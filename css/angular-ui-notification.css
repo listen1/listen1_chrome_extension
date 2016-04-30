@@ -1,0 +1,82 @@
+/**
+ * angular-ui-notification - Angular.js service providing simple notifications using Bootstrap 3 styles with css transitions for animating
+ * @author Alex_Crack
+ * @version v0.1.0
+ * @link https://github.com/alexcrack/angular-ui-notification
+ * @license MIT
+ */
+.ui-notification
+{
+    position: fixed;
+    z-index: 9999;
+
+    width: 300px;
+
+    cursor: pointer;
+    -webkit-transition: all ease .5s;
+         -o-transition: all ease .5s;
+            transition: all ease .5s;
+
+    color: #fff;
+    border-radius: 0;
+    background: #337ab7;
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, .3);
+}
+.ui-notification.killed
+{
+    -webkit-transition: opacity ease 1s;
+         -o-transition: opacity ease 1s;
+            transition: opacity ease 1s;
+
+    opacity: 0;
+}
+.ui-notification > h3
+{
+    font-size: 14px;
+    font-weight: bold;
+
+    display: block;
+
+    margin: 10px 10px 0 10px;
+    padding: 0 0 5px 0;
+
+    text-align: left;
+
+    border-bottom: 1px solid rgba(255, 255, 255, .3);
+}
+.ui-notification a
+{
+    color: #fff;
+}
+.ui-notification a:hover
+{
+    text-decoration: underline;
+}
+.ui-notification > .message
+{
+    margin: 10px 10px 10px 10px;
+}
+.ui-notification.warning
+{
+    color: #fff;
+    background: #f0ad4e;
+}
+.ui-notification.error
+{
+    color: #fff;
+    background: #d9534f;
+}
+.ui-notification.success
+{
+    color: #fff;
+    background: #5cb85c;
+}
+.ui-notification.info
+{
+    color: #fff;
+    background: #5bc0de;
+}
+.ui-notification:hover
+{
+    opacity: .7;
+}
