@@ -275,15 +275,15 @@
             <a open-song-source="currentPlaying" class="src" title="原始链接"></a>  
           </div>
 
-          <div class="m-pbar" >
-            <div class="barbg" id="progressbar" draggable>
+          <div class="m-pbar play" >
+            <div class="barbg" id="progressbar" mode="play" draggable>
               <!-- <div class="rdy" ng-style="{width : myProgress + '%' }"></div> -->
               <div  class="cur" ng-style="{width : myProgress + '%' }">
                 <span class="btn"><i></i></span>
               </div>
             </div>
 
-            <span class="time"><em>{{ currentPostion }}</em> <span ng-show=" currentDuration!=none ">/</span> {{ currentDuration }}</span>
+            <span class="time"><em>{{ currentPosition }}</em> <span ng-show=" currentDuration!=none ">/</span> {{ currentDuration }}</span>
           </div>
 
           <!-- init soundManager2 player -->
@@ -294,6 +294,17 @@
           <!-- <a class="icn icn-add" ng-click="showDialog(0, currentPlaying)" title="添加到歌单">添加到歌单</a> -->
           <a class="icn" ng-class="{ 'icn-shuffle': settings.playmode == 1, 'icn-loop': settings.playmode == 0 }" title="{{ settings.playmode | playmode_title }}" ng-click="changePlaymode()"></a>
           <a class="icn icn-list" title="列表" ng-click="togglePlaylist()"></a>
+        </div>
+
+        <div class="volume-ctrl">
+          <a class="icn" ng-class="{ 'icn-vol-mute': mute, 'icn-vol': mute == false }"  title="音量" ng-click="toggleMuteStatus()"></a>
+          <div class="m-pbar volume" >
+            <div class="barbg" id="volumebar" mode="volume" draggable>
+              <div class="cur" ng-style="{width : volume + '%' }">
+                <span class="btn"><i></i></span>
+              </div>
+            </div>
+          </div>
         </div>
 
         <div class="menu" ng-hide="menuHidden">

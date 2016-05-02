@@ -4938,7 +4938,7 @@ ngSoundManager.directive('soundManager', ['$filter', '$timeout', 'angularPlayer'
                 });
                 scope.$on('currentTrack:position', function(event, data) {
                     $timeout(function() {
-                        scope.currentPostion = $filter('humanTime')(data);
+                        scope.currentPosition = $filter('humanTime')(data);
                     });
                 });
                 scope.$on('currentTrack:duration', function(event, data) {

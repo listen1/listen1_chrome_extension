@@ -352,8 +352,21 @@ a {
 
 .m-pbar {
     position: relative;
-    margin-top: 14px;
+    
+}
+
+.m-pbar.play {
     width: 80%;
+    margin-top: 14px;
+}
+
+.m-pbar.volume {
+    position: absolute;
+    right: 13px;
+    bottom: 11px;
+    float: right;
+    width: 56%;
+    margin-top: 0px;
 }
 
 .m-pbar .barbg, .m-pbar .cur, .m-pbar .rdy {
@@ -413,14 +426,12 @@ em, i {
 .m-playbar .ctrl {
     position: absolute;
     right: 0px;
-    bottom: 17px;
+    bottom: 48px;
     z-index: 10;
-    width: 110px;
+    width: 79px;
     padding-left: 13px;
     float: none;
 }
-
-
 
 .m-playbar .icn-add {
     background-position: -25px 0px;
@@ -432,6 +443,14 @@ em, i {
 
 .m-playbar .icn-list {
     background-position: -125px 0px;
+}
+
+.m-playbar .icn-vol {
+    background-position: -175px 0px;
+}
+
+.m-playbar .icn-vol-mute {
+    background-position: -200px 0px;
 }
 
 .m-playbar .icn-list:hover {
@@ -446,6 +465,13 @@ em, i {
     background-position: -50px -25px;
 }
 
+.m-playbar .icn-vol:hover {
+    background-position: -175px -25px;
+}
+
+.m-playbar .icn-vol-mute:hover {
+    background-position: -200px -25px;
+}
 
 .m-playbar .icn-shuffle {
     background-position: -150px 0px;
@@ -504,6 +530,13 @@ em, i {
 
 .m-playbar .menu .icn-remove:hover {
     background-position: -75px -25px;
+}
+
+.volume-ctrl {
+    position: absolute;
+    right: 0px;
+    bottom: 16px;
+    width: 110px;
 }
 
 li {

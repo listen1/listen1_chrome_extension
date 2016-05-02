@@ -286,6 +286,7 @@
       current.nowplaying_track_id = data;
       localStorage.setObject('player-settings', current);
     });
+
   }]);
 
 
@@ -295,14 +296,15 @@
      function($scope, $timeout, $log, $anchorScroll, $location, angularPlayer,
       $http, $httpParamSerializerJQLike, $rootScope, Notification, loWeb){
       $scope.menuHidden = true;
-
+      $scope.volume = angularPlayer.getVolume();
+      $scope.mute = angularPlayer.getMuteStatus();
       $scope.settings = {"playmode": 0, "nowplaying_track_id": -1};
 
       $scope.loadLocalSettings = function() {
-        var defaultSettings = {"playmode": 0, "nowplaying_track_id": -1}
+        var defaultSettings = {"playmode": 0, "nowplaying_track_id": -1, "volume": 90};
         var localSettings = localStorage.getObject('player-settings');
         if (localSettings == null) {
-          $scope.settings = {"playmode": 0, "nowplaying_track_id": -1};
+          $scope.settings = defaultSettings;
           $scope.saveLocalSettings();
         }
         else {
@@ -318,6 +320,12 @@
         }
         if (angularPlayer.getShuffle() != shuffleSetting) {
           angularPlayer.toggleShuffle();
+        }
+
+        $scope.volume = $scope.settings.volume;
+        if($scope.volume == null) {
+          $scope.volume = 90;
+          $scope.saveLocalSettings();
         }
       }
 
@@ -349,6 +357,12 @@
         }
         $scope.saveLocalSettings();
       };
+
+      $scope.$on('music:volume', function(event, data) {
+          $scope.$apply(function() {
+              $scope.volume = data;
+          });
+      });
 
       $scope.$on('angularPlayer:ready', function(event, data) {
         $log.debug('cleared, ok now add to playlist');
@@ -399,6 +413,11 @@
           $scope.gotoAnchor(anchor);
         }
       };
+
+      $scope.toggleMuteStatus = function() {
+        // mute function is indeed toggle mute status.
+        angularPlayer.mute();
+      }
 
       $scope.playmylist = function(list_id){
         $timeout(function(){
@@ -470,6 +489,10 @@
           // should use apply to force refresh ui
           $scope.myProgress = data;
         });
+      });
+
+      $scope.$on('music:mute', function (event, data) {
+        $scope.mute = data;
       });
   }]);
 
@@ -589,17 +612,58 @@
 
   app.directive('draggable', ['angularPlayer', '$document', '$rootScope',
       function(angularPlayer, $document, $rootScope) {
-    return function(scope, element, attr) {
+    return function(scope, element, attrs) {
       var x;
       var container; 
+      var mode = attrs.mode;
+
+      function onMyMousedown() {
+        if(mode == 'play') {
+          scope.changingProgress = true;
+        }
+      }
+
+      function onMyMouseup() {
+        if(mode == 'play') {
+          scope.changingProgress = false;
+        }
+      }
+
+      function onMyUpdateProgress(progress) {
+        if(mode == 'play') {
+          $rootScope.$broadcast('track:myprogress', progress*100);
+        }
+        if(mode == 'volume') {
+          angularPlayer.adjustVolumeSlider(progress*100);
+          if (angularPlayer.getMuteStatus() == true) {
+            angularPlayer.mute();
+          }
+        }
+      }
+
+      function onMyCommitProgress(progress) {
+        if(mode == 'play') {
+          if (angularPlayer.getCurrentTrack() === null) {
+            return;
+          }
+          var sound = soundManager.getSoundById(angularPlayer.getCurrentTrack());
+          var duration = sound.durationEstimate;
+          sound.setPosition(progress * duration);
+        }
+        if (mode == 'volume') {
+          var current = localStorage.getObject('player-settings');
+          current.volume = progress*100;
+          localStorage.setObject('player-settings', current);
+        }
+      }
 
       element.on('mousedown', function(event) {
-        scope.changingProgress = true;
-        container = document.getElementById('progressbar').getBoundingClientRect();
+        onMyMousedown();
+        container = document.getElementById(attrs.id).getBoundingClientRect();
         // Prevent default dragging of selected content
         event.preventDefault();
         x = event.clientX - container.left;
-        setPosition();
+        updateProgress();
         $document.on('mousemove', mousemove);
         $document.on('mouseup', mouseup);
 
@@ -607,19 +671,22 @@
 
       function mousemove(event) {
         x = event.clientX - container.left;
-        setPosition();
+        updateProgress();
       }
 
-      function changeProgress(progress) {
-        if (angularPlayer.getCurrentTrack() === null) {
-            return;
-        }
-        var sound = soundManager.getSoundById(angularPlayer.getCurrentTrack());
-        var duration = sound.durationEstimate;
-        sound.setPosition(progress * duration);
+      function mouseup() {
+        var progress = x / (container.right - container.left);
+        commitProgress(progress);
+        $document.off('mousemove', mousemove);
+        $document.off('mouseup', mouseup);
+        onMyMouseup();
       }
 
-      function setPosition() {
+      function commitProgress(progress) {
+        onMyCommitProgress(progress);
+      }
+
+      function updateProgress() {
         if (container) {
           if (x < 0) {
             x = 0;
@@ -628,15 +695,7 @@
           }
         }
         var progress = x / (container.right - container.left);
-        $rootScope.$broadcast('track:myprogress', progress*100);
-      }
-
-      function mouseup() {
-        var progress = x / (container.right - container.left);
-        changeProgress(progress);
-        $document.off('mousemove', mousemove);
-        $document.off('mouseup', mouseup);
-        scope.changingProgress = false;
+        onMyUpdateProgress(progress);
       }
     };
   }]);
