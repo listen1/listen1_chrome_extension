@@ -27,14 +27,14 @@ function hack_referer_header(details) {
         blockingResponse = {};
 
     for (var i = 0, l = headers.length; i < l; ++i) {
-        if (headers[i].name == 'Referer') {
+        if ((headers[i].name == 'Referer') && (referer_value != '')) {
             headers[i].value = referer_value;
             isRefererSet = true;
             break;
         }
     }
 
-    if (!isRefererSet) {
+    if ((!isRefererSet) && (referer_value != '')) {
         headers.push({
             name: "Referer",
             value: referer_value
