@@ -55,10 +55,10 @@ function qq_get_image_url(qqimgid, img_type) {
 function qq_convert_song(song) {
     d = {
         'id': 'qqtrack_' + song.songmid,
-        'title': song.songname,
-        'artist': song.singer[0].name,
+        'title': htmlDecode(song.songname),
+        'artist': htmlDecode(song.singer[0].name),
         'artist_id': 'qqartist_' + song.singer[0].mid,
-        'album': song.albumname,
+        'album': htmlDecode(song.albumname),
         'album_id': 'qqalbum_' + song.albummid,
         'img_url': qq_get_image_url(song.albummid, 'album'),
         'source': 'qq',
