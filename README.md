@@ -1,4 +1,4 @@
-Listen 1 (Chrome Extension) （五一先行版）
+Listen 1 (Chrome Extension) （最后更新于5月8日）
 ==========
 
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE)
@@ -25,6 +25,20 @@ Listen 1 (Chrome Extension) （五一先行版）
 
 3. 选择 `加载已解压的扩展程序`(如果没有显示先选中`开发者模式`)，选中解压后的文件夹，完成！
 
+
+更新日志
+-------
+`2016-05-08`
+
+* 增加歌词显示
+* 精选歌单：添加歌单到当前播放列表，可点击跳转到原始链接
+* 修复了循环播放网易歌曲一段时间后暂停的bug
+* 修复了可能导致微信公众号无法登录的bug
+* 优化性能，删除了不必要的事件消息触发
+
+`2016-05-02`
+
+* 增加音量控制
 
 TODO
 ----

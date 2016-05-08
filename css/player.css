@@ -496,21 +496,46 @@ em, i {
     _bottom: 90px;
     right: 0px;
     _right: 0px;
-    width: 60%;
-    height: 301px;
+    height: 330px;
+    width: 100%;
     background-color: #121212;
 }
 
 .m-playbar .menu ul {
+    display: inline-block;
     padding-left: 0px;
-    height: 270px;
-    overflow: auto;
+    height: 290px;
+    overflow-y: scroll;
+    width: 60%;
+    margin-bottom: 0px;
 }
 
 .m-playbar .menu li {
     float: left;
     width: 100%;
     display: block;
+}
+
+.m-playbar .menu .lyric {
+    text-align: center;
+    width: 39%;
+    display: inline-block;
+    height: 290px;
+    overflow-y: scroll;
+    position: relative;
+}
+
+.m-playbar .menu .lyric p{
+    min-height: 20px;
+}
+
+.m-playbar .menu .lyric .placeholder{
+    height: 50px;
+}
+
+.m-playbar .menu .lyric .highlight{
+    font-size: 15px;
+    color: #ffffff;
 }
 
 .m-playbar .menu .playing {
@@ -522,8 +547,8 @@ em, i {
 }
 
 .m-playbar .menu .icn-remove {
-    height: 25px;
-    width: 25px;
+    height: 20px;
+    width: 20px;
     background-position: -75px -25px;
     display: inline-block;
 }
@@ -544,15 +569,37 @@ li {
 }
 
 .menu-header {
-    height: 28px;
-    background-color: #121212;
+    height: 40px;
+    background-color: #222222;
     padding-top: 4px;
     text-align: center;
 }
 
+.menu-header span {
+    position: absolute;
+    left: 19px;
+    top: 7px;
+    font-size: 18px;
+    color: #ffffff;
+}
+
 .menu .remove-all {
+    display: inline-block;
+    position: absolute;
+    left: 113px;
+    top: 9px;
+}
+
+.menu .close-popup {
     float:right;
-    margin-right: 10px;
+    margin-right: 14px;
+    font-size: 20px;
+    text-decoration: none;
+    color: #aaaaaa;
+}
+
+.menu .close-popup:hover {
+    color: #ffffff;
 }
 
 .menu .title {
@@ -636,21 +683,38 @@ li {
     text-align: center;
 }
 
-.playlist-detail .detail-head-title .play {
+.playlist-detail .detail-head-title a {
     display: inline-block;
     text-indent: -9999px;
     width: 36px;
     height: 36px;
     margin-right: 8px;
     margin-top: 0;
-    background-position-x: 0;
     background: url(../images/player_large.png) no-repeat 0 9999px;
+}
+
+.playlist-detail .detail-head-title .play {
     background-position: 0px 0px;
 }
 
 .playlist-detail .detail-head-title .play:hover {
-    background: url(../images/player_large.png) no-repeat 0 9999px;
     background-position: 0px -36px;
+}
+
+.playlist-detail .detail-head-title .add {
+    background-position: -216px 0px;
+}
+
+.playlist-detail .detail-head-title .add:hover {
+    background-position: -216px -36px;
+}
+
+.playlist-detail .detail-head-title .link {
+    background-position: -256px 0px;
+}
+
+.playlist-detail .detail-head-title .link:hover {
+    background-position: -256px -36px;
 }
 
 .playlist-detail .detail-head-title .delete {

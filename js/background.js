@@ -15,7 +15,10 @@ function hack_referer_header(details) {
         referer_value = "http://m.xiami.com/";
     }
 
-    if (details.url.indexOf(".qq.com/") != -1) {
+    if ((details.url.indexOf("y.qq.com/") != -1) || 
+        (details.url.indexOf("qqmusic.qq.com/") != -1) ||
+        (details.url.indexOf("music.qq.com/") != -1) ||
+        (details.url.indexOf("imgcache.qq.com/") != -1)) {
         referer_value = "http://y.qq.com/";
     }
 

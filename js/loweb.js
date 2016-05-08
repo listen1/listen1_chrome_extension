@@ -4,9 +4,6 @@ ngloWebManager.factory('loWeb', ['$rootScope', '$log', '$http', '$httpParamSeria
 function($rootScope, $log, $http, $httpParamSerializerJQLike) {
     var response = null;
     return {
-        foo: function(){
-            console.log('foo');
-        },
         get: function(url) {
             if (url.search('/show_playlist') != -1) {
                 var source = getParameterByName('source', url);
@@ -69,13 +66,26 @@ function($rootScope, $log, $http, $httpParamSerializerJQLike) {
                     return qq_artist(url, $http, $httpParamSerializerJQLike);
                 }
             }
+            if (url.search('/lyric') != -1) {
+                var track_id = getParameterByName('track_id', url);
+                if (track_id.search('xmtrack')!= -1) {
+                    return xm_lyric(url, $http, $httpParamSerializerJQLike);
+                }
+                if (track_id.search('netrack')!= -1) {
+                    return ne_lyric(url, $http, $httpParamSerializerJQLike);
+                }
+                if (track_id.search('qqtrack')!= -1) {
+                    return qq_lyric(url, $http, $httpParamSerializerJQLike);
+                }
+            }
 
         },
         bootstrapTrack: function(sound, track, callback){
-            if (sound.url.search('http') != -1){
-                callback();
-                return;
-            }
+            // always refresh url, becaues url will expires
+            // if (sound.url.search('http') != -1){
+            //     callback();
+            //     return;
+            // }
             if(track.source == 'xiami') {
                 xm_bootstrap_track(sound, track, callback, $http, $httpParamSerializerJQLike);
             }

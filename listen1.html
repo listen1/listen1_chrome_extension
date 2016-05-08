@@ -179,7 +179,7 @@
                   <div class="detail-tools">
                     <a title="添加到当前播放" class="detail-add-button" add-without-play="song" ng-show="options"></a>
                     <!-- <a title="添加到歌单" class="detail-fav-button" ng-show="options" ng-click="showDialog(0, song)"></a> -->
-                    <a title="原始链接" class="source-button" open-song-source="song" ng-show="options"></a>
+                    <a title="原始链接" class="source-button" open-url="song.source_url" ng-show="options"></a>
                   </div>
               </li>
             </ul>
@@ -210,7 +210,7 @@
 
 
     <!-- track list window -->
-    <div class="site-wrapper" ng-hide="is_window_hidden==1" ng-controller="PlayController">
+    <div class="site-wrapper" ng-hide="is_window_hidden==1">
       <div class="site-wrapper-innerd" resize>
         <div class="cover-container" >
 
@@ -225,7 +225,9 @@
               </div>
               <div class="detail-head-title">
                 <h2>{{ playlist_title }}</h2>
-                <a title="播放歌单" class="play" ng-show="playlist_title!=''" ng-click="playmylist(list_id)">播放</a>
+                <a title="播放歌单" class="play" ng-show="playlist_title!=''" ng-click="playMylist(list_id)">播放</a>
+                <a title="添加到当前播放" class="add" ng-show="playlist_title!=''" ng-click="addMylist(list_id)">添加到当前播放</a>
+                <a title="原始链接" class="link" ng-show="playlist_title!=''" open-url="playlist_source_url">原始链接</a>
 <!--                 <a title="删除歌单" class="delete" ng-show="playlist_title!='' && is_mine=='1'" ng-click="removemylist(list_id)">删除</a>
                 <a title="收藏歌单" class="clone" ng-show="playlist_title!='' && is_mine=='0'" ng-click="clonelist(list_id)">收藏</a> -->
               </div>
@@ -238,7 +240,7 @@
                   <div class="detail-tools">
                     <a title="添加到当前播放" class="detail-add-button" add-without-play="song" ng-show="options"></a>
                    <!--  <a title="添加到歌单" class="detail-fav-button" ng-click="showDialog(0, song)" ng-show="options"></a> -->
-                    <a title="原始链接" class="source-button" open-song-source="song" ng-show="options"></a>
+                    <a title="原始链接" class="source-button" open-url="song.source_url" ng-show="options"></a>
                     <!-- <a title="从歌单删除" class="detail-delete-button" ng-click="removeSongFromPlaylist(song, list_id)" ng-show="options && is_mine=='1' "></a> -->
                   </div>
               </li>
@@ -272,7 +274,7 @@
                 <a class="" ng-click="showArtist(currentPlaying.artist_id)">{{ currentPlaying.artist }}</a>
               </span>
             </span>
-            <a open-song-source="currentPlaying" class="src" title="原始链接"></a>  
+            <a open-url="currentPlaying.source_url" class="src" title="原始链接"></a>  
           </div>
 
           <div class="m-pbar play" >
@@ -308,14 +310,10 @@
         </div>
 
         <div class="menu" ng-hide="menuHidden">
-          <div class="menu-header">播放列表 
-              <a class="remove-all" ng-click="menuHidden=!menuHidden">
-                    <small>关闭</small>
-              </a>
-              <a clear-playlist class="remove-all">
-                    <small>(移除所有)</small>
-              </a>
-
+          <div class="menu-header">
+              <span>播放列表</span>
+              <a clear-playlist class="remove-all"><small>(移除所有)</small></a>
+              <a class="close-popup" ng-click="menuHidden=!menuHidden">×</a>
           </div>
           <ul>
             <li id="song{{ song.id }}" ng-repeat="song in playlist" ng-class="{ playing: currentPlaying.id == song.id }" ng-mouseenter="playlist_highlight=true" ng-mouseleave="playlist_highlight=false">
@@ -324,6 +322,11 @@
               <div class="singer" ng-click="showArtist(song.artist_id)">{{ song.artist }}</div>
             </li>
           </ul>
+          <div class="lyric">
+             <div class="placeholder"></div>
+             <p ng-repeat="line in lyricArray track by $index" ng-class="{ 'highlight': line.lineNumber == lyricLineNumber }" >{{ line.content }} </p>
+             <div style="placeholder"></div>
+          </div>
         </div>
       </div>
     </div>
