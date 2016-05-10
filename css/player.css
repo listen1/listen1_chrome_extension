@@ -496,7 +496,7 @@ em, i {
     _bottom: 90px;
     right: 0px;
     _right: 0px;
-    height: 330px;
+    height: 349px;
     width: 100%;
     background-color: #121212;
 }
@@ -504,7 +504,7 @@ em, i {
 .m-playbar .menu ul {
     display: inline-block;
     padding-left: 0px;
-    height: 290px;
+    height: 308px;
     overflow-y: scroll;
     width: 60%;
     margin-bottom: 0px;
@@ -520,7 +520,7 @@ em, i {
     text-align: center;
     width: 39%;
     display: inline-block;
-    height: 290px;
+    height: 308px;
     overflow-y: scroll;
     position: relative;
 }

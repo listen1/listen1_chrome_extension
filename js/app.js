@@ -37,6 +37,18 @@
     };
   });
 
+  function getSourceName(sourceId) {
+    if (sourceId == 0) {
+      return 'netease';
+    }
+    if (sourceId == 1) {
+      return 'xiami';
+    }
+    if (sourceId == 2) {
+      return 'qq';
+    }
+  }
+
   // control main view of page, it can be called any place
   app.controller('NavigationController', ['$scope', '$http',
     '$httpParamSerializerJQLike', '$timeout',
@@ -389,7 +401,17 @@
         if (angularPlayer.getRepeatStatus() == false) {
             angularPlayer.repeatToggle();
         }
-        $timeout(function(){angularPlayer.setBootstrapTrack(loWeb.bootstrapTrack);}, 0);
+        $timeout(
+          function(){
+            angularPlayer.setBootstrapTrack(
+              loWeb.bootstrapTrack(
+                function(){}, 
+                function(){
+                  Notification.info('版权原因无法播放，请搜索其他平台');
+                })
+            );
+          }, 0
+        );
 
         if (track_id == -1) {
           return;
@@ -535,7 +557,10 @@
             var content = line.replace(/\[(\d{2,})\:(\d{2})(?:\.(\d{1,3}))?\]/g, '');
             var min = parseInt(timeRegResult[1]);
             var sec = parseInt(timeRegResult[2]);
-            var microsec = parseInt(rightPadding(timeRegResult[3], 3, '0'));
+            var microsec = 0;
+            if (timeRegResult[3] != null) {
+              microsec = parseInt(rightPadding(timeRegResult[3], 3, '0'));
+            }
             var seconds = min * 60 * 1000 + sec*1000 + microsec;
             var lyricObject = {};
             lyricObject.content = content;
@@ -618,7 +643,7 @@
       $scope.changeTab = function(newTab){
         $scope.tab = newTab;
         $scope.result = [];
-        loWeb.get('/search?source='+ $scope.tab + '&keywords=' + $scope.keywords).success(function(data) {
+        loWeb.get('/search?source=' + getSourceName($scope.tab) + '&keywords=' + $scope.keywords).success(function(data) {
             // update the textarea
             $scope.result = data.result; 
         });
@@ -637,7 +662,7 @@
         // go ahead and retrieve the data
         if (tmpStr === $scope.keywords)
         {
-          loWeb.get('/search?source='+ $scope.tab + '&keywords=' + $scope.keywords).success(function(data) {
+          loWeb.get('/search?source=' + getSourceName($scope.tab) + '&keywords=' + $scope.keywords).success(function(data) {
             // update the textarea
             $scope.result = data.result; 
           });
@@ -848,7 +873,7 @@
       $scope.tab = newTab;
       $scope.result = [];
 
-      loWeb.get('/show_playlist?source=' + $scope.tab).success(function(data) {
+      loWeb.get('/show_playlist?source=' + getSourceName($scope.tab)).success(function(data) {
         $scope.result = data.result;
       });
 
@@ -863,7 +888,7 @@
 
 
     $scope.loadPlaylist = function(){
-      loWeb.get('/show_playlist?source=' + $scope.tab).success(function(data) {
+      loWeb.get('/show_playlist?source=' + getSourceName($scope.tab)).success(function(data) {
         $scope.result = data.result;
       });
     };

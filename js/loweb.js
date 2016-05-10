@@ -1,100 +1,87 @@
 var ngloWebManager = angular.module('loWebManager', []);
 
+function getProviderByName(sourceName) {
+    if (sourceName == 'netease') {
+        return netease;
+    }
+    if (sourceName == 'xiami') {
+        return xiami;
+    }
+    if (sourceName == 'qq') {
+        return qq;
+    }
+}
+
+function getProviderByItemId(itemId) {
+    var prefix = itemId.slice(0,2);
+    if (prefix == 'ne') {
+        return netease;
+    }
+    if (prefix == 'xm') {
+        return xiami;
+    }
+    if (prefix == 'qq') {
+        return qq;
+    }
+}
+
 ngloWebManager.factory('loWeb', ['$rootScope', '$log', '$http', '$httpParamSerializerJQLike',
 function($rootScope, $log, $http, $httpParamSerializerJQLike) {
-    var response = null;
     return {
         get: function(url) {
             if (url.search('/show_playlist') != -1) {
                 var source = getParameterByName('source', url);
-                if (source == '0') {
-                    return ne_show_playlist(url, $http);
-                }
-                if (source == '1') {
-                    return xm_show_playlist(url, $http);
-                }
-                if (source == '2') {
-                    return qq_show_playlist(url, $http);
-                }
+                var provider = getProviderByName(source);
+                return provider.show_playlist(url, $http);
             }
             if (url.search('/playlist') != -1) {
                 var list_id = getParameterByName('list_id', url);
-                if (list_id.search('xmplaylist')!= -1) {
-                    return xm_get_playlist(url, $http);
-                }
-                if (list_id.search('neplaylist')!= -1) {
-                    return ne_get_playlist(url, $http);
-                }
-                 if (list_id.search('qqplaylist')!= -1) {
-                    return qq_get_playlist(url, $http);
-                }
-
+                var provider = getProviderByItemId(list_id);
+                return provider.get_playlist(url, $http);
             }
             if (url.search('/search') != -1) {
                 var source = getParameterByName('source', url);
-                if (source == '0') {
-                    return ne_search(url, $http, $httpParamSerializerJQLike);
-                }
-                if (source == '1') {
-                    return xm_search(url, $http, $httpParamSerializerJQLike);
-                }
-                if (source == '2') {
-                    return qq_search(url, $http, $httpParamSerializerJQLike);
-                }
+                var provider = getProviderByName(source);
+                return provider.search(url, $http, $httpParamSerializerJQLike);
             }
             if (url.search('/album') != -1) {
                 var album_id = getParameterByName('album_id', url);
-                if (album_id.search('xmalbum')!= -1) {
-                    return xm_album(url, $http, $httpParamSerializerJQLike);
-                }
-                if (album_id.search('nealbum')!= -1) {
-                    return ne_album(url, $http, $httpParamSerializerJQLike);
-                }
-                if (album_id.search('qqalbum')!= -1) {
-                    return qq_album(url, $http, $httpParamSerializerJQLike);
-                }
+                var provider = getProviderByItemId(album_id);
+                return provider.album(url, $http, $httpParamSerializerJQLike);
             }
             if (url.search('/artist') != -1) {
                 var artist_id = getParameterByName('artist_id', url);
-                if (artist_id.search('xmartist')!= -1) {
-                    return xm_artist(url, $http, $httpParamSerializerJQLike);
-                }
-                if (artist_id.search('neartist')!= -1) {
-                    return ne_artist(url, $http, $httpParamSerializerJQLike);
-                }
-                if (artist_id.search('qqartist')!= -1) {
-                    return qq_artist(url, $http, $httpParamSerializerJQLike);
-                }
+                var provider = getProviderByItemId(artist_id);
+                return provider.artist(url, $http, $httpParamSerializerJQLike);
             }
             if (url.search('/lyric') != -1) {
                 var track_id = getParameterByName('track_id', url);
-                if (track_id.search('xmtrack')!= -1) {
-                    return xm_lyric(url, $http, $httpParamSerializerJQLike);
-                }
-                if (track_id.search('netrack')!= -1) {
-                    return ne_lyric(url, $http, $httpParamSerializerJQLike);
-                }
-                if (track_id.search('qqtrack')!= -1) {
-                    return qq_lyric(url, $http, $httpParamSerializerJQLike);
-                }
+                var provider = getProviderByItemId(track_id);
+                return provider.lyric(url, $http, $httpParamSerializerJQLike);
             }
 
         },
-        bootstrapTrack: function(sound, track, callback){
-            // always refresh url, becaues url will expires
-            // if (sound.url.search('http') != -1){
-            //     callback();
-            //     return;
-            // }
-            if(track.source == 'xiami') {
-                xm_bootstrap_track(sound, track, callback, $http, $httpParamSerializerJQLike);
-            }
-            if(track.source == 'netease') {
-                ne_bootstrap_track(sound, track, callback, $http, $httpParamSerializerJQLike);
-            }
-            if(track.source == 'qq') {
-                qq_bootstrap_track(sound, track, callback, $http, $httpParamSerializerJQLike);
-            }
+        bootstrapTrack: function(success, failure) {
+            return function(sound, track, callback){
+                // always refresh url, becaues url will expires
+                // if (sound.url.search('http') != -1){
+                //     callback();
+                //     return;
+                // }
+                function successCallback() {
+                    callback();
+                    success();
+                }
+
+                function failureCallback() {
+                    failure();
+                }
+                var source = track.source;
+                var provider = getProviderByName(source);
+
+                provider.bootstrap_track(sound, track, successCallback, failureCallback, $http, $httpParamSerializerJQLike);
+
+            };
         }
     };
 }]);
