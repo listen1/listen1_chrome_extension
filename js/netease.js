@@ -10,12 +10,15 @@ function ne_show_playlist(url, hm) {
                     var default_playlist = {
                         'cover_img_url' : '',
                         'title': '',
-                        'list_id': ''
+                        'list_id': '',
+                        'source_url': ''
                     };
                     default_playlist.cover_img_url = $(this).find('img')[0].src;
                     default_playlist.title = $(this).find('div a')[0].title;
                     var url = $(this).find('div a')[0].href;
-                    default_playlist.list_id = 'neplaylist_' + getParameterByName('id',url);
+                    var list_id = getParameterByName('id',url);
+                    default_playlist.list_id = 'neplaylist_' + list_id;
+                    default_playlist.source_url = 'http://music.163.com/#/playlist?id=' + list_id;
                     result.push(default_playlist);
                 });
                 return fn({"result":result});
@@ -35,7 +38,8 @@ function ne_get_playlist(url, hm) {
                 var info = {
                     'list_id': list_id,
                     'cover_img_url': dataObj.find('.u-cover img').attr('src'),
-                    'title': dataObj.find('.tit h2').text()
+                    'title': dataObj.find('.tit h2').text(),
+                    'source_url': 'http://music.163.com/#/playlist?id=' + list_id
                 };
                 var tracks = [];
                 var json_string = dataObj.find('textarea').val();
@@ -162,7 +166,7 @@ function _encrypted_request(text) {
 function ne_bootstrap_track(sound, track, callback, hm, se) {
     var target_url = 'http://music.163.com/weapi/song/enhance/player/url?csrf_token=';
     var csrf = '';
-    var song_id = sound.url;
+    var song_id = track.id;
 
     song_id = song_id.slice('netrack_'.length);
     var d = {
@@ -245,7 +249,8 @@ function ne_album(url, hm, se) {
                 var info = {
                     'cover_img_url': data.album.picUrl,
                     'title': data.album.name,
-                    'id': data.album.id
+                    'id': 'nealbum_' + data.album.id,
+                    'source_url': 'http://music.163.com/#/album?id=' + data.album.id
                 };
 
                 var tracks = [];
@@ -284,7 +289,8 @@ function ne_artist(url, hm, se) {
                 var info = {
                     'cover_img_url': data.artist.picUrl,
                     'title': data.artist.name,
-                    'id': data.artist.id
+                    'id': 'neartist_' + data.artist.id,
+                    'source_url': 'http://music.163.com/#/artist?id=' + data.artist.id
                 };
 
                 var tracks = [];
@@ -304,6 +310,38 @@ function ne_artist(url, hm, se) {
                     tracks.push(default_track);
                 });
                 return fn({"tracks":tracks, "info":info, "is_mine": 0});
+            });
+        }
+    };
+}
+
+function ne_lyric(url, hm, se) {
+    var track_id = getParameterByName('track_id', url).split('_').pop();
+    // use chrome extension to modify referer.
+    var target_url = 'http://music.163.com/weapi/song/lyric?csrf_token=';
+    var csrf = '';
+    var d = {
+        'id': track_id,
+        'lv': -1,
+        'tv': -1,
+        'csrf_token': csrf
+    }
+    var data = _encrypted_request(d);
+    return {
+        success: function(fn) {
+            hm({
+                url: target_url,
+                method: 'POST',
+                data: se(data),
+                headers: {
+                  'Content-Type': 'application/x-www-form-urlencoded'
+                }
+            }).success(function(data) {
+                var lrc = '';
+                if (data.lrc != null) {
+                    lrc = data.lrc.lyric;
+                }
+                return fn({"lyric":lrc});
             });
         }
     };

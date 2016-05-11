@@ -26,7 +26,9 @@ function qq_show_playlist(url, hm) {
                     var d = {
                         'cover_img_url': item.imgurl,
                         'title': htmlDecode(item.dissname),
-                        'list_id':'qqplaylist_' + item.dissid
+                        'list_id':'qqplaylist_' + item.dissid,
+                        'source_url': 'http://y.qq.com/#type=taoge&id=' + item.dissid
+
                     };
                     playlists.push(d);
                 });
@@ -53,10 +55,10 @@ function qq_get_image_url(qqimgid, img_type) {
 function qq_convert_song(song) {
     d = {
         'id': 'qqtrack_' + song.songmid,
-        'title': song.songname,
-        'artist': song.singer[0].name,
+        'title': htmlDecode(song.songname),
+        'artist': htmlDecode(song.singer[0].name),
         'artist_id': 'qqartist_' + song.singer[0].mid,
-        'album': song.albumname,
+        'album': htmlDecode(song.albumname),
         'album_id': 'qqalbum_' + song.albummid,
         'img_url': qq_get_image_url(song.albummid, 'album'),
         'source': 'qq',
@@ -89,7 +91,8 @@ function qq_get_playlist(url, hm) {
                 var info = {
                     'cover_img_url': data.cdlist[0].logo,
                     'title': data.cdlist[0].dissname,
-                    'id': 'qqplaylist_' + list_id
+                    'id': 'qqplaylist_' + list_id,
+                    'source_url': 'http://y.qq.com/#type=taoge&id=' + list_id
                 };
 
                 var tracks = [];
@@ -125,7 +128,8 @@ function qq_album(url, hm) {
                 var info = {
                     'cover_img_url': qq_get_image_url(album_id, 'album'),
                     'title': data.data.name,
-                    'id': 'qqalbum_' + album_id
+                    'id': 'qqalbum_' + album_id,
+                    'source_url': 'http://y.qq.com/#type=album&mid=' + album_id
                 };
 
                 var tracks = [];
@@ -162,7 +166,8 @@ function qq_artist(url, hm) {
                 var info = {
                     'cover_img_url': qq_get_image_url(artist_id, 'artist'),
                     'title': data.data.singer_name,
-                    'id': 'qqartist_' + artist_id
+                    'id': 'qqartist_' + artist_id,
+                    'source_url': 'http://y.qq.com/#type=singer&mid=' + artist_id
                 };
 
                 var tracks = [];
@@ -220,9 +225,47 @@ function qq_bootstrap_track(sound, track, callback, hm, se) {
         data = data.slice('jsonCallback('.length, -');'.length);
         data = JSON.parse(data);
         var token = data.key;
-        var url = 'http://cc.stream.qqmusic.qq.com/C200' +  sound.url.slice('qqtrack_'.length)  + '.m4a?vkey=' +
+        var url = 'http://cc.stream.qqmusic.qq.com/C200' +  track.id.slice('qqtrack_'.length)  + '.m4a?vkey=' +
             token + '&fromtag=0&guid=780782017';
         sound.url = url;
         callback();
     });
 }
+
+function str2ab(str) {
+  // string to array buffer.
+  var buf = new ArrayBuffer(str.length);
+  var bufView = new Uint8Array(buf);
+  for (var i=0, strLen=str.length; i<strLen; i++) {
+    bufView[i] = str.charCodeAt(i);
+  }
+  return buf;
+}
+
+function qq_lyric(url, hm, se) {
+    var track_id = getParameterByName('track_id', url).split('_').pop();
+    // use chrome extension to modify referer.
+    var target_url = 'http://i.y.qq.com/lyric/fcgi-bin/fcg_query_lyric.fcg?' +
+        'songmid=' + track_id +
+        '&loginUin=0&hostUin=0&format=jsonp&inCharset=GB2312' +
+        '&outCharset=utf-8&notice=0&platform=yqq&jsonpCallback=MusicJsonCallback&needNewCode=0';
+    return {
+        success: function(fn) {
+            hm({
+                url:target_url,
+                method: 'GET',
+                transformResponse: undefined
+            }).success(function(data) {
+                data = data.slice('MusicJsonCallback('.length, -')'.length);
+                data = JSON.parse(data);
+                var lrc = '';
+                if (data.lyric != null) {
+                    var td = new TextDecoder('utf8');
+                    lrc = td.decode(str2ab(atob(data.lyric)));
+                }
+                return fn({"lyric":lrc});
+            });
+        }
+    };
+}
+

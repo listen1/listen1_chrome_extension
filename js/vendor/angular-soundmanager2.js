@@ -4574,6 +4574,14 @@ ngSoundManager.factory('angularPlayer', ['$rootScope', '$log',
                     return playlist[key];
                 }
             },
+            getTrack: function(trackId) {
+                for (var i=0; i< playlist.length; i++) {
+                    if (playlist[i].id == trackId) {
+                        return playlist[i];
+                    }
+                }
+                return null;
+            },
             addToPlaylist: function(track) {
                 playlist.push(track);
                 //broadcast playlist

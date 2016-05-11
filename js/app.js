@@ -72,6 +72,7 @@
     $scope.resetWindow = function() {
       $scope.cover_img_url = 'images/loading.gif';
       $scope.playlist_title = '';
+      $scope.playlist_source_url = '';
       $scope.songs = [];
     };
 
@@ -89,6 +90,7 @@
           $scope.songs = data.tracks;
           $scope.cover_img_url = data.info.cover_img_url;
           $scope.playlist_title = data.info.title;
+          $scope.playlist_source_url = data.info.source_url;
           $scope.list_id = data.info.id;
           $scope.is_mine = data.is_mine;
       });
@@ -112,6 +114,7 @@
             $scope.songs = data.tracks;
             $scope.cover_img_url = data.info.cover_img_url;
             $scope.playlist_title = data.info.title;
+            $scope.playlist_source_url = data.info.source_url;
         });
       }
     };
@@ -277,18 +280,33 @@
       $scope.current_list_id = list_id;
     };
 
-    $scope.$on('player:playlist', function(event, data) {
-      localStorage.setObject('current-playing', data);
-    });
+    $scope.playMylist = function(list_id){
+      $timeout(function(){
+        angularPlayer.clearPlaylist(function(data) {
+          //add songs to playlist
+          angularPlayer.addTrackArray($scope.songs);
+          var index = 0;
+          if (angularPlayer.getShuffle()) {
+            var max = $scope.songs.length - 1;
+            var min = 0;
+            index = Math.floor(Math.random() * (max - min + 1)) + min;
+          }
+          //play first song
+          angularPlayer.playTrack($scope.songs[index].id);
+        });
+      }, 0);
+      $scope.setCurrentList(list_id);
+    };
 
-    $scope.$on('track:id', function(event, data) {
-      var current = localStorage.getObject('player-settings');
-      current.nowplaying_track_id = data;
-      localStorage.setObject('player-settings', current);
-    });
+    $scope.addMylist = function(list_id){
+      $timeout(function(){
+        //add songs to playlist
+        angularPlayer.addTrackArray($scope.songs);
+        Notification.success("添加到当前播放成功");
+      }, 0);
+    };
 
   }]);
-
 
   app.controller('PlayController', ['$scope', '$timeout','$log',
     '$anchorScroll', '$location', 'angularPlayer', '$http',
@@ -299,6 +317,8 @@
       $scope.volume = angularPlayer.getVolume();
       $scope.mute = angularPlayer.getMuteStatus();
       $scope.settings = {"playmode": 0, "nowplaying_track_id": -1};
+      $scope.lyricArray = [];
+      $scope.lyricLineNumber = -1;
 
       $scope.loadLocalSettings = function() {
         var defaultSettings = {"playmode": 0, "nowplaying_track_id": -1, "volume": 90};
@@ -419,23 +439,7 @@
         angularPlayer.mute();
       }
 
-      $scope.playmylist = function(list_id){
-        $timeout(function(){
-          angularPlayer.clearPlaylist(function(data) {
-            //add songs to playlist
-            angularPlayer.addTrackArray($scope.songs);
-            var index = 0;
-            if (angularPlayer.getShuffle()) {
-              var max = $scope.songs.length - 1;
-              var min = 0;
-              index = Math.floor(Math.random() * (max - min + 1)) + min;
-            }
-            //play first song
-            angularPlayer.playTrack($scope.songs[index].id);
-          });
-        }, 0);
-        $scope.setCurrentList(list_id);
-      };
+
 
       $scope.removemylist = function(list_id){
         var url = '/remove_myplaylist';
@@ -494,6 +498,116 @@
       $scope.$on('music:mute', function (event, data) {
         $scope.mute = data;
       });
+
+      $scope.$on('player:playlist', function(event, data) {
+        localStorage.setObject('current-playing', data);
+      });
+
+      function parseLyric(lyric) {
+        var lines = lyric.split('\n');
+        var result = [];
+        var timeResult = [];
+        var timeRegResult = null;
+
+        function rightPadding(str, length, padChar) {
+            var newstr = str;
+            for (var i=0; i< length - str.length; i++) {
+              newstr += padChar;
+            }
+            return newstr;
+        }
+
+        for (var i=0; i<lines.length; i++) {
+          var line = lines[i];
+          var tagReg = /\[\D*:([^\]]+)\]/g;
+          var tagRegResult = tagReg.exec(line);
+          if (tagRegResult) {
+            var lyricObject = {};
+            lyricObject.seconds = 0;
+            lyricObject.content = tagRegResult[1];
+            result.push(lyricObject);
+            continue;
+          }
+
+          var timeReg = /\[(\d{2,})\:(\d{2})(?:\.(\d{1,3}))?\]/g;
+
+          while(timeRegResult = timeReg.exec(line)) {
+            var content = line.replace(/\[(\d{2,})\:(\d{2})(?:\.(\d{1,3}))?\]/g, '');
+            var min = parseInt(timeRegResult[1]);
+            var sec = parseInt(timeRegResult[2]);
+            var microsec = parseInt(rightPadding(timeRegResult[3], 3, '0'));
+            var seconds = min * 60 * 1000 + sec*1000 + microsec;
+            var lyricObject = {};
+            lyricObject.content = content;
+            lyricObject.seconds = seconds;
+            timeResult.push(lyricObject);
+          }
+        }
+
+        // sort time line
+        timeResult.sort(function(a, b){
+            var keyA = a.seconds,
+                keyB = b.seconds;
+            // Compare the 2 dates
+            if(keyA < keyB) return -1;
+            if(keyA > keyB) return 1;
+            return 0;
+        });
+
+        // disable tag info, because music provider always write
+        // tag info in lyric timeline.
+        //result.push.apply(result, timeResult);
+        result = timeResult;
+
+        for (var i=0; i<result.length; i++) {
+          result[i].lineNumber = i;
+        }
+
+        return result;
+      }
+
+
+      $scope.$on('track:id', function(event, data) {
+        var current = localStorage.getObject('player-settings');
+        current.nowplaying_track_id = data;
+        localStorage.setObject('player-settings', current);
+        // update lyric
+        $scope.lyricArray = [];
+        $scope.lyricLineNumber = -1;
+        $(".lyric").animate({ scrollTop: "0px" }, 500);
+        var url = '/lyric?track_id=' + data;
+        var track = angularPlayer.getTrack(data);
+        if (track.lyric_url != null) {
+          url = url + '&lyric_url=' + track.lyric_url;
+        }
+        loWeb.get(url).success(function(data) {
+          var lyric = data.lyric;
+          $scope.lyricArray = parseLyric(lyric);
+        });
+      });
+
+      $scope.$on('currentTrack:position', function(event, data) {
+        // update lyric position
+        var currentSeconds = data;
+        var lastObject = null;
+        for (var i=0; i< $scope.lyricArray.length; i++) {
+          var lyricObject = $scope.lyricArray[i];
+          if (currentSeconds < lyricObject.seconds) {
+            break;
+          }
+          lastObject = lyricObject;
+        }
+        if (lastObject && lastObject.lineNumber != $scope.lyricLineNumber) {
+          var lineHeight = 20;
+          var lineElement = $(".lyric p")[lastObject.lineNumber];
+          var windowHeight = 270;
+          var offset = lineElement.offsetTop - windowHeight/2;
+          //$(".lyric").scrollTop(offset);
+          $(".lyric").animate({ scrollTop: offset+"px" }, 500);
+          $scope.lyricLineNumber = lastObject.lineNumber;
+        }
+      });
+
   }]);
 
   app.controller('InstantSearchController', ['$scope', '$http', '$timeout', 'angularPlayer', 'loWeb',
@@ -595,16 +709,16 @@
         };
     }]);
 
-  app.directive('openSongSource', ['angularPlayer', '$window',
+  app.directive('openUrl', ['angularPlayer', '$window',
     function (angularPlayer, $window) {
       return {
           restrict: "EA",
           scope: {
-              song: "=openSongSource"
+              url: "=openUrl"
           },
           link: function (scope, element, attrs) {
               element.bind('click', function (event) {
-                $window.open(scope.song.source_url, '_blank');
+                $window.open(scope.url, '_blank');
               });
           }
       };
