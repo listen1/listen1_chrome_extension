@@ -730,7 +730,30 @@
       var x;
       var container; 
       var mode = attrs.mode;
+      var fn = function(event, delta, deltaX, deltaY){
+          if(mode =="volume"){
+             var current = localStorage.getObject('player-settings');
+             var progress=(current.volume+delta*5)>=0 &&(current.volume+delta*5)<=100?(current.volume+delta*5)/100.0:(1+delta)/2;
+              onMyUpdateProgress(progress);
+              onMyCommitProgress(progress);
+            }
+      },
+      hamster;
 
+      // don't create multiple Hamster instances per element
+      if (!(hamster = element.data('hamster'))) {
+        hamster = Hamster(element[0]);
+        element.data('hamster', hamster);
+      }
+
+      // bind Hamster wheel event
+      hamster.wheel(fn);
+
+      // unbind Hamster wheel event
+      scope.$on('$destroy', function(){
+        hamster.unwheel(fn);
+      });
+      
       function onMyMousedown() {
         if(mode == 'play') {
           scope.changingProgress = true;
