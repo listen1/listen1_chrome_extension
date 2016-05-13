@@ -1,21 +1,27 @@
 {
-   "background": {
-      "presistent": true,
-      "scripts": ["js/background.js" ]
-   },
-   "browser_action": {
-      "default_icon": "images/logo.png",
-      "default_title": "Listen 1"
-   },
-   "description": "Listen 1 for all music",
-   "icons": {
-      "128": "images/logo.png",
-      "16": "images/logo.png",
-      "48": "images/logo.png"
-   },
-   "manifest_version": 2,
-   "name": "Listen 1",
-   "permissions": [ "notifications", "unlimitedStorage", "downloads", "storage", "contextMenus", "tabs", "*://music.163.com/*", "*://*.xiami.com/*", "*://*.qq.com/*", "webRequest", "webRequestBlocking"],
-   "version": "1.0",
-   "web_accessible_resources": [ "images/*" ]
+    "applications": {
+        "gecko": {
+            "id": "test@mozilla.org",
+            "strict_min_version": "45.0"
+        }
+    },
+    "background": {
+        "presistent": true,
+        "scripts": ["js/background.js" ]
+    },
+    "browser_action": {
+        "default_icon": "images/logo.png",
+        "default_title": "Listen 1"
+    },
+    "description": "Listen 1 for all music",
+    "icons": {
+        "128": "images/logo.png",
+        "16": "images/logo.png",
+        "48": "images/logo.png"
+    },
+    "manifest_version": 2,
+    "name": "Listen 1",
+    "permissions": [ "notifications", "unlimitedStorage", "downloads", "storage", "contextMenus", "tabs", "*://music.163.com/*", "*://*.xiami.com/*", "*://*.qq.com/*", "webRequest", "webRequestBlocking"],
+    "version": "1.0",
+    "web_accessible_resources": [ "images/*" ]
 }
