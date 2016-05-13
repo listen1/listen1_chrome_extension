@@ -220,6 +220,20 @@
             <div ng-show="isDoubanLogin"> 豆瓣：<button class="btn btn-primary confirm-button" ng-click="showDialog(2)">已登录</button></div>
             <div ng-hide="isDoubanLogin"> 豆瓣：<button class="btn btn-primary confirm-button" ng-click="showDialog(2)">登录</button> </div>
           </div> -->
+          <div class="settings-title"><span>数据备份<span></div>
+          <div class="settings-content">
+            <p>重装插件或清除缓存数据会导致我的歌单数据丢失，强烈建议在这些操作前，备份我的歌单。</p>
+            <div>
+              <button class="btn btn-primary confirm-button" ng-click="backupMySettings()">下载备份文件</button>
+            </div>
+          </div>
+          <div class="settings-title"><span>数据恢复<span></div>
+            <div class="settings-content">
+              <p>选择备份文件，恢复我的歌单。注意：恢复我的歌单会覆盖现有的歌单。</p>
+            <label class="btn btn-warning" for="my-file-selector">
+              <input id="my-file-selector" type="file" style="display:none;" ng-model="myuploadfiles"  custom-on-change="importMySettings">上传备份文件
+            </label>
+          </div>
           <div class="settings-title"><span>关于<span></div>
           <div class="settings-content">
             <p> Listen 1 (Chrome Extension) 主页: <a href="https://github.com/listen1/listen1_chrome_extension" target="_blank"> https://github.com/listen1/listen1_chrome_extension </a> </p>

@@ -366,7 +366,63 @@
       });
     };
 
+    $scope.backupMySettings = function() {
+      var items = {};
+      for ( var i = 0, len = localStorage.length; i < len; ++i ) {
+        var key =  localStorage.key(i);
+        var value = localStorage.getObject(key);
+        items[key] = value;
+      }
+
+      var result = JSON.stringify(items);
+      var url = 'data:application/json,' + result;
+      chrome.downloads.download({
+          url: url,
+          filename: 'listen1_backup.json'
+      });
+    }
+
+    $scope.importMySettings = function(event) {
+      console.log('start');
+      var fileObject = event.target.files[0];
+      if (fileObject == null ){
+        Notification.warning("请选择备份文件");
+        return;
+      }
+      var reader = new FileReader();
+      reader.onloadend = function(readerEvent) {
+        if (readerEvent.target.readyState == FileReader.DONE) {
+          var data_json = readerEvent.target.result;
+          // parse json
+          var data = null;
+          try{
+              data = JSON.parse(data_json);
+          }catch(e){
+          }
+          if(data == null) {
+            Notification.warning("备份文件格式错误，请重新选择");
+            return;
+          }
+          for ( var key in data) {
+            var value = data[key];
+            localStorage.setObject(key, value);
+          }
+          Notification.success("恢复我的歌单成功");
+        }
+      };
+      reader.readAsText(fileObject);
+    }
   }]);
+
+  app.directive('customOnChange', function() {
+    return {
+      restrict: 'A',
+      link: function (scope, element, attrs) {
+        var onChangeHandler = scope.$eval(attrs.customOnChange);
+        element.bind('change', onChangeHandler);
+      }
+    };
+  });
 
   app.controller('PlayController', ['$scope', '$timeout','$log',
     '$anchorScroll', '$location', 'angularPlayer', '$http',
