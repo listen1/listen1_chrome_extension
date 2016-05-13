@@ -68,6 +68,7 @@
     $scope.dialog_title = '';
 
     $scope.isDoubanLogin = false;
+    
     $scope.$on('isdoubanlogin:update', function(event, data) {
       $scope.isDoubanLogin = data;
     });
@@ -104,7 +105,7 @@
           $scope.playlist_title = data.info.title;
           $scope.playlist_source_url = data.info.source_url;
           $scope.list_id = data.info.id;
-          $scope.is_mine = data.is_mine;
+          $scope.is_mine = (data.info.id.slice(0,2) == 'my');
       });
     };
 
@@ -124,25 +125,17 @@
         var url = $scope.window_url_stack[$scope.window_url_stack.length-1];
         loWeb.get(url).success(function(data) {
             $scope.songs = data.tracks;
+            $scope.list_id = data.info.id;
             $scope.cover_img_url = data.info.cover_img_url;
             $scope.playlist_title = data.info.title;
             $scope.playlist_source_url = data.info.source_url;
+            $scope.is_mine = (data.info.id.slice(0,2) == 'my');
         });
       }
     };
 
     $scope.showPlaylist = function(list_id) {
       var url = '/playlist?list_id=' + list_id;
-      $scope.showWindow(url);
-    };
-
-    $scope.showArtist = function(artist_id) {
-      var url = '/artist?artist_id=' + artist_id;
-      $scope.showWindow(url);
-    };
-
-    $scope.showAlbum = function(album_id) {
-      var url = '/album?album_id=' + album_id;
       $scope.showWindow(url);
     };
 
@@ -182,7 +175,7 @@
         $scope.dialog_title = '添加到歌单';
         var url = '/show_myplaylist';
         $scope.dialog_song = data;
-        $http.get(url).success(function(data) {
+        loWeb.get(url).success(function(data) {
             $scope.myplaylist = data.result;
         });
       }
@@ -191,25 +184,23 @@
         $scope.dialog_title = '登录豆瓣';
         $scope.dialog_type = 2;
       }
+
+      if (dialog_type == 3) {
+        $scope.dialog_title = '修改歌单';
+        $scope.dialog_type = 3;
+        $scope.dialog_cover_img_url = data.cover_img_url;
+        $scope.dialog_playlist_title = data.playlist_title;
+      }
     };
 
     $scope.chooseDialogOption = function(option_id) {
       var url = '/add_myplaylist';
-
-      $http({
+      loWeb.post({
         url: url,
         method: 'POST',
         data: $httpParamSerializerJQLike({
           list_id: option_id,
-          id: $scope.dialog_song.id,
-          title: $scope.dialog_song.title,
-          artist: $scope.dialog_song.artist,
-          url: $scope.dialog_song.url,
-          artist_id: $scope.dialog_song.artist_id,
-          album: $scope.dialog_song.album,
-          album_id: $scope.dialog_song.album_id,
-          source: $scope.dialog_song.source,
-          source_url: $scope.dialog_song.source_url
+          track: JSON.stringify($scope.dialog_song)
         }),
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded'
@@ -235,20 +226,12 @@
     $scope.createAndAddPlaylist = function() {
       var url = '/create_myplaylist';
 
-      $http({
+      loWeb.post({
         url: url,
         method: 'POST',
         data: $httpParamSerializerJQLike({
           list_title: $scope.newlist_title,
-          id: $scope.dialog_song.id,
-          title: $scope.dialog_song.title,
-          artist: $scope.dialog_song.artist,
-          url: $scope.dialog_song.url,
-          artist_id: $scope.dialog_song.artist_id,
-          album: $scope.dialog_song.album,
-          album_id: $scope.dialog_song.album_id,
-          source: $scope.dialog_song.source,
-          source_url: $scope.dialog_song.source_url
+          track: JSON.stringify($scope.dialog_song)
         }),
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded'
@@ -260,10 +243,33 @@
       });
     };
 
+    $scope.editMyPlaylist = function() {
+      var url = '/edit_myplaylist';
+
+      loWeb.post({
+        url: url,
+        method: 'POST',
+        data: $httpParamSerializerJQLike({
+          list_id: $scope.list_id,
+          title: $scope.dialog_playlist_title,
+          cover_img_url: $scope.dialog_cover_img_url
+        }),
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        }
+      }).success(function() {
+        $rootScope.$broadcast('myplaylist:update');
+        $scope.playlist_title = $scope.dialog_playlist_title;
+        $scope.cover_img_url = $scope.dialog_cover_img_url;
+        Notification.success('修改歌单成功');
+        $scope.closeDialog();
+      });
+    };
+
     $scope.removeSongFromPlaylist = function(song, list_id) {
       var url = '/remove_track_from_myplaylist';
 
-      $http({
+      loWeb.post({
         url: url,
         method: 'POST',
         data: $httpParamSerializerJQLike({
@@ -316,6 +322,48 @@
         angularPlayer.addTrackArray($scope.songs);
         Notification.success("添加到当前播放成功");
       }, 0);
+    };
+
+    $scope.copyrightNotice = function() {
+      Notification.info("版权原因无法播放，请搜索其他平台");
+    };
+
+    $scope.clonePlaylist = function(list_id){
+      var url = '/clone_playlist';
+      loWeb.post({
+        url: url,
+        method: 'POST',
+        data: $httpParamSerializerJQLike({
+          list_id: list_id,
+        }),
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        }
+      }).success(function() {
+        $rootScope.$broadcast('myplaylist:update');
+        $scope.closeWindow();
+        Notification.success('收藏到我的歌单成功');
+      });
+    };
+
+    $scope.removeMyPlaylist = function(list_id){
+      var url = '/remove_myplaylist';
+
+      loWeb.post({
+        url: url,
+        method: 'POST',
+        data: $httpParamSerializerJQLike({
+          list_id: list_id,
+        }),
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        }
+      }).success(function() {
+        $rootScope.$broadcast('myplaylist:update');
+        $scope.closeDialog();
+        $scope.closeWindow();
+        Notification.success('删除歌单成功');
+      });
     };
 
   }]);
@@ -461,46 +509,6 @@
         angularPlayer.mute();
       }
 
-
-
-      $scope.removemylist = function(list_id){
-        var url = '/remove_myplaylist';
-
-        $http({
-          url: url,
-          method: 'POST',
-          data: $httpParamSerializerJQLike({
-            list_id: list_id,
-          }),
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-          }
-        }).success(function() {
-          $rootScope.$broadcast('myplaylist:update');
-          $scope.closeWindow();
-          Notification.success('删除成功');  
-        });
-      };
-
-      $scope.clonelist = function(list_id){
-        var url = '/clone_playlist';
-
-        $http({
-          url: url,
-          method: 'POST',
-          data: $httpParamSerializerJQLike({
-            list_id: list_id,
-          }),
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-          }
-        }).success(function() {
-          $rootScope.$broadcast('myplaylist:update');
-          $scope.closeWindow();
-          Notification.success('收藏到我的歌单成功');  
-        });
-      };
-
       $scope.myProgress = 0;
       $scope.changingProgress = false;
 
@@ -607,6 +615,9 @@
         }
         loWeb.get(url).success(function(data) {
           var lyric = data.lyric;
+          if (lyric == null) {
+            return;
+          }
           $scope.lyricArray = parseLyric(lyric);
         });
       });
@@ -627,7 +638,6 @@
           var lineElement = $(".lyric p")[lastObject.lineNumber];
           var windowHeight = 270;
           var offset = lineElement.offsetTop - windowHeight/2;
-          //$(".lyric").scrollTop(offset);
           $(".lyric").animate({ scrollTop: offset+"px" }, 500);
           $scope.lyricLineNumber = lastObject.lineNumber;
         }
@@ -840,11 +850,12 @@
   }]);
 
   app.controller('MyPlayListController', ['$http','$scope', '$timeout',  
-        'angularPlayer', function($http, $scope, $timeout, angularPlayer){
+        'angularPlayer', 'loWeb',
+        function($http, $scope, $timeout, angularPlayer, loWeb){
     $scope.myplaylists = [];
 
     $scope.loadMyPlaylist = function(){
-      $http.get('/show_myplaylist').success(function(data) {
+      loWeb.get('/show_myplaylist').success(function(data) {
         $scope.myplaylists = data.result;
       });
     };
@@ -876,10 +887,6 @@
       loWeb.get('/show_playlist?source=' + getSourceName($scope.tab)).success(function(data) {
         $scope.result = data.result;
       });
-
-      // $http.get('/show_playlist?source=' + $scope.tab).success(function(data) {
-      //   $scope.result = data.result;
-      // });
     };
 
     $scope.isActiveTab = function(tab){

@@ -76,6 +76,12 @@ a {
     height: 50px;
     width: 50px;
     margin-right: 20px;
+    cursor: pointer;
+}
+
+.masthead .masthead-brand {
+    color: rgba(255,255,255, 1);
+    cursor: pointer;
 }
 
 .cover-container {
@@ -428,7 +434,7 @@ em, i {
     right: 0px;
     bottom: 48px;
     z-index: 10;
-    width: 79px;
+    width: 103px;
     padding-left: 13px;
     float: none;
 }
@@ -488,6 +494,10 @@ em, i {
     height: 25px;
     margin: 11px 2px 0 0;
     text-indent: -9999px;
+}
+
+.m-playbar .icn-add {
+    margin-right: 5px;
 }
 
 .m-playbar .menu {
@@ -717,7 +727,7 @@ li {
     background-position: -256px -36px;
 }
 
-.playlist-detail .detail-head-title .delete {
+.playlist-detail .detail-head-title .edit {
     display: inline-block;
     text-indent: -9999px;
     width: 36px;
@@ -725,12 +735,12 @@ li {
     margin-right: 8px;
     margin-top: 0;
     background: url(../images/player_large.png) no-repeat 0 9999px;
-    background-position: -180px 0px;
+    background-position: -288px 0px;
 }
 
-.playlist-detail .detail-head-title .delete:hover {
+.playlist-detail .detail-head-title .edit:hover {
     background: url(../images/player_large.png) no-repeat 0 9999px;
-    background-position: -180px -36px;
+    background-position: -288px -36px;
 }
 
 .playlist-detail .detail-head-title .clone {
@@ -787,6 +797,10 @@ li {
     float: left;
     width: 19%;
     margin-left: 2%;
+}
+
+.detail-songlist .disabled {
+    color: #777777;
 }
 
 .detail-songlist .col-add {
@@ -920,7 +934,18 @@ li {
 }
 
 .dialog-newplaylist .confirm-button {
-    margin-right: 64px;
+    margin-left: 76px;
+    margin-right: 96px;
+}
+
+.dialog-editplaylist .dialog-footer {
+    position: absolute;
+    bottom: 20px;
+}
+
+.dialog-editplaylist .confirm-button {
+    margin-right: 82px;
+    margin-left: 93px;
 }
 
 .source-list {

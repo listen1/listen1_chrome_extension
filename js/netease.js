@@ -13,14 +13,14 @@ var netease = (function() {
                         var default_playlist = {
                             'cover_img_url' : '',
                             'title': '',
-                            'list_id': '',
+                            'id': '',
                             'source_url': ''
                         };
                         default_playlist.cover_img_url = $(this).find('img')[0].src;
                         default_playlist.title = $(this).find('div a')[0].title;
                         var url = $(this).find('div a')[0].href;
                         var list_id = getParameterByName('id',url);
-                        default_playlist.list_id = 'neplaylist_' + list_id;
+                        default_playlist.id = 'neplaylist_' + list_id;
                         default_playlist.source_url = 'http://music.163.com/#/playlist?id=' + list_id;
                         result.push(default_playlist);
                     });
@@ -30,7 +30,7 @@ var netease = (function() {
         };
     }
 
-    var ne_get_playlist = function(url, hm) {
+    var ne_get_playlist = function(url, hm, se) {
         var list_id = getParameterByName('list_id', url).split('_').pop();
         var target_url = 'http://music.163.com/playlist?id=' + list_id;
         return {
@@ -39,10 +39,10 @@ var netease = (function() {
                     data = $.parseHTML(data);
                     var dataObj = $(data);
                     var info = {
-                        'list_id': list_id,
+                        'id': 'neplaylist_' + list_id,
                         'cover_img_url': dataObj.find('.u-cover img').attr('src'),
                         'title': dataObj.find('.tit h2').text(),
-                        'source_url': 'http://music.163.com/#/playlist?id=' + list_id
+                        'source_url': 'http://music.163.com/#/playlist?id=' + list_id,
                     };
                     var tracks = [];
                     var json_string = dataObj.find('textarea').val();
@@ -69,9 +69,10 @@ var netease = (function() {
                         default_track.source_url = 'http://music.163.com/#/song?id=' +  track_json.id;
                         default_track.img_url = track_json.album.picUrl;
                         default_track.url = default_track.id;
+
                         tracks.push(default_track);
                     });
-                    return fn({"info":info,"tracks":tracks,'is_mine':'0'});
+                    return fn({"info":info,"tracks":tracks});
                 });
             }
         };
@@ -198,6 +199,11 @@ var netease = (function() {
           });
     }
 
+
+    function is_playable(song) {
+        return ((song.status >= 0) && (song.fee != 4));
+    }
+    
     var ne_search = function(url, hm, se) {
         // use chrome extension to modify referer.
         var target_url = 'http://music.163.com/api/search/pc';
@@ -220,9 +226,6 @@ var netease = (function() {
                 }).success(function(data) {
                     var tracks = [];
                     $.each(data.result.songs, function(index, song_info) {
-                        if (song_info.status == -1) {
-                            return;
-                        }
                         var default_track = {
                             'id': 'netrack_' + song_info.id,
                             'title': song_info.name,
@@ -233,8 +236,14 @@ var netease = (function() {
                             'source': 'netease',
                             'source_url': 'http://music.163.com/#/song?id=' + song_info.id,
                             'img_url': song_info.album.picUrl,
-                            'url': 'netrack_' + song_info.id
+                            'url': 'netrack_' + song_info.id,
                         };
+                        if (!is_playable(song_info)) {
+                            default_track.disabled = true;
+                        }
+                        else {
+                            default_track.disabled = false;
+                        }
                         tracks.push(default_track);
                     });
                     return fn({"result":tracks});
@@ -245,7 +254,7 @@ var netease = (function() {
 
 
     var ne_album = function(url, hm, se) {
-        var album_id = getParameterByName('album_id', url).split('_').pop();
+        var album_id = getParameterByName('list_id', url).split('_').pop();
         // use chrome extension to modify referer.
         var target_url = 'http://music.163.com/api/album/' + album_id;
 
@@ -276,16 +285,22 @@ var netease = (function() {
                             'img_url': song_info.album.picUrl,
                             'url': 'netrack_' + song_info.id
                         };
+                        if (!is_playable(song_info))  {
+                            default_track.disabled = true;
+                        }
+                        else {
+                            default_track.disabled = false;
+                        }
                         tracks.push(default_track);
                     });
-                    return fn({"tracks":tracks, "info":info, "is_mine": 0});
+                    return fn({"tracks":tracks, "info":info});
                 });
             }
         };
     }
 
     var ne_artist = function(url, hm, se) {
-        var artist_id = getParameterByName('artist_id', url).split('_').pop();
+        var artist_id = getParameterByName('list_id', url).split('_').pop();
         // use chrome extension to modify referer.
         var target_url = 'http://music.163.com/api/artist/' + artist_id;
 
@@ -316,9 +331,15 @@ var netease = (function() {
                             'img_url': song_info.album.picUrl,
                             'url': 'netrack_' + song_info.id
                         };
+                        if (!is_playable(song_info)) {
+                            default_track.disabled = true;
+                        }
+                        else {
+                            default_track.disabled = false;
+                        }
                         tracks.push(default_track);
                     });
-                    return fn({"tracks":tracks, "info":info, "is_mine": 0});
+                    return fn({"tracks":tracks, "info":info});
                 });
             }
         };
@@ -356,13 +377,24 @@ var netease = (function() {
         };
     }
 
+var get_playlist = function(url, hm, se) {
+    var list_id = getParameterByName('list_id', url).split('_')[0];
+    if (list_id == 'neplaylist') {
+        return ne_get_playlist(url, hm, se);
+    }
+    if (list_id == 'nealbum') {
+        return ne_album(url, hm, se);
+    }
+    if (list_id == 'neartist') {
+        return ne_artist(url, hm, se);
+    }
+}
+
 return {
     show_playlist: ne_show_playlist,
-    get_playlist: ne_get_playlist,
+    get_playlist: get_playlist,
     bootstrap_track: ne_bootstrap_track,
     search: ne_search,
-    album: ne_album,
-    artist: ne_artist,
     lyric: ne_lyric,
 };
 

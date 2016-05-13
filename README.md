@@ -1,4 +1,4 @@
-Listen 1 (Chrome Extension) （最后更新于5月8日）
+Listen 1 (Chrome Extension) （最后更新于5月13日）
 ==========
 
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE)
@@ -28,6 +28,16 @@ Listen 1 (Chrome Extension) （最后更新于5月8日）
 
 更新日志
 -------
+`2016-05-13`
+
+* 增加我的歌单功能，可以收藏现有歌单，并创建自己的歌单
+* 点击Listen 1和图标可以回到首页
+* 标记了部分因版权无法播放的歌曲,增加版权提示
+* 重构了音乐平台代码，使用统一的接口规范
+* 重构了歌单接口，合并歌手，专辑和歌单接口
+* 修复了阿里云歌手链接点击错误的bug
+
+
 `2016-05-08`
 
 * 增加歌词显示
@@ -43,7 +53,7 @@ Listen 1 (Chrome Extension) （最后更新于5月8日）
 
 TODO
 ----
-加入我的歌单功能（如迫不及待需要，可以安装Listen 1非插件版）
+分页加载
 
 
 License

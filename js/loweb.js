@@ -23,6 +23,9 @@ function getProviderByItemId(itemId) {
     if (prefix == 'qq') {
         return qq;
     }
+    if (prefix == 'my') {
+        return myplaylist;
+    }
 }
 
 ngloWebManager.factory('loWeb', ['$rootScope', '$log', '$http', '$httpParamSerializerJQLike',
@@ -37,29 +40,88 @@ function($rootScope, $log, $http, $httpParamSerializerJQLike) {
             if (url.search('/playlist') != -1) {
                 var list_id = getParameterByName('list_id', url);
                 var provider = getProviderByItemId(list_id);
-                return provider.get_playlist(url, $http);
+                return provider.get_playlist(url, $http, $httpParamSerializerJQLike);
             }
             if (url.search('/search') != -1) {
                 var source = getParameterByName('source', url);
                 var provider = getProviderByName(source);
                 return provider.search(url, $http, $httpParamSerializerJQLike);
             }
-            if (url.search('/album') != -1) {
-                var album_id = getParameterByName('album_id', url);
-                var provider = getProviderByItemId(album_id);
-                return provider.album(url, $http, $httpParamSerializerJQLike);
-            }
-            if (url.search('/artist') != -1) {
-                var artist_id = getParameterByName('artist_id', url);
-                var provider = getProviderByItemId(artist_id);
-                return provider.artist(url, $http, $httpParamSerializerJQLike);
-            }
             if (url.search('/lyric') != -1) {
                 var track_id = getParameterByName('track_id', url);
                 var provider = getProviderByItemId(track_id);
                 return provider.lyric(url, $http, $httpParamSerializerJQLike);
             }
-
+            if (url.search('/show_myplaylist') != -1) {
+                return myplaylist.show_myplaylist();
+            }
+        },
+        post: function(request) {
+            if (request.url.search('/clone_playlist') != -1) {
+                var list_id = getParameterByName('list_id', url+'?'+request.data);
+                var provider = getProviderByItemId(list_id);
+                var url = '/playlist?list_id=' + list_id;
+                return {
+                    success: function(fn) {
+                        provider.get_playlist(url, $http).success(function(data){
+                            myplaylist.save_myplaylist(data);
+                            fn();
+                        });
+                    }
+                };
+            }
+            if (request.url.search('/remove_myplaylist') != -1) {
+                var list_id = getParameterByName('list_id', url+'?'+request.data);
+                myplaylist.remove_myplaylist(list_id);
+                return {
+                    success: function(fn) {
+                        fn();
+                    }
+                };
+            }
+            if (request.url.search('/add_myplaylist') != -1) {
+                var list_id = getParameterByName('list_id', url+'?'+request.data);
+                var track_json = getParameterByName('track', url+'?'+request.data);
+                var track = JSON.parse(track_json);
+                myplaylist.add_myplaylist(list_id, track);
+                return {
+                    success: function(fn) {
+                        fn();
+                    }
+                };
+            }
+            if (request.url.search('/remove_track_from_myplaylist') != -1) {
+                var list_id = getParameterByName('list_id', url+'?'+request.data);
+                var track_id = getParameterByName('track_id', url+'?'+request.data);
+                myplaylist.remove_from_myplaylist(list_id, track_id);
+                return {
+                    success: function(fn) {
+                        fn();
+                    }
+                };
+            }
+            if (request.url.search('/create_myplaylist') != -1) {
+                var list_title = getParameterByName('list_title', url+'?'+request.data);
+                var track_json = getParameterByName('track', url+'?'+request.data);
+                var track = JSON.parse(track_json);
+                myplaylist.create_myplaylist(list_title, track);
+                return {
+                    success: function(fn) {
+                        fn();
+                    }
+                };
+            }
+            if (request.url.search('/edit_myplaylist') != -1) {
+                var list_id = getParameterByName('list_id', url+'?'+request.data);
+                var title = getParameterByName('title', url+'?'+request.data);
+                var cover_img_url = getParameterByName('cover_img_url', url+'?'+request.data);
+                myplaylist.edit_myplaylist(list_id, title, cover_img_url);
+                return {
+                    success: function(fn) {
+                        fn();
+                    }
+                };
+            }
         },
         bootstrapTrack: function(success, failure) {
             return function(sound, track, callback){

@@ -29,7 +29,7 @@ var qq = (function() {
                         var d = {
                             'cover_img_url': item.imgurl,
                             'title': htmlDecode(item.dissname),
-                            'list_id':'qqplaylist_' + item.dissid,
+                            'id':'qqplaylist_' + item.dissid,
                             'source_url': 'http://y.qq.com/#type=taoge&id=' + item.dissid
 
                         };
@@ -67,7 +67,8 @@ var qq = (function() {
             'source': 'qq',
             'source_url': 'http://y.qq.com/#type=song&mid=' +
             song.songmid + '&tpl=yqq_song_detail',
-            'url': 'qqtrack_' + song.songmid
+            'url': 'qqtrack_' + song.songmid,
+            'disabled': !qq_is_playable(song)
         }
         return d
     }
@@ -83,7 +84,7 @@ var qq = (function() {
         return ((play_flag == 1) || ((play_flag == 1) && (try_flag == 1)));
     }
 
-    var qq_get_playlist = function(url, hm) {
+    var qq_get_playlist = function(url, hm, se) {
         var list_id = getParameterByName('list_id', url).split('_').pop();
 
         return {
@@ -111,10 +112,8 @@ var qq = (function() {
 
                     var tracks = [];
                     $.each(data.cdlist[0].songlist, function(index, item){
-                        if (qq_is_playable(item)) {
-                            var track = qq_convert_song(item);
-                            tracks.push(track);
-                        }
+                        var track = qq_convert_song(item);
+                        tracks.push(track);
                     });
                     return fn({"tracks":tracks, "info":info});
                 });
@@ -123,7 +122,7 @@ var qq = (function() {
     }
 
     var qq_album = function(url, hm) {
-        var album_id = getParameterByName('album_id', url).split('_').pop();
+        var album_id = getParameterByName('list_id', url).split('_').pop();
 
         return {
             success: function(fn) {
@@ -150,10 +149,8 @@ var qq = (function() {
 
                     var tracks = [];
                     $.each(data.data.list, function(index, item){
-                        if (qq_is_playable(item)) {
-                            var track = qq_convert_song(item);
-                            tracks.push(track);
-                        }
+                        var track = qq_convert_song(item);
+                        tracks.push(track);
                     });
                     return fn({"tracks":tracks, "info":info});
                 });
@@ -162,7 +159,7 @@ var qq = (function() {
     }
 
     var qq_artist = function(url, hm) {
-        var artist_id = getParameterByName('artist_id', url).split('_').pop();
+        var artist_id = getParameterByName('list_id', url).split('_').pop();
 
         return {
             success: function(fn) {
@@ -190,10 +187,8 @@ var qq = (function() {
 
                     var tracks = [];
                     $.each(data.data.list, function(index, item){
-                        if (qq_is_playable(item.musicData)) {
-                            var track = qq_convert_song(item.musicData);
-                            tracks.push(track);
-                        }
+                        var track = qq_convert_song(item.musicData);
+                        tracks.push(track);
                     });
                     return fn({"tracks":tracks, "info":info});
                 });
@@ -221,10 +216,8 @@ var qq = (function() {
                     data = JSON.parse(data);
                     var tracks = [];
                     $.each(data.data.song.list, function(index, item){
-                        if (qq_is_playable(item)) {
-                            var track = qq_convert_song(item);
-                            tracks.push(track);
-                        }
+                        var track = qq_convert_song(item);
+                        tracks.push(track);
                     });
                     return fn({"result":tracks});
                 });
@@ -291,13 +284,25 @@ var qq = (function() {
         };
     }
 
+
+var get_playlist = function(url, hm, se) {
+    var list_id = getParameterByName('list_id', url).split('_')[0];
+    if (list_id == 'qqplaylist') {
+        return qq_get_playlist(url, hm, se);
+    }
+    if (list_id == 'qqalbum') {
+        return qq_album(url, hm, se);
+    }
+    if (list_id == 'qqartist') {
+        return qq_artist(url, hm, se);
+    }
+}
+
 return {
     show_playlist: qq_show_playlist,
-    get_playlist: qq_get_playlist,
+    get_playlist: get_playlist,
     bootstrap_track: qq_bootstrap_track,
     search: qq_search,
-    album: qq_album,
-    artist: qq_artist,
     lyric: qq_lyric,
 };
 
