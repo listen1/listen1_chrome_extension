@@ -366,6 +366,19 @@
       });
     };
 
+
+    $scope.downloadFile = function (fileName, fileType, content) {
+        window.URL = window.URL || window.webkitURL;
+        var blob = new Blob([content], {type: fileType});
+        var link = document.createElement('a');
+        link.download = fileName;
+        link.href = window.URL.createObjectURL(blob);
+        link.style.display = 'none';
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+    }
+
     $scope.backupMySettings = function() {
       var items = {};
       for ( var i = 0, len = localStorage.length; i < len; ++i ) {
@@ -374,16 +387,11 @@
         items[key] = value;
       }
 
-      var result = JSON.stringify(items);
-      var url = 'data:application/json,' + result;
-      chrome.downloads.download({
-          url: url,
-          filename: 'listen1_backup.json'
-      });
+      var content = JSON.stringify(items);
+      $scope.downloadFile('listen1_backup.json', 'application/json', content);
     }
 
     $scope.importMySettings = function(event) {
-      console.log('start');
       var fileObject = event.target.files[0];
       if (fileObject == null ){
         Notification.warning("请选择备份文件");
