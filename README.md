@@ -15,7 +15,7 @@ Listen 1 (Chrome Extension) （最后更新于5月13日）
 
 还有精选歌单哦。
 
-安装
+Chrome安装
 ----
 不能直接用chrome打开安装，不能直接用chrome打开安装，不能直接用chrome打开安装。重要的话说三遍。
 
@@ -25,9 +25,22 @@ Listen 1 (Chrome Extension) （最后更新于5月13日）
 
 3. 选择 `加载已解压的扩展程序`(如果没有显示先选中`开发者模式`)，选中解压后的文件夹，完成！
 
+Firefox打包安装
+-----------
+### 打包xpi文件（或在release页面下载已经打包好的xpi文件）
+1. 将根目录下manifest_firefox.json替换manifest.json
+2. `cd listen1_chrome_extension`
+3. `zip -r ../listen1.xpi *`
+
+### 安装
+1. 打开Firefox，加载xpi文件，完成安装
 
 更新日志
 -------
+`2016-05-14`
+
+* 增加firefox插件支持（感谢fulesdle的提交）
+
 `2016-05-13`
 
 * 增加我的歌单功能，可以收藏现有歌单，并创建自己的歌单
