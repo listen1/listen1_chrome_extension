@@ -783,7 +783,7 @@ li {
     float: left;
     width: 100%;
     display: block;
-    padding: 8px;
+    padding: 10px;
 }
 
 .detail-songlist .col2 {
@@ -811,7 +811,7 @@ li {
 
 .detail-songlist .detail-tools {
     float: right;
-    height: 35px;
+    height: 21px;
     position: relative;
     width: 118px;
 }
