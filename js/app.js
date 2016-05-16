@@ -31,6 +31,16 @@
     });
   });
 
+  app.run(['angularPlayer', 'Notification', 'loWeb', function(angularPlayer, Notification, loWeb) {
+    angularPlayer.setBootstrapTrack(
+      loWeb.bootstrapTrack(
+        function(){}, 
+        function(){
+          Notification.info('版权原因无法播放，请搜索其他平台');
+        })
+    );
+  }]);
+
   app.filter('playmode_title', function() {
     return function(input) {
       return input ? '随机' : '顺序';
@@ -443,6 +453,7 @@
       $scope.settings = {"playmode": 0, "nowplaying_track_id": -1};
       $scope.lyricArray = [];
       $scope.lyricLineNumber = -1;
+      $scope.lastTrackId = null;
 
       $scope.loadLocalSettings = function() {
         var defaultSettings = {"playmode": 0, "nowplaying_track_id": -1, "volume": 90};
@@ -513,17 +524,6 @@
         if (angularPlayer.getRepeatStatus() == false) {
             angularPlayer.repeatToggle();
         }
-        $timeout(
-          function(){
-            angularPlayer.setBootstrapTrack(
-              loWeb.bootstrapTrack(
-                function(){}, 
-                function(){
-                  Notification.info('版权原因无法播放，请搜索其他平台');
-                })
-            );
-          }, 0
-        );
 
         if (track_id == -1) {
           return;
@@ -542,8 +542,7 @@
         }
         var track_id = localPlayerSettings.nowplaying_track_id;
 
-        angularPlayer.playTrack(track_id);
-        angularPlayer.pause();
+        angularPlayer.loadTrack(track_id);
 
       });
 
@@ -665,6 +664,9 @@
 
 
       $scope.$on('track:id', function(event, data) {
+        if ($scope.lastTrackId == data) {
+          return;
+        }
         var current = localStorage.getObject('player-settings');
         current.nowplaying_track_id = data;
         localStorage.setObject('player-settings', current);
@@ -684,6 +686,7 @@
           }
           $scope.lyricArray = parseLyric(lyric);
         });
+        $scope.lastTrackId = data;
       });
 
       $scope.$on('currentTrack:position', function(event, data) {
