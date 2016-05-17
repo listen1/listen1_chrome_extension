@@ -15,7 +15,7 @@
     '$compileProvider',
     function( $compileProvider )
     {   
-        $compileProvider.imgSrcSanitizationWhitelist(/^\s*(https?|ftp|mailto|chrome-extension|moz-extension):/);
+        $compileProvider.imgSrcSanitizationWhitelist(/^\s*(https?|ftp|mailto|chrome-extension|moz-extension|file):/);
     }
   ]);
 

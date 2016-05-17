@@ -101,7 +101,7 @@ var create_myplaylist = function(playlist_title, track) {
     var info = {};
 
     var info = {
-        'cover_img_url' : '/images/mycover.jpg',
+        'cover_img_url' : 'images/mycover.jpg',
         'title': playlist_title,
         'id': '',
         'source_url': ''
