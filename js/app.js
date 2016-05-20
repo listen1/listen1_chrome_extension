@@ -10,7 +10,7 @@
       return value && JSON.parse(value);
   }
 
-  var app = angular.module('listenone', ['angularSoundManager', 'ui-notification', 'loWebManager'])
+    var app = angular.module('listenone', ['angularSoundManager', 'ui-notification', 'loWebManager'])
     .config( [
     '$compileProvider',
     function( $compileProvider )
@@ -917,7 +917,7 @@
   }]);
 
   app.controller('MyPlayListController', ['$http','$scope', '$timeout',  
-        'angularPlayer', 'loWeb',
+        'angularPlayer', 'loWeb', 
         function($http, $scope, $timeout, angularPlayer, loWeb){
     $scope.myplaylists = [];
 
@@ -941,20 +941,32 @@
 
   }]);
 
-  app.controller('PlayListController', ['$http','$scope', '$timeout',  
-        'angularPlayer','loWeb', function($http, $scope, $timeout, angularPlayer, loWeb){
+  app.controller('PlayListController', ['$http','$scope', '$timeout',
+                                        'angularPlayer','loWeb',
+                                        function($http, $scope, $timeout, angularPlayer, loWeb){
     $scope.result = [];
-    
     $scope.tab = 0;
+    $scope.loading = true 
 
     $scope.changeTab = function(newTab){
       $scope.tab = newTab;
       $scope.result = [];
-
       loWeb.get('/show_playlist?source=' + getSourceName($scope.tab)).success(function(data) {
         $scope.result = data.result;
       });
     };
+
+    $scope.scrolling = function(){
+        if ($scope.loading == true) {
+            return
+        }
+        $scope.loading = true;
+        var offset = $scope.result.length
+        loWeb.get('/show_playlist?source=' + getSourceName($scope.tab) + '&offset=' + offset).success(function(data) {
+            $scope.result = $scope.result.concat(data.result);
+            $scope.loading = false;
+        });
+    }
 
     $scope.isActiveTab = function(tab){
       return $scope.tab === tab;
@@ -964,6 +976,7 @@
     $scope.loadPlaylist = function(){
       loWeb.get('/show_playlist?source=' + getSourceName($scope.tab)).success(function(data) {
         $scope.result = data.result;
+        $scope.loading = false;
       });
     };
   }]);

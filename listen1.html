@@ -20,6 +20,7 @@
     <script type="text/javascript" src="js/vendor/angular.min.js"></script>
     <script type="text/javascript" src="js/vendor/angular-soundmanager2.js"></script>
     <script type="text/javascript" src="js/vendor/angular-ui-notification.js"></script>
+    <script type="text/javascript" src="js/vendor/angular-infinite-scroll.js"></script> <!-- require jQuery as dependency -->
 
     <script type="text/javascript" src="js/aes.js"></script>
     <script type="text/javascript" src="js/bigint.js"></script>
@@ -153,20 +154,27 @@
             <!-- <button type="button" class="btn btn-default" ng-class="{'active':isActiveTab(3)}" ng-click="changeTab(3)" ng-show="isDoubanLogin">豆瓣</button> -->
           </div>
           <div class="playlist">
-            <ul class="playlist-covers">
-              <li ng-repeat="i in result ">
-                <div class="u-cover">
-                  <img ng-src="{{i.cover_img_url}}">
-                  <a title="" class="mask" ng-click="showPlaylist(i.id)"></a>
-                  <div class="bottom">
-                    <a class="icon-play" title="播放" ng-click="directplaylist(i.id)"></a>
+            <!--div infinite-scroll='scrolling()' infinite-scroll-disabled='loading' infinite-scroll-distance='2'-->
+              <ul class="playlist-covers">
+                <li ng-repeat="i in result ">
+                  <div class="u-cover">
+                    <img ng-src="{{i.cover_img_url}}">
+                    <a title="" class="mask" ng-click="showPlaylist(i.id)"></a>
+                    <div class="bottom">
+                      <a class="icon-play" title="播放" ng-click="directplaylist(i.id)"></a>
+                    </div>
                   </div>
+                  <p class="desc">
+                    <a title="{{i.title}}" ng-click="showPlaylist(i.id)">{{i.title}}</a>
+                  </p>
+                </li>
+
+                <div class="loading_bottom">
+                  <button ng-click="scrolling()" ng-show='loading==false'>点击以加载更多</button>
+                  <div class="loading" ng-show='loading'>Loading data...</div>
                 </div>
-                <p class="desc">
-                  <a title="{{i.title}}" ng-click="showPlaylist(i.id)">{{i.title}}</a>
-                </p>
-              </li>
-            </ul>
+              </ul>
+            <!--/div-->
           </div>
         </div>
       </div>

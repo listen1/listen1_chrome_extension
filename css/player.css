@@ -26,7 +26,6 @@ a {
     border-radius: 4px 4px 4px 4px;
     padding: 20px;
     background-color: #333;
-
 }
 
 .dialog-header {
@@ -157,6 +156,17 @@ a {
     width: 100%;
     height: 27px;
     color: #ccc;
+}
+
+.playlist-covers .loading_bottom button{
+    width:95%;
+    color: #333;
+}
+
+.playlist-covers .loading_bottom .loading{
+    width:95%;
+    text-align:center; 
+    color: #fff;
 }
 
 .u-cover .mask {

@@ -6,8 +6,12 @@ var qq = (function() {
     }
 
     var qq_show_playlist = function(url, hm) {
+
+        var offset = getParameterByName("offset", url);
+        var page = offset/50 + 1;
         var target_url = 'http://i.y.qq.com/s.plcloud/fcgi-bin/fcg_get_diss_by_tag' + 
-            '.fcg?categoryId=10000000&sortId=1&sin=0&ein=49&' + 
+            '.fcg?categoryId=10000000&sortId=' + page +
+            '&sin=0&ein=49&' +
             'format=jsonp&g_tk=5381&loginUin=0&hostUin=0&' + 
             'format=jsonp&inCharset=GB2312&outCharset=utf-8' + 
             '&notice=0&platform=yqq&jsonpCallback=' + 

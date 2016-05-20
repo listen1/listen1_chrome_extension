@@ -35,7 +35,10 @@ var xiami = (function() {
     }
 
     var xm_show_playlist = function(url, hm) {
-        var target_url = 'http://www.xiami.com/collect/recommend';
+        var offset = getParameterByName("offset",url)
+        var page = offset/30 + 1
+
+        var target_url = 'http://www.xiami.com/collect/recommend/page/' + page;
 
         return {
             success: function(fn) {
