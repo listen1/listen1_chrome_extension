@@ -2,7 +2,15 @@ var netease = (function() {
     'use strict';
 
     var ne_show_playlist = function(url, hm) {
-        var target_url = 'http://music.163.com/discover/playlist/';
+
+        var order = "hot"
+        var offset = getParameterByName('offset',url)
+
+        if (offset !=  null) {
+            var target_url = 'http://music.163.com/discover/playlist/?order=' + order + '&limit=35&offset=' + offset;
+        } else {
+            var target_url = 'http://music.163.com/discover/playlist/?order=' + order;
+        }
 
         return {
             success: function(fn) {
