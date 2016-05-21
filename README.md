@@ -1,4 +1,4 @@
-Listen 1 (Chrome Extension) （最后更新于5月13日）
+Listen 1 (Chrome Extension) （最后更新于5月21日）
 ==========
 
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE)
@@ -37,6 +37,14 @@ Firefox打包安装
 
 更新日志
 -------
+`2016-05-21`
+
+* 增加歌单分页加载功能(感谢@wild-flame的提交)
+* 修复关闭按钮随网页滚动的bug
+* 修复点击暂停按钮会重置进度条和歌词的bug
+* 修复点击歌单名称不跳转的bug
+* 调整歌单水平位置居中
+
 `2016-05-14`
 
 * 增加firefox插件支持（感谢fulesdle的提交）

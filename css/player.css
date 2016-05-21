@@ -87,6 +87,10 @@ a {
     position: relative;
 }
 
+.container-placeholder {
+    margin-top: 90px;
+}
+
 .site-wrapper { 
     width:100%;
     overflow:hidden;
@@ -901,19 +905,19 @@ li {
     float: left;
 }
 
-.playlist-detail .detail-close {
+.cover-container .detail-close {
     position: absolute;
     right: -32px;
     top: 0px;
 }
 
-.playlist-detail .detail-close span {
+.cover-container .detail-close span {
     font-size: 34px;
     cursor: pointer;
     color: #aaaaaa;
 }
 
-.playlist-detail .detail-close span:hover {
+.cover-container .detail-close span:hover {
     color: #ffffff;
 }
 
