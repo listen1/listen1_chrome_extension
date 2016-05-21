@@ -20,6 +20,7 @@
     <script type="text/javascript" src="js/vendor/angular.min.js"></script>
     <script type="text/javascript" src="js/vendor/angular-soundmanager2.js"></script>
     <script type="text/javascript" src="js/vendor/angular-ui-notification.js"></script>
+    <script type="text/javascript" src="js/vendor/ng-infinite-scroll.js"></script> <!-- require jQuery as dependency -->
 
     <script type="text/javascript" src="js/aes.js"></script>
     <script type="text/javascript" src="js/bigint.js"></script>
@@ -144,7 +145,7 @@
 
     <!-- content page: 精选歌单 -->
     <div class="site-wrapper" ng-show="current_tag==2" ng-controller="PlayListController" ng-init="loadPlaylist();">
-      <div class="site-wrapper-innerd" resize>
+      <div class="site-wrapper-innerd" id="hotplaylist" resize>
         <div class="cover-container">
           <div class="btn-group-vertical source-list" ng-show="is_window_hidden==1">
             <button type="button" class="btn btn-default" ng-class="{'active':isActiveTab(0)}" ng-click="changeTab(0)">网易</button> 
@@ -153,7 +154,7 @@
             <!-- <button type="button" class="btn btn-default" ng-class="{'active':isActiveTab(3)}" ng-click="changeTab(3)" ng-show="isDoubanLogin">豆瓣</button> -->
           </div>
           <div class="playlist">
-            <!--div infinite-scroll='scrolling()' infinite-scroll-disabled='loading' infinite-scroll-distance='2'-->
+            <div infinite-scroll='scrolling()' infinite-scroll-disabled='loading==true' infinite-scroll-container="'#hotplaylist'">
               <ul class="playlist-covers">
                 <li ng-repeat="i in result ">
                   <div class="u-cover">
@@ -167,13 +168,11 @@
                     <a title="{{i.title}}" ng-click="showPlaylist(i.id)">{{i.title}}</a>
                   </p>
                 </li>
-
                 <div class="loading_bottom">
-                  <button ng-click="scrolling()" ng-show='loading==false'>点击以加载更多</button>
-                  <div class="loading" ng-show='loading'>Loading data...</div>
+                  <div class="loading" ng-show="loading">加载中...</div>
                 </div>
               </ul>
-            <!--/div-->
+            </div>
           </div>
         </div>
       </div>

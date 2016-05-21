@@ -10,7 +10,7 @@
       return value && JSON.parse(value);
   }
 
-  var app = angular.module('listenone', ['angularSoundManager', 'ui-notification', 'loWebManager'])
+  var app = angular.module('listenone', ['angularSoundManager', 'ui-notification', 'loWebManager','infinite-scroll'])
     .config( [
     '$compileProvider',
     function( $compileProvider )
@@ -961,7 +961,7 @@
             return
         }
         $scope.loading = true;
-        var offset = $scope.result.length
+        var offset = $scope.result.length;
         loWeb.get('/show_playlist?source=' + getSourceName($scope.tab) + '&offset=' + offset).success(function(data) {
             $scope.result = $scope.result.concat(data.result);
             $scope.loading = false;
