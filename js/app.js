@@ -10,7 +10,7 @@
       return value && JSON.parse(value);
   }
 
-    var app = angular.module('listenone', ['angularSoundManager', 'ui-notification', 'loWebManager'])
+  var app = angular.module('listenone', ['angularSoundManager', 'ui-notification', 'loWebManager'])
     .config( [
     '$compileProvider',
     function( $compileProvider )
