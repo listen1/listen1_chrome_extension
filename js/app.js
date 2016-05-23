@@ -483,7 +483,7 @@
           $scope.saveLocalSettings();
         }
         else {
-          angularPlayer.adjustVolumeSlider($scope.volume);
+          $timeout(function(){angularPlayer.adjustVolumeSlider($scope.volume)},0);
         }
       }
 

@@ -974,6 +974,7 @@ li {
     position: absolute;
     right: -32px;
     top: 0px;
+    z-index: 10;
 }
 
 .source-list button{
