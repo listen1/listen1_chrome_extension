@@ -482,6 +482,9 @@
           $scope.volume = 90;
           $scope.saveLocalSettings();
         }
+        else {
+          angularPlayer.adjustVolumeSlider($scope.volume);
+        }
       }
 
       $scope.saveLocalSettings = function() {
