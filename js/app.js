@@ -10,7 +10,7 @@
       return value && JSON.parse(value);
   }
 
-  var app = angular.module('listenone', ['angularSoundManager', 'ui-notification', 'loWebManager','infinite-scroll'])
+  var app = angular.module('listenone', ['angularSoundManager', 'ui-notification', 'loWebManager'])
     .config( [
     '$compileProvider',
     function( $compileProvider )
@@ -821,6 +821,40 @@
           link: function (scope, element, attrs) {
               element.bind('click', function (event) {
                 $window.open(scope.url, '_blank');
+              });
+          }
+      };
+  }]);
+
+  app.directive('infiniteScroll', ['$window',
+    function ($window) {
+      return {
+          restrict: "EA",
+          scope: {
+              infiniteScroll: '&',
+              contentSelector: '=contentSelector'
+          },
+          link: function (scope, elements, attrs) {
+              elements.bind('scroll', function (event) {
+                if (scope.loading) {
+                  return;
+                }
+                var containerElement = elements[0];
+                var contentElement = document.querySelector(scope.contentSelector);
+
+                var baseTop = containerElement.getBoundingClientRect().top;
+                var currentTop = contentElement.getBoundingClientRect().top;
+                var baseHeight = containerElement.offsetHeight;
+                var offset = baseTop - currentTop;
+
+                var bottom = offset + baseHeight;
+                var height = contentElement.offsetHeight;
+
+                var remain = height - bottom;
+                var offsetToload = 10;
+                if (remain <= offsetToload) {
+                  scope.$apply(scope.infiniteScroll);
+                }
               });
           }
       };

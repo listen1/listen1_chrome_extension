@@ -134,6 +134,10 @@ a {
     width: 400px;
 }
 
+.playlist-covers {
+    margin-bottom: 0px;
+}
+
 .playlist-covers li {
     float: left;
     display: inline-block;
