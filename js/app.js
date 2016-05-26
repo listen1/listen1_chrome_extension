@@ -719,6 +719,7 @@
     function($scope, $http, $timeout, angularPlayer, loWeb) {
       $scope.tab = 0;
       $scope.keywords = '';
+      $scope.loading = false;
 
       $scope.changeTab = function(newTab){
         $scope.loading = true;
