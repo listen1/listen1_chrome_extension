@@ -116,6 +116,11 @@ a {
     margin-top: 12px;
 }
 
+.searchbox .nav .searchspinner{
+    margin-top: 8px;
+    height: 25px;
+}
+
 
 .searchitem {
     height: 92px;
