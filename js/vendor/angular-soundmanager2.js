@@ -4686,6 +4686,7 @@ ngSoundManager.factory('angularPlayer', ['$rootScope', '$log',
                 if ((bootstrapTrack != null) && (isResume !== true)) {
                     var angularPlayerObj = this;
                     var sound = soundManager.getSoundById(trackId);
+                    sound.setVolume(volume);
                     bootstrapTrack(sound, this.currentTrackData(), function(){
                         soundManager.play(trackId);
                         $rootScope.$broadcast('track:id', trackId);
@@ -4879,6 +4880,7 @@ ngSoundManager.factory('angularPlayer', ['$rootScope', '$log',
                     }
                     $rootScope.$broadcast('music:volume', volume);
                 };
+                volume = value;
                 changeVolume(value);
             },
             clearPlaylist: function(callback) {

@@ -482,6 +482,9 @@
           $scope.volume = 90;
           $scope.saveLocalSettings();
         }
+        else {
+          $timeout(function(){angularPlayer.adjustVolumeSlider($scope.volume)},0);
+        }
       }
 
       $scope.saveLocalSettings = function() {
@@ -826,6 +829,40 @@
       };
   }]);
 
+  app.directive('infiniteScroll', ['$window',
+    function ($window) {
+      return {
+          restrict: "EA",
+          scope: {
+              infiniteScroll: '&',
+              contentSelector: '=contentSelector'
+          },
+          link: function (scope, elements, attrs) {
+              elements.bind('scroll', function (event) {
+                if (scope.loading) {
+                  return;
+                }
+                var containerElement = elements[0];
+                var contentElement = document.querySelector(scope.contentSelector);
+
+                var baseTop = containerElement.getBoundingClientRect().top;
+                var currentTop = contentElement.getBoundingClientRect().top;
+                var baseHeight = containerElement.offsetHeight;
+                var offset = baseTop - currentTop;
+
+                var bottom = offset + baseHeight;
+                var height = contentElement.offsetHeight;
+
+                var remain = height - bottom;
+                var offsetToload = 10;
+                if (remain <= offsetToload) {
+                  scope.$apply(scope.infiniteScroll);
+                }
+              });
+          }
+      };
+  }]);
+
   app.directive('draggable', ['angularPlayer', '$document', '$rootScope',
       function(angularPlayer, $document, $rootScope) {
     return function(scope, element, attrs) {
@@ -961,7 +998,7 @@
             return
         }
         $scope.loading = true;
-        var offset = $scope.result.length
+        var offset = $scope.result.length;
         loWeb.get('/show_playlist?source=' + getSourceName($scope.tab) + '&offset=' + offset).success(function(data) {
             $scope.result = $scope.result.concat(data.result);
             $scope.loading = false;

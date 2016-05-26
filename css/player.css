@@ -87,6 +87,10 @@ a {
     position: relative;
 }
 
+.container-placeholder {
+    margin-top: 90px;
+}
+
 .site-wrapper { 
     width:100%;
     overflow:hidden;
@@ -130,6 +134,10 @@ a {
     width: 400px;
 }
 
+.playlist-covers {
+    margin-bottom: 0px;
+}
+
 .playlist-covers li {
     float: left;
     display: inline-block;
@@ -158,12 +166,16 @@ a {
     color: #ccc;
 }
 
-.playlist-covers .loading_bottom button{
+.playlist-covers .loading_bottom {
+    clear:both;
+}
+
+.playlist-covers .loading_bottom button {
     width:95%;
     color: #333;
 }
 
-.playlist-covers .loading_bottom .loading{
+.playlist-covers .loading_bottom .loading {
     width:95%;
     text-align:center; 
     color: #fff;
@@ -897,19 +909,19 @@ li {
     float: left;
 }
 
-.playlist-detail .detail-close {
+.cover-container .detail-close {
     position: absolute;
     right: -32px;
     top: 0px;
 }
 
-.playlist-detail .detail-close span {
+.cover-container .detail-close span {
     font-size: 34px;
     cursor: pointer;
     color: #aaaaaa;
 }
 
-.playlist-detail .detail-close span:hover {
+.cover-container .detail-close span:hover {
     color: #ffffff;
 }
 
@@ -962,12 +974,46 @@ li {
     position: absolute;
     right: -32px;
     top: 0px;
+    z-index: 10;
+    text-align: center;
 }
 
-.source-list button{
+.source-list div{
     background-color: #333333;
-    color: #fff;
+    color: #ffffff;
+    height: 35px;
+    border: 1px solid #ffffff;
+    width: 75px;
+    cursor: pointer;
+    vertical-align: middle;
+    padding-top: 6px;
 }
+
+.source-list div:first-child:not(:last-child) {
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+.source-list div:last-child:not(:first-child) {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 4px;
+    border-bottom-left-radius: 4px;
+}
+
+.source-list .active {
+    background-color: #e6e6e6;
+    color: #333333;
+}
+
+.source-list div:hover {
+    background-color: #ffffff;
+    color: #333333;
+}
+
+
 
 .settings-title {
     font-size: 20px;

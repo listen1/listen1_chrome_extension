@@ -144,37 +144,35 @@
 
     <!-- content page: 精选歌单 -->
     <div class="site-wrapper" ng-show="current_tag==2" ng-controller="PlayListController" ng-init="loadPlaylist();">
-      <div class="site-wrapper-innerd" resize>
-        <div class="cover-container">
-          <div class="btn-group-vertical source-list" ng-show="is_window_hidden==1">
-            <button type="button" class="btn btn-default" ng-class="{'active':isActiveTab(0)}" ng-click="changeTab(0)">网易</button> 
-            <button type="button" class="btn btn-default" ng-class="{'active':isActiveTab(1)}" ng-click="changeTab(1)">虾米</button>
-            <button type="button" class="btn btn-default" ng-class="{'active':isActiveTab(2)}" ng-click="changeTab(2)">QQ音乐</button>
-            <!-- <button type="button" class="btn btn-default" ng-class="{'active':isActiveTab(3)}" ng-click="changeTab(3)" ng-show="isDoubanLogin">豆瓣</button> -->
-          </div>
-          <div class="playlist">
-            <!--div infinite-scroll='scrolling()' infinite-scroll-disabled='loading' infinite-scroll-distance='2'-->
-              <ul class="playlist-covers">
-                <li ng-repeat="i in result ">
-                  <div class="u-cover">
-                    <img ng-src="{{i.cover_img_url}}">
-                    <a title="" class="mask" ng-click="showPlaylist(i.id)"></a>
-                    <div class="bottom">
-                      <a class="icon-play" title="播放" ng-click="directplaylist(i.id)"></a>
-                    </div>
-                  </div>
-                  <p class="desc">
-                    <a title="{{i.title}}" ng-click="showPlaylist(i.id)">{{i.title}}</a>
-                  </p>
-                </li>
+      <div class="cover-container container-placeholder">
+        <!-- make empty placeholder div to position sidebar -->
+        <div class="source-list" ng-show="is_window_hidden==1">
+          <div class="source-button" ng-class="{'active':isActiveTab(0)}" ng-click="changeTab(0)">网易</div>
+          <div class="source-button" ng-class="{'active':isActiveTab(1)}" ng-click="changeTab(1)">虾米</div>
+          <div class="source-button" ng-class="{'active':isActiveTab(2)}" ng-click="changeTab(2)">QQ音乐</div>
+          <!-- <button type="button" class="btn btn-default" ng-class="{'active':isActiveTab(3)}" ng-click="changeTab(3)" ng-show="isDoubanLogin">豆瓣</button> -->
+        </div>
+      </div>
 
-                <div class="loading_bottom">
-                  <button ng-click="scrolling()" ng-show='loading==false'>点击以加载更多</button>
-                  <div class="loading" ng-show='loading'>Loading data...</div>
+      <div class="site-wrapper-innerd" id="hotplaylist" resize infinite-scroll="scrolling()" content-selector="'#playlist-content'">
+        <div class="cover-container" id="playlist-content">
+           <ul class="playlist-covers">
+            <li ng-repeat="i in result ">
+              <div class="u-cover">
+                <img ng-src="{{i.cover_img_url}}">
+                <a title="" class="mask" ng-click="showPlaylist(i.id)"></a>
+                <div class="bottom">
+                  <a class="icon-play" title="播放" ng-click="directplaylist(i.id)"></a>
                 </div>
-              </ul>
-            <!--/div-->
-          </div>
+              </div>
+              <div class="desc">
+                <a title="{{i.title}}" ng-click="showPlaylist(i.id)">{{i.title}}</a>
+              </div>
+            </li>
+            <div class="loading_bottom">
+              <div class="loading" ng-show="loading">加载中...</div>
+            </div>
+          </ul>
         </div>
       </div>
     </div>
@@ -243,9 +241,9 @@
           </div>
           <div class="settings-title"><span>关于<span></div>
           <div class="settings-content">
-            <p> Listen 1 (Chrome Extension) 主页: <a href="https://github.com/listen1/listen1_chrome_extension" target="_blank"> https://github.com/listen1/listen1_chrome_extension </a> </p>
+            <p> Listen 1 主页: <a href="http://listen1.github.io/listen1/" target="_blank"> http://listen1.github.io/listen1/ </a> </p>
             <p> Listen 1 邮箱: githublisten1@gmail.com </p>
-            <p> 当前版本 1.1 (本软件基于MIT协议开源免费)</p>
+            <p> 当前版本 1.1.0 (本软件基于MIT协议开源免费)</p>
           </div>
         </div>
       </div>
@@ -254,14 +252,14 @@
 
     <!-- track list window -->
     <div class="site-wrapper" ng-hide="is_window_hidden==1">
+      <div class="cover-container container-placeholder">
+        <div class="detail-close">
+          <span ng-click="popWindow()">&times;</span>
+        </div>
+      </div>
       <div class="site-wrapper-innerd" resize>
         <div class="cover-container" >
-
-          <div class="playlist-detail" >
-            <div class="detail-close"> 
-              <span ng-click="popWindow()">&times;</span>
-            </div>
-
+          <div class="playlist-detail">
             <div class="detail-head">
               <div class="detail-head-cover">
                 <img ng-src="{{ cover_img_url }}">
