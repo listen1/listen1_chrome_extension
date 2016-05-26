@@ -187,13 +187,14 @@
             <!-- Create a binding between the searchString model and the text field -->
             <input type="text" class="form-control" ng-model="keywords" placeholder="输入歌曲名，歌手或专辑"  ng-model-options="{debounce: 500}" />
 
+
             <ul class="nav nav-tabs"> 
               <li ng-class="{'active':isActiveTab(0)}" ng-click="changeTab(0)"><a>网易</a></li>
               <li ng-class="{'active':isActiveTab(1)}" ng-click="changeTab(1)"><a href="#">虾米</a></li>
               <li  ng-class="{'active':isActiveTab(2)}" ng-click="changeTab(2)"><a href="#">QQ音乐</a></li> 
-              <li  ng-class="{'active':isActiveTab(3)}" ng-click="changeTab(3)" ng-show="isDoubanLogin"><a href="#">豆瓣</a></li> 
+              <li  ng-class="{'active':isActiveTab(3)}" ng-click="changeTab(3)" ng-show="isDoubanLogin"><a href="#">豆瓣</a></li>
+              <img class="searchspinner" id="spinner" src="images/loading.gif" ng-show="loading">
             </ul>
-
             <ul class="detail-songlist">
               <li ng-repeat="song in result" ng-class-odd="'odd'" ng-class-even="'even'" ng-mouseenter="options=true" ng-mouseleave="options=false">
                   <div class="col2">

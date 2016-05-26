@@ -719,13 +719,16 @@
     function($scope, $http, $timeout, angularPlayer, loWeb) {
       $scope.tab = 0;
       $scope.keywords = '';
+      $scope.loading = false;
 
       $scope.changeTab = function(newTab){
+        $scope.loading = true;
         $scope.tab = newTab;
         $scope.result = [];
         loWeb.get('/search?source=' + getSourceName($scope.tab) + '&keywords=' + $scope.keywords).success(function(data) {
             // update the textarea
-            $scope.result = data.result; 
+            $scope.result = data.result;
+            $scope.loading = false;  
         });
       };
 
@@ -741,10 +744,12 @@
         // if searchStr is still the same..
         // go ahead and retrieve the data
         if (tmpStr === $scope.keywords)
-        {
+        { 
+          $scope.loading = true;
           loWeb.get('/search?source=' + getSourceName($scope.tab) + '&keywords=' + $scope.keywords).success(function(data) {
             // update the textarea
-            $scope.result = data.result; 
+            $scope.result = data.result;
+            $scope.loading = false; 
           });
         }
       });
