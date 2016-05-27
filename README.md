@@ -1,4 +1,4 @@
-Listen 1 (Chrome Extension) （最后更新于5月21日）
+Listen 1 (Chrome Extension) （最后更新于5月27日）
 ==========
 
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE)
@@ -17,8 +17,6 @@ Listen 1 (Chrome Extension) （最后更新于5月21日）
 
 Chrome安装
 ----
-不能直接用chrome打开安装，不能直接用chrome打开安装，不能直接用chrome打开安装。重要的话说三遍。
-
 1. 下载项目的zip文件，在右上方有个 `Download ZIP`, 解压到本地
 
 2. chrome右上角的设置按钮下找到更多工具，打开`扩展程序`
@@ -37,6 +35,15 @@ Firefox打包安装
 
 更新日志
 -------
+`2016-05-27`
+
+* 增加快捷键功能（输入?查看快捷键设置）
+* 支持同步播放记录到last.fm
+* 增加搜索loading时的图标(感谢@richdho的提交）
+* 页面标题增加显示当前播放信息
+* 修复了在收藏对话框点击取消出现新建歌单的bug
+* 重新组织代码文件夹结构
+
 `2016-05-21`
 
 * 增加歌单分页加载功能(感谢@wild-flame的提交)
