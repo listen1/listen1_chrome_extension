@@ -975,6 +975,15 @@ li {
     margin-left: 93px;
 }
 
+.dialog-connect-lastfm .buttons {
+    margin-top: 30px;
+}
+
+.dialog-connect-lastfm .confirm-button{
+    margin-left: 40px;
+    margin-right: 48px;
+}
+
 .source-list {
     position: absolute;
     right: -32px;
