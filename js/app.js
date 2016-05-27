@@ -47,16 +47,14 @@
     };
   });
 
+  var sourceMappings = {
+    0: 'netease',
+    1: 'xiami',
+    2: 'qq'
+  };
+
   function getSourceName(sourceId) {
-    if (sourceId == 0) {
-      return 'netease';
-    }
-    if (sourceId == 1) {
-      return 'xiami';
-    }
-    if (sourceId == 2) {
-      return 'qq';
-    }
+    return sourceMappings[sourceId];
   }
 
   // control main view of page, it can be called any place
