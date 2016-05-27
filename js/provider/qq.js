@@ -47,6 +47,9 @@ var qq = (function() {
     }
 
     function qq_get_image_url(qqimgid, img_type) {
+        if (qqimgid == null) {
+            return '';
+        }
         var category = '';
         if(img_type == 'artist') {
             category = 'mid_singer_300'
@@ -54,6 +57,7 @@ var qq = (function() {
         if(img_type == 'album') {
             category = 'mid_album_300';
         }
+
         var s = [category, qqimgid[qqimgid.length - 2], qqimgid[qqimgid.length - 1], qqimgid].join('/');
         var url = 'http://imgcache.qq.com/music/photo/' + s + '.jpg';
         return url;

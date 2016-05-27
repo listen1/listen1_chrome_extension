@@ -10,7 +10,7 @@
       return value && JSON.parse(value);
   }
 
-  var app = angular.module('listenone', ['angularSoundManager', 'ui-notification', 'loWebManager'])
+  var app = angular.module('listenone', ['angularSoundManager', 'ui-notification', 'loWebManager', 'cfp.hotkeys', 'lastfmClient'])
     .config( [
     '$compileProvider',
     function( $compileProvider )
@@ -28,6 +28,18 @@
         horizontalSpacing: 20,
         positionX: 'center',
         positionY: 'top'
+    });
+  });
+
+  app.config(function(hotkeysProvider) {
+    hotkeysProvider.templateTitle = '快捷键列表';
+    hotkeysProvider.cheatSheetDescription = '显示/隐藏快捷键列表';
+  });
+
+  app.config(function(lastfmProvider) {
+    lastfmProvider.setOptions({
+      apiKey: '6790c00a181128dc7c4ce06cd99d17c8',
+      apiSecret: 'd68f1dfc6ff43044c96a79ae7dfb5c27'
     });
   });
 
@@ -63,8 +75,12 @@
   app.controller('NavigationController', ['$scope', '$http',
     '$httpParamSerializerJQLike', '$timeout',
     'angularPlayer', 'Notification', '$rootScope', 'loWeb',
+    'hotkeys', 'lastfm',
     function($scope, $http, $httpParamSerializerJQLike,
-      $timeout, angularPlayer, Notification, $rootScope, loWeb){
+      $timeout, angularPlayer, Notification, $rootScope,
+      loWeb, hotkeys, lastfm) {
+
+    $rootScope.page_title = "Listen 1";
     $scope.window_url_stack = [];
     $scope.current_tag = 2;
     $scope.is_window_hidden = 1;
@@ -78,6 +94,8 @@
     $scope.dialog_title = '';
 
     $scope.isDoubanLogin = false;
+
+    $scope.lastfm = lastfm;
     
     $scope.$on('isdoubanlogin:update', function(event, data) {
       $scope.isDoubanLogin = data;
@@ -201,6 +219,10 @@
         $scope.dialog_cover_img_url = data.cover_img_url;
         $scope.dialog_playlist_title = data.playlist_title;
       }
+      if (dialog_type == 4) {
+        $scope.dialog_title = '连接到Last.fm';
+        $scope.dialog_type = 4;
+      }
     };
 
     $scope.chooseDialogOption = function(option_id) {
@@ -302,6 +324,10 @@
     $scope.closeDialog = function() {
       $scope.is_dialog_hidden = 1;
       $scope.dialog_type = 0;
+      // update lastfm status if not authorized
+      if (lastfm.isAuthRequested()) {
+        lastfm.updateStatus();
+      }
     };
 
     $scope.setCurrentList = function(list_id) {
@@ -430,6 +456,22 @@
       };
       reader.readAsText(fileObject);
     }
+
+    $scope.showShortcuts = function() {
+      hotkeys.toggleCheatSheet();
+    }
+
+    hotkeys.add({
+      combo: 'f',
+      description: '快速搜索',
+      callback: function() {
+        $scope.showTag(3);
+        $timeout(function(){$("#search-input").focus();}, 0);
+      }
+    });
+
+
+
   }]);
 
   app.directive('customOnChange', function() {
@@ -444,9 +486,12 @@
 
   app.controller('PlayController', ['$scope', '$timeout','$log',
     '$anchorScroll', '$location', 'angularPlayer', '$http',
-    '$httpParamSerializerJQLike','$rootScope', 'Notification','loWeb',
-     function($scope, $timeout, $log, $anchorScroll, $location, angularPlayer,
-      $http, $httpParamSerializerJQLike, $rootScope, Notification, loWeb){
+    '$httpParamSerializerJQLike','$rootScope', 'Notification',
+    'loWeb', 'hotkeys', 'lastfm',
+     function($scope, $timeout, $log, $anchorScroll, $location,
+      angularPlayer, $http, $httpParamSerializerJQLike,
+      $rootScope, Notification, loWeb, hotkeys, lastfm){
+
       $scope.menuHidden = true;
       $scope.volume = angularPlayer.getVolume();
       $scope.mute = angularPlayer.getMuteStatus();
@@ -454,6 +499,9 @@
       $scope.lyricArray = [];
       $scope.lyricLineNumber = -1;
       $scope.lastTrackId = null;
+
+      $scope.scrobbleTrackId = null;
+      $scope.scrobbleTimer = new Timer();
 
       $scope.loadLocalSettings = function() {
         var defaultSettings = {"playmode": 0, "nowplaying_track_id": -1, "volume": 90};
@@ -599,6 +647,45 @@
         localStorage.setObject('current-playing', data);
       });
 
+
+      $scope.$on('currentTrack:duration', function(event, data) {
+        if (!lastfm.isAuthorized()) {
+          return;
+        }
+        if (data == 0) {
+          return;
+        }
+        if ($scope.scrobbleTrackId == angularPlayer.getCurrentTrack()) {
+          return;
+        }
+        // new song arrives
+        $scope.scrobbleTrackId = angularPlayer.getCurrentTrack();
+        var track = angularPlayer.getTrack($scope.scrobbleTrackId);
+        var startTimestamp = Math.round((new Date()).valueOf() / 1000);
+        $scope.scrobbleTimer.start(function(){
+          lastfm.scrobble(startTimestamp, track.title, track.artist, track.album, function(){});
+        });
+        // according to scrobble rule
+        // http://www.last.fm/api/scrobbling
+        var secondsToScrobble = Math.min(data/1000/2, 60*4);
+        $scope.scrobbleTimer.update(secondsToScrobble);
+      });
+
+      $scope.$on('music:isPlaying', function(event, data) {
+        if (!lastfm.isAuthorized()) {
+          return;
+        }
+        if ($scope.scrobbleTrackId == null) {
+          return;
+        }
+        if (data) {
+          $scope.scrobbleTimer.resume();
+        }
+        else {
+          $scope.scrobbleTimer.pause();
+        };
+      });
+
       function parseLyric(lyric) {
         var lines = lyric.split('\n');
         var result = [];
@@ -679,6 +766,12 @@
         $(".lyric").animate({ scrollTop: "0px" }, 500);
         var url = '/lyric?track_id=' + data;
         var track = angularPlayer.getTrack(data);
+
+        $rootScope.page_title = '▶ ' + track.title + ' - ' + track.artist;
+        if (lastfm.isAuthorized()) {
+          lastfm.sendNowPlaying(track.title, track.artist, function(){});
+        }
+
         if (track.lyric_url != null) {
           url = url + '&lyric_url=' + track.lyric_url;
         }
@@ -713,6 +806,77 @@
         }
       });
 
+      // define keybind
+      hotkeys.add({
+        combo: 'p',
+        description: '播放/暂停',
+        callback: function() {
+          if(angularPlayer.isPlayingStatus()) {
+              //if playing then pause
+              angularPlayer.pause();
+          } else {
+              //else play if not playing
+              angularPlayer.play();
+          }
+        }
+      });
+
+      hotkeys.add({
+        combo: '[',
+        description: '上一首',
+        callback: function() {
+          angularPlayer.prevTrack();
+        }
+      });
+
+      hotkeys.add({
+        combo: ']',
+        description: '下一首',
+        callback: function() {
+          angularPlayer.nextTrack();
+        }
+      });
+
+      hotkeys.add({
+        combo: 'm',
+        description: '静音/取消静音',
+        callback: function() {
+          // mute indeed toggle mute status
+          angularPlayer.mute();
+        }
+      });
+
+      hotkeys.add({
+        combo: 'l',
+        description: '打开/关闭播放列表',
+        callback: function() {
+          $scope.togglePlaylist();
+        }
+      });
+
+      hotkeys.add({
+        combo: 's',
+        description: '切换播放模式（顺序/随机）',
+        callback: function() {
+          $scope.changePlaymode();
+        }
+      });
+
+      hotkeys.add({
+        combo: 'u',
+        description: '音量增加',
+        callback: function() {
+          $timeout(function(){angularPlayer.adjustVolume(true);});
+        }
+      });
+
+      hotkeys.add({
+        combo: 'd',
+        description: '音量减少',
+        callback: function() {
+          $timeout(function(){angularPlayer.adjustVolume(false);});
+        }
+      });
   }]);
 
   app.controller('InstantSearchController', ['$scope', '$http', '$timeout', 'angularPlayer', 'loWeb',

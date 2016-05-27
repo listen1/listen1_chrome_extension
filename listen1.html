@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" ng-app="listenone">
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -8,32 +8,39 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Listen 1</title>
+    <title ng-bind="page_title">Listen 1</title>
 
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="css/angular-ui-notification.css" rel="stylesheet">
 
     <link href="css/cover.css" rel="stylesheet">
     <link href="css/player.css" rel="stylesheet">
+    <link href="css/hotkeys.css" rel="stylesheet">
 
     <script type="text/javascript" src="js/vendor/jquery-1.12.2.js"></script>
     <script type="text/javascript" src="js/vendor/angular.min.js"></script>
     <script type="text/javascript" src="js/vendor/angular-soundmanager2.js"></script>
     <script type="text/javascript" src="js/vendor/angular-ui-notification.js"></script>
+    <script type="text/javascript" src="js/vendor/hotkeys.js"></script>
+    <script type="text/javascript" src="js/vendor/md5.js"></script>
+    <script type="text/javascript" src="js/vendor/aes.js"></script>
+    <script type="text/javascript" src="js/vendor/bigint.js"></script>
+    <script type="text/javascript" src="js/vendor/timer.js"></script>
 
-    <script type="text/javascript" src="js/aes.js"></script>
-    <script type="text/javascript" src="js/bigint.js"></script>
+    <script type="text/javascript" src="js/lastfm.js"></script>
+
     <script type="text/javascript" src="js/lowebutil.js"></script>
-    <script type="text/javascript" src="js/xiami.js"></script>
-    <script type="text/javascript" src="js/qq.js"></script>
-    <script type="text/javascript" src="js/netease.js"></script>
+    <script type="text/javascript" src="js/provider/xiami.js"></script>
+    <script type="text/javascript" src="js/provider/qq.js"></script>
+    <script type="text/javascript" src="js/provider/netease.js"></script>
+
     <script type="text/javascript" src="js/myplaylist.js"></script>
     <script type="text/javascript" src="js/loweb.js"></script>
     <script type="text/javascript" src="js/app.js"></script>
 
   </head>
 
-  <body ng-app="listenone"  ng-controller="NavigationController">
+  <body ng-controller="NavigationController">
 
     <!-- dialog -->
     <div class="shadow" ng-hide="is_dialog_hidden==1"></div>
@@ -90,9 +97,18 @@
           </div>
           
           <button class="btn btn-primary confirm-button" ng-click="editMyPlaylist(list_id)">修改歌单</button>
-          <button class="btn btn-default" ng-click="cancelNewDialog()">取消</button>
+          <button class="btn btn-default" ng-click="closeDialog()">取消</button>
           <div class='dialog-footer'> 
             <button class="btn btn-danger remove-button" ng-click="removeMyPlaylist(list_id)">删除歌单</button>
+          </div>
+        </div>
+
+        <div ng-show="dialog_type==4" class="dialog-connect-lastfm">
+          <p>正在打开Last.fm页面...</p>
+          <p>请在打开的页面点击"Yes, all access", 允许Listen 1访问你的账户。</p>
+          <div class="buttons">
+            <button class="btn btn-primary confirm-button" ng-click="lastfm.updateStatus();closeDialog();">已经完成授权</button>
+            <button class="btn btn-warning warning-button" ng-click="lastfm.getAuth();">遇到问题，再次打开授权页</button>
           </div>
         </div>
 
@@ -185,7 +201,7 @@
           <!-- Initialize a new AngularJS app and associate it with a module named "instantSearch"-->
           <div class="searchbox" ng-controller="InstantSearchController" >
             <!-- Create a binding between the searchString model and the text field -->
-            <input type="text" class="form-control" ng-model="keywords" placeholder="输入歌曲名，歌手或专辑"  ng-model-options="{debounce: 500}" />
+            <input type="text" id="search-input" class="form-control" ng-model="keywords" placeholder="输入歌曲名，歌手或专辑"  ng-model-options="{debounce: 500}" />
 
 
             <ul class="nav nav-tabs"> 
@@ -218,7 +234,7 @@
 
 
     <!-- content page: 设置 -->
-    <div class="site-wrapper" ng-show="current_tag==4">
+    <div class="site-wrapper" ng-show="current_tag==4" ng-init="lastfm.updateStatus()">
       <div class="site-wrapper-innerd" resize>
         <div class="cover-container">
          <!--  <div class="settings-title"><span>第三方登录<span></div>
@@ -239,6 +255,21 @@
             <label class="btn btn-warning" for="my-file-selector">
               <input id="my-file-selector" type="file" style="display:none;" ng-model="myuploadfiles"  custom-on-change="importMySettings">上传备份文件
             </label>
+          </div>
+          <div class="settings-title"><span>快捷键<span></div>
+          <div class="settings-content">
+            <div>
+              <button class="btn btn-primary confirm-button" ng-click="showShortcuts()">查看快捷键列表</button>
+            </div>
+          </div>
+          <div class="settings-title"><span>连接到 Last.fm<span></div>
+          <div class="settings-content">
+            <div>
+              <p> 状态：{{ lastfm.getStatusText() }} </p>
+              <button class="btn btn-primary confirm-button" ng-show="!lastfm.isAuthRequested()" ng-click="lastfm.getAuth(); showDialog(4);">连接到 Last.fm</button>
+              <button class="btn btn-warning confirm-button" ng-show="lastfm.isAuthRequested() && !lastfm.isAuthorized()" ng-click="lastfm.getAuth(); showDialog(4);">重新连接</button>
+              <button class="btn btn-primary confirm-button" ng-show="lastfm.isAuthRequested()" ng-click="lastfm.cancelAuth();">取消连接</button>
+            </div>
           </div>
           <div class="settings-title"><span>关于<span></div>
           <div class="settings-content">
@@ -301,9 +332,9 @@
     <div class="mastfoot" ng-controller="PlayController as playCtrl" ng-init="loadLocalSettings()">
       <div class="m-playbar" >
         <div class="btns">
-          <a class="previous" title="上一首" prev-track >上一首</a>
-          <a class="play" ng-class="{pas: isPlaying}" title="播放/暂停" play-pause-toggle>播放/暂停</a>
-          <a class="next" title="下一首" next-track>下一首</a>
+          <a class="previous" title="上一首([)" prev-track >上一首([)</a>
+          <a class="play" ng-class="{pas: isPlaying}" title="播放/暂停(p)" play-pause-toggle>播放/暂停(p)</a>
+          <a class="next" title="下一首(])" next-track>下一首(])</a>
         </div>
 
         <div class="head">
@@ -340,12 +371,12 @@
 
         <div class="ctrl">
           <a class="icn icn-add" ng-click="showDialog(0, currentPlaying)" title="添加到歌单">添加到歌单</a>
-          <a class="icn" ng-class="{ 'icn-shuffle': settings.playmode == 1, 'icn-loop': settings.playmode == 0 }" title="{{ settings.playmode | playmode_title }}" ng-click="changePlaymode()"></a>
-          <a class="icn icn-list" title="列表" ng-click="togglePlaylist()"></a>
+          <a class="icn" ng-class="{ 'icn-shuffle': settings.playmode == 1, 'icn-loop': settings.playmode == 0 }" title="{{ settings.playmode | playmode_title }}(s)" ng-click="changePlaymode()"></a>
+          <a class="icn icn-list" title="列表(l)" ng-click="togglePlaylist()"></a>
         </div>
 
         <div class="volume-ctrl">
-          <a class="icn" ng-class="{ 'icn-vol-mute': mute, 'icn-vol': mute == false }"  title="音量" ng-click="toggleMuteStatus()"></a>
+          <a class="icn" ng-class="{ 'icn-vol-mute': mute, 'icn-vol': mute == false }"  title="静音(m) 增大(u) 减少(d)" ng-click="toggleMuteStatus()"></a>
           <div class="m-pbar volume" >
             <div class="barbg" id="volumebar" mode="volume" draggable>
               <div class="cur" ng-style="{width : volume + '%' }">
