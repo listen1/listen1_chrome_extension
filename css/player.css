@@ -514,6 +514,13 @@ em, i {
     background-position: -150px -25px;
 }
 
+.m-playbar .icn-repeatone {
+    background-position: -225px 0px;
+}
+
+.m-playbar .icn-repeatone:hover {
+    background-position: -225px -25px;
+}
 
 .m-playbar .icn {
     float: left;
