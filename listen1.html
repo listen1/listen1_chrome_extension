@@ -372,7 +372,7 @@
 
         <div class="ctrl">
           <a class="icn icn-add" ng-click="showDialog(0, currentPlaying)" title="添加到歌单">添加到歌单</a>
-          <a class="icn" ng-class="{ 'icn-shuffle': settings.playmode == 1, 'icn-loop': settings.playmode == 0 }" title="{{ settings.playmode | playmode_title }}(s)" ng-click="changePlaymode()"></a>
+          <a class="icn" ng-class="{ 'icn-repeat': settings.playmode == 2,'icn-shuffle': settings.playmode == 1, 'icn-loop': settings.playmode == 0 }" title="{{ settings.playmode | playmode_title }}(s)" ng-click="changePlaymode()"></a>
           <a class="icn icn-list" title="列表(l)" ng-click="togglePlaylist()"></a>
         </div>
 

@@ -55,7 +55,17 @@
 
   app.filter('playmode_title', function() {
     return function(input) {
-      return input ? '随机' : '顺序';
+      switch(input){
+        case 0:
+            return "顺序";
+            break;
+        case 1:
+            return "随机";
+            break;
+        case 2:
+            return "单曲循环";
+            break;    
+      }
     };
   });
 
@@ -503,6 +513,26 @@
       $scope.scrobbleTrackId = null;
       $scope.scrobbleTimer = new Timer();
 
+      function switchMode(mode){
+        switch(mode){
+          case 0:
+              if (angularPlayer.getShuffle()) {
+                angularPlayer.toggleShuffle();
+              }
+              angularPlayer.setRepeatOneStatus(false);
+              break;
+          case 1:
+              if (!angularPlayer.getShuffle()) {
+                angularPlayer.toggleShuffle();
+              }
+              angularPlayer.setRepeatOneStatus(false);
+              break;
+          case 2:
+              angularPlayer.setRepeatOneStatus(true);
+              break
+        }
+      }
+
       $scope.loadLocalSettings = function() {
         var defaultSettings = {"playmode": 0, "nowplaying_track_id": -1, "volume": 90};
         var localSettings = localStorage.getObject('player-settings');
@@ -514,16 +544,8 @@
           $scope.settings = localSettings;
         }
         // apply settings
-        var shuffleSetting;
-        if ($scope.settings.playmode == 1) {
-          shuffleSetting = true;
-        }
-        else {
-          shuffleSetting = false;
-        }
-        if (angularPlayer.getShuffle() != shuffleSetting) {
-          angularPlayer.toggleShuffle();
-        }
+        switchMode($scope.settings.playmode);
+
 
         $scope.volume = $scope.settings.volume;
         if($scope.volume == null) {
@@ -553,14 +575,9 @@
       }
 
       $scope.changePlaymode = function() {
-        // loop: 0, shuffle: 1
-        angularPlayer.toggleShuffle();
-        if (angularPlayer.getShuffle()) {
-          $scope.settings.playmode = 1;
-        }
-        else {
-          $scope.settings.playmode = 0;
-        }
+        var nr_mode = 3;
+        $scope.settings.playmode = ($scope.settings.playmode+1)%nr_mode;
+        switchMode($scope.settings.playmode);
         $scope.saveLocalSettings();
       };
 
@@ -856,7 +873,7 @@
 
       hotkeys.add({
         combo: 's',
-        description: '切换播放模式（顺序/随机）',
+        description: '切换播放模式（顺序/随机/单曲循环）',
         callback: function() {
           $scope.changePlaymode();
         }
