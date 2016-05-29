@@ -575,8 +575,8 @@
       }
 
       $scope.changePlaymode = function() {
-        var nr_mode = 3;
-        $scope.settings.playmode = ($scope.settings.playmode+1)%nr_mode;
+        var playmodeCount = 3;
+        $scope.settings.playmode = ($scope.settings.playmode+1)%playmodeCount;
         switchMode($scope.settings.playmode);
         $scope.saveLocalSettings();
       };
