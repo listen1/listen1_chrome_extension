@@ -529,6 +529,9 @@
               angularPlayer.setRepeatOneStatus(false);
               break;
           case 2:
+              if (angularPlayer.getShuffle()) {
+                angularPlayer.toggleShuffle();
+              }
               angularPlayer.setRepeatOneStatus(true);
               break
         }
