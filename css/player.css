@@ -173,17 +173,11 @@ a {
 
 .playlist-covers .loading_bottom {
     clear:both;
+    text-align:center;
 }
 
-.playlist-covers .loading_bottom button {
-    width:95%;
-    color: #333;
-}
-
-.playlist-covers .loading_bottom .loading {
-    width:95%;
-    text-align:center; 
-    color: #fff;
+.playlist-covers .loading_bottom img {
+    height:35px;
 }
 
 .u-cover .mask {
@@ -514,6 +508,13 @@ em, i {
     background-position: -150px -25px;
 }
 
+.m-playbar .icn-repeatone {
+    background-position: -225px 0px;
+}
+
+.m-playbar .icn-repeatone:hover {
+    background-position: -225px -25px;
+}
 
 .m-playbar .icn {
     float: left;
