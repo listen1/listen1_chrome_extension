@@ -4428,6 +4428,7 @@ ngSoundManager.factory('angularPlayer', ['$rootScope', '$log',
             trackProgress = 0,
             playlist = [],
             shuffle = false,
+            repeatOne = false,
             shufflelist= [],
             shuffleCount = 0,
             shuffleIndex = -1,
@@ -4505,7 +4506,12 @@ ngSoundManager.factory('angularPlayer', ['$rootScope', '$log',
                                 var injector = elem.injector();
                                 //get the service.
                                 var angularPlayer = injector.get('angularPlayer');
-                                angularPlayer.nextTrack();
+                                // repeat current track
+                                if(repeatOne === true) {
+                                    angularPlayer.playTrack(this.id);
+                                } else {
+                                    angularPlayer.nextTrack(); 
+                                }
                                 $rootScope.$broadcast('track:id', currentTrack);
                             }
                         }
@@ -4848,6 +4854,19 @@ ngSoundManager.factory('angularPlayer', ['$rootScope', '$log',
             },
             getRepeatStatus: function() {
                 return repeat;
+            },
+            repeatOneToggle: function() {
+                if(repeatOne === true) {
+                    repeatOne = false;
+                } else {
+                    repeatOne = true;
+                }
+            },
+            getRepeatOneStatus: function() {
+                return repeatOne;
+            },
+            setRepeatOneStatus: function(value) {
+                repeatOne = value ;
             },
             getVolume: function() {
                 return volume;

@@ -204,6 +204,7 @@
             <input type="text" id="search-input" class="form-control" ng-model="keywords" placeholder="输入歌曲名，歌手或专辑"  ng-model-options="{debounce: 500}" />
 
 
+
             <ul class="nav nav-tabs"> 
               <li ng-class="{'active':isActiveTab(0)}" ng-click="changeTab(0)"><a>网易</a></li>
               <li ng-class="{'active':isActiveTab(1)}" ng-click="changeTab(1)"><a href="#">虾米</a></li>
@@ -371,7 +372,7 @@
 
         <div class="ctrl">
           <a class="icn icn-add" ng-click="showDialog(0, currentPlaying)" title="添加到歌单">添加到歌单</a>
-          <a class="icn" ng-class="{ 'icn-shuffle': settings.playmode == 1, 'icn-loop': settings.playmode == 0 }" title="{{ settings.playmode | playmode_title }}(s)" ng-click="changePlaymode()"></a>
+          <a class="icn" ng-class="{ 'icn-repeatone': settings.playmode == 2,'icn-shuffle': settings.playmode == 1, 'icn-loop': settings.playmode == 0 }" title="{{ settings.playmode | playmode_title }}(s)" ng-click="changePlaymode()"></a>
           <a class="icn icn-list" title="列表(l)" ng-click="togglePlaylist()"></a>
         </div>
 
