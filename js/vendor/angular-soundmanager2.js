@@ -4506,7 +4506,12 @@ ngSoundManager.factory('angularPlayer', ['$rootScope', '$log',
                                 var injector = elem.injector();
                                 //get the service.
                                 var angularPlayer = injector.get('angularPlayer');
-                                angularPlayer.nextTrack();
+                                // repeat current track
+                                if(repeatOne === true) {
+                                    angularPlayer.playTrack(this.id);
+                                } else {
+                                    angularPlayer.nextTrack(); 
+                                }
                                 $rootScope.$broadcast('track:id', currentTrack);
                             }
                         }
@@ -4789,10 +4794,6 @@ ngSoundManager.factory('angularPlayer', ['$rootScope', '$log',
                     return null;
                 }
                 var currentTrackKey = this.getIndexByValue(soundManager.soundIDs, this.getCurrentTrack());
-                if(repeatOne){
-                    this.playTrack(soundManager.soundIDs[currentTrackKey]);
-                    return;
-                }
                 var nextTrackKey = +currentTrackKey + 1;
                 var nextTrack = soundManager.soundIDs[nextTrackKey];
                 if(typeof nextTrack !== 'undefined') {
@@ -4865,9 +4866,6 @@ ngSoundManager.factory('angularPlayer', ['$rootScope', '$log',
                 return repeatOne;
             },
             setRepeatOneStatus: function(value) {
-                if(value === true){
-                    shuffle = false;
-                }
                 repeatOne = value ;
             },
             getVolume: function() {
