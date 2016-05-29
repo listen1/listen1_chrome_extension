@@ -514,7 +514,7 @@
       $scope.scrobbleTimer = new Timer();
 
       function switchMode(mode){
-        //0: loop 1:shuffle 2:repeat one
+        //playmode 0:loop 1:shuffle 2:repeat one
         switch(mode){
           case 0:
               if (angularPlayer.getShuffle()) {
