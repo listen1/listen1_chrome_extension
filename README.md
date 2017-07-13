@@ -1,4 +1,4 @@
-Listen 1 (Chrome Extension) (更新与7月13日)
+Listen 1 (Chrome Extension) (更新于7月13日)
 ==========
 
 1. 调整歌单来源按钮到顶部
@@ -7,7 +7,7 @@ Listen 1 (Chrome Extension) (更新与7月13日)
 
 3. 增加歌词Tab
 
-####Chrome菜单->更多工具->发送到桌面->在窗口中打开，不要太爽
+#### Chrome菜单->更多工具->发送到桌面->在窗口中打开，不要太爽
 
 [![Screenshotfrom2017-07-1316-48-16.md.png](http://pasteupload.com/images/2017/07/13/Screenshotfrom2017-07-1316-48-16.md.png)](http://pasteupload.com/image/NEQu)
 [![Screenshotfrom2017-07-1316-49-04.md.png](http://pasteupload.com/images/2017/07/13/Screenshotfrom2017-07-1316-49-04.md.png)](http://pasteupload.com/image/N4pJ)
