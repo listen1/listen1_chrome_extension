@@ -106,12 +106,20 @@
     $scope.isDoubanLogin = false;
 
     $scope.lastfm = lastfm;
-    
+    $scope.lyricArray = [];
+    $scope.lyricLineNumber= -1;
     $scope.$on('isdoubanlogin:update', function(event, data) {
       $scope.isDoubanLogin = data;
     });
 
-    // tag
+    $scope.$on('updateLyric', function(event, data) {
+      $scope.lyricArray = data;
+    });
+
+    $scope.$on('lyricLineNumber', function(event, data) {
+      $scope.lyricLineNumber = data;
+    }); 
+    
     $scope.showTag = function(tag_id){
       $scope.current_tag = tag_id;
       $scope.is_window_hidden = 1;
@@ -802,6 +810,7 @@
             return;
           }
           $scope.lyricArray = parseLyric(lyric);
+          $scope.$emit("updateLyric", $scope.lyricArray)
         });
         $scope.lastTrackId = data;
       });
@@ -819,11 +828,16 @@
         }
         if (lastObject && lastObject.lineNumber != $scope.lyricLineNumber) {
           var lineHeight = 20;
-          var lineElement = $(".lyric p")[lastObject.lineNumber];
+          var lineElement = $(".menu .lyric p")[lastObject.lineNumber];
+          var lineElementTab = $(".lyric-content .lyric p")[lastObject.lineNumber];
           var windowHeight = 270;
+          var windowHeightTab = $(".lyric-content .lyric").height()
           var offset = lineElement.offsetTop - windowHeight/2;
-          $(".lyric").animate({ scrollTop: offset+"px" }, 500);
+          var offsetTab = lineElementTab.offsetTop - windowHeightTab/2;
+          $(".menu .lyric").animate({ scrollTop: offset+"px" }, 500);
+          $(".lyric-content .lyric").animate({ scrollTop: offsetTab+100+"px" }, 500);
           $scope.lyricLineNumber = lastObject.lineNumber;
+          $scope.$emit("lyricLineNumber",lastObject.lineNumber)
         }
       });
 
@@ -1059,30 +1073,7 @@
       var x;
       var container; 
       var mode = attrs.mode;
-      var fn = function(event, delta, deltaX, deltaY){
-          if(mode =="volume"){
-             var current = localStorage.getObject('player-settings');
-             var progress=(current.volume+delta*5)>=0 &&(current.volume+delta*5)<=100?(current.volume+delta*5)/100.0:(1+delta)/2;
-              onMyUpdateProgress(progress);
-              onMyCommitProgress(progress);
-            }
-      },
-      hamster;
 
-      // don't create multiple Hamster instances per element
-      if (!(hamster = element.data('hamster'))) {
-        hamster = Hamster(element[0]);
-        element.data('hamster', hamster);
-      }
-
-      // bind Hamster wheel event
-      hamster.wheel(fn);
-
-      // unbind Hamster wheel event
-      scope.$on('$destroy', function(){
-        hamster.unwheel(fn);
-      });
-      
       function onMyMousedown() {
         if(mode == 'play') {
           scope.changingProgress = true;
