@@ -4428,6 +4428,7 @@ ngSoundManager.factory('angularPlayer', ['$rootScope', '$log',
             trackProgress = 0,
             playlist = [],
             shuffle = false,
+            repeatOne = false,
             shufflelist= [],
             shuffleCount = 0,
             shuffleIndex = -1,
@@ -4505,7 +4506,12 @@ ngSoundManager.factory('angularPlayer', ['$rootScope', '$log',
                                 var injector = elem.injector();
                                 //get the service.
                                 var angularPlayer = injector.get('angularPlayer');
-                                angularPlayer.nextTrack();
+                                // repeat current track
+                                if(repeatOne === true) {
+                                    angularPlayer.playTrack(this.id);
+                                } else {
+                                    angularPlayer.nextTrack(); 
+                                }
                                 $rootScope.$broadcast('track:id', currentTrack);
                             }
                         }
@@ -4676,21 +4682,26 @@ ngSoundManager.factory('angularPlayer', ['$rootScope', '$log',
                 //once all done then broadcast
                 $rootScope.$broadcast('player:playlist', playlist);
             },
-            initPlayTrack: function(trackId, isResume) {
+            initPlayTrack: function(trackId, isResume, isloadOnly) {
                 if(isResume !== true) {
                     //stop and unload currently playing track
                     this.stop();
                     //set new track as current track
                     this.setCurrentTrack(trackId);
                 }
-                if (bootstrapTrack != null) {
+                if ((bootstrapTrack != null) && (isResume !== true)) {
+                    var angularPlayerObj = this;
                     var sound = soundManager.getSoundById(trackId);
+                    sound.setVolume(volume);
                     bootstrapTrack(sound, this.currentTrackData(), function(){
                         soundManager.play(trackId);
                         $rootScope.$broadcast('track:id', trackId);
                         //set as playing
                         isPlaying = true;
                         $rootScope.$broadcast('music:isPlaying', isPlaying);
+                        if (isloadOnly == true) {
+                            angularPlayerObj.pause();
+                        }
                     });
                 }
                 else {
@@ -4731,6 +4742,10 @@ ngSoundManager.factory('angularPlayer', ['$rootScope', '$log',
                 $rootScope.$broadcast('currentTrack:duration', 0);
                 soundManager.stopAll();
                 soundManager.unload(this.getCurrentTrack());
+            },
+            loadTrack: function(trackId) {
+                // play track and pause at beginning
+                this.initPlayTrack(trackId, false, true);
             },
             playTrack: function(trackId) {
                 this.initPlayTrack(trackId);
@@ -4840,6 +4855,19 @@ ngSoundManager.factory('angularPlayer', ['$rootScope', '$log',
             getRepeatStatus: function() {
                 return repeat;
             },
+            repeatOneToggle: function() {
+                if(repeatOne === true) {
+                    repeatOne = false;
+                } else {
+                    repeatOne = true;
+                }
+            },
+            getRepeatOneStatus: function() {
+                return repeatOne;
+            },
+            setRepeatOneStatus: function(value) {
+                repeatOne = value ;
+            },
             getVolume: function() {
                 return volume;
             },
@@ -4871,6 +4899,7 @@ ngSoundManager.factory('angularPlayer', ['$rootScope', '$log',
                     }
                     $rootScope.$broadcast('music:volume', volume);
                 };
+                volume = value;
                 changeVolume(value);
             },
             clearPlaylist: function(callback) {

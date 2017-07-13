@@ -1,4 +1,4 @@
-Listen 1 (Chrome Extension) （最后更新于5月8日）
+Listen 1 (Chrome Extension) （最后更新于5月27日）
 ==========
 
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE)
@@ -15,19 +15,57 @@ Listen 1 (Chrome Extension) （最后更新于5月8日）
 
 还有精选歌单哦。
 
-安装
+Chrome安装
 ----
-不能直接用chrome打开安装，不能直接用chrome打开安装，不能直接用chrome打开安装。重要的话说三遍。
-
 1. 下载项目的zip文件，在右上方有个 `Download ZIP`, 解压到本地
 
 2. chrome右上角的设置按钮下找到更多工具，打开`扩展程序`
 
 3. 选择 `加载已解压的扩展程序`(如果没有显示先选中`开发者模式`)，选中解压后的文件夹，完成！
 
+Firefox打包安装
+-----------
+### 打包xpi文件（或在release页面下载已经打包好的xpi文件）
+1. 将根目录下manifest_firefox.json替换manifest.json
+2. `cd listen1_chrome_extension`
+3. `zip -r ../listen1.xpi *`
+
+### 安装
+1. 打开Firefox，加载xpi文件，完成安装
 
 更新日志
 -------
+`2016-05-27`
+
+* 增加快捷键功能（输入?查看快捷键设置）
+* 支持同步播放记录到last.fm
+* 增加搜索loading时的图标(感谢@richdho的提交）
+* 页面标题增加显示当前播放信息
+* 修复了在收藏对话框点击取消出现新建歌单的bug
+* 重新组织代码文件夹结构
+
+`2016-05-21`
+
+* 增加歌单分页加载功能(感谢@wild-flame的提交)
+* 修复关闭按钮随网页滚动的bug
+* 修复点击暂停按钮会重置进度条和歌词的bug
+* 修复点击歌单名称不跳转的bug
+* 调整歌单水平位置居中
+
+`2016-05-14`
+
+* 增加firefox插件支持（感谢fulesdle的提交）
+
+`2016-05-13`
+
+* 增加我的歌单功能，可以收藏现有歌单，并创建自己的歌单
+* 点击Listen 1和图标可以回到首页
+* 标记了部分因版权无法播放的歌曲,增加版权提示
+* 重构了音乐平台代码，使用统一的接口规范
+* 重构了歌单接口，合并歌手，专辑和歌单接口
+* 修复了阿里云歌手链接点击错误的bug
+
+
 `2016-05-08`
 
 * 增加歌词显示
@@ -43,7 +81,7 @@ Listen 1 (Chrome Extension) （最后更新于5月8日）
 
 TODO
 ----
-加入我的歌单功能（如迫不及待需要，可以安装Listen 1非插件版）
+分页加载
 
 
 License

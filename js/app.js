@@ -10,12 +10,12 @@
       return value && JSON.parse(value);
   }
 
-  var app = angular.module('listenone', ['angularSoundManager', 'ui-notification', 'loWebManager'])
+  var app = angular.module('listenone', ['angularSoundManager', 'ui-notification', 'loWebManager', 'cfp.hotkeys', 'lastfmClient'])
     .config( [
     '$compileProvider',
     function( $compileProvider )
     {   
-        $compileProvider.imgSrcSanitizationWhitelist(/^\s*(https?|ftp|mailto|chrome-extension):/);
+        $compileProvider.imgSrcSanitizationWhitelist(/^\s*(https?|ftp|mailto|chrome-extension|moz-extension|file):/);
     }
   ]);
 
@@ -31,18 +31,66 @@
     });
   });
 
+  app.config(function(hotkeysProvider) {
+    hotkeysProvider.templateTitle = '快捷键列表';
+    hotkeysProvider.cheatSheetDescription = '显示/隐藏快捷键列表';
+  });
+
+  app.config(function(lastfmProvider) {
+    lastfmProvider.setOptions({
+      apiKey: '6790c00a181128dc7c4ce06cd99d17c8',
+      apiSecret: 'd68f1dfc6ff43044c96a79ae7dfb5c27'
+    });
+  });
+
+  app.run(['angularPlayer', 'Notification', 'loWeb', function(angularPlayer, Notification, loWeb) {
+    angularPlayer.setBootstrapTrack(
+      loWeb.bootstrapTrack(
+        function(){}, 
+        function(){
+          Notification.info('版权原因无法播放，请搜索其他平台');
+        })
+    );
+  }]);
+
   app.filter('playmode_title', function() {
     return function(input) {
-      return input ? '随机' : '顺序';
+      switch(input){
+        case 0:
+            return "顺序";
+            break;
+        case 1:
+            return "随机";
+            break;
+        case 2:
+            return "单曲循环";
+            break;    
+      }
     };
   });
+
+  function getSourceName(sourceId) {
+    if (sourceId == 0) {
+      return 'netease';
+    }
+    if (sourceId == 1) {
+      return 'xiami';
+    }
+    if (sourceId == 2) {
+      return 'qq';
+    }
+  }
 
   // control main view of page, it can be called any place
   app.controller('NavigationController', ['$scope', '$http',
     '$httpParamSerializerJQLike', '$timeout',
     'angularPlayer', 'Notification', '$rootScope', 'loWeb',
+    'hotkeys', 'lastfm',
     function($scope, $http, $httpParamSerializerJQLike,
-      $timeout, angularPlayer, Notification, $rootScope, loWeb){
+      $timeout, angularPlayer, Notification, $rootScope,
+      loWeb, hotkeys, lastfm) {
+
+    $rootScope.page_title = "Listen 1";
     $scope.window_url_stack = [];
     $scope.current_tag = 2;
     $scope.is_window_hidden = 1;
@@ -56,6 +104,9 @@
     $scope.dialog_title = '';
 
     $scope.isDoubanLogin = false;
+
+    $scope.lastfm = lastfm;
+    
     $scope.$on('isdoubanlogin:update', function(event, data) {
       $scope.isDoubanLogin = data;
     });
@@ -92,7 +143,7 @@
           $scope.playlist_title = data.info.title;
           $scope.playlist_source_url = data.info.source_url;
           $scope.list_id = data.info.id;
-          $scope.is_mine = data.is_mine;
+          $scope.is_mine = (data.info.id.slice(0,2) == 'my');
       });
     };
 
@@ -112,25 +163,17 @@
         var url = $scope.window_url_stack[$scope.window_url_stack.length-1];
         loWeb.get(url).success(function(data) {
             $scope.songs = data.tracks;
+            $scope.list_id = data.info.id;
             $scope.cover_img_url = data.info.cover_img_url;
             $scope.playlist_title = data.info.title;
             $scope.playlist_source_url = data.info.source_url;
+            $scope.is_mine = (data.info.id.slice(0,2) == 'my');
         });
       }
     };
 
     $scope.showPlaylist = function(list_id) {
       var url = '/playlist?list_id=' + list_id;
-      $scope.showWindow(url);
-    };
-
-    $scope.showArtist = function(artist_id) {
-      var url = '/artist?artist_id=' + artist_id;
-      $scope.showWindow(url);
-    };
-
-    $scope.showAlbum = function(album_id) {
-      var url = '/album?album_id=' + album_id;
       $scope.showWindow(url);
     };
 
@@ -170,7 +213,7 @@
         $scope.dialog_title = '添加到歌单';
         var url = '/show_myplaylist';
         $scope.dialog_song = data;
-        $http.get(url).success(function(data) {
+        loWeb.get(url).success(function(data) {
             $scope.myplaylist = data.result;
         });
       }
@@ -179,25 +222,27 @@
         $scope.dialog_title = '登录豆瓣';
         $scope.dialog_type = 2;
       }
+
+      if (dialog_type == 3) {
+        $scope.dialog_title = '修改歌单';
+        $scope.dialog_type = 3;
+        $scope.dialog_cover_img_url = data.cover_img_url;
+        $scope.dialog_playlist_title = data.playlist_title;
+      }
+      if (dialog_type == 4) {
+        $scope.dialog_title = '连接到Last.fm';
+        $scope.dialog_type = 4;
+      }
     };
 
     $scope.chooseDialogOption = function(option_id) {
       var url = '/add_myplaylist';
-
-      $http({
+      loWeb.post({
         url: url,
         method: 'POST',
         data: $httpParamSerializerJQLike({
           list_id: option_id,
-          id: $scope.dialog_song.id,
-          title: $scope.dialog_song.title,
-          artist: $scope.dialog_song.artist,
-          url: $scope.dialog_song.url,
-          artist_id: $scope.dialog_song.artist_id,
-          album: $scope.dialog_song.album,
-          album_id: $scope.dialog_song.album_id,
-          source: $scope.dialog_song.source,
-          source_url: $scope.dialog_song.source_url
+          track: JSON.stringify($scope.dialog_song)
         }),
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded'
@@ -223,20 +268,12 @@
     $scope.createAndAddPlaylist = function() {
       var url = '/create_myplaylist';
 
-      $http({
+      loWeb.post({
         url: url,
         method: 'POST',
         data: $httpParamSerializerJQLike({
           list_title: $scope.newlist_title,
-          id: $scope.dialog_song.id,
-          title: $scope.dialog_song.title,
-          artist: $scope.dialog_song.artist,
-          url: $scope.dialog_song.url,
-          artist_id: $scope.dialog_song.artist_id,
-          album: $scope.dialog_song.album,
-          album_id: $scope.dialog_song.album_id,
-          source: $scope.dialog_song.source,
-          source_url: $scope.dialog_song.source_url
+          track: JSON.stringify($scope.dialog_song)
         }),
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded'
@@ -248,10 +285,33 @@
       });
     };
 
+    $scope.editMyPlaylist = function() {
+      var url = '/edit_myplaylist';
+
+      loWeb.post({
+        url: url,
+        method: 'POST',
+        data: $httpParamSerializerJQLike({
+          list_id: $scope.list_id,
+          title: $scope.dialog_playlist_title,
+          cover_img_url: $scope.dialog_cover_img_url
+        }),
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        }
+      }).success(function() {
+        $rootScope.$broadcast('myplaylist:update');
+        $scope.playlist_title = $scope.dialog_playlist_title;
+        $scope.cover_img_url = $scope.dialog_cover_img_url;
+        Notification.success('修改歌单成功');
+        $scope.closeDialog();
+      });
+    };
+
     $scope.removeSongFromPlaylist = function(song, list_id) {
       var url = '/remove_track_from_myplaylist';
 
-      $http({
+      loWeb.post({
         url: url,
         method: 'POST',
         data: $httpParamSerializerJQLike({
@@ -274,6 +334,10 @@
     $scope.closeDialog = function() {
       $scope.is_dialog_hidden = 1;
       $scope.dialog_type = 0;
+      // update lastfm status if not authorized
+      if (lastfm.isAuthRequested()) {
+        lastfm.updateStatus();
+      }
     };
 
     $scope.setCurrentList = function(list_id) {
@@ -306,19 +370,172 @@
       }, 0);
     };
 
+    $scope.copyrightNotice = function() {
+      Notification.info("版权原因无法播放，请搜索其他平台");
+    };
+
+    $scope.clonePlaylist = function(list_id){
+      var url = '/clone_playlist';
+      loWeb.post({
+        url: url,
+        method: 'POST',
+        data: $httpParamSerializerJQLike({
+          list_id: list_id,
+        }),
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        }
+      }).success(function() {
+        $rootScope.$broadcast('myplaylist:update');
+        $scope.closeWindow();
+        Notification.success('收藏到我的歌单成功');
+      });
+    };
+
+    $scope.removeMyPlaylist = function(list_id){
+      var url = '/remove_myplaylist';
+
+      loWeb.post({
+        url: url,
+        method: 'POST',
+        data: $httpParamSerializerJQLike({
+          list_id: list_id,
+        }),
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        }
+      }).success(function() {
+        $rootScope.$broadcast('myplaylist:update');
+        $scope.closeDialog();
+        $scope.closeWindow();
+        Notification.success('删除歌单成功');
+      });
+    };
+
+
+    $scope.downloadFile = function (fileName, fileType, content) {
+        window.URL = window.URL || window.webkitURL;
+        var blob = new Blob([content], {type: fileType});
+        var link = document.createElement('a');
+        link.download = fileName;
+        link.href = window.URL.createObjectURL(blob);
+        link.style.display = 'none';
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+    }
+
+    $scope.backupMySettings = function() {
+      var items = {};
+      for ( var i = 0, len = localStorage.length; i < len; ++i ) {
+        var key =  localStorage.key(i);
+        var value = localStorage.getObject(key);
+        items[key] = value;
+      }
+
+      var content = JSON.stringify(items);
+      $scope.downloadFile('listen1_backup.json', 'application/json', content);
+    }
+
+    $scope.importMySettings = function(event) {
+      var fileObject = event.target.files[0];
+      if (fileObject == null ){
+        Notification.warning("请选择备份文件");
+        return;
+      }
+      var reader = new FileReader();
+      reader.onloadend = function(readerEvent) {
+        if (readerEvent.target.readyState == FileReader.DONE) {
+          var data_json = readerEvent.target.result;
+          // parse json
+          var data = null;
+          try{
+              data = JSON.parse(data_json);
+          }catch(e){
+          }
+          if(data == null) {
+            Notification.warning("备份文件格式错误，请重新选择");
+            return;
+          }
+          for ( var key in data) {
+            var value = data[key];
+            localStorage.setObject(key, value);
+          }
+          Notification.success("恢复我的歌单成功");
+        }
+      };
+      reader.readAsText(fileObject);
+    }
+
+    $scope.showShortcuts = function() {
+      hotkeys.toggleCheatSheet();
+    }
+
+    hotkeys.add({
+      combo: 'f',
+      description: '快速搜索',
+      callback: function() {
+        $scope.showTag(3);
+        $timeout(function(){$("#search-input").focus();}, 0);
+      }
+    });
+
+
+
   }]);
+
+  app.directive('customOnChange', function() {
+    return {
+      restrict: 'A',
+      link: function (scope, element, attrs) {
+        var onChangeHandler = scope.$eval(attrs.customOnChange);
+        element.bind('change', onChangeHandler);
+      }
+    };
+  });
 
   app.controller('PlayController', ['$scope', '$timeout','$log',
     '$anchorScroll', '$location', 'angularPlayer', '$http',
-    '$httpParamSerializerJQLike','$rootScope', 'Notification','loWeb',
-     function($scope, $timeout, $log, $anchorScroll, $location, angularPlayer,
-      $http, $httpParamSerializerJQLike, $rootScope, Notification, loWeb){
+    '$httpParamSerializerJQLike','$rootScope', 'Notification',
+    'loWeb', 'hotkeys', 'lastfm',
+     function($scope, $timeout, $log, $anchorScroll, $location,
+      angularPlayer, $http, $httpParamSerializerJQLike,
+      $rootScope, Notification, loWeb, hotkeys, lastfm){
+
       $scope.menuHidden = true;
       $scope.volume = angularPlayer.getVolume();
       $scope.mute = angularPlayer.getMuteStatus();
       $scope.settings = {"playmode": 0, "nowplaying_track_id": -1};
       $scope.lyricArray = [];
       $scope.lyricLineNumber = -1;
+      $scope.lastTrackId = null;
+
+      $scope.scrobbleTrackId = null;
+      $scope.scrobbleTimer = new Timer();
+
+      function switchMode(mode){
+        //playmode 0:loop 1:shuffle 2:repeat one
+        switch(mode){
+          case 0:
+              if (angularPlayer.getShuffle()) {
+                angularPlayer.toggleShuffle();
+              }
+              angularPlayer.setRepeatOneStatus(false);
+              break;
+          case 1:
+              if (!angularPlayer.getShuffle()) {
+                angularPlayer.toggleShuffle();
+              }
+              angularPlayer.setRepeatOneStatus(false);
+              break;
+          case 2:
+              if (angularPlayer.getShuffle()) {
+                angularPlayer.toggleShuffle();
+              }
+              angularPlayer.setRepeatOneStatus(true);
+              break
+        }
+      }
 
       $scope.loadLocalSettings = function() {
         var defaultSettings = {"playmode": 0, "nowplaying_track_id": -1, "volume": 90};
@@ -331,21 +548,16 @@
           $scope.settings = localSettings;
         }
         // apply settings
-        var shuffleSetting;
-        if ($scope.settings.playmode == 1) {
-          shuffleSetting = true;
-        }
-        else {
-          shuffleSetting = false;
-        }
-        if (angularPlayer.getShuffle() != shuffleSetting) {
-          angularPlayer.toggleShuffle();
-        }
+        switchMode($scope.settings.playmode);
+
 
         $scope.volume = $scope.settings.volume;
         if($scope.volume == null) {
           $scope.volume = 90;
           $scope.saveLocalSettings();
+        }
+        else {
+          $timeout(function(){angularPlayer.adjustVolumeSlider($scope.volume)},0);
         }
       }
 
@@ -367,14 +579,9 @@
       }
 
       $scope.changePlaymode = function() {
-        // loop: 0, shuffle: 1
-        angularPlayer.toggleShuffle();
-        if (angularPlayer.getShuffle()) {
-          $scope.settings.playmode = 1;
-        }
-        else {
-          $scope.settings.playmode = 0;
-        }
+        var playmodeCount = 3;
+        $scope.settings.playmode = ($scope.settings.playmode+1)%playmodeCount;
+        switchMode($scope.settings.playmode);
         $scope.saveLocalSettings();
       };
 
@@ -389,7 +596,6 @@
         if (angularPlayer.getRepeatStatus() == false) {
             angularPlayer.repeatToggle();
         }
-        $timeout(function(){angularPlayer.setBootstrapTrack(loWeb.bootstrapTrack);}, 0);
 
         if (track_id == -1) {
           return;
@@ -408,8 +614,7 @@
         }
         var track_id = localPlayerSettings.nowplaying_track_id;
 
-        angularPlayer.playTrack(track_id);
-        angularPlayer.pause();
+        angularPlayer.loadTrack(track_id);
 
       });
 
@@ -439,46 +644,6 @@
         angularPlayer.mute();
       }
 
-
-
-      $scope.removemylist = function(list_id){
-        var url = '/remove_myplaylist';
-
-        $http({
-          url: url,
-          method: 'POST',
-          data: $httpParamSerializerJQLike({
-            list_id: list_id,
-          }),
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-          }
-        }).success(function() {
-          $rootScope.$broadcast('myplaylist:update');
-          $scope.closeWindow();
-          Notification.success('删除成功');  
-        });
-      };
-
-      $scope.clonelist = function(list_id){
-        var url = '/clone_playlist';
-
-        $http({
-          url: url,
-          method: 'POST',
-          data: $httpParamSerializerJQLike({
-            list_id: list_id,
-          }),
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-          }
-        }).success(function() {
-          $rootScope.$broadcast('myplaylist:update');
-          $scope.closeWindow();
-          Notification.success('收藏到我的歌单成功');  
-        });
-      };
-
       $scope.myProgress = 0;
       $scope.changingProgress = false;
 
@@ -501,6 +666,45 @@
 
       $scope.$on('player:playlist', function(event, data) {
         localStorage.setObject('current-playing', data);
+      });
+
+
+      $scope.$on('currentTrack:duration', function(event, data) {
+        if (!lastfm.isAuthorized()) {
+          return;
+        }
+        if (data == 0) {
+          return;
+        }
+        if ($scope.scrobbleTrackId == angularPlayer.getCurrentTrack()) {
+          return;
+        }
+        // new song arrives
+        $scope.scrobbleTrackId = angularPlayer.getCurrentTrack();
+        var track = angularPlayer.getTrack($scope.scrobbleTrackId);
+        var startTimestamp = Math.round((new Date()).valueOf() / 1000);
+        $scope.scrobbleTimer.start(function(){
+          lastfm.scrobble(startTimestamp, track.title, track.artist, track.album, function(){});
+        });
+        // according to scrobble rule
+        // http://www.last.fm/api/scrobbling
+        var secondsToScrobble = Math.min(data/1000/2, 60*4);
+        $scope.scrobbleTimer.update(secondsToScrobble);
+      });
+
+      $scope.$on('music:isPlaying', function(event, data) {
+        if (!lastfm.isAuthorized()) {
+          return;
+        }
+        if ($scope.scrobbleTrackId == null) {
+          return;
+        }
+        if (data) {
+          $scope.scrobbleTimer.resume();
+        }
+        else {
+          $scope.scrobbleTimer.pause();
+        };
       });
 
       function parseLyric(lyric) {
@@ -535,7 +739,10 @@
             var content = line.replace(/\[(\d{2,})\:(\d{2})(?:\.(\d{1,3}))?\]/g, '');
             var min = parseInt(timeRegResult[1]);
             var sec = parseInt(timeRegResult[2]);
-            var microsec = parseInt(rightPadding(timeRegResult[3], 3, '0'));
+            var microsec = 0;
+            if (timeRegResult[3] != null) {
+              microsec = parseInt(rightPadding(timeRegResult[3], 3, '0'));
+            }
             var seconds = min * 60 * 1000 + sec*1000 + microsec;
             var lyricObject = {};
             lyricObject.content = content;
@@ -568,6 +775,9 @@
 
 
       $scope.$on('track:id', function(event, data) {
+        if ($scope.lastTrackId == data) {
+          return;
+        }
         var current = localStorage.getObject('player-settings');
         current.nowplaying_track_id = data;
         localStorage.setObject('player-settings', current);
@@ -577,13 +787,23 @@
         $(".lyric").animate({ scrollTop: "0px" }, 500);
         var url = '/lyric?track_id=' + data;
         var track = angularPlayer.getTrack(data);
+
+        $rootScope.page_title = '▶ ' + track.title + ' - ' + track.artist;
+        if (lastfm.isAuthorized()) {
+          lastfm.sendNowPlaying(track.title, track.artist, function(){});
+        }
+
         if (track.lyric_url != null) {
           url = url + '&lyric_url=' + track.lyric_url;
         }
         loWeb.get(url).success(function(data) {
           var lyric = data.lyric;
+          if (lyric == null) {
+            return;
+          }
           $scope.lyricArray = parseLyric(lyric);
         });
+        $scope.lastTrackId = data;
       });
 
       $scope.$on('currentTrack:position', function(event, data) {
@@ -602,25 +822,98 @@
           var lineElement = $(".lyric p")[lastObject.lineNumber];
           var windowHeight = 270;
           var offset = lineElement.offsetTop - windowHeight/2;
-          //$(".lyric").scrollTop(offset);
           $(".lyric").animate({ scrollTop: offset+"px" }, 500);
           $scope.lyricLineNumber = lastObject.lineNumber;
         }
       });
 
+      // define keybind
+      hotkeys.add({
+        combo: 'p',
+        description: '播放/暂停',
+        callback: function() {
+          if(angularPlayer.isPlayingStatus()) {
+              //if playing then pause
+              angularPlayer.pause();
+          } else {
+              //else play if not playing
+              angularPlayer.play();
+          }
+        }
+      });
+
+      hotkeys.add({
+        combo: '[',
+        description: '上一首',
+        callback: function() {
+          angularPlayer.prevTrack();
+        }
+      });
+
+      hotkeys.add({
+        combo: ']',
+        description: '下一首',
+        callback: function() {
+          angularPlayer.nextTrack();
+        }
+      });
+
+      hotkeys.add({
+        combo: 'm',
+        description: '静音/取消静音',
+        callback: function() {
+          // mute indeed toggle mute status
+          angularPlayer.mute();
+        }
+      });
+
+      hotkeys.add({
+        combo: 'l',
+        description: '打开/关闭播放列表',
+        callback: function() {
+          $scope.togglePlaylist();
+        }
+      });
+
+      hotkeys.add({
+        combo: 's',
+        description: '切换播放模式（顺序/随机/单曲循环）',
+        callback: function() {
+          $scope.changePlaymode();
+        }
+      });
+
+      hotkeys.add({
+        combo: 'u',
+        description: '音量增加',
+        callback: function() {
+          $timeout(function(){angularPlayer.adjustVolume(true);});
+        }
+      });
+
+      hotkeys.add({
+        combo: 'd',
+        description: '音量减少',
+        callback: function() {
+          $timeout(function(){angularPlayer.adjustVolume(false);});
+        }
+      });
   }]);
 
   app.controller('InstantSearchController', ['$scope', '$http', '$timeout', 'angularPlayer', 'loWeb',
     function($scope, $http, $timeout, angularPlayer, loWeb) {
       $scope.tab = 0;
       $scope.keywords = '';
+      $scope.loading = false;
 
       $scope.changeTab = function(newTab){
+        $scope.loading = true;
         $scope.tab = newTab;
         $scope.result = [];
-        loWeb.get('/search?source='+ $scope.tab + '&keywords=' + $scope.keywords).success(function(data) {
+        loWeb.get('/search?source=' + getSourceName($scope.tab) + '&keywords=' + $scope.keywords).success(function(data) {
             // update the textarea
-            $scope.result = data.result; 
+            $scope.result = data.result;
+            $scope.loading = false;  
         });
       };
 
@@ -636,10 +929,12 @@
         // if searchStr is still the same..
         // go ahead and retrieve the data
         if (tmpStr === $scope.keywords)
-        {
-          loWeb.get('/search?source='+ $scope.tab + '&keywords=' + $scope.keywords).success(function(data) {
+        { 
+          $scope.loading = true;
+          loWeb.get('/search?source=' + getSourceName($scope.tab) + '&keywords=' + $scope.keywords).success(function(data) {
             // update the textarea
-            $scope.result = data.result; 
+            $scope.result = data.result;
+            $scope.loading = false; 
           });
         }
       });
@@ -719,6 +1014,40 @@
           link: function (scope, element, attrs) {
               element.bind('click', function (event) {
                 $window.open(scope.url, '_blank');
+              });
+          }
+      };
+  }]);
+
+  app.directive('infiniteScroll', ['$window',
+    function ($window) {
+      return {
+          restrict: "EA",
+          scope: {
+              infiniteScroll: '&',
+              contentSelector: '=contentSelector'
+          },
+          link: function (scope, elements, attrs) {
+              elements.bind('scroll', function (event) {
+                if (scope.loading) {
+                  return;
+                }
+                var containerElement = elements[0];
+                var contentElement = document.querySelector(scope.contentSelector);
+
+                var baseTop = containerElement.getBoundingClientRect().top;
+                var currentTop = contentElement.getBoundingClientRect().top;
+                var baseHeight = containerElement.offsetHeight;
+                var offset = baseTop - currentTop;
+
+                var bottom = offset + baseHeight;
+                var height = contentElement.offsetHeight;
+
+                var remain = height - bottom;
+                var offsetToload = 10;
+                if (remain <= offsetToload) {
+                  scope.$apply(scope.infiniteScroll);
+                }
               });
           }
       };
@@ -838,11 +1167,12 @@
   }]);
 
   app.controller('MyPlayListController', ['$http','$scope', '$timeout',  
-        'angularPlayer', function($http, $scope, $timeout, angularPlayer){
+        'angularPlayer', 'loWeb', 
+        function($http, $scope, $timeout, angularPlayer, loWeb){
     $scope.myplaylists = [];
 
     $scope.loadMyPlaylist = function(){
-      $http.get('/show_myplaylist').success(function(data) {
+      loWeb.get('/show_myplaylist').success(function(data) {
         $scope.myplaylists = data.result;
       });
     };
@@ -861,24 +1191,32 @@
 
   }]);
 
-  app.controller('PlayListController', ['$http','$scope', '$timeout',  
-        'angularPlayer','loWeb', function($http, $scope, $timeout, angularPlayer, loWeb){
+  app.controller('PlayListController', ['$http','$scope', '$timeout',
+                                        'angularPlayer','loWeb',
+                                        function($http, $scope, $timeout, angularPlayer, loWeb){
     $scope.result = [];
-    
     $scope.tab = 0;
+    $scope.loading = true 
 
     $scope.changeTab = function(newTab){
       $scope.tab = newTab;
       $scope.result = [];
-
-      loWeb.get('/show_playlist?source=' + $scope.tab).success(function(data) {
+      loWeb.get('/show_playlist?source=' + getSourceName($scope.tab)).success(function(data) {
         $scope.result = data.result;
       });
-
-      // $http.get('/show_playlist?source=' + $scope.tab).success(function(data) {
-      //   $scope.result = data.result;
-      // });
     };
+
+    $scope.scrolling = function(){
+        if ($scope.loading == true) {
+            return
+        }
+        $scope.loading = true;
+        var offset = $scope.result.length;
+        loWeb.get('/show_playlist?source=' + getSourceName($scope.tab) + '&offset=' + offset).success(function(data) {
+            $scope.result = $scope.result.concat(data.result);
+            $scope.loading = false;
+        });
+    }
 
     $scope.isActiveTab = function(tab){
       return $scope.tab === tab;
@@ -886,8 +1224,9 @@
 
 
     $scope.loadPlaylist = function(){
-      loWeb.get('/show_playlist?source=' + $scope.tab).success(function(data) {
+      loWeb.get('/show_playlist?source=' + getSourceName($scope.tab)).success(function(data) {
         $scope.result = data.result;
+        $scope.loading = false;
       });
     };
   }]);

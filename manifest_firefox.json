@@ -1,4 +1,10 @@
 {
+    "applications": {
+        "gecko": {
+            "id": "test@mozilla.org",
+            "strict_min_version": "45.0"
+        }
+    },
     "background": {
         "presistent": true,
         "scripts": ["js/background.js" ]

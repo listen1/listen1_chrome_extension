@@ -26,7 +26,6 @@ a {
     border-radius: 4px 4px 4px 4px;
     padding: 20px;
     background-color: #333;
-
 }
 
 .dialog-header {
@@ -76,10 +75,20 @@ a {
     height: 50px;
     width: 50px;
     margin-right: 20px;
+    cursor: pointer;
+}
+
+.masthead .masthead-brand {
+    color: rgba(255,255,255, 1);
+    cursor: pointer;
 }
 
 .cover-container {
     position: relative;
+}
+
+.container-placeholder {
+    margin-top: 90px;
 }
 
 .site-wrapper { 
@@ -107,6 +116,11 @@ a {
     margin-top: 12px;
 }
 
+.searchbox .nav .searchspinner{
+    margin-top: 8px;
+    height: 25px;
+}
+
 
 .searchitem {
     height: 92px;
@@ -123,6 +137,10 @@ a {
     margin-left: 48px;
     margin-top: 38px;
     width: 400px;
+}
+
+.playlist-covers {
+    margin-bottom: 0px;
 }
 
 .playlist-covers li {
@@ -151,6 +169,15 @@ a {
     width: 100%;
     height: 27px;
     color: #ccc;
+}
+
+.playlist-covers .loading_bottom {
+    clear:both;
+    text-align:center;
+}
+
+.playlist-covers .loading_bottom img {
+    height:35px;
 }
 
 .u-cover .mask {
@@ -428,7 +455,7 @@ em, i {
     right: 0px;
     bottom: 48px;
     z-index: 10;
-    width: 79px;
+    width: 103px;
     padding-left: 13px;
     float: none;
 }
@@ -481,6 +508,13 @@ em, i {
     background-position: -150px -25px;
 }
 
+.m-playbar .icn-repeatone {
+    background-position: -225px 0px;
+}
+
+.m-playbar .icn-repeatone:hover {
+    background-position: -225px -25px;
+}
 
 .m-playbar .icn {
     float: left;
@@ -490,13 +524,17 @@ em, i {
     text-indent: -9999px;
 }
 
+.m-playbar .icn-add {
+    margin-right: 5px;
+}
+
 .m-playbar .menu {
     position: absolute;
     bottom: 90px;
     _bottom: 90px;
     right: 0px;
     _right: 0px;
-    height: 330px;
+    height: 349px;
     width: 100%;
     background-color: #121212;
 }
@@ -504,7 +542,7 @@ em, i {
 .m-playbar .menu ul {
     display: inline-block;
     padding-left: 0px;
-    height: 290px;
+    height: 308px;
     overflow-y: scroll;
     width: 60%;
     margin-bottom: 0px;
@@ -520,7 +558,7 @@ em, i {
     text-align: center;
     width: 39%;
     display: inline-block;
-    height: 290px;
+    height: 308px;
     overflow-y: scroll;
     position: relative;
 }
@@ -717,7 +755,7 @@ li {
     background-position: -256px -36px;
 }
 
-.playlist-detail .detail-head-title .delete {
+.playlist-detail .detail-head-title .edit {
     display: inline-block;
     text-indent: -9999px;
     width: 36px;
@@ -725,12 +763,12 @@ li {
     margin-right: 8px;
     margin-top: 0;
     background: url(../images/player_large.png) no-repeat 0 9999px;
-    background-position: -180px 0px;
+    background-position: -288px 0px;
 }
 
-.playlist-detail .detail-head-title .delete:hover {
+.playlist-detail .detail-head-title .edit:hover {
     background: url(../images/player_large.png) no-repeat 0 9999px;
-    background-position: -180px -36px;
+    background-position: -288px -36px;
 }
 
 .playlist-detail .detail-head-title .clone {
@@ -773,7 +811,7 @@ li {
     float: left;
     width: 100%;
     display: block;
-    padding: 8px;
+    padding: 10px;
 }
 
 .detail-songlist .col2 {
@@ -789,6 +827,10 @@ li {
     margin-left: 2%;
 }
 
+.detail-songlist .disabled {
+    color: #777777;
+}
+
 .detail-songlist .col-add {
     float: left;
     width: 75px;
@@ -797,7 +839,7 @@ li {
 
 .detail-songlist .detail-tools {
     float: right;
-    height: 35px;
+    height: 21px;
     position: relative;
     width: 118px;
 }
@@ -873,19 +915,19 @@ li {
     float: left;
 }
 
-.playlist-detail .detail-close {
+.cover-container .detail-close {
     position: absolute;
     right: -32px;
     top: 0px;
 }
 
-.playlist-detail .detail-close span {
+.cover-container .detail-close span {
     font-size: 34px;
     cursor: pointer;
     color: #aaaaaa;
 }
 
-.playlist-detail .detail-close span:hover {
+.cover-container .detail-close span:hover {
     color: #ffffff;
 }
 
@@ -920,19 +962,73 @@ li {
 }
 
 .dialog-newplaylist .confirm-button {
-    margin-right: 64px;
+    margin-left: 76px;
+    margin-right: 96px;
+}
+
+.dialog-editplaylist .dialog-footer {
+    position: absolute;
+    bottom: 20px;
+}
+
+.dialog-editplaylist .confirm-button {
+    margin-right: 82px;
+    margin-left: 93px;
+}
+
+.dialog-connect-lastfm .buttons {
+    margin-top: 30px;
+}
+
+.dialog-connect-lastfm .confirm-button{
+    margin-left: 40px;
+    margin-right: 48px;
 }
 
 .source-list {
     position: absolute;
     right: -32px;
     top: 0px;
+    z-index: 10;
+    text-align: center;
 }
 
-.source-list button{
+.source-list div{
     background-color: #333333;
-    color: #fff;
+    color: #ffffff;
+    height: 35px;
+    border: 1px solid #ffffff;
+    width: 75px;
+    cursor: pointer;
+    vertical-align: middle;
+    padding-top: 6px;
 }
+
+.source-list div:first-child:not(:last-child) {
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+.source-list div:last-child:not(:first-child) {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 4px;
+    border-bottom-left-radius: 4px;
+}
+
+.source-list .active {
+    background-color: #e6e6e6;
+    color: #333333;
+}
+
+.source-list div:hover {
+    background-color: #ffffff;
+    color: #333333;
+}
+
+
 
 .settings-title {
     font-size: 20px;
