@@ -14,7 +14,7 @@
     .config( [
     '$compileProvider',
     function( $compileProvider )
-    {   
+    {
         $compileProvider.imgSrcSanitizationWhitelist(/^\s*(https?|ftp|mailto|chrome-extension|moz-extension|file):/);
     }
   ]);
@@ -46,7 +46,7 @@
   app.run(['angularPlayer', 'Notification', 'loWeb', function(angularPlayer, Notification, loWeb) {
     angularPlayer.setBootstrapTrack(
       loWeb.bootstrapTrack(
-        function(){}, 
+        function(){},
         function(){
           Notification.info('版权原因无法播放，请搜索其他平台');
         })
@@ -64,7 +64,7 @@
             break;
         case 2:
             return "单曲循环";
-            break;    
+            break;
       }
     };
   });
@@ -118,8 +118,8 @@
 
     $scope.$on('lyricLineNumber', function(event, data) {
       $scope.lyricLineNumber = data;
-    }); 
-    
+    });
+
     $scope.showTag = function(tag_id){
       $scope.current_tag = tag_id;
       $scope.is_window_hidden = 1;
@@ -142,7 +142,7 @@
       $scope.window_url_stack.push(url);
       loWeb.get(url).success(function(data) {
           if (data.status == '0') {
-            Notification.info(data.reason);  
+            Notification.info(data.reason);
             $scope.popWindow();
             return;
           }
@@ -205,7 +205,7 @@
                 index = Math.floor(Math.random() * (max - min + 1)) + min;
               }
               angularPlayer.playTrack($scope.songs[index].id);
-              
+
             });
           }, 0);
       });
@@ -256,7 +256,7 @@
           'Content-Type': 'application/x-www-form-urlencoded'
         }
       }).success(function() {
-        Notification.success('添加到歌单成功');  
+        Notification.success('添加到歌单成功');
         $scope.closeDialog();
         // add to current playing list
         if (option_id == $scope.current_list_id) {
@@ -288,7 +288,7 @@
         }
       }).success(function() {
         $rootScope.$broadcast('myplaylist:update');
-        Notification.success('添加到歌单成功');  
+        Notification.success('添加到歌单成功');
         $scope.closeDialog();
       });
     };
@@ -335,7 +335,7 @@
         if (index > -1) {
           $scope.songs.splice(index, 1);
         }
-        Notification.success('删除成功');  
+        Notification.success('删除成功');
       });
     }
 
@@ -615,7 +615,7 @@
           return;
         }
         angularPlayer.addTrackArray(localCurrentPlaying);
-        
+
         var localPlayerSettings = localStorage.getObject('player-settings');
         if (localPlayerSettings == null) {
           return;
@@ -919,16 +919,107 @@
       $scope.tab = 0;
       $scope.keywords = '';
       $scope.loading = false;
-
-      $scope.changeTab = function(newTab){
-        $scope.loading = true;
-        $scope.tab = newTab;
-        $scope.result = [];
-        loWeb.get('/search?source=' + getSourceName($scope.tab) + '&keywords=' + $scope.keywords).success(function(data) {
-            // update the textarea
-            $scope.result = data.result;
-            $scope.loading = false;  
+      $scope.necurpage= 1;
+      $scope.netotalpage = 1;
+      $scope.xmcurpage= 1;
+      $scope.xmtotalpage = 1;
+      $scope.qqcurpage= 1;
+      $scope.qqtotalpage = 1;
+      $scope.curpage = 1;
+      $scope.totalpage = 1;
+      function performSearch(){
+        loWeb.get('/search?source=' + getSourceName($scope.tab) + '&keywords=' + $scope.keywords+'&curpage='+getCurpage()).success(function(data) {
+          // update the textarea
+          $scope.result = data.result;
+          setTotalPage(data.total);
+          $scope.loading = false;
         });
+      }
+      function getCurpage(){
+        switch ($scope.tab) {
+          case 0:
+            return $scope.necurpage;
+            break;
+          case 1:
+            return $scope.xmcurpage;
+            break;
+          case 2:
+            return $scope.qqcurpage;
+            break;
+
+        }
+      }
+      function setCurpage(p){
+        switch ($scope.tab) {
+          case 0:
+            $scope.curpage = $scope.necurpage = p ;
+            break;
+          case 1:
+            $scope.curpage = $scope.xmcurpage = p;
+            break;
+          case 2:
+            $scope.curpage = $scope.qqcurpage = p;
+            break;
+
+        }
+      }
+      function getTotalpage(){
+        switch ($scope.tab) {
+          case 0:
+            return $scope.netotalpage;
+            break;
+          case 1:
+            return $scope.netotalpage;
+            break;
+          case 2:
+            return $scope.qqtotalpage;
+            break;
+
+        }
+      }
+      function setTotalPage(totalNum){
+        switch ($scope.tab) {
+          case 0:
+            $scope.totalpage=$scope.netotalpage=Math.ceil(totalNum/20);
+            break;
+          case 1:
+            $scope.totalpage=$scope.xmtotalpage=Math.ceil(totalNum/20);
+            break;
+          case 2:
+            $scope.totalpage=$scope.qqtotalpage=Math.ceil(totalNum/20);
+            break;
+
+        }
+      }
+      function pageChangeBy(num){
+        switch ($scope.tab) {
+          case 0:
+            $scope.curpage=$scope.necurpage+=num;
+
+            break;
+          case 1:
+            $scope.curpage=$scope.xmcurpage+=num;
+            break;
+          case 2:
+            $scope.curpage=$scope.qqcurpage+=num;
+            break;
+        }
+      }
+      $scope.nextPage = function(){
+        pageChangeBy(1)
+        performSearch();
+
+      }
+      $scope.previousPage = function(){
+        pageChangeBy(-1)
+        performSearch();
+      }
+      $scope.changeTab = function(newTab){
+        $scope.tab = newTab;
+        setCurpage(1);
+        $scope.loading = true;
+        $scope.result = [];
+        performSearch();
       };
 
       $scope.isActiveTab = function(tab){
@@ -943,17 +1034,26 @@
         // if searchStr is still the same..
         // go ahead and retrieve the data
         if (tmpStr === $scope.keywords)
-        { 
-          $scope.loading = true;
-          loWeb.get('/search?source=' + getSourceName($scope.tab) + '&keywords=' + $scope.keywords).success(function(data) {
-            // update the textarea
-            $scope.result = data.result;
-            $scope.loading = false; 
-          });
+        {
+          setCurpage(1)
+          performSearch();
         }
       });
   }]);
 
+  app.directive('pagination',function(){
+    return {
+      restrict: "EA",
+      replace:true,
+			template: ' <button class="btn btn-sm btn-pagination" ng-click="previousPage()" ng-disabled="curpage==1"> 上一页</button>\
+     <label> {{curpage}}/{{totalpage}} 页 </label>\
+     <button class="btn btn-sm btn-pagination" ng-click="nextPage()" ng-disabled="curpage==totalpage"> 下一页</button>',
+			replace: false,
+			link: function(scope, element, attrs) {
+
+    }
+  }
+})
   app.directive('errSrc', function() {
     // http://stackoverflow.com/questions/16310298/if-a-ngsrc-path-resolves-to-a-404-is-there-a-way-to-fallback-to-a-default
     return {
@@ -979,11 +1079,11 @@
             var headerHeight = 90;
             var footerHeight = 90;
             element.css('height', (w.height() - headerHeight - footerHeight) + 'px' );
-          };  
-        w.bind('resize', function () {        
-            changeHeight();   // when window size gets changed             
-      });  
-          changeHeight(); // when page loads          
+          };
+        w.bind('resize', function () {
+            changeHeight();   // when window size gets changed
+      });
+          changeHeight(); // when page loads
     };
   });
 
@@ -1071,7 +1171,7 @@
       function(angularPlayer, $document, $rootScope) {
     return function(scope, element, attrs) {
       var x;
-      var container; 
+      var container;
       var mode = attrs.mode;
 
       function onMyMousedown() {
@@ -1157,8 +1257,8 @@
     };
   }]);
 
-  app.controller('MyPlayListController', ['$http','$scope', '$timeout',  
-        'angularPlayer', 'loWeb', 
+  app.controller('MyPlayListController', ['$http','$scope', '$timeout',
+        'angularPlayer', 'loWeb',
         function($http, $scope, $timeout, angularPlayer, loWeb){
     $scope.myplaylists = [];
 
@@ -1187,7 +1287,7 @@
                                         function($http, $scope, $timeout, angularPlayer, loWeb){
     $scope.result = [];
     $scope.tab = 0;
-    $scope.loading = true 
+    $scope.loading = true
 
     $scope.changeTab = function(newTab){
       $scope.tab = newTab;
@@ -1222,9 +1322,9 @@
     };
   }]);
 
-  // app.controller('ImportController', ['$http', 
+  // app.controller('ImportController', ['$http',
   //   '$httpParamSerializerJQLike', '$scope', '$interval',
-  //   '$timeout', '$rootScope', 'Notification', 'angularPlayer', 
+  //   '$timeout', '$rootScope', 'Notification', 'angularPlayer',
   //   function($http, $httpParamSerializerJQLike, $scope,
   //     $interval, $timeout, $rootScope, Notification, angularPlayer){
   //   $scope.validcode_url = "";
@@ -1297,8 +1397,8 @@
 
   //   $scope.start = function() {
   //     // stops any running interval to avoid two intervals running at the same time
-  //     $scope.stop(); 
-      
+  //     $scope.stop();
+
   //     // store the interval promise
   //     promise = $interval(poll, 1000);
   //   };

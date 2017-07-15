@@ -1,3 +1,6 @@
+Listen 1 (Chrome Extension) (更新于7月15日)
+==========
+ 增加搜索分页功能
 Listen 1 (Chrome Extension) (更新于7月13日)
 ==========
 

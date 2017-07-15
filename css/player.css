@@ -37,7 +37,7 @@ a {
     text-align: left;
     border-bottom: 1px solid;
     margin-bottom: 20px;
-} 
+}
 
 .dialog-header .dialog-close {
     float: right;
@@ -53,7 +53,7 @@ a {
     background-color: #333;
 }
 
-/*.masthead { 
+/*.masthead {
     z-index: 999;
 }*/
 
@@ -91,7 +91,7 @@ a {
     margin-top: 90px;
 }
 
-.site-wrapper { 
+.site-wrapper {
     width:100%;
     overflow:hidden;
     position: absolute;
@@ -271,11 +271,11 @@ a {
 .m-playbar .btns .play{
     width: 36px;
     height: 36px;
-    margin-top:0; 
+    margin-top:0;
     background-position: 0px 0px;
 }
 
-.m-playbar .btns .play:hover{ 
+.m-playbar .btns .play:hover{
     background-position: 0px -36px;
 }
 
@@ -283,7 +283,7 @@ a {
     background-position: -108px 0px;
 }
 
-.m-playbar .btns .pas:hover{ 
+.m-playbar .btns .pas:hover{
     background-position: -108px -36px;
 }
 
@@ -379,7 +379,7 @@ a {
 
 .m-pbar {
     position: relative;
-    
+
 }
 
 .m-pbar.play {
@@ -907,7 +907,7 @@ li {
 }
 
 .detail-songlist .detail-artist a{
-    color: #777777;   
+    color: #777777;
 }
 
 .detail-songlist .odd {
@@ -1003,17 +1003,17 @@ li {
     margin-right: 48px;
 }
 
-.btn-group button{
+.btn-group button,.btn-pagination,.btn-pagination:focus {
     background-color: #333333;
     color: #ffffff;
     border-color: #333333;
 }
-.btn-group .active {
+.btn-group .active,{
     background-color: #e6e6e6!important;
     color: #333333!important;
 }
 
-.btn-group button:hover {
+.btn-group button:hover,.btn-pagination:hover {
     background-color: #ffffff!important;
     color: #333333!important;
 }
@@ -1026,9 +1026,9 @@ li {
     padding: 20px;
 }
 ::-webkit-scrollbar{
-  width: 7px;
+  width: 5px;
   height: 7px;
-  border-radius: 4px;
+  border-radius: 3px;
   background-color: #333;
 }
 ::-webkit-scrollbar-button{
