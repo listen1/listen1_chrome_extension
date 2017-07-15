@@ -2,7 +2,7 @@ Listen 1 (Chrome Extension) (更新于7月15日)
 ==========
 
  增加搜索分页功能
-
+![Screenshotfrom2017-07-1522-33-23.png](http://pasteupload.com/images/2017/07/15/Screenshotfrom2017-07-1522-33-23.png)
 Listen 1 (Chrome Extension) (更新于7月13日)
 ==========
 
