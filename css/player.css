@@ -1,10 +1,10 @@
 a {
- cursor: pointer;
+    cursor: pointer;
 }
 
 .shadow {
     position: fixed;
-    background: rgba(30,30,30,0.9);
+    background: rgba(30, 30, 30, 0.9);
     _position: absolute;
     z-index: 9999;
     top: 0;
@@ -21,7 +21,7 @@ a {
     top: 120px;
     width: 480px;
     height: 420px;
-    z-index:10000;
+    z-index: 10000;
     overflow: hidden;
     border-radius: 4px 4px 4px 4px;
     padding: 20px;
@@ -37,7 +37,7 @@ a {
     text-align: left;
     border-bottom: 1px solid;
     margin-bottom: 20px;
-} 
+}
 
 .dialog-header .dialog-close {
     float: right;
@@ -53,11 +53,13 @@ a {
     background-color: #333;
 }
 
+
 /*.masthead { 
     z-index: 999;
 }*/
 
-.masthead, .mastfoot {
+.masthead,
+.mastfoot {
     margin: 0 auto;
     left: 0;
     right: 0;
@@ -79,7 +81,7 @@ a {
 }
 
 .masthead .masthead-brand {
-    color: rgba(255,255,255, 1);
+    color: rgba(255, 255, 255, 1);
     cursor: pointer;
 }
 
@@ -91,9 +93,9 @@ a {
     margin-top: 90px;
 }
 
-.site-wrapper { 
-    width:100%;
-    overflow:hidden;
+.site-wrapper {
+    width: 100%;
+    overflow: hidden;
     position: absolute;
     padding-left: 17px;
 }
@@ -103,24 +105,24 @@ a {
     margin-top: 90px;
     /* uncomment the line below will hide the scroll bar */
     /*padding-right: 17px;*/
-    box-sizing:content-box;
-    width:100%;
+    box-sizing: content-box;
+    width: 100%;
     background-color: #333;
 }
 
-.searchbox {
-/*    margin-top: 100px;*/
-}
 
-.searchbox .nav{
+/* .searchbox {
+       margin-top: 100px;
+} */
+
+.searchbox .nav {
     margin-top: 12px;
 }
 
-.searchbox .nav .searchspinner{
+.searchbox .nav .searchspinner {
     margin-top: 8px;
     height: 25px;
 }
-
 
 .searchitem {
     height: 92px;
@@ -128,8 +130,8 @@ a {
 
 .searchitem img {
     float: left;
-    height:90px;
-    width:90px;
+    height: 90px;
+    width: 90px;
 }
 
 .searchitem div {
@@ -145,7 +147,6 @@ a {
 
 .playlist-covers li {
     float: left;
-    display: inline-block;
     width: 140px;
     height: 188px;
     margin-right: 22px;
@@ -172,12 +173,12 @@ a {
 }
 
 .playlist-covers .loading_bottom {
-    clear:both;
-    text-align:center;
+    clear: both;
+    text-align: center;
 }
 
 .playlist-covers .loading_bottom img {
-    height:35px;
+    height: 35px;
 }
 
 .u-cover .mask {
@@ -219,13 +220,16 @@ a {
     background-color: #222222;
 }
 
-
 .m-playbar .btns {
     width: 157px;
     padding: 27px 0 0 19px;
 }
 
-.m-playbar .btns, .m-playbar .head, .m-playbar .play, .m-playbar .volum, .m-playbar .oper {
+.m-playbar .btns,
+.m-playbar .head,
+.m-playbar .play,
+.m-playbar .volum,
+.m-playbar .oper {
     float: left;
 }
 
@@ -239,7 +243,9 @@ a {
     background: url(../images/loading.gif);
 }
 
-.m-pbar .barbg, .m-pbar .cur, .m-pbar .left {
+.m-pbar .barbg,
+.m-pbar .cur,
+.m-pbar .left {
     background: url(../images/statbar.png) no-repeat 0 9999px;
     _background-image: url(../images/statbar.png);
 }
@@ -260,39 +266,39 @@ a {
     text-indent: -9999px;
 }
 
-.m-playbar .btns .previous{
+.m-playbar .btns .previous {
     background-position: -72px 0px;
 }
 
-.m-playbar .btns .previous:hover{
-    background-position:-72px -36px;
+.m-playbar .btns .previous:hover {
+    background-position: -72px -36px;
 }
 
-.m-playbar .btns .play{
+.m-playbar .btns .play {
     width: 36px;
     height: 36px;
-    margin-top:0; 
+    margin-top: 0;
     background-position: 0px 0px;
 }
 
-.m-playbar .btns .play:hover{ 
+.m-playbar .btns .play:hover {
     background-position: 0px -36px;
 }
 
-.m-playbar .btns .pas{
+.m-playbar .btns .pas {
     background-position: -108px 0px;
 }
 
-.m-playbar .btns .pas:hover{ 
+.m-playbar .btns .pas:hover {
     background-position: -108px -36px;
 }
 
-.m-playbar .btns .next{
+.m-playbar .btns .next {
     /* pause icon distance adjust from 36 to 38 */
     background-position: -38px 0px;
 }
 
-.m-playbar .btns .next:hover{
+.m-playbar .btns .next:hover {
     background-position: -38px -36px;
 }
 
@@ -301,7 +307,8 @@ a {
     margin: 10px 15px 0 0;
 }
 
-.m-playbar .head, .m-playbar .head img {
+.m-playbar .head,
+.m-playbar .head img {
     width: 70px;
     height: 70px;
 }
@@ -321,7 +328,7 @@ a {
     margin-right: 120px;
 }
 
-.m-playbar .words .notextdeco{
+.m-playbar .words .notextdeco {
     text-decoration: none;
 }
 
@@ -379,7 +386,6 @@ a {
 
 .m-pbar {
     position: relative;
-    
 }
 
 .m-pbar.play {
@@ -396,14 +402,15 @@ a {
     margin-top: 0px;
 }
 
-.m-pbar .barbg, .m-pbar .cur, .m-pbar .rdy {
+.m-pbar .barbg,
+.m-pbar .cur,
+.m-pbar .rdy {
     height: 7px;
 }
 
 .m-pbar .barbg {
     background-position: right 0;
 }
-
 
 .m-pbar .cur {
     position: absolute;
@@ -440,7 +447,8 @@ a {
     color: #a1a1a1;
 }
 
-em, i {
+em,
+i {
     font-style: normal;
     text-align: left;
     font-size: inherit;
@@ -563,15 +571,15 @@ em, i {
     position: relative;
 }
 
-.m-playbar .menu .lyric p{
+.m-playbar .menu .lyric p {
     min-height: 20px;
 }
 
-.m-playbar .menu .lyric .placeholder{
+.m-playbar .menu .lyric .placeholder {
     height: 50px;
 }
 
-.m-playbar .menu .lyric .highlight{
+.m-playbar .menu .lyric .highlight {
     font-size: 15px;
     color: #ffffff;
 }
@@ -580,7 +588,8 @@ em, i {
     background-color: #555555;
 }
 
-.m-playbar .menu li:hover, .m-playbar .menu li:focus {
+.m-playbar .menu li:hover,
+.m-playbar .menu li:focus {
     background-color: #999999;
 }
 
@@ -629,7 +638,7 @@ li {
 }
 
 .menu .close-popup {
-    float:right;
+    float: right;
     margin-right: 14px;
     font-size: 20px;
     text-decoration: none;
@@ -666,9 +675,9 @@ li {
     cursor: pointer;
 }
 
-.dbimport {
-    /*margin-top: 100px;*/
-}
+/* .dbimport {
+    margin-top: 100px;
+} */
 
 .form-signin {
     width: 300px;
@@ -677,7 +686,9 @@ li {
     text-align: center;
 }
 
-.form-signin .form-control, .form-signin .valid-img, .form-signin .btn {
+.form-signin .form-control,
+.form-signin .valid-img,
+.form-signin .btn {
     margin-top: 10px;
 }
 
@@ -705,14 +716,14 @@ li {
 
 .playlist-detail .detail-head-cover {
     height: 180px;
-/*    width: 225px;*/
+    /*    width: 225px;*/
     float: left;
     margin: 10px;
 }
 
 .playlist-detail .detail-head-cover img {
-    max-width:100%;
-    max-height:100%;
+    max-width: 100%;
+    max-height: 100%;
 }
 
 .playlist-detail .detail-head-title {
@@ -791,7 +802,7 @@ li {
     background-position: -40px -204px;
 }
 
-.playlist-detail .detail-head-title h2{
+.playlist-detail .detail-head-title h2 {
     font-size: 17px;
     margin-bottom: 35px;
 }
@@ -851,35 +862,35 @@ li {
     cursor: pointer;
 }
 
-.detail-songlist .detail-tools .detail-add-button{
+.detail-songlist .detail-tools .detail-add-button {
     background-position: 0px 0px;
 }
 
-.detail-songlist .detail-tools .detail-fav-button{
+.detail-songlist .detail-tools .detail-fav-button {
     background-position: -25px 0px;
 }
 
-.detail-songlist .detail-tools .detail-delete-button{
+.detail-songlist .detail-tools .detail-delete-button {
     background-position: -75px 0px;
 }
 
-.detail-songlist .detail-tools .source-button{
+.detail-songlist .detail-tools .source-button {
     background-position: -100px 0px;
 }
 
-.detail-songlist .detail-tools .detail-add-button:hover{
+.detail-songlist .detail-tools .detail-add-button:hover {
     background-position: 0px -25px;
 }
 
-.detail-songlist .detail-tools .detail-fav-button:hover{
+.detail-songlist .detail-tools .detail-fav-button:hover {
     background-position: -25px -25px;
 }
 
-.detail-songlist .detail-tools .detail-delete-button:hover{
+.detail-songlist .detail-tools .detail-delete-button:hover {
     background-position: -75px -25px;
 }
 
-.detail-songlist .detail-tools .source-button:hover{
+.detail-songlist .detail-tools .source-button:hover {
     background-position: -100px -25px;
 }
 
@@ -888,15 +899,16 @@ li {
     display: inline-block;
 }
 
-.detail-songlist .detail-artist a{
-    color: #777777;   
+.detail-songlist .detail-artist a {
+    color: #777777;
 }
 
 .detail-songlist .odd {
     background-color: #333;
 }
 
-.detail-songlist .even,  .detail-songlist .detail-add{
+.detail-songlist .even,
+.detail-songlist .detail-add {
     background-color: #2d2d2d;
 }
 
@@ -905,11 +917,12 @@ li {
     cursor: pointer;
 }
 
+
 /*.playlist-detail .detail-songlist li:hover {
     background-color: #999999;
 }*/
 
-.playlist-detail .btn{
+.playlist-detail .btn {
     width: 88px;
     margin-top: 0;
     float: left;
@@ -952,12 +965,12 @@ li {
     width: 100px;
 }
 
-.dialog-playlist li h2{
+.dialog-playlist li h2 {
     margin-left: 125px;
     font-size: 17px;
 }
 
-.dialog-newplaylist input{
+.dialog-newplaylist input {
     margin-bottom: 22px;
 }
 
@@ -980,7 +993,7 @@ li {
     margin-top: 30px;
 }
 
-.dialog-connect-lastfm .confirm-button{
+.dialog-connect-lastfm .confirm-button {
     margin-left: 40px;
     margin-right: 48px;
 }
@@ -993,7 +1006,7 @@ li {
     text-align: center;
 }
 
-.source-list div{
+.source-list div {
     background-color: #333333;
     color: #ffffff;
     height: 35px;
@@ -1027,8 +1040,6 @@ li {
     background-color: #ffffff;
     color: #333333;
 }
-
-
 
 .settings-title {
     font-size: 20px;
