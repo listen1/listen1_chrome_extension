@@ -42,7 +42,6 @@
     </head>
 
     <body ng-controller="NavigationController">
-
         <!-- dialog -->
         <div class="shadow" ng-hide="is_dialog_hidden==1"></div>
         <div class="dialog" ng-hide="is_dialog_hidden==1" ng-style="myStyle">
@@ -115,7 +114,6 @@
 
             </div>
         </div>
-
         <!-- page header -->
         <div class="masthead clearfix">
             <div class="inner">
@@ -131,8 +129,6 @@
                 </nav>
             </div>
         </div>
-
-
         <!-- content page: 我的歌单 -->
         <div class="site-wrapper" ng-show="current_tag==1" ng-controller="MyPlayListController">
             <div class="site-wrapper-innerd" resize>
@@ -157,8 +153,6 @@
                 </div>
             </div>
         </div>
-
-
         <!-- content page: 精选歌单 -->
         <div class="site-wrapper" ng-show="current_tag==2" ng-controller="PlayListController" ng-init="loadPlaylist();">
             <div class="cover-container container-placeholder">
@@ -193,8 +187,6 @@
                 </div>
             </div>
         </div>
-
-
         <!-- content page: 快速搜索 -->
         <div class="site-wrapper" ng-show="current_tag==3">
             <div class="site-wrapper-innerd" resize>
@@ -215,7 +207,7 @@
                             </div>
                         </ul>
                         <ul class="detail-songlist">
-                            <li ng-repeat="song in result" ng-class-odd="'odd'" ng-class-even="'even'" ng-mouseenter="options=true" ng-mouseleave="options=false">
+                            <li ng-repeat="song in result" ng-click="song.checked=!song.checked;onMultiSelect();" ng-class-odd="'odd'" ng-class-even="'even'" ng-mouseenter="options=true" ng-mouseleave="options=false">
                                 <div style="position:absolute;" ng-show="song.checked || options">
                                     <input type="checkbox" ng-model="song.checked" ng-change="onMultiSelect()" style="cursor:pointer;">
                                 </div>
@@ -236,8 +228,6 @@
                 </div>
             </div>
         </div>
-
-
         <!-- content page: 设置 -->
         <div class="site-wrapper" ng-show="current_tag==4" ng-init="lastfm.updateStatus()">
             <div class="site-wrapper-innerd" resize>
@@ -285,8 +275,6 @@
         </div>
       </div>
     </div>
-
-
     <!-- track list window -->
     <div class="site-wrapper" ng-hide="is_window_hidden==1">
       <div class="cover-container container-placeholder">

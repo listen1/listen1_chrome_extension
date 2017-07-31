@@ -252,7 +252,6 @@
                     $scope.closeDialog();
                     // add to current playing list
                     if (option_id == $scope.current_list_id) {
-                        console.log('添加到歌单成功', $scope.dialog_song);
                         if (Array.isArray($scope.dialog_song)) {
                             angularPlayer.addTrackArray($scope.dialog_song);
                         } else {

@@ -74,7 +74,6 @@ var myplaylist = (function () {
     }
 
     var add_myplaylist = function (playlist_id, track) {
-        console.log('add_myplaylist track ', track);
         var playlist = localStorage.getObject(playlist_id);
         if (playlist == null) {
             return;
