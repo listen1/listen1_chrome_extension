@@ -211,6 +211,7 @@
               <li  ng-class="{'active':isActiveTab(2)}" ng-click="changeTab(2)"><a href="#">QQ音乐</a></li> 
               <li  ng-class="{'active':isActiveTab(3)}" ng-click="changeTab(3)" ng-show="isDoubanLogin"><a href="#">豆瓣</a></li>
               <img class="searchspinner" id="spinner" src="images/loading.gif" ng-show="loading">
+              <a class="addallbtn" add-all-without-play="result"><small>添加所有到当前播放</small></a>
             </ul>
             <ul class="detail-songlist">
               <li ng-repeat="song in result" ng-class-odd="'odd'" ng-class-even="'even'" ng-mouseenter="options=true" ng-mouseleave="options=false">
