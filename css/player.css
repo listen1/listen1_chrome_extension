@@ -1053,7 +1053,15 @@ li {
     top: -56px;
     z-index: 1000;
 }
-.nav-tabs li>a:hover{
-    background-color: #ffffff!important;
-    color: #333333!important;
+.nav-tabs li:first-child>a:hover,.nav-tabs li.active:first-child>a{
+    background-color: #c20c0c!important;
+    color: #fff!important;
+}
+.nav-tabs li:nth-child(2)>a:hover,.nav-tabs li.active:nth-child(2)>a{
+    background-color: #CC5A18!important;
+    color: #fff!important;
+}
+.nav-tabs li:nth-child(3)>a:hover,.nav-tabs li.active:nth-child(3)>a{
+    background-color: #31c27c!important;
+    color: #fff!important;
 }
