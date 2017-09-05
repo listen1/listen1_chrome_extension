@@ -1053,3 +1053,7 @@ li {
     top: -56px;
     z-index: 1000;
 }
+.nav-tabs li>a:hover{
+    background-color: #ffffff!important;
+    color: #333333!important;
+}
