@@ -157,9 +157,9 @@ var netease = (function() {
     }
 
     function _encrypted_request(text) {
-        var modulus = '00e0b509f6259df8642dbc35662901477df22677ec152b5ff68ace615bb7b72' + 
-        '5152b3ab17a876aea8a5aa76d2e417629ec4ee341f56135fccf695280104e0312ecbd' + 
-        'a92557c93870114af6c9d05c4f7f0c3685b7a46bee255932575cce10b424d813cfe48' + 
+        var modulus = '00e0b509f6259df8642dbc35662901477df22677ec152b5ff68ace615bb7b72' +
+        '5152b3ab17a876aea8a5aa76d2e417629ec4ee341f56135fccf695280104e0312ecbd' +
+        'a92557c93870114af6c9d05c4f7f0c3685b7a46bee255932575cce10b424d813cfe48' +
         '75d3e82047b97ddef52741d546b8e289dc6935b3ece0462db0a22b8e7';
         var nonce = '0CoJUm6Qyw8W8jud';
         var pubKey = '010001';
@@ -211,14 +211,15 @@ var netease = (function() {
     function is_playable(song) {
         return ((song.status >= 0) && (song.fee != 4));
     }
-    
+
     var ne_search = function(url, hm, se) {
         // use chrome extension to modify referer.
         var target_url = 'http://music.163.com/api/search/pc';
         var keyword = getParameterByName('keywords', url);
+        var curpage = getParameterByName('curpage', url);
         var req_data = {
             's': keyword,
-            'offset': 0,
+            'offset': 20*(curpage-1),
             'limit': 20,
             'type': 1
         };
@@ -254,7 +255,7 @@ var netease = (function() {
                         }
                         tracks.push(default_track);
                     });
-                    return fn({"result":tracks});
+                    return fn({"result":tracks,"total":data.result.songCount});
                 });
             }
         };
@@ -407,4 +408,3 @@ return {
 };
 
 })();
-

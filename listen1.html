@@ -95,10 +95,10 @@
             <label >封面图片url</label>
             <input type="text" class="form-control" placeholder="输入歌单名称" ng-model="dialog_cover_img_url"/>
           </div>
-          
+
           <button class="btn btn-primary confirm-button" ng-click="editMyPlaylist(list_id)">修改歌单</button>
           <button class="btn btn-default" ng-click="closeDialog()">取消</button>
-          <div class='dialog-footer'> 
+          <div class='dialog-footer'>
             <button class="btn btn-danger remove-button" ng-click="removeMyPlaylist(list_id)">删除歌单</button>
           </div>
         </div>
@@ -125,7 +125,8 @@
             <li ng-class="{ 'active':current_tag==2 }"><a ng-click="showTag(2)">精选歌单</a></li>
             <li ng-class="{ 'active':current_tag==1 }"><a ng-click="showTag(1)">我的歌单</a></li>
             <li ng-class="{ 'active':current_tag==3 }"><a ng-click="showTag(3)">快速搜索</a></li>
-            <li ng-class="{ 'active':current_tag==4 }"><a ng-click="showTag(4)">关于</a></li>
+            <li ng-class="{ 'active':current_tag==4 }"><a ng-click="showTag(4)">当前歌词</a></li>
+            <li ng-class="{ 'active':current_tag==5 }"><a ng-click="showTag(5)">关于</a></li>
           </ul>
         </nav>
       </div>
@@ -162,10 +163,10 @@
     <div class="site-wrapper" ng-show="current_tag==2" ng-controller="PlayListController" ng-init="loadPlaylist();">
       <div class="cover-container container-placeholder">
         <!-- make empty placeholder div to position sidebar -->
-        <div class="source-list" ng-show="is_window_hidden==1">
-          <div class="source-button" ng-class="{'active':isActiveTab(0)}" ng-click="changeTab(0)">网易</div>
-          <div class="source-button" ng-class="{'active':isActiveTab(1)}" ng-click="changeTab(1)">虾米</div>
-          <div class="source-button" ng-class="{'active':isActiveTab(2)}" ng-click="changeTab(2)">QQ音乐</div>
+        <div class="btn-group" role="group" ng-show="is_window_hidden==1">
+          <button type="button" class="btn btn-default" ng-class="{'active':isActiveTab(0)}" ng-click="changeTab(0)">网易</button>
+          <button type="button" class="btn btn-default" ng-class="{'active':isActiveTab(1)}" ng-click="changeTab(1)">虾米</button>
+          <button type="button" class="btn btn-default" ng-class="{'active':isActiveTab(2)}" ng-click="changeTab(2)">QQ音乐</button>
           <!-- <button type="button" class="btn btn-default" ng-class="{'active':isActiveTab(3)}" ng-click="changeTab(3)" ng-show="isDoubanLogin">豆瓣</button> -->
         </div>
       </div>
@@ -205,10 +206,10 @@
 
 
 
-            <ul class="nav nav-tabs"> 
+            <ul class="nav nav-tabs">
               <li ng-class="{'active':isActiveTab(0)}" ng-click="changeTab(0)"><a>网易</a></li>
               <li ng-class="{'active':isActiveTab(1)}" ng-click="changeTab(1)"><a href="#">虾米</a></li>
-              <li  ng-class="{'active':isActiveTab(2)}" ng-click="changeTab(2)"><a href="#">QQ音乐</a></li> 
+              <li  ng-class="{'active':isActiveTab(2)}" ng-click="changeTab(2)"><a href="#">QQ音乐</a></li>
               <li  ng-class="{'active':isActiveTab(3)}" ng-click="changeTab(3)" ng-show="isDoubanLogin"><a href="#">豆瓣</a></li>
               <img class="searchspinner" id="spinner" src="images/loading.gif" ng-show="loading">
             </ul>
@@ -220,7 +221,7 @@
                   </div>
                   <div class="col1 detail-artist"><a ng-click="showPlaylist(song.artist_id)">{{ song.artist }}</a></div>
                   <div class="col2"><a ng-click="showPlaylist(song.album_id)">{{ song.album }}</a></div>
-                  
+
                   <div class="detail-tools">
                     <a title="添加到当前播放" class="detail-add-button" add-without-play="song" ng-show="options"></a>
                     <a title="添加到歌单" class="detail-fav-button" ng-show="options" ng-click="showDialog(0, song)"></a>
@@ -228,14 +229,28 @@
                   </div>
               </li>
             </ul>
+            <pagination ng-show= "totalpage>1"></pagination>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- content page: 歌词 -->
+    <div class="site-wrapper" ng-show="current_tag==4" ng-init="lastfm.updateStatus()">
+      <div class="site-wrapper-innerd" resize>
+        <div class="cover-container">
+        <div class="lyric-content">
+          <div class="lyric">
+               <div class="placeholder"></div>
+               <p ng-repeat="line in lyricArray track by $index" ng-class="{ 'highlight': line.lineNumber == lyricLineNumber }" >{{ line.content }} </p>
+               <div style="placeholder"></div>
+            </div>
           </div>
         </div>
       </div>
     </div>
 
-
     <!-- content page: 设置 -->
-    <div class="site-wrapper" ng-show="current_tag==4" ng-init="lastfm.updateStatus()">
+    <div class="site-wrapper" ng-show="current_tag==5" ng-init="lastfm.updateStatus()">
       <div class="site-wrapper-innerd" resize>
         <div class="cover-container">
          <!--  <div class="settings-title"><span>第三方登录<span></div>
@@ -352,7 +367,7 @@
                 <a class="" ng-click="showPlaylist(currentPlaying.artist_id)">{{ currentPlaying.artist }}</a>
               </span>
             </span>
-            <a open-url="currentPlaying.source_url" class="src" title="原始链接"></a>  
+            <a open-url="currentPlaying.source_url" class="src" title="原始链接"></a>
           </div>
 
           <div class="m-pbar play" >

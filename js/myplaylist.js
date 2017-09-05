@@ -73,7 +73,7 @@ var remove_myplaylist = function(playlist_id) {
 
 var add_myplaylist = function(playlist_id, track) {
     var playlist = localStorage.getObject(playlist_id);
-    if (playlist == null) {
+    if (playlist == null || playlist.tracks.map(function(e) { return e.id;}).indexOf(track.id)!= -1) {
         return;
     }
     playlist.tracks.push(track);

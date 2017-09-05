@@ -37,7 +37,7 @@ a {
     text-align: left;
     border-bottom: 1px solid;
     margin-bottom: 20px;
-} 
+}
 
 .dialog-header .dialog-close {
     float: right;
@@ -53,7 +53,7 @@ a {
     background-color: #333;
 }
 
-/*.masthead { 
+/*.masthead {
     z-index: 999;
 }*/
 
@@ -91,7 +91,7 @@ a {
     margin-top: 90px;
 }
 
-.site-wrapper { 
+.site-wrapper {
     width:100%;
     overflow:hidden;
     position: absolute;
@@ -271,11 +271,11 @@ a {
 .m-playbar .btns .play{
     width: 36px;
     height: 36px;
-    margin-top:0; 
+    margin-top:0;
     background-position: 0px 0px;
 }
 
-.m-playbar .btns .play:hover{ 
+.m-playbar .btns .play:hover{
     background-position: 0px -36px;
 }
 
@@ -283,7 +283,7 @@ a {
     background-position: -108px 0px;
 }
 
-.m-playbar .btns .pas:hover{ 
+.m-playbar .btns .pas:hover{
     background-position: -108px -36px;
 }
 
@@ -379,7 +379,7 @@ a {
 
 .m-pbar {
     position: relative;
-    
+
 }
 
 .m-pbar.play {
@@ -554,7 +554,7 @@ em, i {
     display: block;
 }
 
-.m-playbar .menu .lyric {
+.m-playbar .menu .lyric{
     text-align: center;
     width: 39%;
     display: inline-block;
@@ -563,17 +563,35 @@ em, i {
     position: relative;
 }
 
-.m-playbar .menu .lyric p{
-    min-height: 20px;
+.lyric-content .lyric {
+   text-align: center;
+    width: 100%;
+    display: inline-block;
+    height: calc(100vh - 200px);
+    overflow-y: scroll;
+    position: relative;
 }
 
-.m-playbar .menu .lyric .placeholder{
+.lyric-content .lyric::-webkit-scrollbar{
+  width: 7px;
+  height: 7px;
+  border-radius: 4px;
+  background-color: #333;
+  display: none;
+}
+
+.m-playbar .menu .lyric p,.lyric-content .lyric p{
+    min-height: 20px;
+    font-size: 16px;
+}
+
+.m-playbar .menu .lyric .placeholder,.lyric-content .lyric .placeholder{
     height: 50px;
 }
 
-.m-playbar .menu .lyric .highlight{
+.m-playbar .menu .lyric .highlight,.lyric-content .lyric .highlight{
     font-size: 15px;
-    color: #ffffff;
+    color: #ff0000;
 }
 
 .m-playbar .menu .playing {
@@ -889,7 +907,7 @@ li {
 }
 
 .detail-songlist .detail-artist a{
-    color: #777777;   
+    color: #777777;
 }
 
 .detail-songlist .odd {
@@ -985,57 +1003,65 @@ li {
     margin-right: 48px;
 }
 
-.source-list {
-    position: absolute;
-    right: -32px;
-    top: 0px;
-    z-index: 10;
-    text-align: center;
-}
-
-.source-list div{
+.btn-group button,.btn-pagination,.btn-pagination:focus {
     background-color: #333333;
     color: #ffffff;
-    height: 35px;
-    border: 1px solid #ffffff;
-    width: 75px;
-    cursor: pointer;
-    vertical-align: middle;
-    padding-top: 6px;
+    border-color: #333333;
+}
+.btn-group .active,{
+    background-color: #e6e6e6!important;
+    color: #333333!important;
 }
 
-.source-list div:first-child:not(:last-child) {
-    border-top-left-radius: 4px;
-    border-top-right-radius: 4px;
-    border-bottom-right-radius: 0;
-    border-bottom-left-radius: 0;
+.btn-group button:hover,.btn-pagination:hover {
+    background-color: #ffffff!important;
+    color: #333333!important;
 }
-
-.source-list div:last-child:not(:first-child) {
-    border-top-left-radius: 0;
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 4px;
-    border-bottom-left-radius: 4px;
-}
-
-.source-list .active {
-    background-color: #e6e6e6;
-    color: #333333;
-}
-
-.source-list div:hover {
-    background-color: #ffffff;
-    color: #333333;
-}
-
-
-
 .settings-title {
     font-size: 20px;
     padding: 20px;
     border-bottom: 2px solid #aaaaaa;
 }
-
 .settings-content {
     padding: 20px;
+}
+::-webkit-scrollbar{
+  width: 5px;
+  height: 7px;
+  border-radius: 3px;
+  background-color: #333;
+}
+::-webkit-scrollbar-button{
+  display: none;
+}
+::-webkit-scrollbar-track-piece {
+  display: none;
+}
+::-webkit-scrollbar-thumb{
+  background-color: #fff;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-corner {
+  display: none;
+}
+::-webkit-resizer{
+  display: none;
+}
+.btn-group{
+   position: absolute;
+    left: 200px;
+    top: -56px;
+    z-index: 1000;
+}
+.nav-tabs li:first-child>a:hover,.nav-tabs li.active:first-child>a{
+    background-color: #c20c0c!important;
+    color: #fff!important;
+}
+.nav-tabs li:nth-child(2)>a:hover,.nav-tabs li.active:nth-child(2)>a{
+    background-color: #CC5A18!important;
+    color: #fff!important;
+}
+.nav-tabs li:nth-child(3)>a:hover,.nav-tabs li.active:nth-child(3)>a{
+    background-color: #31c27c!important;
+    color: #fff!important;
 }

@@ -1,3 +1,22 @@
+Listen 1 (Chrome Extension) (更新于7月15日)
+==========
+
+ 增加搜索分页功能
+![Screenshotfrom2017-07-1522-33-23.png](http://pasteupload.com/images/2017/07/15/Screenshotfrom2017-07-1522-33-23.png)
+Listen 1 (Chrome Extension) (更新于7月13日)
+==========
+
+1. 调整歌单来源按钮到顶部
+
+2. 更改滚动条的样式
+
+3. 增加歌词Tab
+
+#### Chrome菜单->更多工具->发送到桌面->在窗口中打开，不要太爽
+
+[![Screenshotfrom2017-07-1316-48-16.md.png](http://pasteupload.com/images/2017/07/13/Screenshotfrom2017-07-1316-48-16.md.png)](http://pasteupload.com/image/NEQu)
+[![Screenshotfrom2017-07-1316-49-04.md.png](http://pasteupload.com/images/2017/07/13/Screenshotfrom2017-07-1316-49-04.md.png)](http://pasteupload.com/image/N4pJ)
+
 Listen 1 (Chrome Extension) （最后更新于5月27日）
 ==========
 
