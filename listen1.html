@@ -54,7 +54,7 @@
             <img src="images/mycover.jpg" />
             <h2> 新建歌单 </h2>
           </li>
-          <li ng-repeat="playlist in myplaylist" ng-class-odd="'odd'" ng-class-even="'even'" ng-click="chooseDialogOption(playlist.info.id)">
+          <li ng-repeat="playlist in myplaylist track by $index" ng-class-odd="'odd'" ng-class-even="'even'" ng-click="chooseDialogOption(playlist.info.id)">
             <img ng-src="{{ playlist.info.cover_img_url }}" />
             <h2> {{ playlist.info.title }} </h2>
           </li>
@@ -138,7 +138,7 @@
         <div class="cover-container">
           <div class="playlist" ng-init="loadMyPlaylist();">
             <ul class="playlist-covers">
-              <li ng-repeat="i in myplaylists ">
+              <li ng-repeat="i in myplaylists track by $index">
                 <div class="u-cover">
                   <img ng-src="{{i.info.cover_img_url}}">
                   <a title="" class="mask" ng-click="showPlaylist(i.info.id)"></a>
@@ -307,7 +307,7 @@
               </div>
             </div>
             <ul class="detail-songlist">
-              <li ng-repeat="song in songs" ng-class-odd="'odd'" ng-class-even="'even'" ng-mouseenter="options=true" ng-mouseleave="options=false">
+              <li ng-repeat="song in songs track by $index" ng-class-odd="'odd'" ng-class-even="'even'" ng-mouseenter="options=true" ng-mouseleave="options=false">
                   <div class="col2">
                     <a ng-if="song.disabled" class="disabled" ng-click="copyrightNotice()">{{ song.title }}</a>
                     <a ng-if="!song.disabled" add-and-play="song">{{ song.title }}</a>
@@ -394,7 +394,7 @@
               <a class="close-popup" ng-click="menuHidden=!menuHidden">×</a>
           </div>
           <ul>
-            <li id="song{{ song.id }}" ng-repeat="song in playlist" ng-class="{ playing: currentPlaying.id == song.id }" ng-mouseenter="playlist_highlight=true" ng-mouseleave="playlist_highlight=false">
+            <li id="song{{ song.id }}" ng-repeat="song in playlist track by $index" ng-class="{ playing: currentPlaying.id == song.id }" ng-mouseenter="playlist_highlight=true" ng-mouseleave="playlist_highlight=false">
               <div class="title" play-from-playlist="song"><a>{{ song.title }}</a></div>
               <a class="icn-remove" remove-from-playlist="song" data-index="{{$index}}" ng-show="playlist_highlight"></a>
               <div class="singer" ng-click="showPlaylist(song.artist_id)">{{ song.artist }}</div>
