@@ -1,4 +1,4 @@
-Listen 1 (Chrome Extension) （最后更新于5月27日）
+Listen 1 (Chrome Extension) （最后更新于2017年9月14日）
 ==========
 
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE)
@@ -35,6 +35,10 @@ Firefox打包安装
 
 更新日志
 -------
+`2017-09-14`
+
+* 修复QQ音乐无法播放的bug
+
 `2016-05-27`
 
 * 增加快捷键功能（输入?查看快捷键设置）
