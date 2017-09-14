@@ -43,7 +43,8 @@ var xiami = (function() {
         return {
             success: function(fn) {
                 var result = [];
-                hm.get(target_url).success(function(data) {
+                hm.get(target_url).then(function onSuccess(response) {
+                    let data = response.data;
                     data = $.parseHTML(data);
                     $(data).find('.block_list ul li').each(function(){
                         var default_playlist = {
@@ -78,7 +79,8 @@ var xiami = (function() {
                     method: 'GET',
                     transformResponse: undefined
                 })
-                .success(function(data) {
+                .then(function onSuccess(response) {
+                    let data = response.data;
                     data = data.slice('jsonp122('.length, -')'.length);
                     data = JSON.parse(data);
 
@@ -103,7 +105,8 @@ var xiami = (function() {
     var xm_bootstrap_track = function(sound, track, success, failure, hm, se) {
         var target_url = 'http://www.xiami.com/song/playlist/id/' + track.id.slice('xmtrack_'.length) +
             '/object_name/default/object_id/0/cat/json';
-        hm.get(target_url).success(function(data) {
+        hm.get(target_url).then(function onSuccess(response) {
+            let data = response.data;
             if (data.data.trackList == null) {
                 failure();
                 return;
@@ -145,7 +148,8 @@ var xiami = (function() {
                     method: 'GET',
                     transformResponse: undefined
                 })
-                .success(function(data) {
+                .then(function onSuccess(response) {
+                    let data = response.data;
                     data = data.slice('jsonp154('.length, -')'.length);
                     data = JSON.parse(data);
                     var tracks = [];
@@ -170,7 +174,8 @@ var xiami = (function() {
                     method: 'GET',
                     transformResponse: undefined
                 })
-                .success(function(data) {
+                .then(function onSuccess(response) {
+                    let data = response.data;
                     data = data.slice('jsonp217('.length, -')'.length);
                     data = JSON.parse(data);
 
@@ -206,7 +211,8 @@ var xiami = (function() {
                     method: 'GET',
                     transformResponse: undefined
                 })
-                .success(function(data) {   
+                .then(function onSuccess(response) {
+                    let data = response.data;
                     data = data.slice('jsonp217('.length, -')'.length);
                     data = JSON.parse(data);
 
@@ -224,7 +230,8 @@ var xiami = (function() {
                         method: 'GET',
                         transformResponse: undefined
                     })
-                    .success(function(data) {
+                    .then(function onSuccess(response) {
+                        let data = response.data;
                         data = data.slice('jsonp217('.length, -')'.length);
                         data = JSON.parse(data);
 
@@ -250,8 +257,8 @@ var xiami = (function() {
                     url: lyric_url,
                     method: 'GET',
                     transformResponse: undefined
-                }).success(function(data) {
-                    return fn({"lyric":data});
+                }).then(function onSuccess(response) {
+                    return fn({"lyric":response.data});
                 });
             }
         };

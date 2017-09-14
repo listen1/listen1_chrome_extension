@@ -24,7 +24,8 @@ var qq = (function() {
                     url:target_url,
                     method: 'GET',
                     transformResponse: undefined
-                }).success(function(data) {
+                }).then(function onSuccess(response) {
+                    let data = response.data;
                     data = data.slice('MusicJsonCallback('.length, -')'.length);
                     data = JSON.parse(data);
 
@@ -107,7 +108,8 @@ var qq = (function() {
                     method: 'GET',
                     transformResponse: undefined
                 })
-                .success(function(data) {
+                .then(function onSuccess(response) {
+                    let data = response.data;
                     data = data.slice('jsonCallback('.length, -')'.length);
                     data = JSON.parse(data);
 
@@ -144,7 +146,8 @@ var qq = (function() {
                     method: 'GET',
                     transformResponse: undefined
                 })
-                .success(function(data) {
+                .then(function onSuccess(response) {
+                    let data = response.data;
                     data = data.slice(' asonglist1459961045566('.length, -')'.length);
                     data = JSON.parse(data);
 
@@ -182,7 +185,8 @@ var qq = (function() {
                     method: 'GET',
                     transformResponse: undefined
                 })
-                .success(function(data) {
+                .then(function onSuccess(response) {
+                    let data = response.data;
                     data = data.slice(' ssonglist1459960621772('.length, -')'.length);
                     data = JSON.parse(data);
 
@@ -219,7 +223,8 @@ var qq = (function() {
                     method: 'GET',
                     transformResponse: undefined
                 })
-                .success(function(data) {
+                .then(function onSuccess(response) {
+                    let data = response.data;
                     data = data.slice('jsonp4('.length, -')'.length);
                     data = JSON.parse(data);
                     var tracks = [];
@@ -244,7 +249,8 @@ var qq = (function() {
             method: 'GET',
             transformResponse: undefined
         })
-        .success(function(data) {
+        .then(function onSuccess(response) {
+            let data = response.data;
             data = data.slice('jsonCallback('.length, -');'.length);
             data = JSON.parse(data);
             var token = data.key;
@@ -278,7 +284,8 @@ var qq = (function() {
                     url:target_url,
                     method: 'GET',
                     transformResponse: undefined
-                }).success(function(data) {
+                }).then(function onSuccess(response) {
+                    let data = response.data;
                     data = data.slice('MusicJsonCallback('.length, -')'.length);
                     data = JSON.parse(data);
                     var lrc = '';

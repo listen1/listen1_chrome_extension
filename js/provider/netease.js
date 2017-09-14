@@ -15,7 +15,8 @@ var netease = (function() {
         return {
             success: function(fn) {
                 var result = [];
-                hm.get(target_url).success(function(data) {
+                hm.get(target_url).then(function onSuccess(response) {
+                    let data = response.data;
                     data = $.parseHTML(data);
                     $(data).find('.m-cvrlst li').each(function(){
                         var default_playlist = {
@@ -43,7 +44,8 @@ var netease = (function() {
         var target_url = 'http://music.163.com/playlist?id=' + list_id;
         return {
             success: function(fn) {
-                hm.get(target_url).success(function(data) {
+                hm.get(target_url).then(function onSuccess(response) {
+                    let data = response.data;
                     data = $.parseHTML(data);
                     var dataObj = $(data);
                     var info = {
@@ -187,7 +189,6 @@ var netease = (function() {
             "csrf_token": csrf
         }
         var data = _encrypted_request(d);
-
         hm({
             url: target_url,
             method: 'POST',
@@ -195,8 +196,8 @@ var netease = (function() {
             headers: {
               'Content-Type': 'application/x-www-form-urlencoded'
             }
-          }).success(function(data) {
-            var url = data.data[0].url;
+          }).then(function onSuccess(response) {
+            var url = response.data.data[0].url;
             if (url != null) {
                 sound.url = url;
                 success();
@@ -231,7 +232,8 @@ var netease = (function() {
                     headers: {
                       'Content-Type': 'application/x-www-form-urlencoded'
                     }
-                }).success(function(data) {
+                }).then(function onSuccess(response) {
+                    let data = response.data;
                     var tracks = [];
                     $.each(data.result.songs, function(index, song_info) {
                         var default_track = {
@@ -271,7 +273,8 @@ var netease = (function() {
                 hm({
                     url: target_url,
                     method: 'GET'
-                }).success(function(data) {
+                }).then(function onSuccess(response) {
+                    let data = response.data;
                     var info = {
                         'cover_img_url': data.album.picUrl,
                         'title': data.album.name,
@@ -317,7 +320,8 @@ var netease = (function() {
                 hm({
                     url: target_url,
                     method: 'GET'
-                }).success(function(data) {
+                }).then(function onSuccess(response) {
+                    let data = response.data;
                     var info = {
                         'cover_img_url': data.artist.picUrl,
                         'title': data.artist.name,
@@ -374,7 +378,8 @@ var netease = (function() {
                     headers: {
                       'Content-Type': 'application/x-www-form-urlencoded'
                     }
-                }).success(function(data) {
+                }).then(function onSuccess(response) {
+                    let data = response.data;
                     var lrc = '';
                     if (data.lrc != null) {
                         lrc = data.lrc.lyric;
