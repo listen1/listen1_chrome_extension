@@ -248,7 +248,7 @@ var qq = (function() {
             data = data.slice('jsonCallback('.length, -');'.length);
             data = JSON.parse(data);
             var token = data.key;
-            var url = 'http://cc.stream.qqmusic.qq.com/C200' +  track.id.slice('qqtrack_'.length)  + '.m4a?vkey=' +
+            var url = 'http://dl.stream.qqmusic.qq.com/C200' +  track.id.slice('qqtrack_'.length)  + '.m4a?vkey=' +
                 token + '&fromtag=0&guid=780782017';
             sound.url = url;
             success();
