@@ -40,22 +40,18 @@ var netease = (function() {
 
     var ne_get_playlist = function(url, hm, se) {
         var list_id = getParameterByName('list_id', url).split('_').pop();
-        var target_url = 'http://music.163.com/playlist?id=' + list_id;
+        var target_url = 'http://music.163.com/api/playlist/detail?id=' + list_id;
         return {
-            success: function(fn) {
-                hm.get(target_url).success(function(data) {
-                    data = $.parseHTML(data);
-                    var dataObj = $(data);
+            success: function (fn) {
+                hm.get(target_url).success(function (data) {
                     var info = {
                         'id': 'neplaylist_' + list_id,
-                        'cover_img_url': dataObj.find('.u-cover img').attr('src'),
-                        'title': dataObj.find('.tit h2').text(),
-                        'source_url': 'http://music.163.com/#/playlist?id=' + list_id,
+                        'cover_img_url': data.result.coverImgUrl,
+                        'title': data.result.name,
+                        'source_url': 'http://music.163.com/#/playlist?id=' + list_id
                     };
                     var tracks = [];
-                    var json_string = dataObj.find('textarea').val();
-                    var track_json_list = JSON.parse(json_string);
-                    $.each(track_json_list, function(index, track_json){
+                    $.each(data.result.tracks, function(index, track_json){
                         var default_track = {
                             'id': '0',
                             'title': '',
