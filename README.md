@@ -1,4 +1,4 @@
-Listen 1 (Chrome Extension) （最后更新于2017年9月14日）
+Listen 1 (Chrome Extension) （最后更新于2017年10月03日）
 ==========
 
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE)
@@ -35,6 +35,11 @@ Firefox打包安装
 
 更新日志
 -------
+
+`2017-10-03`
+
+* 修复网易云音乐歌单无法显示的问题(感谢@Moobusy的提交)
+
 `2017-09-14`
 
 * 修复QQ音乐无法播放的bug
