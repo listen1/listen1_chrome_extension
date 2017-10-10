@@ -1,4 +1,4 @@
-# Listen 1 (Chrome Extension) （最后更新于2017年10月03日
+# Listen 1 (Chrome Extension) （最后更新于2017年10月10日)
 ==========
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE)
 
