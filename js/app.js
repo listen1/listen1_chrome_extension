@@ -934,11 +934,15 @@
                 $scope.loading = true;
                 $scope.tab = newTab;
                 $scope.result = [];
-                loWeb.get('/search?source=' + getSourceName($scope.tab) + '&keywords=' + $scope.keywords).success(function (data) {
+                if ($scope.keywords===''){
+                    $scope.loading = false;
+                }else{
+                    loWeb.get('/search?source=' + getSourceName($scope.tab) + '&keywords=' + $scope.keywords).success(function (data) {
                     // update the textarea
                     $scope.result = data.result;
                     $scope.loading = false;
-                });
+                    });
+                }
             };
 
             $scope.addSongsToPlay = function () {
