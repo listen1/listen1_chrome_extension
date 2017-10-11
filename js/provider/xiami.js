@@ -83,7 +83,7 @@ var xiami = (function() {
                     data = JSON.parse(data);
 
                     var info = {
-                        'cover_img_url': xm_retina_url(data.data.logo),
+                        'cover_img_url': data.data.logo,
                         'title': data.data.collect_name,
                         'id': 'xmplaylist_' + list_id,
                         'source_url': 'http://www.xiami.com/collect/' + list_id
