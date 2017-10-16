@@ -1,4 +1,4 @@
-Listen 1 (Chrome Extension) （最后更新于2017年10月03日）
+Listen 1 (Chrome Extension) （最后更新于2017年10月16日）
 ==========
 
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE)
@@ -35,6 +35,10 @@ Firefox打包安装
 
 更新日志
 -------
+
+`2017-10-16`
+
+* 修复QQ音乐歌单翻页显示重复的问题(感谢@Moobusy的提交)
 
 `2017-10-03`
 
