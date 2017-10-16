@@ -7,15 +7,12 @@ var qq = (function() {
 
     var qq_show_playlist = function(url, hm) {
 
-        var offset = getParameterByName("offset", url);
-        var page = offset/50 + 1;
-        var target_url = 'http://i.y.qq.com/s.plcloud/fcgi-bin/fcg_get_diss_by_tag' + 
-            '.fcg?categoryId=10000000&sortId=' + page +
-            '&sin=0&ein=49&' +
-            'format=jsonp&g_tk=5381&loginUin=0&hostUin=0&' + 
-            'format=jsonp&inCharset=GB2312&outCharset=utf-8' + 
-            '&notice=0&platform=yqq&jsonpCallback=' + 
-            'MusicJsonCallback&needNewCode=0';
+        var offset = Number(getParameterByName("offset", url)) || 0;
+        var target_url = 'https://c.y.qq.com/splcloud/fcgi-bin/fcg_get_diss_by_tag.fcg' +
+            '?rnd=0.4781484879517406&g_tk=732560869&jsonpCallback=MusicJsonCallback' +
+            '&loginUin=0&hostUin=0&format=jsonp&inCharset=utf8&outCharset=utf-8' +
+            '&notice=0&platform=yqq&needNewCode=0' +
+            '&categoryId=10000000&sortId=5&sin= ' + offset + '&ein=' + (49 + offset);
 
         return {
             success: function(fn) {
