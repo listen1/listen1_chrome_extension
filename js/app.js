@@ -693,6 +693,12 @@
       });
 
       $scope.$on('music:isPlaying', function(event, data) {
+        if (data) {
+          $rootScope.page_title = '▶' + $rootScope.page_title.slice(1);
+        }
+        else {
+          $rootScope.page_title = '⏸' + $rootScope.page_title.slice(1);
+        };
         if (!lastfm.isAuthorized()) {
           return;
         }
