@@ -175,7 +175,7 @@ var xiami = (function() {
                     data = JSON.parse(data);
 
                     var info = {
-                        'cover_img_url': xm_retina_url(data.data.album_logo),
+                        'cover_img_url': data.data.album_logo,
                         'title': data.data.album_name,
                         'id': 'xmalbum_' + data.data.album_id,
                         'source_url': 'http://www.xiami.com/album/' + data.data.album_id
