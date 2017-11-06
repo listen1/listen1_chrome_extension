@@ -12,7 +12,7 @@ var qq = (function() {
             '?rnd=0.4781484879517406&g_tk=732560869&jsonpCallback=MusicJsonCallback' +
             '&loginUin=0&hostUin=0&format=jsonp&inCharset=utf8&outCharset=utf-8' +
             '&notice=0&platform=yqq&needNewCode=0' +
-            '&categoryId=10000000&sortId=5&sin= ' + offset + '&ein=' + (49 + offset);
+            '&categoryId=10000000&sortId=5&sin=' + offset + '&ein=' + (49 + offset);
 
         return {
             success: function(fn) {
