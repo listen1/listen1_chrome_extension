@@ -971,7 +971,7 @@ li {
     bottom: 20px;
 }
 
-.dialog-editplaylist .confirm-button {
+.dialog-editplaylist .confirm-button, .dialog-open-url .confirm-button {
     margin-right: 82px;
     margin-left: 93px;
 }
@@ -1028,7 +1028,9 @@ li {
     color: #333333;
 }
 
-
+.source-list .open-url-button {
+    border-radius: 4px;
+}
 
 .settings-title {
     font-size: 20px;

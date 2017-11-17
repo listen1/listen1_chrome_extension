@@ -381,6 +381,14 @@ var netease = (function() {
         };
     }
 
+    var ne_parse_url = function(url) {
+        var result = undefined;
+        if (url.search('//music.163.com/#/m/playlist') != -1 || url.search('//music.163.com/#/playlist') != -1) {
+            result = {'type': 'playlist', 'id': 'neplaylist_' + getParameterByName('id', url)};
+        }
+        return result;
+    }
+
 var get_playlist = function(url, hm, se) {
     var list_id = getParameterByName('list_id', url).split('_')[0];
     if (list_id == 'neplaylist') {
@@ -397,6 +405,7 @@ var get_playlist = function(url, hm, se) {
 return {
     show_playlist: ne_show_playlist,
     get_playlist: get_playlist,
+    parse_url: ne_parse_url,
     bootstrap_track: ne_bootstrap_track,
     search: ne_search,
     lyric: ne_lyric,

@@ -289,6 +289,16 @@ var qq = (function() {
         };
     }
 
+    var qq_parse_url = function(url) {
+        var result = undefined;
+        var match = /\/\/y.qq.com\/n\/yqq\/playlist\/([0-9]+)/.exec(url);
+        if (match != null) {
+            var playlist_id = match[1];
+            result = {'type': 'playlist', 'id': 'qqplaylist_' + playlist_id};
+        }
+        return result;
+    }
+
 
 var get_playlist = function(url, hm, se) {
     var list_id = getParameterByName('list_id', url).split('_')[0];
@@ -306,6 +316,7 @@ var get_playlist = function(url, hm, se) {
 return {
     show_playlist: qq_show_playlist,
     get_playlist: get_playlist,
+    parse_url: qq_parse_url,
     bootstrap_track: qq_bootstrap_track,
     search: qq_search,
     lyric: qq_lyric,

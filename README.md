@@ -1,4 +1,4 @@
-Listen 1 (Chrome Extension) （最后更新于2017年10月16日）
+Listen 1 (Chrome Extension) （最后更新于2017年11月17日）
 ==========
 
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE)
@@ -35,6 +35,11 @@ Firefox打包安装
 
 更新日志
 -------
+
+`2017-11-17`
+
+* 在我的歌单页面增加“打开歌单”功能，可打开支持网页的歌单链接地址。这样就可以导入你喜欢的歌单了。
+* HTTP请求头部的Origin字段设置为正常网址
 
 `2017-10-16`
 

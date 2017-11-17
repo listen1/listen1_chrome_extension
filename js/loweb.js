@@ -12,6 +12,10 @@ function getProviderByName(sourceName) {
     }
 }
 
+function getAllProviders(){
+    return [netease, xiami, qq];
+}
+
 function getProviderByItemId(itemId) {
     var prefix = itemId.slice(0,2);
     if (prefix == 'ne') {
@@ -121,6 +125,23 @@ function($rootScope, $log, $http, $httpParamSerializerJQLike) {
                         fn();
                     }
                 };
+            }
+            if (request.url.search('/parse_url') != -1) {
+                var url = getParameterByName('url', url+'?'+request.data);
+                var providers = getAllProviders();
+                var result = undefined;
+                for(var i=0; i<providers.length; i++) {
+                    var r = providers[i].parse_url(url);
+                    if (r !== undefined) {
+                        result = r;
+                        break;
+                    }
+                }
+                return {
+                    success: function(fn){
+                        return fn({'result': result});
+                    }
+                }
             }
         },
         bootstrapTrack: function(success, failure) {

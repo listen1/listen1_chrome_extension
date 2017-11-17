@@ -257,6 +257,16 @@ var xiami = (function() {
         };
     }
 
+    var xm_parse_url = function(url) {
+        var result = undefined;
+        var match = /\/\/www.xiami.com\/collect\/([0-9]+)/.exec(url);
+        if (match != null) {
+            var playlist_id = match[1];
+            result = {'type': 'playlist', 'id': 'xmplaylist_' + playlist_id};
+        }
+        return result;
+    }
+
 var get_playlist = function(url, hm, se) {
     var list_id = getParameterByName('list_id', url).split('_')[0];
     if (list_id == 'xmplaylist') {
@@ -272,6 +282,7 @@ var get_playlist = function(url, hm, se) {
 return {
     show_playlist: xm_show_playlist,
     get_playlist: get_playlist,
+    parse_url: xm_parse_url,
     bootstrap_track: xm_bootstrap_track,
     search: xm_search,
     lyric: xm_lyric,

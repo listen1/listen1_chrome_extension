@@ -23,6 +23,7 @@ function hack_referer_header(details) {
     }
 
     var isRefererSet = false;
+    var isOriginSet = false;
     var headers = details.requestHeaders,
         blockingResponse = {};
 
@@ -30,7 +31,10 @@ function hack_referer_header(details) {
         if ((headers[i].name == 'Referer') && (referer_value != '')) {
             headers[i].value = referer_value;
             isRefererSet = true;
-            break;
+        }
+        if ((headers[i].name == 'Origin') && (referer_value != '')) {
+            headers[i].value = referer_value;
+            isOriginSet = true;
         }
     }
 
@@ -41,6 +45,13 @@ function hack_referer_header(details) {
         });
     }
 
+    if ((!isOriginSet) && (referer_value != '')) {
+        headers.push({
+            name: "Origin",
+            value: referer_value
+        });
+    }
+    
     blockingResponse.requestHeaders = headers;
     return blockingResponse;
 };

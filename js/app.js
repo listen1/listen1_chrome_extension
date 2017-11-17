@@ -233,6 +233,10 @@
         $scope.dialog_title = '连接到Last.fm';
         $scope.dialog_type = 4;
       }
+      if (dialog_type == 5) {
+        $scope.dialog_title = '打开歌单';
+        $scope.dialog_type = 5;
+      }
     };
 
     $scope.chooseDialogOption = function(option_id) {
@@ -480,7 +484,26 @@
       }
     });
 
-
+    $scope.openUrl = function(url) {
+      loWeb.post({
+        url: '/parse_url',
+        method: 'POST',
+        data: $httpParamSerializerJQLike({
+          url: url
+        }),
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        }
+      }).success(function(data) {
+        var result = data.result;
+        if (result !== undefined) {
+          $scope.showPlaylist(result.id);
+        }
+        else {
+          Notification.info('未能打开输入的歌单地址');
+        }
+      });
+    }
 
   }]);
 
