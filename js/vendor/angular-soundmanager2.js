@@ -4682,7 +4682,7 @@ ngSoundManager.factory('angularPlayer', ['$rootScope', '$log',
                 //once all done then broadcast
                 $rootScope.$broadcast('player:playlist', playlist);
             },
-            initPlayTrack: function(trackId, isResume, isloadOnly) {
+            initPlayTrack: function(trackId, isResume, isloadOnly, successCallback, failCallback) {
                 if(isResume !== true) {
                     //stop and unload currently playing track
                     this.stop();
@@ -4701,6 +4701,13 @@ ngSoundManager.factory('angularPlayer', ['$rootScope', '$log',
                         $rootScope.$broadcast('music:isPlaying', isPlaying);
                         if (isloadOnly == true) {
                             angularPlayerObj.pause();
+                        }
+                        if(successCallback != undefined) {
+                            successCallback();
+                        }
+                    }, function(){
+                        if(failCallback != undefined) {
+                            failCallback();
                         }
                     });
                 }
@@ -4748,7 +4755,12 @@ ngSoundManager.factory('angularPlayer', ['$rootScope', '$log',
                 this.initPlayTrack(trackId, false, true);
             },
             playTrack: function(trackId) {
-                this.initPlayTrack(trackId);
+                var player = this;
+                this.initPlayTrack(trackId, false, false, undefined, function(){player.nextTrack()});
+            },
+            playTrackFailToPrev: function(trackId) {
+                var player = this;
+                this.initPlayTrack(trackId, false, false, undefined, function(){player.prevTrack()});
             },
             nextTrack: function() {
                 if (shuffle) {
@@ -4768,7 +4780,7 @@ ngSoundManager.factory('angularPlayer', ['$rootScope', '$log',
 
                     if (shuffleIndex + 1 < shuffleCount) {
                         shuffleIndex++;
-                        this.initPlayTrack(shufflelist[shuffleIndex]);
+                        this.playTrack(shufflelist[shuffleIndex]);
                         return;
                     }
 
@@ -4785,7 +4797,7 @@ ngSoundManager.factory('angularPlayer', ['$rootScope', '$log',
                     shufflelist[shuffleCount] = temp;
 
                     shuffleIndex++;
-                    this.initPlayTrack(shufflelist[shuffleIndex]);
+                    this.playTrack(shufflelist[shuffleIndex]);
                     shuffleCount++;
                     return;
                 }
@@ -4795,9 +4807,9 @@ ngSoundManager.factory('angularPlayer', ['$rootScope', '$log',
                 }
                 var currentTrackKey = this.getIndexByValue(soundManager.soundIDs, this.getCurrentTrack());
                 var nextTrackKey = +currentTrackKey + 1;
-                var nextTrack = soundManager.soundIDs[nextTrackKey];
-                if(typeof nextTrack !== 'undefined') {
-                    this.playTrack(nextTrack);
+                var nextTrackId = soundManager.soundIDs[nextTrackKey];
+                if(typeof nextTrackId !== 'undefined') {
+                    this.playTrack(nextTrackId);
                 } else {
                     //if no next track found
                     if(repeat === true) {
@@ -4817,7 +4829,7 @@ ngSoundManager.factory('angularPlayer', ['$rootScope', '$log',
                         return;
                     }
                     shuffleIndex--;
-                    this.initPlayTrack(shufflelist[shuffleIndex]);
+                    this.playTrackFailToPrev(shufflelist[shuffleIndex]);
                     return;
                 }
                 if(this.getCurrentTrack() === null) {
@@ -4826,9 +4838,9 @@ ngSoundManager.factory('angularPlayer', ['$rootScope', '$log',
                 }
                 var currentTrackKey = this.getIndexByValue(soundManager.soundIDs, this.getCurrentTrack());
                 var prevTrackKey = +currentTrackKey - 1;
-                var prevTrack = soundManager.soundIDs[prevTrackKey];
-                if(typeof prevTrack !== 'undefined') {
-                    this.playTrack(prevTrack);
+                var prevTrackId = soundManager.soundIDs[prevTrackKey];
+                if(typeof prevTrackId !== 'undefined') {
+                    this.playTrackFailToPrev(prevTrackId);
                 } else {
                     $log.debug('no prev track found!');
                 }

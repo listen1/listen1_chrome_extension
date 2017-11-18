@@ -145,18 +145,19 @@ function($rootScope, $log, $http, $httpParamSerializerJQLike) {
             }
         },
         bootstrapTrack: function(success, failure) {
-            return function(sound, track, callback){
+            return function(sound, track, playerSuccessCallback, playerFailCallback){
                 // always refresh url, becaues url will expires
                 // if (sound.url.search('http') != -1){
                 //     callback();
                 //     return;
                 // }
                 function successCallback() {
-                    callback();
+                    playerSuccessCallback();
                     success();
                 }
 
                 function failureCallback() {
+                    playerFailCallback();
                     failure();
                 }
                 var source = track.source;
