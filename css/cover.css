@@ -9,6 +9,22 @@ a:hover {
   color: #fff;
 }
 
+/* Custom scrollBar */
+*::-webkit-scrollbar {
+  width: 6px;
+  background: #eee;
+}
+*::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+}
+*::-webkit-scrollbar-thumb {
+  background-color: darkgrey;
+  outline: 1px solid slategrey;
+}
+body::-webkit-scrollbar {
+  width: 0px;
+  background: #eee
+}
 /* Custom default button */
 .btn-default,
 .btn-default:hover,
