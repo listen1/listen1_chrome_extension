@@ -139,7 +139,8 @@ var xiami = (function() {
         return {
             success: function(fn) {
                 var keyword = getParameterByName('keywords', url);
-                var target_url = 'http://api.xiami.com/web?v=2.0&app_key=1&key=' + keyword + '&page=1&limit=50&callback=jsonp154&r=search/songs';
+                var curpage = getParameterByName('curpage', url);
+                var target_url = 'http://api.xiami.com/web?v=2.0&app_key=1&key=' + keyword + '&page='+ curpage +'&limit=20&callback=jsonp154&r=search/songs';
                 hm({
                     url:target_url,
                     method: 'GET',
@@ -153,7 +154,7 @@ var xiami = (function() {
                         var track = xm_convert_song(item, 'artist_name');
                         tracks.push(track);
                     });
-                    return fn({"result":tracks});
+                    return fn({"result":tracks,"total":data.data.total});
                 });
             }
         };
