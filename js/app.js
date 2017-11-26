@@ -971,6 +971,8 @@
 
       var timeout;
       $scope.$watch('keywords', function (tmpStr,oldStr) {
+        updateCurrentPage(-1);
+        updateTotalPage(-1);
         if (!tmpStr || tmpStr.length === 0){
           $scope.result = [];
           return 0;
@@ -983,8 +985,6 @@
             $timeout.cancel(timeout);
           } 
           timeout = $timeout(function(){
-              updateCurrentPage(-1);
-              updateTotalPage(-1)
               performSearch();
           },500)
         }
