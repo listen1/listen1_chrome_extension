@@ -959,7 +959,7 @@
         updateTotalPage();
 
         if ($scope.keywords===''){
-            $scope.loading = false;
+           $scope.loading = false;
         }else{
             performSearch();
         }
@@ -1039,9 +1039,6 @@
         template: ' <button class="btn btn-sm btn-pagination" ng-click="previousPage()" ng-disabled="curpage==1"> 上一页</button>\
        <label> {{curpage}}/{{totalpage}} 页 </label>\
        <button class="btn btn-sm btn-pagination" ng-click="nextPage()" ng-disabled="curpage==totalpage"> 下一页</button>',
-        replace: false,
-        link: function(scope, element, attrs) {
-      }
     }
   })
 
