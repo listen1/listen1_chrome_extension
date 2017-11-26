@@ -1041,3 +1041,77 @@ li {
 .settings-content {
     padding: 20px;
 }
+
+.lyric-content .lyric {
+   text-align: center;
+    width: 100%;
+    display: inline-block;
+    height: calc(100vh - 200px);
+    overflow-y: scroll;
+    position: relative;
+}
+
+.lyric-content .lyric::-webkit-scrollbar{
+  width: 7px;
+  height: 7px;
+  border-radius: 4px;
+  background-color: #333;
+  display: none;
+}
+
+.m-playbar .menu .lyric p,.lyric-content .lyric p{
+    min-height: 20px;
+    font-size: 16px;
+}
+
+.m-playbar .menu .lyric .placeholder,.lyric-content .lyric .placeholder{
+    height: 50px;
+}
+
+.m-playbar .menu .lyric .highlight,.lyric-content .lyric .highlight{
+    font-size: 15px;
+    color: #ff0000;
+}
+
+.lyric-content .lyric::-webkit-scrollbar{
+  width: 7px;
+  height: 7px;
+  border-radius: 4px;
+  background-color: #333;
+  display: none;
+}
+
+.btn-group button,.btn-pagination,.btn-pagination:focus {
+    background-color: #333333;
+    color: #ffffff;
+    border-color: #333333;
+}
+
+.btn-group button:hover,.btn-pagination:hover {
+    background-color: #ffffff!important;
+    color: #333333!important;
+}
+
+.searchbox  li>a:hover{
+color: #333333!important;
+}
+
+::-webkit-scrollbar{
+  width: 5px;
+  height: 7px;
+  border-radius: 3px;
+  background-color: #333;
+}
+::-webkit-scrollbar-button{
+  display: none;
+}
+::-webkit-scrollbar-track-piece {
+  display: none;
+}
+::-webkit-scrollbar-thumb{
+  background-color: #fff;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-corner {
+  display: none;
+}

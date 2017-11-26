@@ -212,9 +212,10 @@ var netease = (function() {
         // use chrome extension to modify referer.
         var target_url = 'http://music.163.com/api/search/pc';
         var keyword = getParameterByName('keywords', url);
+        var curpage = getParameterByName('curpage', url);
         var req_data = {
             's': keyword,
-            'offset': 0,
+            'offset': 20*(+curpage-1),
             'limit': 20,
             'type': 1
         };
@@ -250,7 +251,7 @@ var netease = (function() {
                         }
                         tracks.push(default_track);
                     });
-                    return fn({"result":tracks});
+                    return fn({"result":tracks,"total":data.result.songCount});
                 });
             }
         };
