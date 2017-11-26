@@ -210,7 +210,7 @@ var netease = (function() {
     
     var ne_search = function(url, hm, se) {
         // use chrome extension to modify referer.
-        var target_url = 'http://music.163.com/api/search/pc';
+        var target_url = 'http://music.163.com/api/search/get';
         var keyword = getParameterByName('keywords', url);
         var curpage = getParameterByName('curpage', url);
         var req_data = {
