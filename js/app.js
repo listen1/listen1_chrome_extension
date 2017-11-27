@@ -107,10 +107,20 @@
 
     $scope.lastfm = lastfm;
     
+    $scope.lyricArray = [];
+    $scope.lyricLineNumber= -1;
+
     $scope.$on('isdoubanlogin:update', function(event, data) {
       $scope.isDoubanLogin = data;
     });
 
+    $scope.$on('updateLyric', function(event, data) {
+      $scope.lyricArray = data;
+    });
+
+    $scope.$on('lyricLineNumber', function(event, data) {
+      $scope.lyricLineNumber = data;
+    });
     // tag
     $scope.showTag = function(tag_id){
       $scope.current_tag = tag_id;
@@ -825,6 +835,7 @@
             return;
           }
           $scope.lyricArray = parseLyric(lyric);
+          $scope.$emit("updateLyric", $scope.lyricArray);
         });
         $scope.lastTrackId = data;
       });
@@ -842,11 +853,18 @@
         }
         if (lastObject && lastObject.lineNumber != $scope.lyricLineNumber) {
           var lineHeight = 20;
-          var lineElement = $(".lyric p")[lastObject.lineNumber];
+          var lineElement = $(".menu .lyric p")[lastObject.lineNumber];
           var windowHeight = 270;
           var offset = lineElement.offsetTop - windowHeight/2;
-          $(".lyric").animate({ scrollTop: offset+"px" }, 500);
+          $(".menu .lyric").animate({ scrollTop: offset+"px" }, 500);
           $scope.lyricLineNumber = lastObject.lineNumber;
+
+          // 当前歌词Tab中的歌词联动
+          var lineElementTab = $(".lyric-content .lyric p")[lastObject.lineNumber];
+          var windowHeightTab = $(".lyric-content .lyric").height();
+          var offsetTab = lineElementTab.offsetTop - windowHeightTab/2;
+          $(".lyric-content .lyric").animate({ scrollTop: offsetTab+100+"px" }, 500);
+          $scope.$emit("lyricLineNumber",lastObject.lineNumber);
         }
       });
 
@@ -928,20 +946,22 @@
       $scope.tab = 0;
       $scope.keywords = '';
       $scope.loading = false;
+      $scope.curpagelog = [1,1,1];  // [网易,虾米,QQ]
+      $scope.totalpagelog = [1,1,1]; 
+      $scope.curpage = 1;
+      $scope.totalpage = 1;
 
       $scope.changeTab = function(newTab){
         $scope.loading = true;
         $scope.tab = newTab;
         $scope.result = [];
+        updateCurrentPage();
+        updateTotalPage();
 
         if ($scope.keywords===''){
-          $scope.loading = false;
+           $scope.loading = false;
         }else{
-          loWeb.get('/search?source=' + getSourceName($scope.tab) + '&keywords=' + $scope.keywords).success(function(data) {
-              // update the textarea
-              $scope.result = data.result;
-              $scope.loading = false;
-          });
+            performSearch();
         }
       };
 
@@ -949,24 +969,78 @@
         return $scope.tab === tab;
       };
 
-      $scope.$watch('keywords', function (tmpStr) {
+      var timeout;
+      $scope.$watch('keywords', function (tmpStr,oldStr) {
+        updateCurrentPage(-1);
+        updateTotalPage(-1);
         if (!tmpStr || tmpStr.length === 0){
           $scope.result = [];
           return 0;
         }
-        // if searchStr is still the same..
+        // if searchStr changed and no more changes within 500ms ..
         // go ahead and retrieve the data
-        if (tmpStr === $scope.keywords)
+        if (tmpStr != oldStr)
         { 
-          $scope.loading = true;
-          loWeb.get('/search?source=' + getSourceName($scope.tab) + '&keywords=' + $scope.keywords).success(function(data) {
-            // update the textarea
-            $scope.result = data.result;
-            $scope.loading = false; 
-          });
+          if(timeout){
+            $timeout.cancel(timeout);
+          } 
+          timeout = $timeout(function(){
+              performSearch();
+          },500)
         }
-      });
+      },true);
+
+      function performSearch(){
+        loWeb.get('/search?source=' + getSourceName($scope.tab) + '&keywords=' + $scope.keywords+'&curpage='+ $scope.curpage).success(function(data) {
+          // update the textarea
+          $scope.result = data.result;
+          updateTotalPage(data.total);
+          $scope.loading = false;
+        });
+      }
+
+      function updateCurrentPage(cp){
+          if(cp === -1){  // when search words changes,pagenums should be reset.
+              $scope.curpagelog = [1,1,1];
+              $scope.curpage = 1;
+          } 
+          else if(cp >= 0)
+              $scope.curpage = $scope.curpagelog[$scope.tab] = cp;
+          else  // only tab changed
+              $scope.curpage = $scope.curpagelog[$scope.tab];
+      }
+
+      function updateTotalPage(totalItem){
+          if(totalItem === -1) {
+              $scope.totalpagelog = [1,1,1];
+              $scope.totalpage = 1;
+          }
+          else if(totalItem >=0)
+            $scope.totalpage=$scope.totalpagelog[$scope.tab] = Math.ceil(totalItem/20);
+          else  
+              $scope.totalpage=$scope.totalpagelog[$scope.tab];
+      }
+
+      $scope.nextPage = function(){
+        $scope.curpage = $scope.curpagelog[$scope.tab] += 1;
+        performSearch();
+      }
+
+      $scope.previousPage = function(){
+          $scope.curpage = $scope.curpagelog[$scope.tab] -= 1;
+          performSearch();
+      }
   }]);
+
+    app.directive('pagination',function(){
+      return {
+        restrict: "EA",
+        replace:false,
+        template: ' <button class="btn btn-sm btn-pagination" ng-click="previousPage()" ng-disabled="curpage==1"> 上一页</button>\
+       <label> {{curpage}}/{{totalpage}} 页 </label>\
+       <button class="btn btn-sm btn-pagination" ng-click="nextPage()" ng-disabled="curpage==totalpage"> 下一页</button>',
+    }
+  })
 
   app.directive('errSrc', function() {
     // http://stackoverflow.com/questions/16310298/if-a-ngsrc-path-resolves-to-a-404-is-there-a-way-to-fallback-to-a-default
