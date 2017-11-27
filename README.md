@@ -1,4 +1,4 @@
-Listen 1 (Chrome Extension) （最后更新于2017年11月17日）
+Listen 1 (Chrome Extension) （最后更新于2017年11月27日）
 ==========
 
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE)
@@ -35,6 +35,10 @@ Firefox打包安装
 
 更新日志
 -------
+
+`2017-11-27`
+
+* 修复网易云音乐歌单只显示第一首歌的Bug（感谢[@Binaryify/NeteaseCloudMusicApi](https://github.com/Binaryify/NeteaseCloudMusicApi)提供接口实现）
 
 `2017-11-18`
 

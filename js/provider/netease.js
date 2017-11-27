@@ -38,50 +38,6 @@ var netease = (function() {
         };
     }
 
-    var ne_get_playlist = function(url, hm, se) {
-        var list_id = getParameterByName('list_id', url).split('_').pop();
-        var target_url = 'http://music.163.com/api/playlist/detail?id=' + list_id;
-        return {
-            success: function (fn) {
-                hm.get(target_url).success(function (data) {
-                    var info = {
-                        'id': 'neplaylist_' + list_id,
-                        'cover_img_url': data.result.coverImgUrl,
-                        'title': data.result.name,
-                        'source_url': 'http://music.163.com/#/playlist?id=' + list_id
-                    };
-                    var tracks = [];
-                    $.each(data.result.tracks, function(index, track_json){
-                        var default_track = {
-                            'id': '0',
-                            'title': '',
-                            'artist': '',
-                            'artist_id': 'neartist_0',
-                            'album': '',
-                            'album_id': 'nealbum_0',
-                            'source': 'netease',
-                            'source_url': 'http://www.xiami.com/song/0',
-                            'img_url': '',
-                            'url': ''
-                        };
-                        default_track.id = 'netrack_' + track_json.id;
-                        default_track.title = track_json.name;
-                        default_track.artist = track_json.artists[0].name;
-                        default_track.artist_id = 'neartist_' + track_json.artists[0].id;
-                        default_track.album = track_json.album.name;
-                        default_track.album_id = 'nealbum_' + track_json.album.id;
-                        default_track.source_url = 'http://music.163.com/#/song?id=' +  track_json.id;
-                        default_track.img_url = track_json.album.picUrl;
-                        default_track.url = default_track.id;
-
-                        tracks.push(default_track);
-                    });
-                    return fn({"info":info,"tracks":tracks});
-                });
-            }
-        };
-    }
-
     function _create_secret_key(size) {
         var result = [];
         var choice = '012345679abcdef'.split('');
@@ -169,6 +125,69 @@ var netease = (function() {
         };
 
         return data;
+    }
+
+    var ne_get_playlist = function(url, hm, se) {
+        // special thanks for @Binaryify
+        // https://github.com/Binaryify/NeteaseCloudMusicApi
+        return {
+            success: function (fn) {
+                var list_id = getParameterByName('list_id', url).split('_').pop();
+                var target_url = 'http://music.163.com/weapi/v3/playlist/detail';
+                var d = {
+                    id: list_id,
+                    offset: 0,
+                    total: true,
+                    limit: 1000,
+                    n: 1000,
+                    csrf_token: ''
+                };
+                var data = _encrypted_request(d);
+
+                hm({
+                    url: target_url,
+                    method: 'POST',
+                    data: se(data),
+                    headers: {
+                      'Content-Type': 'application/x-www-form-urlencoded'
+                    }
+                }).success(function(data) {
+                    var info = {
+                        'id': 'neplaylist_' + list_id,
+                        'cover_img_url': data.playlist.coverImgUrl,
+                        'title': data.playlist.name,
+                        'source_url': 'http://music.163.com/#/playlist?id=' + list_id
+                    };
+                    var tracks = [];
+                    $.each(data.playlist.tracks, function(index, track_json){
+                        var default_track = {
+                            'id': '0',
+                            'title': '',
+                            'artist': '',
+                            'artist_id': 'neartist_0',
+                            'album': '',
+                            'album_id': 'nealbum_0',
+                            'source': 'netease',
+                            'source_url': 'http://www.xiami.com/song/0',
+                            'img_url': '',
+                            'url': ''
+                        };
+                        default_track.id = 'netrack_' + track_json.id;
+                        default_track.title = track_json.name;
+                        default_track.artist = track_json.ar[0].name;
+                        default_track.artist_id = 'neartist_' + track_json.ar[0].id;
+                        default_track.album = track_json.al.name;
+                        default_track.album_id = 'nealbum_' + track_json.al.id;
+                        default_track.source_url = 'http://music.163.com/#/song?id=' +  track_json.id;
+                        default_track.img_url = track_json.al.picUrl;
+                        default_track.url = default_track.id;
+
+                        tracks.push(default_track);
+                    });
+                    return fn({"info":info,"tracks":tracks});
+                });
+            }
+        };
     }
 
     var ne_bootstrap_track = function(sound, track, success, failure, hm, se) {

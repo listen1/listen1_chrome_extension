@@ -67,7 +67,7 @@ function($rootScope, $log, $http, $httpParamSerializerJQLike) {
                 var url = '/playlist?list_id=' + list_id;
                 return {
                     success: function(fn) {
-                        provider.get_playlist(url, $http).success(function(data){
+                        provider.get_playlist(url, $http, $httpParamSerializerJQLike).success(function(data){
                             myplaylist.save_myplaylist(data);
                             fn();
                         });
