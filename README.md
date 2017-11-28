@@ -3,6 +3,14 @@ Listen 1 (Chrome Extension) （最后更新于2017年11月27日）
 
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE)
 
+重要
+----
+Listen1的用户，有个坏消息希望和大家分享。Listen1最近收到了[QQ音乐的DMCA Takedown Notice](https://github.com/github/dmca/blob/master/2017/2017-11-17-Listen1.md), 主要代码库已经因为此原因而临时关闭。悲观一点看，Listen1项目可能会在今年内彻底消失。
+
+Listen1诞生的初衷从不是和大公司的争夺版权利益，而是为了给予热爱音乐的人更好的收听体验，所以，Listen1是开源，免费的，并且不接受任何形式的捐助。正是因为有热爱音乐的Listen1的你们，Listen1才发展到今天这一步。不管结果如何，Listen1团队感谢所有支持过这个项目的人们。
+
+在这个关系项目生死存亡的时刻，我寻求项目因为DMCA被github关闭的援助。如果有对这个比较了解如何解决的人，或者你想对这个事情发表看法和建议，可以在[issue](https://github.com/listen1/listen1_chrome_extension/issues/113)留言，或者发送邮件到 githublisten1@gmail.com。我们会尽最大努力，来守护Listen1，即使可能它即将成为历史。
+
 缘起
 ----
 当我发现找个想听的歌因为版权听不了，需要打开好几个网站开始搜索，来回切换让我抓狂的时候，我知道是时候该做点什么了。
