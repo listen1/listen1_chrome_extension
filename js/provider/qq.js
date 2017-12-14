@@ -7,15 +7,12 @@ var qq = (function() {
 
     var qq_show_playlist = function(url, hm) {
 
-        var offset = getParameterByName("offset", url);
-        var page = offset/50 + 1;
-        var target_url = 'http://i.y.qq.com/s.plcloud/fcgi-bin/fcg_get_diss_by_tag' + 
-            '.fcg?categoryId=10000000&sortId=' + page +
-            '&sin=0&ein=49&' +
-            'format=jsonp&g_tk=5381&loginUin=0&hostUin=0&' + 
-            'format=jsonp&inCharset=GB2312&outCharset=utf-8' + 
-            '&notice=0&platform=yqq&jsonpCallback=' + 
-            'MusicJsonCallback&needNewCode=0';
+        var offset = Number(getParameterByName("offset", url)) || 0;
+        var target_url = 'https://c.y.qq.com/splcloud/fcgi-bin/fcg_get_diss_by_tag.fcg' +
+            '?rnd=0.4781484879517406&g_tk=732560869&jsonpCallback=MusicJsonCallback' +
+            '&loginUin=0&hostUin=0&format=jsonp&inCharset=utf8&outCharset=utf-8' +
+            '&notice=0&platform=yqq&needNewCode=0' +
+            '&categoryId=10000000&sortId=5&sin=' + offset + '&ein=' + (49 + offset);
 
         return {
             success: function(fn) {
@@ -292,6 +289,16 @@ var qq = (function() {
         };
     }
 
+    var qq_parse_url = function(url) {
+        var result = undefined;
+        var match = /\/\/y.qq.com\/n\/yqq\/playlist\/([0-9]+)/.exec(url);
+        if (match != null) {
+            var playlist_id = match[1];
+            result = {'type': 'playlist', 'id': 'qqplaylist_' + playlist_id};
+        }
+        return result;
+    }
+
 
 var get_playlist = function(url, hm, se) {
     var list_id = getParameterByName('list_id', url).split('_')[0];
@@ -309,6 +316,7 @@ var get_playlist = function(url, hm, se) {
 return {
     show_playlist: qq_show_playlist,
     get_playlist: get_playlist,
+    parse_url: qq_parse_url,
     bootstrap_track: qq_bootstrap_track,
     search: qq_search,
     lyric: qq_lyric,

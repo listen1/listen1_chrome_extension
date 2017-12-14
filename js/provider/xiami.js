@@ -83,7 +83,7 @@ var xiami = (function() {
                     data = JSON.parse(data);
 
                     var info = {
-                        'cover_img_url': xm_retina_url(data.data.logo),
+                        'cover_img_url': data.data.logo,
                         'title': data.data.collect_name,
                         'id': 'xmplaylist_' + list_id,
                         'source_url': 'http://www.xiami.com/collect/' + list_id
@@ -175,7 +175,7 @@ var xiami = (function() {
                     data = JSON.parse(data);
 
                     var info = {
-                        'cover_img_url': xm_retina_url(data.data.album_logo),
+                        'cover_img_url': data.data.album_logo,
                         'title': data.data.album_name,
                         'id': 'xmalbum_' + data.data.album_id,
                         'source_url': 'http://www.xiami.com/album/' + data.data.album_id
@@ -257,6 +257,16 @@ var xiami = (function() {
         };
     }
 
+    var xm_parse_url = function(url) {
+        var result = undefined;
+        var match = /\/\/www.xiami.com\/collect\/([0-9]+)/.exec(url);
+        if (match != null) {
+            var playlist_id = match[1];
+            result = {'type': 'playlist', 'id': 'xmplaylist_' + playlist_id};
+        }
+        return result;
+    }
+
 var get_playlist = function(url, hm, se) {
     var list_id = getParameterByName('list_id', url).split('_')[0];
     if (list_id == 'xmplaylist') {
@@ -272,6 +282,7 @@ var get_playlist = function(url, hm, se) {
 return {
     show_playlist: xm_show_playlist,
     get_playlist: get_playlist,
+    parse_url: xm_parse_url,
     bootstrap_track: xm_bootstrap_track,
     search: xm_search,
     lyric: xm_lyric,

@@ -12,6 +12,10 @@ function getProviderByName(sourceName) {
     }
 }
 
+function getAllProviders(){
+    return [netease, xiami, qq];
+}
+
 function getProviderByItemId(itemId) {
     var prefix = itemId.slice(0,2);
     if (prefix == 'ne') {
@@ -63,7 +67,7 @@ function($rootScope, $log, $http, $httpParamSerializerJQLike) {
                 var url = '/playlist?list_id=' + list_id;
                 return {
                     success: function(fn) {
-                        provider.get_playlist(url, $http).success(function(data){
+                        provider.get_playlist(url, $http, $httpParamSerializerJQLike).success(function(data){
                             myplaylist.save_myplaylist(data);
                             fn();
                         });
@@ -122,20 +126,38 @@ function($rootScope, $log, $http, $httpParamSerializerJQLike) {
                     }
                 };
             }
+            if (request.url.search('/parse_url') != -1) {
+                var url = getParameterByName('url', url+'?'+request.data);
+                var providers = getAllProviders();
+                var result = undefined;
+                for(var i=0; i<providers.length; i++) {
+                    var r = providers[i].parse_url(url);
+                    if (r !== undefined) {
+                        result = r;
+                        break;
+                    }
+                }
+                return {
+                    success: function(fn){
+                        return fn({'result': result});
+                    }
+                }
+            }
         },
         bootstrapTrack: function(success, failure) {
-            return function(sound, track, callback){
+            return function(sound, track, playerSuccessCallback, playerFailCallback){
                 // always refresh url, becaues url will expires
                 // if (sound.url.search('http') != -1){
                 //     callback();
                 //     return;
                 // }
                 function successCallback() {
-                    callback();
+                    playerSuccessCallback();
                     success();
                 }
 
                 function failureCallback() {
+                    playerFailCallback();
                     failure();
                 }
                 var source = track.source;

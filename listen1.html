@@ -112,6 +112,17 @@
           </div>
         </div>
 
+        <!-- open playlist dialog -->
+        <div ng-show="dialog_type==5" class="dialog-open-url">
+          <div class="form-group">
+            <label >歌单链接</label>
+            <input type="text" class="form-control" placeholder="例如http://www.xiami.com/collect/198267231" ng-model="dialog_url"/>
+          </div>
+
+          <button class="btn btn-primary confirm-button" ng-click="openUrl(dialog_url);closeDialog();">打开歌单</button>
+          <button class="btn btn-default" ng-click="closeDialog()">取消</button>
+        </div>
+
       </div>
     </div>
 
@@ -134,6 +145,12 @@
 
     <!-- content page: 我的歌单 -->
     <div class="site-wrapper" ng-show="current_tag==1" ng-controller="MyPlayListController">
+      <div class="cover-container container-placeholder">
+        <!-- make empty placeholder div to position sidebar -->
+        <div class="source-list" ng-show="is_window_hidden==1">
+          <div class="open-url-button" ng-click="showDialog(5)">打开歌单</div>
+        </div>
+      </div>
       <div class="site-wrapper-innerd" resize>
         <div class="cover-container">
           <div class="playlist" ng-init="loadMyPlaylist();">
@@ -276,7 +293,7 @@
           <div class="settings-content">
             <p> Listen 1 主页: <a href="http://listen1.github.io/listen1/" target="_blank"> http://listen1.github.io/listen1/ </a> </p>
             <p> Listen 1 邮箱: githublisten1@gmail.com </p>
-            <p> 当前版本 1.2.1 (本软件基于MIT协议开源免费)</p>
+            <p> 当前版本 1.2.4 (本软件基于MIT协议开源免费)</p>
           </div>
         </div>
       </div>
