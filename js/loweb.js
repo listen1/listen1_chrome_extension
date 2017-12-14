@@ -143,6 +143,19 @@ function($rootScope, $log, $http, $httpParamSerializerJQLike) {
                     }
                 }
             }
+			if (request.url.search('/merge_playlist') != -1) {
+				var source = getParameterByName('source', url+'?'+request.data);
+				var target = getParameterByName('target', url+'?'+request.data);
+				var data = localStorage.getObject(target);
+                for(var i in data.tracks){
+					myplaylist.add_myplaylist(source, data.tracks[i]);
+				};
+                return {
+                    success: function(fn) {
+                        fn();
+                    }
+                };
+            }
         },
         bootstrapTrack: function(success, failure) {
             return function(sound, track, playerSuccessCallback, playerFailCallback){
