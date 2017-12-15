@@ -333,9 +333,10 @@
           'Content-Type': 'application/x-www-form-urlencoded'
         }
       }).success(function() {
-        $scope.showPlaylist($scope.list_id);
         Notification.success('合并歌单成功');
         $scope.closeDialog();
+		$scope.popWindow();
+		$scope.showPlaylist($scope.list_id);
       });
     };
 	
