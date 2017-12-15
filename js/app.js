@@ -256,7 +256,11 @@
         $scope.closeDialog();
         // add to current playing list
         if (option_id == $scope.current_list_id) {
-          angularPlayer.addTrack($scope.dialog_song);
+                        if (Array.isArray($scope.dialog_song)) {
+                            angularPlayer.addTrackArray($scope.dialog_song);
+                        } else {
+                            angularPlayer.addTrack($scope.dialog_song);
+                        }
         }
       });
     };
@@ -928,6 +932,7 @@
       $scope.tab = 0;
       $scope.keywords = '';
       $scope.loading = false;
+      $scope.isMultiSelected = false;
 
       $scope.changeTab = function(newTab){
         $scope.loading = true;
@@ -944,6 +949,38 @@
           });
         }
       };
+
+            $scope.addSongsToPlay = function () {
+                if ($scope.result) {
+                    let selectedSongs = $scope.result.filter(v => v.checked);
+                    if (selectedSongs) {
+                        angularPlayer.addTrackArray(selectedSongs);
+                        Notification.success("已添加到当前播放歌单");
+                    }
+                }
+            };
+
+            $scope.addSongsToMyList = function () {
+                if ($scope.result) {
+                    let selectedSongs = $scope.result.filter(v => v.checked);
+                    if (selectedSongs) {
+                        $scope.$parent.showDialog(0, selectedSongs);
+                    }
+                }
+            };
+
+            $scope.onMultiSelect = function () {
+                if ($scope.result) {
+                    let selectedSongs = $scope.result.filter(v => v.checked);
+                    if (selectedSongs && selectedSongs.length > 0) {
+                        $scope.isMultiSelected = true;
+                    } else {
+                        $scope.isMultiSelected = false;
+                    }
+                } else {
+                    $scope.isMultiSelected = false;
+                }
+            };
 
       $scope.isActiveTab = function(tab){
         return $scope.tab === tab;

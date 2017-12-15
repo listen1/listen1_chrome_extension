@@ -145,7 +145,6 @@ a {
 
 .playlist-covers li {
     float: left;
-    display: inline-block;
     width: 140px;
     height: 188px;
     margin-right: 22px;

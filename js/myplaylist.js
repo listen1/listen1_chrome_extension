@@ -76,7 +76,11 @@ var add_myplaylist = function(playlist_id, track) {
     if (playlist == null) {
         return;
     }
-    playlist.tracks.push(track);
+    if (Array.isArray(track)) {
+        playlist.tracks.push(...track);
+    } else {
+        playlist.tracks.push(track);
+    }
     localStorage.setObject(playlist_id, playlist);
 }
 
@@ -109,7 +113,11 @@ var create_myplaylist = function(playlist_title, track) {
 
     playlist.is_mine = 1;
     playlist.info = info;
-    playlist.tracks = [track];
+    if (Array.isArray(track)) {
+        playlist.tracks = track;
+    } else {
+            playlist.tracks = [track];
+    }
     save_myplaylist(playlist);
 }
 

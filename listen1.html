@@ -228,10 +228,17 @@
               <li  ng-class="{'active':isActiveTab(2)}" ng-click="changeTab(2)"><a href="#">QQ音乐</a></li> 
               <li  ng-class="{'active':isActiveTab(3)}" ng-click="changeTab(3)" ng-show="isDoubanLogin"><a href="#">豆瓣</a></li>
               <img class="searchspinner" id="spinner" src="images/loading.gif" ng-show="loading">
+                            <div ng-show="isMultiSelected" style="width: 100px;float: right;height: 20px;margin-right: 28px;">
+                                <a title="添加到当前播放" ng-click="addSongsToPlay();" style="background: url(../images/player_small.png) no-repeat 0 0;height: 25px;width: 25px;cursor: pointer;display: inline-block;"></a>
+                                <a title="添加到歌单" ng-click="addSongsToMyList();" style="background: url(../images/player_small.png) no-repeat -25px 0;height: 25px;width: 25px;cursor: pointer;display: inline-block;"></a>
+                            </div>
             </ul>
             <ul class="detail-songlist">
-              <li ng-repeat="song in result" ng-class-odd="'odd'" ng-class-even="'even'" ng-mouseenter="options=true" ng-mouseleave="options=false">
-                  <div class="col2">
+                            <li ng-repeat="song in result" ng-click="song.checked=!song.checked;onMultiSelect();" ng-class-odd="'odd'" ng-class-even="'even'" ng-mouseenter="options=true" ng-mouseleave="options=false">
+                                <div style="position:absolute;" ng-show="song.checked || options">
+                                    <input type="checkbox" ng-model="song.checked" ng-change="onMultiSelect()" style="cursor:pointer;">
+                                </div>
+                                <div class="col2" style="margin-left:4%;">
                     <a ng-if="song.disabled" class="disabled" ng-click="copyrightNotice()">{{ song.title }}</a>
                     <a ng-if="!song.disabled" add-and-play="song">{{ song.title }}</a>
                   </div>
@@ -420,7 +427,7 @@
           <div class="lyric">
              <div class="placeholder"></div>
              <p ng-repeat="line in lyricArray track by $index" ng-class="{ 'highlight': line.lineNumber == lyricLineNumber }" >{{ line.content }} </p>
-             <div style="placeholder"></div>
+                            <div class="placeholder"></div>
           </div>
         </div>
       </div>
