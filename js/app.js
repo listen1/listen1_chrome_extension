@@ -321,6 +321,7 @@
     };
 
 	$scope.mergePlaylist = function(target_list_id) {
+	  Notification.info('正在合并导入歌单……');
       var url = '/merge_playlist';
       loWeb.post({
         url: url,

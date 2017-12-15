@@ -154,7 +154,6 @@ function($rootScope, $log, $http, $httpParamSerializerJQLike) {
 					for(var j in srcData){
 						if(tarData[i].id==srcData[j].id){
 							isInSourceList = true;
-							console.log(tarData[i]);
 							break;
 						}
 					};
