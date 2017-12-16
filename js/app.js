@@ -967,13 +967,15 @@
       });
 
       function performSearch(){
-                      loWeb.get('/search?source=' + getSourceName($scope.tab) + '&keywords=' + $scope.keywords+'&curpage='+ $scope.curpage).success(function(data) {
-                        // update the textarea
-                        $scope.result = data.result;
-                        updateTotalPage(data.total);
-                        $scope.loading = false;
-                      });
-            }
+        loWeb.get('/search?source=' + getSourceName($scope.tab) + '&keywords=' + $scope.keywords+'&curpage='+ $scope.curpage).success(function(data) {
+          // update the textarea
+          $scope.result = data.result;
+          updateTotalPage(data.total);
+          $scope.loading = false;
+          // scroll back to top when finish searching
+          $('.site-wrapper-innerd').scrollTop(0);
+        });
+      }
 
       function updateCurrentPage(cp){
           if(cp === -1){  // when search words changes,pagenums should be reset.
