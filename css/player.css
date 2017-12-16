@@ -1056,3 +1056,18 @@ li {
 .searchbox  li>a:hover{
 color: #333333;
 }
+
+.search-pagination {
+    text-align: center;
+    display: block;
+    vertical-align: middle;
+    line-height: 45px;
+}
+
+.search-pagination button:focus {
+    outline:0;
+}
+
+.search-pagination label {
+    margin: 0 15px;
+}
