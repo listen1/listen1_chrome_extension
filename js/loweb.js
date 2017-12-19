@@ -148,7 +148,7 @@ function($rootScope, $log, $http, $httpParamSerializerJQLike) {
 				var target = getParameterByName('target', url+'?'+request.data);
 				var tarData = (localStorage.getObject(target)).tracks;
 				var srcData = (localStorage.getObject(source)).tracks;
-				let isInSourceList = false;
+				var isInSourceList = false;
                 for(var i in tarData){
 					isInSourceList = false;
 					for(var j in srcData){
