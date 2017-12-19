@@ -239,11 +239,11 @@
             <ul class="detail-songlist">
               <li ng-repeat="song in result" ng-class-odd="'odd'" ng-class-even="'even'" ng-mouseenter="options=true" ng-mouseleave="options=false">
                   <div class="col2">
-                    <a ng-if="song.disabled" class="disabled" ng-click="copyrightNotice()">{{ song.title }}</a>
-                    <a ng-if="!song.disabled" add-and-play="song">{{ song.title }}</a>
+                    <a ng-if="song.disabled" class="disabled" ng-click="copyrightNotice()">{{ song.title |limitTo:30}}</a>
+                    <a ng-if="!song.disabled" add-and-play="song">{{ song.title |limitTo:30}}</a>
                   </div>
-                  <div class="col1 detail-artist"><a ng-click="showPlaylist(song.artist_id)">{{ song.artist }}</a></div>
-                  <div class="col2"><a ng-click="showPlaylist(song.album_id)">{{ song.album }}</a></div>
+                  <div class="col1 detail-artist"><a ng-click="showPlaylist(song.artist_id)">{{ song.artist |limitTo:20}}</a></div>
+                  <div class="col2"><a ng-click="showPlaylist(song.album_id)">{{ song.album |limitTo:30}}</a></div>
                   
                   <div class="detail-tools">
                     <a title="添加到当前播放" class="detail-add-button" add-without-play="song" ng-show="options"></a>
@@ -252,6 +252,7 @@
                   </div>
               </li>
             </ul>
+            <div class="search-pagination" ng-show= "totalpage>1" pagination></div>
           </div>
         </div>
       </div>

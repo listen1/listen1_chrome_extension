@@ -1105,4 +1105,35 @@ li {
 
 .settings-content {
     padding: 20px;
+
+}
+
+.btn-group button,.btn-pagination,.btn-pagination:focus {
+    background-color: #333333;
+    color: #ffffff;
+    border-color: #333333;
+}
+
+.btn-group button:hover,.btn-pagination:hover {
+    background-color: #ffffff;
+    color: #333333;
+}
+
+.searchbox  li>a:hover{
+color: #333333;
+}
+
+.search-pagination {
+    text-align: center;
+    display: block;
+    vertical-align: middle;
+    line-height: 45px;
+}
+
+.search-pagination button:focus {
+    outline:0;
+}
+
+.search-pagination label {
+    margin: 0 15px;
 }

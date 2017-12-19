@@ -957,20 +957,22 @@
       $scope.tab = 0;
       $scope.keywords = '';
       $scope.loading = false;
+      $scope.curpagelog = [1,1,1];  // [网易,虾米,QQ]
+      $scope.totalpagelog = [1,1,1]; 
+      $scope.curpage = 1;
+      $scope.totalpage = 1;
 
       $scope.changeTab = function(newTab){
         $scope.loading = true;
         $scope.tab = newTab;
         $scope.result = [];
+        updateCurrentPage();
+        updateTotalPage();
 
         if ($scope.keywords===''){
           $scope.loading = false;
         }else{
-          loWeb.get('/search?source=' + getSourceName($scope.tab) + '&keywords=' + $scope.keywords).success(function(data) {
-              // update the textarea
-              $scope.result = data.result;
-              $scope.loading = false;
-          });
+          performSearch();
         }
       };
 
@@ -979,6 +981,8 @@
       };
 
       $scope.$watch('keywords', function (tmpStr) {
+        updateCurrentPage(-1);
+        updateTotalPage(-1);
         if (!tmpStr || tmpStr.length === 0){
           $scope.result = [];
           return 0;
@@ -987,15 +991,64 @@
         // go ahead and retrieve the data
         if (tmpStr === $scope.keywords)
         { 
-          $scope.loading = true;
-          loWeb.get('/search?source=' + getSourceName($scope.tab) + '&keywords=' + $scope.keywords).success(function(data) {
-            // update the textarea
-            $scope.result = data.result;
-            $scope.loading = false; 
-          });
+          performSearch();
         }
       });
+
+      function performSearch(){
+        loWeb.get('/search?source=' + getSourceName($scope.tab) + '&keywords=' + $scope.keywords+'&curpage='+ $scope.curpage).success(function(data) {
+          // update the textarea
+          $scope.result = data.result;
+          updateTotalPage(data.total);
+          $scope.loading = false;
+          // scroll back to top when finish searching
+          $('.site-wrapper-innerd').scrollTop(0);
+        });
+      }
+
+      function updateCurrentPage(cp){
+          if(cp === -1){  // when search words changes,pagenums should be reset.
+              $scope.curpagelog = [1,1,1];
+              $scope.curpage = 1;
+          } 
+          else if(cp >= 0)
+              $scope.curpage = $scope.curpagelog[$scope.tab] = cp;
+          else  // only tab changed
+              $scope.curpage = $scope.curpagelog[$scope.tab];
+      }
+
+      function updateTotalPage(totalItem){
+          if(totalItem === -1) {
+              $scope.totalpagelog = [1,1,1];
+              $scope.totalpage = 1;
+          }
+          else if(totalItem >=0)
+            $scope.totalpage=$scope.totalpagelog[$scope.tab] = Math.ceil(totalItem/20);
+          else  
+            //just switch tab
+              $scope.totalpage=$scope.totalpagelog[$scope.tab];
+      }
+
+      $scope.nextPage = function(){
+        $scope.curpage = $scope.curpagelog[$scope.tab] += 1;
+        performSearch();
+      }
+
+      $scope.previousPage = function(){
+          $scope.curpage = $scope.curpagelog[$scope.tab] -= 1;
+          performSearch();
+      }
   }]);
+
+  app.directive('pagination',function(){
+    return {
+      restrict: "EA",
+      replace:false,
+      template: ' <button class="btn btn-sm btn-pagination" ng-click="previousPage()" ng-disabled="curpage==1"> 上一页</button>\
+     <label> {{curpage}}/{{totalpage}} 页 </label>\
+     <button class="btn btn-sm btn-pagination" ng-click="nextPage()" ng-disabled="curpage==totalpage"> 下一页</button>',
+  }
+});
 
   app.directive('errSrc', function() {
     // http://stackoverflow.com/questions/16310298/if-a-ngsrc-path-resolves-to-a-404-is-there-a-way-to-fallback-to-a-default
