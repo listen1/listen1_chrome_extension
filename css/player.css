@@ -2,28 +2,6 @@ a {
  cursor: pointer;
 }
 
-*::-webkit-scrollbar-track
-{
-	box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
-	border-radius: 10px;
-	background-color: #F5F5F5;
-}
-
-*::-webkit-scrollbar
-{
-	width: 12px;
-	background-color: #F5F5F5;
-	border-radius: 12px;
-}
-
-*::-webkit-scrollbar-thumb
-{
-	border-radius: 10px;
-	box-shadow: inset 0 0 6px rgba(0,0,0,.3);
-	background-color: #555;
-}
-
-
 .shadow {
     position: fixed;
     background: rgba(30,30,30,0.9);
@@ -114,20 +92,19 @@ a {
 }
 
 .site-wrapper { 
-    /* width:1000px; */
-	margin:0 auto 0 auto;
+    width:100%;
     overflow:hidden;
-	top: 0; left: 0; bottom: 0; right: 0;   
-	position: absolute;
+    position: absolute;
+    padding-left: 17px;
 }
 
 .site-wrapper-innerd {
     overflow-y: scroll;
-    margin: 90px auto 0 auto;
+    margin-top: 90px;
     /* uncomment the line below will hide the scroll bar */
     /*padding-right: 17px;*/
-    box-sizing: content-box;
-    /* width: 1000px; */
+    box-sizing:content-box;
+    width:100%;
     background-color: #333;
 }
 
