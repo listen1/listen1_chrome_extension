@@ -122,6 +122,13 @@
           <button class="btn btn-primary confirm-button" ng-click="openUrl(dialog_url);closeDialog();">打开歌单</button>
           <button class="btn btn-default" ng-click="closeDialog()">取消</button>
         </div>
+		
+		<ul ng-show="dialog_type==6" class="dialog-merge-playlist">
+          <li ng-repeat="playlist in myplaylist track by $index" ng-class-odd="'odd'" ng-class-even="'even'" ng-click="mergePlaylist(playlist.info.id)">
+            <img ng-src="{{ playlist.info.cover_img_url }}" />
+            <h2> {{ playlist.info.title }} </h2>
+          </li>
+        </ul>
 
       </div>
     </div>
@@ -322,6 +329,7 @@
                 <a title="收藏歌单" class="clone" ng-show="playlist_title!='' && !is_mine" ng-click="clonePlaylist(list_id)">收藏</a>
                 <a title="编辑歌单" class="edit" ng-show="playlist_title!='' && is_mine" ng-click="showDialog(3, {list_id: list_id, playlist_title: playlist_title, cover_img_url: cover_img_url})">编辑</a>
                 <a title="原始链接" class="link" ng-show="playlist_title!=''" open-url="playlist_source_url">原始链接</a>
+				<a title="导入合并" class="merge" ng-show="playlist_title!='' && is_mine" ng-click="showDialog(6)">导入合并</a>
               </div>
             </div>
             <ul class="detail-songlist">

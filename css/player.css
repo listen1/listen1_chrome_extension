@@ -2,6 +2,28 @@ a {
  cursor: pointer;
 }
 
+*::-webkit-scrollbar-track
+{
+	box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+	border-radius: 10px;
+	background-color: #F5F5F5;
+}
+
+*::-webkit-scrollbar
+{
+	width: 12px;
+	background-color: #F5F5F5;
+	border-radius: 12px;
+}
+
+*::-webkit-scrollbar-thumb
+{
+	border-radius: 10px;
+	box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+	background-color: #555;
+}
+
+
 .shadow {
     position: fixed;
     background: rgba(30,30,30,0.9);
@@ -92,19 +114,20 @@ a {
 }
 
 .site-wrapper { 
-    width:100%;
+    /* width:1000px; */
+	margin:0 auto 0 auto;
     overflow:hidden;
-    position: absolute;
-    padding-left: 17px;
+	top: 0; left: 0; bottom: 0; right: 0;   
+	position: absolute;
 }
 
 .site-wrapper-innerd {
     overflow-y: scroll;
-    margin-top: 90px;
+    margin: 90px auto 0 auto;
     /* uncomment the line below will hide the scroll bar */
     /*padding-right: 17px;*/
-    box-sizing:content-box;
-    width:100%;
+    box-sizing: content-box;
+    /* width: 1000px; */
     background-color: #333;
 }
 
@@ -726,7 +749,6 @@ li {
     text-indent: -9999px;
     width: 36px;
     height: 36px;
-    margin-right: 8px;
     margin-top: 0;
     background: url(../images/player_large.png) no-repeat 0 9999px;
 }
@@ -748,43 +770,35 @@ li {
 }
 
 .playlist-detail .detail-head-title .link {
-    background-position: -256px 0px;
+    background-position: -250px 0px;
 }
 
 .playlist-detail .detail-head-title .link:hover {
-    background-position: -256px -36px;
+    background-position: -250px -36px;
 }
 
 .playlist-detail .detail-head-title .edit {
-    display: inline-block;
-    text-indent: -9999px;
-    width: 36px;
-    height: 36px;
-    margin-right: 8px;
-    margin-top: 0;
-    background: url(../images/player_large.png) no-repeat 0 9999px;
     background-position: -288px 0px;
 }
 
 .playlist-detail .detail-head-title .edit:hover {
-    background: url(../images/player_large.png) no-repeat 0 9999px;
     background-position: -288px -36px;
 }
 
 .playlist-detail .detail-head-title .clone {
-    display: inline-block;
-    text-indent: -9999px;
-    width: 36px;
-    height: 36px;
-    margin-right: 8px;
-    margin-top: 0;
-    background: url(../images/player_large.png) no-repeat 0 9999px;
     background-position: -144px 0px;
 }
 
 .playlist-detail .detail-head-title .clone:hover {
-    background: url(../images/player_large.png) no-repeat 0 9999px;
     background-position: -144px -36px;
+}
+
+.playlist-detail .detail-head-title .merge {
+    background-position: -324px 0px;
+}
+
+.playlist-detail .detail-head-title .merge:hover {
+    background-position: -324px -36px;
 }
 
 .playlist-detail .detail-head-title .ply:hover {
@@ -957,6 +971,32 @@ li {
     font-size: 17px;
 }
 
+.dialog-merge-playlist {
+    padding-left: 0px;
+    text-align: left;
+}
+
+.dialog-merge-playlist li {
+    cursor: pointer;
+    height: 112px;
+    padding: 6px;
+}
+
+.dialog-merge-playlist li:hover {
+    background-color: #555555;
+}
+
+.dialog-merge-playlist li img {
+    float: left;
+    height: 100px;
+    width: 100px;
+}
+
+.dialog-merge-playlist li h2{
+    margin-left: 125px;
+    font-size: 17px;
+}
+
 .dialog-newplaylist input{
     margin-bottom: 22px;
 }
@@ -1040,6 +1080,7 @@ li {
 
 .settings-content {
     padding: 20px;
+
 }
 
 .btn-group button,.btn-pagination,.btn-pagination:focus {

@@ -67,7 +67,7 @@ function($rootScope, $log, $http, $httpParamSerializerJQLike) {
                 var url = '/playlist?list_id=' + list_id;
                 return {
                     success: function(fn) {
-                        provider.get_playlist(url, $http, $httpParamSerializerJQLike).success(function(data){
+							provider.get_playlist(url, $http, $httpParamSerializerJQLike).success(function(data){
                             myplaylist.save_myplaylist(data);
                             fn();
                         });
@@ -142,6 +142,30 @@ function($rootScope, $log, $http, $httpParamSerializerJQLike) {
                         return fn({'result': result});
                     }
                 }
+            }
+			if (request.url.search('/merge_playlist') != -1) {
+				var source = getParameterByName('source', url+'?'+request.data);
+				var target = getParameterByName('target', url+'?'+request.data);
+				var tarData = (localStorage.getObject(target)).tracks;
+				var srcData = (localStorage.getObject(source)).tracks;
+				var isInSourceList = false;
+                for(var i in tarData){
+					isInSourceList = false;
+					for(var j in srcData){
+						if(tarData[i].id==srcData[j].id){
+							isInSourceList = true;
+							break;
+						}
+					};
+					if(!isInSourceList){
+						myplaylist.add_myplaylist(source, tarData[i]);
+					};
+				};
+                return {
+                    success: function(fn) {
+                        fn();
+                    }
+                };
             }
         },
         bootstrapTrack: function(success, failure) {

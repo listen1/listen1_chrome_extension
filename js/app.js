@@ -237,6 +237,14 @@
         $scope.dialog_title = '打开歌单';
         $scope.dialog_type = 5;
       }
+	  if (dialog_type == 6) {
+        $scope.dialog_title = '歌单导入合并';
+		var url = '/show_myplaylist';
+        loWeb.get(url).success(function(data) {
+            $scope.myplaylist = data.result;
+        });
+        $scope.dialog_type = 6;
+      }
     };
 
     $scope.chooseDialogOption = function(option_id) {
@@ -312,6 +320,27 @@
       });
     };
 
+	$scope.mergePlaylist = function(target_list_id) {
+	  Notification.info('正在合并导入歌单……');
+      var url = '/merge_playlist';
+      loWeb.post({
+        url: url,
+        method: 'POST',
+        data: $httpParamSerializerJQLike({
+          source: $scope.list_id,
+          target: target_list_id,
+        }),
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        }
+      }).success(function() {
+        Notification.success('合并歌单成功');
+        $scope.closeDialog();
+		$scope.popWindow();
+		$scope.showPlaylist($scope.list_id);
+      });
+    };
+	
     $scope.removeSongFromPlaylist = function(song, list_id) {
       var url = '/remove_track_from_myplaylist';
 
