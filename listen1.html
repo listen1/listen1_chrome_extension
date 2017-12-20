@@ -28,6 +28,7 @@
     <script type="text/javascript" src="js/vendor/timer.js"></script>
 
     <script type="text/javascript" src="js/lastfm.js"></script>
+    <script type="text/javascript" src="js/gist.js"></script>
 
     <script type="text/javascript" src="js/lowebutil.js"></script>
     <script type="text/javascript" src="js/provider/xiami.js"></script>
@@ -120,6 +121,20 @@
           </div>
 
           <button class="btn btn-primary confirm-button" ng-click="openUrl(dialog_url);closeDialog();">打开歌单</button>
+          <button class="btn btn-default" ng-click="closeDialog()">取消</button>
+        </div>
+
+        <!-- open playlist dialog -->
+        <div ng-show="dialog_type==6" class="dialog-open-url">
+          <div class="form-group">
+            <label >Gist id*</label>
+            <input type="text" class="form-control" placeholder="用于保存备份文件的gist id" ng-model="dialog_gistid"/>
+          </div>
+          <div class="form-group">
+            <label >Gist token</label>
+            <input type="text" class="form-control" placeholder="备份到Gist须提供token,仅还原可只填id" ng-model="dialog_gisttoken"/>
+          </div>
+          <button class="btn btn-primary confirm-button" ng-click="saveLocalGistInfo()">保存</button>
           <button class="btn btn-default" ng-click="closeDialog()">取消</button>
         </div>
 
@@ -266,6 +281,8 @@
             <p>重装插件或清除缓存数据会导致我的歌单数据丢失，强烈建议在这些操作前，备份我的歌单。</p>
             <div>
               <button class="btn btn-primary confirm-button" ng-click="backupMySettings()">下载备份文件</button>
+              <button class="btn btn-primary confirm-button" ng-click="backupMySettings2Gist()">备份到Gist</button>
+              <button class="btn btn-danger confirm-button" ng-click="clearLocalGistInfo()">清除Gist认证信息</button>
             </div>
           </div>
           <div class="settings-title"><span>数据恢复<span></div>
@@ -274,6 +291,7 @@
             <label class="btn btn-warning" for="my-file-selector">
               <input id="my-file-selector" type="file" style="display:none;" ng-model="myuploadfiles"  custom-on-change="importMySettings">上传备份文件
             </label>
+            <button class="btn btn-warning confirm-button" ng-click="importMySettingsFromGist()">从Gist恢复</button>
           </div>
           <div class="settings-title"><span>快捷键<span></div>
           <div class="settings-content">

@@ -10,7 +10,7 @@
       return value && JSON.parse(value);
   }
 
-  var app = angular.module('listenone', ['angularSoundManager', 'ui-notification', 'loWebManager', 'cfp.hotkeys', 'lastfmClient'])
+  var app = angular.module('listenone', ['angularSoundManager', 'ui-notification', 'loWebManager', 'cfp.hotkeys', 'lastfmClient','gistClient'])
     .config( [
     '$compileProvider',
     function( $compileProvider )
@@ -85,10 +85,10 @@
   app.controller('NavigationController', ['$scope', '$http',
     '$httpParamSerializerJQLike', '$timeout',
     'angularPlayer', 'Notification', '$rootScope', 'loWeb',
-    'hotkeys', 'lastfm',
+    'hotkeys', 'lastfm','gist',
     function($scope, $http, $httpParamSerializerJQLike,
       $timeout, angularPlayer, Notification, $rootScope,
-      loWeb, hotkeys, lastfm) {
+      loWeb, hotkeys, lastfm,gist) {
 
     $rootScope.page_title = "Listen 1";
     $scope.window_url_stack = [];
@@ -106,6 +106,7 @@
     $scope.isDoubanLogin = false;
 
     $scope.lastfm = lastfm;
+    $scope.gist = gist;
     
     $scope.$on('isdoubanlogin:update', function(event, data) {
       $scope.isDoubanLogin = data;
@@ -236,6 +237,10 @@
       if (dialog_type == 5) {
         $scope.dialog_title = '打开歌单';
         $scope.dialog_type = 5;
+      }
+      if (dialog_type == 6) {
+        $scope.dialog_title = '同步到Gist';
+        $scope.dialog_type = 6;
       }
     };
 
@@ -471,6 +476,72 @@
       reader.readAsText(fileObject);
     }
 
+    $scope.loadLocalGistInfo = function(){
+      var localGistInfo = localStorage.getObject("gistinfo");
+      if(localGistInfo === null) return null;
+      $scope.dialog_gistid = localGistInfo.id;
+      $scope.dialog_gisttoken = localGistInfo.token;
+    }
+
+    $scope.saveLocalGistInfo = function(){
+      if(!$scope.dialog_gistid) return;
+        var gistinfo = {"id":$scope.dialog_gistid,"token":$scope.dialog_gisttoken};
+        localStorage.setObject("gistinfo",gistinfo);
+        $scope.closeDialog();
+    }
+
+    $scope.clearLocalGistInfo = function(){
+      if(!$scope.loadLocalGistInfo()){
+        localStorage.removeItem("gistinfo");
+        $scope.dialog_gistid = $scope.dialog_gisttoken = "";
+      }
+      Notification.success("已清除Gist认证信息");
+    }
+
+    $scope.backupMySettings2Gist= function(){
+      if($scope.loadLocalGistInfo()===null){
+        $scope.showDialog(6);
+      }else{
+        var items = {};
+        for ( var i = 0, len = localStorage.length; i < len; ++i ) {
+          var key =  localStorage.key(i);
+          if(key!=="gistinfo"){ // avoid token leak
+            var value = localStorage.getObject(key);
+            items[key] = value;
+          }
+        }
+        var content = JSON.stringify(items);
+        $scope.gist.backupMySettings2Gist(content).then(function(){
+          Notification.success("成功备份歌单到Gist");
+        },function(err){
+            Notification.warning("备份歌单失败，检查后重试");
+            $scope.showDialog(6);
+        })
+      }
+    }
+
+    $scope.importMySettingsFromGist = function(){
+      if($scope.loadLocalGistInfo()===null){
+        $scope.showDialog(6);
+      }else{
+        $scope.gist.importMySettingsFromGist().then(function(raw){
+          var  data = JSON.parse(raw);
+          for ( var key in data) {
+            var value = data[key];
+            localStorage.setObject(key, value);
+          }
+          Notification.success("恢复我的歌单成功");
+        },function(err){
+          if(err==404){
+            Notification.warning("未找到备份歌单，请先备份");
+          }else{
+            Notification.warning("恢复歌单失败，检查后重试");
+            $scope.showDialog(6);
+          }
+        })
+      }
+    }
+
     $scope.showShortcuts = function() {
       hotkeys.toggleCheatSheet();
     }
@@ -598,7 +669,7 @@
       }
 
       $scope.saveLocalCurrentPlaying = function() {
-        localStorage.setObjct('current-playing', angularPlayer.playlist)
+        localStorage.setObject('current-playing', angularPlayer.playlist)
       }
 
       $scope.changePlaymode = function() {
