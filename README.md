@@ -1,5 +1,6 @@
-Listen 1 (Chrome Extension) V1.3.0 （最后更新于2017年12月20日）
+Listen 1 (Chrome Extension) V1.4.0 
 ==========
+（最后更新于2017年12月26日）
 
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE)
 
@@ -43,6 +44,11 @@ Firefox打包安装
 
 更新日志
 -------
+
+`2017-12-26`
+
+* 增加同步歌单到Github Gist功能。(特别感谢@ConstLhq提供创意和部分代码实现）
+
 
 `2017-12-20`
 
