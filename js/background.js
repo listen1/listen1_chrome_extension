@@ -59,3 +59,16 @@ function hack_referer_header(details) {
 chrome.webRequest.onBeforeSendHeaders.addListener(hack_referer_header, {
     urls: ["*://music.163.com/*", "*://*.xiami.com/*", "*://*.qq.com/*"]
 }, ['requestHeaders', 'blocking']);
+
+
+/**
+ * Get tokens.
+ */
+
+chrome.runtime.onMessage.addListener(
+    function(request, sender, sendResponse) {
+        var code = request.query.split('=')[1];
+        Github.handleCallback(code);
+        sendResponse();
+    }
+);

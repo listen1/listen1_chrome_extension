@@ -27,6 +27,8 @@
     <script type="text/javascript" src="js/vendor/bigint.js"></script>
     <script type="text/javascript" src="js/vendor/timer.js"></script>
 
+    <script type="text/javascript" src="js/github_api.js"></script>
+    <script type="text/javascript" src="js/github.js"></script>
     <script type="text/javascript" src="js/lastfm.js"></script>
 
     <script type="text/javascript" src="js/lowebutil.js"></script>
@@ -123,12 +125,21 @@
           <button class="btn btn-default" ng-click="closeDialog()">取消</button>
         </div>
 		
-		<ul ng-show="dialog_type==6" class="dialog-merge-playlist">
+		    <ul ng-show="dialog_type==6" class="dialog-merge-playlist">
           <li ng-repeat="playlist in myplaylist track by $index" ng-class-odd="'odd'" ng-class-even="'even'" ng-click="mergePlaylist(playlist.info.id)">
             <img ng-src="{{ playlist.info.cover_img_url }}" />
             <h2> {{ playlist.info.title }} </h2>
           </li>
         </ul>
+
+        <div ng-show="dialog_type==7" class="dialog-connect-github">
+          <p>正在打开Github.com页面...</p>
+          <p>请在打开的页面点击"Authencate", 允许Listen 1访问你的账户。</p>
+          <div class="buttons">
+            <button class="btn btn-primary confirm-button" ng-click="github.updateStatus();closeDialog();">已经完成授权</button>
+            <button class="btn btn-warning warning-button" ng-click="github.openAuthUrl();">遇到问题，再次打开授权页</button>
+          </div>
+        </div>
 
       </div>
     </div>
@@ -260,7 +271,7 @@
 
 
     <!-- content page: 设置 -->
-    <div class="site-wrapper" ng-show="current_tag==4" ng-init="lastfm.updateStatus()">
+    <div class="site-wrapper" ng-show="current_tag==4" ng-init="lastfm.updateStatus(); github.updateStatus();">
       <div class="site-wrapper-innerd" resize>
         <div class="cover-container">
          <!--  <div class="settings-title"><span>第三方登录<span></div>
@@ -282,6 +293,17 @@
               <input id="my-file-selector" type="file" style="display:none;" ng-model="myuploadfiles"  custom-on-change="importMySettings">上传备份文件
             </label>
           </div>
+
+          <div class="settings-title"><span>连接到 Github.com<span></div>
+          <div class="settings-content">
+            <div>
+              <p> 状态：{{ github.getStatusText() }} </p>
+              <button class="btn btn-primary confirm-button" ng-show="github.getStatus() == 0" ng-click="github.openAuthUrl(); showDialog(7);">连接到 Github.com</button>
+              <button class="btn btn-warning confirm-button" ng-show="github.getStatus() == 1" ng-click="showDialog(7);">重新连接</button>
+              <button class="btn btn-primary confirm-button" ng-show="github.getStatus() == 2" ng-click="github.logout();">取消连接</button>
+            </div>
+          </div>
+
           <div class="settings-title"><span>快捷键<span></div>
           <div class="settings-content">
             <div>
@@ -297,6 +319,7 @@
               <button class="btn btn-primary confirm-button" ng-show="lastfm.isAuthRequested()" ng-click="lastfm.cancelAuth();">取消连接</button>
             </div>
           </div>
+
           <div class="settings-title"><span>关于<span></div>
           <div class="settings-content">
             <p> Listen 1 主页: <a href="http://listen1.github.io/listen1/" target="_blank"> http://listen1.github.io/listen1/ </a> </p>

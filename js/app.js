@@ -10,8 +10,9 @@
       return value && JSON.parse(value);
   }
 
-  var app = angular.module('listenone', ['angularSoundManager', 'ui-notification', 'loWebManager', 'cfp.hotkeys', 'lastfmClient'])
-    .config( [
+  var app = angular.module('listenone', ['angularSoundManager', 'ui-notification', 'loWebManager', 'cfp.hotkeys', 'lastfmClient', 'githubClient'])
+    
+  app.config( [
     '$compileProvider',
     function( $compileProvider )
     {   
@@ -42,6 +43,7 @@
       apiSecret: 'd68f1dfc6ff43044c96a79ae7dfb5c27'
     });
   });
+
 
   app.run(['angularPlayer', 'Notification', 'loWeb', function(angularPlayer, Notification, loWeb) {
     angularPlayer.setBootstrapTrack(
@@ -85,10 +87,10 @@
   app.controller('NavigationController', ['$scope', '$http',
     '$httpParamSerializerJQLike', '$timeout',
     'angularPlayer', 'Notification', '$rootScope', 'loWeb',
-    'hotkeys', 'lastfm',
+    'hotkeys', 'lastfm', 'github',
     function($scope, $http, $httpParamSerializerJQLike,
       $timeout, angularPlayer, Notification, $rootScope,
-      loWeb, hotkeys, lastfm) {
+      loWeb, hotkeys, lastfm, github) {
 
     $rootScope.page_title = "Listen 1";
     $scope.window_url_stack = [];
@@ -106,6 +108,7 @@
     $scope.isDoubanLogin = false;
 
     $scope.lastfm = lastfm;
+    $scope.github = github;
     
     $scope.$on('isdoubanlogin:update', function(event, data) {
       $scope.isDoubanLogin = data;
@@ -237,13 +240,17 @@
         $scope.dialog_title = '打开歌单';
         $scope.dialog_type = 5;
       }
-	  if (dialog_type == 6) {
+	    if (dialog_type == 6) {
         $scope.dialog_title = '歌单导入合并';
-		var url = '/show_myplaylist';
+		    var url = '/show_myplaylist';
         loWeb.get(url).success(function(data) {
             $scope.myplaylist = data.result;
         });
         $scope.dialog_type = 6;
+      }
+      if (dialog_type == 7) {
+        $scope.dialog_title = '连接到Github.com';
+        $scope.dialog_type = 7;
       }
     };
 
@@ -640,6 +647,12 @@
       $scope.$on('music:volume', function(event, data) {
           $scope.$apply(function() {
               $scope.volume = data;
+          });
+      });
+
+      $scope.$on('github:status', function(event, data) {
+          $scope.$apply(function() {
+              $scope.githubStatus = data;
           });
       });
 
