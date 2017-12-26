@@ -517,42 +517,42 @@
           items[key] = value;
         }
       }
-      var content = JSON.stringify(items);
+      var gistFiles = gist.json2gist(items);
       $scope.gistBackupLoading = true;
-      gist.backupMySettings2Gist(content).then(function(){
+      gist.backupMySettings2Gist(gistFiles).then(function(){
         Notification.clearAll();
-        Notification.success("成功备份歌单到Gist");
+        Notification.success("成功导出歌单到Gist");
         $scope.gistBackupLoading = false;
       },function(err){
         Notification.clearAll();
-        Notification.warning("备份歌单失败，检查后重试");
+        Notification.warning("导出歌单失败，检查后重试");
         $scope.gistBackupLoading = false;
       });
-      Notification({message: "正在备份歌单到Gist...", delay: null});
+      Notification({message: "正在导出歌单到Gist...", delay: null});
     }
 
     $scope.gistRestoreLoading = false;
     $scope.importMySettingsFromGist = function(){
       $scope.gistRestoreLoading = true;
       gist.importMySettingsFromGist().then(function(raw){
-        var  data = JSON.parse(raw);
+        var data = gist.gist2json(raw);
         for ( var key in data) {
           var value = data[key];
           localStorage.setObject(key, value);
         }
         Notification.clearAll();
-        Notification.success("恢复我的歌单成功");
+        Notification.success("导入歌单成功");
         $scope.gistRestoreLoading = false;
       },function(err){
         Notification.clearAll();
         if(err==404){
           Notification.warning("未找到备份歌单，请先备份");
         }else{
-          Notification.warning("恢复歌单失败，检查后重试");
+          Notification.warning("导入歌单失败，检查后重试");
         }
         $scope.gistRestoreLoading = false;
       })
-      Notification({message: "正在从Gist恢复我的歌单...", delay: null});
+      Notification({message: "正在从Gist导入歌单...", delay: null});
     }
 
 
