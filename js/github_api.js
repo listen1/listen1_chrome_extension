@@ -30,17 +30,12 @@
       }
       var self = this;
       this.api('/user', function(data){
-        console.log(data.login);
         if (data.login == undefined) {
-          console.log('before setting:', self.status);
           self.status = 1;
-          console.log('after setting:', self.status);
         }
         else {
-          console.log('before setting:', self.status);
           self.status = 2;
           self.username = data.login;
-          console.log('after setting:', self.status);
         }
         if(callback != null) {
           callback(self.status);
@@ -53,7 +48,6 @@
     },
 
     getStatusText: function(){
-      console.log(this.status);
       if(this.status == 0) {
         return '未连接';
       }
@@ -86,7 +80,6 @@
         dataType: "json",
         data: data,
         success: function(response) {
-          console.log(response);
           var ak = response.access_token;
           localStorage.setObject('githubOauthAccessKey', ak);
           if(cb != undefined) {

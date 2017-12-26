@@ -284,6 +284,7 @@
             <p>重装插件或清除缓存数据会导致我的歌单数据丢失，强烈建议在这些操作前，备份我的歌单。</p>
             <div>
               <button class="btn btn-primary confirm-button" ng-click="backupMySettings()">下载备份文件</button>
+               <button class="btn btn-primary confirm-button" ng-disabled="gistBackupLoading" ng-show="github.getStatus() == 2" ng-click="backupMySettings2Gist()">备份到Gist</button>
             </div>
           </div>
           <div class="settings-title"><span>数据恢复<span></div>
@@ -292,6 +293,7 @@
             <label class="btn btn-warning" for="my-file-selector">
               <input id="my-file-selector" type="file" style="display:none;" ng-model="myuploadfiles"  custom-on-change="importMySettings">上传备份文件
             </label>
+            <button class="btn btn-warning confirm-button" ng-disabled="gistRestoreLoading" ng-show="github.getStatus() == 2" ng-click="importMySettingsFromGist()">从Gist恢复</button>
           </div>
 
           <div class="settings-title"><span>连接到 Github.com<span></div>

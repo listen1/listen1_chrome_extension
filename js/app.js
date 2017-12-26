@@ -87,10 +87,10 @@
   app.controller('NavigationController', ['$scope', '$http',
     '$httpParamSerializerJQLike', '$timeout',
     'angularPlayer', 'Notification', '$rootScope', 'loWeb',
-    'hotkeys', 'lastfm', 'github',
+    'hotkeys', 'lastfm', 'github', 'gist',
     function($scope, $http, $httpParamSerializerJQLike,
       $timeout, angularPlayer, Notification, $rootScope,
-      loWeb, hotkeys, lastfm, github) {
+      loWeb, hotkeys, lastfm, github, gist) {
 
     $rootScope.page_title = "Listen 1";
     $scope.window_url_stack = [];
@@ -507,6 +507,55 @@
       reader.readAsText(fileObject);
     }
 
+    $scope.gistBackupLoading = false;
+    $scope.backupMySettings2Gist= function(){
+      var items = {};
+      for ( var i = 0; i < localStorage.length; i++ ) {
+        var key =  localStorage.key(i);
+        if(key!=="gistid" && key !== 'githubOauthAccessKey'){ // avoid token leak
+          var value = localStorage.getObject(key);
+          items[key] = value;
+        }
+      }
+      var content = JSON.stringify(items);
+      $scope.gistBackupLoading = true;
+      gist.backupMySettings2Gist(content).then(function(){
+        Notification.clearAll();
+        Notification.success("成功备份歌单到Gist");
+        $scope.gistBackupLoading = false;
+      },function(err){
+        Notification.clearAll();
+        Notification.warning("备份歌单失败，检查后重试");
+        $scope.gistBackupLoading = false;
+      });
+      Notification({message: "正在备份歌单到Gist...", delay: null});
+    }
+
+    $scope.gistRestoreLoading = false;
+    $scope.importMySettingsFromGist = function(){
+      $scope.gistRestoreLoading = true;
+      gist.importMySettingsFromGist().then(function(raw){
+        var  data = JSON.parse(raw);
+        for ( var key in data) {
+          var value = data[key];
+          localStorage.setObject(key, value);
+        }
+        Notification.clearAll();
+        Notification.success("恢复我的歌单成功");
+        $scope.gistRestoreLoading = false;
+      },function(err){
+        Notification.clearAll();
+        if(err==404){
+          Notification.warning("未找到备份歌单，请先备份");
+        }else{
+          Notification.warning("恢复歌单失败，检查后重试");
+        }
+        $scope.gistRestoreLoading = false;
+      })
+      Notification({message: "正在从Gist恢复我的歌单...", delay: null});
+    }
+
+
     $scope.showShortcuts = function() {
       hotkeys.toggleCheatSheet();
     }
@@ -634,7 +683,7 @@
       }
 
       $scope.saveLocalCurrentPlaying = function() {
-        localStorage.setObjct('current-playing', angularPlayer.playlist)
+        localStorage.setObject('current-playing', angularPlayer.playlist)
       }
 
       $scope.changePlaymode = function() {
