@@ -943,9 +943,37 @@ li {
     width: 100px;
 }
 
-.dialog-playlist li h2{
+.dialog-backuplist li h2{
     margin-left: 125px;
     font-size: 17px;
+}
+
+
+.dialog-backuplist {
+    padding-left: 0px;
+    text-align: left;
+}
+
+.dialog-backuplist li {
+    cursor: pointer;
+    height: 112px;
+    padding: 6px;
+}
+
+.dialog-backuplist li:hover {
+    background-color: #555555;
+}
+
+.dialog-backuplist li img {
+    float: left;
+    height: 100px;
+    width: 100px;
+}
+
+.dialog-backuplist li h2{
+    margin-top: 10px;
+    margin-left: 125px;
+    font-size: 15px;
 }
 
 .dialog-merge-playlist {
@@ -981,6 +1009,14 @@ li {
 .dialog-newplaylist .confirm-button {
     margin-left: 76px;
     margin-right: 96px;
+}
+
+.dialog-newbackup {
+    text-align: center;
+}
+
+.dialog-newbackup .confirm-button {
+    margin-right: 12px;
 }
 
 .dialog-editplaylist .dialog-footer {
@@ -1058,6 +1094,10 @@ li {
 .settings-content {
     padding: 20px;
 
+}
+
+.settings-content .btn {
+    margin-right: 10px;
 }
 
 .btn-group button,.btn-pagination,.btn-pagination:focus {

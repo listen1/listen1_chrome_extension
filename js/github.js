@@ -21,8 +21,6 @@ function($rootScope) {
         },
         logout: function(){
             Github.logout();
-            // delete gist id info;
-            localStorage.removeItem("gistid");
         }
     };
 }]);
@@ -37,9 +35,11 @@ ngGithub.provider('gist', {
 
     function json2gist(jsonObject) {
       var result = {};
+      
       result['listen1_backup.json'] = {content: JSON.stringify(jsonObject)};
       //var markdown = '# My Listen1 Playlists\n';
       var playlistIds = jsonObject['playerlists'];
+      var songsCount = 0;
       for(var i=0; i<playlistIds.length; i++) {
         var playlistId = playlistIds[i];
         var playlist = jsonObject[playlistId];
@@ -55,7 +55,10 @@ ngGithub.provider('gist', {
         var content = '<details>\n  <summary>' + cover + '   ' + title + '</summary><p>\n' + tableHeader + tableBody +'</p></details>';
         var filename = 'listen1_'+playlistId + '.md';
         result[filename] = {content: content};
+        songsCount += playlist.tracks.length;
       }
+      var summary = "本歌单由[Listen1](http://listen1.github.io/listen1/)创建, 歌曲数：" + songsCount + "，歌单数：" + playlistIds.length + "，点击查看更多";
+      result['listen1_aha_playlist.md'] = {content: summary};
       
       return result;
     }
@@ -65,9 +68,25 @@ ngGithub.provider('gist', {
       return JSON.parse(jsonString);
     }
 
-    function backup(files) {
+    function listExistBackup(){
       var deferred = $q.defer();
-      var gistId = _getGistId();
+      var url = apiUrl;
+      $http({
+        method: 'GET',
+        url: url,
+        headers:{'Authorization':'token ' + localStorage.getObject("githubOauthAccessKey")},
+      }).then(function(res) {
+        var result = res.data;
+        result = result.filter(function(backup){return backup.description.startsWith('updated by Listen1')});
+        deferred.resolve(result);
+      }, function(err) {
+        deferred.reject(err)
+      });
+      return deferred.promise;
+    }
+
+    function backup(files, gistId, isPublic) {
+      var deferred = $q.defer();
       var method = '';
       var url = '';
       if (gistId != null) {
@@ -83,13 +102,11 @@ ngGithub.provider('gist', {
         url: url,
         headers:{'Authorization':'token ' + localStorage.getObject("githubOauthAccessKey")},
         data:{
-        "description": "updated by Listen1(http://listen1.github.io/listen1/) at " + new Date().toLocaleString(),
-        "public": false,
-        "files": files
+          "description": "updated by Listen1(http://listen1.github.io/listen1/) at " + new Date().toLocaleString(),
+          "public": isPublic,
+          "files": files
         }
       }).then(function(res) {
-        var newGistId = res.data.id;
-        localStorage.setObject("gistid", newGistId);
         deferred.resolve();
       }, function(err) {
         deferred.reject(err)
@@ -97,11 +114,11 @@ ngGithub.provider('gist', {
       return deferred.promise;
     }
 
-    function restore() {
+    function restore(gistId) {
       var deferred = $q.defer();
       $http({
         method:'GET',
-        url:apiUrl + '/' + _getGistId(),
+        url:apiUrl + '/' + gistId,
       }).then(function(res) {
         try{
           var files = res.data.files
@@ -117,6 +134,7 @@ ngGithub.provider('gist', {
     var gistApi = {
       "gist2json": gist2json,
       "json2gist": json2gist,
+      "listExistBackup": listExistBackup,
       "backupMySettings2Gist": backup,
       "importMySettingsFromGist": restore,
     };

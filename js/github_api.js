@@ -55,7 +55,7 @@
         return '连接中';
       }
       if(this.status == 2) {
-        return '已连接: ' + this.username;
+        return this.username + '已登录';
       }
       return '???'
     },
