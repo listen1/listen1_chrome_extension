@@ -82,6 +82,16 @@ var add_myplaylist = function(playlist_id, track) {
         playlist.tracks.push(track);
     }
 
+    // dedupe
+    var newTracks = [], trackIds = [];
+    playlist.tracks.forEach(function (track) {
+       if (trackIds.indexOf(track.id) === -1) {
+           newTracks.push(track);
+           trackIds.push(track.id);
+       }
+    });
+    playlist.tracks = newTracks;
+
     localStorage.setObject(playlist_id, playlist);
 }
 
