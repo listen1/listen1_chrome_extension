@@ -97,10 +97,10 @@
             <label >封面图片url</label>
             <input type="text" class="form-control" placeholder="输入歌单名称" ng-model="dialog_cover_img_url"/>
           </div>
-          
+
           <button class="btn btn-primary confirm-button" ng-click="editMyPlaylist(list_id)">修改歌单</button>
           <button class="btn btn-default" ng-click="closeDialog()">取消</button>
-          <div class='dialog-footer'> 
+          <div class='dialog-footer'>
             <button class="btn btn-danger remove-button" ng-click="removeMyPlaylist(list_id)">删除歌单</button>
           </div>
         </div>
@@ -124,7 +124,7 @@
           <button class="btn btn-primary confirm-button" ng-click="openUrl(dialog_url);closeDialog();">打开歌单</button>
           <button class="btn btn-default" ng-click="closeDialog()">取消</button>
         </div>
-		
+
 		    <ul ng-show="dialog_type==6" class="dialog-merge-playlist">
           <li ng-repeat="playlist in myplaylist track by $index" ng-class-odd="'odd'" ng-class-even="'even'" ng-click="mergePlaylist(playlist.info.id)">
             <img ng-src="{{ playlist.info.cover_img_url }}" />
@@ -265,10 +265,10 @@
 
 
 
-            <ul class="nav nav-tabs"> 
+            <ul class="nav nav-tabs">
               <li ng-class="{'active':isActiveTab(0)}" ng-click="changeTab(0)"><a>网易</a></li>
               <li ng-class="{'active':isActiveTab(1)}" ng-click="changeTab(1)"><a href="#">虾米</a></li>
-              <li  ng-class="{'active':isActiveTab(2)}" ng-click="changeTab(2)"><a href="#">QQ音乐</a></li> 
+              <li  ng-class="{'active':isActiveTab(2)}" ng-click="changeTab(2)"><a href="#">QQ音乐</a></li>
               <li  ng-class="{'active':isActiveTab(3)}" ng-click="changeTab(3)" ng-show="isDoubanLogin"><a href="#">豆瓣</a></li>
               <img class="searchspinner" id="spinner" src="images/loading.gif" ng-show="loading">
             </ul>
@@ -280,7 +280,7 @@
                   </div>
                   <div class="col1 detail-artist"><a ng-click="showPlaylist(song.artist_id)">{{ song.artist |limitTo:20}}</a></div>
                   <div class="col2"><a ng-click="showPlaylist(song.album_id)">{{ song.album |limitTo:30}}</a></div>
-                  
+
                   <div class="detail-tools">
                     <a title="添加到当前播放" class="detail-add-button" add-without-play="song" ng-show="options"></a>
                     <a title="添加到歌单" class="detail-fav-button" ng-show="options" ng-click="showDialog(0, song)"></a>
@@ -428,7 +428,7 @@
                 <a class="" ng-click="showPlaylist(currentPlaying.artist_id)">{{ currentPlaying.artist }}</a>
               </span>
             </span>
-            <a open-url="currentPlaying.source_url" class="src" title="原始链接"></a>  
+            <a open-url="currentPlaying.source_url" class="src" title="原始链接"></a>
           </div>
 
           <div class="m-pbar play" >
@@ -466,7 +466,8 @@
         <div class="menu" ng-hide="menuHidden">
           <div class="menu-header">
               <span>播放列表</span>
-              <a clear-playlist class="remove-all"><small>(移除所有)</small></a>
+              <a clear-playlist class="remove-all"><small>(移除所有</small></a>
+              <a class="add-all" ng-click="showDialog(0, playlist)"><small>添加所有到歌单)</small></a>
               <a class="close-popup" ng-click="menuHidden=!menuHidden">×</a>
           </div>
           <ul>

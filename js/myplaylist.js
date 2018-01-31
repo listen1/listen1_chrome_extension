@@ -76,7 +76,12 @@ var add_myplaylist = function(playlist_id, track) {
     if (playlist == null) {
         return;
     }
-    playlist.tracks.push(track);
+    if (Array.isArray(track)) {
+        playlist.tracks = playlist.tracks.concat(track);
+    } else {
+        playlist.tracks.push(track);
+    }
+
     localStorage.setObject(playlist_id, playlist);
 }
 

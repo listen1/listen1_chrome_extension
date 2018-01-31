@@ -37,7 +37,7 @@ a {
     text-align: left;
     border-bottom: 1px solid;
     margin-bottom: 20px;
-} 
+}
 
 .dialog-header .dialog-close {
     float: right;
@@ -53,7 +53,7 @@ a {
     background-color: #333;
 }
 
-/*.masthead { 
+/*.masthead {
     z-index: 999;
 }*/
 
@@ -91,7 +91,7 @@ a {
     margin-top: 90px;
 }
 
-.site-wrapper { 
+.site-wrapper {
     width:100%;
     overflow:hidden;
     position: absolute;
@@ -271,11 +271,11 @@ a {
 .m-playbar .btns .play{
     width: 36px;
     height: 36px;
-    margin-top:0; 
+    margin-top:0;
     background-position: 0px 0px;
 }
 
-.m-playbar .btns .play:hover{ 
+.m-playbar .btns .play:hover{
     background-position: 0px -36px;
 }
 
@@ -283,7 +283,7 @@ a {
     background-position: -108px 0px;
 }
 
-.m-playbar .btns .pas:hover{ 
+.m-playbar .btns .pas:hover{
     background-position: -108px -36px;
 }
 
@@ -379,7 +379,7 @@ a {
 
 .m-pbar {
     position: relative;
-    
+
 }
 
 .m-pbar.play {
@@ -625,6 +625,13 @@ li {
     display: inline-block;
     position: absolute;
     left: 113px;
+    top: 9px;
+}
+
+.menu .add-all {
+    display: inline-block;
+    position: absolute;
+    left: 175px;
     top: 9px;
 }
 
@@ -880,7 +887,7 @@ li {
 }
 
 .detail-songlist .detail-artist a{
-    color: #777777;   
+    color: #777777;
 }
 
 .detail-songlist .odd {
