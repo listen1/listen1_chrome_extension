@@ -588,6 +588,7 @@
     });
 
     $scope.openUrl = function(url) {
+      url = url.replace('music.163.com/#/my/m/music/playlist?','music.163.com/#/playlist?');
       loWeb.post({
         url: '/parse_url',
         method: 'POST',
