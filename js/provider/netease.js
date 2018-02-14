@@ -403,6 +403,7 @@ var netease = (function() {
 
     var ne_parse_url = function(url) {
         var result = undefined;
+        url = url.replace('music.163.com/#/my/m/music/playlist?','music.163.com/#/playlist?');
         if (url.search('//music.163.com/#/m/playlist') != -1 || url.search('//music.163.com/#/playlist') != -1) {
             result = {'type': 'playlist', 'id': 'neplaylist_' + getParameterByName('id', url)};
         }

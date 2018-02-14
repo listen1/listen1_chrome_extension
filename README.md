@@ -1,6 +1,6 @@
 Listen 1 (Chrome Extension) V1.4.0 
 ==========
-（最后更新于2017年12月26日）
+（最后更新于2018年02月14日）
 
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE)
 
@@ -44,6 +44,11 @@ Firefox打包安装
 
 更新日志
 -------
+
+`2018-02-14`
+
+* 修复主页在加载更多数据时出现双重滚动条的bug（感谢@zhuzhuyule的提交)
+* 修复打开歌单时，网易云音乐个人歌单地址无法解析的bug（感谢@zhuzhuyule的提交)
 
 `2017-12-26`
 
