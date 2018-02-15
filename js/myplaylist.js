@@ -124,7 +124,13 @@ var create_myplaylist = function(playlist_title, track) {
 
     playlist.is_mine = 1;
     playlist.info = info;
-    playlist.tracks = [track];
+
+    if (Array.isArray(track)) {
+        playlist.tracks = track;
+    } else {
+        playlist.tracks = [track];
+    }
+
     save_myplaylist(playlist);
 }
 

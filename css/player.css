@@ -621,19 +621,35 @@ li {
     color: #ffffff;
 }
 
-.menu .remove-all {
-    display: inline-block;
-    position: absolute;
-    left: 113px;
-    top: 9px;
+.menu-header small {
+    background-color: #333333;
+    color: #ffffff;
+    cursor: pointer;
+    vertical-align: middle;
+    display:inline-block;
+    width: 60px;
+    line-height: 20px;
 }
 
+.menu-header a:hover small{
+    background-color: #ffffff;
+    color: #333333;
+}
 .menu .add-all {
     display: inline-block;
     position: absolute;
-    left: 175px;
+    left: 377px;
     top: 9px;
 }
+
+
+.menu .remove-all {
+    display: inline-block;
+    position: absolute;
+    left: 454px;
+    top: 9px;
+}
+
 
 .menu .close-popup {
     float:right;
