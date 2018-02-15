@@ -4786,8 +4786,8 @@ ngSoundManager.factory('angularPlayer', ['$rootScope', '$log',
 
                     // choose one song from [shuffleCount, shufflelist.length-1]
                     if (shuffleCount == shufflelist.length) {
-                        $log.debug("Shuffle list played finish, no next");
-                        return;
+                        shuffleCount = 0;
+                        shuffleIndex = -1;
                     }
                     
                     var index = shuffleCount + Math.floor(Math.random() * (shufflelist.length-shuffleCount));
