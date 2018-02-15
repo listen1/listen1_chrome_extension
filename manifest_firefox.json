@@ -15,8 +15,8 @@
     "description": "One for all free music in China",
     "icons": {
         "128": "images/logo.png",
-        "16": "images/logo.png",
-        "48": "images/logo.png"
+        "16": "images/logo_16.png",
+        "48": "images/logo_48.png"
     },
     "manifest_version": 2,
     "name": "Listen 1",
