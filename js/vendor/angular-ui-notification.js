@@ -53,8 +53,8 @@ angular.module('ui-notification').provider('Notification', function() {
             args.positionX = args.positionX ? args.positionX : options.positionX;
             args.replaceMessage = args.replaceMessage ? args.replaceMessage : options.replaceMessage;
 
-            $http.get(args.template,{cache: $templateCache}).success(function(template) {
-
+            $http.get(args.template,{cache: $templateCache}).then(function(response) {
+                var template = response.data;
                 var scope = args.scope.$new();
                 scope.message = $sce.trustAsHtml(args.message);
                 scope.title = $sce.trustAsHtml(args.title);

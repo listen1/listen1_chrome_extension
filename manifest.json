@@ -1,13 +1,12 @@
 {
     "background": {
-        "presistent": true,
-        "scripts": ["js/vendor/jquery-1.12.2.js", "js/github_api.js", "js/background.js"]
+        "scripts": ["js/vendor/jquery-2.2.3.min.js", "js/github_api.js","js/background.js" ]
     },
     "browser_action": {
         "default_icon": "images/logo.png",
         "default_title": "Listen 1"
     },
-    "description": "Listen 1 for all music",
+    "description": "One for all free music in China",
     "icons": {
         "128": "images/logo.png",
         "16": "images/logo.png",

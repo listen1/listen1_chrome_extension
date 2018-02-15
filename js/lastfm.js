@@ -76,7 +76,8 @@
 
       function getAuth(callback){
         var url = apiUrl + '?method=auth.gettoken&api_key=' + options.apiKey  + '&format=json';
-        $http.get(url).success(function(data) {
+        $http.get(url).then(function(response) {
+          var data = response.data;
           var token = data.token;
           localStorage.setObject('lastfmtoken', token);
           var grant_url = 'http://www.last.fm/api/auth/?api_key=' + options.apiKey + '&token=' + token;
@@ -137,7 +138,8 @@
         };
         var apiSig = generateSign(params);
         var url = apiUrl + '?' + createQueryString(params) + '&api_sig=' + apiSig + '&format=json';
-        $http.get(url).success(function(data){
+        $http.get(url).then(function(response){
+          var data = response.data;
           mySession = data.session;
           localStorage.setObject('lastfmsession', mySession);
           callback(mySession);
