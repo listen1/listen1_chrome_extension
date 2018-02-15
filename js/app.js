@@ -826,10 +826,10 @@
 
       $scope.$on('music:isPlaying', function(event, data) {
         if (data) {
-          $rootScope.page_title = '▶' + $rootScope.page_title.slice(1);
+          $rootScope.page_title = '▶ ' + $rootScope.page_title.slice($rootScope.page_title.indexOf(' '));
         }
         else {
-          $rootScope.page_title = '❚❚' + $rootScope.page_title.slice(1);
+          $rootScope.page_title = '❚❚ ' + $rootScope.page_title.slice($rootScope.page_title.indexOf(' '));
         };
         if (!lastfm.isAuthorized()) {
           return;
