@@ -43,7 +43,7 @@
   </head>
 
   <body ng-controller="NavigationController">
-
+    <div ng-controller="PlayController as playCtrl" ng-init="loadLocalSettings()">
     <!-- dialog -->
     <div class="shadow" ng-hide="is_dialog_hidden==1"></div>
     <div class="dialog" ng-hide="is_dialog_hidden==1" ng-style="myStyle">
@@ -357,7 +357,6 @@
       </div>
     </div>
 
-
     <!-- track list window -->
     <div class="site-wrapper" ng-hide="is_window_hidden==1">
       <div class="cover-container container-placeholder">
@@ -367,7 +366,7 @@
       </div>
       <div class="site-wrapper-innerd" resize>
         <div class="cover-container" >
-          <div class="playlist-detail">
+          <div class="playlist-detail" ng-show="window_type=='list'">
             <div class="detail-head">
               <div class="detail-head-cover">
                 <img ng-src="{{ cover_img_url }}">
@@ -400,13 +399,36 @@
               </li>
             </ul>
           </div>
+          <div class="playsong-detail" ng-show="window_type=='track'">
+            <div class="detail-head">
+              <div class="detail-head-cover">
+                <img ng-src="{{ currentPlaying.img_url  }}">
+              </div>
+              <div class="detail-head-title">
+                
+<!--                 <a title="加入收藏" class="clone" ng-click="showDialog(0, currentPlaying)">收藏</a>
+                <a open-url="currentPlaying.source_url" title="原始链接" class="link">原始链接</a> -->
+              </div>
+            </div>
+            <ul class="detail-songinfo">
+              <h2>{{ currentPlaying.title }}</h2>
+              <div class="info">
+                <span>歌手: </span><a class="" ng-click="showPlaylist(currentPlaying.artist_id)">{{ currentPlaying.artist }}</a><span class="album">专辑: </span><a ng-click="showPlaylist(currentPlaying.album_id)">{{ currentPlaying.album }}</a>
+              </div>
+              <div class="lyric">
+                 <div class="placeholder"></div>
+                 <p ng-repeat="line in lyricArray track by $index" ng-class="{ 'highlight': line.lineNumber == lyricLineNumber }" >{{ line.content }} </p>
+                 <div style="placeholder"></div>
+              </div>
+            </ul>
+          </div>
         </div>
       </div>
     </div>
 
 
     <!-- page footer -->
-    <div class="mastfoot" ng-controller="PlayController as playCtrl" ng-init="loadLocalSettings()">
+    <div class="mastfoot">
       <div class="m-playbar" >
         <div class="btns">
           <a class="previous" title="上一首([)" prev-track >上一首([)</a>
@@ -417,12 +439,13 @@
         <div class="head">
           <!-- <img ng-src="{{ currentPlaying.img_url }}" err-src="images/placeholder.png"> -->
            <img ng-src="{{ currentPlaying.img_url }}">
-          <a ng-click="showPlaylist(currentPlaying.album_id)" class="mask"></a>
+          <!-- <a ng-click="showPlaylist(currentPlaying.album_id)" class="mask"></a> -->
+          <a ng-click="showWindow('/now_playing')" class="mask"></a> 
         </div>
 
         <div class="maininfo">
           <div class="words">
-            <a class="overflowhide name notextdeco floatleft" title="{{currentPlaying.title}}">{{currentPlaying.title}}</a>
+            <a ng-click="showWindow('/now_playing')" class="overflowhide name notextdeco floatleft" title="{{currentPlaying.title}}">{{currentPlaying.title}}</a>
             <span class="by overflowhide floatleft">
               <span title="{{ currentPlaying.artist }}">
                 <a class="" ng-click="showPlaylist(currentPlaying.artist_id)">{{ currentPlaying.artist }}</a>
@@ -477,14 +500,9 @@
               <div class="singer" ng-click="showPlaylist(song.artist_id)">{{ song.artist }}</div>
             </li>
           </ul>
-          <div class="lyric">
-             <div class="placeholder"></div>
-             <p ng-repeat="line in lyricArray track by $index" ng-class="{ 'highlight': line.lineNumber == lyricLineNumber }" >{{ line.content }} </p>
-             <div style="placeholder"></div>
-          </div>
         </div>
       </div>
     </div>
-
+  </div>
   </body>
 </html>

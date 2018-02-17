@@ -113,7 +113,7 @@ var xiami = (function() {
             }
             var location = data.data.trackList[0].location;
             sound.url = caesar(location);
-            track.img_url = data.data.trackList[0].pic;
+            track.img_url = xm_retina_url(data.data.trackList[0].pic);
             track.album = data.data.trackList[0].album_name;
             track.album_id = 'xmalbum_' + data.data.trackList[0].album_id;
             track.lyric_url = data.data.trackList[0].lyric_url;

@@ -1,6 +1,6 @@
 Listen 1 (Chrome Extension) V1.4.0 
 ==========
-（最后更新于2018年02月14日）
+（最后更新于2018年02月18日）
 
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE)
 
@@ -44,6 +44,10 @@ Firefox打包安装
 
 更新日志
 -------
+
+`2018-02-18`
+
+* 增加歌曲主页，点击封面可进入（特别感谢@iparanoid提供歌曲页面UI设计）
 
 `2018-02-15`
 

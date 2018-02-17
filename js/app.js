@@ -128,13 +128,28 @@
       $scope.playlist_title = '';
       $scope.playlist_source_url = '';
       $scope.songs = [];
+      $scope.window_type = 'list';
     };
 
     $scope.showWindow = function(url){
+      if ($scope.window_url_stack.length > 0 &&  $scope.window_url_stack[$scope.window_url_stack.length-1] == url) {
+        return;
+      }
       $scope.is_window_hidden = 0;
       $scope.resetWindow();
+      
+      if ($scope.window_url_stack.length > 0 && $scope.window_url_stack[$scope.window_url_stack.length-1] == '/now_playing') {
+        // if now playing is top, pop it
+        $scope.window_url_stack.splice(-1,1);
+      }
 
+      if (url == '/now_playing') {
+        $scope.window_type = 'track';
+        $scope.window_url_stack.push(url);
+        return;
+      }
       $scope.window_url_stack.push(url);
+
       loWeb.get(url).success(function(data) {
           if (data.status == '0') {
             Notification.info(data.reason);  
@@ -147,6 +162,7 @@
           $scope.playlist_source_url = data.info.source_url;
           $scope.list_id = data.info.id;
           $scope.is_mine = (data.info.id.slice(0,2) == 'my');
+          $scope.window_type = 'list';
       });
     };
 
@@ -164,6 +180,11 @@
       else {
         $scope.resetWindow();
         var url = $scope.window_url_stack[$scope.window_url_stack.length-1];
+
+        if (url == '/now_playing') {
+          $scope.window_type = 'track';
+          return;
+        }
         loWeb.get(url).success(function(data) {
             $scope.songs = data.tracks;
             $scope.list_id = data.info.id;
@@ -959,7 +980,8 @@
           var lineHeight = 20;
           var lineElement = $(".lyric p")[lastObject.lineNumber];
           var windowHeight = 270;
-          var offset = lineElement.offsetTop - windowHeight/2;
+          var AdditionOffset = 4;
+          var offset = lineElement.offsetTop - windowHeight/2 + AdditionOffset;
           $(".lyric").animate({ scrollTop: offset+"px" }, 500);
           $scope.lyricLineNumber = lastObject.lineNumber;
         }

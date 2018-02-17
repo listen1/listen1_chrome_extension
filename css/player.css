@@ -535,7 +535,7 @@ em, i {
     right: 0px;
     _right: 0px;
     height: 349px;
-    width: 100%;
+    width: 60%;
     background-color: #121212;
 }
 
@@ -544,7 +544,6 @@ em, i {
     padding-left: 0px;
     height: 308px;
     overflow-y: scroll;
-    width: 60%;
     margin-bottom: 0px;
 }
 
@@ -638,7 +637,7 @@ li {
 .menu .add-all {
     display: inline-block;
     position: absolute;
-    left: 377px;
+    left: 335px;
     top: 9px;
 }
 
@@ -646,7 +645,7 @@ li {
 .menu .remove-all {
     display: inline-block;
     position: absolute;
-    left: 454px;
+    left: 410px;
     top: 9px;
 }
 
@@ -738,13 +737,13 @@ li {
     max-height:100%;
 }
 
-.playlist-detail .detail-head-title {
+.detail-head-title {
     float: left;
     width: 100%;
     text-align: center;
 }
 
-.playlist-detail .detail-head-title a {
+.detail-head-title a {
     display: inline-block;
     text-indent: -9999px;
     width: 36px;
@@ -753,55 +752,55 @@ li {
     background: url(../images/player_large.png) no-repeat 0 9999px;
 }
 
-.playlist-detail .detail-head-title .play {
+.detail-head-title .play {
     background-position: 0px 0px;
 }
 
-.playlist-detail .detail-head-title .play:hover {
+.detail-head-title .play:hover {
     background-position: 0px -36px;
 }
 
-.playlist-detail .detail-head-title .add {
+.detail-head-title .add {
     background-position: -216px 0px;
 }
 
-.playlist-detail .detail-head-title .add:hover {
+.detail-head-title .add:hover {
     background-position: -216px -36px;
 }
 
-.playlist-detail .detail-head-title .link {
+.detail-head-title .link {
     background-position: -250px 0px;
 }
 
-.playlist-detail .detail-head-title .link:hover {
+.detail-head-title .link:hover {
     background-position: -250px -36px;
 }
 
-.playlist-detail .detail-head-title .edit {
+.detail-head-title .edit {
     background-position: -288px 0px;
 }
 
-.playlist-detail .detail-head-title .edit:hover {
+.detail-head-title .edit:hover {
     background-position: -288px -36px;
 }
 
-.playlist-detail .detail-head-title .clone {
+.detail-head-title .clone {
     background-position: -144px 0px;
 }
 
-.playlist-detail .detail-head-title .clone:hover {
+.detail-head-title .clone:hover {
     background-position: -144px -36px;
 }
 
-.playlist-detail .detail-head-title .merge {
+.detail-head-title .merge {
     background-position: -324px 0px;
 }
 
-.playlist-detail .detail-head-title .merge:hover {
+.detail-head-title .merge:hover {
     background-position: -324px -36px;
 }
 
-.playlist-detail .detail-head-title .ply:hover {
+.detail-head-title .ply:hover {
     background-position: -40px -204px;
 }
 
@@ -814,6 +813,67 @@ li {
     margin-left: 220px;
     margin-top: 6px;
     margin-right: 14px;
+}
+
+.playsong-detail .detail-head {
+    width: 390px;
+    position: fixed;
+    margin-bottom: 20px;
+}
+
+.playsong-detail .detail-songinfo {
+    padding-left: 440px;
+    padding-right: 55px;
+} 
+
+.playsong-detail .detail-head .detail-head-cover {
+    margin: 0 auto;
+    width: 200px;
+}
+
+.playsong-detail .detail-head .detail-head-cover img {
+    width: 240px;
+    height: 240px;
+}
+
+.playsong-detail .detail-songinfo h2 {
+    font-size: 22px;
+}
+
+.playsong-detail .detail-songinfo .info {
+    border-bottom: solid #444 1px;
+    margin-bottom: 5px;
+    padding-bottom: 10px;
+}
+.playsong-detail .detail-songinfo .info span{
+    color: #9b9b9b;
+    margin-right: 10px;
+}
+.playsong-detail .detail-songinfo .info span.album {
+    margin-left: 30px;
+}
+.playsong-detail .lyric {
+    color: #999; /* IE8 proofing */
+    color: rgba(255,255,255,.5);
+    text-align: left;
+    width: 100%;
+    display: inline-block;
+    height: 410px;
+    overflow-y: scroll;
+    position: relative;
+    font-size: 15px;
+}
+
+.playsong-detail .lyric p{
+    min-height: 20px;
+}
+
+.playsong-detail .lyric .placeholder{
+    height: 50px;
+}
+
+.playsong-detail .lyric .highlight{
+    color: #ffffff;
 }
 
 .detail-songlist {
