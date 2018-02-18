@@ -1,4 +1,4 @@
-Listen 1 (Chrome Extension) V1.5.0
+Listen 1 (Chrome Extension) V1.5.1
 ==========
 （最后更新于2018年02月18日）
 
@@ -47,6 +47,7 @@ Firefox打包安装
 
 `2018-02-18`
 
+* 修复无法创建歌单的bug
 * 增加歌曲主页，点击封面可进入（特别感谢@iparanoid提供歌曲页面UI设计）
 
 `2018-02-15`
