@@ -163,7 +163,8 @@
           params.api_sig = generateSign(params);
 
           var url = apiUrl + '?' + createQueryString(params) + '&format=json';
-          $http.post(url).success(function(data){
+          $http.post(url).then(function(response){
+            var data = response.data;
             if (callback != null) {
               callback(data);
             }
@@ -189,7 +190,8 @@
           params.api_sig = generateSign(params);
 
           var url = apiUrl + '?' + createQueryString(params) + '&format=json';
-          $http.post(url).success(function(data){
+          $http.post(url).then(function(response){
+            var data = response.data;
             if (callback != null) {
               callback(data);
             }
@@ -212,7 +214,8 @@
           params.api_sig = generateSign(params);
 
           var url = apiUrl + '?' + createQueryString(params) + '&format=json';
-          $http.post(url).success(function(data){
+          $http.post(url).then(function(response){
+            var data = response.data;
             if (callback != null) {
               callback(data);
             }
