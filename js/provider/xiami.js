@@ -31,7 +31,10 @@ var xiami = (function() {
     }
 
     function xm_retina_url(s){
-        return s.slice(0, -6) + s.slice(-4);
+        if (s.slice(-6, -4) == '_1') {
+            return s.slice(0, -6) + s.slice(-4);
+        }
+        return s;
     }
 
     var xm_show_playlist = function(url, hm) {
