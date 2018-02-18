@@ -15,7 +15,7 @@
     "manifest_version": 2,
     "name": "Listen 1",
     "permissions": [ "notifications", "unlimitedStorage", "downloads", "storage", "contextMenus", "tabs", "*://music.163.com/*", "*://*.xiami.com/*", "*://*.qq.com/*", "*://api.github.com/*", "*://github.com/*", "webRequest", "webRequestBlocking"],
-    "version": "1.4.0",
+    "version": "1.5.0",
     "web_accessible_resources": [ "images/*" ],
     "content_scripts": [{
         "matches": ["https://listen1.github.io/listen1/*"],
