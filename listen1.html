@@ -491,7 +491,7 @@
               <span>播放列表</span>
               <a class="add-all" ng-click="showDialog(0, playlist)"><small>收藏全部</small></a>
               <a clear-playlist class="remove-all"><small>清空</small></a>
-              <a class="close-popup" ng-click="menuHidden=!menuHidden">×</a>
+              <a class="close-popup" ng-click="togglePlaylist()">×</a>
           </div>
           <ul>
             <li id="song{{ song.id }}" ng-repeat="song in playlist track by $index" ng-class="{ playing: currentPlaying.id == song.id }" ng-mouseenter="playlist_highlight=true" ng-mouseleave="playlist_highlight=false">
