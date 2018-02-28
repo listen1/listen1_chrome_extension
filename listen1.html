@@ -475,7 +475,7 @@
           <a class="icn icn-list" title="列表(l)" ng-click="togglePlaylist()"></a>
         </div>
 
-        <div class="volume-ctrl">
+        <div class="volume-ctrl" volume-wheel>
           <a class="icn" ng-class="{ 'icn-vol-mute': mute, 'icn-vol': mute == false }"  title="静音(m) 增大(u) 减少(d)" ng-click="toggleMuteStatus()"></a>
           <div class="m-pbar volume" >
             <div class="barbg" id="volumebar" mode="volume" draggable>

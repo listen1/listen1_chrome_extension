@@ -641,6 +641,14 @@
     };
   });
 
+  app.directive('volumeWheel', function() {
+    return function (scope, element, attrs) {
+        element.bind('mousewheel', function(){
+          scope.adjustVolume(window.event.wheelDelta>0)
+        });
+    };
+  });
+
   app.controller('PlayController', ['$scope', '$timeout','$log',
     '$anchorScroll', '$location', 'angularPlayer', '$http',
     '$httpParamSerializerJQLike','$rootScope', 'Notification',
@@ -659,6 +667,7 @@
 
       $scope.scrobbleTrackId = null;
       $scope.scrobbleTimer = new Timer();
+      $scope.adjustVolume = angularPlayer.adjustVolume;
 
       function switchMode(mode){
         //playmode 0:loop 1:shuffle 2:repeat one
