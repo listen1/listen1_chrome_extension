@@ -1,5 +1,6 @@
-Listen 1 (Chrome Extension) （最后更新于2017年11月27日）
+Listen 1 (Chrome Extension) V1.4.0 
 ==========
+（最后更新于2017年12月26日）
 
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE)
 
@@ -43,6 +44,16 @@ Firefox打包安装
 
 更新日志
 -------
+
+`2017-12-26`
+
+* 增加同步歌单到Github Gist功能。(特别感谢@ConstLhq提供创意和部分代码实现）
+
+
+`2017-12-20`
+
+* 增加搜索翻页功能，你可以看到更多的搜索结果了。(感谢@ConstLhq的提交）
+* 增加合并歌单功能。可以快速的把其它你创建的歌曲合并到当前的歌单中了。(感谢@Dumeng的提交）
 
 `2017-11-27`
 
@@ -113,9 +124,10 @@ Firefox打包安装
 
 * 增加音量控制
 
-TODO
+即将到来的功能
 ----
-分页加载
+
+* 歌单云同步（基于Gist）
 
 
 License

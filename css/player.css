@@ -971,6 +971,37 @@ li {
     font-size: 17px;
 }
 
+<<<<<<< HEAD
+=======
+
+.dialog-backuplist {
+    padding-left: 0px;
+    text-align: left;
+}
+
+.dialog-backuplist li {
+    cursor: pointer;
+    height: 112px;
+    padding: 6px;
+}
+
+.dialog-backuplist li:hover {
+    background-color: #555555;
+}
+
+.dialog-backuplist li img {
+    float: left;
+    height: 100px;
+    width: 100px;
+}
+
+.dialog-backuplist li h2{
+    margin-top: 10px;
+    margin-left: 125px;
+    font-size: 15px;
+}
+
+>>>>>>> refs/remotes/listen1/master
 .dialog-merge-playlist {
     padding-left: 0px;
     text-align: left;
@@ -1004,6 +1035,14 @@ li {
 .dialog-newplaylist .confirm-button {
     margin-left: 76px;
     margin-right: 96px;
+}
+
+.dialog-newbackup {
+    text-align: center;
+}
+
+.dialog-newbackup .confirm-button {
+    margin-right: 12px;
 }
 
 .dialog-editplaylist .dialog-footer {
@@ -1081,6 +1120,13 @@ li {
 .settings-content {
     padding: 20px;
 
+<<<<<<< HEAD
+=======
+}
+
+.settings-content .btn {
+    margin-right: 10px;
+>>>>>>> refs/remotes/listen1/master
 }
 
 .btn-group button,.btn-pagination,.btn-pagination:focus {

@@ -10,8 +10,9 @@
       return value && JSON.parse(value);
   }
 
-  var app = angular.module('listenone', ['angularSoundManager', 'ui-notification', 'loWebManager', 'cfp.hotkeys', 'lastfmClient'])
-    .config( [
+  var app = angular.module('listenone', ['angularSoundManager', 'ui-notification', 'loWebManager', 'cfp.hotkeys', 'lastfmClient', 'githubClient'])
+    
+  app.config( [
     '$compileProvider',
     function( $compileProvider )
     {   
@@ -42,6 +43,7 @@
       apiSecret: 'd68f1dfc6ff43044c96a79ae7dfb5c27'
     });
   });
+
 
   app.run(['angularPlayer', 'Notification', 'loWeb', function(angularPlayer, Notification, loWeb) {
     angularPlayer.setBootstrapTrack(
@@ -85,10 +87,10 @@
   app.controller('NavigationController', ['$scope', '$http',
     '$httpParamSerializerJQLike', '$timeout',
     'angularPlayer', 'Notification', '$rootScope', 'loWeb',
-    'hotkeys', 'lastfm',
+    'hotkeys', 'lastfm', 'github', 'gist',
     function($scope, $http, $httpParamSerializerJQLike,
       $timeout, angularPlayer, Notification, $rootScope,
-      loWeb, hotkeys, lastfm) {
+      loWeb, hotkeys, lastfm, github, gist) {
 
     $rootScope.page_title = "Listen 1";
     $scope.window_url_stack = [];
@@ -106,6 +108,7 @@
     $scope.isDoubanLogin = false;
 
     $scope.lastfm = lastfm;
+    $scope.github = github;
     
     $scope.$on('isdoubanlogin:update', function(event, data) {
       $scope.isDoubanLogin = data;
@@ -237,14 +240,45 @@
         $scope.dialog_title = '打开歌单';
         $scope.dialog_type = 5;
       }
+<<<<<<< HEAD
 	  if (dialog_type == 6) {
         $scope.dialog_title = '歌单导入合并';
 		var url = '/show_myplaylist';
+=======
+	    if (dialog_type == 6) {
+        $scope.dialog_title = '歌单导入合并';
+		    var url = '/show_myplaylist';
+>>>>>>> refs/remotes/listen1/master
         loWeb.get(url).success(function(data) {
             $scope.myplaylist = data.result;
         });
         $scope.dialog_type = 6;
       }
+<<<<<<< HEAD
+=======
+      if (dialog_type == 7) {
+        $scope.dialog_title = '连接到Github.com';
+        $scope.dialog_type = 7;
+      }
+      if (dialog_type == 8) {
+        $scope.dialog_title = '导出到Github Gist';
+        $scope.dialog_type = 8;
+        gist.listExistBackup().then(function(res){
+          $scope.myBackup = res;
+        }, function(err){
+          $scope.myBackup = [];
+        });
+      }
+      if (dialog_type == 10) {
+        $scope.dialog_title = '从Github Gist导入';
+        $scope.dialog_type = 10;
+        gist.listExistBackup().then(function(res){
+          $scope.myBackup = res;
+        }, function(err){
+          $scope.myBackup = [];
+        });
+      }
+>>>>>>> refs/remotes/listen1/master
     };
 
     $scope.chooseDialogOption = function(option_id) {
@@ -269,12 +303,12 @@
       });
     };
 
-    $scope.newDialogOption = function() {
-      $scope.dialog_type = 1;
+    $scope.newDialogOption = function(option) {
+      $scope.dialog_type = option;
     };
 
-    $scope.cancelNewDialog = function() {
-      $scope.dialog_type = 0;
+    $scope.cancelNewDialog = function(option) {
+      $scope.dialog_type = option;
     };
 
     $scope.createAndAddPlaylist = function() {
@@ -494,11 +528,60 @@
             var value = data[key];
             localStorage.setObject(key, value);
           }
-          Notification.success("恢复我的歌单成功");
+          Notification.success("成功导入我的歌单");
         }
       };
       reader.readAsText(fileObject);
     }
+
+    $scope.gistBackupLoading = false;
+    $scope.backupMySettings2Gist= function(gistId, isPublic){
+      var items = {};
+      for ( var i = 0; i < localStorage.length; i++ ) {
+        var key =  localStorage.key(i);
+        if(key!=="gistid" && key !== 'githubOauthAccessKey'){ // avoid token leak
+          var value = localStorage.getObject(key);
+          items[key] = value;
+        }
+      }
+      var gistFiles = gist.json2gist(items);
+      $scope.gistBackupLoading = true;
+      gist.backupMySettings2Gist(gistFiles, gistId, isPublic).then(function(){
+        Notification.clearAll();
+        Notification.success("成功导出我的歌单到Gist");
+        $scope.gistBackupLoading = false;
+      },function(err){
+        Notification.clearAll();
+        Notification.warning("导出我的歌单失败，检查后重试");
+        $scope.gistBackupLoading = false;
+      });
+      Notification({message: "正在导出我的歌单到Gist...", delay: null});
+    }
+
+    $scope.gistRestoreLoading = false;
+    $scope.importMySettingsFromGist = function(gistId){
+      $scope.gistRestoreLoading = true;
+      gist.importMySettingsFromGist(gistId).then(function(raw){
+        var data = gist.gist2json(raw);
+        for ( var key in data) {
+          var value = data[key];
+          localStorage.setObject(key, value);
+        }
+        Notification.clearAll();
+        Notification.success("导入我的歌单成功");
+        $scope.gistRestoreLoading = false;
+      },function(err){
+        Notification.clearAll();
+        if(err==404){
+          Notification.warning("未找到备份歌单，请先备份");
+        }else{
+          Notification.warning("导入我的歌单失败，检查后重试");
+        }
+        $scope.gistRestoreLoading = false;
+      })
+      Notification({message: "正在从Gist导入我的歌单...", delay: null});
+    }
+
 
     $scope.showShortcuts = function() {
       hotkeys.toggleCheatSheet();
@@ -627,7 +710,7 @@
       }
 
       $scope.saveLocalCurrentPlaying = function() {
-        localStorage.setObjct('current-playing', angularPlayer.playlist)
+        localStorage.setObject('current-playing', angularPlayer.playlist)
       }
 
       $scope.changePlaymode = function() {
@@ -640,6 +723,12 @@
       $scope.$on('music:volume', function(event, data) {
           $scope.$apply(function() {
               $scope.volume = data;
+          });
+      });
+
+      $scope.$on('github:status', function(event, data) {
+          $scope.$apply(function() {
+              $scope.githubStatus = data;
           });
       });
 
