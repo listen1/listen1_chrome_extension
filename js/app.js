@@ -261,22 +261,14 @@
         $scope.dialog_title = '打开歌单';
         $scope.dialog_type = 5;
       }
-<<<<<<< HEAD
-	  if (dialog_type == 6) {
-        $scope.dialog_title = '歌单导入合并';
-		var url = '/show_myplaylist';
-=======
 	    if (dialog_type == 6) {
         $scope.dialog_title = '歌单导入合并';
 		    var url = '/show_myplaylist';
->>>>>>> refs/remotes/listen1/master
         loWeb.get(url).success(function(data) {
             $scope.myplaylist = data.result;
         });
         $scope.dialog_type = 6;
       }
-<<<<<<< HEAD
-=======
       if (dialog_type == 7) {
         $scope.dialog_title = '连接到Github.com';
         $scope.dialog_type = 7;
@@ -299,7 +291,6 @@
           $scope.myBackup = [];
         });
       }
->>>>>>> refs/remotes/listen1/master
     };
 
     $scope.chooseDialogOption = function(option_id) {
