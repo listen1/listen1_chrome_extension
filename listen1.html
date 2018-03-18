@@ -124,8 +124,9 @@
           <button class="btn btn-primary confirm-button" ng-click="openUrl(dialog_url);closeDialog();">打开歌单</button>
           <button class="btn btn-default" ng-click="closeDialog()">取消</button>
         </div>
-
+        
 		    <ul ng-show="dialog_type==6" class="dialog-merge-playlist">
+
           <li ng-repeat="playlist in myplaylist track by $index" ng-class-odd="'odd'" ng-class-even="'even'" ng-click="mergePlaylist(playlist.info.id)">
             <img ng-src="{{ playlist.info.cover_img_url }}" />
             <h2> {{ playlist.info.title }} </h2>
@@ -165,6 +166,7 @@
           <h2> {{ backup.id }} {{backup.description}}</h2>
         </li>
       </ul>
+>>>>>>> refs/remotes/listen1/master
 
       </div>
     </div>
