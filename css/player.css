@@ -108,9 +108,9 @@ a {
     background-color: #333;
 }
 
-.searchbox {
-/*    margin-top: 100px;*/
-}
+/* .searchbox {
+   margin-top: 100px;
+} */
 
 .searchbox .nav{
     margin-top: 12px;
@@ -144,7 +144,7 @@ a {
 }
 
 .playlist-covers li {
-    float: left;
+    /* float: left; */
     display: inline-block;
     width: 140px;
     height: 188px;
@@ -688,9 +688,9 @@ li {
     cursor: pointer;
 }
 
-.dbimport {
-    /*margin-top: 100px;*/
-}
+/* .dbimport {
+    margin-top: 100px;
+} */
 
 .form-signin {
     width: 300px;
@@ -1201,7 +1201,7 @@ color: #333333;
 .search-pagination {
     text-align: center;
     display: block;
-    vertical-align: middle;
+    /* vertical-align: middle; */
     line-height: 45px;
 }
 
