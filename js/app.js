@@ -230,13 +230,14 @@
 				$scope.is_dialog_hidden = 0;
 				var dialogWidth = 480;
 				var left = $(window).width() / 2 - dialogWidth / 2;
+				var url;
 				$scope.myStyle = {
 					'left': left + 'px'
 				};
 
 				if (dialog_type == 0) {
 					$scope.dialog_title = '添加到歌单';
-					var url = '/show_myplaylist';
+					url = '/show_myplaylist';
 					$scope.dialog_song = data;
 					loWeb.get(url).success(function (data) {
 						$scope.myplaylist = data.result;
@@ -264,7 +265,7 @@
 				}
 				if (dialog_type == 6) {
 					$scope.dialog_title = '歌单导入合并';
-					var url = '/show_myplaylist';
+					url = '/show_myplaylist';
 					loWeb.get(url).success(function (data) {
 						$scope.myplaylist = data.result;
 					});
@@ -921,7 +922,7 @@
 
 					var timeReg = /\[(\d{2,})\:(\d{2})(?:\.(\d{1,3}))?\]/g;
 
-					while (timeRegResult == timeReg.exec(line)) {
+					while (timeRegResult = timeReg.exec(line)) {
 						var content = line.replace(/\[(\d{2,})\:(\d{2})(?:\.(\d{1,3}))?\]/g, '');
 						var min = parseInt(timeRegResult[1]);
 						var sec = parseInt(timeRegResult[2]);
