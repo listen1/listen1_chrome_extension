@@ -954,8 +954,8 @@
 				//result.push.apply(result, timeResult);
 				result = timeResult;
 
-				for (var item in result) {
-					item.lineNumber = i;
+				for (var index in result) {
+					result[index].lineNumber = index;
 				}
 
 				return result;

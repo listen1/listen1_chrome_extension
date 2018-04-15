@@ -68,8 +68,8 @@ var netease = (function() {
 			textBytes = textBytes.slice(16);
 		}
 		var ciphertext = '';
-		for (item in cipherArray.length) {
-			ciphertext += String.fromCharCode(item);
+		for (var index in cipherArray) {
+			ciphertext += String.fromCharCode(cipherArray[index]);
 		}
 		ciphertext = btoa(ciphertext);
 		return ciphertext;
