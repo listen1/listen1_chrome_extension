@@ -30,6 +30,12 @@ var xiami = (function() {
         return unescape(s.join('')).replace(/\^/g, '0');
     }
 
+    function handleProtocolRelativeUrl(url){
+        var regex = /^.*?\/\//;
+        var result = url.replace(regex, 'http://');
+        return result;
+    }
+
     function xm_retina_url(s){
         if (s.slice(-6, -4) == '_1') {
             return s.slice(0, -6) + s.slice(-4);
@@ -56,7 +62,7 @@ var xiami = (function() {
                             'id': '',
                             'source_url': ''
                         };
-                        default_playlist.cover_img_url = $(this).find('img')[0].src;
+                        default_playlist.cover_img_url = handleProtocolRelativeUrl($(this).find('img')[0].src);
                         default_playlist.title = $(this).find('h3 a')[0].title;
                         var xiami_url = $(this).find('h3 a')[0].href;
                         var list_id = xiami_url.split('?')[0].split('/').pop()
@@ -115,8 +121,8 @@ var xiami = (function() {
                 return;
             }
             var location = data.data.trackList[0].location;
-            sound.url = caesar(location);
-            track.img_url = xm_retina_url(data.data.trackList[0].pic);
+            sound.url = handleProtocolRelativeUrl(caesar(location));
+            track.img_url = xm_retina_url(handleProtocolRelativeUrl(data.data.trackList[0].pic));
             track.album = data.data.trackList[0].album_name;
             track.album_id = 'xmalbum_' + data.data.trackList[0].album_id;
             track.lyric_url = data.data.trackList[0].lyric_url;

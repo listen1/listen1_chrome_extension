@@ -1,6 +1,6 @@
-Listen 1 (Chrome Extension) V1.5.2
+Listen 1 (Chrome Extension) V1.6.0
 ==========
-（最后更新于2018年02月18日）
+（最后更新于2018年04月23日）
 
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE)
 
@@ -44,6 +44,9 @@ Firefox打包安装
 
 更新日志
 -------
+
+`2018-04-23`
+* 修复虾米音乐无法播放的问题
 
 `2018-02-18`
 
