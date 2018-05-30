@@ -237,10 +237,13 @@ var qq = (function() {
     }
 
     var qq_bootstrap_track = function(sound, track, success, failure, hm, se) {
-        var target_url ='http://base.music.qq.com/fcgi-bin/fcg_musicexpress.fcg?' + 
-            'json=3&guid=780782017&g_tk=938407465&loginUin=0&hostUin=0&' + 
-            'format=jsonp&inCharset=GB2312&outCharset=GB2312&notice=0&' + 
-            'platform=yqq&jsonpCallback=jsonCallback&needNewCode=0';
+        var target_url ='https://c.y.qq.com/base/fcgi-bin/fcg_music_express_mobile3.fcg' +
+            '?g_tk=195219765&jsonpCallback=MusicJsonCallback004680169373158849' + 
+            '&loginUin=1297716249&hostUin=0&format=json&inCharset=utf8' + 
+            '&outCharset=utf-8&notice=0&platform=yqq&needNewCode=0' + 
+            '&cid=205361747&callback=MusicJsonCallback004680169373158849' + 
+            '&uin=1297716249&songmid='+ track.id.slice('qqtrack_'.length) +
+            '&filename=C400'+ track.id.slice('qqtrack_'.length) + '.m4a&guid=7332953645';
 
         hm({
             url:target_url,
@@ -249,11 +252,13 @@ var qq = (function() {
         })
         .then(function(response) {
             var data = response.data;
-            data = data.slice('jsonCallback('.length, -');'.length);
+            data = data.slice(data.indexOf('(')+1,data.length-1);
             data = JSON.parse(data);
-            var token = data.key;
-            var url = 'http://dl.stream.qqmusic.qq.com/C200' +  track.id.slice('qqtrack_'.length)  + '.m4a?vkey=' +
-                token + '&fromtag=0&guid=780782017';
+            var token = data.data.items[0].vkey;
+            var url = 'http://dl.stream.qqmusic.qq.com/C400' +
+              track.id.slice('qqtrack_'.length)  +
+              '.m4a?vkey=' + token +
+              '&uin=1297716249&fromtag=0&guid=7332953645';
             sound.url = url;
             success();
         });
