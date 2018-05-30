@@ -20,5 +20,28 @@
     "content_scripts": [{
         "matches": ["https://listen1.github.io/listen1/*"],
         "js": ["js/oauth_callback.js"]
-    }]
+    }],
+    "commands": {
+        "play_next": {
+            "suggested_key": {
+                "default": "Ctrl+Shift+K"
+            },
+            "description": "Play next song.",
+            "global": true
+        },
+        "play_prev": {
+            "suggested_key": {
+                "default": "Ctrl+Shift+Left"
+            },
+            "description": "Play previous song.",
+            "global": true
+        },
+        "play_pause": {
+            "suggested_key": {
+                "default": "Ctrl+Shift+Up"
+            },
+            "description": "Toggle play pause state.",
+            "global": true
+        }
+    }
 }

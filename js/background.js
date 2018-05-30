@@ -1,6 +1,9 @@
+let listen1Tab = undefined;
+
 chrome.browserAction.onClicked.addListener(function(tab) {
   chrome.tabs.create({'url': chrome.extension.getURL('listen1.html')}, function(tab) {
     // Tab opened.
+    listen1Tab = tab
   });
 });
 
@@ -15,7 +18,7 @@ function hack_referer_header(details) {
         referer_value = "http://m.xiami.com/";
     }
 
-    if ((details.url.indexOf("y.qq.com/") != -1) || 
+    if ((details.url.indexOf("y.qq.com/") != -1) ||
         (details.url.indexOf("qqmusic.qq.com/") != -1) ||
         (details.url.indexOf("music.qq.com/") != -1) ||
         (details.url.indexOf("imgcache.qq.com/") != -1)) {
@@ -51,7 +54,7 @@ function hack_referer_header(details) {
             value: referer_value
         });
     }
-    
+
     blockingResponse.requestHeaders = headers;
     return blockingResponse;
 };
@@ -72,3 +75,24 @@ chrome.runtime.onMessage.addListener(
         sendResponse();
     }
 );
+
+chrome.commands.onCommand.addListener(function (command) {
+    const [viewWindow] = chrome.extension.getViews({
+        type: 'tab',
+        tabId: listen1Tab.id
+    });
+
+    switch (command) {
+        case 'play_next':
+            viewWindow.document.querySelector('.next').click();
+            break;
+        case 'play_prev':
+            viewWindow.document.querySelector('.previous').click();
+            break;
+        case 'play_pause':
+            viewWindow.document.querySelector('.mastfoot a.play').click();
+            break;
+        default:
+            console.log('不支持的快捷键')
+    }
+});
