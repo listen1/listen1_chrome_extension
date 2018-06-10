@@ -208,7 +208,7 @@ var kugou = (function() {
         }).then(function(response){
             var data = response.data;
             data = JSON.parse(data);
-            if (data.status) {
+            if (data.status == '1') {
                 sound.url = data.url;
                 success();
             } else {

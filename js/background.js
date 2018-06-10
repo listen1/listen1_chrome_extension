@@ -1,3 +1,4 @@
+
 chrome.browserAction.onClicked.addListener(function(tab) {
   chrome.tabs.create({'url': chrome.extension.getURL('listen1.html')}, function(tab) {
     // Tab opened.
@@ -20,6 +21,9 @@ function hack_referer_header(details) {
         (details.url.indexOf("music.qq.com/") != -1) ||
         (details.url.indexOf("imgcache.qq.com/") != -1)) {
         referer_value = "http://y.qq.com/";
+    }
+    if (details.url.indexOf(".kugou.com/") != -1) {
+        referer_value = "http://www.kugou.com/";
     }
 
     var isRefererSet = false;
@@ -57,7 +61,7 @@ function hack_referer_header(details) {
 };
 
 chrome.webRequest.onBeforeSendHeaders.addListener(hack_referer_header, {
-    urls: ["*://music.163.com/*", "*://*.xiami.com/*", "*://*.qq.com/*"]
+    urls: ["*://music.163.com/*", "*://*.xiami.com/*", "*://*.qq.com/*", "*://*.kugou.com/*"]
 }, ['requestHeaders', 'blocking']);
 
 
