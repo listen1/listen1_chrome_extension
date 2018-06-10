@@ -125,7 +125,7 @@ var xiami = (function() {
             track.img_url = xm_retina_url(handleProtocolRelativeUrl(data.data.trackList[0].pic));
             track.album = data.data.trackList[0].album_name;
             track.album_id = 'xmalbum_' + data.data.trackList[0].album_id;
-            track.lyric_url = data.data.trackList[0].lyric_url;
+            track.lyric_url = handleProtocolRelativeUrl(data.data.trackList[0].lyric_url);
             success();
         });
     }
