@@ -35,6 +35,7 @@
     <script type="text/javascript" src="js/provider/xiami.js"></script>
     <script type="text/javascript" src="js/provider/qq.js"></script>
     <script type="text/javascript" src="js/provider/netease.js"></script>
+    <script type="text/javascript" src="js/provider/kugou.js"></script>
 
     <script type="text/javascript" src="js/myplaylist.js"></script>
     <script type="text/javascript" src="js/loweb.js"></script>
@@ -227,6 +228,7 @@
           <div class="source-button" ng-class="{'active':isActiveTab(1)}" ng-click="changeTab(1)">虾米</div>
           <div class="source-button" ng-class="{'active':isActiveTab(2)}" ng-click="changeTab(2)">QQ音乐</div>
           <!-- <button type="button" class="btn btn-default" ng-class="{'active':isActiveTab(3)}" ng-click="changeTab(3)" ng-show="isDoubanLogin">豆瓣</button> -->
+          <div class="source-button" ng-class="{'active':isActiveTab(4)}" ng-click="changeTab(4)">酷狗音乐</div>
         </div>
       </div>
 
@@ -270,6 +272,7 @@
               <li ng-class="{'active':isActiveTab(1)}" ng-click="changeTab(1)"><a href="#">虾米</a></li>
               <li  ng-class="{'active':isActiveTab(2)}" ng-click="changeTab(2)"><a href="#">QQ音乐</a></li>
               <li  ng-class="{'active':isActiveTab(3)}" ng-click="changeTab(3)" ng-show="isDoubanLogin"><a href="#">豆瓣</a></li>
+              <li ng-class="{'active':isActiveTab(4)}" ng-click="changeTab(4)"><a href="#">酷狗音乐</a></li>
               <img class="searchspinner" id="spinner" src="images/loading.gif" ng-show="loading">
             </ul>
             <ul class="detail-songlist">
@@ -351,7 +354,7 @@
           <div class="settings-content">
             <p> Listen 1 主页: <a href="http://listen1.github.io/listen1/" target="_blank"> http://listen1.github.io/listen1/ </a> </p>
             <p> Listen 1 邮箱: githublisten1@gmail.com </p>
-            <p> 当前版本 1.6.1 (本软件基于MIT协议开源免费)</p>
+            <p> 当前版本 1.6.2 (本软件基于MIT协议开源免费)</p>
           </div>
         </div>
       </div>
@@ -405,7 +408,7 @@
                 <img ng-src="{{ currentPlaying.img_url  }}">
               </div>
               <div class="detail-head-title">
-                
+
 <!--                 <a title="加入收藏" class="clone" ng-click="showDialog(0, currentPlaying)">收藏</a>
                 <a open-url="currentPlaying.source_url" title="原始链接" class="link">原始链接</a> -->
               </div>
@@ -440,7 +443,7 @@
           <!-- <img ng-src="{{ currentPlaying.img_url }}" err-src="images/placeholder.png"> -->
            <img ng-src="{{ currentPlaying.img_url }}">
           <!-- <a ng-click="showPlaylist(currentPlaying.album_id)" class="mask"></a> -->
-          <a ng-click="showWindow('/now_playing')" class="mask"></a> 
+          <a ng-click="showWindow('/now_playing')" class="mask"></a>
         </div>
 
         <div class="maininfo">

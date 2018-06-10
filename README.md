@@ -1,6 +1,6 @@
-Listen 1 (Chrome Extension) V1.6.1
+Listen 1 (Chrome Extension) V1.6.2
 ==========
-（最后更新于2018年05月30日）
+（最后更新于2018年06月05日）
 
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE)
 
@@ -44,6 +44,10 @@ Firefox打包安装
 
 更新日志
 -------
+
+`2018-06-05`
+* 增加酷狗音乐的支持
+* 增加全局的快捷键的支持 (代码来自@mu-yu)
 
 `2018-05-30`
 * 修复QQ音乐无法播放的问题（感谢@noschoollee 提供修复方案）

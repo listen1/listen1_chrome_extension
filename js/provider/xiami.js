@@ -26,7 +26,7 @@ var xiami = (function() {
         for (var i=0; i<remainder; i++) {
             s.push(result[i].slice(-1));
         }
-        
+
         return unescape(s.join('')).replace(/\^/g, '0');
     }
 
@@ -177,7 +177,7 @@ var xiami = (function() {
         return {
             success: function(fn) {
                 var album_id = getParameterByName('list_id', url).split('_').pop();
-                var target_url = 'http://api.xiami.com/web?v=2.0&app_key=1&id=' + album_id + 
+                var target_url = 'http://api.xiami.com/web?v=2.0&app_key=1&id=' + album_id +
                 '&page=1&limit=20&callback=jsonp217&r=album/detail';
                 hm({
                     url:target_url,
@@ -212,8 +212,8 @@ var xiami = (function() {
             success: function(fn) {
                 var artist_id = getParameterByName('list_id', url).split('_').pop();
 
-                var target_url = 'http://api.xiami.com/web?v=2.0&app_key=1&id=' + artist_id + 
-                    '&page=1&limit=20&_ksTS=1459931285956_216' + 
+                var target_url = 'http://api.xiami.com/web?v=2.0&app_key=1&id=' + artist_id +
+                    '&page=1&limit=20&_ksTS=1459931285956_216' +
                     '&callback=jsonp217&r=artist/detail';
 
                 hm({
@@ -233,7 +233,7 @@ var xiami = (function() {
                         'source_url': 'http://www.xiami.com/artist/' + artist_id
                     };
 
-                    target_url = 'http://api.xiami.com/web?v=2.0&app_key=1&id=' + artist_id + 
+                    target_url = 'http://api.xiami.com/web?v=2.0&app_key=1&id=' + artist_id +
                         '&page=1&limit=20&callback=jsonp217&r=artist/hot-songs'
                     hm({
                         url:target_url,
