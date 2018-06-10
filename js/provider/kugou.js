@@ -26,6 +26,41 @@ var kugou = (function() {
         return track;
     }
 
+    function async_process_list(data_list, handler, handler_extra_param_list, callback) {
+        var tracks = [];
+        var fnDict = {};
+        $.each(data_list, function(index, item){
+            fnDict[index] = function(callback){
+                return handler(index, item, handler_extra_param_list, callback);
+            };
+        });
+        async.parallel(fnDict, function(err, results){
+            $.each(data_list, function(index){
+                tracks.push(results[index]);
+            });
+            callback(null, tracks);
+        });
+    }
+
+    function kg_render_search_result_item(index, item, params, callback) {
+        var hm = params[0];
+
+        var track = kg_convert_song(item);
+        // Add singer img
+        var url = 'http://www.kugou.com/yy/index.php?'
+            + 'r=play/getdata&hash=' + track.lyric_url;
+        hm({
+            url: url,
+            method: 'GET',
+            transformResponse: undefined
+        }).then(function(response){
+            var data = response.data;
+            data = JSON.parse(data);
+            track.img_url = data.data.img;
+            callback(null, track);
+        });
+    }
+
     var kg_search = function(url, hm, se) {
         return {
             success: function(fn) {
@@ -41,27 +76,50 @@ var kugou = (function() {
                 .then(function(response){
                     var data = response.data
                     data = JSON.parse(data);
-                    var tracks = []
-                    $.each(data.data.lists, function(index, item){
-                        var track = kg_convert_song(item);
-                        // Add singer img
-                        target_url = 'http://www.kugou.com/yy/index.php?'
-                            + 'r=play/getdata&hash=' + track.lyric_url;
-                        hm({
-                            url: target_url,
-                            method: 'GET',
-                            transformResponse: undefined
-                        }).then(function(response){
-                            var data = response.data;
-                            data = JSON.parse(data);
-                            track.img_url = data.data.img;
-                        });
-                        tracks.push(track);
+                    async_process_list(data.data.lists, kg_render_search_result_item, [hm], function(err, tracks){
+                        return fn({"result": tracks, "total": data.data.total});
                     });
-                    return fn({"result": tracks, "total": data.data.total});
                 });
             }
         };
+    }
+
+    function kg_render_playlist_result_item(index, item, params, callback){
+        var hm = params[0];
+        var target_url = 'http://m.kugou.com/app/i/getSongInfo.php?'
+        + 'cmd=playInfo&hash=' + item.hash;
+
+        var track = {
+            'id': 'kgtrack_' + item.hash,
+            'title': '',
+            'artist': '',
+            'artist_id': '',
+            'album': '',
+            'album_id': 'kgalbum_' + item.album_id,
+            'source': 'kugou',
+            'source_url': 'http://www.kugou.com/song/#hash='
+                    + item.hash + '&album_id=' + item.album_id,
+            'img_url': '',
+            'url': 'xmtrack_' + item.hash,
+            'lyric_url': item.hash
+        };
+        // Fix song info
+        hm.get(target_url).then(function(response){
+            var data = response.data;
+            track['title'] = data.songName;
+            track['artist'] = data.singerId == 0 ?
+                '未知' : data.singerName;
+            track['artist_id'] = 'kgartist_' + data.singerId;
+            track['img_url'] = data.imgUrl.replace('{size}', '400');
+            // Fix album
+            target_url = 'http://mobilecdnbj.kugou.com/api/v3/album/info?albumid='
+                + item.album_id;
+            hm.get(target_url).then(function(response){
+                var data = response.data;
+                track['album'] = data.status ? data.data.albumname : '';
+                return callback(null, track);
+            });
+        });
     }
 
     var kg_get_playlist = function(url, hm, se) {
@@ -83,46 +141,53 @@ var kugou = (function() {
                     };
 
                     var tracks = [];
-                    $.each(data.list.list.info, function(index, item){
-                        target_url = 'http://m.kugou.com/app/i/getSongInfo.php?'
-                            + 'cmd=playInfo&hash=' + item.hash;
 
-                        var track = {
-                            'id': 'kgtrack_' + item.hash,
-                            'title': '',
-                            'artist': '',
-                            'artist_id': '',
-                            'album': '',
-                            'album_id': 'kgalbum_' + item.album_id,
-                            'source': 'kugou',
-                            'source_url': 'http://www.kugou.com/song/#hash='
-                                    + item.hash + '&album_id=' + item.album_id,
-                            'img_url': '',
-                            'url': 'xmtrack_' + item.hash,
-                            'lyric_url': item.hash
-                        };
-                        // Fix song info
-                        hm.get(target_url).then(function(response){
-                            var data = response.data;
-                            track['title'] = data.songName;
-                            track['artist'] = data.singerId == 0 ?
-                                '未知' : data.singerName;
-                            track['artist_id'] = 'kgartist_' + data.singerId;
-                            track['img_url'] = data.imgUrl.replace('{size}', '400');
-                        });
-                        // Fix album
-                        target_url = 'http://mobilecdnbj.kugou.com/api/v3/album/info?albumid='
-                            + item.album_id;
-                        hm.get(target_url).then(function(response){
-                            var data = response.data;
-                            track['album'] = data.status ? data.data.albumname : '';
-                        });
-                        tracks.push(track);
+                    async_process_list(data.list.list.info, kg_render_playlist_result_item, [hm], function(err, tracks){
+                        return fn({"tracks":tracks, "info":info});
                     });
-                    return fn({"tracks":tracks, "info":info});
                 });
             }
         };
+    }
+
+    function kg_render_artist_result_item(index, item, params, callback){
+        var hm = params[0];
+        var info = params[1];
+        var track = {
+            'id': 'kgtrack_' + item.hash,
+            'title': '', 
+            'artist': '', 
+            'artist_id': info['id'],
+            'album': '',
+            'album_id': 'kgalbum_' + item.album_id,
+            'source': 'kugou',
+            'source_url': 'http://www.kugou.com/song/#hash='
+                + item.hash + '&album_id=' + item.album_id,
+            'img_url': '',
+            'url': 'kgtrack_' + item.hash,
+            'lyric_url': item.hash
+        };
+        var one = item.filename.split('-');
+        track['title'] = $.trim(one[1]);
+        track['artist'] = $.trim(one[0]);
+        // Fix album name and img
+        var target_url = 'http://www.kugou.com/yy/index.php?'
+            + 'r=play/getdata&hash=' + item.hash;
+        hm({
+            url: 'http://mobilecdnbj.kugou.com/api/v3/album/info?albumid=' + item.album_id,
+            method: 'GET',
+            transformResponse: undefined
+        }).then(function(response){
+            var data = response.data; data = JSON.parse(data);
+            track['album'] = data.status ? data.data.albumname : '';
+            hm({
+                url: target_url, method: 'GET', transformResponse: undefined
+            }).then(function(response){
+                var data = JSON.parse(response.data);
+                track['img_url'] = data.data.img;
+                callback(null, track);
+            });
+        });
     }
 
     var kg_artist = function(url, hm, se) {
@@ -152,43 +217,10 @@ var kugou = (function() {
                     }).then(function(response){
                         var data = response.data;
                         data = JSON.parse(data);
-                        var tracks = []
-                        $.each(data.data.info, function(index, item){
-                            var track = {
-                                'id': 'kgtrack_' + item.hash,
-                                'title': '', 'artist': '', 'artist_id': info['id'],
-                                'album': '',
-                                'album_id': 'kgalbum_' + item.album_id,
-                                'source': 'kugou',
-                                'source_url': 'http://www.kugou.com/song/#hash='
-                                    + item.hash + '&album_id=' + item.album_id,
-                                'img_url': '',
-                                'url': 'kgtrack_' + item.hash,
-                                'lyric_url': item.hash
-                            };
-                            var one = item.filename.split('-');
-                            track['title'] = $.trim(one[1]);
-                            track['artist'] = $.trim(one[0]);
-                            // Fix album name and img
-                            target_url = 'http://www.kugou.com/yy/index.php?'
-                                + 'r=play/getdata&hash=' + item.hash;
-                            hm({
-                                url: 'http://mobilecdnbj.kugou.com/api/v3/album/info?albumid=' + item.album_id,
-                                method: 'GET',
-                                transformResponse: undefined
-                            }).then(function(response){
-                                var data = response.data; data = JSON.parse(data);
-                                track['album'] = data.status ? data.data.albumname : '';
-                            });
-                            hm({
-                                url: target_url, method: 'GET', transformResponse: undefined
-                            }).then(function(response){
-                                var data = JSON.parse(response.data);
-                                track['img_url'] = data.data.img;
-                            });
-                            tracks.push(track);
+                        var tracks = [];
+                        async_process_list(data.data.info, kg_render_artist_result_item, [hm, info], function(err, tracks){
+                            return fn({"tracks":tracks, "info":info});
                         });
-                        return fn({"tracks":tracks,"info": info});
                     });
                 });
             }
@@ -236,6 +268,40 @@ var kugou = (function() {
         };
     }
 
+    function kg_render_album_result_item(index, item, params, callback){
+        var hm = params[0];
+        var info = params[1];
+        var album_id = params[2];
+        var track = {
+            'id': 'kgtrack_' + item.hash,
+            'title': '',
+            'artist': '',
+            'artist_id': '',
+            'album': info['title'],
+            'album_id': 'kgalbum_' + album_id,
+            'source': 'kugou',
+            'source_url': 'http://www.kugou.com/song/#hash='
+                    + item.hash + '&album_id=' + album_id,
+            'img_url': '',
+            'url': 'xmtrack_' + item.hash,
+            'lyric_url': item.hash
+        };
+        // Fix other data
+        var target_url = 'http://m.kugou.com/app/i/getSongInfo.php?'
+            + 'cmd=playInfo&hash=' + item.hash;
+        hm({
+            url: target_url, method: 'GET', transformResponse: undefined
+        }).then(function(response){
+            var data = JSON.parse(response.data);
+            track['title'] = data.songName;
+            track['artist'] = data.singerId == 0 ?
+                '未知' : data.singerName;
+            track['artist_id'] = 'kgartist_' + data.singerId;
+            track['img_url'] = data.imgUrl.replace('{size}', '400');
+            callback(null, track);
+        });
+    }
+
     var kg_album = function(url, hm, se) {
         return {
             success: function(fn) {
@@ -260,49 +326,21 @@ var kugou = (function() {
                         'source_url': 'http://www.kugou.com/album/{id}.html'
                             .replace('{id}', data.data.albumid)
                     };
-                });
 
-                target_url = 'http://mobilecdnbj.kugou.com/api/v3/album/song?'
+                    target_url = 'http://mobilecdnbj.kugou.com/api/v3/album/song?'
                     + 'albumid=' + album_id + '&page=1&pagesize=-1'
-                hm({
-                    url: target_url,
-                    method: 'GET',
-                    transformResponse: undefined
-                }).then(function(response){
-                    var data = response.data;
-                    data = JSON.parse(data);
+                    hm({
+                        url: target_url,
+                        method: 'GET',
+                        transformResponse: undefined
+                    }).then(function(response){
+                        var data = response.data;
+                        data = JSON.parse(data);
 
-                    $.each(data.data.info, function(index, item){
-                        var track = {
-                            'id': 'kgtrack_' + item.hash,
-                            'title': '',
-                            'artist': '',
-                            'artist_id': '',
-                            'album': info['title'],
-                            'album_id': 'kgalbum_' + album_id,
-                            'source': 'kugou',
-                            'source_url': 'http://www.kugou.com/song/#hash='
-                                    + item.hash + '&album_id=' + album_id,
-                            'img_url': '',
-                            'url': 'xmtrack_' + item.hash,
-                            'lyric_url': item.hash
-                        };
-                        // Fix other data
-                        target_url = 'http://m.kugou.com/app/i/getSongInfo.php?'
-                            + 'cmd=playInfo&hash=' + item.hash;
-                        hm({
-                            url: target_url, method: 'GET', transformResponse: undefined
-                        }).then(function(response){
-                            var data = JSON.parse(response.data);
-                            track['title'] = data.songName;
-                            track['artist'] = data.singerId == 0 ?
-                                '未知' : data.singerName;
-                            track['artist_id'] = 'kgartist_' + data.singerId;
-                            track['img_url'] = data.imgUrl.replace('{size}', '400');
+                        async_process_list(data.data.info, kg_render_album_result_item, [hm, info, album_id], function(err, tracks){
+                            return fn({"tracks":tracks, "info":info});
                         });
-                        tracks.push(track);
                     });
-                    return fn({"tracks": tracks,"info": info});
                 });
             }
         };
