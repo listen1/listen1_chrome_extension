@@ -20,7 +20,7 @@
     },
     "manifest_version": 2,
     "name": "Listen 1",
-    "permissions": [ "notifications", "unlimitedStorage", "downloads", "storage", "contextMenus", "tabs", "*://music.163.com/*", "*://*.xiami.com/*", "*://*.qq.com/*", "*://api.github.com/*", "*://github.com/*", "webRequest", "webRequestBlocking"],
+    "permissions": [ "notifications", "unlimitedStorage", "downloads", "storage", "contextMenus", "tabs", "*://music.163.com/*", "*://*.xiami.com/*", "*://*.qq.com/*", "*://*.kugou.com/", "*://api.github.com/*", "*://github.com/*", "webRequest", "webRequestBlocking"],
     "version": "1.7.1",
     "web_accessible_resources": [ "images/*" ],
     "content_scripts": [{
