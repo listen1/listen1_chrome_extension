@@ -37,6 +37,7 @@
     <script type="text/javascript" src="js/provider/qq.js"></script>
     <script type="text/javascript" src="js/provider/netease.js"></script>
     <script type="text/javascript" src="js/provider/kugou.js"></script>
+    <script type="text/javascript" src="js/provider/kuwo.js"></script>
 
     <script type="text/javascript" src="js/myplaylist.js"></script>
     <script type="text/javascript" src="js/loweb.js"></script>
@@ -230,6 +231,7 @@
           <div class="source-button" ng-class="{'active':isActiveTab(2)}" ng-click="changeTab(2)">QQ音乐</div>
           <!-- <button type="button" class="btn btn-default" ng-class="{'active':isActiveTab(3)}" ng-click="changeTab(3)" ng-show="isDoubanLogin">豆瓣</button> -->
           <div class="source-button" ng-class="{'active':isActiveTab(4)}" ng-click="changeTab(4)">酷狗音乐</div>
+          <div class="source-button" ng-class="{'active':isActiveTab(5)}" ng-click="changeTab(5)">酷我音乐</div>
         </div>
       </div>
 
@@ -274,6 +276,7 @@
               <li  ng-class="{'active':isActiveTab(2)}" ng-click="changeTab(2)"><a href="#">QQ音乐</a></li>
               <li  ng-class="{'active':isActiveTab(3)}" ng-click="changeTab(3)" ng-show="isDoubanLogin"><a href="#">豆瓣</a></li>
               <li ng-class="{'active':isActiveTab(4)}" ng-click="changeTab(4)"><a href="#">酷狗音乐</a></li>
+              <li ng-class="{'active':isActiveTab(5)}" ng-click="changeTab(5)"><a href="#">酷我音乐</a></li>
               <img class="searchspinner" id="spinner" src="images/loading.gif" ng-show="loading">
             </ul>
             <ul class="detail-songlist">

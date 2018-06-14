@@ -25,6 +25,9 @@ function hack_referer_header(details) {
     if (details.url.indexOf(".kugou.com/") != -1) {
         referer_value = "http://www.kugou.com/";
     }
+    if (details.url.indexOf(".kuwo.cn/") != -1) {
+        referer_value = "http://www.kuwo.cn/";
+    }
 
     var isRefererSet = false;
     var isOriginSet = false;
