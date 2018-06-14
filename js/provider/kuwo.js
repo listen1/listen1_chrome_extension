@@ -136,6 +136,8 @@ var kuwo = (function() {
         // API From https://blog.csdn.net/u011354613/article/details/52756467
         var keyword = getParameterByName('keywords', url);
         var curpage = getParameterByName('curpage', url);
+        // page number is started from 0
+        curpage = curpage - 1;
         var target_url = "http://search.kuwo.cn/r.s?"
             + "ft=music&itemset=web_2013&client=kt"
             + "&rformat=json&encoding=utf8"
