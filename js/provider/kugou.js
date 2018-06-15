@@ -42,21 +42,74 @@ var kugou = (function() {
         });
     }
 
+    // function kg_render_search_result_item(index, item, params, callback) {
+    //     var hm = params[0];
+
+    //     var track = kg_convert_song(item);
+    //     // Add singer img
+    //     var url = 'http://www.kugou.com/yy/index.php?'
+    //         + 'r=play/getdata&hash=' + track.lyric_url;
+    //     hm({
+    //         url: url,
+    //         method: 'GET',
+    //         transformResponse: undefined
+    //     }).then(function(response){
+    //         var data = response.data;
+    //         data = JSON.parse(data);
+    //         track.img_url = data.data.img;
+    //         callback(null, track);
+    //     });
+    // }
+
+    // var kg_search = function(url, hm, se) {
+    //     return {
+    //         success: function(fn) {
+    //             var keyword = getParameterByName('keywords', url);
+    //             var curpage = getParameterByName('curpage', url);
+    //             var target_url = "http://songsearch.kugou.com/" +
+    //                 "song_search_v2?keyword=" + keyword + "&page=" + curpage;
+    //             hm({
+    //                 url: target_url,
+    //                 method: 'GET',
+    //                 transformResponse: undefined
+    //             })
+    //             .then(function(response){
+    //                 var data = response.data
+    //                 data = JSON.parse(data);
+    //                 async_process_list(data.data.lists, kg_render_search_result_item, [hm], function(err, tracks){
+    //                     return fn({"result": tracks, "total": data.data.total});
+    //                 });
+    //             });
+    //         }
+    //     };
+    // }
+
     function kg_render_search_result_item(index, item, params, callback) {
         var hm = params[0];
 
-        var track = kg_convert_song(item);
-        // Add singer img
-        var url = 'http://www.kugou.com/yy/index.php?'
-            + 'r=play/getdata&hash=' + track.lyric_url;
+        // Set song info
+        var track = {
+            'id': 'kgtrack_' + item.hash,
+            'title': item.songname,
+            'artist': item.singername,
+            'artist_id': '',
+            'album': item.album_name,
+            'album_id': 'kgalbum_' + item.album_id,
+            'source': 'kugou',
+            'source_url': 'http://www.kugou.com/song/#hash=' + item.hash + '&album_id=' + item.album_id,
+            'img_url': '',
+            'url': 'kgtrack_' + item.hash,
+            'lyric_url': item.hash
+        };
+
+        // add singer id and img
+        var url = 'http://www.kugou.com/yy/index.php?r=play/getdata&hash=' + track.lyric_url;
         hm({
-            url: url,
-            method: 'GET',
-            transformResponse: undefined
+            url: url, method: 'GET', transformResponse: undefined
         }).then(function(response){
-            var data = response.data;
-            data = JSON.parse(data);
+            var data = JSON.parse(response.data);
             track.img_url = data.data.img;
+            track.artist_id = 'kgartist_' + data.data.author_id;
             callback(null, track);
         });
     }
@@ -66,22 +119,18 @@ var kugou = (function() {
             success: function(fn) {
                 var keyword = getParameterByName('keywords', url);
                 var curpage = getParameterByName('curpage', url);
-                var target_url = "http://songsearch.kugou.com/" +
-                    "song_search_v2?keyword=" + keyword + "&page=" + curpage;
+                var target_url = 'http://mobilecdnbj.kugou.com/api/v3/search/song?showtype=10&plat=2&version=8990'
+                    + '&keyword=' + keyword + '&page=' + curpage + '&pagesize=30';
                 hm({
-                    url: target_url,
-                    method: 'GET',
-                    transformResponse: undefined
-                })
-                .then(function(response){
-                    var data = response.data
-                    data = JSON.parse(data);
-                    async_process_list(data.data.lists, kg_render_search_result_item, [hm], function(err, tracks){
+                    url: target_url, method: 'GET', transformResponse: undefined
+                }).then(function(response){
+                    var data = JSON.parse(response.data);
+                    async_process_list(data.data.info, kg_render_search_result_item, [hm], function(err, tracks){
                         return fn({"result": tracks, "total": data.data.total});
                     });
                 });
             }
-        };
+        }
     }
 
     function kg_render_playlist_result_item(index, item, params, callback){
@@ -155,8 +204,8 @@ var kugou = (function() {
         var info = params[1];
         var track = {
             'id': 'kgtrack_' + item.hash,
-            'title': '', 
-            'artist': '', 
+            'title': '',
+            'artist': '',
             'artist_id': info['id'],
             'album': '',
             'album_id': 'kgalbum_' + item.album_id,
@@ -228,10 +277,12 @@ var kugou = (function() {
     }
 
     var kg_bootstrap_track = function(sound, track, success, failure, hm, se) {
-        var target_url = 'http://trackercdnbj.kugou.com/i/v2/?cmd=23&pid=1&behavior=download';
+        // var target_url = 'http://trackercdnbj.kugou.com/i/v2/?cmd=23&pid=1&behavior=download';
+        // var song_id = track.id.slice('kgtrack_'.length);
+        // var key = MD5(song_id + 'kgcloudv2');
+        // target_url = target_url + '&hash=' + song_id  + '&key=' + key;
         var song_id = track.id.slice('kgtrack_'.length);
-        var key = MD5(song_id + 'kgcloudv2');
-        target_url = target_url + '&hash=' + song_id  + '&key=' + key;
+        var target_url = 'http://www.kugou.com/yy/index.php?r=play/getdata&hash=' + song_id;
 
         hm({
             url: target_url,
@@ -240,8 +291,9 @@ var kugou = (function() {
         }).then(function(response){
             var data = response.data;
             data = JSON.parse(data);
-            if (data.status == '1') {
-                sound.url = data.url;
+            if (data.status == 1) {
+                // sound.url = data.url;
+                sound.url = data.data.play_url;
                 success();
             } else {
                 failure();
