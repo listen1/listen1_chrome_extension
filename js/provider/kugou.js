@@ -165,6 +165,18 @@ var kugou = (function() {
         };
     }
 
+    function VIPChannelOfPlayURL(id, hm, callback) {
+        var target_url = 'http://trackercdnbj.kugou.com/i/v2/?cmd=23&pid=1&behavior=download';
+        var key = MD5(id + 'kgcloudv2');
+        target_url = target_url + '&hash=' + id  + '&key=' + key;
+        hm({
+            url: target_url, method: 'GET', transformResponse: undefined
+        }).then(function(response) {
+            var data = JSON.parse(response.data);
+            callback(data.status == '1' ? data.url : '');
+        });
+    }
+
     var kg_bootstrap_track = function(sound, track, success, failure, hm, se) {
 
         var song_id = track.id.slice('kgtrack_'.length);
@@ -177,13 +189,14 @@ var kugou = (function() {
         }).then(function(response){
             var data = response.data;
             data = JSON.parse(data);
-            console.log(data);
             if (data.status == 1) {
                 sound.url = data.data.play_url;
-                success();
-            } else {
-                failure();
+                // Fix play online disable
+                if (sound.url == '') {
+                    VIPChannelOfPlayURL(song_id, hm, function(id) {sound.url = id;});
+                }
             }
+            sound.url == '' ? failure() : success();
         });
     }
 
