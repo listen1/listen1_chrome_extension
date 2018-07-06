@@ -7,9 +7,6 @@ chrome.browserAction.onClicked.addListener(function(tab) {
 
 
 function hack_referer_header(details) {
-    var isRefererSet = false;
-    var isOriginSet = false;
-
     var referer_value = '';
     if (details.url.indexOf("://music.163.com/") != -1) {
         referer_value = "http://music.163.com/";
@@ -32,9 +29,11 @@ function hack_referer_header(details) {
         referer_value = "http://www.kuwo.cn/";
     }
     if (details.url.indexOf(".bilibili.com/") != -1) {
-        referer_value = "https://www.bilibili.com/";
-        isOriginSet = true; // set "Origin" could cause user can't visit bilibili
+        referer_value = "http://www.bilibili.com/";
     }
+
+    var isRefererSet = false;
+    var isOriginSet = false;
     var headers = details.requestHeaders,
         blockingResponse = {};
 
