@@ -152,17 +152,22 @@ var bilibili = (function() {
     var bi_search = function(url, hm, se) {
         return {
             success: function(fn) {
-                return fn({"result": [], "total": 0});
-                // inferred, not implemented yet
                 var keyword = getParameterByName('keywords', url);
                 var curpage = getParameterByName('curpage', url);
+                var au = /\d+$/.exec(keyword);
+                if (au != null) {
+                    var target_url = 'https://www.bilibili.com/audio/music-service-c/web/song/info?sid=' + au
+                    hm.get(target_url).then(function(response) {
+                        var data = response.data.data;
+                        var tracks = [bi_convert_song(data)];
+                        return fn({"result": tracks, "total": 1});
+                    });
+                } else {
+                    return fn({"result": [], "total": 0});
+                }
+                // inferred, not implemented yet
                 var target_url = 'https://api.bilibili.com/x/web-interface/search/type?search_type=audio&keyword=' + keyword + '&page=' + curpage
-                hm({
-                    url:target_url,
-                    method: 'GET',
-                    transformResponse: undefined
-                })
-                .then(function(response) {
+                hm.get(target_url).then(function(response) {
                     var data = response.data.data;
                     var tracks = [];
                     $.each(data.result, function(index, item) {
