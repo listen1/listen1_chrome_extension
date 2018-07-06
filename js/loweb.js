@@ -16,10 +16,13 @@ function getProviderByName(sourceName) {
     if (sourceName == 'kuwo') {
         return kuwo;
     }
+    if (sourceName == 'bilibili') {
+        return bilibili;
+    }
 }
 
 function getAllProviders(){
-    return [netease, xiami, qq, kugou, kuwo];
+    return [netease, xiami, qq, kugou, kuwo, bilibili];
 }
 
 function getProviderByItemId(itemId) {
@@ -38,6 +41,9 @@ function getProviderByItemId(itemId) {
     }
     if (prefix == 'kw') {
         return kuwo;
+    }
+    if (prefix == 'bi') {
+        return bilibili;
     }
     if (prefix == 'my') {
         return myplaylist;
