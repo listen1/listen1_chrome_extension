@@ -87,6 +87,9 @@
     if (sourceId == 5) {
       return 'kuwo';
     }
+    if (sourceId == 6) {
+      return 'bilibili';
+    }
   }
 
   // control main view of page, it can be called any place
@@ -1077,7 +1080,7 @@
 
   app.controller('InstantSearchController', ['$scope', '$http', '$timeout', 'angularPlayer', 'loWeb',
     function($scope, $http, $timeout, angularPlayer, loWeb) {
-      $scope.originpagelog = [1, 1, 1, 1, 1, 1];  // [网易,虾米,QQ,NULL,酷狗,酷我]
+      $scope.originpagelog = [1, 1, 1, 1, 1, 1, 1];  // [网易,虾米,QQ,NULL,酷狗,酷我,bilibili]
       $scope.tab = 0;
       $scope.keywords = '';
       $scope.loading = false;

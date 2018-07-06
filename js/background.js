@@ -28,6 +28,9 @@ function hack_referer_header(details) {
     if (details.url.indexOf(".kuwo.cn/") != -1) {
         referer_value = "http://www.kuwo.cn/";
     }
+    if (details.url.indexOf(".bilibili.com/") != -1) {
+        referer_value = "http://www.bilibili.com/";
+    }
 
     var isRefererSet = false;
     var isOriginSet = false;
