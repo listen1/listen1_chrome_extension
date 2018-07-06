@@ -98,7 +98,8 @@ var bilibili = (function() {
 
                 var target_url = 'https://space.bilibili.com/ajax/member/GetInfo'
 
-                hm.post(target_url, 'mid=' + artist_id).then(function(response) {
+                hm.post(target_url, $.param({mid: artist_id}), {headers: {'Content-Type': 'application/x-www-form-urlencoded'}})
+                .then(function(response) {
                     var data = response.data.data;
 
                     var info = {
