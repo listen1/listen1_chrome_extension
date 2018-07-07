@@ -7,6 +7,11 @@ chrome.browserAction.onClicked.addListener(function(tab) {
 
 
 function hack_referer_header(details) {
+    let replace_referer = true;
+    let replace_origin = true;
+    let add_referer = true;
+    let add_origin = true;
+
     var referer_value = '';
     if (details.url.indexOf("://music.163.com/") != -1) {
         referer_value = "http://music.163.com/";
@@ -30,6 +35,8 @@ function hack_referer_header(details) {
     }
     if (details.url.indexOf(".bilibili.com/") != -1) {
         referer_value = "http://www.bilibili.com/";
+        replace_origin = false;
+        add_origin = false;
     }
 
     var isRefererSet = false;
@@ -38,24 +45,24 @@ function hack_referer_header(details) {
         blockingResponse = {};
 
     for (var i = 0, l = headers.length; i < l; ++i) {
-        if ((headers[i].name == 'Referer') && (referer_value != '')) {
+        if (replace_referer && (headers[i].name == 'Referer') && (referer_value != '')) {
             headers[i].value = referer_value;
             isRefererSet = true;
         }
-        if ((headers[i].name == 'Origin') && (referer_value != '')) {
+        if (replace_origin && (headers[i].name == 'Origin') && (referer_value != '')) {
             headers[i].value = referer_value;
             isOriginSet = true;
         }
     }
 
-    if ((!isRefererSet) && (referer_value != '')) {
+    if (add_referer && (!isRefererSet) && (referer_value != '')) {
         headers.push({
             name: "Referer",
             value: referer_value
         });
     }
 
-    if ((!isOriginSet) && (referer_value != '')) {
+    if (add_origin && (!isOriginSet) && (referer_value != '')) {
         headers.push({
             name: "Origin",
             value: referer_value
