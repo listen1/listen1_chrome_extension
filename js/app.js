@@ -913,7 +913,12 @@
           var timeReg = /\[(\d{2,})\:(\d{2})(?:\.(\d{1,3}))?\]/g;
 
           while(timeRegResult = timeReg.exec(line)) {
-            var content = line.replace(/\[(\d{2,})\:(\d{2})(?:\.(\d{1,3}))?\]/g, '');
+            var content = line.replace(/\[(\d{2,})\:(\d{2})(?:\.(\d{1,3}))?\]/g, '')
+              .replace(/&lt;/g, "<")
+              .replace(/&gt;/g, ">")
+              .replace(/&amp;/g, "&")
+              .replace(/&quot;/g, '"')
+              .replace(/&apos;/g, "'");
             var min = parseInt(timeRegResult[1]);
             var sec = parseInt(timeRegResult[2]);
             var microsec = 0;
