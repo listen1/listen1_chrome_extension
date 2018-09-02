@@ -18,7 +18,7 @@ function hack_referer_header(details) {
     }
 
     if (details.url.indexOf(".xiami.com/") != -1) {
-        referer_value = "http://m.xiami.com/";
+        referer_value = "http://www.xiami.com/";
     }
 
     if ((details.url.indexOf("y.qq.com/") != -1) ||
