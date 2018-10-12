@@ -1,0 +1,84 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml2/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+    <title>How to Translate your Site in Runtime using Jquery - demo</title>
+    <link rel="stylesheet" href="css/main.css" type="text/css" />
+    <script src="js/jquery-3.3.1.min.js"></script>
+    <script>
+        // preparing language file
+var aLangKeys=new Array();
+aLangKeys['en']=new Array();
+aLangKeys['ru']=new Array();
+aLangKeys['en']['home']='Home';
+aLangKeys['en']['peoples']='Peoples >>';
+aLangKeys['en']['all_list']='All list';
+aLangKeys['en']['online']='Online';
+aLangKeys['en']['articles']='Articles >>';
+aLangKeys['en']['js']='JavaScript';
+aLangKeys['en']['php']='PHP';
+aLangKeys['en']['html']='HTML';
+aLangKeys['en']['css']='CSS';
+aLangKeys['en']['contact_us']='Contact us';
+aLangKeys['en']['welcome']='Welcome guests';
+aLangKeys['ru']['home']='???????';
+aLangKeys['ru']['peoples']='???????????? >>';
+aLangKeys['ru']['all_list']='???? ??????';
+aLangKeys['ru']['online']='? ????';
+aLangKeys['ru']['articles']='?????? >>';
+aLangKeys['ru']['js']='?????????';
+aLangKeys['ru']['php']='???';
+aLangKeys['ru']['html']='????';
+aLangKeys['ru']['css']='???';
+aLangKeys['ru']['contact_us']='???????? ???';
+aLangKeys['ru']['welcome']='????? ??????????';
+$(document).ready(function() {
+    // onclick behavior
+    $('.lang').click( function() {
+        var lang = $(this).attr('id'); // obtain language id
+        // translate all translatable elements
+        $('.tr').each(function(i){
+          $(this).text(aLangKeys[lang][ $(this).attr('key') ]);
+        });
+    } );
+});
+
+    </script>
+
+</head>
+<body>
+    <div class="example">
+        <h3><a href="#">How to Translate your Site in Runtime using Jquery - demo</a></h3>
+        <div id="content">
+            <div class="lang_switcher">
+                <button id="en" class="lang">EN</button>
+                <button id="ru" class="lang">RU</button>
+            </div>
+            <div style="clear:both;"></div>
+            <!-- nav menu start -->
+            <ul id="nav">
+                <li><a href="#nogo" key="home" class="tr">Home</a></li>
+                <li><a href="#nogo" key="peoples" class="tr">Peoples >></a>
+                    <ul>
+                        <li><a href="#nogo" key="all_list" class="tr">All list</a></li>
+                        <li><a href="#nogo" key="online" class="tr">Online</a></li>
+                    </ul>
+                </li>
+                <li><a href="#nogo" key="articles" class="tr">Articles >></a>
+                    <ul>
+                        <li><a href="#nogo" key="js" class="tr">JavaScript</a></li>
+                        <li><a href="#nogo" key="php" class="tr">PHP</a></li>
+                        <li><a href="#nogo" key="html" class="tr">HTML</a></li>
+                        <li><a href="#nogo" key="css" class="tr">CSS</a></li>
+                    </ul>
+                </li>
+                <li><a href="#nogo" key="contact_us" class="tr">Contact us</a></li>
+            </ul>
+            <!-- nav menu end -->
+            <div style="clear:both;"></div>
+            <h2 key="welcome" class="tr">Welcome guests</h2>
+            <hr />
+            <div>A man bribes a rabbit with wicked dentures to run away with him in a sailboat via an ambulance. Bribing Koalas to remain illegally in one place. Trees anchor me in place. / Your mom drives the ambulance, but the city is farther than it appears.</div>
+        </div>
+    </div>
+</body>
+</html>
