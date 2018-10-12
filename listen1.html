@@ -31,6 +31,7 @@
     <script type="text/javascript" src="js/github_api.js"></script>
     <script type="text/javascript" src="js/github.js"></script>
     <script type="text/javascript" src="js/lastfm.js"></script>
+    <!-- <script type="text/javascript" src="js/translate.js"></script> -->
 
     <script type="text/javascript" src="js/lowebutil.js"></script>
     <script type="text/javascript" src="js/provider/xiami.js"></script>
@@ -42,6 +43,43 @@
     <script type="text/javascript" src="js/myplaylist.js"></script>
     <script type="text/javascript" src="js/loweb.js"></script>
     <script type="text/javascript" src="js/app.js"></script>
+    <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.min.js"></script>
+    <script>
+      var arrLang = {
+        'en': {
+          'songList' : 'Song List',
+          'myList' : 'My Song List',
+          'search' : 'Search',
+          'about' : 'About'
+        },
+        'cn': {
+          'songList' : '精选歌单',
+          'myList' : '我的歌单',
+          'search' : '快速搜索',
+          'about' : '关于'
+        }
+      }
+      // var arrLang = new Array();
+
+      // arrLang['en'] = new Array();
+      // arrLang['cn'] = new Array();
+
+      // arrLang['en']['songList'] = 'Song List';
+      // arrLang['en']['myList'] = 'My Song List';
+      // arrLang['en']['search'] = 'Search';
+      // arrLang['en']['about'] = 'About';
+
+
+      $(document).ready((e)=>{
+        $('.translate').click(()=>{
+          var lang = $(this).attr('id');
+
+          $('.lang').each(function(index,element){
+            $('this').text(arrLang[lang][$(this).attr('key')]);
+          });
+        });
+      });
+      </script>
 
   </head>
 
@@ -179,10 +217,13 @@
         <h3 class="masthead-brand" ng-click="showTag(2)">Listen 1</h3>
         <nav>
           <ul class="nav masthead-nav">
-            <li ng-class="{ 'active':current_tag==2 }"><a ng-click="showTag(2)">精选歌单</a></li>
-            <li ng-class="{ 'active':current_tag==1 }"><a ng-click="showTag(1)">我的歌单</a></li>
-            <li ng-class="{ 'active':current_tag==3 }"><a ng-click="showTag(3)">快速搜索</a></li>
-            <li ng-class="{ 'active':current_tag==4 }"><a ng-click="showTag(4)">关于</a></li>
+            <li ng-class="{ 'active':current_tag==2 }" key="songList"><a ng-click="showTag(2)">精选歌单</a></li>
+            <li ng-class="{ 'active':current_tag==1 }" key="myList"><a ng-click="showTag(1)">我的歌单</a></li>
+            <li ng-class="{ 'active':current_tag==3 }" key="search"><a ng-click="showTag(3)">快速搜索</a></li>
+            <li ng-class="{ 'active':current_tag==4 }" key="about"><a ng-click="showTag(4)">关于</a></li>
+            <button id="cn" class="translate">中文</button>
+            <button id="en" class="translate">English</button>
+            
           </ul>
         </nav>
       </div>
