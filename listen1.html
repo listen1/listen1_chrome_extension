@@ -281,6 +281,7 @@
               <li ng-class="{'active':isActiveTab(5)}" ng-click="changeTab(5)"><a>酷我音乐</a></li>
               <li ng-class="{'active':isActiveTab(6)}" ng-click="changeTab(6)"><a>哔哩哔哩</a></li>
               <img class="searchspinner" id="spinner" src="images/loading.gif" ng-show="loading">
+              <a class="addallbtn" add-all-without-play="result"><small>添加所有到当前播放</small></a>
             </ul>
             <ul class="detail-songlist">
               <li ng-repeat="song in result" ng-class-odd="'odd'" ng-class-even="'even'" ng-mouseenter="options=true" ng-mouseleave="options=false">

@@ -121,6 +121,10 @@ a {
     height: 25px;
 }
 
+.searchbox .nav .addallbtn{
+    float: right;
+    line-height: 42px;
+}
 
 .searchitem {
     height: 92px;

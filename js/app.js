@@ -1215,6 +1215,23 @@
     };
   });
 
+  app.directive('addAllWithoutPlay', ['angularPlayer', 'Notification',
+  function (angularPlayer, Notification) {
+      return {
+          restrict: "EA",
+          scope: {
+              result: "=addAllWithoutPlay"
+          },
+          link: function (scope, element, attrs) {
+              element.bind('click', function (event) {
+                  scope.result.forEach(function(song){
+                    angularPlayer.addTrack(song);
+                  });
+                  Notification.success("已添加到当前播放歌单");
+              });
+          }
+      };
+  }]);
   app.directive('addAndPlay', ['angularPlayer', function (angularPlayer) {
         return {
             restrict: "EA",
