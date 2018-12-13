@@ -229,7 +229,7 @@ var netease = (function() {
     function is_playable(song) {
         return ((song.status >= 0) && (song.fee != 4));
     }
-    
+
     var ne_search = function(url, hm, se) {
         // use chrome extension to modify referer.
         var target_url = 'http://music.163.com/api/search/pc';
