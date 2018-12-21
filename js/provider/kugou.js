@@ -110,13 +110,23 @@ var kugou = (function() {
             track['artist'] = data.singerId == 0 ?
                 '未知' : data.singerName;
             track['artist_id'] = 'kgartist_' + data.singerId;
-            track['img_url'] = data.imgUrl.replace('{size}', '400');
+            if (data.imgUrl !== undefined) {
+                track['img_url'] = data.imgUrl.replace('{size}', '400');
+            }
+            else {
+                // track['img_url'] = data.imgUrl.replace('{size}', '400');
+            }
             // Fix album
             target_url = 'http://mobilecdnbj.kugou.com/api/v3/album/info?albumid='
                 + item.album_id;
             hm.get(target_url).then(function(response){
                 var data = response.data;
-                track['album'] = data.status ? data.data.albumname : '';
+                if (data.status && data.data!= undefined) {
+                    track['album'] = data.data.albumname;
+                }
+                else {
+                    track['album'] = '';
+                }
                 return callback(null, track);
             });
         });
@@ -179,7 +189,12 @@ var kugou = (function() {
             transformResponse: undefined
         }).then(function(response){
             var data = response.data; data = JSON.parse(data);
-            track['album'] = data.status ? data.data.albumname : '';
+            if (data.status && data.data!= undefined) {
+                track['album'] = data.data.albumname;
+            }
+            else {
+                track['album'] = '';
+            }
             hm({
                 url: target_url, method: 'GET', transformResponse: undefined
             }).then(function(response){
@@ -226,22 +241,29 @@ var kugou = (function() {
             }
         };
     }
-
+    function getTimestampString(){
+        return (new Date).getTime().toString();
+    }
+    function getRandomIntString(){
+        return (Math.random()*100).toString().replace(/\D/g,'');
+    }
     var kg_bootstrap_track = function(sound, track, success, failure, hm, se) {
-        var target_url = 'http://trackercdnbj.kugou.com/i/v2/?cmd=23&pid=1&behavior=download';
+        var target_url = 'https://wwwapi.kugou.com/yy/index.php?r=play/getdata';
+        var jQueryHeader = 'jQuery1910' + getRandomIntString() + '_' + getTimestampString();
+
         var song_id = track.id.slice('kgtrack_'.length);
-        var key = MD5(song_id + 'kgcloudv2');
-        target_url = target_url + '&hash=' + song_id  + '&key=' + key;
+
+        target_url = target_url + '&callback=' + jQueryHeader + '&hash=' + song_id + '&_=' + getTimestampString();
 
         hm({
             url: target_url,
             method: 'GET',
             transformResponse: undefined
         }).then(function(response){
-            var data = response.data;
+            var data = response.data.slice(jQueryHeader.length+1, response.data.length-2);
             data = JSON.parse(data);
             if (data.status == '1') {
-                sound.url = data.url;
+                sound.url = data.data.play_url;
                 success();
             } else {
                 failure();
