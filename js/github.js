@@ -4,8 +4,18 @@ ngGithub.factory('github', ['$rootScope',
 function($rootScope) {
     return {
         openAuthUrl: function(){
-            console.log('openAuthUrl');
-            window.open(Github.getOAuthUrl(), '_blank');
+          var url=Github.getOAuthUrl();
+          if( (typeof chrome) == 'undefined') {
+            // normal window for link
+            const {BrowserWindow} = require('electron').remote
+            let win = new BrowserWindow({width: 1000, height: 670})
+            win.on('closed', () => {
+              win = null
+            })
+            win.loadURL(url);
+            return;
+          }
+          window.open(url, '_blank');
         },
         getStatusText: function(){
             return Github.getStatusText();
@@ -14,7 +24,7 @@ function($rootScope) {
             return Github.getStatus();
         },
         updateStatus: function(){
-            console.log('github update status');
+            // console.log('github update status');
             Github.updateStatus(function(newStatus){
                 $rootScope.$broadcast('github:status', newStatus);
             });
@@ -63,9 +73,22 @@ ngGithub.provider('gist', {
       return result;
     }
 
-    function gist2json(gistFiles) {
-      var jsonString = gistFiles['listen1_backup.json'].content;
-      return JSON.parse(jsonString);
+    function gist2json(gistFiles, callback) {
+      if (!gistFiles['listen1_backup.json'].truncated) {
+        var jsonString = gistFiles['listen1_backup.json'].content;
+        return callback(JSON.parse(jsonString));
+      }
+      else {
+        var url = gistFiles['listen1_backup.json'].raw_url;
+        var size = gistFiles['listen1_backup.json'].size;
+        $http({
+          method: 'GET',
+          url: url,
+          headers:{'Authorization':'token ' + localStorage.getObject("githubOauthAccessKey")},
+        }).then(function(res) {
+          return callback(res.data);
+        });
+      }
     }
 
     function listExistBackup(){
