@@ -1,6 +1,6 @@
-Listen 1 (Chrome Extension) V1.9.0
+Listen 1 (Chrome Extension) V1.9.1
 ==========
-（最后更新于2018年12月5日）
+（最后更新于2018年12月21日）
 
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE)
 
@@ -44,6 +44,13 @@ Firefox打包安装
 
 更新日志
 -------
+`2018-12-21`
+* 修复虾米音乐歌单访问的问题
+* 修复网易云音乐歌单只有一首歌的问题
+* 修复bilibili滚动时加载重复歌单的问题
+* 修复酷狗部分音乐无法播放的问题
+* 修复Github Gist备份无法导入的问题
+* 升级soundmanager2库到最新版本
 
 `2018-12-05`
 * 完全修复虾米音乐歌单访问的问题
@@ -165,11 +172,6 @@ Firefox打包安装
 `2016-05-02`
 
 * 增加音量控制
-
-即将到来的功能
-----
-
-* 歌单云同步（基于Gist）
 
 
 License
