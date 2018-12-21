@@ -1,7 +1,6 @@
 var bilibili = (function() {
     'use strict';
-
-    function bi_convert_song(song_info) {
+     function bi_convert_song(song_info) {
         var track = {
             'id': 'bitrack_' + song_info.id,
             'title': song_info.title,
@@ -15,11 +14,10 @@ var bilibili = (function() {
         };
         return track;
     }
-
-    var bi_show_playlist = function(url, hm) {
+     var bi_show_playlist = function(url, hm) {
         var offset = getParameterByName("offset", url)
         if (offset == undefined) { offset = 0; }
-        var page = offset / 20;
+        var page = offset / 20 + 1;
         var target_url = 'https://www.bilibili.com/audio/music-service-c/web/menu/hit?ps=20&pn=' + page
         return {
             success: function(fn) {
@@ -40,24 +38,20 @@ var bilibili = (function() {
             }
         };
     }
-
-    var bi_get_playlist = function(url, hm, se) {
+     var bi_get_playlist = function(url, hm, se) {
         var list_id = getParameterByName('list_id', url).split('_').pop();
         var target_url = 'https://www.bilibili.com/audio/music-service-c/web/menu/info?sid=' + list_id;
-
-        return {
+         return {
             success: function(fn) {
                 hm.get(target_url).then(function(response) {
                     var data = response.data.data;
-
-                    var info = {
+                     var info = {
                         'cover_img_url': data.cover,
                         'title': data.title,
                         'id': 'biplaylist_' + list_id,
                         'source_url': 'https://www.bilibili.com/audio/am' + list_id
                     };
-
-                    var target_url = 'https://www.bilibili.com/audio/music-service-c/web/song/of-menu?pn=1&ps=100&sid=' + list_id;
+                     var target_url = 'https://www.bilibili.com/audio/music-service-c/web/song/of-menu?pn=1&ps=100&sid=' + list_id;
                     hm.get(target_url).then(function(response) {
                         var data = response.data.data.data;
                         var tracks = [];
@@ -71,8 +65,7 @@ var bilibili = (function() {
             }
         };
     }
-
-    var bi_album = function(url, hm, se) {
+     var bi_album = function(url, hm, se) {
         return {
             success: function(fn) {
                 return fn({"tracks": [], "info": {}});
@@ -81,39 +74,31 @@ var bilibili = (function() {
                 var target_url = ''
                 hm.get(target_url).then(function(response) {
                     var data = response.data;
-
-                    var info = {};
-
-                    var tracks = [];
+                     var info = {};
+                     var tracks = [];
                     return fn({"tracks": tracks, "info": info});
                 });
             }
         };
     }
-
-    var bi_artist = function (url, hm, se) {
+     var bi_artist = function (url, hm, se) {
         return {
             success: function(fn) {
                 var artist_id = getParameterByName('list_id', url).split('_').pop();
-
-                var target_url = 'https://space.bilibili.com/ajax/member/GetInfo'
-
-                hm.post(target_url, $.param({mid: artist_id}), {headers: {'Content-Type': 'application/x-www-form-urlencoded'}})
+                 var target_url = 'https://space.bilibili.com/ajax/member/GetInfo'
+                 hm.post(target_url, $.param({mid: artist_id}), {headers: {'Content-Type': 'application/x-www-form-urlencoded'}})
                 .then(function(response) {
                     var data = response.data.data;
-
-                    var info = {
+                     var info = {
                         'cover_img_url': data.face,
                         'title': data.name,
                         'id': 'biartist_' + artist_id,
                         'source_url': 'https://space.bilibili.com/' + artist_id + '/#/audio'
                     };
-
-                    target_url = 'https://api.bilibili.com/audio/music-service-c/web/song/upper?pn=1&ps=0&order=2&uid=' + artist_id
+                     target_url = 'https://api.bilibili.com/audio/music-service-c/web/song/upper?pn=1&ps=0&order=2&uid=' + artist_id
                     hm.get(target_url).then(function(response) {
                         var data = response.data.data.data;
-
-                        var tracks = [];
+                         var tracks = [];
                         $.each(data, function(index, item) {
                             var track = bi_convert_song(item);
                             tracks.push(track);
@@ -124,8 +109,7 @@ var bilibili = (function() {
             }
         };
     }
-
-    var bi_parse_url = function(url) {
+     var bi_parse_url = function(url) {
         var result = undefined;
         var match = /\/\/www.bilibili.com\/audio\/am([0-9]+)/.exec(url);
         if (match != null) {
@@ -134,12 +118,10 @@ var bilibili = (function() {
         }
         return result;
     }
-
-    var bi_bootstrap_track = function(sound, track, success, failure, hm, se) {
+     var bi_bootstrap_track = function(sound, track, success, failure, hm, se) {
         var song_id = track.id.slice('bitrack_'.length);
         var target_url = 'https://www.bilibili.com/audio/music-service-c/web/url?sid=' + song_id;
-
-        hm.get(target_url).then(function(response) {
+         hm.get(target_url).then(function(response) {
             var data = response.data;
             if (data.code == 0) {
                 sound.url = data.data.cdns[0];
@@ -149,8 +131,7 @@ var bilibili = (function() {
             }
         });
     }
-
-    var bi_search = function(url, hm, se) {
+     var bi_search = function(url, hm, se) {
         return {
             success: function(fn) {
                 var keyword = getParameterByName('keywords', url);
@@ -180,8 +161,7 @@ var bilibili = (function() {
             }
         };
     }
-
-    var bi_lyric = function (url, hm, se) {
+     var bi_lyric = function (url, hm, se) {
         var track_id = getParameterByName('track_id', url).split('_').pop();
         var lyric_url = getParameterByName('lyric_url', url);
         return {
@@ -193,8 +173,7 @@ var bilibili = (function() {
             }
         };
     }
-
-    var get_playlist = function(url, hm, se) {
+     var get_playlist = function(url, hm, se) {
         var list_id = getParameterByName('list_id', url).split('_')[0];
         if (list_id == 'biplaylist') {
             return bi_get_playlist(url, hm, se);
@@ -206,8 +185,7 @@ var bilibili = (function() {
             return bi_artist(url, hm, se);
         }
     }
-
-    return {
+     return {
         show_playlist: bi_show_playlist,
         get_playlist: get_playlist,
         parse_url: bi_parse_url,
