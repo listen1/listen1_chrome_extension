@@ -43,24 +43,49 @@ var xiami = (function() {
         return s;
     }
 
-    function xm_ensure_cookie(callback){
+    function xm_get_token(callback) {
         var domain = 'https://www.xiami.com';
         var name = 'xm_sg_tk';
-        chrome.cookies.get({"url": domain, "name": name}, function(cookie) {
-            if (cookie == null) {
-                var xhr = new XMLHttpRequest();
+        var cookieProvider = null;
+        if (typeof chrome !== 'undefined') {
+            cookieProvider = chrome;
+            cookieProvider.cookies.get({url: domain, name:name}, function(cookie) {
+                if (cookie == null) {
+                    return callback('');
+                }
+                return callback(cookie.value);
+            });
+        }
+        else {
+            var remote = require('electron').remote;
+            cookieProvider = remote.session.defaultSession;
+            cookieProvider.cookies.get({domain: '.xiami.com', name:name}, function(err, cookie) {
+                if (cookie.length == 0) {
+                    return callback('');
+                }
+                return callback(cookie[0].value);
+            });
+        }
 
-                xhr.open("GET", "https://www.xiami.com", false);
-                xhr.send();
+    }
 
-                var result = xhr.responseText;
-                chrome.cookies.get({"url": domain, "name": name}, function(cookie) {
-                    callback(cookie.value);
-                });
-            }
-            else {
-                callback(cookie.value);
-            }
+    function xm_cookie_get(hm, api, params, callback) {
+        xm_get_token(function(token){
+            var url = xm_get_api_url(api, params, token);
+            hm.get(url).then(function(response) {
+                if (response.data.code == "SG_TOKEN_EMPTY" || response.data.code == "SG_TOKEN_EXPIRED"||response.data.code == "SG_INVALID") {
+                    // token expire, refetch token and start get url
+                    xm_get_token(function(token){
+                        var url = xm_get_api_url(api, params, token);
+                        hm.get(url).then(function(response) {
+                            callback(response);
+                        });
+                    });
+                }
+                else {
+                    callback(response);
+                }
+            });
         });
     }
 
@@ -72,6 +97,10 @@ var xiami = (function() {
         return encodeURI(baseUrl + api + '?_q=' + params_string + '&_s=' + sign);
     }
 
+    function xm_get_low_quality_img_url(url) {
+        return url + '?x-oss-process=image/resize,m_fill,limit_0,s_330/quality,q_80';
+    }
+
     var xm_show_playlist = function(url, hm) {
         var offset = getParameterByName("offset",url);
         var page = offset/30 + 1;
@@ -80,28 +109,25 @@ var xiami = (function() {
         return {
             success: function(fn) {
                 var result = [];
-                xm_ensure_cookie(function(token){
-                    var api = '/api/list/collect';
-                    var params = {"pagingVO":{"page":page,"pageSize":pageSize},"dataType":"system"};
-                    var url = xm_get_api_url(api, params, token);
-                    hm.get(url).then(function(response) {
-                        for(var i=0; i<response.data.result.data.collects.length; i++) {
-                            var d = response.data.result.data.collects[i];
-                            var default_playlist = {
-                                'cover_img_url' : '',
-                                'title': '',
-                                'id': '',
-                                'source_url': ''
-                            };
-                            default_playlist.cover_img_url = d.collectLogo;
-                            default_playlist.title = d.collectName;
-                            var list_id = d.listId;
-                            default_playlist.id = 'xmplaylist_' + list_id;
-                            default_playlist.source_url = 'http://www.xiami.com/collect/' + list_id;
-                            result.push(default_playlist);
-                        }
-                        return fn({"result":result});
-                    });
+                var api = '/api/list/collect';
+                var params = {"pagingVO":{"page":page,"pageSize":pageSize},"dataType":"system"};
+                xm_cookie_get(hm, api, params, function(response){
+                    for(var i=0; i<response.data.result.data.collects.length; i++) {
+                        var d = response.data.result.data.collects[i];
+                        var default_playlist = {
+                            'cover_img_url' : '',
+                            'title': '',
+                            'id': '',
+                            'source_url': ''
+                        };
+                        default_playlist.cover_img_url = xm_get_low_quality_img_url(d.collectLogo);
+                        default_playlist.title = d.collectName;
+                        var list_id = d.listId;
+                        default_playlist.id = 'xmplaylist_' + list_id;
+                        default_playlist.source_url = 'http://www.xiami.com/collect/' + list_id;
+                        result.push(default_playlist);
+                    }
+                    return fn({"result":result});
                 });
             }
         };
@@ -112,25 +138,22 @@ var xiami = (function() {
 
         return {
             success: function(fn) {
-                xm_ensure_cookie(function(token){
-                    var api = '/api/collect/initialize';
-                    var params = {"listId": parseInt(list_id)};
-                    var url = xm_get_api_url(api, params, token);
-                    hm.get(url).then(function(response) {
-                        var collect = response.data.result.data.collectDetail;
-                        var info = {
-                            'cover_img_url': collect.collectLogo,
-                            'title': collect.collectName,
-                            'id': 'xmplaylist_' + list_id,
-                            'source_url': 'http://www.xiami.com/collect/' + list_id
-                        };
-                        var tracks = [];
-                        $.each(response.data.result.data.collectSongs, function(index, item){
-                            var track = xm_convert_song2(item, 'artist_name');
-                            tracks.push(track);
-                        });
-                        return fn({"tracks":tracks, "info":info});
+                var api = '/api/collect/initialize';
+                var params = {"listId": parseInt(list_id)};
+                xm_cookie_get(hm, api, params, function(response){
+                    var collect = response.data.result.data.collectDetail;
+                    var info = {
+                        'cover_img_url': xm_get_low_quality_img_url(collect.collectLogo),
+                        'title': collect.collectName,
+                        'id': 'xmplaylist_' + list_id,
+                        'source_url': 'http://www.xiami.com/collect/' + list_id
+                    };
+                    var tracks = [];
+                    $.each(response.data.result.data.collectSongs, function(index, item){
+                        var track = xm_convert_song2(item, 'artist_name');
+                        tracks.push(track);
                     });
+                    return fn({"tracks":tracks, "info":info});
                 });
             }
         };
