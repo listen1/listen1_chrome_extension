@@ -583,14 +583,16 @@
     $scope.importMySettingsFromGist = function(gistId){
       $scope.gistRestoreLoading = true;
       gist.importMySettingsFromGist(gistId).then(function(raw){
-        var data = gist.gist2json(raw);
-        for ( var key in data) {
-          var value = data[key];
-          localStorage.setObject(key, value);
-        }
-        Notification.clearAll();
-        Notification.success("导入我的歌单成功");
-        $scope.gistRestoreLoading = false;
+        gist.gist2json(raw, function(data){
+          for ( var key in data) {
+            var value = data[key];
+            localStorage.setObject(key, value);
+          }
+          Notification.clearAll();
+          Notification.success("导入我的歌单成功");
+          $scope.gistRestoreLoading = false;
+          $rootScope.$broadcast('myplaylist:update');
+        });
       },function(err){
         Notification.clearAll();
         if(err==404){
