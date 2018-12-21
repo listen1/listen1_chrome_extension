@@ -309,6 +309,16 @@ var qq = (function() {
             var playlist_id = match[1];
             result = {'type': 'playlist', 'id': 'qqplaylist_' + playlist_id};
         }
+        match = /\/\/y.qq.com\/n\/yqq\/playsquare\/([0-9]+)/.exec(url);
+        if (match != null) {
+            var playlist_id = match[1];
+            result = {'type': 'playlist', 'id': 'qqplaylist_' + playlist_id};
+        }
+        match = /\/\/y.qq.com\/n\/m\/detail\/taoge\/index.html\?id=([0-9]+)/.exec(url);
+        if (match != null) {
+            var playlist_id = match[1];
+            result = {'type': 'playlist', 'id': 'qqplaylist_' + playlist_id};
+        }
         return result;
     }
 
