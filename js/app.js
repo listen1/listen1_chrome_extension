@@ -103,6 +103,7 @@
 
     $rootScope.page_title = "Listen 1";
     $scope.window_url_stack = [];
+    $scope.window_poped_url_stack = [];
     $scope.current_tag = 2;
     $scope.is_window_hidden = 1;
     $scope.is_dialog_hidden = 1;
@@ -128,16 +129,22 @@
       $scope.current_tag = tag_id;
       $scope.is_window_hidden = 1;
       $scope.window_url_stack = [];
+      $scope.window_poped_url_stack = [];
       $scope.closeWindow();
     };
 
+    $scope.$on('search:keyword_change', function(event, data) {
+      $scope.showTag(3);
+    });
+
     // playlist window
     $scope.resetWindow = function() {
-      $scope.cover_img_url = 'images/loading.gif';
+      $scope.cover_img_url = 'images/loading.svg';
       $scope.playlist_title = '';
       $scope.playlist_source_url = '';
       $scope.songs = [];
       $scope.window_type = 'list';
+      document.getElementsByClassName('browser')[0].scrollTop = 0;
     };
 
     $scope.showWindow = function(url){
@@ -155,9 +162,11 @@
       if (url == '/now_playing') {
         $scope.window_type = 'track';
         $scope.window_url_stack.push(url);
+        $scope.window_poped_url_stack = [];
         return;
       }
       $scope.window_url_stack.push(url);
+      $scope.window_poped_url_stack = [];
 
       loWeb.get(url).success(function(data) {
           if (data.status == '0') {
@@ -179,17 +188,10 @@
       $scope.is_window_hidden = 1;
       $scope.resetWindow();
       $scope.window_url_stack = [];
+      $scope.window_poped_url_stack = [];
     };
 
-    $scope.popWindow = function() {
-      $scope.window_url_stack.pop();
-      if($scope.window_url_stack.length === 0) {
-        $scope.closeWindow();
-      }
-      else {
-        $scope.resetWindow();
-        var url = $scope.window_url_stack[$scope.window_url_stack.length-1];
-
+    function refreshWindow(url){
         if (url == '/now_playing') {
           $scope.window_type = 'track';
           return;
@@ -202,6 +204,36 @@
             $scope.playlist_source_url = data.info.source_url;
             $scope.is_mine = (data.info.id.slice(0,2) == 'my');
         });
+    }
+    $scope.popWindow = function() {
+      var poped = $scope.window_url_stack.pop();
+      $scope.window_poped_url_stack.push(poped);
+      if($scope.window_url_stack.length === 0) {
+        $scope.closeWindow();
+      }
+      else {
+        $scope.resetWindow();
+        var url = $scope.window_url_stack[$scope.window_url_stack.length-1];
+        refreshWindow(url);
+      }
+    };
+
+    $scope.toggleWindow = function(url){
+      if ($scope.window_url_stack.length > 0 &&  $scope.window_url_stack[$scope.window_url_stack.length-1] == url) {
+        return $scope.popWindow();
+      }
+      return $scope.showWindow(url);
+    }
+
+    $scope.forwardWindow = function() {
+      if($scope.window_poped_url_stack.length === 0) {
+        return;
+      }
+      else {
+        $scope.resetWindow();
+        var url = $scope.window_poped_url_stack.pop();
+        $scope.window_url_stack.push(url);
+        refreshWindow(url);
       }
     };
 
@@ -238,7 +270,7 @@
 
     $scope.showDialog = function(dialog_type, data) {
       $scope.is_dialog_hidden = 0;
-      var dialogWidth = 480;
+      var dialogWidth = 285;
       var left = $(window).width()/2 - dialogWidth/2;
       $scope.myStyle = {'left':  left + 'px'};
 
@@ -549,6 +581,7 @@
             var value = data[key];
             localStorage.setObject(key, value);
           }
+          $rootScope.$broadcast('myplaylist:update');
           Notification.success("成功导入我的歌单");
         }
       };
@@ -679,6 +712,14 @@
       $scope.scrobbleTrackId = null;
       $scope.scrobbleTimer = new Timer();
       $scope.adjustVolume = angularPlayer.adjustVolume;
+      $scope.enableGloablShortcut = false;
+      $scope.isChrome = (typeof chrome !== 'undefined');
+      $scope.isMac = false;
+
+      if (!$scope.isChrome) {
+        $scope.isMac = require('electron').remote.process.platform == 'darwin';
+      }
+
 
       function switchMode(mode){
         //playmode 0:loop 1:shuffle 2:repeat one
@@ -726,6 +767,8 @@
         else {
           $timeout(function(){angularPlayer.adjustVolumeSlider($scope.volume)},0);
         }
+        $scope.enableGlobalShortCut = localStorage.getObject('enable_global_shortcut');
+        $scope.applyGlobalShortcut();
       }
 
       $scope.saveLocalSettings = function() {
@@ -1002,10 +1045,10 @@
           lastObject = lyricObject;
         }
         if (lastObject && lastObject.lineNumber != $scope.lyricLineNumber) {
-          var lineHeight = 20;
+          var lineHeight = 21;
           var lineElement = $(".lyric p")[lastObject.lineNumber];
-          var windowHeight = 270;
-          var AdditionOffset = 4;
+          var windowHeight = 380;
+          var AdditionOffset = -158;
           var offset = lineElement.offsetTop - windowHeight/2 + AdditionOffset;
           $(".lyric").animate({ scrollTop: offset+"px" }, 500);
           $scope.lyricLineNumber = lastObject.lineNumber;
@@ -1083,10 +1126,44 @@
           $timeout(function(){angularPlayer.adjustVolume(false);});
         }
       });
+
+      // electron global shortcuts
+      $scope.applyGlobalShortcut = function(toggle) {
+        if (typeof chrome !== 'undefined') {
+          return;
+        }
+        var message = '';
+        if(toggle === true) {
+          $scope.enableGlobalShortCut = !$scope.enableGlobalShortCut;
+        }
+        if ($scope.enableGlobalShortCut == true) {
+          message = 'enable_global_shortcut';
+        }
+        else {
+          message = 'disable_global_shortcut';
+        }
+
+        // check if globalShortcuts is allowed
+        localStorage.setObject('enable_global_shortcut', $scope.enableGlobalShortCut);
+
+        const {ipcRenderer} = require('electron');
+        ipcRenderer.send('control', message);
+      }
+
+      if (typeof chrome == 'undefined') {
+        require('electron').ipcRenderer.on('globalShortcut', (event, message) => {
+          if (message == 'right'){
+            angularPlayer.nextTrack();
+          }
+          else if (message == 'left') {
+            angularPlayer.prevTrack();
+          }
+        });
+      }
   }]);
 
-  app.controller('InstantSearchController', ['$scope', '$http', '$timeout', 'angularPlayer', 'loWeb',
-    function($scope, $http, $timeout, angularPlayer, loWeb) {
+  app.controller('InstantSearchController', ['$scope', '$http', '$timeout', '$rootScope', 'angularPlayer', 'loWeb',
+    function($scope, $http, $timeout, $rootScope, angularPlayer, loWeb) {
       $scope.originpagelog = [1, 1, 1, 1, 1, 1, 1];  // [网易,虾米,QQ,NULL,酷狗,酷我,bilibili]
       $scope.tab = 0;
       $scope.keywords = '';
@@ -1096,7 +1173,7 @@
       $scope.curpage = 1;
       $scope.totalpage = 1;
 
-      $scope.changeTab = function(newTab){
+      $scope.changeSourceTab = function(newTab){
         $scope.loading = true;
         $scope.tab = newTab;
         $scope.result = [];
@@ -1130,6 +1207,7 @@
       });
 
       function performSearch(){
+        $rootScope.$broadcast('search:keyword_change', $scope.keywords);
         loWeb.get('/search?source=' + getSourceName($scope.tab) + '&keywords=' + $scope.keywords+'&curpage='+ $scope.curpage).success(function(data) {
           // update the textarea
           $scope.result = data.result;
@@ -1257,14 +1335,42 @@
           },
           link: function (scope, element, attrs) {
               element.bind('click', function (event) {
+                if( (typeof chrome) == 'undefined') {
+                  // normal window for link
+                  const {BrowserWindow} = require('electron').remote
+                  let win = new BrowserWindow({width: 1000, height: 670})
+                  win.on('closed', () => {
+                    win = null
+                  })
+                  win.loadURL(scope.url);
+                  return;
+                }
                 $window.open(scope.url, '_blank');
               });
           }
       };
   }]);
 
-  app.directive('infiniteScroll', ['$window',
-    function ($window) {
+  app.directive('windowControl', ['angularPlayer', '$window',
+    function (angularPlayer, $window) {
+      return {
+          restrict: "EA",
+          scope: {
+              action: "@windowControl"
+          },
+          link: function (scope, element, attrs) {
+              element.bind('click', function (event) {
+                if( (typeof chrome) == 'undefined') {
+                  const {ipcRenderer} = require('electron');
+                  ipcRenderer.send('control', scope.action);
+                }
+              });
+          }
+      };
+  }]);
+
+  app.directive('infiniteScroll', ['$window', '$rootScope',
+    function ($window, $rootScope) {
       return {
           restrict: "EA",
           scope: {
@@ -1288,9 +1394,14 @@
                 var height = contentElement.offsetHeight;
 
                 var remain = height - bottom;
+                if (remain < 0) {
+                  // page not shown
+                  return;
+                }
                 var offsetToload = 10;
                 if (remain <= offsetToload) {
-                  scope.$apply(scope.infiniteScroll);
+                  //scope.$apply(scope.infiniteScroll);
+                  $rootScope.$broadcast('infinite_scroll:hit_bottom', '');
                 }
               });
           }
@@ -1427,7 +1538,8 @@
       });
     };
 
-    $scope.scrolling = function(){
+
+    $scope.$on('infinite_scroll:hit_bottom', function(event, data) {
         if ($scope.loading == true) {
             return
         }
@@ -1437,7 +1549,7 @@
             $scope.result = $scope.result.concat(data.result);
             $scope.loading = false;
         });
-    }
+    });
 
     $scope.isActiveTab = function(tab){
       return $scope.tab === tab;
@@ -1451,112 +1563,5 @@
       });
     };
   }]);
-
-  // app.controller('ImportController', ['$http',
-  //   '$httpParamSerializerJQLike', '$scope', '$interval',
-  //   '$timeout', '$rootScope', 'Notification', 'angularPlayer',
-  //   function($http, $httpParamSerializerJQLike, $scope,
-  //     $interval, $timeout, $rootScope, Notification, angularPlayer){
-  //   $scope.validcode_url = "";
-  //   $scope.token = "";
-
-  //   $scope.getLoginInfo = function(){
-  //     $http.get('/dbvalidcode').success(function(data) {
-  //       if (data.isLogin == 0) {
-  //         $scope.validcode_url = data.captcha.path;
-  //         $scope.token = data.captcha.token;
-  //       }
-  //       else {
-  //         // already login
-  //         $scope.isDoubanLogin = true;
-  //         $rootScope.$broadcast('isdoubanlogin:update', true);
-  //       }
-  //     });
-  //   };
-
-  //   $scope.loginDouban = function(){
-  //     $scope.session.token = $scope.token;
-  //     $http({
-  //       url: '/dblogin',
-  //       method: 'POST',
-  //       data: $httpParamSerializerJQLike($scope.session),
-  //       headers: {
-  //         'Content-Type': 'application/x-www-form-urlencoded'
-  //       }
-  //     }).success(function(data) {
-  //       if (data.result.success == '1') {
-  //         $scope.isDoubanLogin = true;
-  //         $rootScope.$broadcast('isdoubanlogin:update', true);
-  //         Notification.success("登录豆瓣成功");
-  //       }
-  //       else {
-  //         $scope.validcode_url = data.result.path;
-  //         $scope.token = data.result.token;
-  //       }
-  //     });
-  //     $scope.session.solution = "";
-  //   };
-
-  //   $scope.logoutDouban = function() {
-  //     $http({
-  //       url: '/dblogout',
-  //       method: 'GET'
-  //     }).success(function(data) {
-  //       $scope.isDoubanLogin = false;
-  //       $rootScope.$broadcast('isdoubanlogin:update', false);
-  //       Notification.success("退出登录豆瓣成功");
-  //       $scope.getLoginInfo();
-  //     });
-  //   };
-
-  //   $scope.importDoubanFav = function(){
-  //     $http({
-  //       url: '/dbfav',
-  //       method: 'POST',
-  //       data: $httpParamSerializerJQLike({command:'start'}),
-  //       headers: {
-  //         'Content-Type': 'application/x-www-form-urlencoded'
-  //       }
-  //     }).success(function(data) {
-  //       $scope.status = '正在进行中：' + data.result.progress + '%';
-  //       $scope.start();
-  //     });
-  //   };
-
-  //   var promise;
-
-  //   $scope.start = function() {
-  //     // stops any running interval to avoid two intervals running at the same time
-  //     $scope.stop();
-
-  //     // store the interval promise
-  //     promise = $interval(poll, 1000);
-  //   };
-
-  //   $scope.stop = function() {
-  //     $interval.cancel(promise);
-  //   };
-  //   $scope.$on('$destroy', function() {
-  //     $scope.stop();
-  //   });
-
-  //   function poll(){
-  //     $http({
-  //       url: '/dbfav',
-  //       method: 'POST',
-  //       data: $httpParamSerializerJQLike({command:'status'}),
-  //       headers: {
-  //         'Content-Type': 'application/x-www-form-urlencoded'
-  //       }
-  //     }).success(function(data) {
-  //       $scope.status = '正在进行中：' + data.result.progress + '%';
-  //       if (data.result.progress == 100) {
-  //         $scope.stop();
-  //         $scope.status = '';
-  //         Notification.success("红心兆赫已导入我的歌单");
-  //       }
-  //     });
-  //   }
-  // }]);
 
 })();

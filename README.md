@@ -1,6 +1,6 @@
-Listen 1 (Chrome Extension) V1.9.1
+Listen 1 (Chrome Extension) V2.0.0
 ==========
-（最后更新于2018年12月21日）
+（最后更新于2018年12月22日）
 
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE)
 
@@ -44,6 +44,10 @@ Firefox打包安装
 
 更新日志
 -------
+`2018-12-22`
+* 全新版本2.0发布，更新界面(特别感谢@iparanoid提供主题设计)
+* 升级jquery和angular版本
+
 `2018-12-21`
 * 修复虾米音乐歌单访问的问题
 * 修复网易云音乐歌单只有一首歌的问题

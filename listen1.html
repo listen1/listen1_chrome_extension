@@ -1,24 +1,22 @@
 <!DOCTYPE html>
 <html lang="en" ng-app="listenone">
-  <head>
+
+<head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags-->
     <meta name="description" content="">
     <meta name="author" content="">
-
     <title ng-bind="page_title">Listen 1</title>
-
-    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <!-- link href="css/bootstrap.min.css" rel="stylesheet"-->
     <link href="css/angular-ui-notification.css" rel="stylesheet">
-
-    <link href="css/cover.css" rel="stylesheet">
-    <link href="css/player.css" rel="stylesheet">
     <link href="css/hotkeys.css" rel="stylesheet">
-
-    <script type="text/javascript" src="js/vendor/jquery-2.2.3.min.js"></script>
+    <link href="css/icon.css" rel="stylesheet">
+    <link href="css/iparanoid.css" rel="stylesheet">
+    <script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
     <script type="text/javascript" src="js/vendor/angular.min.js"></script>
+    <script type="text/javascript" src="js/vendor/jquery-3.3.1.min.js"></script>
     <script type="text/javascript" src="js/vendor/angular-soundmanager2.js"></script>
     <script type="text/javascript" src="js/vendor/angular-ui-notification.js"></script>
     <script type="text/javascript" src="js/vendor/hotkeys.js"></script>
@@ -27,11 +25,9 @@
     <script type="text/javascript" src="js/vendor/bigint.js"></script>
     <script type="text/javascript" src="js/vendor/timer.js"></script>
     <script type="text/javascript" src="js/vendor/async.min.js"></script>
-
     <script type="text/javascript" src="js/github_api.js"></script>
     <script type="text/javascript" src="js/github.js"></script>
     <script type="text/javascript" src="js/lastfm.js"></script>
-
     <script type="text/javascript" src="js/lowebutil.js"></script>
     <script type="text/javascript" src="js/provider/xiami.js"></script>
     <script type="text/javascript" src="js/provider/qq.js"></script>
@@ -39,480 +35,444 @@
     <script type="text/javascript" src="js/provider/kugou.js"></script>
     <script type="text/javascript" src="js/provider/kuwo.js"></script>
     <script type="text/javascript" src="js/provider/bilibili.js"></script>
-
     <script type="text/javascript" src="js/myplaylist.js"></script>
     <script type="text/javascript" src="js/loweb.js"></script>
     <script type="text/javascript" src="js/app.js"></script>
 
-  </head>
+    <script>if (window.module) module = window.module;</script>
+</head>
 
-  <body ng-controller="PlayController as playCtrl" ng-init="loadLocalSettings()">
-    <div ng-controller="NavigationController">
-    <!-- dialog -->
-    <div class="shadow" ng-hide="is_dialog_hidden==1"></div>
-    <div class="dialog" ng-hide="is_dialog_hidden==1" ng-style="myStyle">
-      <div class="dialog-header"> <span>{{ dialog_title }}</span> <span class="dialog-close" ng-click="closeDialog()">×</span></div>
-      <div class="dialog-body">
+<body ng-controller="PlayController as playCtrl" ng-init="loadLocalSettings()" >
+    <!-- could use body element instead of wrap if wanted-->
+    <div class="wrap" ng-controller="NavigationController">
+        <!-- dialog-->
+        <div class="shadow" ng-hide="is_dialog_hidden==1"></div>
+        <div class="dialog" ng-hide="is_dialog_hidden==1" ng-style="myStyle">
+          <div class="dialog-header"><span>{{ dialog_title }}</span><span class="dialog-close" ng-click="closeDialog()">×</span></div>
+          <div class="dialog-body">
+            <!-- choose playlist dialog-->
+            <ul class="dialog-playlist" ng-show="dialog_type==0">
+              <li class="detail-add" ng-click="newDialogOption(1)"><img src="images/mycover.jpg" />
+                <h2> 新建歌单 </h2>
+              </li>
+              <li ng-repeat="playlist in myplaylist track by $index" ng-class-odd="'odd'" ng-class-even="'even'" ng-click="chooseDialogOption(playlist.info.id)"><img ng-src="{{ playlist.info.cover_img_url }}" />
+                <h2> {{ playlist.info.title }} </h2>
+              </li>
+            </ul>
+            <!-- create new playlist dialog-->
+            <div class="dialog-newplaylist" ng-show="dialog_type==1">
+              <input class="form-control" type="text" placeholder="输入新歌单名称" ng-model="newlist_title" />
+              <button class="btn btn-primary confirm-button" ng-click="createAndAddPlaylist()">创建并添加</button>
+              <button class="btn btn-default" ng-click="cancelNewDialog(0)">取消</button>
+            </div>
+            <!-- edit playlist dialog-->
+            <div class="dialog-editplaylist" ng-show="dialog_type==3">
+              <div class="form-group">
+                <label>标题</label>
+                <input class="form-control" type="text" placeholder="输入歌单名称" ng-model="dialog_playlist_title" />
+              </div>
+              <div class="form-group">
+                <label>封面图片url</label>
+                <input class="form-control" type="text" placeholder="输入歌单名称" ng-model="dialog_cover_img_url" />
+              </div>
+              <button class="btn btn-primary confirm-button" ng-click="editMyPlaylist(list_id)">修改歌单</button>
+              <button class="btn btn-default" ng-click="closeDialog()">取消</button>
+              <div class="dialog-footer">
+                <button class="btn btn-danger remove-button" ng-click="removeMyPlaylist(list_id)">删除歌单</button>
+              </div>
+            </div>
+            <div class="dialog-connect-lastfm" ng-show="dialog_type==4">
+              <p>正在打开Last.fm页面...</p>
+              <p>请在打开的页面点击"Yes, all access", 允许Listen 1访问你的账户。</p>
+              <div class="buttons">
+                <button class="btn btn-primary confirm-button" ng-click="lastfm.updateStatus();closeDialog();">已经完成授权</button>
+                <button class="btn btn-warning warning-button" ng-click="lastfm.getAuth();">遇到问题，再次打开授权页</button>
+              </div>
+            </div>
+            <!-- open playlist dialog-->
+            <div class="dialog-open-url" ng-show="dialog_type==5">
+              <div class="form-group">
+                <label>歌单链接</label>
+                <input class="form-control" type="text" placeholder="例如http://www.xiami.com/collect/198267231" ng-model="dialog_url" />
+              </div>
+              <button class="btn btn-primary confirm-button" ng-click="openUrl(dialog_url);closeDialog();dialog_url='';">打开歌单</button>
+              <button class="btn btn-default" ng-click="closeDialog()">取消</button>
+            </div>
+            <ul class="dialog-merge-playlist" ng-show="dialog_type==6">
+              <li ng-repeat="playlist in myplaylist track by $index" ng-class-odd="'odd'" ng-class-even="'even'" ng-click="mergePlaylist(playlist.info.id)"><img ng-src="{{ playlist.info.cover_img_url }}" />
+                <h2> {{ playlist.info.title }} </h2>
+              </li>
+            </ul>
+            <div class="dialog-connect-github" ng-show="dialog_type==7">
+              <p>正在打开Github.com页面...</p>
+              <p>请在打开的页面点击"Authencate", 允许Listen 1访问你的账户。</p>
+              <div class="buttons">
+                <button class="btn btn-primary confirm-button" ng-click="github.updateStatus();closeDialog();">已经完成授权</button>
+                <button class="btn btn-warning warning-button" ng-click="github.openAuthUrl();">遇到问题，再次打开授权页</button>
+              </div>
+            </div>
+            <ul class="dialog-backuplist" ng-show="dialog_type==8">
+              <li class="detail-add" ng-click="newDialogOption(9)"><img src="images/mycover.jpg" />
+                <h2> 新建歌单备份 </h2>
+              </li>
+              <li ng-repeat="backup in myBackup track by $index" ng-class-odd="'odd'" ng-class-even="'even'" ng-click="backupMySettings2Gist(backup.id, backup.public); closeDialog();"><img ng-src="images/mycover.jpg" />
+                <h2> {{ backup.id }}<br/>  {{backup.description}} </h2>
 
-      <!-- choose playlist dialog -->
-      <ul class="dialog-playlist" ng-show="dialog_type==0">
-        <li class="detail-add" ng-click="newDialogOption(1)">
-          <img src="images/mycover.jpg" />
-          <h2> 新建歌单 </h2>
-        </li>
-        <li ng-repeat="playlist in myplaylist track by $index" ng-class-odd="'odd'" ng-class-even="'even'" ng-click="chooseDialogOption(playlist.info.id)">
-          <img ng-src="{{ playlist.info.cover_img_url }}" />
-          <h2> {{ playlist.info.title }} </h2>
-        </li>
-      </ul>
-
-      <!-- create new playlist dialog -->
-      <div ng-show="dialog_type==1" class="dialog-newplaylist">
-         <input type="text" class="form-control" placeholder="输入歌单名称" ng-model="newlist_title"/>
-         <button class="btn btn-primary confirm-button" ng-click="createAndAddPlaylist()">创建并添加</button>
-         <button class="btn btn-default" ng-click="cancelNewDialog(0)">取消</button>
-      </div>
-
-        <!-- login douban dialog -->
-<!--         <div ng-show="dialog_type==2" class="dbimport" ng-controller="ImportController"  ng-init="getLoginInfo()" >
-          <form class="form-signin" name="loginForm" ng-submit="loginForm.$valid && loginDouban()" novalidate ng-show="!isDoubanLogin">
-            <label for="inputEmail" class="sr-only">邮件地址</label>
-            <input type="email" id="inputEmail" class="form-control" name="email" placeholder="登录邮箱" ng-model="session.user" required autofocus>
-            <label for="inputPassword" class="sr-only">密码</label>
-            <input type="password" id="inputPassword" class="form-control" placeholder="密码" ng-model="session.password" required>
-            <img ng-src="{{validcode_url}}" class="valid-img" ng-click="getLoginInfo()">
-            <label for="captchaSolution" class="sr-only">验证码</label>
-            <input type="text" id="captchaSolution" class="form-control" placeholder="请输入验证码，看不清请点击图片" ng-model="session.solution" required>
-            <button class="btn btn-lg btn-primary btn-block" type="submit" ng-disabled="!loginForm.$valid">登录</button>
-            <p class='security-notice'>注：本软件不保存和传输密码给除豆瓣以外的任何组织和个人。</p>
-          </form>
-          <button class="btn btn-lg btn-primary btn-block" ng-click="importDoubanFav()" ng-show="isDoubanLogin">导入红心兆赫到我的歌单</button>
-          <button class="btn btn-lg btn-primary btn-block" ng-click="logoutDouban()" ng-show="isDoubanLogin">退出登录</button>
-          <p ng-show="isDoubanLogin">{{ status }}</p>
-        </div> -->
-
-        <!-- edit playlist dialog -->
-        <div ng-show="dialog_type==3" class="dialog-editplaylist">
-          <div class="form-group">
-            <label >标题</label>
-            <input type="text" class="form-control" placeholder="输入歌单名称" ng-model="dialog_playlist_title"/>
-          </div>
-          <div class="form-group">
-            <label >封面图片url</label>
-            <input type="text" class="form-control" placeholder="输入歌单名称" ng-model="dialog_cover_img_url"/>
-          </div>
-
-          <button class="btn btn-primary confirm-button" ng-click="editMyPlaylist(list_id)">修改歌单</button>
-          <button class="btn btn-default" ng-click="closeDialog()">取消</button>
-          <div class='dialog-footer'>
-            <button class="btn btn-danger remove-button" ng-click="removeMyPlaylist(list_id)">删除歌单</button>
-          </div>
-        </div>
-
-        <div ng-show="dialog_type==4" class="dialog-connect-lastfm">
-          <p>正在打开Last.fm页面...</p>
-          <p>请在打开的页面点击"Yes, all access", 允许Listen 1访问你的账户。</p>
-          <div class="buttons">
-            <button class="btn btn-primary confirm-button" ng-click="lastfm.updateStatus();closeDialog();">已经完成授权</button>
-            <button class="btn btn-warning warning-button" ng-click="lastfm.getAuth();">遇到问题，再次打开授权页</button>
-          </div>
-        </div>
-
-        <!-- open playlist dialog -->
-        <div ng-show="dialog_type==5" class="dialog-open-url">
-          <div class="form-group">
-            <label >歌单链接</label>
-            <input type="text" class="form-control" placeholder="例如http://www.xiami.com/collect/198267231" ng-model="dialog_url"/>
-          </div>
-
-          <button class="btn btn-primary confirm-button" ng-click="openUrl(dialog_url);closeDialog();">打开歌单</button>
-          <button class="btn btn-default" ng-click="closeDialog()">取消</button>
-        </div>
-
-		    <ul ng-show="dialog_type==6" class="dialog-merge-playlist">
-          <li ng-repeat="playlist in myplaylist track by $index" ng-class-odd="'odd'" ng-class-even="'even'" ng-click="mergePlaylist(playlist.info.id)">
-            <img ng-src="{{ playlist.info.cover_img_url }}" />
-            <h2> {{ playlist.info.title }} </h2>
-          </li>
-        </ul>
-
-        <div ng-show="dialog_type==7" class="dialog-connect-github">
-          <p>正在打开Github.com页面...</p>
-          <p>请在打开的页面点击"Authencate", 允许Listen 1访问你的账户。</p>
-          <div class="buttons">
-            <button class="btn btn-primary confirm-button" ng-click="github.updateStatus();closeDialog();">已经完成授权</button>
-            <button class="btn btn-warning warning-button" ng-click="github.openAuthUrl();">遇到问题，再次打开授权页</button>
+              </li>
+            </ul>
+            <!-- create new backup dialog-->
+            <div class="dialog-newbackup" ng-show="dialog_type==9">
+              <button class="btn btn-primary confirm-button" ng-click="backupMySettings2Gist(null, true);closeDialog();">创建公开备份</button>
+              <button class="btn btn-primary confirm-button" ng-click="backupMySettings2Gist(null, false);closeDialog();">创建私有备份</button>
+              <button class="btn btn-default" ng-click="cancelNewDialog(8)">取消</button>
+            </div>
+            <ul class="dialog-backuplist" ng-show="dialog_type==10">
+              <li ng-repeat="backup in myBackup track by $index" ng-class-odd="'odd'" ng-class-even="'even'" ng-click="importMySettingsFromGist(backup.id); closeDialog();"><img ng-src="images/mycover.jpg" />
+                <h2> {{ backup.id }} {{backup.description}}</h2>
+              </li>
+            </ul>
           </div>
         </div>
 
-      <ul class="dialog-backuplist" ng-show="dialog_type==8">
-        <li class="detail-add" ng-click="newDialogOption(9)">
-          <img src="images/mycover.jpg" />
-          <h2> 新建歌单备份 </h2>
-        </li>
-        <li ng-repeat="backup in myBackup track by $index" ng-class-odd="'odd'" ng-class-even="'even'" ng-click="backupMySettings2Gist(backup.id, backup.public); closeDialog();">
-          <img ng-src="images/mycover.jpg" />
-          <h2> {{ backup.id }} {{backup.description}}</h2>
-        </li>
-      </ul>
+        <div class="main" ng-controller="MyPlayListController">
+            <div class="sidebar">
+                <div class="flex-scroll-wrapper">
+                <div class="menu-control"></div>
+                <div class="menu-title"><div class="title">平台聚合</div></div>
+                <ul class="nav masthead-nav">
+                    <li ng-class="{ 'active':(current_tag==2) && (window_url_stack.length ==0) }" ng-click="showTag(2)"><span class="icon li-featured-list"></span><a>精选歌单</a></li>
+                </ul>
+                <div class="menu-title" ng-init="loadMyPlaylist();">
+                  <div class="title">我的音乐</div>
+                  <svg class="feather icon" ng-click="showDialog(5)"><use xlink:href="images/feather-sprite.svg#plus-square"></use></svg></div>
+                <ul class="nav masthead-nav">
+                    <li ng-repeat="i in myplaylists track by $index" ng-class="{ 'active':window_type=='list' && (('/playlist?list_id='+i.info.id)==window_url_stack[window_url_stack.length-1]) }" ng-click="showPlaylist(i.info.id)"><svg class="feather"><use xlink:href="images/feather-sprite.svg#disc"></use></svg><a>{{i.info.title}}</a></li>
+                </ul>
+              </div>
+            </div>
 
-      <!-- create new backup dialog -->
-      <div ng-show="dialog_type==9" class="dialog-newbackup">
-         <button class="btn btn-primary confirm-button" ng-click="backupMySettings2Gist(null, true);closeDialog();">创建公开备份</button>
-         <button class="btn btn-primary confirm-button" ng-click="backupMySettings2Gist(null, false);closeDialog();">创建私有备份</button>
-         <button class="btn btn-default" ng-click="cancelNewDialog(8)">取消</button>
-      </div>
-
-      <ul class="dialog-backuplist" ng-show="dialog_type==10">
-        <li ng-repeat="backup in myBackup track by $index" ng-class-odd="'odd'" ng-class-even="'even'" ng-click="importMySettingsFromGist(backup.id); closeDialog();">
-          <img ng-src="images/mycover.jpg" />
-          <h2> {{ backup.id }} {{backup.description}}</h2>
-        </li>
-      </ul>
-
-      </div>
-    </div>
-
-    <!-- page header -->
-    <div class="masthead clearfix">
-      <div class="inner">
-        <img class="logo" src="images/logo.png" ng-click="showTag(2)" />
-        <h3 class="masthead-brand" ng-click="showTag(2)">Listen 1</h3>
-        <nav>
-          <ul class="nav masthead-nav">
-            <li ng-class="{ 'active':current_tag==2 }"><a ng-click="showTag(2)">精选歌单</a></li>
-            <li ng-class="{ 'active':current_tag==1 }"><a ng-click="showTag(1)">我的歌单</a></li>
-            <li ng-class="{ 'active':current_tag==3 }"><a ng-click="showTag(3)">快速搜索</a></li>
-            <li ng-class="{ 'active':current_tag==4 }"><a ng-click="showTag(4)">关于</a></li>
-          </ul>
-        </nav>
-      </div>
-    </div>
-
-
-    <!-- content page: 我的歌单 -->
-    <div class="site-wrapper" ng-show="current_tag==1" ng-controller="MyPlayListController">
-      <div class="cover-container container-placeholder">
-        <!-- make empty placeholder div to position sidebar -->
-        <div class="source-list" ng-show="is_window_hidden==1">
-          <div class="open-url-button" ng-click="showDialog(5)">打开歌单</div>
-        </div>
-      </div>
-      <div class="site-wrapper-innerd" resize>
-        <div class="cover-container">
-          <div class="playlist" ng-init="loadMyPlaylist();">
-            <ul class="playlist-covers">
-              <li ng-repeat="i in myplaylists track by $index">
-                <div class="u-cover">
-                  <img ng-src="{{i.info.cover_img_url}}">
-                  <a title="" class="mask" ng-click="showPlaylist(i.info.id)"></a>
-                  <div class="bottom">
-                    <span class="icon-headset"></span>
-                    <a class="icon-play" ng-click="directplaylist(i.info.id)" title="播放"></a>
-                  </div>
+            <div class="content" ng-controller="InstantSearchController">
+                <div class="navigation">
+                    <div class="backfront">
+                      <span class="icon li-back" ng-click="popWindow()"></span>
+                      <span class="icon li-advance" ng-click="forwardWindow()"></span>
+                    </div>
+                    <div class="search">
+                    <input class="form-control search-input"
+                        id="search-input" type="text" ng-model="keywords" placeholder="输入歌曲名，歌手或专辑" ng-model-options="{debounce: 500}">
+                    </div>
+                    <div ng-class="{ 'active': (current_tag==4) && (window_url_stack.length ==0)}" ng-click="showTag(4)" class="settings">
+                      <span class="icon li-setting"></span>
+                    </div>
+                    <div ng-if="!isChrome && !isMac" class="window-control">
+                      <svg class="feather" window-control="window_min"><use xlink:href="images/feather-sprite.svg#minimize-2"></use></svg>
+                      <svg class="feather" window-control="window_max"><use xlink:href="images/feather-sprite.svg#maximize" ></use></svg>
+                      <svg class="feather" window-control="window_close"><use xlink:href="images/feather-sprite.svg#x"></use></svg>
+                    </div>
                 </div>
-                <p class="desc">
-                  <a title="" ng-click="showPlaylist(i.info.id)">{{i.info.title}}</a>
-                </p>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </div>
+                <div class="browser flex-scroll-wrapper" infinite-scroll="scrolling()" content-selector="'#playlist-content'">
+                    <!-- hot playlist window-->
+                    <div class="page page-hot-playlist" ng-show="current_tag==2 && is_window_hidden==1" ng-controller="PlayListController" ng-init="loadPlaylist();">
+
+                        <div class="source-list" ng-show="is_window_hidden==1">
+                            <div class="source-button" ng-class="{'active':isActiveTab(0)}" ng-click="changeTab(0)">网易云音乐</div>
+                            <div class="splitter"></div>
+                            <div class="source-button" ng-class="{'active':isActiveTab(1)}" ng-click="changeTab(1)">虾米音乐</div>
+                            <div class="splitter"></div>
+                            <div class="source-button" ng-class="{'active':isActiveTab(2)}" ng-click="changeTab(2)">QQ音乐</div>
+                            <div class="splitter"></div>
+                            <div class="source-button" ng-class="{'active':isActiveTab(4)}" ng-click="changeTab(4)">酷狗音乐</div>
+                            <div class="splitter"></div>
+                            <div class="source-button" ng-class="{'active':isActiveTab(5)}" ng-click="changeTab(5)">酷我音乐</div>
+                            <div class="splitter"></div>
+                            <div class="source-button" ng-class="{'active':isActiveTab(6)}" ng-click="changeTab(6)">哔哩哔哩</div>
+                        </div>
+
+                        <div class="site-wrapper-innerd" id="hotplaylist" >
+                            <div class="cover-container" id="playlist-content">
+                                <ul class="playlist-covers">
+                                    <li ng-repeat="i in result ">
+                                        <div class="u-cover"><img ng-src="{{i.cover_img_url}}" ng-click="showPlaylist(i.id)">
+                                            <div class="bottom" ng-click="directplaylist(i.id)"><svg class="feather"><use xlink:href="images/feather-sprite.svg#play-circle"></use></svg></div>
+                                        </div>
+                                        <div class="desc"><span ng-click="showPlaylist(i.id)">{{i.title}}</span></div>
+                                    </li>
+                                    <div class="loading_bottom">  <svg version="1.1" id="loader-1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"  width="40px" height="40px" viewBox="0 0 40 40" enable-background="new 0 0 40 40" xml:space="preserve"> <path opacity="0.2" fill="#000" d="M20.201,5.169c-8.254,0-14.946,6.692-14.946,14.946c0,8.255,6.692,14.946,14.946,14.946 s14.946-6.691,14.946-14.946C35.146,11.861,28.455,5.169,20.201,5.169z M20.201,31.749c-6.425,0-11.634-5.208-11.634-11.634 c0-6.425,5.209-11.634,11.634-11.634c6.425,0,11.633,5.209,11.633,11.634C31.834,26.541,26.626,31.749,20.201,31.749z"/> <path fill="#000" d="M26.013,10.047l1.654-2.866c-2.198-1.272-4.743-2.012-7.466-2.012h0v3.312h0 C22.32,8.481,24.301,9.057,26.013,10.047z"> <animateTransform attributeType="xml" attributeName="transform"  type="rotate" from="0 20 20"  to="360 20 20" dur="0.6s" repeatCount="indefinite"/> </path> </svg></div>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- content page: 快速搜索 -->
+                    <div class="page" ng-show="current_tag==3 && is_window_hidden==1">
+                      <div class="site-wrapper-innerd" resize>
+                        <div class="cover-container">
+                          <!-- Initialize a new AngularJS app and associate it with a module named "instantSearch"-->
+                          <div class="searchbox"  >
+                            <ul class="source-list">
+                              <li class="source-button" ng-class="{'active':isActiveTab(0)}" ng-click="changeSourceTab(0)"><a>网易云音乐</a></li><div class="splitter"></div>
+                              <li class="source-button" ng-class="{'active':isActiveTab(1)}" ng-click="changeSourceTab(1)"><a>虾米音乐</a></li><div class="splitter"></div>
+                              <li class="source-button" ng-class="{'active':isActiveTab(2)}" ng-click="changeSourceTab(2)"><a>QQ音乐</a></li><div class="splitter"></div>
+<!--                               <li  ng-class="{'active':isActiveTab(3)}" ng-click="changeSourceTab(3)" ng-show="isDoubanLogin"><a>豆瓣</a></li> -->
+                              <li class="source-button" ng-class="{'active':isActiveTab(4)}" ng-click="changeSourceTab(4)"><a>酷狗音乐</a></li><div class="splitter"></div>
+                              <li class="source-button" ng-class="{'active':isActiveTab(5)}" ng-click="changeSourceTab(5)"><a>酷我音乐</a></li>
+                              <!-- <div class="splitter"></div><li class="source-button" ng-class="{'active':isActiveTab(6)}" ng-click="changeSourceTab(6)"><a>哔哩哔哩</a></li> -->
+                              
+                              <svg class="searchspinner" ng-show="loading" version="1.1" id="loader-1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"  width="40px" height="40px" viewBox="0 0 40 40" enable-background="new 0 0 40 40" xml:space="preserve"> <path opacity="0.2" fill="#000" d="M20.201,5.169c-8.254,0-14.946,6.692-14.946,14.946c0,8.255,6.692,14.946,14.946,14.946 s14.946-6.691,14.946-14.946C35.146,11.861,28.455,5.169,20.201,5.169z M20.201,31.749c-6.425,0-11.634-5.208-11.634-11.634 c0-6.425,5.209-11.634,11.634-11.634c6.425,0,11.633,5.209,11.633,11.634C31.834,26.541,26.626,31.749,20.201,31.749z"/> <path fill="#000" d="M26.013,10.047l1.654-2.866c-2.198-1.272-4.743-2.012-7.466-2.012h0v3.312h0 C22.32,8.481,24.301,9.057,26.013,10.047z"> <animateTransform attributeType="xml" attributeName="transform"  type="rotate" from="0 20 20"  to="360 20 20" dur="0.6s" repeatCount="indefinite"/> </path> </svg>
+
+                            </ul>
+                            <ul class="detail-songlist">
+                              <li class="head">
+                                  <div class="title"><a>歌曲名</a></div>
+                                  <div class="artist"><a>歌手</a></div>
+                                  <div class="album"><a>专辑名</a></div>
+                                  <div class="tools">操作</div>
+                              </li>
+                              <li ng-repeat="song in result" ng-class-odd="'odd'" ng-class-even="'even'" ng-mouseenter="options=true" ng-mouseleave="options=false">
+                                  <div class="title">
+                                    <a ng-if="song.disabled" class="disabled" ng-click="copyrightNotice()">{{ song.title |limitTo:30}}</a>
+                                    <a ng-if="!song.disabled" add-and-play="song">{{ song.title |limitTo:30}}</a>
+                                  </div>
+                                  <div class="artist"><a ng-click="showPlaylist(song.artist_id)">{{ song.artist |limitTo:20}}</a></div>
+                                  <div class="album"><a ng-click="showPlaylist(song.album_id)">{{ song.album |limitTo:30}}</a></div>
+
+                                  <div class="tools">
+                                    <a title="添加到当前播放" class="detail-add-button" add-without-play="song" ng-show="options"><span class="icon li-add"></span></a>
+                                    <a title="添加到歌单" class="detail-fav-button" ng-show="options" ng-click="showDialog(0, song)"><span class="icon li-songlist"></span></a>
+                                    <a title="从歌单删除" class="detail-delete-button" ng-click="removeSongFromPlaylist(song, list_id)" ng-show="options && is_mine=='1' "><span class="icon li-del"></span></a>
+                                    <a title="原始链接" class="source-button" open-url="song.source_url" ng-show="options"><span class="icon li-link"></span></a>
+                                  </div>
+                              </li>
+                            </ul>
+                            <div class="search-pagination" ng-show= "totalpage>1" pagination></div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
 
 
-    <!-- content page: 精选歌单 -->
-    <div class="site-wrapper" ng-show="current_tag==2" ng-controller="PlayListController" ng-init="loadPlaylist();">
-      <div class="cover-container container-placeholder">
-        <!-- make empty placeholder div to position sidebar -->
-        <div class="source-list" ng-show="is_window_hidden==1">
-          <div class="source-button" ng-class="{'active':isActiveTab(0)}" ng-click="changeTab(0)">网易</div>
-          <div class="source-button" ng-class="{'active':isActiveTab(1)}" ng-click="changeTab(1)">虾米</div>
-          <div class="source-button" ng-class="{'active':isActiveTab(2)}" ng-click="changeTab(2)">QQ音乐</div>
-          <!-- <button type="button" class="btn btn-default" ng-class="{'active':isActiveTab(3)}" ng-click="changeTab(3)" ng-show="isDoubanLogin">豆瓣</button> -->
-          <div class="source-button" ng-class="{'active':isActiveTab(4)}" ng-click="changeTab(4)">酷狗音乐</div>
-          <div class="source-button" ng-class="{'active':isActiveTab(5)}" ng-click="changeTab(5)">酷我音乐</div>
-          <div class="source-button" ng-class="{'active':isActiveTab(6)}" ng-click="changeTab(6)">哔哩哔哩</div>
-        </div>
-      </div>
+                    <!-- content page: 设置 -->
+                    <div class="page" ng-show="current_tag==4 && is_window_hidden==1" ng-init="lastfm.updateStatus(); github.updateStatus();">
+                      <div class="site-wrapper-innerd" resize>
+                        <div class="cover-container">
+                          <div class="settings-title"><span>备份歌单<span></div>
+                          <div class="settings-content">
+                            <p>重装插件或清除缓存数据会导致我的歌单数据丢失，强烈建议在这些操作前，备份我的歌单。</p>
+                            <div>
+                              <button class="btn btn-primary confirm-button" ng-click="backupMySettings()">导出到本地文件</button>
+                               <button class="btn btn-primary confirm-button" ng-show="github.getStatus() == 2" ng-click="showDialog(8)">导出到Github Gist</button>
+                            </div>
+                          </div>
+                          <div class="settings-title"><span>导入歌单<span></div>
+                            <div class="settings-content">
+                              <p>选择备份文件，恢复我的歌单。注意：恢复我的歌单会覆盖现有的歌单。</p>
+                            <label class="upload-button" for="my-file-selector">
+                              <input id="my-file-selector" type="file" style="display:none;" ng-model="myuploadfiles"  custom-on-change="importMySettings">从本地文件导入
+                            </label>
+                            <button class="btn btn-warning confirm-button" ng-show="github.getStatus() == 2" ng-click="showDialog(10)">从Github Gist导入</button>
+                          </div>
 
-      <div class="site-wrapper-innerd" id="hotplaylist" resize infinite-scroll="scrolling()" content-selector="'#playlist-content'">
-        <div class="cover-container" id="playlist-content">
-           <ul class="playlist-covers">
-            <li ng-repeat="i in result ">
-              <div class="u-cover">
-                <img ng-src="{{i.cover_img_url}}">
-                <a title="" class="mask" ng-click="showPlaylist(i.id)"></a>
-                <div class="bottom">
-                  <a class="icon-play" title="播放" ng-click="directplaylist(i.id)"></a>
+                          <div class="settings-title"><span>连接到 Github.com<span></div>
+                          <div class="settings-content">
+                            <div>
+                              <p> 状态：{{ github.getStatusText() }} </p>
+                              <button class="btn btn-primary confirm-button" ng-show="github.getStatus() == 0" ng-click="github.openAuthUrl(); showDialog(7);">连接到 Github.com</button>
+                              <button class="btn btn-warning confirm-button" ng-show="github.getStatus() == 1" ng-click="showDialog(7);">重新连接</button>
+                              <button class="btn btn-primary confirm-button" ng-show="github.getStatus() == 2" ng-click="github.logout();">取消连接</button>
+                            </div>
+                          </div>
+
+                          <div class="settings-title"><span>快捷键<span></div>
+                          <div class="settings-content">
+                            <button class="btn btn-primary confirm-button" ng-click="showShortcuts()">查看快捷键列表</button>
+                              <div class="shortcut" ng-if="!isChrome" class="btn btn-primary confirm-button" >
+                                <svg class="feather" ng-show="!enableGlobalShortCut" ng-click="applyGlobalShortcut(true)"><use xlink:href="images/feather-sprite.svg#square"></use></svg>
+                                <svg class="feather" ng-show="enableGlobalShortCut" ng-click="applyGlobalShortcut(true)"><use xlink:href="images/feather-sprite.svg#check-square"></use></svg>
+                                <span ng-show="enableGlobalShortCut"></span>
+                                启用全局快捷键: Ctrl(Cmd) + Alt + 左箭头 (上一首)，Ctrl(Cmd) + Alt + 右箭头 (下一首)</div>
+                          </div>
+                          <div class="settings-title"><span>连接到 Last.fm<span></div>
+                          <div class="settings-content">
+                            <div>
+                              <p> 状态：{{ lastfm.getStatusText() }} </p>
+                              <button class="btn btn-primary confirm-button" ng-show="!lastfm.isAuthRequested()" ng-click="lastfm.getAuth(); showDialog(4);">连接到 Last.fm</button>
+                              <button class="btn btn-warning confirm-button" ng-show="lastfm.isAuthRequested() && !lastfm.isAuthorized()" ng-click="lastfm.getAuth(); showDialog(4);">重新连接</button>
+                              <button class="btn btn-primary confirm-button" ng-show="lastfm.isAuthRequested()" ng-click="lastfm.cancelAuth();">取消连接</button>
+                            </div>
+                          </div>
+
+                          <div class="settings-title"><span>关于<span></div>
+                          <div class="settings-content">
+                            <p> Listen 1 主页: <a open-url="'http://listen1.github.io/listen1/'"> http://listen1.github.io/listen1/ </a> </p>
+                            <p> Listen 1 邮箱: githublisten1@gmail.com </p>
+                            <p> 主题设计: iparanoid </p>
+                            <p> 当前版本: 2.0 (本软件基于MIT协议开源免费)</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- track list window-->
+                    <div class="page" ng-hide="is_window_hidden==1">
+                        <div class="playlist-detail" ng-show="window_type=='list'">
+                            <div class="detail-head">
+                                <div class="detail-head-cover"><img ng-src="{{ cover_img_url }}"></div>
+                                <div class="detail-head-title">
+                                    <h2>{{ playlist_title }}</h2>
+                                    <div class="playlist-button-list">
+                                        <div class="playlist-button playadd-button" ng-show="playlist_title!=''">
+                                            <div class="play-list" ng-click="playMylist(list_id)"><span class="icon li-play-s"></span>
+                                              播放全部
+                                            </div>
+                                            <div class="add-list" ng-click="addMylist(list_id)"><span class="icon li-add"></span></div>
+                                        </div>
+                                        <div class="playlist-button clone-button" ng-show="playlist_title!='' && !is_mine" ng-click="clonePlaylist(list_id)">
+                                            <div class="play-list"><span class="icon li-songlist"></span><span>收藏</span></div>
+                                        </div>
+                                        <div class="playlist-button edit-button" ng-show="playlist_title!='' && is_mine" ng-click="showDialog(3, {list_id: list_id, playlist_title: playlist_title, cover_img_url: cover_img_url})">
+                                            <div class="play-list"><svg class="feather"><use xlink:href="images/feather-sprite.svg#edit"></use></svg><span>编辑</span></div>
+                                        </div>
+                                        <div class="playlist-button edit-button" ng-show="playlist_title!='' && !is_mine" open-url="playlist_source_url">
+                                            <div class="play-list"><span class="icon li-link"></span><span>链接</span></div>
+                                        </div>
+                                        <div class="playlist-button edit-button" ng-show="playlist_title!='' && is_mine" ng-click="showDialog(6)">
+                                            <div class="play-list"><svg class="feather"><use xlink:href="images/feather-sprite.svg#git-merge"></use></svg><span>导入</span></div>
+                                        </div>
+                                    </div>
+                                  </div>
+
+                            </div>
+                            <ul class="detail-songlist">
+                                <li class="head">
+                                    <div class="title"><a>歌曲名</a></div>
+                                    <div class="artist"><a>歌手</a></div>
+                                    <div class="album"><a>专辑名</a></div>
+                                    <div class="tools">操作</div>
+                                </li>
+                                <li ng-repeat="song in songs track by $index" ng-class-odd="'odd'" ng-class-even="'even'" ng-mouseenter="options=true" ng-mouseleave="options=false">
+                                    <div class="title"><a class="disabled" ng-if="song.disabled" ng-click="copyrightNotice()">{{ song.title }}</a><a ng-if="!song.disabled" add-and-play="song">{{ song.title }}</a></div>
+                                    <div class="artist"><a ng-click="showPlaylist(song.artist_id)">{{ song.artist }}</a></div>
+                                    <div class="album"><a ng-click="showPlaylist(song.album_id)">{{ song.album }}</a></div>
+                                    <div class="tools">
+                                    <a title="添加到当前播放" class="detail-add-button" add-without-play="song" ng-show="options"><span class="icon li-add"></span></a>
+                                    <a title="添加到歌单" class="detail-fav-button" ng-show="options" ng-click="showDialog(0, song)"><span class="icon li-songlist"></span></a>
+                                    <a title="从歌单删除" class="detail-delete-button" ng-click="removeSongFromPlaylist(song, list_id)" ng-show="options && is_mine=='1' "><span class="icon li-del"></span></a>
+                                    <a title="原始链接" class="source-button" open-url="song.source_url" ng-show="options"><span class="icon li-link"></span></a>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                        <!-- now playing window-->
+                        <div class="songdetail-wrapper" ng-show="window_type=='track'">
+                            <div class="close" ng-class="isMac? 'mac':'' "ng-click="popWindow()"><svg class="feather"><use xlink:href="images/feather-sprite.svg#chevron-down"></use></svg></div>
+
+                            <div ng-if="!isChrome && !isMac" class="window-control">
+                              <svg class="feather" window-control="window_min"><use xlink:href="images/feather-sprite.svg#minimize-2"></use></svg>
+                              <svg class="feather" window-control="window_max"><use xlink:href="images/feather-sprite.svg#maximize" ></use></svg>
+                              <svg class="feather" window-control="window_close"><use xlink:href="images/feather-sprite.svg#x"></use></svg>
+                            </div>
+
+                            <div class="playsong-detail">
+                                <div class="detail-head">
+                                    <div class="detail-head-cover"><img ng-src="{{ currentPlaying.img_url  }}"></div>
+                                    <div class="detail-head-title">
+                                        <!--<a title="加入收藏" class="clone" ng-click="showDialog(0, currentPlaying)">收藏</a>
+<a open-url="currentPlaying.source_url" title="原始链接" class="link">原始链接</a>--></div>
+                                </div>
+                                <div class="detail-songinfo">
+                                    <h2>{{ currentPlaying.title }}</h2>
+                                    <div class="info">
+                                        <div class="singer"><span>歌手： </span><a ng-click="showPlaylist(currentPlaying.artist_id)" title="{{currentPlaying.artist}}">{{ currentPlaying.artist }}</a></div>
+                                        <div class="album"><span>专辑： </span><a ng-click="showPlaylist(currentPlaying.album_id)" title="{{currentPlaying.album}}">{{ currentPlaying.album }}</a></div>
+                                    </div>
+                                    <div class="lyric">
+                                        <div class="placeholder"></div>
+                                        <p ng-repeat="line in lyricArray track by $index" ng-class="{ 'highlight': line.lineNumber == lyricLineNumber }">{{ line.content }} </p>
+                                        <div style="placeholder;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-              </div>
-              <div class="desc">
-                <a title="{{i.title}}" ng-click="showPlaylist(i.id)">{{i.title}}</a>
-              </div>
-            </li>
-            <div class="loading_bottom">
-              <img class="searchspinner" id="spinner" src="images/loading.gif" ng-show="loading">
             </div>
-          </ul>
         </div>
-      </div>
+        <div class="footer">
+            <div class="left-control">
+              <span class="icon li-previous" prev-track=""></span>
+              <span class="icon li-play play" ng-class="isPlaying? 'li-pause': 'li-play'"  play-pause-toggle=""></span>
+              <span class="icon li-next" next-track=""></span>
+            </div>
+            <div class="main-info">
+                <div class="logo-banner" ng-if="playlist.length == 0"><svg class="logo" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="#666666" stroke="#666666" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><polygon points="7 4 7 19 16 19 16 16 10 16 10 4"></polygon><polygon points="13 4 13 13 16 13 16 4"></polygon></svg></div>
+                <img
+                    class="cover" ng-if="playlist.length > 0" ng-src="{{ currentPlaying.img_url }}" ng-click="toggleWindow('/now_playing')">
+                    <div class="detail" ng-if="playlist.length > 0">
+
+                        <div class="ctrl">
+                          <a ng-click="showDialog(0, currentPlaying)" title="添加到歌单">
+                            <span class="icon li-songlist"></span>
+                          </a>
+                          <a title="{{ settings.playmode | playmode_title }}(s)" ng-click="changePlaymode()">
+                            <span ng-show="settings.playmode == 0" class="icon li-loop"></span>
+                            <span ng-show="settings.playmode == 1" class="icon li-random-loop"></span>
+                            <span ng-show="settings.playmode == 2" class="icon li-single-cycle"></span>
+                          </a>
+                        </div>
+
+                        <div class="title">{{ currentPlaying.title }}</div>
+                        <div class="more-info">
+                            <div class="current">{{ currentPosition }}</div>
+                            <div class="singer"><a ng-click="showPlaylist(currentPlaying.artist_id)">{{ currentPlaying.artist }}</a> - <a ng-click="showPlaylist(currentPlaying.album_id)">{{ currentPlaying.album }}</a></div>
+                            <div class="total"> {{ currentDuration }}</div>
+                        </div>
+                        <div class="playbar">
+                            <div class="barbg" id="progressbar" mode="play" draggable="">
+                                <!-- <div class="rdy" ng-style="{width : myProgress + '%' }"></div>-->
+                                <div class="cur" ng-style="{width : myProgress + '%' }"><span class="btn"><i></i></span></div>
+                            </div>
+                        </div>
+                    </div>
+            </div>
+            <div class="right-control">
+                <div class="playlist-toggle">
+                  <span ng-click="togglePlaylist()" class="icon li-list"></span>
+                </div>
+                <div class="volume-ctrl" volume-wheel="">
+                  <span class="icon"  ng-class="mute? 'li-mute': 'li-volume'" ng-click="toggleMuteStatus()"></span>
+                    <div class="m-pbar volume">
+                        <div class="barbg" id="volumebar" mode="volume" draggable="">
+                            <div class="cur" ng-style="{width : volume + '%' }"><span class="btn"><i></i></span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="menu" ng-hide="menuHidden">
+                <div class="menu-header"><span class="menu-title">共{{playlist.length}}首</span>
+                  <a class="add-all" ng-click="showDialog(0, playlist)">
+                    <span class="icon li-songlist" ng-click="togglePlaylist()"></span>
+                    <span>添加到歌单</span></a>
+                  <a class="remove-all" clear-playlist=""><span class="icon li-del" ng-click="togglePlaylist()"></span><span>清空</span></a>
+
+                  <a class="close" ng-click="togglePlaylist()"><svg class="feather"><use xlink:href="images/feather-sprite.svg#x"></use></svg></a>
+                </div>
+                <ul class="menu-list">
+                    <li id="song{{ song.id }}" ng-repeat="song in playlist track by $index" ng-class="{ playing: currentPlaying.id == song.id }" ng-mouseenter="playlist_highlight=true" ng-mouseleave="playlist_highlight=false" ng-class-odd="'odd'" ng-class-even="'even'">
+                        <div class="song-status-icon"><svg class="feather play" ng-show="currentPlaying.id == song.id"><use xlink:href="images/feather-sprite.svg#play"></use></svg></div>
+                        <div class="song-title"><a play-from-playlist="song">{{ song.title }}</a></div>
+                        <div class="song-singer"><a ng-click="showPlaylist(song.artist_id); togglePlaylist();">{{ song.artist }}</a></div>
+                        <div class="tools">
+                          <span remove-from-playlist="song" data-index="{{$index}}" ng-show="playlist_highlight" class="icon li-del"></span>
+                          <span open-url="song.source_url" ng-show="playlist_highlight" class="icon li-link"></span>
+                        </div>
+                        <!-- <div class="song-time">00:00</div> -->
+                    </li>
+                </ul>
+            </div>
+        </div>
     </div>
+    <!-- init soundManager2 player-->
+    <sound-manager></sound-manager>
+</body>
 
-
-    <!-- content page: 快速搜索 -->
-    <div class="site-wrapper" ng-show="current_tag==3">
-      <div class="site-wrapper-innerd" resize>
-        <div class="cover-container">
-          <!-- Initialize a new AngularJS app and associate it with a module named "instantSearch"-->
-          <div class="searchbox" ng-controller="InstantSearchController" >
-            <!-- Create a binding between the searchString model and the text field -->
-            <input type="text" id="search-input" class="form-control" ng-model="keywords" placeholder="输入歌曲名，歌手或专辑"  ng-model-options="{debounce: 500}" />
-
-
-
-            <ul class="nav nav-tabs">
-              <li ng-class="{'active':isActiveTab(0)}" ng-click="changeTab(0)"><a>网易</a></li>
-              <li ng-class="{'active':isActiveTab(1)}" ng-click="changeTab(1)"><a>虾米</a></li>
-              <li  ng-class="{'active':isActiveTab(2)}" ng-click="changeTab(2)"><a>QQ音乐</a></li>
-              <li  ng-class="{'active':isActiveTab(3)}" ng-click="changeTab(3)" ng-show="isDoubanLogin"><a>豆瓣</a></li>
-              <li ng-class="{'active':isActiveTab(4)}" ng-click="changeTab(4)"><a>酷狗音乐</a></li>
-              <li ng-class="{'active':isActiveTab(5)}" ng-click="changeTab(5)"><a>酷我音乐</a></li>
-              <li ng-class="{'active':isActiveTab(6)}" ng-click="changeTab(6)"><a>哔哩哔哩</a></li>
-              <img class="searchspinner" id="spinner" src="images/loading.gif" ng-show="loading">
-            </ul>
-            <ul class="detail-songlist">
-              <li ng-repeat="song in result" ng-class-odd="'odd'" ng-class-even="'even'" ng-mouseenter="options=true" ng-mouseleave="options=false">
-                  <div class="col2">
-                    <a ng-if="song.disabled" class="disabled" ng-click="copyrightNotice()">{{ song.title |limitTo:30}}</a>
-                    <a ng-if="!song.disabled" add-and-play="song">{{ song.title |limitTo:30}}</a>
-                  </div>
-                  <div class="col1 detail-artist"><a ng-click="showPlaylist(song.artist_id)">{{ song.artist |limitTo:20}}</a></div>
-                  <div class="col2"><a ng-click="showPlaylist(song.album_id)">{{ song.album |limitTo:30}}</a></div>
-
-                  <div class="detail-tools">
-                    <a title="添加到当前播放" class="detail-add-button" add-without-play="song" ng-show="options"></a>
-                    <a title="添加到歌单" class="detail-fav-button" ng-show="options" ng-click="showDialog(0, song)"></a>
-                    <a title="原始链接" class="source-button" open-url="song.source_url" ng-show="options"></a>
-                  </div>
-              </li>
-            </ul>
-            <div class="search-pagination" ng-show= "totalpage>1" pagination></div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-
-    <!-- content page: 设置 -->
-    <div class="site-wrapper" ng-show="current_tag==4" ng-init="lastfm.updateStatus(); github.updateStatus();">
-      <div class="site-wrapper-innerd" resize>
-        <div class="cover-container">
-         <!--  <div class="settings-title"><span>第三方登录<span></div>
-          <div class="settings-content">
-            <div ng-show="isDoubanLogin"> 豆瓣：<button class="btn btn-primary confirm-button" ng-click="showDialog(2)">已登录</button></div>
-            <div ng-hide="isDoubanLogin"> 豆瓣：<button class="btn btn-primary confirm-button" ng-click="showDialog(2)">登录</button> </div>
-          </div> -->
-          <div class="settings-title"><span>导出我的歌单<span></div>
-          <div class="settings-content">
-            <p>重装插件或清除缓存数据会导致我的歌单数据丢失，强烈建议在这些操作前，备份我的歌单。</p>
-            <div>
-              <button class="btn btn-primary confirm-button" ng-click="backupMySettings()">导出到本地文件</button>
-               <button class="btn btn-primary confirm-button" ng-show="github.getStatus() == 2" ng-click="showDialog(8)">导出到Github Gist</button>
-            </div>
-          </div>
-          <div class="settings-title"><span>导入我的歌单<span></div>
-            <div class="settings-content">
-              <p>选择备份文件，恢复我的歌单。注意：恢复我的歌单会覆盖现有的歌单。</p>
-            <label class="btn btn-warning" for="my-file-selector">
-              <input id="my-file-selector" type="file" style="display:none;" ng-model="myuploadfiles"  custom-on-change="importMySettings">从本地文件导入
-            </label>
-            <button class="btn btn-warning confirm-button" ng-show="github.getStatus() == 2" ng-click="showDialog(10)">从Github Gist导入</button>
-          </div>
-
-          <div class="settings-title"><span>连接到 Github.com<span></div>
-          <div class="settings-content">
-            <div>
-              <p> 状态：{{ github.getStatusText() }} </p>
-              <button class="btn btn-primary confirm-button" ng-show="github.getStatus() == 0" ng-click="github.openAuthUrl(); showDialog(7);">连接到 Github.com</button>
-              <button class="btn btn-warning confirm-button" ng-show="github.getStatus() == 1" ng-click="showDialog(7);">重新连接</button>
-              <button class="btn btn-primary confirm-button" ng-show="github.getStatus() == 2" ng-click="github.logout();">取消连接</button>
-            </div>
-          </div>
-
-          <div class="settings-title"><span>快捷键<span></div>
-          <div class="settings-content">
-            <div>
-              <button class="btn btn-primary confirm-button" ng-click="showShortcuts()">查看快捷键列表</button>
-            </div>
-          </div>
-          <div class="settings-title"><span>连接到 Last.fm<span></div>
-          <div class="settings-content">
-            <div>
-              <p> 状态：{{ lastfm.getStatusText() }} </p>
-              <button class="btn btn-primary confirm-button" ng-show="!lastfm.isAuthRequested()" ng-click="lastfm.getAuth(); showDialog(4);">连接到 Last.fm</button>
-              <button class="btn btn-warning confirm-button" ng-show="lastfm.isAuthRequested() && !lastfm.isAuthorized()" ng-click="lastfm.getAuth(); showDialog(4);">重新连接</button>
-              <button class="btn btn-primary confirm-button" ng-show="lastfm.isAuthRequested()" ng-click="lastfm.cancelAuth();">取消连接</button>
-            </div>
-          </div>
-
-          <div class="settings-title"><span>关于<span></div>
-          <div class="settings-content">
-            <p> Listen 1 主页: <a href="http://listen1.github.io/listen1/" target="_blank"> http://listen1.github.io/listen1/ </a> </p>
-            <p> Listen 1 邮箱: githublisten1@gmail.com </p>
-            <p> 当前版本 1.9.1 (本软件基于MIT协议开源免费)</p>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- track list window -->
-    <div class="site-wrapper" ng-hide="is_window_hidden==1">
-      <div class="cover-container container-placeholder">
-        <div class="detail-close">
-          <span ng-click="popWindow()">&times;</span>
-        </div>
-      </div>
-      <div class="site-wrapper-innerd" resize>
-        <div class="cover-container" >
-          <div class="playlist-detail" ng-show="window_type=='list'">
-            <div class="detail-head">
-              <div class="detail-head-cover">
-                <img ng-src="{{ cover_img_url }}">
-              </div>
-              <div class="detail-head-title">
-                <h2>{{ playlist_title }}</h2>
-                <a title="播放歌单" class="play" ng-show="playlist_title!=''" ng-click="playMylist(list_id)">播放</a>
-                <a title="添加到当前播放" class="add" ng-show="playlist_title!=''" ng-click="addMylist(list_id)">添加到当前播放</a>
-                <a title="收藏歌单" class="clone" ng-show="playlist_title!='' && !is_mine" ng-click="clonePlaylist(list_id)">收藏</a>
-                <a title="编辑歌单" class="edit" ng-show="playlist_title!='' && is_mine" ng-click="showDialog(3, {list_id: list_id, playlist_title: playlist_title, cover_img_url: cover_img_url})">编辑</a>
-                <a title="原始链接" class="link" ng-show="playlist_title!=''" open-url="playlist_source_url">原始链接</a>
-				        <a title="导入合并" class="merge" ng-show="playlist_title!='' && is_mine" ng-click="showDialog(6)">导入合并</a>
-              </div>
-            </div>
-            <ul class="detail-songlist">
-              <li ng-repeat="song in songs track by $index" ng-class-odd="'odd'" ng-class-even="'even'" ng-mouseenter="options=true" ng-mouseleave="options=false">
-                  <div class="col2">
-                    <a ng-if="song.disabled" class="disabled" ng-click="copyrightNotice()">{{ song.title }}</a>
-                    <a ng-if="!song.disabled" add-and-play="song">{{ song.title }}</a>
-                  </div>
-                  <div class="col1 detail-artist"><a ng-click="showPlaylist(song.artist_id)">{{ song.artist }}</a></div>
-                  <div class="col2"><a ng-click="showPlaylist(song.album_id)">{{ song.album }}</a></div>
-                  <div class="detail-tools">
-                    <a title="添加到当前播放" class="detail-add-button" add-without-play="song" ng-show="options"></a>
-                    <a title="添加到歌单" class="detail-fav-button" ng-click="showDialog(0, song)" ng-show="options"></a>
-                    <a title="从歌单删除" class="detail-delete-button" ng-click="removeSongFromPlaylist(song, list_id)" ng-show="options && is_mine=='1' "></a>
-                    <a title="原始链接" class="source-button" open-url="song.source_url" ng-show="options"></a>
-
-                  </div>
-              </li>
-            </ul>
-          </div>
-          <div class="playsong-detail" ng-show="window_type=='track'">
-            <div class="detail-head">
-              <div class="detail-head-cover">
-                <img ng-src="{{ currentPlaying.img_url  }}">
-              </div>
-              <div class="detail-head-title">
-
-<!--                 <a title="加入收藏" class="clone" ng-click="showDialog(0, currentPlaying)">收藏</a>
-                <a open-url="currentPlaying.source_url" title="原始链接" class="link">原始链接</a> -->
-              </div>
-            </div>
-            <ul class="detail-songinfo">
-              <h2>{{ currentPlaying.title }}</h2>
-              <div class="info">
-                <span>歌手: </span><a class="" ng-click="showPlaylist(currentPlaying.artist_id)">{{ currentPlaying.artist }}</a><span class="album">专辑: </span><a ng-click="showPlaylist(currentPlaying.album_id)">{{ currentPlaying.album }}</a>
-              </div>
-              <div class="lyric">
-                 <div class="placeholder"></div>
-                 <p ng-repeat="line in lyricArray track by $index" ng-class="{ 'highlight': line.lineNumber == lyricLineNumber }" >{{ line.content }} </p>
-                 <div style="placeholder"></div>
-              </div>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </div>
-
-
-    <!-- page footer -->
-    <div class="mastfoot">
-      <div class="m-playbar" >
-        <div class="btns">
-          <a class="previous" title="上一首([)" prev-track >上一首([)</a>
-          <a class="play" ng-class="{pas: isPlaying}" title="播放/暂停(p)" play-pause-toggle>播放/暂停(p)</a>
-          <a class="next" title="下一首(])" next-track>下一首(])</a>
-        </div>
-
-        <div class="head">
-          <!-- <img ng-src="{{ currentPlaying.img_url }}" err-src="images/placeholder.png"> -->
-           <img ng-src="{{ currentPlaying.img_url }}">
-          <!-- <a ng-click="showPlaylist(currentPlaying.album_id)" class="mask"></a> -->
-          <a ng-click="showWindow('/now_playing')" class="mask"></a>
-        </div>
-
-        <div class="maininfo">
-          <div class="words">
-            <a ng-click="showWindow('/now_playing')" class="overflowhide name notextdeco floatleft" title="{{currentPlaying.title}}">{{currentPlaying.title}}</a>
-            <span class="by overflowhide floatleft">
-              <span title="{{ currentPlaying.artist }}">
-                <a class="" ng-click="showPlaylist(currentPlaying.artist_id)">{{ currentPlaying.artist }}</a>
-              </span>
-            </span>
-            <a open-url="currentPlaying.source_url" class="src" title="原始链接"></a>
-          </div>
-
-          <div class="m-pbar play" >
-            <div class="barbg" id="progressbar" mode="play" draggable>
-              <!-- <div class="rdy" ng-style="{width : myProgress + '%' }"></div> -->
-              <div  class="cur" ng-style="{width : myProgress + '%' }">
-                <span class="btn"><i></i></span>
-              </div>
-            </div>
-
-            <span class="time"><em>{{ currentPosition }}</em> <span ng-show=" currentDuration!=none ">/</span> {{ currentDuration }}</span>
-          </div>
-
-          <!-- init soundManager2 player -->
-          <sound-manager></sound-manager>
-        </div>
-
-        <div class="ctrl">
-          <a class="icn icn-add" ng-click="showDialog(0, currentPlaying)" title="添加到歌单">添加到歌单</a>
-          <a class="icn" ng-class="{ 'icn-repeatone': settings.playmode == 2,'icn-shuffle': settings.playmode == 1, 'icn-loop': settings.playmode == 0 }" title="{{ settings.playmode | playmode_title }}(s)" ng-click="changePlaymode()"></a>
-          <a class="icn icn-list" title="列表(l)" ng-click="togglePlaylist()"></a>
-        </div>
-
-        <div class="volume-ctrl" volume-wheel>
-          <a class="icn" ng-class="{ 'icn-vol-mute': mute, 'icn-vol': mute == false }"  title="静音(m) 增大(u) 减少(d)" ng-click="toggleMuteStatus()"></a>
-          <div class="m-pbar volume" >
-            <div class="barbg" id="volumebar" mode="volume" draggable>
-              <div class="cur" ng-style="{width : volume + '%' }">
-                <span class="btn"><i></i></span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="menu" ng-hide="menuHidden">
-          <div class="menu-header">
-              <span>播放列表</span>
-              <a class="add-all" ng-click="showDialog(0, playlist)"><small>收藏全部</small></a>
-              <a clear-playlist class="remove-all"><small>清空</small></a>
-              <a class="close-popup" ng-click="togglePlaylist()">×</a>
-          </div>
-          <ul>
-            <li id="song{{ song.id }}" ng-repeat="song in playlist track by $index" ng-class="{ playing: currentPlaying.id == song.id }" ng-mouseenter="playlist_highlight=true" ng-mouseleave="playlist_highlight=false">
-              <div class="title" play-from-playlist="song"><a>{{ song.title }}</a></div>
-              <a class="icn-remove" remove-from-playlist="song" data-index="{{$index}}" ng-show="playlist_highlight"></a>
-              <div class="singer" ng-click="showPlaylist(song.artist_id)">{{ song.artist }}</div>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </div>
-  </body>
 </html>
