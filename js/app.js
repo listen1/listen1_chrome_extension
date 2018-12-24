@@ -56,12 +56,14 @@
       $translateProvider.preferredLanguage('zh_CN');
     }]);
 
-  app.run(['angularPlayer', 'Notification', 'loWeb', function(angularPlayer, Notification, loWeb) {
+  app.run(['angularPlayer', 'Notification', 'loWeb', '$translate',
+    function(angularPlayer, Notification, loWeb, $translate) {
     angularPlayer.setBootstrapTrack(
       loWeb.bootstrapTrack(
         function(){},
         function(){
-          Notification.info('版权原因无法播放，请搜索其他平台');
+          var d = {message: $translate.instant('_COPYRIGHT_ISSUE'), replaceMessage: true}
+          Notification.info(d);
         })
     );
   }]);
@@ -526,7 +528,8 @@
     };
 
     $scope.copyrightNotice = function() {
-      Notification.info($translate.instant('_COPYRIGHT_ISSUE'));
+      var d = {message: $translate.instant('_COPYRIGHT_ISSUE'), replaceMessage: true}
+      Notification.info(d);
     };
 
     $scope.clonePlaylist = function(list_id){
