@@ -76,10 +76,11 @@ var add_myplaylist = function(playlist_id, track) {
     if (playlist == null) {
         return;
     }
+    // new track will always insert in beginning of playlist
     if (Array.isArray(track)) {
-        playlist.tracks = playlist.tracks.concat(track);
+        playlist.tracks = track.concat(playlist.tracks);
     } else {
-        playlist.tracks.push(track);
+        playlist.tracks.unshift(track);
     }
 
     // dedupe
