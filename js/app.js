@@ -10,7 +10,7 @@
       return value && JSON.parse(value);
   }
 
-  var app = angular.module('listenone', ['angularSoundManager', 'ui-notification', 'loWebManager', 'cfp.hotkeys', 'lastfmClient', 'githubClient'])
+  var app = angular.module('listenone', ['angularSoundManager', 'ui-notification', 'loWebManager', 'cfp.hotkeys', 'lastfmClient', 'githubClient', 'pascalprecht.translate'])
 
   app.config( [
     '$compileProvider',
@@ -44,6 +44,17 @@
     });
   });
 
+  app.config(['$translateProvider', function($translateProvider) {
+
+      // Register a loader for the static files
+       $translateProvider.useStaticFilesLoader({
+          prefix: './i18n/',
+          suffix: '.json'
+        });
+      $translateProvider.use('zh_CN');
+      // Tell the module what language to use by default
+      $translateProvider.preferredLanguage('zh_CN');
+    }]);
 
   app.run(['angularPlayer', 'Notification', 'loWeb', function(angularPlayer, Notification, loWeb) {
     angularPlayer.setBootstrapTrack(
@@ -92,14 +103,38 @@
     }
   }
 
+
+  app.controller('TranslateController', ['$scope', '$translate', '$http', function($scope, $translate, $http) {
+      //var defaultLang = 'zh_CN';
+      var defaultLang = localStorage.getObject('language') || 'zh_CN';
+
+        
+      $scope.setLang = function(langKey) {
+        // You can change the language during runtime
+        $translate.use(langKey).then(function () {
+
+          $http.get('./i18n/zh_CN.json')
+               .then(function(res){
+                  for(var k in res.data) {
+                    $scope[k] = $translate.instant(k);
+                  }
+          });
+          localStorage.setObject('language', langKey);
+        });
+      };
+
+      $scope.setLang(defaultLang);
+
+    }]);
+
   // control main view of page, it can be called any place
   app.controller('NavigationController', ['$scope', '$http',
     '$httpParamSerializerJQLike', '$timeout',
     'angularPlayer', 'Notification', '$rootScope', 'loWeb',
-    'hotkeys', 'lastfm', 'github', 'gist',
+    'hotkeys', 'lastfm', 'github', 'gist', '$translate',
     function($scope, $http, $httpParamSerializerJQLike,
       $timeout, angularPlayer, Notification, $rootScope,
-      loWeb, hotkeys, lastfm, github, gist) {
+      loWeb, hotkeys, lastfm, github, gist, $translate) {
 
     $rootScope.page_title = "Listen 1";
     $scope.window_url_stack = [];
@@ -275,7 +310,7 @@
       $scope.myStyle = {'left':  left + 'px'};
 
       if (dialog_type == 0) {
-        $scope.dialog_title = '添加到歌单';
+        $scope.dialog_title = $translate.instant('_ADD_TO_PLAYLIST');
         var url = '/show_myplaylist';
         $scope.dialog_song = data;
         loWeb.get(url).success(function(data) {
@@ -283,27 +318,27 @@
         });
       }
 
-      if (dialog_type == 2) {
-        $scope.dialog_title = '登录豆瓣';
-        $scope.dialog_type = 2;
-      }
+      // if (dialog_type == 2) {
+      //   $scope.dialog_title = '登录豆瓣';
+      //   $scope.dialog_type = 2;
+      // }
 
       if (dialog_type == 3) {
-        $scope.dialog_title = '修改歌单';
+        $scope.dialog_title = $translate.instant('_EDIT_PLAYLIST');
         $scope.dialog_type = 3;
         $scope.dialog_cover_img_url = data.cover_img_url;
         $scope.dialog_playlist_title = data.playlist_title;
       }
       if (dialog_type == 4) {
-        $scope.dialog_title = '连接到Last.fm';
+        $scope.dialog_title = $translate.instant('_CONNECT_TO_LASTFM');
         $scope.dialog_type = 4;
       }
       if (dialog_type == 5) {
-        $scope.dialog_title = '打开歌单';
+        $scope.dialog_title = $translate.instant('_OPEN_PLAYLIST');
         $scope.dialog_type = 5;
       }
 	    if (dialog_type == 6) {
-        $scope.dialog_title = '歌单导入合并';
+        $scope.dialog_title = $translate.instant('_IMPORT_PLAYLIST');
 		    var url = '/show_myplaylist';
         loWeb.get(url).success(function(data) {
             $scope.myplaylist = data.result;
@@ -311,11 +346,11 @@
         $scope.dialog_type = 6;
       }
       if (dialog_type == 7) {
-        $scope.dialog_title = '连接到Github.com';
+        $scope.dialog_title = $translate.instant('_CONNECT_TO_GITHUB');
         $scope.dialog_type = 7;
       }
       if (dialog_type == 8) {
-        $scope.dialog_title = '导出到Github Gist';
+        $scope.dialog_title = $translate.instant('_EXPORT_TO_GITHUB_GIST');
         $scope.dialog_type = 8;
         gist.listExistBackup().then(function(res){
           $scope.myBackup = res;
@@ -324,7 +359,7 @@
         });
       }
       if (dialog_type == 10) {
-        $scope.dialog_title = '从Github Gist导入';
+        $scope.dialog_title = $translate.instant('_RECOVER_FROM_GITHUB_GIST');
         $scope.dialog_type = 10;
         gist.listExistBackup().then(function(res){
           $scope.myBackup = res;
@@ -347,7 +382,7 @@
           'Content-Type': 'application/x-www-form-urlencoded'
         }
       }).success(function() {
-        Notification.success('添加到歌单成功');
+        Notification.success($translate.instant('_ADD_TO_PLAYLIST_SUCCESS'));
         $scope.closeDialog();
         // add to current playing list
         if (option_id == $scope.current_list_id) {
@@ -379,7 +414,7 @@
         }
       }).success(function() {
         $rootScope.$broadcast('myplaylist:update');
-        Notification.success('添加到歌单成功');
+        Notification.success($translate.instant('_ADD_TO_PLAYLIST_SUCCESS'));
         $scope.closeDialog();
       });
     };
@@ -402,13 +437,13 @@
         $rootScope.$broadcast('myplaylist:update');
         $scope.playlist_title = $scope.dialog_playlist_title;
         $scope.cover_img_url = $scope.dialog_cover_img_url;
-        Notification.success('修改歌单成功');
+        Notification.success($translate.instant('_EDIT_PLAYLIST_SUCCESS'));
         $scope.closeDialog();
       });
     };
 
 	$scope.mergePlaylist = function(target_list_id) {
-	  Notification.info('正在合并导入歌单……');
+	  Notification.info($translate.instant('_IMPORTING_PLAYLIST'));
       var url = '/merge_playlist';
       loWeb.post({
         url: url,
@@ -421,7 +456,7 @@
           'Content-Type': 'application/x-www-form-urlencoded'
         }
       }).success(function() {
-        Notification.success('合并歌单成功');
+        Notification.success($translate.instant('_IMPORTING_PLAYLIST_SUCCESS'));
         $scope.closeDialog();
 		$scope.popWindow();
 		$scope.showPlaylist($scope.list_id);
@@ -447,7 +482,7 @@
         if (index > -1) {
           $scope.songs.splice(index, 1);
         }
-        Notification.success('删除成功');
+        Notification.success($translate.instant('_REMOVE_PLAYLIST_SUCCESS'));
       });
     }
 
@@ -486,12 +521,12 @@
       $timeout(function(){
         //add songs to playlist
         angularPlayer.addTrackArray($scope.songs);
-        Notification.success("添加到当前播放成功");
+        Notification.success($translate.instant('_ADD_TO_QUEUE_SUCCESS'));
       }, 0);
     };
 
     $scope.copyrightNotice = function() {
-      Notification.info("版权原因无法播放，请搜索其他平台");
+      Notification.info($translate.instant('_COPYRIGHT_ISSUE'));
     };
 
     $scope.clonePlaylist = function(list_id){
@@ -508,7 +543,7 @@
       }).success(function() {
         $rootScope.$broadcast('myplaylist:update');
         $scope.closeWindow();
-        Notification.success('收藏到我的歌单成功');
+        Notification.success($translate.instant('_ADD_TO_PLAYLIST_SUCCESS'));
       });
     };
 
@@ -528,7 +563,7 @@
         $rootScope.$broadcast('myplaylist:update');
         $scope.closeDialog();
         $scope.closeWindow();
-        Notification.success('删除歌单成功');
+        Notification.success($translate.instant('_REMOVE_PLAYLIST_SUCCESS'));
       });
     };
 
@@ -668,7 +703,7 @@
           $scope.showPlaylist(result.id);
         }
         else {
-          Notification.info('未能打开输入的歌单地址');
+          Notification.info($translate.instant('_FAIL_OPEN_PLAYLIST_URL'));
         }
       });
     }
@@ -1310,8 +1345,8 @@
         };
     }]);
 
-  app.directive('addWithoutPlay', ['angularPlayer', 'Notification',
-    function (angularPlayer, Notification) {
+  app.directive('addWithoutPlay', ['angularPlayer', 'Notification', '$translate',
+    function (angularPlayer, Notification, $translate) {
         return {
             restrict: "EA",
             scope: {
@@ -1320,7 +1355,7 @@
             link: function (scope, element, attrs) {
                 element.bind('click', function (event) {
                     angularPlayer.addTrack(scope.song);
-                    Notification.success("已添加到当前播放歌单");
+                    Notification.success($translate.instant('_ADD_TO_QUEUE_SUCCESS'));
                 });
             }
         };

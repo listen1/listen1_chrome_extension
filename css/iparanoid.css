@@ -405,7 +405,7 @@ svg:hover {
 
 .playlist-button-list .playlist-button .play-list {
     flex: 1;
-    padding-left: 18px;
+    padding: 0 18px;
     display: flex;
     align-items: center;
 }
@@ -451,7 +451,7 @@ svg:hover {
 }
 
 .playlist-button-list .playlist-button.clone-button,  .playlist-button-list .playlist-button.edit-button{
-	flex: 0 0 90px;
+	flex: 0 0 auto;
 }
 
 .playlist-button-list .playlist-button.clone-button .play-list svg, .playlist-button-list .playlist-button.edit-button .play-list svg {
@@ -674,7 +674,7 @@ ul.detail-songlist li .tools .icon {
 .page .settings-content {
 	margin: 0 25px 25px 25px;
 }
-.page .settings-content label.upload-button {
+.page .settings-content label.upload-button,  .page .settings-content .language-button{
     border: solid 1px #999;
     padding: 2px 9px;
     background: #eeeeee;
@@ -894,14 +894,15 @@ svg.searchspinner {
 
 .footer .menu .menu-header .add-all {
     border-right: solid 1px #e5e5e5;
-    flex: 0 0 93px;
+    flex: 0 0 auto;
     display: flex;
     align-items: center;
+    padding-right: 10px;
 }
 
 .footer .menu .menu-header .remove-all {
     margin-left: 10px;
-    flex: 0 0 55px;
+    flex: 0 0 auto;
     display: flex;
     align-items: center;
 }

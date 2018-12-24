@@ -4,6 +4,8 @@ Listen 1 (Chrome Extension) V2.0.0
 
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE)
 
+[English Version](https://github.com/listen1/listen1_chrome_extension/blob/master/README_EN.md)
+
 重要
 ----
 Listen1的用户，有个坏消息希望和大家分享。Listen1最近收到了[QQ音乐的DMCA Takedown Notice](https://github.com/github/dmca/blob/master/2017/2017-11-17-Listen1.md), 主要代码库已经因为此原因而临时关闭。悲观一点看，Listen1项目可能会在今年内彻底消失。
@@ -44,6 +46,9 @@ Firefox打包安装
 
 更新日志
 -------
+`2018-12-23`
+* 多语言支持，支持英文
+
 `2018-12-22`
 * 全新版本2.0发布，更新界面(特别感谢@iparanoid提供主题设计)
 * 升级jquery和angular版本
