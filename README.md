@@ -1,6 +1,6 @@
-Listen 1 (Chrome Extension) V2.0.0
+Listen 1 (Chrome Extension) V2.1.0
 ==========
-（最后更新于2018年12月22日）
+（最后更新于2018年12月24日）
 
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE)
 
@@ -46,8 +46,10 @@ Firefox打包安装
 
 更新日志
 -------
-`2018-12-23`
+`2018-12-24`
 * 多语言支持，支持英文
+* 新添加到歌单的歌曲将出现在歌单头部
+* 修复版权通知占满屏幕的bug
 
 `2018-12-22`
 * 全新版本2.0发布，更新界面(特别感谢@iparanoid提供主题设计)

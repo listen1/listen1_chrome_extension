@@ -1,6 +1,6 @@
-Listen 1 (Chrome Extension) V2.0.0
+Listen 1 (Chrome Extension) V2.1.0
 ==========
-（Last Update 12/22/2018)
+（Last Update 12/24/2018)
 
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE)
 
@@ -33,8 +33,10 @@ Install (Firefox)
 
 Changelog
 -------
-`2018-12-23`
+`2018-12-24`
 * i18n support, support English language.
+* new song will now add to top of playlist
+* copyright notification will not mess up the screen
 
 `2018-12-22`
 * Version 2.0 released. New UI(Special Thanks to @iparanoid)
