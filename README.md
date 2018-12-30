@@ -1,6 +1,6 @@
-Listen 1 (Chrome Extension) V2.1.1
+Listen 1 (Chrome Extension) V2.1.2
 ==========
-（最后更新于2018年12月24日）
+（最后更新于2018年12月30日）
 
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE)
 
@@ -46,6 +46,10 @@ Firefox打包安装
 
 更新日志
 -------
+`2018-12-30`
+* 修复酷我音乐歌单缺失歌曲的问题
+* 自动检测客户端语言
+
 `2018-12-29`
 * 修复虾米音乐搜索失败的问题
 * 修复部分QQ音乐歌曲无法播放的问题
