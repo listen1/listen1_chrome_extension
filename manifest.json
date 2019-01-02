@@ -17,8 +17,27 @@
     "permissions": [ "notifications", "unlimitedStorage", "downloads", "storage", "contextMenus", "tabs", "cookies", "*://music.163.com/*", "*://*.xiami.com/*", "*://*.qq.com/*", "*://*.kugou.com/", "*://*.kuwo.cn/", "*://*.bilibili.com/*", "*://api.github.com/*", "*://github.com/*", "*://gist.githubusercontent.com/*", "webRequest", "webRequestBlocking"],
     "version": "2.1.2",
     "web_accessible_resources": [ "images/*" ],
-    "content_scripts": [{
-        "matches": ["https://listen1.github.io/listen1/*"],
-        "js": ["js/oauth_callback.js"]
-    }]
+    "commands": {
+        "play_next": {
+            "suggested_key": {
+                "default": "MediaNextTrack"
+            },
+            "description": "Play next song.",
+            "global": true
+        },
+        "play_prev": {
+            "suggested_key": {
+                "default": "MediaPrevTrack"
+            },
+            "description": "Play previous song.",
+            "global": true
+        },
+        "play_pause": {
+            "suggested_key": {
+                "default": "MediaPlayPause"
+            },
+            "description": "Toggle play pause state.",
+            "global": true
+        }
+    }
 }

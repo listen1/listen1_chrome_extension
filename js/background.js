@@ -110,3 +110,21 @@ chrome.browserAction.onClicked.addListener(function(tab) {
       }
   );
   
+  // at end of background.js
+  chrome.commands.onCommand.addListener(function (command) {
+    const [viewWindow] = chrome.extension.getViews().filter(p => p.location.href.endsWith('listen1.html'));
+  
+    switch (command) {
+        case 'play_next':
+            viewWindow.document.querySelector('.li-next').click();
+            break;
+        case 'play_prev':
+            viewWindow.document.querySelector('.li-previous').click();
+            break;
+        case 'play_pause':
+            viewWindow.document.querySelector('.play').click();
+            break;
+        default:
+            console.log('不支持的快捷键')
+    }
+  });
