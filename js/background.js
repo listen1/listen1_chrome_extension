@@ -89,6 +89,13 @@ chrome.browserAction.onClicked.addListener(function(tab) {
           });
       }
   
+      if (details.url.indexOf("://music.163.com/") != -1) {
+          headers.push({
+              name: "X-Real-IP",
+              value: "118.88.88.88"
+          });
+      }
+      
       blockingResponse.requestHeaders = headers;
       return blockingResponse;
   };
