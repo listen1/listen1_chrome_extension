@@ -251,7 +251,7 @@ var netease = (function() {
             var data = response.data;
             var url = data.data[0].url;
             if (url != null) {
-                sound.url = url;
+                sound.url = url.replace(/(m\d+?)(?!c)\.music\.126\.net/, '$1c.music.126.net');
                 success();
             }
             else {
