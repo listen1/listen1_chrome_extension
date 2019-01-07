@@ -1,6 +1,10 @@
 /* global chrome Github */
-chrome.browserAction.onClicked.addListener(() => {
-  chrome.tabs.create({ url: chrome.extension.getURL('listen1.html') });
+chrome.browserAction.onClicked.addListener((tab) => { // eslint-disable-line no-unused-vars
+  chrome.tabs.create({
+    url: chrome.extension.getURL('listen1.html'),
+  }, (new_tab) => { // eslint-disable-line no-unused-vars
+    // Tab opened.
+  });
 });
 
 
@@ -19,15 +23,26 @@ function hack_referer_header(details) {
     referer_value = 'https://gist.githubusercontent.com/';
   }
 
-  if (details.url.indexOf('api.xiami.com/') !== -1 || details.url.indexOf('.xiami.com/song/playlist/id/') !== -1) {
-    referer_value = 'https://www.xiami.com/';
+  if (details.url.indexOf('api.xiami.com/') !== -1 || details.url.indexOf('.xiami.com/song/playlist/id/') !== -1
+    || details.url.indexOf('www.xiami.com/api/') !== -1
+  ) {
+    add_origin = false;
+    referer_value = 'https://www.xiami.com';
   }
 
-  if ((details.url.indexOf('c.y.qq.com/') !== -1)
-        || (details.url.indexOf('i.y.qq.com/') !== -1)
-        || (details.url.indexOf('qqmusic.qq.com/') !== -1)
-        || (details.url.indexOf('music.qq.com/') !== -1)
-        || (details.url.indexOf('imgcache.qq.com/') !== -1)) {
+  if (details.url.indexOf('www.xiami.com/api/search/searchSongs') !== -1) {
+    const key = /key%22:%22(.*?)%22/.exec(details.url)[1];
+    add_origin = false;
+    referer_value = `https://www.xiami.com/search?key=${key}`;
+  }
+
+  if (details.url.indexOf('c.y.qq.com/') !== -1) {
+    referer_value = 'https://y.qq.com';
+  }
+  if ((details.url.indexOf('i.y.qq.com/') !== -1)
+    || (details.url.indexOf('qqmusic.qq.com/') !== -1)
+    || (details.url.indexOf('music.qq.com/') !== -1)
+    || (details.url.indexOf('imgcache.qq.com/') !== -1)) {
     referer_value = 'https://y.qq.com/';
   }
 
@@ -47,22 +62,19 @@ function hack_referer_header(details) {
 
   let isRefererSet = false;
   let isOriginSet = false;
-
+  const headers = details.requestHeaders;
   const blockingResponse = {};
 
-
-  const headers = details.requestHeaders.map((item) => {
-    const header = item;
-    if (replace_referer && (header.name === 'Referer') && (referer_value !== '')) {
-      header.value = referer_value;
+  for (let i = 0, l = headers.length; i < l; i += 1) {
+    if (replace_referer && (headers[i].name === 'Referer') && (referer_value !== '')) {
+      headers[i].value = referer_value;
       isRefererSet = true;
     }
-    if (replace_origin && (header.name === 'Origin') && (referer_value !== '')) {
-      header.value = referer_value;
+    if (replace_origin && (headers[i].name === 'Origin') && (referer_value !== '')) {
+      headers[i].value = referer_value;
       isOriginSet = true;
     }
-    return header;
-  });
+  }
 
   if (add_referer && (!isRefererSet) && (referer_value !== '')) {
     headers.push({
@@ -91,10 +103,27 @@ chrome.webRequest.onBeforeSendHeaders.addListener(hack_referer_header, {
  * Get tokens.
  */
 
-chrome.runtime.onMessage.addListener(
-  (request, sender, sendResponse) => {
-    const code = request.query.split('=')[1];
-    Github.handleCallback(code);
-    sendResponse();
-  },
-);
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  const code = request.query.split('=')[1];
+  Github.handleCallback(code);
+  sendResponse();
+});
+
+// at end of background.js
+chrome.commands.onCommand.addListener((command) => {
+  const [viewWindow] = chrome.extension.getViews().filter(p => p.location.href.endsWith('listen1.html'));
+
+  switch (command) {
+    case 'play_next':
+      viewWindow.document.querySelector('.li-next').click();
+      break;
+    case 'play_prev':
+      viewWindow.document.querySelector('.li-previous').click();
+      break;
+    case 'play_pause':
+      viewWindow.document.querySelector('.play').click();
+      break;
+    default:
+      // console.log('不支持的快捷键')
+  }
+});

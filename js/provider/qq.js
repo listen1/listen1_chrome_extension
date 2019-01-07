@@ -237,14 +237,15 @@ var qq = (function() {
     }
 
     var qq_bootstrap_track = function(sound, track, success, failure, hm, se) {
-        var target_url ='https://c.y.qq.com/base/fcgi-bin/fcg_music_express_mobile3.fcg' +
-            '?g_tk=195219765&jsonpCallback=MusicJsonCallback004680169373158849' + 
-            '&loginUin=1297716249&hostUin=0&format=json&inCharset=utf8' + 
-            '&outCharset=utf-8&notice=0&platform=yqq&needNewCode=0' + 
-            '&cid=205361747&callback=MusicJsonCallback004680169373158849' + 
-            '&uin=1297716249&songmid='+ track.id.slice('qqtrack_'.length) +
-            '&filename=C400'+ track.id.slice('qqtrack_'.length) + '.m4a&guid=7332953645';
-
+        var songId = track.id.slice('qqtrack_'.length);
+        var target_url = 'https://u.y.qq.com/cgi-bin/musicu.fcg?loginUin=0&'+
+            'hostUin=0&format=json&inCharset=utf8&outCharset=utf-8&notice=0&'+
+            'platform=yqq.json&needNewCode=0&data=%7B%22req_0%22%3A%7B%22'+
+            'module%22%3A%22vkey.GetVkeyServer%22%2C%22method%22%3A%22'+
+            'CgiGetVkey%22%2C%22param%22%3A%7B%22guid%22%3A%2210000%22%2C%22songmid%22%3A%5B%22'+
+            songId+'%22%5D%2C%22songtype%22%3A%5B0%5D%2C%22uin%22%3A%220%22%2C%22loginflag%22'+
+            '%3A1%2C%22platform%22%3A%2220%22%7D%7D%2C%22comm%22%3A%7B%22uin%22%3A0%2C%22'+
+            'format%22%3A%22json%22%2C%22ct%22%3A20%2C%22cv%22%3A0%7D%7D';
         hm({
             url:target_url,
             method: 'GET',
@@ -252,13 +253,8 @@ var qq = (function() {
         })
         .then(function(response) {
             var data = response.data;
-            data = data.slice(data.indexOf('(')+1,data.length-1);
             data = JSON.parse(data);
-            var token = data.data.items[0].vkey;
-            var url = 'http://dl.stream.qqmusic.qq.com/C400' +
-              track.id.slice('qqtrack_'.length)  +
-              '.m4a?vkey=' + token +
-              '&uin=1297716249&fromtag=0&guid=7332953645';
+            var url = data.req_0.data.sip[0] + data.req_0.data.midurlinfo[0].purl;
             sound.url = url;
             success();
         });

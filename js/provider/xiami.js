@@ -218,24 +218,18 @@ var xiami = (function() {
     var xm_search = function(url, hm, se) {
         return {
             success: function(fn) {
+                var api = '/api/search/searchSongs';
                 var keyword = getParameterByName('keywords', url);
                 var curpage = getParameterByName('curpage', url);
-                var target_url = 'http://api.xiami.com/web?v=2.0&app_key=1&key=' + keyword + '&page='+ curpage +'&limit=20&callback=jsonp154&r=search/songs';
-                hm({
-                    url:target_url,
-                    method: 'GET',
-                    transformResponse: undefined
-                })
-                .then(function(response) {
-                    var data = response.data;
-                    data = data.slice('jsonp154('.length, -')'.length);
-                    data = JSON.parse(data);
+                var pageSize = 60;
+                var params = {"pagingVO":{"page":curpage,"pageSize":pageSize},"key":keyword};
+                xm_cookie_get(hm, api, params, function(response){
                     var tracks = [];
-                    $.each(data.data.songs, function(index, item){
-                        var track = xm_convert_song(item, 'artist_name');
+                    $.each(response.data.result.data.songs, function(index, item){
+                        var track = xm_convert_song2(item, 'artistName');
                         tracks.push(track);
                     });
-                    return fn({"result":tracks,"total":data.data.total});
+                    return fn({"result":tracks,"total":response.data.result.data.pagingVO.pages});
                 });
             }
         };

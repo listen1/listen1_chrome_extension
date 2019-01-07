@@ -1,4 +1,4 @@
-/* global Storage localStorage window document Blob */
+/* global Storage localStorage window document Blob navigator */
 /* global $ angular Timer FileReader soundManager */
 /* eslint-disable global-require */
 /* eslint-disable no-unused-vars */
@@ -112,9 +112,14 @@ const main = () => {
 
 
   app.controller('TranslateController', ['$scope', '$translate', '$http', ($scope, $translate, $http) => {
-    // var defaultLang = 'zh_CN';
-    const defaultLang = localStorage.getObject('language') || 'zh_CN';
-
+    let defaultLang = 'zh_CN';
+    const supportLangs = ['zh_CN', 'en_US'];
+    if (supportLangs.indexOf(navigator.language) !== -1) {
+      defaultLang = navigator.language;
+    }
+    if (supportLangs.indexOf(localStorage.getObject('language')) !== -1) {
+      defaultLang = localStorage.getObject('language');
+    }
 
     $scope.setLang = (langKey) => {
       // You can change the language during runtime

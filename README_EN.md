@@ -1,6 +1,6 @@
-Listen 1 (Chrome Extension) V2.1.1
+Listen 1 (Chrome Extension) V2.1.2
 ==========
-（Last Update 12/24/2018)
+（Last Update 12/30/2018)
 
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE)
 
@@ -33,6 +33,15 @@ Install (Firefox)
 
 Changelog
 -------
+`2018-12-30`
+* fix songs missing in kuwo playlist
+* auto detect language
+
+`2018-12-29`
+* fix fail on xiami search
+* fix some qq songs fail to play
+* fix qq music web visit problem after extension installed
+
 `2018-12-24`
 * i18n support, support English language.
 * new song will now add to top of playlist
