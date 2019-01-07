@@ -983,7 +983,6 @@ const main = () => {
         const lines = lyric.split('\n');
         let result = [];
         const timeResult = [];
-        let timeRegResult = null;
 
         function rightPadding(str, length, padChar) {
           const newstr = str + new Array(length - str.length + 1).join(padChar);
@@ -1003,18 +1002,15 @@ const main = () => {
 
           const timeReg = /\[(\d{2,})\:(\d{2})(?:\.(\d{1,3}))?\]/g; // eslint-disable-line no-useless-escape
 
-          const lyricObject = {
-            content: '',
-            seconds: 0,
-          };
-          for (timeRegResult = timeReg.exec(line);
-            timeRegResult;
-            timeRegResult = timeReg.exec(line)) {
-            lyricObject.content = $('<a />').html(line.replace(timeReg, '')).text();
-            lyricObject.seconds = parseInt(timeRegResult[1], 10) * 60 * 1000 // min
-              + parseInt(timeRegResult[2], 10) * 1000 // sec
-              + (timeRegResult[3] !== null ? parseInt(rightPadding(timeRegResult[3], 3, '0'), 10) : 0); // microsec
-            timeResult.push(lyricObject);
+          let timeRegResult = null;
+          // eslint-disable-next-line no-cond-assign
+          while ((timeRegResult = timeReg.exec(line)) !== null) {
+            timeResult.push({
+              content: $('<a />').html(line.replace(timeRegResult[0], '')).text(),
+              seconds: parseInt(timeRegResult[1], 10) * 60 * 1000 // min
+                + parseInt(timeRegResult[2], 10) * 1000 // sec
+                + (timeRegResult[3] !== null ? parseInt(rightPadding(timeRegResult[3], 3, '0'), 10) : 0), // microsec
+            });
           }
         });
 
