@@ -197,7 +197,7 @@ function build_xiami() {
       url: `xmtrack_${song_info.songId}`,
       // 'lyric_url': song_info.lyricInfo.lyricFile
     };
-    if (song_info.lyricInfo !== undefined) {
+    if (song_info.lyricInfo) {
       track.lyric_url = song_info.lyricInfo.lyricFile;
     }
     return track;
@@ -322,9 +322,9 @@ function build_xiami() {
               transformResponse: undefined,
             })
               .then((res) => {
-                let { res_data } = res;
-                res_data = data.slice('jsonp217('.length, -')'.length);
-                res_data = JSON.parse(data);
+                let { data: res_data } = res;
+                res_data = res_data.slice('jsonp217('.length, -')'.length);
+                res_data = JSON.parse(res_data);
 
                 const tracks = res_data.data.map((item) => {
                   const track = xm_convert_song(item, 'singers');

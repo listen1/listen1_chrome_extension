@@ -113,7 +113,7 @@ function build_kugou() {
       target_url = `http://mobilecdnbj.kugou.com/api/v3/album/info?albumid=${
         item.album_id}`;
       hm.get(target_url).then((res) => {
-        const { res_data } = res;
+        const { data: res_data } = res;
         if (res_data.status && res_data.data !== undefined) {
           track.album = res_data.data.albumname;
         } else {
@@ -224,7 +224,7 @@ function build_kugou() {
             method: 'GET',
             transformResponse: undefined,
           }).then((res) => {
-            let { res_data } = res;
+            let { data: res_data } = res;
             res_data = JSON.parse(res_data);
             async_process_list(res_data.data.info, kg_render_artist_result_item, [hm, info],
               (err, tracks) => fn({

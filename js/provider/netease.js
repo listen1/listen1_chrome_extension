@@ -188,14 +188,14 @@ function build_netease() {
               'Content-Type': 'application/x-www-form-urlencoded',
             },
           }).then((response) => {
-            const { res_data } = response;
+            const { data: res_data } = response;
             const info = {
               id: `neplaylist_${list_id}`,
               cover_img_url: res_data.playlist.coverImgUrl,
               title: res_data.playlist.name,
               source_url: `http://music.163.com/#/playlist?id=${list_id}`,
             };
-            const tracks = data.playlist.tracks.map(track_json => ({
+            const tracks = res_data.playlist.tracks.map(track_json => ({
               id: `netrack_${track_json.id}`,
               title: track_json.name,
               artist: track_json.ar[0].name,

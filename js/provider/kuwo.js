@@ -196,7 +196,7 @@ function build_kuwo() {
             const m = parseInt(t / 60, 10);
             const s = parseInt(t - m * 60, 10);
             const ms = parseInt((t - m * 60 - s) * 100, 10);
-            return `${str}${lyric}[${num2str(m)}:${num2str(parseInt(s, 10))}.${num2str(ms)}]${item.lineLyric}\n`;
+            return `${str}[${num2str(m)}:${num2str(parseInt(s, 10))}.${num2str(ms)}]${item.lineLyric}\n`;
           }, '');
           return fn({
             lyric,
@@ -235,8 +235,8 @@ function build_kuwo() {
             method: 'GET',
             transformResponse: undefined,
           }).then((res) => {
-            const { res_data } = res;
-            data = JSON.parse(fix_json(data));
+            let { data: res_data } = res;
+            res_data = JSON.parse(fix_json(res_data));
             async_process_list(res_data.musiclist, kw_render_artist_result_item, [hm],
               (err, tracks) => fn({
                 tracks,
