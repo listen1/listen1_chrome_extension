@@ -16,25 +16,13 @@ function build_netease() {
       success(fn) {
         hm.get(target_url).then((response) => {
           const { data } = response;
-          const list_elements = (new DOMParser()).parseFromString(data, 'text/html').getElementsByClassName('m-cvrlst')[0].children;
-          const result = list_elements.map((item) => ({
+          const list_elements = Array.from((new DOMParser()).parseFromString(data, 'text/html').getElementsByClassName('m-cvrlst')[0].children);
+          const result = list_elements.map(item => ({
             cover_img_url: item.getElementsByTagName('img')[0].src,
-            title : item.find('div a')[0].title,
-            const list_url = $(this).find('div a')[0].href;
-            const list_id = getParameterByName('id', list_url);
-            default_playlist.id = `neplaylist_${list_id}`;
-            default_playlist.source_url = `http://music.163.com/#/playlist?id=${list_id}`;
+            title: item.getElementsByTagName('div')[0].getElementsByTagName('a')[0].title,
+            id: `neplaylist_${getParameterByName('id', item.getElementsByTagName('div')[0].getElementsByTagName('a')[0].href)}`,
+            source_url: `http://music.163.com/#/playlist?id=${getParameterByName('id', item.getElementsByTagName('div')[0].getElementsByTagName('a')[0].href)}`,
           }));
-          $(data).find('.m-cvrlst li').each(function element_handler() {
-            const default_playlist = {
-              cover_img_url: '',
-              title: '',
-              id: '',
-              source_url: '',
-            };
-
-            result.push(default_playlist);
-          });
           return fn({
             result,
           });
