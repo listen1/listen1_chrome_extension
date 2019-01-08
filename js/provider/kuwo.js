@@ -343,8 +343,11 @@ function build_kuwo() {
     return {
       success(fn) {
         hm.get(target_url).then((response) => {
-          const { data } = response;
-          const result = data.data[0].data.map(item => ({
+          const { data } = response.data;
+          if (!data[0]) {
+            return fn([]);
+          }
+          const result = data[0].data.map(item => ({
             cover_img_url: item.img,
             title: item.name,
             id: `kwplaylist_${item.id}`,

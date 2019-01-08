@@ -244,7 +244,7 @@ function build_qq() {
       transformResponse: undefined,
     })
       .then((response) => {
-        let { data } = response.data;
+        let { data } = response;
         data = JSON.parse(data);
         const url = data.req_0.data.sip[0] + data.req_0.data.midurlinfo[0].purl;
         sound.url = url; // eslint-disable-line no-param-reassign
@@ -275,7 +275,7 @@ function build_qq() {
           method: 'GET',
           transformResponse: undefined,
         }).then((response) => {
-          let { data } = response.data;
+          let { data } = response;
           data = data.slice('MusicJsonCallback('.length, -')'.length);
           data = JSON.parse(data);
           let lrc = '';
