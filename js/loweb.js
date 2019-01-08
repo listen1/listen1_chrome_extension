@@ -3,25 +3,22 @@
 const ngloWebManager = angular.module('loWebManager', []);
 
 function getProviderByName(sourceName) {
-  if (sourceName === 'netease') {
-    return netease;
+  switch (sourceName) {
+    case 'netease':
+      return netease;
+    case 'xiami':
+      return xiami;
+    case 'qq':
+      return qq;
+    case 'kugou':
+      return kugou;
+    case 'kuwo':
+      return kuwo;
+    case 'bilibili':
+      return bilibili;
+    default:
+      return null;
   }
-  if (sourceName === 'xiami') {
-    return xiami;
-  }
-  if (sourceName === 'qq') {
-    return qq;
-  }
-  if (sourceName === 'kugou') {
-    return kugou;
-  }
-  if (sourceName === 'kuwo') {
-    return kuwo;
-  }
-  if (sourceName === 'bilibili') {
-    return bilibili;
-  }
-  return null;
 }
 
 function getAllProviders() {
@@ -30,28 +27,24 @@ function getAllProviders() {
 
 function getProviderByItemId(itemId) {
   const prefix = itemId.slice(0, 2);
-  if (prefix === 'ne') {
-    return netease;
+  switch (prefix) {
+    case 'ne':
+      return netease;
+    case 'xm':
+      return xiami;
+    case 'qq':
+      return qq;
+    case 'kg':
+      return kugou;
+    case 'kw':
+      return kuwo;
+    case 'bi':
+      return bilibili;
+    case 'my':
+      return myplaylist;
+    default:
+      return null;
   }
-  if (prefix === 'xm') {
-    return xiami;
-  }
-  if (prefix === 'qq') {
-    return qq;
-  }
-  if (prefix === 'kg') {
-    return kugou;
-  }
-  if (prefix === 'kw') {
-    return kuwo;
-  }
-  if (prefix === 'bi') {
-    return bilibili;
-  }
-  if (prefix === 'my') {
-    return myplaylist;
-  }
-  return null;
 }
 
 ngloWebManager.factory('loWeb', ['$rootScope', '$log', '$http', '$httpParamSerializerJQLike',
@@ -86,7 +79,7 @@ ngloWebManager.factory('loWeb', ['$rootScope', '$log', '$http', '$httpParamSeria
       if (request.url.search('/clone_playlist') !== -1) {
         const list_id = getParameterByName('list_id', `${request.url}?${request.data}`);
         const provider = getProviderByItemId(list_id);
-        let url = `/playlist?list_id=${list_id}`;
+        const url = `/playlist?list_id=${list_id}`;
         return {
           success: (fn) => {
             provider.get_playlist(url, $http, $httpParamSerializerJQLike).success((data) => {
@@ -100,9 +93,7 @@ ngloWebManager.factory('loWeb', ['$rootScope', '$log', '$http', '$httpParamSeria
         const list_id = getParameterByName('list_id', `${request.url}?${request.data}`);
         myplaylist.remove_myplaylist(list_id);
         return {
-          success: (fn) => {
-            fn();
-          },
+          success: fn => fn(),
         };
       }
       if (request.url.search('/add_myplaylist') !== -1) {
@@ -111,9 +102,7 @@ ngloWebManager.factory('loWeb', ['$rootScope', '$log', '$http', '$httpParamSeria
         const track = JSON.parse(track_json);
         myplaylist.add_myplaylist(list_id, track);
         return {
-          success: (fn) => {
-            fn();
-          },
+          success: fn => fn(),
         };
       }
       if (request.url.search('/remove_track_from_myplaylist') !== -1) {
@@ -121,9 +110,7 @@ ngloWebManager.factory('loWeb', ['$rootScope', '$log', '$http', '$httpParamSeria
         const track_id = getParameterByName('track_id', `${request.url}?${request.data}`);
         myplaylist.remove_from_myplaylist(list_id, track_id);
         return {
-          success: (fn) => {
-            fn();
-          },
+          success: fn => fn(),
         };
       }
       if (request.url.search('/create_myplaylist') !== -1) {
@@ -150,13 +137,7 @@ ngloWebManager.factory('loWeb', ['$rootScope', '$log', '$http', '$httpParamSeria
         const url = getParameterByName('url', `${request.url}?${request.data}`);
         const providers = getAllProviders();
         let result;
-        for (let i = 0; i < providers.length; i += 1) {
-          const r = providers[i].parse_url(url);
-          if (r !== undefined) {
-            result = r;
-            break;
-          }
-        }
+        providers.reduce((r, provider) => (!r ? provider.parse_url(url) : r));
         return {
           success: fn => fn({ result }),
         };
