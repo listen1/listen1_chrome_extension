@@ -283,7 +283,7 @@ function build_kuwo() {
 
   function kw_show_playlist(url, hm) {
     let offset = getParameterByName('offset', url);
-    if (offset === undefined) {
+    if (!offset) {
       offset = 0;
     }
     /* const id_available = {

@@ -65,7 +65,7 @@ function build_qq() {
     //  "fav", "share", "bgm", "ring", "sing", "radio", "try", "give"]
     const play_flag = switch_flag[0];
     const try_flag = switch_flag[13];
-    return ((play_flag === 1) || ((play_flag === 1) && (try_flag === 1)));
+    return ((play_flag === '1') || ((play_flag === '1') && (try_flag === '1')));
   }
 
   function qq_convert_song(song) {
