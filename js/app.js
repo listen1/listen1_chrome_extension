@@ -107,9 +107,14 @@
 
 
   app.controller('TranslateController', ['$scope', '$translate', '$http', function($scope, $translate, $http) {
-      //var defaultLang = 'zh_CN';
-      var defaultLang = localStorage.getObject('language') || 'zh_CN';
-
+      var defaultLang = 'zh_CN';
+      var supportLangs = ['zh_CN', 'en_US'];
+      if (supportLangs.indexOf(navigator.language) != -1) {
+        defaultLang = navigator.language;
+      }
+      if (supportLangs.indexOf(localStorage.getObject('language')) != -1) {
+        defaultLang = localStorage.getObject('language');
+      }
         
       $scope.setLang = function(langKey) {
         // You can change the language during runtime

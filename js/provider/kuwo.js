@@ -307,8 +307,8 @@ var kuwo = (function() {
     var kw_get_playlist = function(url, hm, se) {
         var list_id = getParameterByName('list_id', url).split('_').pop();
         var target_url = 'http://nplserver.kuwo.cn/pl.svc?'
-            + 'op=getlistinfo&pn=0&rn=100&encode=utf-8&keyset=pl2012&pcmp4=1'
-            + '&pid=' + list_id;
+            + 'op=getlistinfo&pn=0&rn=200&encode=utf-8&keyset=pl2012&pcmp4=1'
+            + '&pid=' + list_id + '&vipver=MUSIC_9.0.2.0_W1&newver=1';
 
         return {
             success: function(fn) {

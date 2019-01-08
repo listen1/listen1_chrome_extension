@@ -1,6 +1,6 @@
-Listen 1 (Chrome Extension) V2.1.1
+Listen 1 (Chrome Extension) V2.1.2
 ==========
-（最后更新于2018年12月24日）
+（最后更新于2018年12月30日）
 
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE)
 
@@ -22,7 +22,7 @@ Listen1诞生的初衷从不是和大公司的争夺版权利益，而是为了�
 
 搜歌，听歌，就用 `Listen1`。
 
-[![imgur](http://i.imgur.com/yblr3KO.gif)]()
+[![imgur](https://i.imgur.com/dIVFtor.gif)]()
 
 还有精选歌单哦。
 
@@ -46,6 +46,15 @@ Firefox打包安装
 
 更新日志
 -------
+`2018-12-30`
+* 修复酷我音乐歌单缺失歌曲的问题
+* 自动检测客户端语言
+
+`2018-12-29`
+* 修复虾米音乐搜索失败的问题
+* 修复部分QQ音乐歌曲无法播放的问题
+* 修复使用插件时QQ官方网站无法使用的问题
+
 `2018-12-24`
 * 多语言支持，支持英文
 * 新添加到歌单的歌曲将出现在歌单头部
