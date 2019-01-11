@@ -261,7 +261,7 @@ function build_kugou() {
     }).then((response) => {
       let data = response.data.slice(jQueryHeader.length + 1, response.data.length - 2);
       data = JSON.parse(data);
-      if (data.status === '1') {
+      if (data.status === 1) {
         sound.url = data.data.play_url; // eslint-disable-line no-param-reassign
         success();
       } else {
