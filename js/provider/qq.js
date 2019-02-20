@@ -1,4 +1,4 @@
-/* global DOMParser getParameterByName atob */
+/* global DOMParser getParameterByName atob chrome */
 function build_qq() {
   function htmlDecode(value) {
     const parser = new DOMParser();
@@ -90,7 +90,7 @@ function build_qq() {
 
     return {
       success(fn) {
-        const target_url = `${'http://i.y.qq.com/qzone-music/fcg-bin/fcg_ucc_getcdinfo_'
+        const target_url = `${'http://c.y.qq.com/qzone-music/fcg-bin/fcg_ucc_getcdinfo_'
           + 'byids_cp.fcg?type=1&json=1&utf8=1&onlysong=0&jsonpCallback='
           + 'jsonCallback&nosign=1&disstid='}${list_id}&g_tk=5381&loginUin=0&hostUin=0`
           + '&format=jsonp&inCharset=GB2312&outCharset=utf-8&notice=0'
@@ -127,7 +127,7 @@ function build_qq() {
 
     return {
       success(fn) {
-        const target_url = `${'http://i.y.qq.com/v8/fcg-bin/fcg_v8_album_info_cp.fcg'
+        const target_url = `${'http://c.y.qq.com/v8/fcg-bin/fcg_v8_album_info_cp.fcg'
           + '?platform=h5page&albummid='}${album_id}&g_tk=938407465`
           + '&uin=0&format=jsonp&inCharset=utf-8&outCharset=utf-8'
           + '&notice=0&platform=h5&needNewCode=1&_=1459961045571'
@@ -164,7 +164,7 @@ function build_qq() {
 
     return {
       success(fn) {
-        const target_url = `${'http://i.y.qq.com/v8/fcg-bin/fcg_v8_singer_track_cp.fcg'
+        const target_url = `${'http://c.y.qq.com/v8/fcg-bin/fcg_v8_singer_track_cp.fcg'
           + '?platform=h5page&order=listen&begin=0&num=50&singermid='}${artist_id}`
           + '&g_tk=938407465&uin=0&format=jsonp&'
           + 'inCharset=utf-8&outCharset=utf-8&notice=0&platform='
@@ -202,7 +202,7 @@ function build_qq() {
       success(fn) {
         const keyword = getParameterByName('keywords', url);
         const curpage = getParameterByName('curpage', url);
-        const target_url = `${'http://i.y.qq.com/s.music/fcgi-bin/search_for_qq_cp?'
+        const target_url = `${'http://c.y.qq.com/s.music/fcgi-bin/search_for_qq_cp?'
           + 'g_tk=938407465&uin=0&format=jsonp&inCharset=utf-8'
           + '&outCharset=utf-8&notice=0&platform=h5&needNewCode=1'
           + '&w='}${keyword}&zhidaqu=1&catZhida=1`
@@ -265,8 +265,8 @@ function build_qq() {
   function qq_lyric(url, hm, se) { // eslint-disable-line no-unused-vars
     const track_id = getParameterByName('track_id', url).split('_').pop();
     // use chrome extension to modify referer.
-    const target_url = `${'http://i.y.qq.com/lyric/fcgi-bin/fcg_query_lyric.fcg?'
-      + 'songmid='}${track_id}&loginUin=0&hostUin=0&format=jsonp&inCharset=GB2312`
+    const target_url = `${'http://c.y.qq.com/lyric/fcgi-bin/fcg_query_lyric.fcg?'
+      + 'songmid='}${track_id}&loginUin=0&hostUin=0&format=jsonp&inCharset=utf-8`
       + '&outCharset=utf-8&notice=0&platform=yqq&jsonpCallback=MusicJsonCallback&needNewCode=0';
     return {
       success(fn) {
@@ -345,4 +345,14 @@ function build_qq() {
   };
 }
 
+if (chrome) {
+  chrome.webRequest.onBeforeSendHeaders.addListener((detail) => {
+    detail.requestHeaders.push({ name: 'Referer', value: 'https://y.qq.com/portal/playlist.html' });
+    return { requestHeaders: detail.requestHeaders };
+  }, { urls: ['*://c.y.qq.com/*/fcgi-bin/*'] }, ['blocking', 'requestHeaders', 'extraHeaders']);
+  chrome.webRequest.onBeforeSendHeaders.addListener((detail) => {
+    detail.requestHeaders.push({ name: 'Referer', value: 'https://y.qq.com/portal/player.html' });
+    return { requestHeaders: detail.requestHeaders };
+  }, { urls: ['*://c.y.qq.com/lyric/fcgi-bin/*'] }, ['blocking', 'requestHeaders', 'extraHeaders']);
+}
 const qq = build_qq(); // eslint-disable-line no-unused-vars
