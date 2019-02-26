@@ -1,6 +1,6 @@
-Listen 1 (Chrome Extension) V2.1.2
+Listen 1 (Chrome Extension) V2.1.3
 ==========
-（Last Update 12/30/2018)
+（Last Update 02/26/2019)
 
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE)
 
@@ -33,6 +33,9 @@ Install (Firefox)
 
 Changelog
 -------
+`2019-02-26`
+* fix qq music songlist not shown bug
+
 `2018-12-30`
 * fix songs missing in kuwo playlist
 * auto detect language
