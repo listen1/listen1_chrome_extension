@@ -96,7 +96,7 @@ function hack_referer_header(details) {
 
 chrome.webRequest.onBeforeSendHeaders.addListener(hack_referer_header, {
   urls: ['*://music.163.com/*', '*://*.xiami.com/*', '*://*.qq.com/*', '*://*.kugou.com/*', '*://*.bilibili.com/*', '*://*.githubusercontent.com/*'],
-}, ['requestHeaders', 'blocking']);
+}, ['requestHeaders', 'blocking','extraHeaders']);
 
 
 /**
