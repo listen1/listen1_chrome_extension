@@ -1,4 +1,4 @@
-Listen 1 (Chrome Extension) V2.1.3
+Listen 1 (Chrome Extension) V2.1.4
 ==========
 （Last Update 02/26/2019)
 

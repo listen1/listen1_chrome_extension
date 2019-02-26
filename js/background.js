@@ -94,10 +94,19 @@ function hack_referer_header(details) {
   return blockingResponse;
 }
 
-chrome.webRequest.onBeforeSendHeaders.addListener(hack_referer_header, {
-  urls: ['*://music.163.com/*', '*://*.xiami.com/*', '*://*.qq.com/*', '*://*.kugou.com/*', '*://*.bilibili.com/*', '*://*.githubusercontent.com/*'],
-}, ['requestHeaders', 'blocking','extraHeaders']);
+const urls = ['*://music.163.com/*', '*://*.xiami.com/*', '*://i.y.qq.com/*', '*://c.y.qq.com/*', '*://*.kugou.com/*', '*://*.bilibili.com/*', '*://*.githubusercontent.com/*'];
 
+try {
+  chrome.webRequest.onBeforeSendHeaders.addListener(hack_referer_header, {
+    urls: urls,
+  }, ['requestHeaders', 'blocking','extraHeaders']);
+}
+catch(err) {
+  // before chrome v72, extraHeader is not supported
+  chrome.webRequest.onBeforeSendHeaders.addListener(hack_referer_header, {
+    urls: urls,
+  }, ['requestHeaders', 'blocking']);
+}
 
 /**
  * Get tokens.
