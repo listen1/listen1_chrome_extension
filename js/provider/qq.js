@@ -8,10 +8,10 @@ function build_qq() {
   function qq_show_playlist(url, hm) {
     const offset = Number(getParameterByName('offset', url)) || 0;
     const target_url = `${'https://c.y.qq.com/splcloud/fcgi-bin/fcg_get_diss_by_tag.fcg'
-      + '?rnd=0.4781484879517406&g_tk=732560869&jsonpCallback=MusicJsonCallback'
-      + '&loginUin=0&hostUin=0&format=jsonp&inCharset=utf8&outCharset=utf-8'
-      + '&notice=0&platform=yqq&needNewCode=0'
-      + '&categoryId=10000000&sortId=5&sin='}${offset}&ein=${49 + offset}`;
+      + `?picmid=1&rnd=${Math.random()}&g_tk=732560869`
+      + '&loginUin=0&hostUin=0&format=json&inCharset=utf8&outCharset=utf-8'
+      + '&notice=0&platform=yqq.json&needNewCode=0'
+      + '&categoryId=10000000&sortId=5&sin='}${offset}&ein=${29 + offset}`;
 
     return {
       success: (fn) => {
@@ -21,7 +21,6 @@ function build_qq() {
           transformResponse: undefined,
         }).then((response) => {
           let { data } = response;
-          data = data.slice('MusicJsonCallback('.length, -')'.length);
           data = JSON.parse(data);
 
           const playlists = data.data.list.map(item => ({
