@@ -136,7 +136,13 @@ ngloWebManager.factory('loWeb', ['$rootScope', '$log', '$http', '$httpParamSeria
       if (request.url.search('/parse_url') !== -1) {
         const url = getParameterByName('url', `${request.url}?${request.data}`);
         const providers = getAllProviders();
-        const result = providers.reduce((r, provider) => (!r ? provider.parse_url(url) : r));
+        let result = undefined;
+        providers.forEach((provider)=>{
+          let r = provider.parse_url(url);
+          if (r !== undefined) {
+            result = r;
+          }
+        });
         return {
           success: fn => fn({ result }),
         };
