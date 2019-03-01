@@ -19,7 +19,7 @@ function build_kuwo() {
     const track = {
       id: `kwtrack_${song_id}`,
       title: html_decode(item.SONGNAME),
-      artist: item.ARTIST,
+      artist: html_decode(item.ARTIST),
       artist_id: `kwartist_${item.ARTISTID}`,
       album: html_decode(item.ALBUM),
       album_id: `kwalbum_${item.ALBUMID}`,
