@@ -251,7 +251,7 @@ function build_netease() {
 
 
   function is_playable(song) {
-    return ((song.status >= 0) && (song.fee !== 4));
+    return (song.fee !== 4) && (song.fee !== 1);
   }
 
   function ne_search(url, hm, se) {
