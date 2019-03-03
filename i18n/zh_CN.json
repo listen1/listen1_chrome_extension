@@ -75,6 +75,7 @@
  "_IMPORTING_PLAYLIST": "正在导入歌单...",
  "_IMPORTING_PLAYLIST_SUCCESS": "导入歌单成功",
  "_REMOVE_PLAYLIST_SUCCESS": "删除歌单成功",
+ "_REMOVE_SONG_FROM_PLAYLIST_SUCCESS": "删除歌曲成功",
  "_ADD_TO_QUEUE_SUCCESS": "添加到当前播放成功",
  "_COPYRIGHT_ISSUE": "版权原因无法播放，请搜索其他平台",
  "_ADD_TO_PLAYLIST_SUCCESS": "收藏到我的歌单成功",

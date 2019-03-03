@@ -492,7 +492,7 @@ const main = () => {
           if (index > -1) {
             $scope.songs.splice(index, 1);
           }
-          Notification.success($translate.instant('_REMOVE_PLAYLIST_SUCCESS'));
+          Notification.success($translate.instant('_REMOVE_SONG_FROM_PLAYLIST_SUCCESS'));
         });
       };
 

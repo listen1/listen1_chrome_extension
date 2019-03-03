@@ -58,7 +58,7 @@ const myplaylistFactory = () => {
     if (playlists == null) {
       return;
     }
-    const newplaylists = playlists.filter(item => item === playlist_id);
+    const newplaylists = playlists.filter(item => item !== playlist_id);
     localStorage.removeItem(playlist_id);
     localStorage.setObject('playerlists', newplaylists);
   };
@@ -95,7 +95,7 @@ const myplaylistFactory = () => {
     if (playlist == null) {
       return;
     }
-    const newtracks = playlist.tracks.filter(item => item.id === track_id);
+    const newtracks = playlist.tracks.filter(item => item.id !== track_id);
     playlist.tracks = newtracks;
     localStorage.setObject(playlist_id, playlist);
   }

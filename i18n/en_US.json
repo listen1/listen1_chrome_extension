@@ -75,6 +75,7 @@
  "_IMPORTING_PLAYLIST": "Importing playlists...",
  "_IMPORTING_PLAYLIST_SUCCESS": "Success: Import Playlists",
  "_REMOVE_PLAYLIST_SUCCESS": "Success: Remove Playlist",
+ "_REMOVE_SONG_FROM_PLAYLIST_SUCCESS": "Success: Remove Song from Playlist",
  "_ADD_TO_QUEUE_SUCCESS": "Success: Add to Queue",
  "_COPYRIGHT_ISSUE": "Fail because copyright issue, Search other platform instead",
  "_ADD_TO_PLAYLIST_SUCCESS": "Success: Add to playlist",

@@ -1,4 +1,4 @@
-Listen 1 (Chrome Extension) V2.1.4
+Listen 1 (Chrome Extension) V2.1.5
 ==========
 （Last Update 02/26/2019)
 
@@ -33,6 +33,9 @@ Install (Firefox)
 
 Changelog
 -------
+`2019-03-03`
+* fix delete single playlist destroy all playlists bug
+
 `2019-02-26`
 * fix qq music songlist not shown bug
 
