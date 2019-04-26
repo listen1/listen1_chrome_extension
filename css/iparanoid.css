@@ -126,7 +126,7 @@ svg:hover {
 /* main framework start */
 .wrap {
     display: flex;
-    min-height: 100vh;
+    height: 100vh;
     flex-direction: column;
     margin: auto;
 }
@@ -135,6 +135,7 @@ svg:hover {
 .main {
     flex: 1;
     display: flex;
+    overflow: hidden;
 }
 
 .footer {
