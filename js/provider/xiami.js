@@ -147,7 +147,7 @@ function build_xiami() {
 
   // eslint-disable-next-line no-unused-vars
   function xm_bootstrap_track(sound, track, success, failure, hm, se) {
-    const target_url = `http://www.xiami.com/song/playlist/id/${track.id.slice('xmtrack_'.length)
+    const target_url = `http://emumo.xiami.com/song/playlist/id/${track.id.slice('xmtrack_'.length)
     }/object_name/default/object_id/0/cat/json`;
     hm.get(target_url).then((response) => {
       const { data } = response;
