@@ -1,4 +1,4 @@
-Listen 1 (Chrome Extension) V2.1.5
+Listen 1 (Chrome Extension) V2.1.6
 ==========
 （Last Update 03/03/2019)
 
@@ -33,6 +33,10 @@ Install (Firefox)
 
 Changelog
 -------
+`2019-04-26`
+* fix xiami music can't play bug
+* fix footer player out of page bug
+
 `2019-03-03`
 * fix delete single playlist destroy all playlists bug
 
