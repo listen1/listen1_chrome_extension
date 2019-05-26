@@ -245,14 +245,23 @@ function build_kugou() {
     return (Math.random() * 100).toString().replace(/\D/g, '');
   }
 
+  function getRandomHexString() {
+    let result = '';
+    const letters = '0123456789abcdef';
+    for (let i = 0; i < 16; i += 1) {
+      result += letters[(Math.floor(Math.random() * 16))];
+    }
+    return result;
+  }
+
   // eslint-disable-next-line no-unused-vars
   function kg_bootstrap_track(sound, track, success, failure, hm, se) {
-    let target_url = 'https://wwwapi.kugou.com/yy/index.php?r=play/getdata';
+    let target_url = 'http://wwwapi.kugou.com/yy/index.php?r=play/getdata';
     const jQueryHeader = `jQuery1910${getRandomIntString()}_${getTimestampString()}`;
 
     const song_id = track.id.slice('kgtrack_'.length);
 
-    target_url = `${target_url}&callback=${jQueryHeader}&hash=${song_id}&_=${getTimestampString()}`;
+    target_url = `${target_url}&callback=${jQueryHeader}&hash=${song_id}&_=${getTimestampString()}&platid=4&mid=${getRandomHexString()}`;
 
     hm({
       url: target_url,
@@ -261,7 +270,7 @@ function build_kugou() {
     }).then((response) => {
       let data = response.data.slice(jQueryHeader.length + 1, response.data.length - 2);
       data = JSON.parse(data);
-      if (data.status === 1) {
+      if (data.status === 1 && data.data.play_url !== '') {
         sound.url = data.data.play_url; // eslint-disable-line no-param-reassign
         success();
       } else {

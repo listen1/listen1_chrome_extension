@@ -15,7 +15,7 @@
     "manifest_version": 2,
     "name": "Listen 1",
     "permissions": [ "notifications", "unlimitedStorage", "downloads", "storage", "contextMenus", "tabs", "cookies", "*://music.163.com/*", "*://*.xiami.com/*", "*://*.qq.com/*", "*://*.kugou.com/", "*://*.kuwo.cn/", "*://*.bilibili.com/*", "*://api.github.com/*", "*://github.com/*", "*://gist.githubusercontent.com/*", "webRequest", "webRequestBlocking"],
-    "version": "2.1.6",
+    "version": "2.2.0",
     "web_accessible_resources": [ "images/*" ],
     "commands": {
         "play_next": {
