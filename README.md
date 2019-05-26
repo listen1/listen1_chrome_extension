@@ -1,6 +1,6 @@
-Listen 1 (Chrome Extension) V2.1.6
+Listen 1 (Chrome Extension) V2.2.0
 ==========
-（最后更新于2019年04月26日）
+（最后更新于2019年05月26日）
 
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE)
 
@@ -46,6 +46,9 @@ Firefox打包安装
 
 更新日志
 -------
+`2019-05-26`
+* 修复酷狗音乐无法播放的bug
+
 `2019-04-26`
 * 修复虾米音乐无法播放的bug
 * 修复播放器未在页面底端显示的bug
