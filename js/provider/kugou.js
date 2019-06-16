@@ -114,7 +114,7 @@ function build_kugou() {
         item.album_id}`;
       hm.get(target_url).then((res) => {
         const { data: res_data } = res;
-        if (res_data.status && res_data.data !== undefined) {
+        if (res_data.status && res_data.data !== undefined && res_data.data !== null) {
           track.album = res_data.data.albumname;
         } else {
           track.album = '';
