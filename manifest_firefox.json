@@ -21,7 +21,7 @@
     "manifest_version": 2,
     "name": "Listen 1",
     "permissions": [ "notifications", "unlimitedStorage", "downloads", "storage", "contextMenus", "tabs", "cookies", "*://music.163.com/*", "*://*.xiami.com/*", "*://*.qq.com/*", "*://*.kugou.com/", "*://*.kuwo.cn/", "*://*.bilibili.com/*", "*://api.github.com/*", "*://github.com/*", "*://gist.githubusercontent.com/*", "webRequest", "webRequestBlocking"],
-    "version": "2.2.0",
+    "version": "2.2.1",
     "web_accessible_resources": [ "images/*" ],
     "content_scripts": [{
         "matches": ["https://listen1.github.io/listen1/*"],
