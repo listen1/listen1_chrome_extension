@@ -33,6 +33,9 @@ Install (Firefox)
 
 Changelog
 -------
+`2019-06-23`
+* fix connect to github.com error
+
 `2019-05-26`
 * fix kugou music can't play bug
 
