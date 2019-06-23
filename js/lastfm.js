@@ -1,11 +1,11 @@
 /* global Storage localStorage */
 /* global angular MD5 */
 function lastfm() {
-  Storage.prototype.setObject = (key, value) => {
+  localStorage.__proto__.setObject = function setObject(key, value) {
     this.setItem(key, JSON.stringify(value));
   };
 
-  Storage.prototype.getObject = (key) => {
+  localStorage.__proto__.getObject = function getObject(key) {
     const value = this.getItem(key);
     return value && JSON.parse(value);
   };
