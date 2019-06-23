@@ -6,11 +6,11 @@ function github() {
   const client_id = 'e099a4803bb1e2e773a3';
   const client_secret = '81fbfc45c65af8c0fbf2b4dae6f23f22e656cfb8';
 
-  Storage.prototype.setObject = (key, value) => {
+  localStorage.__proto__.setObject = function setObject(key, value) {
     this.setItem(key, JSON.stringify(value));
   };
 
-  Storage.prototype.getObject = (key) => {
+  localStorage.__proto__.getObject = function getObject(key) {
     const value = this.getItem(key);
     return value && JSON.parse(value);
   };

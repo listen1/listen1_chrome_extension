@@ -5,11 +5,11 @@
 /* eslint-disable no-param-reassign */
 /* eslint-disable import/no-unresolved */
 const main = () => {
-  Storage.prototype.setObject = function setObject(key, value) {
+  localStorage.__proto__.setObject = function setObject(key, value) {
     this.setItem(key, JSON.stringify(value));
   };
 
-  Storage.prototype.getObject = function getObject(key) {
+  localStorage.__proto__.getObject = function getObject(key) {
     const value = this.getItem(key);
     return value && JSON.parse(value);
   };
