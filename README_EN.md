@@ -1,4 +1,4 @@
-Listen 1 (Chrome Extension) V2.3.0
+Listen 1 (Chrome Extension) V2.3.1
 ==========
 （Last Update 06/24/2019)
 
@@ -35,6 +35,8 @@ Changelog
 -------
 `2019-06-24`
 * add migu music
+* fix kugou play bug
+* fix netease play bug
 
 `2019-06-23`
 * fix connect to github.com error

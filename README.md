@@ -1,4 +1,4 @@
-Listen 1 (Chrome Extension) V2.3.0
+Listen 1 (Chrome Extension) V2.3.1
 ==========
 （最后更新于2019年06月24日）
 
@@ -48,6 +48,8 @@ Firefox打包安装
 -------
 `2019-06-24`
 * 增加咪咕音乐
+* 修复网易音乐无法播放的bug
+* 修复酷狗音乐无法播放的bug
 
 `2019-06-23`
 * 修复无法连接到github的bug
