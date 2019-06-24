@@ -254,24 +254,18 @@ function build_kugou() {
     return result;
   }
 
-  // eslint-disable-next-line no-unused-vars
   function kg_bootstrap_track(sound, track, success, failure, hm, se) {
-    let target_url = 'http://wwwapi.kugou.com/yy/index.php?r=play/getdata';
-    const jQueryHeader = `jQuery1910${getRandomIntString()}_${getTimestampString()}`;
-
     const song_id = track.id.slice('kgtrack_'.length);
-
-    target_url = `${target_url}&callback=${jQueryHeader}&hash=${song_id}&_=${getTimestampString()}&platid=4&mid=${getRandomHexString()}`;
+    let target_url = `http://m.kugou.com/app/i/getSongInfo.php?cmd=playInfo&hash=${song_id}`;
 
     hm({
       url: target_url,
       method: 'GET',
       transformResponse: undefined,
     }).then((response) => {
-      let data = response.data.slice(jQueryHeader.length + 1, response.data.length - 2);
-      data = JSON.parse(data);
-      if (data.status === 1 && data.data.play_url !== '') {
-        sound.url = data.data.play_url; // eslint-disable-line no-param-reassign
+      data = JSON.parse(response.data);
+      if (data.url !== '') {
+        sound.url = data.url; // eslint-disable-line no-param-reassign
         success();
       } else {
         failure();
