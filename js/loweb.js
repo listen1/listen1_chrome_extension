@@ -16,13 +16,15 @@ function getProviderByName(sourceName) {
       return kuwo;
     case 'bilibili':
       return bilibili;
+    case 'migu':
+      return migu;
     default:
       return null;
   }
 }
 
 function getAllProviders() {
-  return [netease, xiami, qq, kugou, kuwo, bilibili];
+  return [netease, xiami, qq, kugou, kuwo, bilibili, migu];
 }
 
 function getProviderByItemId(itemId) {
@@ -40,6 +42,8 @@ function getProviderByItemId(itemId) {
       return kuwo;
     case 'bi':
       return bilibili;
+    case 'mg':
+      return migu;
     case 'my':
       return myplaylist;
     default:

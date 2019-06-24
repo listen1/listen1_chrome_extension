@@ -107,6 +107,9 @@ const main = () => {
     if (sourceId === 6) {
       return 'bilibili';
     }
+    if (sourceId === 7) {
+      return 'migu';
+    }
     return '';
   }
 
@@ -1205,7 +1208,8 @@ const main = () => {
 
   app.controller('InstantSearchController', ['$scope', '$http', '$timeout', '$rootScope', 'angularPlayer', 'loWeb',
     ($scope, $http, $timeout, $rootScope, angularPlayer, loWeb) => {
-      $scope.originpagelog = [1, 1, 1, 1, 1, 1, 1]; // [网易,虾米,QQ,NULL,酷狗,酷我,bilibili]
+      // notice: douban is skipped so array should plus 1
+      $scope.originpagelog = Array(getAllProviders().length+1).fill(1);  // [网易,虾米,QQ,NULL,酷狗,酷我,bilibili, migu]
       $scope.tab = 0;
       $scope.keywords = '';
       $scope.loading = false;

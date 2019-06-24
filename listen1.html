@@ -37,6 +37,7 @@
     <script type="text/javascript" src="js/provider/kugou.js"></script>
     <script type="text/javascript" src="js/provider/kuwo.js"></script>
     <script type="text/javascript" src="js/provider/bilibili.js"></script>
+    <script type="text/javascript" src="js/provider/migu.js"></script>
     <script type="text/javascript" src="js/myplaylist.js"></script>
     <script type="text/javascript" src="js/loweb.js"></script>
     <script type="text/javascript" src="js/app.js"></script>
@@ -189,6 +190,8 @@
                             <div class="source-button" ng-class="{'active':isActiveTab(5)}" ng-click="changeTab(5)">{{_KUWO_MUSIC}}</div>
                             <div class="splitter"></div>
                             <div class="source-button" ng-class="{'active':isActiveTab(6)}" ng-click="changeTab(6)">{{_BILIBILI_MUSIC}}</div>
+                            <div class="splitter"></div>
+                            <div class="source-button" ng-class="{'active':isActiveTab(7)}" ng-click="changeTab(7)">{{_MIGU_MUSIC}}</div>
                         </div>
 
                         <div class="site-wrapper-innerd" id="hotplaylist" >
@@ -218,9 +221,9 @@
                               <li class="source-button" ng-class="{'active':isActiveTab(2)}" ng-click="changeSourceTab(2)"><a>{{_QQ_MUSIC}}</a></li><div class="splitter"></div>
 <!--                               <li  ng-class="{'active':isActiveTab(3)}" ng-click="changeSourceTab(3)" ng-show="isDoubanLogin"><a>豆瓣</a></li> -->
                               <li class="source-button" ng-class="{'active':isActiveTab(4)}" ng-click="changeSourceTab(4)"><a>{{_KUGOU_MUSIC}}</a></li><div class="splitter"></div>
-                              <li class="source-button" ng-class="{'active':isActiveTab(5)}" ng-click="changeSourceTab(5)"><a>{{_KUWO_MUSIC}}</a></li>
-                              <!-- <div class="splitter"></div><li class="source-button" ng-class="{'active':isActiveTab(6)}" ng-click="changeSourceTab(6)"><a>哔哩哔哩</a></li> -->
-                              
+                              <li class="source-button" ng-class="{'active':isActiveTab(5)}" ng-click="changeSourceTab(5)"><a>{{_KUWO_MUSIC}}</a></li><div class="splitter"></div>
+                              <!--  <li class="source-button" ng-class="{'active':isActiveTab(6)}" ng-click="changeSourceTab(6)"><a>{{_BILIBILI_MUSIC}}</a></li>-->
+                             <li class="source-button" ng-class="{'active':isActiveTab(7)}" ng-click="changeSourceTab(7)"><a>{{_MIGU_MUSIC}}</a></li>
                               <svg class="searchspinner" ng-show="loading" version="1.1" id="loader-1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"  width="40px" height="40px" viewBox="0 0 40 40" enable-background="new 0 0 40 40" xml:space="preserve"> <path opacity="0.2" fill="#000" d="M20.201,5.169c-8.254,0-14.946,6.692-14.946,14.946c0,8.255,6.692,14.946,14.946,14.946 s14.946-6.691,14.946-14.946C35.146,11.861,28.455,5.169,20.201,5.169z M20.201,31.749c-6.425,0-11.634-5.208-11.634-11.634 c0-6.425,5.209-11.634,11.634-11.634c6.425,0,11.633,5.209,11.633,11.634C31.834,26.541,26.626,31.749,20.201,31.749z"/> <path fill="#000" d="M26.013,10.047l1.654-2.866c-2.198-1.272-4.743-2.012-7.466-2.012h0v3.312h0 C22.32,8.481,24.301,9.057,26.013,10.047z"> <animateTransform attributeType="xml" attributeName="transform"  type="rotate" from="0 20 20"  to="360 20 20" dur="0.6s" repeatCount="indefinite"/> </path> </svg>
 
                             </ul>
@@ -316,7 +319,7 @@
                             <p> Listen 1 {{_HOMEPAGE}}: <a open-url="'http://listen1.github.io/listen1/'"> http://listen1.github.io/listen1/ </a> </p>
                             <p> Listen 1 {{_EMAIL}}: githublisten1@gmail.com </p>
                             <p> {{_DESIGNER}}: iparanoid </p>
-                            <p> {{_VERSION}}: 2.2.1 {{_LICENSE_NOTICE}}</p>
+                            <p> {{_VERSION}}: 2.3.0 {{_LICENSE_NOTICE}}</p>
                           </div>
                         </div>
                       </div>

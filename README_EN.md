@@ -1,6 +1,6 @@
-Listen 1 (Chrome Extension) V2.2.1
+Listen 1 (Chrome Extension) V2.3.0
 ==========
-（Last Update 06/23/2019)
+（Last Update 06/24/2019)
 
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE)
 
@@ -33,6 +33,9 @@ Install (Firefox)
 
 Changelog
 -------
+`2019-06-24`
+* add migu music
+
 `2019-06-23`
 * fix connect to github.com error
 
