@@ -218,15 +218,17 @@ function build_netease() {
   }
 
   function ne_bootstrap_track(sound, track, success, failure, hm, se) {
-    const target_url = 'http://music.163.com/weapi/song/enhance/player/url?csrf_token=';
+    const target_url = 'http://music.163.com/weapi/song/enhance/player/url/v1?csrf_token=';
     const csrf = '';
     let song_id = track.id;
 
     song_id = song_id.slice('netrack_'.length);
+
     const d = {
       ids: [song_id],
-      br: 320000,
-      csrf_token: csrf,
+      level: "standard",
+      encodeType: "aac",
+      csrf_token: ""
     };
     const data = _encrypted_request(d);
 
