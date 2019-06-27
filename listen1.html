@@ -313,7 +313,14 @@
                               <button class="btn btn-primary confirm-button" ng-show="lastfm.isAuthRequested()" ng-click="lastfm.cancelAuth();">{{_CANCEL_CONNECT}}</button>
                             </div>
                           </div>
-
+                          <div class="settings-title"><span>{{_LYRIC_DISPLAY}}</span></div>
+                          <div class="settings-content">
+                            <div class="shortcut" ng-if="!isChrome" class="btn btn-primary confirm-button" >
+                              <svg class="feather" ng-show="!enableLyricFloatingWindow" ng-click="openLyricFloatingWindow(true)"><use xlink:href="images/feather-sprite.svg#square"></use></svg>
+                              <svg class="feather" ng-show="enableLyricFloatingWindow" ng-click="openLyricFloatingWindow(true)"><use xlink:href="images/feather-sprite.svg#check-square"></use></svg>
+                              <span ng-show="enableLyricFloatingWindow"></span>{{_SHOW_DESKTOP_LYRIC}}
+                            </div>
+                          </div>
                           <div class="settings-title"><span>{{_ABOUT}}<span></div>
                           <div class="settings-content">
                             <p> Listen 1 {{_HOMEPAGE}}: <a open-url="'http://listen1.github.io/listen1/'"> http://listen1.github.io/listen1/ </a> </p>

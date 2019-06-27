@@ -824,7 +824,9 @@ const main = () => {
           }, 0);
         }
         $scope.enableGlobalShortCut = localStorage.getObject('enable_global_shortcut');
+        $scope.enableLyricFloatingWindow = localStorage.getObject('enable_lyric_floating_window');
         $scope.applyGlobalShortcut();
+        $scope.openLyricFloatingWindow();
       };
 
       $scope.saveLocalSettings = () => {
@@ -1072,6 +1074,9 @@ const main = () => {
           $scope.lyricArray = parseLyric(lyric);
         });
         $scope.lastTrackId = data;
+        const { ipcRenderer } = require('electron');
+        console.log(JSON.stringify(track.title));
+        ipcRenderer.send('currentLyric', track.title);
       });
 
       $scope.$on('currentTrack:position', (event, data) => {
@@ -1093,6 +1098,8 @@ const main = () => {
             scrollTop: `${offset}px`,
           }, 500);
           $scope.lyricLineNumber = lastObject.lineNumber;
+          const { ipcRenderer } = require('electron');
+          ipcRenderer.send('currentLyric', $scope.lyricArray[lastObject.lineNumber].content);
         }
       });
 
@@ -1190,6 +1197,24 @@ const main = () => {
         // check if globalShortcuts is allowed
         localStorage.setObject('enable_global_shortcut', $scope.enableGlobalShortCut);
 
+        const { ipcRenderer } = require('electron');
+        ipcRenderer.send('control', message);
+      };
+
+      $scope.openLyricFloatingWindow = (toggle) => {
+        if (typeof chrome !== 'undefined') {
+          return;
+        }
+        let message = '';
+        if (toggle === true) {
+          $scope.enableLyricFloatingWindow = !$scope.enableLyricFloatingWindow;
+        }
+        if ($scope.enableLyricFloatingWindow === true) {
+          message = 'enable_lyric_floating_window';
+        } else {
+          message = 'disable_lyric_floating_window';
+        }
+        localStorage.setObject('enable_lyric_floating_window', $scope.enableLyricFloatingWindow);
         const { ipcRenderer } = require('electron');
         ipcRenderer.send('control', message);
       };

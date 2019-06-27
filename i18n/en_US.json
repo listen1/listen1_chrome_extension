@@ -59,6 +59,8 @@
  "_SHORTCUTS": "Shortcuts",
  "_VIEW_SHORTCUTS_LIST": "View Shortcuts List",
  "_GLOBAL_SHORTCUTS_NOTICE": "Enable Global Shortcuts: Ctrl(Cmd) + Alt + Left Arrow (Previous Track)，Ctrl(Cmd) + Alt + Right Arrow (Next Track)",
+ "_LYRIC_DISPLAY": "Lyric Display",
+ "_SHOW_DESKTOP_LYRIC": "Show desktop lyric",
  "_CONNECT_TO_LASTFM": "Connect to Last.fm",
  "_ABOUT": "About",
  "_HOMEPAGE": "Homepage",
