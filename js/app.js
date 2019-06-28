@@ -1075,7 +1075,6 @@ const main = () => {
         });
         $scope.lastTrackId = data;
         const { ipcRenderer } = require('electron');
-        console.log(JSON.stringify(track.title));
         ipcRenderer.send('currentLyric', track.title);
       });
 
