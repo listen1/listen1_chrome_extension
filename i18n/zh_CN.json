@@ -59,6 +59,8 @@
  "_SHORTCUTS": "快捷键",
  "_VIEW_SHORTCUTS_LIST": "查看快捷键列表",
  "_GLOBAL_SHORTCUTS_NOTICE": "启用全局快捷键: Ctrl(Cmd) + Alt + 左箭头 (上一首)，Ctrl(Cmd) + Alt + 右箭头 (下一首)",
+ "_LYRIC_DISPLAY": "歌词显示",
+ "_SHOW_DESKTOP_LYRIC": "显示桌面歌词",
  "_CONNECT_TO_LASTFM": "连接到last.fm",
  "_ABOUT": "关于",
  "_HOMEPAGE": "主页",
