@@ -1074,8 +1074,10 @@ const main = () => {
           $scope.lyricArray = parseLyric(lyric);
         });
         $scope.lastTrackId = data;
-        const { ipcRenderer } = require('electron');
-        ipcRenderer.send('currentLyric', track.title);
+        if (typeof chrome == 'undefined') {
+          const { ipcRenderer } = require('electron');
+          ipcRenderer.send('currentLyric', track.title);
+        }
       });
 
       $scope.$on('currentTrack:position', (event, data) => {
@@ -1097,8 +1099,10 @@ const main = () => {
             scrollTop: `${offset}px`,
           }, 500);
           $scope.lyricLineNumber = lastObject.lineNumber;
-          const { ipcRenderer } = require('electron');
-          ipcRenderer.send('currentLyric', $scope.lyricArray[lastObject.lineNumber].content);
+          if (typeof chrome == 'undefined') {
+            const { ipcRenderer } = require('electron');
+            ipcRenderer.send('currentLyric', $scope.lyricArray[lastObject.lineNumber].content);
+          }
         }
       });
 
