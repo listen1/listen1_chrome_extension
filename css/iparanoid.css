@@ -1032,6 +1032,27 @@ svg.searchspinner {
     color: #000000;
 }
 
+.footer .right-control .lyric-toggle {
+    margin-right: 30px;
+    cursor: pointer;
+}
+
+.footer .right-control .lyric-toggle .lyric-icon, .footer .right-control .lyric-toggle .lyric-icon.selected:hover {
+    border: solid 1px #7f7f7f;
+    height: 16px;
+    line-height: 16px;
+    font-size: 14px;
+    color: #7f7f7f;
+    background-color: #fff;
+    user-select: none;
+}
+
+.footer .right-control .lyric-toggle .lyric-icon.selected {
+    border: solid 1px #7f7f7f;
+    background-color: #7f7f7f;
+    color: #fff;
+}
+
 .footer .right-control .volume-ctrl {
     flex: 1;
     display: flex;

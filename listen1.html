@@ -328,7 +328,7 @@
                             <p> Listen 1 {{_HOMEPAGE}}: <a open-url="'http://listen1.github.io/listen1/'"> http://listen1.github.io/listen1/ </a> </p>
                             <p> Listen 1 {{_EMAIL}}: githublisten1@gmail.com </p>
                             <p> {{_DESIGNER}}: iparanoid </p>
-                            <p> {{_VERSION}}: 2.3.1 {{_LICENSE_NOTICE}}</p>
+                            <p> {{_VERSION}}: 2.4.0 {{_LICENSE_NOTICE}}</p>
                           </div>
                         </div>
                       </div>
@@ -467,6 +467,9 @@
                             <div class="cur" ng-style="{width : volume + '%' }"><span class="btn"><i></i></span></div>
                         </div>
                     </div>
+                </div>
+                <div ng-if="!isChrome" class="lyric-toggle">
+                  <div ng-click="openLyricFloatingWindow(true)" class="lyric-icon" ng-class="{'selected': enableLyricFloatingWindow}">词</div>
                 </div>
             </div>
             <div class="menu" ng-hide="menuHidden">
