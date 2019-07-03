@@ -59,6 +59,9 @@ function hack_referer_header(details) {
     replace_origin = false;
     add_origin = false;
   }
+  if (details.url.indexOf('.migu.cn') !== -1) {
+    referer_value = 'http://music.migu.cn/v3/music/player/audio?from=migu';
+  }
 
   let isRefererSet = false;
   let isOriginSet = false;
@@ -94,7 +97,7 @@ function hack_referer_header(details) {
   return blockingResponse;
 }
 
-const urls = ['*://music.163.com/*', '*://*.xiami.com/*', '*://i.y.qq.com/*', '*://c.y.qq.com/*', '*://*.kugou.com/*', '*://*.bilibili.com/*', '*://*.githubusercontent.com/*'];
+const urls = ['*://music.163.com/*', '*://*.xiami.com/*', '*://i.y.qq.com/*', '*://c.y.qq.com/*', '*://*.kugou.com/*', '*://*.bilibili.com/*', '*://*.migu.cn/*', '*://*.githubusercontent.com/*'];
 
 try {
   chrome.webRequest.onBeforeSendHeaders.addListener(hack_referer_header, {

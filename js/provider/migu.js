@@ -117,20 +117,27 @@ function build_migu() {
   function mg_bootstrap_track(sound, track, success, failure, hm, se) {
     let song_id = track.id;
     song_id = song_id.slice('mgtrack_'.length);
-    const target_url = 'http://m.music.migu.cn/migu/remoting/cms_detail_tag?cpid=' + song_id;
+
+    const k = "4ea5c508a6566e76240543f8feb06fd457777be39549c4016436afda65d2330e";
+    const rsaEncrypt = new JSEncrypt();
+    const publicKey = "-----BEGIN PUBLIC KEY-----\nMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC8asrfSaoOb4je+DSmKdriQJKW\nVJ2oDZrs3wi5W67m3LwTB9QVR+cE3XWU21Nx+YBxS0yun8wDcjgQvYt625ZCcgin\n2ro/eOkNyUOTBIbuj9CvMnhUYiR61lC1f1IGbrSYYimqBVSjpifVufxtx/I3exRe\nZosTByYp4Xwpb1+WAQIDAQAB\n-----END PUBLIC KEY-----";
+    rsaEncrypt.setPublicKey(publicKey);
+    const secKey = rsaEncrypt.encrypt(k);
+    const aesResult = CryptoJS.AES.encrypt(`{"copyrightId":"${song_id}"}`, k).toString();
+    const url = `http://music.migu.cn/v3/api/music/audioPlayer/getPlayInfo?dataType=2&data=${encodeURIComponent(aesResult)}&secKey=${encodeURIComponent(secKey)}`;
 
     hm({
-      url: target_url,
+      url: url,
       method: 'GET',
     }).then((response) => {
       const {
         data: res_data
       } = response;
       const {
-        listenUrl
-      } = res_data.data;
-      if (listenUrl != null) {
-        sound.url = listenUrl; // eslint-disable-line no-param-reassign
+        playUrl
+      } = res_data.walkmanInfo;
+      if (playUrl != null) {
+        sound.url = playUrl; // eslint-disable-line no-param-reassign
         success();
       } else {
         failure();
@@ -175,7 +182,7 @@ function build_migu() {
 
   function mg_lyric(url, hm, se) {
     const song_id = getParameterByName('track_id', url).split('_').pop();
-    const target_url = 'http://m.music.migu.cn/migu/remoting/cms_detail_tag?cpid=' + song_id;
+    const target_url = 'http://music.migu.cn/v3/api/music/audioPlayer/getLyric?copyrightId=' + song_id;
     return {
       success(fn) {
         hm({
@@ -186,8 +193,8 @@ function build_migu() {
             data: res_data
           } = response;
           let lrc = '';
-          if (res_data.data.lyricLrc != null) {
-            lrc = res_data.data.lyricLrc;
+          if (res_data.lyric != null) {
+            lrc = res_data.lyric;
           }
           return fn({
             lyric: lrc,
