@@ -342,22 +342,22 @@
                                 <div class="detail-head-title">
                                     <h2>{{ playlist_title }}</h2>
                                     <div class="playlist-button-list">
-                                        <div class="playlist-button playadd-button" ng-show="playlist_title!=''">
+                                        <div class="playlist-button playadd-button">
                                             <div class="play-list" ng-click="playMylist(list_id)"><span class="icon li-play-s"></span>
                                               {{_PLAY_ALL}}
                                             </div>
                                             <div class="add-list" ng-click="addMylist(list_id)"><span class="icon li-add"></span></div>
                                         </div>
-                                        <div class="playlist-button clone-button" ng-show="playlist_title!='' && !is_mine" ng-click="clonePlaylist(list_id)">
+                                        <div class="playlist-button clone-button" ng-show="!is_mine" ng-click="clonePlaylist(list_id)">
                                             <div class="play-list"><span class="icon li-songlist"></span><span>{{_ADD_TO_PLAYLIST}}</span></div>
                                         </div>
-                                        <div class="playlist-button edit-button" ng-show="playlist_title!='' && is_mine" ng-click="showDialog(3, {list_id: list_id, playlist_title: playlist_title, cover_img_url: cover_img_url})">
+                                        <div class="playlist-button edit-button" ng-show="is_mine" ng-click="showDialog(3, {list_id: list_id, playlist_title: playlist_title, cover_img_url: cover_img_url})">
                                             <div class="play-list"><svg class="feather"><use xlink:href="images/feather-sprite.svg#edit"></use></svg><span>{{_EDIT}}</span></div>
                                         </div>
-                                        <div class="playlist-button edit-button" ng-show="playlist_title!='' && !is_mine" open-url="playlist_source_url">
+                                        <div class="playlist-button edit-button" ng-show="!is_mine" open-url="playlist_source_url">
                                             <div class="play-list"><span class="icon li-link"></span><span>{{_ORIGIN_LINK}}</span></div>
                                         </div>
-                                        <div class="playlist-button edit-button" ng-show="playlist_title!='' && is_mine" ng-click="showDialog(6)">
+                                        <div class="playlist-button edit-button" ng-show="is_mine" ng-click="showDialog(6)">
                                             <div class="play-list"><svg class="feather"><use xlink:href="images/feather-sprite.svg#git-merge"></use></svg><span>{{_IMPORT}}</span></div>
                                         </div>
                                     </div>
