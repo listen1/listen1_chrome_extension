@@ -12,7 +12,6 @@ body {
   border-color: var(--windows-border-color);
   border-width: 1px;
   box-sizing: border-box;
-  border-radius: 5px;
 }
 
 /* remove focus highlight */
