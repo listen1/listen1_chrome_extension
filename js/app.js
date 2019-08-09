@@ -114,7 +114,7 @@ const main = () => {
   }
 
 
-  app.controller('TranslateController', ['$scope', '$translate', '$http', ($scope, $translate, $http) => {
+  app.controller('ProfileController', ['$scope', '$translate', '$http', ($scope, $translate, $http) => {
     let defaultLang = 'zh_CN';
     const supportLangs = ['zh_CN', 'en_US'];
     if (supportLangs.indexOf(navigator.language) !== -1) {
@@ -136,8 +136,24 @@ const main = () => {
         localStorage.setObject('language', langKey);
       });
     };
-
     $scope.setLang(defaultLang);
+
+    let defaultTheme = 'white';
+    if (localStorage.getObject('theme') !== null) {
+      defaultTheme = localStorage.getObject('theme');
+    }
+    $scope.setTheme = (theme) => {
+      var themeFiles = {
+        'white':"css/iparanoid.css",
+        'black': "css/origin.css"
+      }
+      // You can change the language during runtime
+      if(themeFiles[theme]!==undefined) {
+        document.getElementById('theme').href = themeFiles[theme];
+        localStorage.setObject('theme', theme);
+      }      
+    };
+    $scope.setTheme(defaultTheme);
   }]);
 
   // control main view of page, it can be called any place

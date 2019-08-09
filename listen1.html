@@ -13,7 +13,10 @@
     <link href="css/angular-ui-notification.css" rel="stylesheet">
     <link href="css/hotkeys.css" rel="stylesheet">
     <link href="css/icon.css" rel="stylesheet">
-    <link href="css/iparanoid.css" rel="stylesheet">
+
+    <link href="css/origin.css" rel="stylesheet" id="theme">
+    <link href="css/common.css" rel="stylesheet">
+    
     <script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
     <script type="text/javascript" src="js/vendor/angular.min.js"></script>
     <script src="js/vendor/angular-translate.min.js"></script>
@@ -49,7 +52,7 @@
 
 <body >
     <div ng-controller="PlayController as playCtrl" ng-init="loadLocalSettings()">
-    <div ng-controller="TranslateController">
+    <div ng-controller="ProfileController">
     <div ng-controller="NavigationController">
     <div class="wrap">
         <!-- dialog-->
@@ -270,6 +273,13 @@
                               <button class="language-button" ng-click="setLang('en_US')">English</button>
                             </div>
                           </div>
+                          <div class="settings-title"><span>{{_THEME}}<span></div>
+                          <div class="settings-content">
+                            <div>
+                              <button class="theme-button" ng-click="setTheme('white')">{{_THEME_WHITE}}</button>
+                              <button class="theme-button" ng-click="setTheme('black')">{{_THEME_BLACK}}</button>
+                            </div>
+                          </div>
                           <div class="settings-title"><span>{{_BACKUP_PLAYLIST}}<span></div>
                           <div class="settings-content">
                             <p>{{_BACKUP_WARNING}}</p>
@@ -328,7 +338,7 @@
                             <p> Listen 1 {{_HOMEPAGE}}: <a open-url="'http://listen1.github.io/listen1/'"> http://listen1.github.io/listen1/ </a> </p>
                             <p> Listen 1 {{_EMAIL}}: githublisten1@gmail.com </p>
                             <p> {{_DESIGNER}}: iparanoid </p>
-                            <p> {{_VERSION}}: 2.4.0 {{_LICENSE_NOTICE}}</p>
+                            <p> {{_VERSION}}: 2.5.0 {{_LICENSE_NOTICE}}</p>
                           </div>
                         </div>
                       </div>

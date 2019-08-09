@@ -85,5 +85,8 @@
  "_INPUT_NEW_PLAYLIST_TITLE": "Input New Playlist Title",
  "_FAIL_OPEN_PLAYLIST_URL": "Fail to Open Playlist url",
  "_EXAMPLE": "Example:",
- "_COMFIRM": "Confirm"
+ "_COMFIRM": "Confirm",
+ "_THEME": "Theme",
+ "_THEME_WHITE": "White Theme",
+ "_THEME_BLACK": "Black Theme"
 }

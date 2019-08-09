@@ -1,4 +1,4 @@
-Listen 1 (Chrome Extension) V2.4.0
+Listen 1 (Chrome Extension) V2.5.0
 ==========
 （Last Update 07/03/2019)
 
@@ -33,6 +33,9 @@ Install (Firefox)
 
 Changelog
 -------
+`2019-08-09`
+* add dark theme
+
 `2019-07-03`
 * fix migu play error
 

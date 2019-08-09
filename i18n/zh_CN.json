@@ -85,5 +85,8 @@
  "_INPUT_NEW_PLAYLIST_TITLE": "输入新歌单名称",
  "_FAIL_OPEN_PLAYLIST_URL": "未能打开输入的歌单地址",
  "_EXAMPLE": "例如",
-  "_COMFIRM": "确认"
+ "_COMFIRM": "确认",
+ "_THEME": "主题",
+ "_THEME_WHITE": "简约白",
+ "_THEME_BLACK": "深空灰"
 }

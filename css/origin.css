@@ -1,0 +1,74 @@
+/* global settings (theme related) */
+:root {
+  --icon-default-color: #666666;
+  --icon-highlight-color: #111111;
+
+  --text-default-color: #ffffff;
+  --text-subtitle-color: #666666;
+  --text-disable-color: #999999;
+
+  --lyric-default-color: #666666;
+
+  --link-default-color: #999999;
+  --link-highlight-color: #ffffff;
+  --link-active-color: #ffffff;
+  --link-inactive-color: rgba(255, 255, 255, 0.75);
+
+  --line-default-color: #333333;
+
+  --sidebar-background-color: #333333;
+  --sidebar-highlight-background-color: #4d4d4d;
+  --sidebar-highlight-text-color: #ffffff;
+
+  --content-background-color: #333333;
+
+  --foot-background-color: #222222;
+  --foot-border-color: #222222;
+  --footer-main-background-color: #222222;
+  --footer-player-bar-background-color: #666666;
+  --footer-player-bar-cur-background-color: #e0e0e0;
+  --footer-header-background-color: #333333;
+  --footer-menu-even-background-color: #2d2d2d;
+  --footer-menu-hover-background-color: #333333;
+  --search-input-background-color: #222222;
+
+  --window-control-border-color: #dddddd;
+
+  --important-color: #fff;
+
+  --button-background-color: #222222;
+  --button-border-color: #222222;
+  --button-hover-background-color: #444444;
+
+  --now-playing-page-background-color: #333333;
+  --now-playing-close-icon-color: #555555;
+
+  --disable-song-title-color: #b7b7b7;
+  --windows-border-color: #333333;
+
+  --default-border-radius: 2px;
+  --text-default-size: 13px;
+  --h2-title-font-size: 24px;
+
+  --songlist-even-background-color: #2d2d2d;
+  --songlist-border-color: transparent;
+
+  --player-left-icon-color: #b3b3b3;
+  --player-icon-color: #b3b3b3;
+  --player-icon-hover-color: #eeeeee;
+  --player-right-icon-color: #b3b3b3;
+  --player-right-icon-hover-color: #eeeeee;
+  --player-icon-hightlight-color: #eeeeee;
+
+  --dialog-highlight-color: #444444;
+  --dialog-background-color: #333;
+  --dialog-text-color: #ffffff;
+
+  --volume-icon-color: #b3b3b3;
+  --volume-bar-background-color: #333333;
+  --volume-bar-current-background-color: #e0e0e0;
+
+  --scroll-color: #444444;
+
+  --lyric-icon-background-color: #222222;
+}
