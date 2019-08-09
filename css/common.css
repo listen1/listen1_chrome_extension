@@ -56,10 +56,10 @@ svg {
   /*    stroke: var(--icon-default-color);*/
 }
 
-svg:hover {
-  /*    fill: var(--icon-highlight-color);*/
+/* svg:hover {
+  fill: var(--icon-highlight-color);
   stroke: var(--icon-highlight-color);
-}
+} */
 
 .icon {
   /* default icon settings */
