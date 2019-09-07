@@ -135,7 +135,7 @@ function build_migu() {
       } = response;
       const {
         playUrl
-      } = res_data.walkmanInfo;
+      } = res_data.data.hqPlayInfo;
       if (playUrl != null) {
         sound.url = playUrl; // eslint-disable-line no-param-reassign
         success();

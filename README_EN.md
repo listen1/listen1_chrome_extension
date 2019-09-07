@@ -1,6 +1,6 @@
-Listen 1 (Chrome Extension) V2.5.0
+Listen 1 (Chrome Extension) V2.5.1
 ==========
-（Last Update 08/09/2019)
+（Last Update Sep 7th, 2019)
 
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE)
 
@@ -33,6 +33,9 @@ Install (Firefox)
 
 Changelog
 -------
+`2019-09-07`
+* fix migu
+
 `2019-08-09`
 * add dark theme
 
