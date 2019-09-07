@@ -1,6 +1,6 @@
-Listen 1 (Chrome Extension) V2.5.0
+Listen 1 (Chrome Extension) V2.5.1
 ==========
-（最后更新于2019年08月09日）
+（最后更新于2019年09月07日）
 
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE)
 
@@ -46,6 +46,9 @@ Firefox打包安装
 
 更新日志
 -------
+`2019-09-07`
+* 修复migu无法播放的bug
+
 `2019-08-09`
 * 增加深色主题
 
