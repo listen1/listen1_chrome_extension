@@ -1,4 +1,4 @@
-Listen 1 (Chrome Extension) V2.5.1
+Listen 1 (Chrome Extension) V2.5.2
 ==========
 （Last Update Sep 7th, 2019)
 
@@ -33,6 +33,9 @@ Install (Firefox)
 
 Changelog
 -------
+`2019-11-27`
+* add frech language, special thanks to @Leoche
+
 `2019-09-07`
 * fix migu
 
