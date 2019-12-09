@@ -81,7 +81,6 @@
  "_REMOVE_SONG_FROM_PLAYLIST_SUCCESS": "Success: Remove Song from Playlist",
  "_ADD_TO_QUEUE_SUCCESS": "Success: Add to Queue",
  "_COPYRIGHT_ISSUE": "Fail because copyright issue, Search other platform instead",
- "_ADD_TO_PLAYLIST_SUCCESS": "Success: Add to playlist",
  "_INPUT_NEW_PLAYLIST_TITLE": "Input New Playlist Title",
  "_FAIL_OPEN_PLAYLIST_URL": "Fail to Open Playlist url",
  "_EXAMPLE": "Example:",
