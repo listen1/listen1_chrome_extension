@@ -397,12 +397,7 @@ svg {
   height: 14px;
   flex: 0 0 14px;
   margin-right: 4px;
-  stroke: var(--important-color);.icon {
-    /* default icon settings */
-    font-size: 16px;
-    cursor: pointer;
-  }
-  
+  stroke: var(--important-color);
   fill: var(--important-color);
 }
 .playlist-button-list .playlist-button .play-list .icon {
@@ -440,8 +435,6 @@ svg {
   width: 14px;
   height: 14px;
 }
-
-
 
 .playlist-button-list .playlist-button.clone-button,
 .playlist-button-list .playlist-button.edit-button {
