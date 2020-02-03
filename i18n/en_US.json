@@ -10,6 +10,8 @@
  "_PLATFORM_UNION": "Platforms",
  "_PLAYLISTS": "PLAYLISTS",
  "_MY_MUSIC": "My Music",
+ "_FAVORITED_PLAYLIST": "Favorite Playlist",
+ "_REFRESH": "refresh playlist",
  "_PLAY_ALL": "Play All",
  "_ADD_TO_PLAYLIST": "Add to Playlist",
  "_EDIT": "Edit",

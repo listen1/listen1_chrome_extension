@@ -397,7 +397,12 @@ svg {
   height: 14px;
   flex: 0 0 14px;
   margin-right: 4px;
-  stroke: var(--important-color);
+  stroke: var(--important-color);.icon {
+    /* default icon settings */
+    font-size: 16px;
+    cursor: pointer;
+  }
+  
   fill: var(--important-color);
 }
 .playlist-button-list .playlist-button .play-list .icon {
@@ -420,6 +425,13 @@ svg {
   justify-content: center;
 }
 
+.playlist-button-list .playlist-button.edit-button .play-list.favorited{
+  color: var(--important-color);
+}
+.playlist-button-list .playlist-button.edit-button .play-list.notfavorite{
+  color: var(--text-default-color);
+}
+
 .playlist-button-list .playlist-button .play-list:hover,
 .playlist-button-list .playlist-button.playadd-button .add-list:hover {
   background: var(--button-hover-background-color);
@@ -428,6 +440,8 @@ svg {
   width: 14px;
   height: 14px;
 }
+
+
 
 .playlist-button-list .playlist-button.clone-button,
 .playlist-button-list .playlist-button.edit-button {
