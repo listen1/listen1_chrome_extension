@@ -62,7 +62,7 @@ const main = () => {
     (angularPlayer, Notification, loWeb, $translate) => {
       angularPlayer.setBootstrapTrack(
         loWeb.bootstrapTrack(
-          () => { },
+          () => {},
           () => {
             const d = {
               message: $translate.instant('_COPYRIGHT_ISSUE'),
@@ -1025,7 +1025,7 @@ const main = () => {
         const track = angularPlayer.getTrack($scope.scrobbleTrackId);
         const startTimestamp = Math.round((new Date()).valueOf() / 1000);
         $scope.scrobbleTimer.start(() => {
-          lastfm.scrobble(startTimestamp, track.title, track.artist, track.album, () => { });
+          lastfm.scrobble(startTimestamp, track.title, track.artist, track.album, () => {});
         });
         // according to scrobble rule
         // http://www.last.fm/api/scrobbling
@@ -1128,7 +1128,7 @@ const main = () => {
 
         $rootScope.page_title = `▶ ${track.title} - ${track.artist}`;
         if (lastfm.isAuthorized()) {
-          lastfm.sendNowPlaying(track.title, track.artist, () => { });
+          lastfm.sendNowPlaying(track.title, track.artist, () => {});
         }
 
         if (track.lyric_url !== null) {
