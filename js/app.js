@@ -404,14 +404,6 @@ const main = () => {
             $scope.myBackup = [];
           });
         }
-        if (dialog_type === 11) {
-          $scope.dialog_title = $translate.instant('_ADD_SYNC_PLAYLIST');
-          $scope.dialog_type = 11;
-        }
-        if (dialog_type === 12) {
-          $scope.dialog_title = $translate.instant('_DELETE_SYNC_PLAYLIST');
-          $scope.dialog_type = 12;
-        }
       };
 
       $scope.chooseDialogOption = (option_id) => {
@@ -586,6 +578,9 @@ const main = () => {
           data: $httpParamSerializerJQLike({
             list_id,
           }),
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
         }).success(() => {
           $rootScope.$broadcast('myplaylist:update');
           $scope.closeWindow();
@@ -612,26 +607,6 @@ const main = () => {
           Notification.success($translate.instant('_REMOVE_PLAYLIST_SUCCESS'));
         });
       };
-
-      $scope.removeFavoritePlaylist = (list_id) => {
-        const url = '/remove_favoriteplaylist';
-
-        loWeb.post({
-          url,
-          method: 'POST',
-          data: $httpParamSerializerJQLike({
-            list_id,
-          }),
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-          },
-        }).success(() => {
-          $rootScope.$broadcast('favoriteplaylist:update');
-          // $scope.closeWindow();
-          Notification.success($translate.instant('_REMOVE_PLAYLIST_SUCCESS'));
-        });
-      };
-
 
       $scope.downloadFile = (fileName, fileType, content) => {
         window.URL = window.URL || window.webkitURL;
@@ -795,6 +770,26 @@ const main = () => {
           Notification.success($translate.instant('_ADD_TO_PLAYLIST_SUCCESS'));
         });
       };
+
+      $scope.removeFavoritePlaylist = (list_id) => {
+        const url = '/remove_favoriteplaylist';
+
+        loWeb.post({
+          url,
+          method: 'POST',
+          data: $httpParamSerializerJQLike({
+            list_id,
+          }),
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+        }).success(() => {
+          $rootScope.$broadcast('favoriteplaylist:update');
+          // $scope.closeWindow();
+          Notification.success($translate.instant('_REMOVE_PLAYLIST_SUCCESS'));
+        });
+      };
+
     },
   ]);
 
