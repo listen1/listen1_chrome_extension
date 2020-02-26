@@ -297,6 +297,15 @@ svg {
   height: 185px;
   color: var(--text-default-color);
   margin: 0 13px;
+    transition: 0.5s ease-out;
+    -webkit-transition: 0.5s ease-out;
+    -moz-transition: 0.5s ease-out;
+    -ms-transition: 0.5s ease-out;
+    -o-transition: 0.5s ease-out;
+}
+
+.playlist-covers li:hover {
+    margin-top: -8px;
 }
 
 .playlist-covers .u-cover {
@@ -1242,11 +1251,25 @@ svg.searchspinner {
 }
 
 .source-list .source-button {
-  display: inline-block;
-  color: var(--link-inactive-color);
-  cursor: pointer;
-  padding-bottom: 4px;
-  font-size: 14px;
+    display: inline-block;
+    color: var(--link-inactive-color);
+    cursor: pointer;
+    padding-bottom: 4px;
+    font-size: 14px;
+    transition: 2s ease-in-out;
+    -webkit-transition: 2s ease-in-out;
+    -moz-transition: 2s ease-in-out;
+    -ms-transition: 2s ease-in-out;
+    -o-transition: 2s ease-in-out;
+}
+
+.source-list .source-button:hover {
+    color: #323232;
+    transition: 0.5s ease-in-out;
+    -webkit-transition: 0.5s ease-in-out;
+    -moz-transition: 0.5s ease-in-out;
+    -ms-transition: 0.5s ease-in-out;
+    -o-transition: 0.5s ease-in-out;
 }
 
 .source-list .source-button.active {
