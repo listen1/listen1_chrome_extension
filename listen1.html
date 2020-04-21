@@ -169,7 +169,7 @@
                     </div>
                     <div class="search">
                     <input class="form-control search-input"
-                        id="search-input" type="text" ng-model="keywords" placeholder="{{_SEARCH_PLACEHOLDER}}" ng-model-options="{debounce: 500}">
+                        id="search-input" type="text" ng-model="keywords" placeholder="{{_SEARCH_PLACEHOLDER}}" ng-model-options="{debounce: 500}" ng-keyup="enterEvent($event)">
                     </div>
                     <div ng-class="{ 'active': (current_tag==4) && (window_url_stack.length ==0)}" ng-click="showTag(4)" class="settings">
                       <span class="icon li-setting"></span>
