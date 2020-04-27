@@ -33,7 +33,7 @@ const myplaylistFactory = () => {
     };
   }
 
-  function my_get_playlist(url, hm, se) {
+  function get_myplaylist(url, hm, se) {
     const list_id = getParameterByName('list_id', url);
     return {
       success(fn) {
@@ -177,7 +177,7 @@ const myplaylistFactory = () => {
   return {
     show_myplaylist,
     save_myplaylist,
-    get_playlist: my_get_playlist,
+    get_playlist: get_myplaylist,
     remove_myplaylist,
     add_myplaylist,
     remove_from_myplaylist,

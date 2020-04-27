@@ -767,7 +767,7 @@ const main = () => {
           },
         }).success((addResult) => {
           $rootScope.$broadcast('favoriteplaylist:update');
-          Notification.success($translate.instant('_ADD_TO_PLAYLIST_SUCCESS'));
+          Notification.success($translate.instant('_FAVORITE_PLAYLIST_SUCCESS'));
         });
       };
 
@@ -787,7 +787,7 @@ const main = () => {
         }).success(() => {
           $rootScope.$broadcast('favoriteplaylist:update');
           // $scope.closeWindow();
-          Notification.success($translate.instant('_REMOVE_PLAYLIST_SUCCESS'));
+          Notification.success($translate.instant('_UNFAVORITE_PLAYLIST_SUCCESS'));
         });
       };
 
