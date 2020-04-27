@@ -372,8 +372,8 @@
                                         <div class="playlist-button edit-button" ng-show="is_mine" ng-click="showDialog(3, {list_id: list_id, playlist_title: playlist_title, cover_img_url: cover_img_url})">
                                             <div class="play-list"><svg class="feather"><use xlink:href="images/feather-sprite.svg#edit"></use></svg><span>{{_EDIT}}</span></div>
                                         </div>
-                                        <div class="playlist-button edit-button" ng-show="!is_mine" ng-click="favoritePlaylist(list_id)">
-                                            <div class="play-list" ng-class="{'favorited':is_favorite,'notfavorite':!is_favorite}"><span class="icon li-featured-list" ></span><span>{{is_favorite?_FAVORITED:_FAVORITE}}</span></div>
+                                        <div class="playlist-button fav-button" ng-show="!is_mine" ng-click="favoritePlaylist(list_id)">
+                                            <div class="play-list" ng-class="{'favorited':is_favorite,'notfavorite':!is_favorite}"><svg class="feather"><use xlink:href="images/feather-sprite.svg#star"></use></svg><span>{{is_favorite?_FAVORITED:_FAVORITE}}</span></div>
                                         </div>
                                         <div class="playlist-button edit-button" ng-show="is_favorite" ng-click="closeWindow();showPlaylist(list_id)">
                                           <div class="play-list"><span class="icon li-loop"></span><span>{{_REFRESH_PLAYLIST}}</span></div>

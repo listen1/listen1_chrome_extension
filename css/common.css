@@ -438,17 +438,23 @@ svg {
 }
 
 .playlist-button-list .playlist-button.clone-button,
-.playlist-button-list .playlist-button.edit-button {
+.playlist-button-list .playlist-button.edit-button,
+.playlist-button-list .playlist-button.fav-button {
   flex: 0 0 auto;
 }
 
 .playlist-button-list .playlist-button.clone-button .play-list svg,
-.playlist-button-list .playlist-button.edit-button .play-list svg {
+.playlist-button-list .playlist-button.edit-button .play-list svg,
+.playlist-button-list .playlist-button.fav-button .play-list svg {
   width: 16px;
   height: 16px;
   flex: 0 0 16px;
   margin-right: 8px;
   stroke: rgb(102, 102, 102);
+}
+
+.playlist-button-list .playlist-button.fav-button .play-list.favorited svg {
+  fill: rgb(102, 102, 102);
 }
 
 .page .playlist-detail .detail-head .detail-head-title h2 {
