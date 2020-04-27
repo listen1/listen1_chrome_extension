@@ -42,6 +42,7 @@ function build_migu() {
     return {
       success(fn) {
         const list_id = getParameterByName('list_id', url).split('_').pop();
+        const list_type = getParameterByName('list_id', url).split('_')[0];
         let target_url = '';
         if (playlist_type == 'playlist') {
           target_url = `http://music.migu.cn/v3/music/playlist/${list_id}`;
@@ -70,7 +71,7 @@ function build_migu() {
             title = domObj.getElementsByClassName('thumb-img')[0].alt;
           }
           const info = {
-            id: `mgplaylist_${list_id}`,
+            id: `${list_type}_${list_id}`,
             cover_img_url: cover_url,
             title: title,
             source_url: target_url,
