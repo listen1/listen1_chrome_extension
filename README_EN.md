@@ -1,6 +1,6 @@
-Listen 1 (Chrome Extension) V2.5.2
+Listen 1 (Chrome Extension) V2.6.0
 ==========
-（Last Update Sep 7th, 2019)
+（Last Update April 27th, 2020)
 
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE)
 
@@ -33,6 +33,9 @@ Install (Firefox)
 
 Changelog
 -------
+`2020-04-27`
+* fix migu music
+
 `2019-11-27`
 * add frech language, special thanks to @Leoche
 

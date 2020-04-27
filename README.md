@@ -1,6 +1,6 @@
-Listen 1 (Chrome Extension) V2.5.2
+Listen 1 (Chrome Extension) V2.6.0
 ==========
-（最后更新于2019年11月27日）
+（最后更新于2020年04月27日）
 
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE)
 
@@ -46,6 +46,9 @@ Firefox打包安装
 
 更新日志
 -------
+`2020-04-27`
+* 修复咪咕音乐无法播放的bug
+
 `2019-11-27`
 * 加入法语支持, 特别感谢 @Leoche
 
