@@ -54,56 +54,69 @@ function getProviderByItemId(itemId) {
 ngloWebManager.factory('loWeb', ['$rootScope', '$log', '$http', '$httpParamSerializerJQLike',
   ($rootScope, $log, $http, $httpParamSerializerJQLike) => ({
     get(url) {
-      if (url.search('/show_playlist') !== -1) {
+      const path = url.split('?')[0];
+      if (path === '/show_playlist') {
         const source = getParameterByName('source', url);
         const provider = getProviderByName(source);
         return provider.show_playlist(url, $http);
       }
-      if (url.search('/playlist') !== -1) {
+      if (path === '/playlist') {
         const list_id = getParameterByName('list_id', url);
         const provider = getProviderByItemId(list_id);
         return provider.get_playlist(url, $http, $httpParamSerializerJQLike);
       }
-      if (url.search('/search') !== -1) {
+      if (path === '/search') {
         const source = getParameterByName('source', url);
         const provider = getProviderByName(source);
         return provider.search(url, $http, $httpParamSerializerJQLike);
       }
-      if (url.search('/lyric') !== -1) {
+      if (path === '/lyric') {
         const track_id = getParameterByName('track_id', url);
         const provider = getProviderByItemId(track_id);
         return provider.lyric(url, $http, $httpParamSerializerJQLike);
       }
-      if (url.search('/show_myplaylist') !== -1) {
-        return myplaylist.show_myplaylist();
+      if (path === '/show_myplaylist') {
+        return myplaylist.show_myplaylist('my');
       }
-      if(url.search('/show_favoriteplaylist') !== -1){
-        return favoriteplaylist.show_favoriteplaylist();
+      if (path === '/show_favoriteplaylist') {
+        return myplaylist.show_myplaylist('favorite');
+      }
+      
+      if (path === '/playlist_contains') {
+        const list_id = getParameterByName('list_id', url);
+        const playlist_type = getParameterByName('type', url);
+        const result = myplaylist.myplaylist_containers(playlist_type, list_id);
+        return {
+          success: fn => fn({result})
+        };
       }
       return null;
     },
     post(request) {
-      if (request.url.search('/clone_playlist') !== -1) {
+      const path = request.url.split('?')[0];
+      if (path === '/clone_playlist') {
+        const playlist_type = getParameterByName('playlist_type', `${request.url}?${request.data}`);
         const list_id = getParameterByName('list_id', `${request.url}?${request.data}`);
         const provider = getProviderByItemId(list_id);
         const url = `/playlist?list_id=${list_id}`;
         return {
           success: (fn) => {
             provider.get_playlist(url, $http, $httpParamSerializerJQLike).success((data) => {
-              myplaylist.save_myplaylist(data);
+              myplaylist.save_myplaylist(playlist_type, data);
               fn();
             });
           },
         };
       }
-      if (request.url.search('/remove_myplaylist') !== -1) {
+      if (path === '/remove_myplaylist') {
+        const playlist_type = getParameterByName('playlist_type', `${request.url}?${request.data}`);
         const list_id = getParameterByName('list_id', `${request.url}?${request.data}`);
-        myplaylist.remove_myplaylist(list_id);
+        myplaylist.remove_myplaylist(playlist_type, list_id);
         return {
           success: fn => fn(),
         };
       }
-      if (request.url.search('/add_myplaylist') !== -1) {
+      if (path === '/add_myplaylist') {
         const list_id = getParameterByName('list_id', `${request.url}?${request.data}`);
         const track_json = getParameterByName('track', `${request.url}?${request.data}`);
         const track = JSON.parse(track_json);
@@ -112,27 +125,8 @@ ngloWebManager.factory('loWeb', ['$rootScope', '$log', '$http', '$httpParamSeria
           success: fn => fn(),
         };
       }
-      if (request.url.search('/remove_favoriteplaylist') !== -1) {
-        const list_id = getParameterByName('list_id', `${request.url}?${request.data}`);
-        favoriteplaylist.remove_favoriteplaylist(list_id);
-        return {
-          success: fn => fn(),
-        };
-      }
-      if (request.url.search('/add_favoriteplaylist') !== -1) {
-        const list_id = getParameterByName('list_id', `${request.url}?${request.data}`);
-        const provider = getProviderByItemId(list_id);
-        const url = `/playlist?list_id=${list_id}`;
-        return {
-          success: (fn) => {
-            provider.get_playlist(url, $http, $httpParamSerializerJQLike).success((data) => {
-              favoriteplaylist.save_favoriteplaylist(data);
-              fn();
-            });
-          },
-        };
-      }
-      if (request.url.search('/remove_track_from_myplaylist') !== -1) {
+
+      if (path === '/remove_track_from_myplaylist') {
         const list_id = getParameterByName('list_id', `${request.url}?${request.data}`);
         const track_id = getParameterByName('track_id', `${request.url}?${request.data}`);
         myplaylist.remove_from_myplaylist(list_id, track_id);
@@ -140,7 +134,7 @@ ngloWebManager.factory('loWeb', ['$rootScope', '$log', '$http', '$httpParamSeria
           success: fn => fn(),
         };
       }
-      if (request.url.search('/create_myplaylist') !== -1) {
+      if (path === '/create_myplaylist') {
         const list_title = getParameterByName('list_title', `${request.url}?${request.data}`);
         const track_json = getParameterByName('track', `${request.url}?${request.data}`);
         const track = JSON.parse(track_json);
@@ -151,7 +145,7 @@ ngloWebManager.factory('loWeb', ['$rootScope', '$log', '$http', '$httpParamSeria
           },
         };
       }
-      if (request.url.search('/edit_myplaylist') !== -1) {
+      if (path === '/edit_myplaylist') {
         const list_id = getParameterByName('list_id', `${request.url}?${request.data}`);
         const title = getParameterByName('title', `${request.url}?${request.data}`);
         const cover_img_url = getParameterByName('cover_img_url', `${request.url}?${request.data}`);
@@ -160,7 +154,7 @@ ngloWebManager.factory('loWeb', ['$rootScope', '$log', '$http', '$httpParamSeria
           success: fn => fn(),
         };
       }
-      if (request.url.search('/parse_url') !== -1) {
+      if (path === '/parse_url') {
         const url = getParameterByName('url', `${request.url}?${request.data}`);
         const providers = getAllProviders();
         let result = undefined;
@@ -174,7 +168,7 @@ ngloWebManager.factory('loWeb', ['$rootScope', '$log', '$http', '$httpParamSeria
           success: fn => fn({ result }),
         };
       }
-      if (request.url.search('/merge_playlist') !== -1) {
+      if (path === '/merge_playlist') {
         const source = getParameterByName('source', `${request.url}?${request.data}`);
         const target = getParameterByName('target', `${request.url}?${request.data}`);
         const tarData = (localStorage.getObject(target)).tracks;

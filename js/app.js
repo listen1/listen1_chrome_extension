@@ -244,14 +244,11 @@ const main = () => {
           $scope.playlist_source_url = data.info.source_url;
           $scope.list_id = data.info.id;
           $scope.is_mine = (data.info.id.slice(0, 2) === 'my');
-          let playlists = localStorage.getObject('favoriteplayerlists');
-          $scope.is_favorite = 0;
-          for (let i in playlists) {
-            if (data.info.id == playlists[i]) {
-              $scope.is_favorite = 1;
-              break;
-            }
-          }
+          const isfavUrl = '/playlist_contains?type=favorite&list_id='+data.info.id;
+          loWeb.get(isfavUrl).success((res) => {
+            $scope.is_favorite = res.result;
+          });
+
           $scope.window_type = 'list';
         });
       };
@@ -576,6 +573,7 @@ const main = () => {
           url,
           method: 'POST',
           data: $httpParamSerializerJQLike({
+            playlist_type: 'my',
             list_id,
           }),
           headers: {
@@ -596,6 +594,7 @@ const main = () => {
           method: 'POST',
           data: $httpParamSerializerJQLike({
             list_id,
+            playlist_type: 'my'
           }),
           headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
@@ -757,9 +756,10 @@ const main = () => {
       }
       $scope.addFavoritePlaylist = (list_id) => {
         loWeb.post({
-          url: '/add_favoriteplaylist',
+          url: '/clone_playlist',
           method: 'POST',
           data: $httpParamSerializerJQLike({
+            playlist_type: 'favorite',
             list_id,
           }),
           headers: {
@@ -772,13 +772,14 @@ const main = () => {
       };
 
       $scope.removeFavoritePlaylist = (list_id) => {
-        const url = '/remove_favoriteplaylist';
+        const url = '/remove_myplaylist';
 
         loWeb.post({
           url,
           method: 'POST',
           data: $httpParamSerializerJQLike({
             list_id,
+            playlist_type: 'favorite'
           }),
           headers: {
             'Content-Type': 'application/x-www-form-urlencoded',

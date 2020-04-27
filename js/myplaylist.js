@@ -1,9 +1,23 @@
 /* global localStorage getParameterByName */
 const myplaylistFactory = () => {
-  function show_myplaylist() {
+  function getPlaylistObjectKey(playlist_type){
+    let key = '';
+    if (playlist_type == 'my') {
+      key = 'playlists';
+    }
+    else if (playlist_type == 'favorite'){
+      key = 'favoriteplayerlists';
+    }
+    return key;
+  }
+  function show_myplaylist(playlist_type) {
     return {
       success(fn) {
-        let playlists = localStorage.getObject('playerlists');
+        let key = getPlaylistObjectKey(playlist_type);
+        if (key == '') {
+          return fn({result:[]});
+        }
+        let playlists = localStorage.getObject(key);
         if (playlists == null) {
           playlists = [];
         }
@@ -39,28 +53,46 @@ const myplaylistFactory = () => {
       s4()}-${s4()}${s4()}${s4()}`;
   }
 
-  const save_myplaylist = (playlist) => {
-    let playlists = localStorage.getObject('playerlists');
+  const save_myplaylist = (playlist_type, playlist) => {
+    let key = getPlaylistObjectKey(playlist_type);
+    if (key == '') {
+      return;
+    }
+    let playlists = localStorage.getObject(key);
     if (playlists == null) {
       playlists = [];
     }
     // update listid
-    const playlist_id = `myplaylist_${guid()}`;
-    playlist.info.id = playlist_id; // eslint-disable-line no-param-reassign
-    playlist.is_mine = 1; // eslint-disable-line no-param-reassign
+    let playlist_id = '';
+    if (playlist_type === 'my') {
+      playlist_id = `myplaylist_${guid()}`;
+      playlist.info.id = playlist_id;
+      playlist.is_mine = 1; // eslint-disable-line no-param-reassign
+    }
+    else if (playlist_type == 'favorite') {
+      playlist_id = playlist.info.id;
+      playlist.is_fav = 1;
+      // remove all tracks info, cause favorite playlist always load latest
+      delete playlist.tracks;
+    }
+    
     playlists.push(playlist_id);
-    localStorage.setObject('playerlists', playlists);
+    localStorage.setObject(key, playlists);
     localStorage.setObject(playlist_id, playlist);
   };
 
-  const remove_myplaylist = (playlist_id) => {
-    const playlists = localStorage.getObject('playerlists');
+  const remove_myplaylist = (playlist_type, playlist_id) => {
+    let key = getPlaylistObjectKey(playlist_type);
+    if (key == '') {
+      return;
+    }
+    const playlists = localStorage.getObject(key);
     if (playlists == null) {
       return;
     }
     const newplaylists = playlists.filter(item => item !== playlist_id);
     localStorage.removeItem(playlist_id);
-    localStorage.setObject('playerlists', newplaylists);
+    localStorage.setObject(key, newplaylists);
   };
 
   function add_myplaylist(playlist_id, track) {
@@ -118,8 +150,9 @@ const myplaylistFactory = () => {
     } else {
       playlist.tracks = [track];
     }
-
-    save_myplaylist(playlist);
+    
+    // notice: create only used by my playlist, favorite created by clone interface
+    save_myplaylist('my', playlist);
   }
 
   function edit_myplaylist(playlist_id, title, cover_img_url) {
@@ -132,6 +165,15 @@ const myplaylistFactory = () => {
     localStorage.setObject(playlist_id, playlist);
   }
 
+  function myplaylist_containers(playlist_type, list_id) {
+    let key = getPlaylistObjectKey(playlist_type);
+    if (key == '') {
+      return false;
+    }
+    let playlist = localStorage.getObject(list_id);
+    return playlist !== null && playlist.is_fav;
+  }
+
   return {
     show_myplaylist,
     save_myplaylist,
@@ -141,6 +183,7 @@ const myplaylistFactory = () => {
     remove_from_myplaylist,
     create_myplaylist,
     edit_myplaylist,
+    myplaylist_containers,
   };
 };
 

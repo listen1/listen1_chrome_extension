@@ -421,7 +421,7 @@ svg {
 }
 
 .playlist-button-list .playlist-button.edit-button .play-list.favorited{
-  color: var(--important-color);
+  color: var(--text-default-color);
 }
 .playlist-button-list .playlist-button.edit-button .play-list.notfavorite{
   color: var(--text-default-color);
