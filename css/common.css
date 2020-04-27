@@ -308,7 +308,6 @@ svg {
   border: solid 1px var(--line-default-color);
   margin-bottom: 2px;
   cursor: pointer;
-  height: 140px;
 }
 
 .playlist-covers .u-cover .bottom {
