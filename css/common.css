@@ -420,6 +420,13 @@ svg {
   justify-content: center;
 }
 
+.playlist-button-list .playlist-button.edit-button .play-list.favorited{
+  color: var(--important-color);
+}
+.playlist-button-list .playlist-button.edit-button .play-list.notfavorite{
+  color: var(--text-default-color);
+}
+
 .playlist-button-list .playlist-button .play-list:hover,
 .playlist-button-list .playlist-button.playadd-button .add-list:hover {
   background: var(--button-hover-background-color);

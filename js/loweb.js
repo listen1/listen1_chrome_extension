@@ -77,6 +77,9 @@ ngloWebManager.factory('loWeb', ['$rootScope', '$log', '$http', '$httpParamSeria
       if (url.search('/show_myplaylist') !== -1) {
         return myplaylist.show_myplaylist();
       }
+      if(url.search('/show_favoriteplaylist') !== -1){
+        return favoriteplaylist.show_favoriteplaylist();
+      }
       return null;
     },
     post(request) {
@@ -107,6 +110,26 @@ ngloWebManager.factory('loWeb', ['$rootScope', '$log', '$http', '$httpParamSeria
         myplaylist.add_myplaylist(list_id, track);
         return {
           success: fn => fn(),
+        };
+      }
+      if (request.url.search('/remove_favoriteplaylist') !== -1) {
+        const list_id = getParameterByName('list_id', `${request.url}?${request.data}`);
+        favoriteplaylist.remove_favoriteplaylist(list_id);
+        return {
+          success: fn => fn(),
+        };
+      }
+      if (request.url.search('/add_favoriteplaylist') !== -1) {
+        const list_id = getParameterByName('list_id', `${request.url}?${request.data}`);
+        const provider = getProviderByItemId(list_id);
+        const url = `/playlist?list_id=${list_id}`;
+        return {
+          success: (fn) => {
+            provider.get_playlist(url, $http, $httpParamSerializerJQLike).success((data) => {
+              favoriteplaylist.save_favoriteplaylist(data);
+              fn();
+            });
+          },
         };
       }
       if (request.url.search('/remove_track_from_myplaylist') !== -1) {
