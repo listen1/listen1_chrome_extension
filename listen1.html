@@ -375,7 +375,7 @@
                                         <div class="playlist-button fav-button" ng-show="!is_mine" ng-click="favoritePlaylist(list_id)">
                                             <div class="play-list" ng-class="{'favorited':is_favorite,'notfavorite':!is_favorite}"><svg class="feather"><use xlink:href="images/feather-sprite.svg#star"></use></svg><span>{{is_favorite?_FAVORITED:_FAVORITE}}</span></div>
                                         </div>
-                                        <div class="playlist-button edit-button" ng-show="is_favorite" ng-click="closeWindow();showPlaylist(list_id)">
+                                        <div class="playlist-button edit-button" ng-show="isChrome && is_favorite" ng-click="closeWindow();showPlaylist(list_id)">
                                           <div class="play-list"><span class="icon li-loop"></span><span>{{_REFRESH_PLAYLIST}}</span></div>
                                         </div>
                                         <div class="playlist-button edit-button" ng-show="!is_mine" open-url="playlist_source_url">
