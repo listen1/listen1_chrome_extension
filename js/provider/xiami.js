@@ -49,10 +49,8 @@ function build_xiami() {
   function xm_get_token(callback) {
     const domain = 'https://www.xiami.com';
     const name = 'xm_sg_tk';
-    let cookieProvider = null;
     if (typeof chrome !== 'undefined') {
-      cookieProvider = chrome;
-      cookieProvider.cookies.get({
+      cookieGet({
         url: domain,
         name,
       }, (cookie) => {
@@ -63,8 +61,7 @@ function build_xiami() {
       });
     } else {
       const remote = require('electron').remote; // eslint-disable-line
-      cookieProvider = remote.session.defaultSession;
-      cookieProvider.cookies.get({
+      cookieGet({
         domain: '.xiami.com',
         name,
       }, (err, cookie) => {

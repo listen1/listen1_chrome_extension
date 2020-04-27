@@ -122,33 +122,30 @@ function build_netease() {
     const domain = 'https://music.163.com';
     const nuidName = '_ntes_nuid';
     const nnidName = '_ntes_nnid';
-    let cookieProvider = null;
     let env = null;
     if (typeof chrome !== 'undefined') {
-      cookieProvider = chrome;
       env = 'chrome';
     } else {
       const remote = require('electron').remote; // eslint-disable-line
-      cookieProvider = remote.session.defaultSession;
       env = 'electron';
     }
-    cookieProvider.cookies.get({
+    cookieGet({
       url: domain,
       name: nuidName,
     }, (arg1, arg2) => {
-      if (((env === 'chrome') && (arg1 == null)) || ((env === 'electron' && arg2.length === 0))) {
+      if (((env === 'chrome') && (arg1 == null)) || ((env === 'electron' && arg2.length == 0))) {
         const nuidValue = _create_secret_key(32);
         const nnidValue = `${nuidValue},${(new Date()).getTime()}`;
         // netease default cookie expire time: 100 years
         const expire = ((new Date()).getTime() + 1e3 * 60 * 60 * 24 * 365 * 100) / 1000;
 
-        cookieProvider.cookies.set({
+        cookieSet({
           url: domain,
           name: nuidName,
           value: nuidValue,
           expirationDate: expire,
         }, (cookie) => { // eslint-disable-line no-unused-vars
-          cookieProvider.cookies.set({
+          cookieSet({
             url: domain,
             name: nnidName,
             value: nnidValue,
