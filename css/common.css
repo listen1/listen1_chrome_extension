@@ -453,6 +453,7 @@ svg {
 
 .page .playlist-detail .detail-head .detail-head-title h2 {
   font-size: var(--h2-title-font-size);
+  height: 33px;
 }
 /* page playlist detail end */
 
