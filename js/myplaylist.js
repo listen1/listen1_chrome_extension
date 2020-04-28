@@ -3,7 +3,7 @@ const myplaylistFactory = () => {
   function getPlaylistObjectKey(playlist_type){
     let key = '';
     if (playlist_type == 'my') {
-      key = 'playlists';
+      key = 'playerlists';
     }
     else if (playlist_type == 'favorite'){
       key = 'favoriteplayerlists';
