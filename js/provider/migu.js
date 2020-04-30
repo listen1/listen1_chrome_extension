@@ -124,7 +124,9 @@ function build_migu() {
     const publicKey = "-----BEGIN PUBLIC KEY-----\nMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC8asrfSaoOb4je+DSmKdriQJKW\nVJ2oDZrs3wi5W67m3LwTB9QVR+cE3XWU21Nx+YBxS0yun8wDcjgQvYt625ZCcgin\n2ro/eOkNyUOTBIbuj9CvMnhUYiR61lC1f1IGbrSYYimqBVSjpifVufxtx/I3exRe\nZosTByYp4Xwpb1+WAQIDAQAB\n-----END PUBLIC KEY-----";
     rsaEncrypt.setPublicKey(publicKey);
     const secKey = rsaEncrypt.encrypt(k);
-    const aesResult = CryptoJS.AES.encrypt(`{"copyrightId":"${song_id}"}`, k).toString();
+    // type parameter for music quality: 1: normal 2: hq 3: sq
+    const aesResult = CryptoJS.AES.encrypt(`{"copyrightId":"${song_id}","type":2,"auditionsFlag":0}`, k).toString();
+
     const url = `http://music.migu.cn/v3/api/music/audioPlayer/getPlayInfo?dataType=2&data=${encodeURIComponent(aesResult)}&secKey=${encodeURIComponent(secKey)}`;
 
     hm({
