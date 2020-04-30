@@ -1,4 +1,4 @@
-Listen 1 (Chrome Extension) V2.7.1
+Listen 1 (Chrome Extension) V2.7.2
 ==========
 （Last Update April 27th, 2020)
 
@@ -42,6 +42,9 @@ Install (Firefox)
 
 Changelog
 -------
+`2020-04-30`
+* fix migu poor music quality bug
+
 `2020-04-27`
 * support adding playlist to favorite, special thanks to @zhenyiLiang
 * fix migu music
