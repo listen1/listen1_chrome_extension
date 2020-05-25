@@ -1175,18 +1175,22 @@ const main = () => {
         }
       });
 
+      function togglePlayPause() {
+        if (angularPlayer.isPlayingStatus()) {
+          // if playing then pause
+          angularPlayer.pause();
+        } else {
+          // else play if not playing
+          angularPlayer.play();
+        }
+      }
+
       // define keybind
       hotkeys.add({
         combo: 'p',
         description: '播放/暂停',
         callback() {
-          if (angularPlayer.isPlayingStatus()) {
-            // if playing then pause
-            angularPlayer.pause();
-          } else {
-            // else play if not playing
-            angularPlayer.play();
-          }
+          togglePlayPause();
         },
       });
 
@@ -1298,6 +1302,24 @@ const main = () => {
           } else if (message === 'left') {
             angularPlayer.prevTrack();
           }
+        });
+      }
+
+      if (typeof chrome === 'undefined') {
+        require('electron').ipcRenderer.on('togglePlayPause', (event, message) => {
+          togglePlayPause();
+        });
+      }
+
+      if (typeof chrome === 'undefined') {
+        require('electron').ipcRenderer.on('prevTrack', (event, message) => {
+          angularPlayer.prevTrack();
+        });
+      }
+
+      if (typeof chrome === 'undefined') {
+        require('electron').ipcRenderer.on('nextTrack', (event, message) => {
+          angularPlayer.nextTrack();
         });
       }
     },
