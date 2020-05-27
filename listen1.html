@@ -102,7 +102,7 @@
             <!-- open playlist dialog-->
             <div class="dialog-open-url" ng-show="dialog_type==5">
               <div class="form-group">
-                <label>{{_PLAYLIST_LINK}}</label>
+                <label>{{_PLAYLIST_LINK}}/{{_PLAYLIST_TITLE}}</label>
                 <input class="form-control" type="text" placeholder="{{_EXAMPLE}}http://www.xiami.com/collect/198267231" ng-model="dialog_url" />
               </div>
               <button class="btn btn-primary confirm-button" ng-click="openUrl(dialog_url);closeDialog();dialog_url='';">{{_COMFIRM}}</button>

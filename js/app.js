@@ -368,7 +368,8 @@ const main = () => {
           $scope.dialog_type = 4;
         }
         if (dialog_type === 5) {
-          $scope.dialog_title = $translate.instant('_OPEN_PLAYLIST');
+          $scope.dialog_title = $translate.instant('_OPEN_PLAYLIST') +
+                                '/' + $translate.instant('_CREATE_PLAYLIST');
           $scope.dialog_type = 5;
         }
         if (dialog_type === 6) {
@@ -726,6 +727,7 @@ const main = () => {
       });
 
       $scope.openUrl = (url) => {
+        $scope.newlist_title = url;
         loWeb.post({
           url: '/parse_url',
           method: 'POST',
@@ -740,7 +742,8 @@ const main = () => {
           if (result !== undefined) {
             $scope.showPlaylist(result.id);
           } else {
-            Notification.info($translate.instant('_FAIL_OPEN_PLAYLIST_URL'));
+            $scope.createAndAddPlaylist();
+            //Notification.info($translate.instant('_FAIL_OPEN_PLAYLIST_URL'));
           }
         });
       };
