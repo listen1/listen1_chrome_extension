@@ -74,7 +74,6 @@ svg {
   overflow-y: scroll;
   scrollbar-width: thin;
   scrollbar-color: var(--scroll-color) var(--content-background-color);
-
 }
 
 /* scroll bar style */
