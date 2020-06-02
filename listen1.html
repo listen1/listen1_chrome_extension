@@ -356,7 +356,7 @@
                     <div class="page" ng-hide="is_window_hidden==1">
                         <div class="playlist-detail" ng-show="window_type=='list'">
                             <div class="detail-head">
-                                <div class="detail-head-cover"><img ng-src="{{ cover_img_url }}"></div>
+                                <div class="detail-head-cover"><img ng-src="{{ cover_img_url }}" err-src="https://y.gtimg.cn/mediastyle/global/img/singer_300.png"/></div>
                                 <div class="detail-head-title">
                                     <h2>{{ playlist_title }}</h2>
                                     <div class="playlist-button-list">
@@ -420,7 +420,7 @@
 
                             <div class="playsong-detail">
                                 <div class="detail-head">
-                                    <div class="detail-head-cover"><img ng-src="{{ currentPlaying.img_url  }}"></div>
+                                    <div class="detail-head-cover"><img ng-src="{{ currentPlaying.img_url  }}" err-src="https://y.gtimg.cn/mediastyle/global/img/album_300.png"/></div>
                                     <div class="detail-head-title">
                                         <!--<a title="加入收藏" class="clone" ng-click="showDialog(0, currentPlaying)">收藏</a>
 <a open-url="currentPlaying.source_url" title="原始链接" class="link">原始链接</a>--></div>
@@ -452,7 +452,7 @@
             <div class="main-info">
                 <div class="logo-banner" ng-if="playlist.length == 0"><svg class="logo" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="#666666" stroke="#666666" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><polygon points="7 4 7 19 16 19 16 16 10 16 10 4"></polygon><polygon points="13 4 13 13 16 13 16 4"></polygon></svg></div>
                 <img
-                    class="cover" ng-if="playlist.length > 0" ng-src="{{ currentPlaying.img_url }}" ng-click="toggleWindow('/now_playing')">
+                    class="cover" ng-if="playlist.length > 0" ng-src="{{ currentPlaying.img_url }}" err-src="https://y.gtimg.cn/mediastyle/global/img/album_300.png"/ ng-click="toggleWindow('/now_playing')">
                     <div class="detail" ng-if="playlist.length > 0">
 
                         <div class="ctrl">
