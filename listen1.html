@@ -54,7 +54,7 @@
     <div ng-controller="PlayController as playCtrl" ng-init="loadLocalSettings()">
     <div ng-controller="ProfileController">
     <div ng-controller="NavigationController">
-    <div class="wrap">
+    <div class="wrap" ng-if="!enableMiniPlayer">
         <!-- dialog-->
         <div class="shadow" ng-hide="is_dialog_hidden==1"></div>
         <div class="dialog" ng-hide="is_dialog_hidden==1" ng-style="myStyle">
@@ -144,7 +144,7 @@
           </div>
         </div>
 
-        <div class="main" ng-controller="MyPlayListController">
+        <div class="main" ng-if="!enableMiniPlayer" ng-controller="MyPlayListController">
             <div class="sidebar">
                 <div class="flex-scroll-wrapper">
                 <div class="menu-control"></div>
@@ -443,7 +443,7 @@
                 </div>
             </div>
         </div>
-        <div class="footer">
+        <div class="footer" ng-if="!enableMiniPlayer">
             <div class="left-control">
               <span class="icon li-previous" prev-track=""></span>
               <span class="icon li-play play" ng-class="isPlaying? 'li-pause': 'li-play'"  play-pause-toggle=""></span>
@@ -493,7 +493,9 @@
                     </div>
                 </div>
                 <div ng-if="!isChrome" class="lyric-toggle">
-                  <div ng-click="openLyricFloatingWindow(true)" class="lyric-icon" ng-class="{'selected': enableLyricFloatingWindow}">词</div>
+                  <span ng-click="openLyricFloatingWindow(true)" class="lyric-icon" ng-class="{'selected': enableLyricFloatingWindow}">词</span>
+                  <span ng-click="toggleMiniPlayer(true)" class="icon li-enlarge"></span>
+                  </div>
                 </div>
             </div>
             <div class="menu" ng-hide="menuHidden">
@@ -518,6 +520,56 @@
                     </li>
                 </ul>
             </div>
+        </div>
+        <div class="footer" ng-if="enableMiniPlayer">
+            <div class="mini-player">
+              <div class="main-info">
+                <div class="logo-banner" ng-if="playlist.length == 0"><svg class="logo" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="#666666" stroke="#666666" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><polygon points="7 4 7 19 16 19 16 16 10 16 10 4"></polygon><polygon points="13 4 13 13 16 13 16 4"></polygon></svg></div>
+                <img
+                    class="cover" ng-if="playlist.length > 0" ng-src="{{ currentPlaying.img_url }}" ng-click="toggleWindow('/now_playing')">
+                    <div class="detail" ng-if="playlist.length > 0">
+
+                        <div class="ctrl">
+                          <a title="{{ settings.playmode | playmode_title }}(s)" ng-click="changePlaymode()">
+                            <span ng-show="settings.playmode == 0" class="icon li-loop"></span>
+                            <span ng-show="settings.playmode == 1" class="icon li-random-loop"></span>
+                            <span ng-show="settings.playmode == 2" class="icon li-single-cycle"></span>
+                          </a>
+                        </div>
+
+                        <div class="title">{{ currentPlaying.title }}</div>
+                        <div class="more-info">
+                            <div class="current">{{ currentPosition }}</div>
+                            <div class="singer"><a ng-click="showPlaylist(currentPlaying.artist_id)">{{ currentPlaying.artist }}</a> - <a ng-click="showPlaylist(currentPlaying.album_id)">{{ currentPlaying.album }}</a></div>
+                            <div class="total"> {{ currentDuration }}</div>
+                        </div>
+                        <div class="playbar">
+                            <div class="barbg" id="progressbar" mode="play" draggable="">
+                                <!-- <div class="rdy" ng-style="{width : myProgress + '%' }"></div>-->
+                                <div class="cur" ng-style="{width : myProgress + '%' }"><span class="btn"><i></i></span></div>
+                            </div>
+                        </div>
+                    </div>
+            </div>
+            <div class="control-panel">
+                <span class="icon li-previous" prev-track=""></span>
+                <span class="icon li-play play" ng-class="isPlaying? 'li-pause': 'li-play'"  play-pause-toggle=""></span>
+                <span class="icon li-next" next-track=""></span>
+                <div class="volume-ctrl" volume-wheel="">
+                  <span class="icon"  ng-class="mute? 'li-mute': 'li-volume'" ng-click="toggleMuteStatus()"></span>
+                    <div class="m-pbar volume">
+                        <div class="barbg" id="volumebar" mode="volume" draggable="">
+                            <div class="cur" ng-style="{width : volume + '%' }"><span class="btn"><i></i></span></div>
+                        </div>
+                    </div>
+                </div>
+                <div ng-if="!isChrome" class="window-control" style="display: flex">
+                    <span ng-click="openLyricFloatingWindow(true)" class="lyric-icon" ng-class="{'selected': enableLyricFloatingWindow}">词</span>
+                    <span ng-click="toggleMiniPlayer(true)" class="icon li-enlarge"></span>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
     </div>
     </div>

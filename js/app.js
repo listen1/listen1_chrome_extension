@@ -897,8 +897,10 @@ const main = () => {
         }
         $scope.enableGlobalShortCut = localStorage.getObject('enable_global_shortcut');
         $scope.enableLyricFloatingWindow = localStorage.getObject('enable_lyric_floating_window');
+        $scope.enableMiniPlayer = localStorage.getObject('enable_mini_player');
         $scope.applyGlobalShortcut();
         $scope.openLyricFloatingWindow();
+        $scope.toggleMiniPlayer($scope.enableMiniPlayer);
       };
 
       $scope.saveLocalSettings = () => {
@@ -1294,6 +1296,24 @@ const main = () => {
           message = 'disable_lyric_floating_window';
         }
         localStorage.setObject('enable_lyric_floating_window', $scope.enableLyricFloatingWindow);
+        const { ipcRenderer } = require('electron');
+        ipcRenderer.send('control', message);
+      };
+
+      $scope.toggleMiniPlayer = (toggle) => {
+        if (typeof chrome !== 'undefined') {
+          return;
+        }
+        let message = '';
+        if (toggle === true) {
+          $scope.enableMiniPlayer = !$scope.enableMiniPlayer;
+        }
+        if ($scope.enableMiniPlayer === true) {
+          message = 'enable_mini_player';
+        } else {
+          message = 'disable_mini_player';
+        }
+        localStorage.setObject('enable_mini_player', $scope.enableMiniPlayer);
         const { ipcRenderer } = require('electron');
         ipcRenderer.send('control', message);
       };

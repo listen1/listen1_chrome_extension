@@ -87,3 +87,12 @@
 .li-featured-list:before {
   content: "\e914";
 }
+.li-enlarge:before {
+  content: "\e98b";
+}
+.li-shrink:before {
+  content: "\e98c";
+}
+.li-download:before {
+  content: "\e9c7";
+}
