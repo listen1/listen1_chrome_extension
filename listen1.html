@@ -15,6 +15,7 @@
 
     <link href="css/origin.css" rel="stylesheet" id="theme" />
     <link href="css/common.css" rel="stylesheet" />
+    <link href="css/font-awesome.min.css" rel="stylesheet">
 
     <script>
       if (typeof module === 'object') {
@@ -61,6 +62,7 @@
     <script>
       if (window.module) module = window.module;
     </script>
+    <script src="../../../listen1_chrome_extension/js/app.js"></script>
   </head>
 
   <body>
@@ -2095,7 +2097,7 @@
                                   >{{ song.album |limitTo:30}}</a
                                 >
                               </div>
-
+                              
                               <div class="tools">
                                 <a
                                   title="{{_ADD_TO_QUEUE}}"
@@ -2125,6 +2127,11 @@
                                   ng-show="options"
                                   ><span class="icon li-link"></span
                                 ></a>
+                                <a title="下载"
+                                   class="source-button"
+                                   ng-show="options"
+                                   ng-click="downloadSong(song)"
+                                ><span class="icon fa fa-download"></span></a>
                               </div>
                             </li>
                             <li
@@ -2653,6 +2660,11 @@
                               </div>
                             </div>
                           </div>
+                          <div class="playlist-search navigation" style="border-bottom:none">
+                            <input class="form-control search-input"
+                                   id="search-input-in-playlist" type="text" ng-model="keywords_in_playlist" placeholder="搜索歌单音乐" ng-model-options="{debounce: 500}" ng-keyup="void(0)">
+
+                          </div>
                         </div>
                       </div>
                       <ul class="detail-songlist">
@@ -2665,7 +2677,7 @@
                           <div class="tools">{{_OPERATION}}</div>
                         </li>
                         <li
-                          ng-repeat="song in songs track by $index"
+                          ng-repeat="song in filter_keyword_songs(songs) track by $index"
                           ng-class-odd="'odd'"
                           ng-class-even="'even'"
                           ng-mouseenter="options=true"
@@ -2714,6 +2726,11 @@
                               ng-show="options && !is_local"
                               ><span class="icon li-link"></span
                             ></a>
+                            <a title="下载"
+                               class="source-button"
+                               ng-show="options"
+                               ng-click="downloadSong(song)"
+                            ><span class="icon fa fa-download"></span></a>
                           </div>
                         </li>
                       </ul>
@@ -2874,7 +2891,6 @@
                       ></span>
                     </a>
                   </div>
-
                   <div class="title">
                     <span
                       ng-if="currentPlaying.source === 'xiami'"

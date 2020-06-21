@@ -762,7 +762,7 @@ ul.detail-songlist li .album {
 }
 
 ul.detail-songlist li .tools {
-  flex: 0 0 110px;
+  flex: 0 0 130px;
   display: flex;
   align-items: center;
 }

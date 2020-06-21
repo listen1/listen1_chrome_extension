@@ -201,12 +201,20 @@ const MediaService = {
     };
   },
 
+// <<<<<<< HEAD
   addMyPlaylist(id, track) {
     const newPlaylist = myplaylist.add_myplaylist(id, track);
     return {
       success: (fn) => fn(newPlaylist),
     };
   },
+// =======
+        /*function successCallback() {
+          track.download_url = sound.url;
+          playerSuccessCallback();
+          success();
+        }*/
+// >>>>>>> 697fa68 (音乐下载)
 
   addPlaylist(id, tracks) {
     const provider = getProviderByItemId(id);
@@ -265,7 +273,10 @@ const MediaService = {
   },
 
   bootstrapTrack(sound, track, playerSuccessCallback, playerFailCallback) {
-    const successCallback = playerSuccessCallback;
+    const successCallback = function () {
+      track.download_url = sound.url;
+      playerSuccessCallback();
+    };
 
     function failureCallback() {
       if (localStorage.getObject('enable_auto_choose_source') === false) {

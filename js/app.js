@@ -600,6 +600,125 @@ const main = () => {
         link.remove();
       };
 
+      $scope.downloadSong = (song) => {
+        let bootStrapTrack = loWeb.bootstrapTrack; //l1Player.getBootstrapTrack();
+        bootStrapTrack(song, song, function() {
+          $scope.downloadMusic(song);
+        }, ()=>{});
+      };
+
+      $scope.songClickSelected = function(song){
+        if (!$scope.selected_songs) {
+          $scope.selected_songs = [];
+        }
+        let index = $scope.selected_songs.indexOf(song);
+        if (index >= 0) {
+          $scope.selected_songs.splice(index, 1);
+        } else {
+          $scope.selected_songs.push(song);
+        }
+      }
+
+      $scope.selectedAll = function () {
+        if (!$scope.selected_songs) {
+          $scope.selected_songs = [];
+        }
+        if ($scope.selected_songs.length === $scope.songs.length) {
+          // clear
+          $scope.selected_songs = [];
+        } else {
+          // add all
+          $scope.selected_songs = [];
+          for (var i = 0 ; i < $scope.songs.length; ++i) {
+            let song = $scope.songs[i];
+            $scope.selected_songs.push(song);
+          }
+        }
+      }
+
+      $scope.songIsSelected = function (song) {
+        if (!$scope.selected_songs) {
+          return false;
+        }
+        return $scope.selected_songs.indexOf(song) >= 0;
+      }
+
+      $scope.downloadSelected = function () {
+        if (!$scope.selected_songs) {
+          return;
+        }
+        for (var i = 0 ; i < $scope.selected_songs.length; ++i) {
+          let song = $scope.selected_songs[i];
+          $scope.downloadSong(song);
+        }
+      }
+
+      $scope.downloadMusic = (currentPlaying) => {
+        console.log(currentPlaying);
+        /**
+         * 获取 blob
+         * @param  {String} url 目标文件地址
+         * @return {Promise}
+         */
+        function getBlob(url) {
+          return new Promise(resolve => {
+            const xhr = new XMLHttpRequest();
+
+            xhr.open('GET', url, true);
+            xhr.responseType = 'blob';
+            xhr.onload = () => {
+              if (xhr.status === 200) {
+                resolve(xhr.response);
+              }
+            };
+
+            xhr.send();
+          });
+        }
+
+        /**
+         * 保存
+         * @param  {Blob} blob
+         * @param  {String} filename 想要保存的文件名称
+         */
+        function saveAs(blob, filename) {
+          if (window.navigator.msSaveOrOpenBlob) {
+            navigator.msSaveBlob(blob, filename);
+          } else {
+            const link = document.createElement('a');
+            const body = document.querySelector('body');
+
+            link.href = window.URL.createObjectURL(blob);
+            link.download = filename;
+
+            // fix Firefox
+            link.style.display = 'none';
+            body.appendChild(link);
+
+            link.click();
+            body.removeChild(link);
+
+            window.URL.revokeObjectURL(link.href);
+          }
+        }
+
+        getBlob(currentPlaying.download_url).then(blob => {
+          let filename = currentPlaying.title;
+          if (currentPlaying.artist) {
+            filename = filename + '-' + currentPlaying.artist;
+          }
+          // 文件加上后缀名
+          let url_name = (currentPlaying.download_url.split('?')[0]);
+          let tmp = url_name.split('.');
+          if (tmp.length) {
+            let ext = tmp[tmp.length - 1];
+            filename = filename + '.' + ext;
+          }
+          saveAs(blob, filename);
+        });
+
+      };
+
       $scope.backupMySettings = () => {
         const items = {};
         Object.keys(localStorage).forEach((key) => {
@@ -1616,6 +1735,8 @@ const main = () => {
       $scope.originpagelog = Array(getAllProviders().length + 2).fill(1);
       $scope.tab = 0;
       $scope.keywords = '';
+      $scope.keywords_in_playlist = '';
+      $scope.selected_songs = [];
       $scope.loading = false;
       $scope.curpagelog = $scope.originpagelog.slice(0);
       $scope.totalpagelog = $scope.originpagelog.slice(0);
@@ -1667,6 +1788,24 @@ const main = () => {
           // scroll back to top when finish searching
           document.querySelector('.site-wrapper-innerd').scrollTo({ top: 0 });
         });
+      }
+
+      $scope.filter_keyword_songs = (songs) => {
+        if (!$scope.keywords_in_playlist) {
+          return songs;
+        }
+        let new_songs = [];
+        for (let i = 0; i < songs.length; i += 1) {
+          let song = songs[i];
+          if (song.title.search($scope.keywords_in_playlist) !== -1) {
+            new_songs.push(song);
+          }else if (song.artist.search($scope.keywords_in_playlist) !== -1) {
+            new_songs.push(song);
+          }else if (song.album.search($scope.keywords_in_playlist) !== -1) {
+            new_songs.push(song);
+          }
+        }
+        return new_songs;
       }
 
       $scope.changeSourceTab = (newTab) => {
