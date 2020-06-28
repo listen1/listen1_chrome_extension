@@ -245,6 +245,10 @@ function build_qq() {
       .then((response) => {
         let { data } = response;
         data = JSON.parse(data);
+        if(data.req_0.data.midurlinfo[0].purl==''){
+          // vip
+          return failure();
+        }
         const url = data.req_0.data.sip[0] + data.req_0.data.midurlinfo[0].purl;
         sound.url = url; // eslint-disable-line no-param-reassign
         success();

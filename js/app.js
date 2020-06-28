@@ -60,6 +60,14 @@ const main = () => {
 
   app.run(['angularPlayer', 'Notification', 'loWeb', '$translate',
     (angularPlayer, Notification, loWeb, $translate) => {
+      function getAutoChooseSource(){
+        var enableAutoChooseSource = localStorage.getObject('enable_auto_choose_source');
+        if(enableAutoChooseSource === null) {
+          // default on
+          enableAutoChooseSource = true;
+        }
+        return enableAutoChooseSource;
+      }
       angularPlayer.setBootstrapTrack(
         loWeb.bootstrapTrack(
           () => {},
@@ -70,6 +78,7 @@ const main = () => {
             };
             Notification.info(d);
           },
+          getAutoChooseSource
         ),
       );
     },
@@ -894,6 +903,11 @@ const main = () => {
         }
         $scope.enableGlobalShortCut = localStorage.getObject('enable_global_shortcut');
         $scope.enableLyricFloatingWindow = localStorage.getObject('enable_lyric_floating_window');
+        $scope.enableAutoChooseSource = localStorage.getObject('enable_auto_choose_source');
+        if($scope.enableAutoChooseSource === null) {
+          // default on
+          $scope.enableAutoChooseSource = true;
+        }
         $scope.applyGlobalShortcut();
         $scope.openLyricFloatingWindow();
       };
@@ -1300,6 +1314,13 @@ const main = () => {
           }
         });
       }
+
+      $scope.setAutoChooseSource = (toggle) => {
+        if (toggle === true) {
+          $scope.enableAutoChooseSource = !$scope.enableAutoChooseSource;
+        }
+        localStorage.setObject('enable_auto_choose_source', $scope.enableAutoChooseSource);
+      };
     },
   ]);
 

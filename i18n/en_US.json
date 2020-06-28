@@ -94,5 +94,7 @@
  "_COMFIRM": "Confirm",
  "_THEME": "Theme",
  "_THEME_WHITE": "White Theme",
- "_THEME_BLACK": "Black Theme"
+ "_THEME_BLACK": "Black Theme",
+ "_AUTO_CHOOSE_SOURCE": "Auto Choose Source",
+ "_AUTO_CHOOSE_SOURCE_NOTICE": "If play fail, auto choose source from other music platform."
 }

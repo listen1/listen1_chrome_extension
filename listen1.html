@@ -248,8 +248,8 @@
                               </li>
                               <li ng-repeat="song in result" ng-class-odd="'odd'" ng-class-even="'even'" ng-mouseenter="options=true" ng-mouseleave="options=false">
                                   <div class="title">
-                                    <a ng-if="song.disabled" class="disabled" ng-click="copyrightNotice()">{{ song.title |limitTo:30}}</a>
-                                    <a ng-if="!song.disabled" add-and-play="song">{{ song.title |limitTo:30}}</a>
+                                   <!-- <a ng-if="song.disabled" class="disabled" ng-click="copyrightNotice()">{{ song.title |limitTo:30}}</a> -->
+                                    <a add-and-play="song">{{ song.title |limitTo:30}}</a>
                                   </div>
                                   <div class="artist"><a ng-click="showPlaylist(song.artist_id)">{{ song.artist |limitTo:20}}</a></div>
                                   <div class="album"><a ng-click="showPlaylist(song.album_id)">{{ song.album |limitTo:30}}</a></div>
@@ -288,6 +288,14 @@
                               <button class="theme-button" ng-click="setTheme('black')">{{_THEME_BLACK}}</button>
                             </div>
                           </div>
+                          <div class="settings-title"><span>{{_AUTO_CHOOSE_SOURCE}} (Beta)<span></div>
+                          <div class="settings-content">
+                            <div class="shortcut" class="btn btn-primary confirm-button" >
+                              <svg class="feather" ng-show="!enableAutoChooseSource" ng-click="setAutoChooseSource(true)"><use xlink:href="images/feather-sprite.svg#square"></use></svg>
+                              <svg class="feather" ng-show="enableAutoChooseSource" ng-click="setAutoChooseSource(true)"><use xlink:href="images/feather-sprite.svg#check-square"></use></svg>
+                              {{_AUTO_CHOOSE_SOURCE_NOTICE}}
+                            </div>
+                          </div>
                           <div class="settings-title"><span>{{_BACKUP_PLAYLIST}}<span></div>
                           <div class="settings-content">
                             <p>{{_BACKUP_WARNING}}</p>
@@ -321,7 +329,7 @@
                               <div class="shortcut" ng-if="!isChrome" class="btn btn-primary confirm-button" >
                                 <svg class="feather" ng-show="!enableGlobalShortCut" ng-click="applyGlobalShortcut(true)"><use xlink:href="images/feather-sprite.svg#square"></use></svg>
                                 <svg class="feather" ng-show="enableGlobalShortCut" ng-click="applyGlobalShortcut(true)"><use xlink:href="images/feather-sprite.svg#check-square"></use></svg>
-                                <span ng-show="enableGlobalShortCut"></span>{{_GLOBAL_SHORTCUTS_NOTICE}}
+                                {{_GLOBAL_SHORTCUTS_NOTICE}}
                                 </div>
                           </div>
                           <div class="settings-title"><span>{{_CONNECT_TO_LASTFM}}<span></div>
@@ -396,7 +404,10 @@
                                     <div class="tools">{{_OPERATION}}</div>
                                 </li>
                                 <li ng-repeat="song in songs track by $index" ng-class-odd="'odd'" ng-class-even="'even'" ng-mouseenter="options=true" ng-mouseleave="options=false">
-                                    <div class="title"><a class="disabled" ng-if="song.disabled" ng-click="copyrightNotice()">{{ song.title }}</a><a ng-if="!song.disabled" add-and-play="song">{{ song.title }}</a></div>
+                                    <div class="title">
+                                      <!-- <a class="disabled" ng-if="song.disabled" ng-click="copyrightNotice()">{{ song.title }}</a> -->
+                                      <a add-and-play="song">{{ song.title }}</a>
+                                    </div>
                                     <div class="artist"><a ng-click="showPlaylist(song.artist_id)">{{ song.artist }}</a></div>
                                     <div class="album"><a ng-click="showPlaylist(song.album_id)">{{ song.album }}</a></div>
                                     <div class="tools">
