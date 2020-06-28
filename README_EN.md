@@ -1,6 +1,6 @@
-Listen 1 (Chrome Extension) V2.7.2
+Listen 1 (Chrome Extension) V2.8.0
 ==========
-（Last Update April 27th, 2020)
+（Last Update June 28th, 2020)
 
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE)
 
@@ -42,6 +42,9 @@ Install (Firefox)
 
 Changelog
 -------
+`2020-06-28`
+* fix netease music only show 10 tracks bug
+
 `2020-04-30`
 * fix migu poor music quality bug
 
