@@ -127,31 +127,83 @@ function build_kuwo() {
     kw_add_song_pic_in_track(track, params, callback);
   }
 
+  function kw_get_token(callback) {
+    const domain = 'http://www.kuwo.cn';
+    const name = 'kw_token';
+    if (typeof chrome !== 'undefined') {
+      cookieGet({
+        url: domain,
+        name,
+      }, (cookie) => {
+        if (cookie == null) {
+          return callback('');
+        }
+        return callback(cookie.value);
+      });
+    } else {
+      cookieGet({
+        domain: '.kuwo.cn',
+        name,
+      }, (err, cookie) => {
+        if (cookie.length === 0) {
+          return callback('');
+        }
+        return callback(cookie[0].value);
+      });
+    }
+  }
+
   function kw_search(url, hm, se) { // eslint-disable-line no-unused-vars
-    // API From https://blog.csdn.net/u011354613/article/details/52756467
     const keyword = getParameterByName('keywords', url);
     let curpage = getParameterByName('curpage', url);
-    // page number is started from 0
-    curpage -= 1;
-    const target_url = `${'http://search.kuwo.cn/r.s?'
-      + 'ft=music&itemset=web_2013&client=kt'
-      + '&rformat=json&encoding=utf8'}${
-      '&all={0}&pn={1}&rn=20'.replace('{0}', keyword).replace('{1}', curpage)}`;
 
     return {
       success(fn) {
+        kw_get_token((token) => {
+
+        const target_url = `http://www.kuwo.cn/api/www/search/searchMusicBykeyWord?key=${keyword}&pn=${curpage}&rn=30`;
+        const token_url = 'http://www.kuwo.cn/search/list?key=';
         hm({
           url: target_url,
           method: 'GET',
           ransformResponse: undefined,
+          headers: {
+            'csrf': token,
+          }
         }).then((response) => {
           let { data } = response;
-          data = JSON.parse(fix_json(data));
-          async_process_list(data.abslist, kw_render_search_result_item, [hm], (err, tracks) => fn({
-            result: tracks,
-            total: data.TOTAL,
-          }));
+          if (data.success===false) {
+            // token not valid
+            return hm({
+              url: token_url,
+              method: 'GET',
+              ransformResponse: undefined,
+            }).then((response) => {
+              // now token valid, call myself
+              return kw_search(url, hm, se).success(fn);
+            });
+          }
+
+          let tracks = data.data.list.map((item)=>{
+            const musicrid = item.musicrid.split('_')[1];
+            const track = {
+              id: `kwtrack_${musicrid}`,
+              title: html_decode(item.name),
+              artist: item.artist,
+              artist_id: `kwartist_${item.artistid}`,
+              album: html_decode(item.album),
+              album_id: `kwalbum_${item.albumid}`,
+              source: 'kuwo',
+              source_url: `http://www.kuwo.cn/yinyue/${musicrid}`,
+              img_url: item.albumpic,
+              url: `xmtrack_${musicrid}`,
+              lyric_url: musicrid,
+            };
+            return track;
+          })
+          fn({result:tracks, total: data.data.total});
         });
+      });
       },
     };
   }
