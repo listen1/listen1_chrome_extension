@@ -1,6 +1,6 @@
-Listen 1 (Chrome Extension) V2.7.2
+Listen 1 (Chrome Extension) V2.8.0
 ==========
-（最后更新于2020年04月30日）
+（最后更新于2020年06月28日）
 
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE)
 
@@ -55,6 +55,9 @@ Firefox打包安装
 
 更新日志
 -------
+`2020-06-28`
+* 修复网易歌单仅显示10首歌曲的问题
+
 `2020-04-30`
 * 修复咪咕音质较差的问题
 
