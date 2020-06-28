@@ -97,7 +97,7 @@ function hack_referer_header(details) {
   return blockingResponse;
 }
 
-const urls = ['*://music.163.com/*', '*://*.xiami.com/*', '*://i.y.qq.com/*', '*://c.y.qq.com/*', '*://*.kugou.com/*', '*://*.bilibili.com/*', '*://*.migu.cn/*', '*://*.githubusercontent.com/*'];
+const urls = ['*://music.163.com/*', '*://*.xiami.com/*', '*://i.y.qq.com/*', '*://c.y.qq.com/*', '*://*.kugou.com/*', '*://*.kuwo.cn/*', '*://*.bilibili.com/*', '*://*.migu.cn/*', '*://*.githubusercontent.com/*'];
 
 try {
   chrome.webRequest.onBeforeSendHeaders.addListener(hack_referer_header, {
