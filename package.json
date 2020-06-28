@@ -1,7 +1,7 @@
 {
   "name": "listen1_chrome_extension",
-  "version": "2.1.1",
-  "description": "Listen 1 (Chrome Extension) V2.1.1 ========== （最后更新于2018年12月24日）",
+  "version": "2.8.0",
+  "description": "one for all free music in china",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

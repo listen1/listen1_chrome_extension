@@ -160,6 +160,83 @@ function build_netease() {
     });
   }
 
+  function async_process_list(data_list, handler, handler_extra_param_list, callback) {
+    const fnDict = {};
+    data_list.forEach((item, index) => {
+      fnDict[index] = cb => handler(index, item, handler_extra_param_list, cb);
+    });
+    async.parallel(fnDict,
+      (err, results) => callback(null, data_list.map((item, index) => results[index])));
+  }
+
+  function ng_render_playlist_result_item(index, item, params, callback) {
+    const hm = params[0];
+    const se = params[1];
+    const target_url = 'https://music.163.com/weapi/v3/song/detail';
+    const queryIds = [item.id, item.id];
+    const d = {
+      c: '[' + queryIds.map(id => ('{"id":' + id + '}')).join(',') + ']',
+      ids: '[' + queryIds.join(',') + ']'
+    }
+    const data = _encrypted_request(d);
+    hm({
+      url: target_url,
+      method: 'POST',
+      data: se(data),
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+    }).then((response)=>{
+      track_json = response.data.songs[0];
+      const track = {
+        id: `netrack_${track_json.id}`,
+        title: track_json.name,
+        artist: track_json.ar[0].name,
+        artist_id: `neartist_${track_json.ar[0].id}`,
+        album: track_json.al.name,
+        album_id: `nealbum_${track_json.al.id}`,
+        source: 'netease',
+        source_url: `http://music.163.com/#/song?id=${track_json.id}`,
+        img_url: track_json.al.picUrl,
+        url: `netrack_${track_json.id}`,
+      };
+      return callback(null, track);
+    });
+  }
+
+  function ng_parse_playlist_tracks(playlist_tracks, hm, se, callback) {
+    const target_url = 'https://music.163.com/weapi/v3/song/detail';
+    const track_ids = playlist_tracks.map(i=>i.id);
+    const d = {
+      c: '[' + track_ids.map(id => ('{"id":' + id + '}')).join(',') + ']',
+      ids: '[' + track_ids.join(',') + ']'
+    }
+    const data = _encrypted_request(d);
+    hm({
+      url: target_url,
+      method: 'POST',
+      data: se(data),
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+    }).then((response)=>{
+      const tracks = response.data.songs.map(track_json=>({
+        id: `netrack_${track_json.id}`,
+        title: track_json.name,
+        artist: track_json.ar[0].name,
+        artist_id: `neartist_${track_json.ar[0].id}`,
+        album: track_json.al.name,
+        album_id: `nealbum_${track_json.al.id}`,
+        source: 'netease',
+        source_url: `http://music.163.com/#/song?id=${track_json.id}`,
+        img_url: track_json.al.picUrl,
+        url: `netrack_${track_json.id}`,
+      }));
+
+      return callback(null, tracks);
+    });
+  }
+
   function ne_get_playlist(url, hm, se) {
     // special thanks for @Binaryify
     // https://github.com/Binaryify/NeteaseCloudMusicApi
@@ -192,22 +269,21 @@ function build_netease() {
               title: res_data.playlist.name,
               source_url: `http://music.163.com/#/playlist?id=${list_id}`,
             };
-            const tracks = res_data.playlist.tracks.map(track_json => ({
-              id: `netrack_${track_json.id}`,
-              title: track_json.name,
-              artist: track_json.ar[0].name,
-              artist_id: `neartist_${track_json.ar[0].id}`,
-              album: track_json.al.name,
-              album_id: `nealbum_${track_json.al.id}`,
-              source: 'netease',
-              source_url: `http://music.163.com/#/song?id=${track_json.id}`,
-              img_url: track_json.al.picUrl,
-              url: `netrack_${track_json.id}`,
-            }));
-            return fn({
-              info,
+
+            // request all tracks to fetch song info
+            ng_parse_playlist_tracks(res_data.playlist.trackIds, hm, se,
+            (err, tracks) => fn({
               tracks,
-            });
+              info,
+            }));
+
+            // request every tracks to fetch song info
+            // async_process_list(res_data.playlist.trackIds, ng_render_playlist_result_item, [hm, se],
+            //   (err, tracks) => fn({
+            //     tracks,
+            //     info,
+            //   }));
+
           });
         });
       },
