@@ -184,22 +184,96 @@ ngloWebManager.factory('loWeb', ['$rootScope', '$log', '$http', '$httpParamSeria
       }
       return null;
     },
-    bootstrapTrack(success, failure) {
+    bootstrapTrack(success, failure, getAutoChooseSource) {
+      function getTrackFromSame(track, source, callback){
+        if (track.source === source){
+          // come from same source, no need to check
+          return callback(null);
+        }
+        //TODO: better query method
+        const keyword = track.title + ' ' + track.artist;
+        const curpage = 1;
+        const url = `/search?source=${source}&keywords=${keyword}&curpage=${curpage}`;
+        const provider = getProviderByName(source);
+        provider.search(url, $http, $httpParamSerializerJQLike).success((data)=>{
+          for(var i = 0; i < data.result.length; i++) {
+            const searchTrack = data.result[i];
+            // compare search track and track to check if they are same
+            // TODO: better similar compare method (duration, md5)
+            if (!searchTrack.disable){
+              if ((searchTrack.title === track.title) && (searchTrack.artist === track.artist)){
+                return callback(searchTrack);
+              }
+            }
+          };
+          return callback(null);
+        });
+      }
+
+      function getUrlFromTrack(track, source, callback) {
+        const provider = getProviderByName(source);
+        const soundInfo = {}
+        provider.bootstrap_track(soundInfo, track, () => {
+          callback(soundInfo.url);
+        },
+        ()=>{
+          callback(null);
+        }, $http, $httpParamSerializerJQLike);
+      }
+
+      function getUrlFromSame(track, source, callback){
+        getTrackFromSame(track, source, (sameTrack)=>{
+          if (sameTrack === null) {
+            return callback(null);
+          }
+          return getUrlFromTrack(sameTrack, source, callback);
+        });
+      }
+
       return (sound, track, playerSuccessCallback, playerFailCallback) => {
-        // always refresh url, becaues url will expires
-        // if (sound.url.search('http') !== -1){
-        //     callback();
-        //     return;
-        // }
+
         function successCallback() {
           playerSuccessCallback();
           success();
         }
 
         function failureCallback() {
-          playerFailCallback();
-          failure();
+          if(!getAutoChooseSource()){
+            playerFailCallback();
+            failure();
+            return 
+          }
+          const failover_source_list = ['kuwo', 'qq', 'migu'];
+
+          function makeFn(track, source){
+            return function(cb){
+              getUrlFromSame(track, source, function(url){
+                // pass url as error to return instant when any of source available
+                return cb(url);
+              });
+            }
+          }
+          const getUrlFnList = [];
+          for (var i=0; i<failover_source_list.length; i++){
+            getUrlFnList.push(makeFn(track, failover_source_list[i]));
+          }
+
+          async.parallel(
+            getUrlFnList,
+            function(err) {
+              if(err){
+                // use error to make instant return, error contains url
+                sound.url = err;
+                playerSuccessCallback();
+                success();
+                return;
+              }
+
+              playerFailCallback();
+              failure();
+            });
         }
+
         const { source } = track;
         const provider = getProviderByName(source);
 

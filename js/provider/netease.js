@@ -173,7 +173,7 @@ function build_netease() {
     const hm = params[0];
     const se = params[1];
     const target_url = 'https://music.163.com/weapi/v3/song/detail';
-    const queryIds = [item.id, item.id];
+    const queryIds = [item.id];
     const d = {
       c: '[' + queryIds.map(id => ('{"id":' + id + '}')).join(',') + ']',
       ids: '[' + queryIds.join(',') + ']'
