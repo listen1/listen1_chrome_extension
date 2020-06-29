@@ -185,7 +185,6 @@ ngloWebManager.factory('loWeb', ['$rootScope', '$log', '$http', '$httpParamSeria
       return null;
     },
     bootstrapTrack(success, failure, getAutoChooseSource) {
-
       function getTrackFromSame(track, source, callback){
         if (track.source === source){
           // come from same source, no need to check
@@ -209,7 +208,6 @@ ngloWebManager.factory('loWeb', ['$rootScope', '$log', '$http', '$httpParamSeria
           };
           return callback(null);
         });
-        
       }
 
       function getUrlFromTrack(track, source, callback) {
@@ -250,7 +248,8 @@ ngloWebManager.factory('loWeb', ['$rootScope', '$log', '$http', '$httpParamSeria
           function makeFn(track, source){
             return function(cb){
               getUrlFromSame(track, source, function(url){
-                return cb(null, url);
+                // pass url as error to return instant when any of source available
+                return cb(url);
               });
             }
           }
@@ -261,19 +260,18 @@ ngloWebManager.factory('loWeb', ['$rootScope', '$log', '$http', '$httpParamSeria
 
           async.parallel(
             getUrlFnList,
-            function(err, results) {
-                for(var i=0; i<results.length; i++){
-                  if (results[i] !== null){
-                    sound.url = results[i];
-                    playerSuccessCallback();
-                    success();
-                    return;
-                  }
-                }
-                playerFailCallback();
-                failure();
+            function(err) {
+              if(err){
+                // use error to make instant return, error contains url
+                sound.url = err;
+                playerSuccessCallback();
+                success();
+                return;
+              }
+
+              playerFailCallback();
+              failure();
             });
-       
         }
 
         const { source } = track;
