@@ -1,6 +1,6 @@
-Listen 1 (Chrome Extension) V2.8.0
+Listen 1 (Chrome Extension) V2.9.0
 ==========
-（最后更新于2020年06月28日）
+（最后更新于2020年06月29日）
 
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE)
 
@@ -33,6 +33,10 @@ Listen1诞生的初衷从不是和大公司的争夺版权利益，而是为了�
 
 [![imgur](https://i.imgur.com/dIVFtor.gif)]()
 
+V2.9.0 新特性：自动切换播放源(Beta)
+
+当一首歌的播放源不可用时，会自动搜索其他平台，获得可用的播放源。避免了用户手动搜索的麻烦。
+
 还有精选歌单哦。
 
 Chrome安装
@@ -55,6 +59,9 @@ Firefox打包安装
 
 更新日志
 -------
+`2020-06-29`
+* 支持播放失败时自动切换播放源(Beta)
+
 `2020-06-28`
 * 修复网易歌单仅显示10首歌曲的问题
 

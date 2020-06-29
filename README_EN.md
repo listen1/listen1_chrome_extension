@@ -1,6 +1,6 @@
-Listen 1 (Chrome Extension) V2.8.0
+Listen 1 (Chrome Extension) V2.9.0
 ==========
-（Last Update June 28th, 2020)
+（Last Update June 29th, 2020)
 
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE)
 
@@ -19,6 +19,10 @@ Supported music platform:
 * Migu
 
 Search songs, listen songs from multiple platforms, that's `Listen 1`.
+
+V2.9.0 New Feature: Auto choose source
+
+when music play source url is not available, auto choose source from other sources.
 
 Making your own playlist is also supported.
 
@@ -42,6 +46,9 @@ Install (Firefox)
 
 Changelog
 -------
+`2020-06-29`
+* support auto choose source when play fail
+
 `2020-06-28`
 * fix netease music only show 10 tracks bug
 
