@@ -989,6 +989,10 @@ svg.searchspinner {
   cursor: pointer;
 }
 
+div.visited{
+  color: green;
+}
+
 .footer .menu ul.menu-list li .tools {
   flex: 0 0 63px;
   width: 63px;

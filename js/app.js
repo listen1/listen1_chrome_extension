@@ -1703,6 +1703,7 @@ const main = () => {
       $scope.result = [];
       $scope.tab = 0;
       $scope.loading = true;
+      $rootScope.list_id='';
 
       $scope.changeTab = (newTab) => {
         $scope.tab = newTab;
