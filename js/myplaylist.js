@@ -65,7 +65,7 @@ const myplaylistFactory = () => {
     // update listid
     let playlist_id = '';
     if (playlist_type === 'my') {
-      playlist_id = `myplaylist_${guid()}`;
+      playlist_id = `myplaylist_${guid()}_sourceid_${playlist.info.id}`;
       playlist.info.id = playlist_id;
       playlist.is_mine = 1; // eslint-disable-line no-param-reassign
     }
