@@ -1319,6 +1319,14 @@ const main = () => {
             angularPlayer.nextTrack();
           } else if (message === 'left') {
             angularPlayer.prevTrack();
+          } else if (message === 'space') {
+            if (angularPlayer.isPlayingStatus()) {
+              // if playing then pause
+              angularPlayer.pause();
+            } else {
+              // else play if not playing
+              angularPlayer.play();
+            }
           }
         });
       }

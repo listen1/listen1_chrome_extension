@@ -63,7 +63,7 @@
  "_CANCEL_CONNECT": "Annuler la connexion",
  "_SHORTCUTS": "Raccourcis",
  "_VIEW_SHORTCUTS_LIST": "Voir la liste des raccourcis",
- "_GLOBAL_SHORTCUTS_NOTICE": "Activer les raccourcis généraux: Ctrl(Cmd) + Alt + Flèche gauche (Morceau précedent)，Ctrl(Cmd) + Alt + Flèche droite (Morceau suivant)",
+ "_GLOBAL_SHORTCUTS_NOTICE": "Activer les raccourcis généraux: Ctrl(Cmd) + Alt + Flèche gauche (Morceau précedent)，Ctrl(Cmd) + Alt + Flèche droite (Morceau suivant)，Ctrl(Cmd) + Alt + Espace (Jouer/Pause)",
  "_LYRIC_DISPLAY": "Affichage des parole",
  "_SHOW_DESKTOP_LYRIC": "Afficher les parole du bureau",
  "_CONNECT_TO_LASTFM": "Ouverture de Last.fm",
