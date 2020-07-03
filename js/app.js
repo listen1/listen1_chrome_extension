@@ -1315,18 +1315,30 @@ const main = () => {
 
       $scope.isActiveTab = tab => ($scope.tab === tab);
 
-      $scope.enterEvent = (e) => {
-        var keycode = window.event?e.keyCode:e.which;
-        if(keycode==13){
-          updateCurrentPage(-1);
-          updateTotalPage(-1);
-          if (!$scope.keywords || $scope.keywords.length === 0) {
-            $scope.result = [];
-            return 0;
-          }
+      function renderSearchPage(){
+        updateCurrentPage(-1);
+        updateTotalPage(-1);
+        if (!$scope.keywords || $scope.keywords.length === 0) {
+          $scope.result = [];
+          return 0;
+        }
+
+        performSearch();
+      }
+
+      $scope.$watch('keywords', (tmpStr)=>{
+        if (tmpStr === $scope.keywords) {
           // if searchStr is still the same..
           // go ahead and retrieve the data
-          performSearch();
+          renderSearchPage();
+        }
+      });
+
+      $scope.enterEvent = (e) => {
+        var keycode = window.event?e.keyCode:e.which;
+        if(keycode == 13){
+          // enter key
+          renderSearchPage();
         }
       };
 
