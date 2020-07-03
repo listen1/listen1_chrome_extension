@@ -241,7 +241,6 @@ const main = () => {
         }
         $scope.window_url_stack.push(url);
         $scope.window_poped_url_stack = [];
-        $scope.songscount = 0;
 
         loWeb.get(url).success((data) => {
           if (data.status === '0') {
@@ -249,7 +248,6 @@ const main = () => {
             $scope.popWindow();
             return;
           }
-          $scope.songscount = data.tracks.length;
           $scope.songs = data.tracks;
           $scope.cover_img_url = data.info.cover_img_url;
           $scope.playlist_title = data.info.title;
