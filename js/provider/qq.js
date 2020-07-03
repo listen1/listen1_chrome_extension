@@ -44,14 +44,14 @@ function build_qq() {
     }
     let category = '';
     if (img_type === 'artist') {
-      category = 'mid_singer_300';
+      category = 'T001R300x300M000';
     }
     if (img_type === 'album') {
-      category = 'mid_album_300';
+      category = 'T002R300x300M000';
     }
 
-    const s = [category, qqimgid[qqimgid.length - 2], qqimgid[qqimgid.length - 1], qqimgid].join('/');
-    const url = `http://imgcache.qq.com/music/photo/${s}.jpg`;
+    const s = category+qqimgid;
+    const url = `https://y.gtimg.cn/music/photo_new/${s}.jpg`;
     return url;
   }
 
