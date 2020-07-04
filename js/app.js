@@ -179,7 +179,6 @@ const main = () => {
       $scope.current_tag = 2;
       $scope.is_window_hidden = 1;
       $scope.is_dialog_hidden = 1;
-      $rootScope.homeScrollTop = 0;
 
       $scope.songs = [];
       $scope.current_list_id = -1;
@@ -254,7 +253,6 @@ const main = () => {
           $scope.playlist_source_url = data.info.source_url;
           $scope.list_id = data.info.id;
           $scope.is_mine = (data.info.id.slice(0, 2) === 'my');
-          $rootScope.list_id = data.info.id;
           const isfavUrl = '/playlist_contains?type=favorite&list_id=' + data.info.id;
           loWeb.get(isfavUrl).success((res) => {
             $scope.is_favorite = res.result;
@@ -316,10 +314,7 @@ const main = () => {
         refreshWindow(url);
       };
 
-      $scope.showPlaylist = (list_id, fromHome) => {
-        if (fromHome) {
-          $rootScope.homeScrollTop = document.getElementsByClassName('browser')[0].scrollTop;
-        }
+      $scope.showPlaylist = (list_id) => {
         const url = `/playlist?list_id=${list_id}`;
         $scope.showWindow(url);
       };
@@ -335,7 +330,7 @@ const main = () => {
             // use timeout to avoid stil in digest error.
             angularPlayer.clearPlaylist((res) => {
               // add songs to playlist
-              angularPlayer.addTrackArray($scope.songs, list_id);
+              angularPlayer.addTrackArray($scope.songs);
               // play first song
               let index = 0;
               if (angularPlayer.getShuffle()) {
@@ -552,7 +547,7 @@ const main = () => {
           angularPlayer.clearPlaylist((data) => {
             // add songs to playlist
             $scope.playlist_source_url;
-            angularPlayer.addTrackArray($scope.songs, list_id);
+            angularPlayer.addTrackArray($scope.songs);
             let index = 0;
             if (angularPlayer.getShuffle()) {
               const max = $scope.songs.length - 1;
@@ -569,7 +564,7 @@ const main = () => {
       $scope.addMylist = (list_id) => {
         $timeout(() => {
           // add songs to playlist
-          angularPlayer.addTrackArray($scope.songs, list_id);
+          angularPlayer.addTrackArray($scope.songs);
           Notification.success($translate.instant('_ADD_TO_QUEUE_SUCCESS'));
         }, 0);
       };
@@ -1469,20 +1464,20 @@ const main = () => {
     changeHeight(); // when page loads
   }));
 
-  app.directive('addAndPlay', ['angularPlayer', '$rootScope', (angularPlayer, $rootScope) => ({
+  app.directive('addAndPlay', ['angularPlayer', (angularPlayer) => ({
     restrict: 'EA',
     scope: {
       song: '=addAndPlay',
     },
     link(scope, element, attrs) {
       element.bind('click', (event) => {
-        angularPlayer.addTrack(scope.song, $rootScope.list_id);
+        angularPlayer.addTrack(scope.song);
         angularPlayer.playTrack(scope.song.id);
       });
     },
   })]);
 
-  app.directive('addWithoutPlay', ['angularPlayer', 'Notification', '$rootScope', '$translate',
+  app.directive('addWithoutPlay', ['angularPlayer', 'Notification', '$translate',
     (angularPlayer, Notification, $rootScope, $translate) => ({
       restrict: 'EA',
       scope: {
@@ -1490,7 +1485,7 @@ const main = () => {
       },
       link(scope, element, attrs) {
         element.bind('click', (event) => {
-          angularPlayer.addTrack(scope.song, $rootScope.list_id);
+          angularPlayer.addTrack(scope.song);
           Notification.success($translate.instant('_ADD_TO_QUEUE_SUCCESS'));
         });
       },
@@ -1703,13 +1698,12 @@ const main = () => {
     },
   ]);
 
-  app.controller('PlayListController', ['$http', '$scope', '$rootScope', '$timeout',
+  app.controller('PlayListController', ['$http', '$scope', '$timeout',
     'angularPlayer', 'loWeb',
-    ($http, $scope, $rootScope, $timeout, angularPlayer, loWeb) => {
+    ($http, $scope, $timeout, angularPlayer, loWeb) => {
       $scope.result = [];
       $scope.tab = 0;
       $scope.loading = true;
-      $rootScope.list_id='';
 
       $scope.changeTab = (newTab) => {
         $scope.tab = newTab;
@@ -1718,20 +1712,6 @@ const main = () => {
           $scope.result = data.result;
         });
       };
-
-      $scope.$watch('is_window_hidden', (newValue, oldValue) => {
-        if (newValue !== oldValue) {
-          if (newValue === 1) {
-            $timeout(function () {
-              document.getElementsByClassName('browser')[0].scrollTop = $rootScope.homeScrollTop;
-              $rootScope.homeScrollTop = 0;
-            }, 10);
-          }
-          else if (oldValue == 1) {
-            // $scope.homeScrollTop = document.getElementsByClassName('browser')[0].scrollTop;
-          }
-        }
-      });
 
       $scope.$on('infinite_scroll:hit_bottom', (event, data) => {
         if ($scope.loading === true) {
