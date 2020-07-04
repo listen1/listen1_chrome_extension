@@ -60,9 +60,9 @@ const main = () => {
 
   app.run(['angularPlayer', 'Notification', 'loWeb', '$translate',
     (angularPlayer, Notification, loWeb, $translate) => {
-      function getAutoChooseSource(){
+      function getAutoChooseSource() {
         var enableAutoChooseSource = localStorage.getObject('enable_auto_choose_source');
-        if(enableAutoChooseSource === null) {
+        if (enableAutoChooseSource === null) {
           // default on
           enableAutoChooseSource = true;
         }
@@ -70,7 +70,7 @@ const main = () => {
       }
       angularPlayer.setBootstrapTrack(
         loWeb.bootstrapTrack(
-          () => {},
+          () => { },
           () => {
             const d = {
               message: $translate.instant('_COPYRIGHT_ISSUE'),
@@ -253,7 +253,7 @@ const main = () => {
           $scope.playlist_source_url = data.info.source_url;
           $scope.list_id = data.info.id;
           $scope.is_mine = (data.info.id.slice(0, 2) === 'my');
-          const isfavUrl = '/playlist_contains?type=favorite&list_id='+data.info.id;
+          const isfavUrl = '/playlist_contains?type=favorite&list_id=' + data.info.id;
           loWeb.get(isfavUrl).success((res) => {
             $scope.is_favorite = res.result;
           });
@@ -546,6 +546,7 @@ const main = () => {
         $timeout(() => {
           angularPlayer.clearPlaylist((data) => {
             // add songs to playlist
+            $scope.playlist_source_url;
             angularPlayer.addTrackArray($scope.songs);
             let index = 0;
             if (angularPlayer.getShuffle()) {
@@ -904,7 +905,7 @@ const main = () => {
         $scope.enableGlobalShortCut = localStorage.getObject('enable_global_shortcut');
         $scope.enableLyricFloatingWindow = localStorage.getObject('enable_lyric_floating_window');
         $scope.enableAutoChooseSource = localStorage.getObject('enable_auto_choose_source');
-        if($scope.enableAutoChooseSource === null) {
+        if ($scope.enableAutoChooseSource === null) {
           // default on
           $scope.enableAutoChooseSource = true;
         }
@@ -1040,7 +1041,7 @@ const main = () => {
         const track = angularPlayer.getTrack($scope.scrobbleTrackId);
         const startTimestamp = Math.round((new Date()).valueOf() / 1000);
         $scope.scrobbleTimer.start(() => {
-          lastfm.scrobble(startTimestamp, track.title, track.artist, track.album, () => {});
+          lastfm.scrobble(startTimestamp, track.title, track.artist, track.album, () => { });
         });
         // according to scrobble rule
         // http://www.last.fm/api/scrobbling
@@ -1143,7 +1144,7 @@ const main = () => {
 
         $rootScope.page_title = `▶ ${track.title} - ${track.artist}`;
         if (lastfm.isAuthorized()) {
-          lastfm.sendNowPlaying(track.title, track.artist, () => {});
+          lastfm.sendNowPlaying(track.title, track.artist, () => { });
         }
 
         if (track.lyric_url !== null) {
@@ -1311,6 +1312,14 @@ const main = () => {
             angularPlayer.nextTrack();
           } else if (message === 'left') {
             angularPlayer.prevTrack();
+          } else if (message === 'space') {
+            if (angularPlayer.isPlayingStatus()) {
+              // if playing then pause
+              angularPlayer.pause();
+            } else {
+              // else play if not playing
+              angularPlayer.play();
+            }
           }
         });
       }
@@ -1467,7 +1476,7 @@ const main = () => {
     changeHeight(); // when page loads
   }));
 
-  app.directive('addAndPlay', ['angularPlayer', angularPlayer => ({
+  app.directive('addAndPlay', ['angularPlayer', (angularPlayer) => ({
     restrict: 'EA',
     scope: {
       song: '=addAndPlay',
@@ -1715,7 +1724,6 @@ const main = () => {
           $scope.result = data.result;
         });
       };
-
 
       $scope.$on('infinite_scroll:hit_bottom', (event, data) => {
         if ($scope.loading === true) {
