@@ -1478,7 +1478,7 @@ const main = () => {
   })]);
 
   app.directive('addWithoutPlay', ['angularPlayer', 'Notification', '$translate',
-    (angularPlayer, Notification, $rootScope, $translate) => ({
+    (angularPlayer, Notification, $translate) => ({
       restrict: 'EA',
       scope: {
         song: '=addWithoutPlay',

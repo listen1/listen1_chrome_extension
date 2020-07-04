@@ -6507,7 +6507,7 @@ ngSoundManager.factory('angularPlayer', ['$rootScope', '$log',
                     }
                 }
             },
-            addTrack: function(track,list_id) {
+            addTrack: function(track) {
                 //check if track itself is valid and if its url is playable
                 // disable track valid check because request url without 
                 // proper extension name can be playable.
@@ -6526,15 +6526,11 @@ ngSoundManager.factory('angularPlayer', ['$rootScope', '$log',
                     });
                     shufflelist.push(track.id);
                     //add to playlist
-                    if(list_id)
-                    {
-                      track.list_id = list_id;
-                    }
                     this.addToPlaylist(track);
                 }
                 return track.id;
             },
-            addTrackArray: function(trackArray,list_id) {
+            addTrackArray: function(trackArray) {
                 for(var i = 0; i < trackArray.length; i++) {
                     var track = trackArray[i];
                     //check if track itself is valid and if its url is playable
@@ -6554,10 +6550,6 @@ ngSoundManager.factory('angularPlayer', ['$rootScope', '$log',
                         });
                         shufflelist.push(track.id);
                         //add to playlist
-                        if(list_id)
-                        {
-                          track.list_id = list_id;
-                        }
                         playlist.push(track);
                     }    
                 }

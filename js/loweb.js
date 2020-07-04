@@ -61,12 +61,7 @@ ngloWebManager.factory('loWeb', ['$rootScope', '$log', '$http', '$httpParamSeria
         return provider.show_playlist(url, $http);
       }
       if (path === '/playlist') {
-        let list_id = getParameterByName('list_id', url);
-        if (!localStorage.getObject(list_id) && list_id.indexOf('sourceid_') > 0) {
-          let sourceid = list_id.substring(list_id.indexOf('sourceid_') + 'sourceid_'.length);
-          url = url.replace(list_id, sourceid);
-          list_id = sourceid;
-        }
+        const list_id = getParameterByName('list_id', url);
         const provider = getProviderByItemId(list_id);
         return provider.get_playlist(url, $http, $httpParamSerializerJQLike);
       }
