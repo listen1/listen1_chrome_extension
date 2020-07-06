@@ -210,16 +210,23 @@ const main = () => {
       });
 
       // playlist window
-      $scope.resetWindow = () => {
+      $scope.resetWindow = (offset) => {
+        if(offset === undefined){
+          offset = 0;
+        }
         $scope.cover_img_url = 'images/loading.svg';
         $scope.playlist_title = '';
         $scope.playlist_source_url = '';
         $scope.songs = [];
         $scope.window_type = 'list';
-        document.getElementsByClassName('browser')[0].scrollTop = 0;
+        $timeout(()=>{
+          document.getElementsByClassName('browser')[0].scrollTop = offset;
+        },0);
       };
 
       $scope.showWindow = (url) => {
+        // save current scrolltop
+        const offset = document.getElementsByClassName('browser')[0].scrollTop;
         if ($scope.window_url_stack.length > 0
           && $scope.window_url_stack[$scope.window_url_stack.length - 1] === url) {
           return;
@@ -234,11 +241,11 @@ const main = () => {
 
         if (url === '/now_playing') {
           $scope.window_type = 'track';
-          $scope.window_url_stack.push(url);
+          $scope.window_url_stack.push({url:url, offset:offset});
           $scope.window_poped_url_stack = [];
           return;
         }
-        $scope.window_url_stack.push(url);
+        $scope.window_url_stack.push({url:url, offset:offset});
         $scope.window_poped_url_stack = [];
 
         loWeb.get(url).success((data) => {
@@ -262,14 +269,20 @@ const main = () => {
         });
       };
 
-      $scope.closeWindow = () => {
+      $scope.closeWindow = (offset) => {
+        if(offset===undefined){
+          offset = 0;
+        }
         $scope.is_window_hidden = 1;
-        $scope.resetWindow();
+        $scope.resetWindow(offset);
         $scope.window_url_stack = [];
         $scope.window_poped_url_stack = [];
       };
 
-      function refreshWindow(url) {
+      function refreshWindow(url, offset) {
+        if(offset === undefined){
+          offset = 0;
+        }
         if (url === '/now_playing') {
           $scope.window_type = 'track';
           return;
@@ -281,23 +294,29 @@ const main = () => {
           $scope.playlist_title = data.info.title;
           $scope.playlist_source_url = data.info.source_url;
           $scope.is_mine = (data.info.id.slice(0, 2) === 'my');
+          $timeout(()=>{
+            document.getElementsByClassName('browser')[0].scrollTop = offset;
+          }, 0);
         });
       }
       $scope.popWindow = () => {
+        if ($scope.window_url_stack.length===0) {
+          return;
+        }
         const poped = $scope.window_url_stack.pop();
-        $scope.window_poped_url_stack.push(poped);
+        $scope.window_poped_url_stack.push(poped.url);
         if ($scope.window_url_stack.length === 0) {
-          $scope.closeWindow();
+          $scope.closeWindow(poped.offset);
         } else {
-          $scope.resetWindow();
-          const url = $scope.window_url_stack[$scope.window_url_stack.length - 1];
-          refreshWindow(url);
+          $scope.resetWindow(poped.offset);
+          const lastWindow = $scope.window_url_stack[$scope.window_url_stack.length - 1];
+          refreshWindow(lastWindow.url, poped.offset);
         }
       };
 
       $scope.toggleWindow = (url) => {
         if ($scope.window_url_stack.length > 0
-          && $scope.window_url_stack[$scope.window_url_stack.length - 1] === url) {
+          && $scope.window_url_stack[$scope.window_url_stack.length - 1].url === url) {
           return $scope.popWindow();
         }
         return $scope.showWindow(url);
