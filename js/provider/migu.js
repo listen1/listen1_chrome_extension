@@ -136,10 +136,13 @@ function build_migu() {
       const {
         data: res_data
       } = response;
-      const {
+      let {
         playUrl
       } = res_data.data;
       if (playUrl != null) {
+        if (playUrl.startsWith('//')) {
+          playUrl = 'https:' + playUrl;
+        }
         sound.url = playUrl; // eslint-disable-line no-param-reassign
         success();
       } else {
