@@ -241,6 +241,8 @@ const main = () => {
 
         if (url === '/now_playing') {
           $scope.window_type = 'track';
+          $scope.window_url_stack.push({url:url, offset:offset});
+          $scope.window_poped_url_stack = [];
           return;
         }
         $scope.window_url_stack.push({url:url, offset:offset});
@@ -301,7 +303,10 @@ const main = () => {
         if ($scope.window_url_stack.length===0) {
           return;
         }
-        const poped = $scope.window_url_stack.pop();
+        let poped = $scope.window_url_stack.pop();
+        if ($scope.window_url_stack.length > 0 && $scope.window_url_stack[$scope.window_url_stack.length-1].url === '/now_playing'){
+          poped = $scope.window_url_stack.pop();
+        }
         $scope.window_poped_url_stack.push(poped.url);
         if ($scope.window_url_stack.length === 0) {
           $scope.closeWindow(poped.offset);
