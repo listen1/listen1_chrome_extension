@@ -1,6 +1,6 @@
-Listen 1 (Chrome Extension) V2.9.0
+Listen 1 (Chrome Extension) V2.10.0
 ==========
-（Last Update June 29th, 2020)
+（Last Update July 10th, 2020)
 
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE)
 
@@ -46,6 +46,13 @@ Install (Firefox)
 
 Changelog
 -------
+`2020-07-10`
+* fix migu play fail bug
+* support press enter key to search in search bar thanks @kangbb）
+* support playlist song count show, support play/pause shortcut, desktop only（thanks @x2009again）
+* support restore scrollbar offset when go back（thanks @x2009again for discuss solution）
+* optimaze firefox scorlling bar, modify source image url for qq music, fix firefox jquery lib md5 error（thanks @RecluseWind）
+
 `2020-06-29`
 * support auto choose source when play fail
 

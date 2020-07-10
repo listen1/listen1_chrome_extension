@@ -1,6 +1,6 @@
-Listen 1 (Chrome Extension) V2.9.0
+Listen 1 (Chrome Extension) V2.10.0
 ==========
-（最后更新于2020年06月29日）
+（最后更新于2020年07月10日）
 
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE)
 
@@ -59,6 +59,13 @@ Firefox打包安装
 
 更新日志
 -------
+`2020-07-10`
+* 修复咪咕音乐无法播放的问题
+* 支持顶部搜索栏回车触发 （感谢@kangbb的提交）
+* 支持歌单歌曲数显示，支持播放/暂停全局快捷键（桌面版）（感谢@x2009again的提交）
+* 支持返回时回到滚动条历史位置（感谢@x2009again参与完成）
+* 优化firefox滑动条，修改qq音乐图标网址，解决firefox上架jquery代码问题 （感谢@RecluseWind的提交）
+
 `2020-06-29`
 * 支持播放失败时自动切换播放源(Beta)
 
