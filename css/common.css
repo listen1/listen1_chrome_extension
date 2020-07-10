@@ -356,6 +356,7 @@ svg {
 .page .playlist-detail .detail-head img {
   height: 150px;
   width: 150px;
+  object-fit: cover;
 }
 
 .page .playlist-detail .detail-head .detail-head-cover {
@@ -529,6 +530,7 @@ svg {
 .page .playsong-detail .detail-head img {
   width: 250px;
   height: 250px;
+  object-fit: cover;
 }
 
 .page .playsong-detail .detail-songinfo {
