@@ -241,8 +241,6 @@ const main = () => {
 
         if (url === '/now_playing') {
           $scope.window_type = 'track';
-          $scope.window_url_stack.push({url:url, offset:offset});
-          $scope.window_poped_url_stack = [];
           return;
         }
         $scope.window_url_stack.push({url:url, offset:offset});
