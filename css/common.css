@@ -762,6 +762,7 @@ svg.searchspinner {
   background: var(--footer-main-background-color);
   display: flex;
   overflow: hidden;
+  z-index: 1;
 }
 
 .footer .main-info .logo-banner {
@@ -876,16 +877,19 @@ svg.searchspinner {
 }
 
 .footer .menu {
-  flex: 1;
   background: var(--foot-background-color);
   border: solid 1px var(--foot-border-color);
   border-radius: 3px;
-  position: absolute;
+  position: fixed;
   height: 370px;
-  top: -372px;
+  bottom: -310px;
   left: 300px;
   right: 300px;
   -webkit-app-region: no-drag;
+  transition: all 0.3s;
+}
+.footer .menu.slideup {
+  bottom: 60px;
 }
 
 .footer .menu .menu-header {
