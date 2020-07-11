@@ -475,6 +475,10 @@ svg {
   overflow: hidden;
   border: solid 1px var(--windows-border-color);
   -webkit-app-region: drag;
+  transition: all 0.3s;
+}
+.page .songdetail-wrapper.slidedown {
+  top: calc(100% - 60px);
 }
 
 .page .songdetail-wrapper .close {
