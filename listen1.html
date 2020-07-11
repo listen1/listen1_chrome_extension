@@ -361,8 +361,8 @@
                     </div>
 
                     <!-- track list window-->
-                    <div class="page" ng-hide="is_window_hidden==1">
-                        <div class="playlist-detail" ng-show="window_type=='list'">
+                    <div class="page">
+                        <div class="playlist-detail" ng-show="is_window_hidden!=1 && window_type=='list'">
                             <div class="detail-head">
                                 <div class="detail-head-cover"><img ng-src="{{ cover_img_url }}" err-src="https://y.gtimg.cn/mediastyle/global/img/singer_300.png"/></div>
                                 <div class="detail-head-title">
@@ -420,7 +420,7 @@
                             </ul>
                         </div>
                         <!-- now playing window-->
-                        <div class="songdetail-wrapper" ng-show="window_type=='track'">
+                        <div class="songdetail-wrapper" ng-class="{slidedown: window_type!=='track'}">
                             <div class="close" ng-class="isMac? 'mac':'' "ng-click="popWindow()"><svg class="icon"><use xlink:href="images/feather-sprite.svg#chevron-down"></use></svg></div>
 
                             <div ng-if="!isChrome && !isMac" class="window-control">
@@ -507,7 +507,7 @@
                   <div ng-click="openLyricFloatingWindow(true)" class="lyric-icon" ng-class="{'selected': enableLyricFloatingWindow}">词</div>
                 </div>
             </div>
-            <div class="menu" ng-hide="menuHidden">
+            <div class="menu" ng-class="{slideup: !menuHidden}">
                 <div class="menu-header"><span class="menu-title">{{_TOTAL_SONG_PREFIX}}{{playlist.length}}{{_TOTAL_SONG_POSTFIX}}</span>
                   <a class="add-all" ng-click="showDialog(0, playlist)">
                     <span class="icon li-songlist" ng-click="togglePlaylist()"></span>
