@@ -8,9 +8,8 @@ body {
 }
 
 .wrap {
-  border-style: solid;
-  border-color: var(--windows-border-color);
-  border-width: 1px;
+  /* https://stackoverflow.com/questions/28897089/z-index-on-borders */
+  outline: solid 1px var(--windows-border-color);
   box-sizing: border-box;
 }
 
