@@ -355,8 +355,6 @@ svg {
 
 .page .playlist-detail .detail-head img {
   height: 150px;
-  width: 150px;
-  object-fit: cover;
 }
 
 .page .playlist-detail .detail-head .detail-head-cover {
@@ -779,7 +777,6 @@ svg.searchspinner {
 
 .footer .main-info .cover {
   height: 60px;
-  width: 60px;
   flex: 0 0 60px;
   cursor: pointer;
 }
