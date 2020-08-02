@@ -290,9 +290,8 @@ function build_xiami() {
       success(fn) {
         const artist_id = getParameterByName('list_id', url).split('_').pop();
 
-        let target_url = `http://api.xiami.com/web?v=2.0&app_key=1&id=${artist_id
-        }&page=1&limit=20&_ksTS=1459931285956_216`
-          + '&callback=jsonp217&r=artist/detail';
+        let target_url = `https://m.xiami.com/graphql?query=query{artistDetail(artistId:%22${artist_id
+        }%22,artistStringId:%22${artist_id}%22){artistDetailVO{artistName%20artistLogo}}}`;
 
         hm({
           url: target_url,
@@ -300,13 +299,12 @@ function build_xiami() {
           transformResponse: undefined,
         })
           .then((response) => {
-            let { data } = response;
-            data = data.slice('jsonp217('.length, -')'.length);
-            data = JSON.parse(data);
+            let { data: res_data} = response;
+            res_data = JSON.parse(res_data);
 
             const info = {
-              cover_img_url: xm_retina_url(data.data.logo),
-              title: data.data.artist_name,
+              cover_img_url: xm_retina_url(res_data.data.artistDetail.artistDetailVO.artistLogo),
+              title: res_data.data.artistDetail.artistDetailVO.artistname,
               id: `xmartist_${artist_id}`,
               source_url: `http://www.xiami.com/artist/${artist_id}`,
             };
