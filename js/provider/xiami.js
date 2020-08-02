@@ -304,7 +304,7 @@ function build_xiami() {
 
             const info = {
               cover_img_url: xm_retina_url(res_data.data.artistDetail.artistDetailVO.artistLogo),
-              title: res_data.data.artistDetail.artistDetailVO.artistname,
+              title: res_data.data.artistDetail.artistDetailVO.artistName,
               id: `xmartist_${artist_id}`,
               source_url: `http://www.xiami.com/artist/${artist_id}`,
             };
