@@ -301,11 +301,15 @@ svg {
 }
 
 .playlist-covers .u-cover {
+  display:flex;
   position: relative;
 }
 
 .playlist-covers .u-cover img {
+  height: 136px;
   max-width: 100%;
+  object-fit: cover;
+  margin: auto;
   border: solid 1px var(--line-default-color);
   margin-bottom: 2px;
   cursor: pointer;
