@@ -493,6 +493,7 @@ function build_netease() {
 
   function ne_parse_url(url) {
     let result;
+    url = url.replace('music.163.com/#/discover/toplist?', 'music.163.com/#/playlist?'); // eslint-disable-line no-param-reassign
     url = url.replace('music.163.com/#/my/m/music/', 'music.163.com/'); // eslint-disable-line no-param-reassign
     url = url.replace('music.163.com/#/m/', 'music.163.com/'); // eslint-disable-line no-param-reassign
     url = url.replace('music.163.com/#/', 'music.163.com/'); // eslint-disable-line no-param-reassign
