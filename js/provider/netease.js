@@ -494,6 +494,8 @@ function build_netease() {
   function ne_parse_url(url) {
     let result;
     url = url.replace('music.163.com/#/my/m/music/playlist?', 'music.163.com/#/playlist?'); // eslint-disable-line no-param-reassign
+    // https://music.163.com/#/discover/toplist?id=2884035
+    url = url.replace('music.163.com/#/discover/toplist?', 'music.163.com/#/playlist?')
     if (url.search('//music.163.com/#/m/playlist') !== -1 || url.search('//music.163.com/#/playlist') !== -1 || url.search('//music.163.com/playlist') !== -1) {
       result = {
         type: 'playlist',
