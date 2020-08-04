@@ -1,6 +1,6 @@
-Listen 1 (Chrome Extension) V2.10.0
+Listen 1 (Chrome Extension) V2.11.0
 ==========
-（最后更新于2020年07月10日）
+（最后更新于2020年08月04日）
 
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE)
 
@@ -59,6 +59,12 @@ Firefox打包安装
 
 更新日志
 -------
+`2020-08-04`
+* 增加正在播放窗口和播放列表弹窗的动画效果
+* 修复虾米艺人封面图片无法显示的问题 （感谢@RecluseWind的提交）
+* 优化打开歌单功能，支持网易云排行榜单，艺人页面，专辑页面网址（感谢@whtiehack的提交）
+* 优化专辑图片显示，避免图片被压缩 （感谢@RecluseWind的提交）
+
 `2020-07-10`
 * 修复咪咕音乐无法播放的问题
 * 支持顶部搜索栏回车触发 （感谢@kangbb的提交）

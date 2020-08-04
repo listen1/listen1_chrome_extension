@@ -1,6 +1,6 @@
-Listen 1 (Chrome Extension) V2.10.0
+Listen 1 (Chrome Extension) V2.11.0
 ==========
-（Last Update July 10th, 2020)
+（Last Update August 4th, 2020)
 
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE)
 
@@ -46,6 +46,12 @@ Install (Firefox)
 
 Changelog
 -------
+`2020-08-04`
+* add animation for now playing and current playlist window
+* fix xiami cover image not loaded bug (thanks @RecluseWind)
+* optimaze open songlist url, support netease toplist, artist, album (thanks @whtiehack)
+* optimaze cover image display, avoid resize (thanks @RecluseWind)
+
 `2020-07-10`
 * fix migu play fail bug
 * support press enter key to search in search bar thanks @kangbb）
