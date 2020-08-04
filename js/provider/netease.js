@@ -493,13 +493,25 @@ function build_netease() {
 
   function ne_parse_url(url) {
     let result;
-    url = url.replace('music.163.com/#/my/m/music/playlist?', 'music.163.com/#/playlist?'); // eslint-disable-line no-param-reassign
-    // https://music.163.com/#/discover/toplist?id=2884035
-    url = url.replace('music.163.com/#/discover/toplist?', 'music.163.com/#/playlist?')
-    if (url.search('//music.163.com/#/m/playlist') !== -1 || url.search('//music.163.com/#/playlist') !== -1 || url.search('//music.163.com/playlist') !== -1) {
+    url = url.replace('music.163.com/#/my/m/music/', 'music.163.com/'); // eslint-disable-line no-param-reassign
+    url = url.replace('music.163.com/#/m/', 'music.163.com/'); // eslint-disable-line no-param-reassign
+    url = url.replace('music.163.com/#/', 'music.163.com/'); // eslint-disable-line no-param-reassign
+    if (url.search('//music.163.com/playlist') !== -1 ) {
       result = {
         type: 'playlist',
         id: `neplaylist_${getParameterByName('id', url)}`,
+      };
+    }
+    else if (url.search('//music.163.com/artist') !== -1) {
+      result = {
+        type: 'playlist',
+        id: `neartist_${getParameterByName('id', url)}`,
+      };
+    }
+    else if (url.search('//music.163.com/album') !== -1) {
+      result = {
+        type: 'playlist',
+        id: `nealbum_${getParameterByName('id', url)}`,
       };
     }
     return result;
