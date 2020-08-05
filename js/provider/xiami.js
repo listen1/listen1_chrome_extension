@@ -299,7 +299,7 @@ function build_xiami() {
           transformResponse: undefined,
         })
           .then((response) => {
-            let { data: res_data} = response;
+            let { data: res_data } = response;
             res_data = JSON.parse(res_data);
 
             const info = {
@@ -309,28 +309,26 @@ function build_xiami() {
               source_url: `http://www.xiami.com/artist/${artist_id}`,
             };
 
-            target_url = `http://api.xiami.com/web?v=2.0&app_key=1&id=${artist_id
-            }&page=1&limit=20&callback=jsonp217&r=artist/hot-songs`;
-            hm({
-              url: target_url,
-              method: 'GET',
-              transformResponse: undefined,
-            })
-              .then((res) => {
-                let { data: res_data } = res;
-                res_data = res_data.slice('jsonp217('.length, -')'.length);
-                res_data = JSON.parse(res_data);
-
-                const tracks = res_data.data.map((item) => {
-                  const track = xm_convert_song(item, 'singers');
-                  track.artist_id = `xmartist_${artist_id}`;
-                  return track;
-                });
-                return fn({
-                  tracks,
-                  info,
-                });
+            const offset = getParameterByName('offset', url);
+            const page = offset / 30 + 1;
+            const pageSize = 50; 
+            const category = 0;
+            const api = '/api/song/getArtistSongs';
+            const params = {
+               artistId: artist_id,
+               category,
+               pagingVO: {
+                page,
+                pageSize
+              }
+            };
+            xm_cookie_get(hm, api, params, (response) => {
+              const tracks = response.data.result.data.songs.map(item => xm_convert_song2(item, 'artist_name'));
+              return fn({
+                tracks,
+                info,
               });
+            });
           });
       },
     };
