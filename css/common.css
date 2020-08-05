@@ -295,7 +295,7 @@ svg {
 
 .playlist-covers li {
   flex: 0 1 calc(20% - 26px);
-  height: 185px;
+  min-height: 156px;
   color: var(--text-default-color);
   margin: 0 13px;
 }
@@ -306,7 +306,8 @@ svg {
 }
 
 .playlist-covers .u-cover img {
-  height: 137px;
+  height: 136px;
+  min-width: 136px;
   max-width: 100%;
   object-fit: cover;
   margin: auto;
@@ -344,6 +345,11 @@ svg {
 
 .playlist-covers .desc {
   cursor: pointer;
+}
+
+.playlist-covers .desc .ng-binding {
+  display:flex;
+  margin: 0 0 5px;
 }
 /* page hot-playlist end */
 
