@@ -588,8 +588,8 @@ svg {
   flex: 0 0 380px;
   overflow-y: scroll;
   color: var(--lyric-default-color);
-  scrollbar-width: thin;
-  scrollbar-color: var(--scroll-color) var(--content-background-color);
+  scrollbar-width: auto;
+  scrollbar-color: var(--scroll-color) transparent;
   font-size: 14px;
 }
 .page .playsong-detail .detail-songinfo .lyric p {
