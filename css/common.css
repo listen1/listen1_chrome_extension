@@ -348,7 +348,8 @@ svg {
 }
 
 .playlist-covers .desc .ng-binding {
-  display:flex;
+  display: flex;
+  min-height: 32px;
   margin: 0 0 5px;
 }
 /* page hot-playlist end */
