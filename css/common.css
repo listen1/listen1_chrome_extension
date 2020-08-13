@@ -347,7 +347,7 @@ svg {
   cursor: pointer;
 }
 
-.playlist-covers .desc .ng-binding {
+.playlist-covers .desc .title {
   display: flex;
   min-height: 32px;
   margin: 0 0 5px;
