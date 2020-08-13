@@ -35,7 +35,7 @@ function build_xiami() {
 
   function handleProtocolRelativeUrl(url) {
     const regex = /^.*?\/\//;
-    const result = url.replace(regex, 'http://');
+    const result = url.replace(regex, 'https://');
     return result;
   }
 
@@ -131,7 +131,7 @@ function build_xiami() {
             default_playlist.title = d.collectName;
             const list_id = d.listId;
             default_playlist.id = `xmplaylist_${list_id}`;
-            default_playlist.source_url = `http://www.xiami.com/collect/${list_id}`;
+            default_playlist.source_url = `https://www.xiami.com/collect/${list_id}`;
             return default_playlist;
           });
           return fn({
@@ -144,7 +144,7 @@ function build_xiami() {
 
   // eslint-disable-next-line no-unused-vars
   function xm_bootstrap_track(sound, track, success, failure, hm, se) {
-    const target_url = `http://emumo.xiami.com/song/playlist/id/${track.id.slice('xmtrack_'.length)
+    const target_url = `https://emumo.xiami.com/song/playlist/id/${track.id.slice('xmtrack_'.length)
     }/object_name/default/object_id/0/cat/json`;
     hm.get(target_url).then((response) => {
       const { data } = response;
@@ -158,7 +158,11 @@ function build_xiami() {
       track.img_url = xm_retina_url(handleProtocolRelativeUrl(data.data.trackList[0].pic));
       track.album = data.data.trackList[0].album_name;
       track.album_id = `xmalbum_${data.data.trackList[0].album_id}`;
-      track.lyric_url = handleProtocolRelativeUrl(data.data.trackList[0].lyric_url);
+      if (handleProtocolRelativeUrl(data.data.trackList[0].lyric_url) != ""){
+        track.lyric_url = handleProtocolRelativeUrl(data.data.trackList[0].lyric_url);
+      } else {
+        track.lyric_url = handleProtocolRelativeUrl(data.data.trackList[0].lyricInfo.lyricFile);
+      }
       success();
     });
   }
@@ -172,7 +176,7 @@ function build_xiami() {
       album: song_info.album_name,
       album_id: `xmalbum_${song_info.album_id}`,
       source: 'xiami',
-      source_url: `http://www.xiami.com/song/${song_info.song_id}`,
+      source_url: `https://www.xiami.com/song/${song_info.song_id}`,
       img_url: song_info.album_logo,
       url: `xmtrack_${song_info.song_id}`,
       lyric_url: song_info.lyric_file,
@@ -189,7 +193,7 @@ function build_xiami() {
       album: song_info.albumName,
       album_id: `xmalbum_${song_info.albumId}`,
       source: 'xiami',
-      source_url: `http://www.xiami.com/song/${song_info.songId}`,
+      source_url: `https://www.xiami.com/song/${song_info.songId}`,
       img_url: song_info.albumLogo,
       url: `xmtrack_${song_info.songId}`,
       // 'lyric_url': song_info.lyricInfo.lyricFile
@@ -205,22 +209,31 @@ function build_xiami() {
 
     return {
       success(fn) {
-        const api = '/api/collect/initialize';
+        const api = '/api/collect/getCollectStaticUrl';
         const params = {
           listId: parseInt(list_id, 10),
         };
         xm_cookie_get(hm, api, params, (response) => {
-          const collect = response.data.result.data.collectDetail;
-          const info = {
-            cover_img_url: xm_get_low_quality_img_url(collect.collectLogo),
-            title: collect.collectName,
-            id: `xmplaylist_${list_id}`,
-            source_url: `http://www.xiami.com/collect/${list_id}`,
-          };
-          const tracks = response.data.result.data.collectSongs.map(item => xm_convert_song2(item, 'artist_name'));
-          return fn({
-            tracks,
-            info,
+          const collecturl = response.data.result.data.data.data.url;
+          hm({
+            url: collecturl,
+            method: 'GET',
+            transformResponse: undefined,
+          })
+          .then((response) => {
+            let { data: res_data } = response;
+            res_data = JSON.parse(res_data);
+            const info = {
+              cover_img_url: xm_get_low_quality_img_url(res_data.resultObj.collectLogo),
+              title: res_data.resultObj.collectName,
+              id: `xmplaylist_${list_id}`,
+              source_url: `https://www.xiami.com/collect/${list_id}`,
+            };
+            const tracks = res_data.resultObj.songs.map(item => xm_convert_song2(item, 'artist_name'));
+            return fn({
+              tracks,
+              info,
+            });
           });
         });
       },
@@ -256,7 +269,7 @@ function build_xiami() {
     return {
       success(fn) {
         const album_id = getParameterByName('list_id', url).split('_').pop();
-        const target_url = `http://api.xiami.com/web?v=2.0&app_key=1&id=${album_id
+        const target_url = `https://api.xiami.com/web?v=2.0&app_key=1&id=${album_id
         }&page=1&limit=20&callback=jsonp217&r=album/detail`;
         hm({
           url: target_url,
@@ -272,7 +285,7 @@ function build_xiami() {
               cover_img_url: data.data.album_logo,
               title: data.data.album_name,
               id: `xmalbum_${data.data.album_id}`,
-              source_url: `http://www.xiami.com/album/${data.data.album_id}`,
+              source_url: `https://www.xiami.com/album/${data.data.album_id}`,
             };
 
             const tracks = data.data.songs.map(item => xm_convert_song(item, 'singers'));
@@ -299,38 +312,36 @@ function build_xiami() {
           transformResponse: undefined,
         })
           .then((response) => {
-            let { data: res_data} = response;
+            let { data: res_data } = response;
             res_data = JSON.parse(res_data);
 
             const info = {
               cover_img_url: xm_retina_url(res_data.data.artistDetail.artistDetailVO.artistLogo),
               title: res_data.data.artistDetail.artistDetailVO.artistName,
               id: `xmartist_${artist_id}`,
-              source_url: `http://www.xiami.com/artist/${artist_id}`,
+              source_url: `https://www.xiami.com/artist/${artist_id}`,
             };
 
-            target_url = `http://api.xiami.com/web?v=2.0&app_key=1&id=${artist_id
-            }&page=1&limit=20&callback=jsonp217&r=artist/hot-songs`;
-            hm({
-              url: target_url,
-              method: 'GET',
-              transformResponse: undefined,
-            })
-              .then((res) => {
-                let { data: res_data } = res;
-                res_data = res_data.slice('jsonp217('.length, -')'.length);
-                res_data = JSON.parse(res_data);
-
-                const tracks = res_data.data.map((item) => {
-                  const track = xm_convert_song(item, 'singers');
-                  track.artist_id = `xmartist_${artist_id}`;
-                  return track;
-                });
-                return fn({
-                  tracks,
-                  info,
-                });
+            const offset = getParameterByName('offset', url);
+            const page = offset / 30 + 1;
+            const pageSize = 50; 
+            const category = 0;
+            const api = '/api/song/getArtistSongs';
+            const params = {
+               artistId: artist_id,
+               category,
+               pagingVO: {
+                page,
+                pageSize
+              }
+            };
+            xm_cookie_get(hm, api, params, (response) => {
+              const tracks = response.data.result.data.songs.map(item => xm_convert_song2(item, 'artist_name'));
+              return fn({
+                tracks,
+                info,
               });
+            });
           });
       },
     };
@@ -339,20 +350,25 @@ function build_xiami() {
   function xm_lyric(url, hm, se) { // eslint-disable-line no-unused-vars
     // const track_id = getParameterByName('track_id', url).split('_').pop();
     const lyric_url = getParameterByName('lyric_url', url);
-    return {
-      success(fn) {
-        hm({
-          url: lyric_url,
-          method: 'GET',
-          transformResponse: undefined,
-        }).then((response) => {
-          const { data } = response;
-          return fn({
-            lyric: data,
+    if (lyric_url == "") {
+      return;
+    } else {
+      return {
+        success(fn) {
+          hm({
+            url: lyric_url,
+            method: 'GET',
+            transformResponse: undefined,
+          }).then((response) => {
+            const reg = new RegExp("\<\\d+\>","gmi");
+            let res_data = response.data.replace(reg,"");
+            return fn({
+              lyric: res_data,
+            });
           });
-        });
-      },
-    };
+        },
+      };
+    }
   }
 
   function xm_parse_url(url) {
