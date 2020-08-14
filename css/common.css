@@ -378,6 +378,7 @@ svg {
 
 .playlist-button-list {
   display: flex;
+  flex-flow: row wrap;
 }
 
 .playlist-button-list .playlist-button {
@@ -386,7 +387,7 @@ svg {
   cursor: pointer;
   border-radius: 2px;
   display: flex;
-  margin-right: 20px;
+  margin: 0 20px 20px 0;
 }
 
 .playlist-button-list .playlist-button.playadd-button {
