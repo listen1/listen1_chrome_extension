@@ -295,7 +295,7 @@ svg {
 
 .playlist-covers li {
   flex: 0 1 calc(20% - 26px);
-  height: 185px;
+  min-height: 156px;
   color: var(--text-default-color);
   margin: 0 13px;
 }
@@ -306,7 +306,8 @@ svg {
 }
 
 .playlist-covers .u-cover img {
-  height: 137px;
+  height: 136px;
+  min-width: 136px;
   max-width: 100%;
   object-fit: cover;
   margin: auto;
@@ -345,6 +346,12 @@ svg {
 .playlist-covers .desc {
   cursor: pointer;
 }
+
+.playlist-covers .desc .title {
+  display: flex;
+  min-height: 32px;
+  margin: 0 0 5px;
+}
 /* page hot-playlist end */
 
 /* page playlist-detail start */
@@ -371,6 +378,7 @@ svg {
 
 .playlist-button-list {
   display: flex;
+  flex-flow: row wrap;
 }
 
 .playlist-button-list .playlist-button {
@@ -379,7 +387,7 @@ svg {
   cursor: pointer;
   border-radius: 2px;
   display: flex;
-  margin-right: 20px;
+  margin: 0 20px 20px 0;
 }
 
 .playlist-button-list .playlist-button.playadd-button {
@@ -581,8 +589,8 @@ svg {
   flex: 0 0 380px;
   overflow-y: scroll;
   color: var(--lyric-default-color);
-  scrollbar-width: thin;
-  scrollbar-color: var(--scroll-color) var(--content-background-color);
+  scrollbar-width: auto;
+  scrollbar-color: var(--scroll-color) transparent;
   font-size: 14px;
 }
 .page .playsong-detail .detail-songinfo .lyric p {
