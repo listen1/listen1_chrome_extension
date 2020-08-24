@@ -1,6 +1,6 @@
-Listen 1 (Chrome Extension) V2.11.0
+Listen 1 (Chrome Extension) V2.12.0
 ==========
-（Last Update August 4th, 2020)
+（Last Update August 24th, 2020)
 
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE)
 
@@ -46,6 +46,11 @@ Install (Firefox)
 
 Changelog
 -------
+`2020-08-24`
+* fix xiami songlist only shows part of songs bug (thanks @RecluseWind)
+* fix songlist cover and title display bug (thanks @RecluseWind)
+* support open url using system default browser for desktop version
+
 `2020-08-04`
 * add animation for now playing and current playlist window
 * fix xiami cover image not loaded bug (thanks @RecluseWind)

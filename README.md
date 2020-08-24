@@ -1,6 +1,6 @@
-Listen 1 (Chrome Extension) V2.11.0
+Listen 1 (Chrome Extension) V2.12.0
 ==========
-（最后更新于2020年08月04日）
+（最后更新于2020年08月24日）
 
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE)
 
@@ -59,6 +59,11 @@ Firefox打包安装
 
 更新日志
 -------
+`2020-08-24`
+* 修复虾米歌单歌曲只显示部分歌曲的bug (感谢@RecluseWind的提交)
+* 修复歌单图片和标题显示问题 (感谢@RecluseWind的提交)
+* 支持桌面版点击链接打开系统默认浏览器
+
 `2020-08-04`
 * 增加正在播放窗口和播放列表弹窗的动画效果
 * 修复虾米艺人封面图片无法显示的问题 （感谢@RecluseWind的提交）
