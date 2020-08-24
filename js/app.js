@@ -1535,19 +1535,12 @@ const main = () => {
       link(scope, element, attrs) {
         element.bind('click', (event) => {
           if ((typeof chrome) === 'undefined') {
-            // normal window for link
-            const { BrowserWindow } = require('electron').remote;
-            let win = new BrowserWindow({
-              width: 1000,
-              height: 670,
-            });
-            win.on('closed', () => {
-              win = null;
-            });
-            win.loadURL(scope.url);
-            return;
+            var shell = require('electron').shell;
+            shell.openExternal(scope.url);
           }
-          $window.open(scope.url, '_blank');
+          else {
+            $window.open(scope.url, '_blank');
+          }
         });
       },
     }),
