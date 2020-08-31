@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en" ng-app="listenone">
 
 <head>
@@ -421,20 +421,22 @@
                         </div>
                         <!-- now playing window-->
                         <div class="songdetail-wrapper" ng-class="{slidedown: window_type!=='track'}">
-                            <div class="close" ng-class="isMac? 'mac':'' "ng-click="popWindow()"><svg class="icon"><use xlink:href="images/feather-sprite.svg#chevron-down"></use></svg></div>
+                            <div class="bg" style="background-image: url({{ currentPlaying.img_url }});"></div>
+                            <div class="close" ng-class="isMac? 'mac':'' " ng-click="popWindow()"><svg class="icon"><use xlink:href="images/feather-sprite.svg#chevron-down"></use></svg></div>
 
                             <div ng-if="!isChrome && !isMac" class="window-control">
-                              <svg class="icon" window-control="window_min"><use xlink:href="images/feather-sprite.svg#minimize-2"></use></svg>
-                              <svg class="icon" window-control="window_max"><use xlink:href="images/feather-sprite.svg#maximize" ></use></svg>
-                              <svg class="icon" window-control="window_close"><use xlink:href="images/feather-sprite.svg#x"></use></svg>
+                                <svg class="icon" window-control="window_min"><use xlink:href="images/feather-sprite.svg#minimize-2"></use></svg>
+                                <svg class="icon" window-control="window_max"><use xlink:href="images/feather-sprite.svg#maximize"></use></svg>
+                                <svg class="icon" window-control="window_close"><use xlink:href="images/feather-sprite.svg#x"></use></svg>
                             </div>
 
                             <div class="playsong-detail">
                                 <div class="detail-head">
-                                    <div class="detail-head-cover"><img ng-src="{{ currentPlaying.img_url  }}" err-src="https://y.gtimg.cn/mediastyle/global/img/album_300.png"/></div>
+                                    <div class="detail-head-cover"><img ng-src="{{ currentPlaying.img_url  }}" err-src="https://y.gtimg.cn/mediastyle/global/img/album_300.png" /></div>
                                     <div class="detail-head-title">
                                         <!--<a title="加入收藏" class="clone" ng-click="showDialog(0, currentPlaying)">收藏</a>
-<a open-url="currentPlaying.source_url" title="原始链接" class="link">原始链接</a>--></div>
+                <a open-url="currentPlaying.source_url" title="原始链接" class="link">原始链接</a>-->
+                                    </div>
                                 </div>
                                 <div class="detail-songinfo">
                                     <h2>{{ currentPlaying.title }}</h2>
