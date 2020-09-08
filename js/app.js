@@ -119,6 +119,9 @@ const main = () => {
     if (sourceId === 7) {
       return 'migu';
     }
+    if (sourceId === 8) {
+      return 'neteasePlaylist';
+    }
     return '';
   }
 
@@ -1358,7 +1361,7 @@ const main = () => {
   app.controller('InstantSearchController', ['$scope', '$http', '$timeout', '$rootScope', 'angularPlayer', 'loWeb',
     ($scope, $http, $timeout, $rootScope, angularPlayer, loWeb) => {
       // notice: douban is skipped so array should plus 1
-      $scope.originpagelog = Array(getAllProviders().length + 1).fill(1);  // [网易,虾米,QQ,NULL,酷狗,酷我,bilibili, migu]
+      $scope.originpagelog = Array(getAllProviders().length + 2).fill(1);  // [网易,虾米,QQ,NULL,酷狗,酷我,bilibili, migu]
       $scope.tab = 0;
       $scope.keywords = '';
       $scope.loading = false;
@@ -1419,6 +1422,10 @@ const main = () => {
       };
 
       $scope.isActiveTab = tab => ($scope.tab === tab);
+
+      $scope.isPlayListSearch = tab => (
+        $scope.tab === 8
+      );
 
       function renderSearchPage(){
         updateCurrentPage(-1);
@@ -1506,7 +1513,9 @@ const main = () => {
     link(scope, element, attrs) {
       element.bind('click', (event) => {
         angularPlayer.addTrack(scope.song);
-        angularPlayer.playTrack(scope.song.id);
+        angularPlayer.playTrack(scope.song.id);  
+          angularPlayer.playTrack(scope.song.id);  
+        angularPlayer.playTrack(scope.song.id);  
       });
     },
   })]);

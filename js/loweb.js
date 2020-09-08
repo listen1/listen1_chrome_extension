@@ -18,6 +18,8 @@ function getProviderByName(sourceName) {
       return bilibili;
     case 'migu':
       return migu;
+    case 'neteasePlaylist':
+      return netease;
     default:
       return null;
   }
@@ -68,7 +70,11 @@ ngloWebManager.factory('loWeb', ['$rootScope', '$log', '$http', '$httpParamSeria
       if (path === '/search') {
         const source = getParameterByName('source', url);
         const provider = getProviderByName(source);
-        return provider.search(url, $http, $httpParamSerializerJQLike);
+        if(source === "neteasePlaylist"){
+          return provider.playlist_search(url, $http, $httpParamSerializerJQLike);
+        } else {
+          return provider.search(url, $http, $httpParamSerializerJQLike);
+        }
       }
       if (path === '/lyric') {
         const track_id = getParameterByName('track_id', url);
