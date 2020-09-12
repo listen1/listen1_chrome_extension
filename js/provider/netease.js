@@ -205,55 +205,44 @@ function build_netease() {
   }
 
   function ng_parse_playlist_tracks(playlist_tracks, hm, se, callback) {
-    var list = playlist_tracks;
-    var count = Math.ceil(list.length / 1000);
-    var nowCount = 0;
-    var playList = [];
-    function ng_parse_playlist_tracks_getData(playlist_tracks, hm, se, callback, index) {
-        const target_url = 'https://music.163.com/weapi/v3/song/detail';
-        const track_ids = playlist_tracks.map(i => i.id);
-        const d = {
-            c: '[' + track_ids.map(id => ('{"id":' + id + '}')).join(',') + ']',
-            ids: '[' + track_ids.join(',') + ']'
-        }
-        const data = _encrypted_request(d);
-        hm({
-            url: target_url,
-            method: 'POST',
-            data: se(data),
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-            },
-        }).then((response) => {
-            return callback(index, response.data.songs.map(track_json => ({
-                id: `netrack_${track_json.id}`,
-                title: track_json.name,
-                artist: track_json.ar[0].name,
-                artist_id: `neartist_${track_json.ar[0].id}`,
-                album: track_json.al.name,
-                album_id: `nealbum_${track_json.al.id}`,
-                source: 'netease',
-                source_url: `http://music.163.com/#/song?id=${track_json.id}`,
-                img_url: track_json.al.picUrl,
-                url: `netrack_${track_json.id}`,
-            })));
-        });
+    const target_url = 'https://music.163.com/weapi/v3/song/detail';
+    const track_ids = playlist_tracks.map(i=>i.id);
+    const d = {
+      c: '[' + track_ids.map(id => ('{"id":' + id + '}')).join(',') + ']',
+      ids: '[' + track_ids.join(',') + ']'
     }
-    function cb(index, data) {
-        nowCount++;
-        playList[index] = data;
-        if (count == nowCount) {
-            var _playList = [];
-            for (var i = 0; i < playList.length; i++) {
-                _playList = _playList.concat(playList[i]);
-            }
-            return callback(null, _playList);
-        }
-    }
+    const data = _encrypted_request(d);
+    hm({
+      url: target_url,
+      method: 'POST',
+      data: se(data),
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+    }).then((response)=>{
+      const tracks = response.data.songs.map(track_json=>({
+        id: `netrack_${track_json.id}`,
+        title: track_json.name,
+        artist: track_json.ar[0].name,
+        artist_id: `neartist_${track_json.ar[0].id}`,
+        album: track_json.al.name,
+        album_id: `nealbum_${track_json.al.id}`,
+        source: 'netease',
+        source_url: `http://music.163.com/#/song?id=${track_json.id}`,
+        img_url: track_json.al.picUrl,
+        url: `netrack_${track_json.id}`,
+      }));
+
+      return callback(null, tracks);
+    });
+  }
+  function split_array(myarray, size) {
+    var count = Math.ceil(myarray.length / size);
+    var result = [];
     for (var i = 0; i < count; i++) {
-        playlist_tracks = list.slice(i * 1000, (i + 1) * 1000);
-        ng_parse_playlist_tracks_getData(playlist_tracks, hm, se, cb, i)
+      result.push(myarray.slice(i * size, (i + 1) * size));
     }
+    return result;
   }
 
   function ne_get_playlist(url, hm, se) {
@@ -288,13 +277,16 @@ function build_netease() {
               title: res_data.playlist.name,
               source_url: `http://music.163.com/#/playlist?id=${list_id}`,
             };
+            var max_allow_size = 1000;
+            var trackIdsArray = split_array(res_data.playlist.trackIds, max_allow_size);
 
-            // request all tracks to fetch song info
-            ng_parse_playlist_tracks(res_data.playlist.trackIds, hm, se,
-            (err, tracks) => fn({
-              tracks,
-              info,
-            }));
+            function ng_parse_playlist_tracks_wrapper(trackIds, callback){
+              return ng_parse_playlist_tracks(trackIds, hm, se, callback);
+            }
+
+            async.concat(trackIdsArray, ng_parse_playlist_tracks_wrapper, function(err, tracks){
+              fn({tracks, info});
+            });
 
             // request every tracks to fetch song info
             // async_process_list(res_data.playlist.trackIds, ng_render_playlist_result_item, [hm, se],
