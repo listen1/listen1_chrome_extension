@@ -296,6 +296,14 @@
                               {{_AUTO_CHOOSE_SOURCE_NOTICE}}
                             </div>
                           </div>
+                          <div class="settings-title"><span>{{_NOWPLAYING_COVER_BACKGROUND}}<span></div>
+                          <div class="settings-content">
+                            <div class="shortcut" class="btn btn-primary confirm-button" >
+                              <svg class="feather" ng-show="!enableNowplayingCoverBackground" ng-click="setNowplayingCoverBackground(true)"><use xlink:href="images/feather-sprite.svg#square"></use></svg>
+                              <svg class="feather" ng-show="enableNowplayingCoverBackground" ng-click="setNowplayingCoverBackground(true)"><use xlink:href="images/feather-sprite.svg#check-square"></use></svg>
+                              {{_NOWPLAYING_COVER_BACKGROUND_NOTICE}}
+                            </div>
+                          </div>
                           <div class="settings-title"><span>{{_BACKUP_PLAYLIST}}<span></div>
                           <div class="settings-content">
                             <p>{{_BACKUP_WARNING}}</p>
@@ -420,8 +428,8 @@
                             </ul>
                         </div>
                         <!-- now playing window-->
-                        <div class="songdetail-wrapper" ng-class="{slidedown: window_type!=='track'}">
-                            <div class="bg" style="background-image: url({{ currentPlaying.img_url }});"></div>
+                        <div class="songdetail-wrapper" ng-class="{slidedown: window_type!=='track', coverbg: enableNowplayingCoverBackground}">
+                            <div ng-if="enableNowplayingCoverBackground" class="bg" style="background-image: url({{ currentPlaying.img_url }});"></div>
                             <div class="close" ng-class="isMac? 'mac':'' " ng-click="popWindow()"><svg class="icon"><use xlink:href="images/feather-sprite.svg#chevron-down"></use></svg></div>
 
                             <div ng-if="!isChrome && !isMac" class="window-control">

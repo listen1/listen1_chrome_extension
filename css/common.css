@@ -605,6 +605,9 @@ svg {
 .page .playsong-detail .detail-songinfo .info span {
   color: var(--lyric-default-color);
 }
+.page .coverbg .playsong-detail .detail-songinfo .info span {
+  color: var(--lyric-on-cover-color);
+}
 .page .playsong-detail .detail-songinfo .lyric {
   flex: 0 0 380px;
   overflow-y: scroll;
@@ -613,11 +616,17 @@ svg {
   scrollbar-color: var(--scroll-color) transparent;
   font-size: 14px;
 }
+.page .coverbg .playsong-detail .detail-songinfo .lyric {
+  color: var(--lyric-on-cover-color);
+}
 .page .playsong-detail .detail-songinfo .lyric p {
   margin: 10px 0;
 }
 .page .playsong-detail .detail-songinfo .lyric p.highlight {
-  color: var(--important-color);
+  color: var(--lyric-important-color);
+}
+.page .coverbg .playsong-detail .detail-songinfo .lyric p.highlight {
+  color: var(--lyric-important-on-cover-color);
 }
 
 ul.detail-songlist {

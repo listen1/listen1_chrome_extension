@@ -96,5 +96,7 @@
  "_THEME_WHITE": "White Theme",
  "_THEME_BLACK": "Black Theme",
  "_AUTO_CHOOSE_SOURCE": "Auto Choose Source",
- "_AUTO_CHOOSE_SOURCE_NOTICE": "If play fail, auto choose source from other music platform."
+ "_AUTO_CHOOSE_SOURCE_NOTICE": "If play fail, auto choose source from other music platform.",
+ "_NOWPLAYING_COVER_BACKGROUND": "Now Playing Cover Background",
+ "_NOWPLAYING_COVER_BACKGROUND_NOTICE": "Show Cover Image for Now Playing"
 }

@@ -7,7 +7,10 @@
   --text-subtitle-color: #666666;
   --text-disable-color: #999999;
 
-  --lyric-default-color: #333333;
+  --lyric-default-color: #666666;
+  --lyric-on-cover-color: #333333;
+  --lyric-important-color: #ff4444;
+  --lyric-important-on-cover-color: #ffffff;
 
   --link-default-color: #999999;
   --link-highlight-color: #111111;
@@ -34,7 +37,7 @@
 
   --window-control-border-color: #dddddd;
 
-  --important-color: #fff;
+  --important-color: #ff4444;
 
   --button-background-color: #eeeeee;
   --button-border-color: #bebebe;

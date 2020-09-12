@@ -96,5 +96,7 @@
  "_THEME_WHITE": "简约白",
  "_THEME_BLACK": "深空灰",
  "_AUTO_CHOOSE_SOURCE": "自动切换源",
- "_AUTO_CHOOSE_SOURCE_NOTICE": "如果播放音乐失败，是否自动切换播放源(默认从酷我，QQ和咪咕音乐搜索)"
+ "_AUTO_CHOOSE_SOURCE_NOTICE": "如果播放音乐失败，是否自动切换播放源(默认从酷我，QQ和咪咕音乐搜索)",
+ "_NOWPLAYING_COVER_BACKGROUND": "正在播放背景",
+ "_NOWPLAYING_COVER_BACKGROUND_NOTICE": "是否显示专辑封面作为正在播放背景"
 }

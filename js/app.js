@@ -927,9 +927,15 @@ const main = () => {
         $scope.enableGlobalShortCut = localStorage.getObject('enable_global_shortcut');
         $scope.enableLyricFloatingWindow = localStorage.getObject('enable_lyric_floating_window');
         $scope.enableAutoChooseSource = localStorage.getObject('enable_auto_choose_source');
+        $scope.enableNowplayingCoverBackground = localStorage.getObject('enable_nowplaying_cover_background');
+        
         if ($scope.enableAutoChooseSource === null) {
           // default on
           $scope.enableAutoChooseSource = true;
+        }
+        if ($scope.enableNowplayingCoverBackground === null) {
+          // default false
+          $scope.enableNowplayingCoverBackground = false;
         }
         $scope.applyGlobalShortcut();
         $scope.openLyricFloatingWindow();
@@ -1351,6 +1357,13 @@ const main = () => {
           $scope.enableAutoChooseSource = !$scope.enableAutoChooseSource;
         }
         localStorage.setObject('enable_auto_choose_source', $scope.enableAutoChooseSource);
+      };
+
+      $scope.setNowplayingCoverBackground = (toggle) => {
+        if (toggle === true) {
+          $scope.enableNowplayingCoverBackground = !$scope.enableNowplayingCoverBackground;
+        }
+        localStorage.setObject('enable_nowplaying_cover_background', $scope.enableNowplayingCoverBackground);
       };
     },
   ]);
