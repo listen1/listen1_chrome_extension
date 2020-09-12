@@ -1,4 +1,4 @@
-Listen 1 (Chrome Extension) V2.12.0
+Listen 1 (Chrome Extension) V2.13.0
 ==========
 （Last Update August 24th, 2020)
 
@@ -46,6 +46,11 @@ Install (Firefox)
 
 Changelog
 -------
+`2020-09-12`
+* fix netease songlist contains more than 1k tracks import error (thanks @YueShangGuan）
+* support album cover as nowplaying background (thanks @YueShangGuan）
+
+
 `2020-08-24`
 * fix xiami songlist only shows part of songs bug (thanks @RecluseWind)
 * fix songlist cover and title display bug (thanks @RecluseWind)

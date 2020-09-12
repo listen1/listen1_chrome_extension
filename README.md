@@ -1,6 +1,6 @@
-Listen 1 (Chrome Extension) V2.12.0
+Listen 1 (Chrome Extension) V2.13.0
 ==========
-（最后更新于2020年08月24日）
+（最后更新于2020年09月12日）
 
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE)
 
@@ -59,6 +59,10 @@ Firefox打包安装
 
 更新日志
 -------
+`2020-09-12`
+* 修复网易歌单超过1000首时导入失败的bug (感谢@YueShangGuan的提交）
+* 支持显示歌曲封面作为正在播放背景 (感谢@YueShangGuan的提交）
+
 `2020-08-24`
 * 修复虾米歌单歌曲只显示部分歌曲的bug (感谢@RecluseWind的提交)
 * 修复歌单图片和标题显示问题 (感谢@RecluseWind的提交)
