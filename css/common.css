@@ -521,7 +521,27 @@ svg {
   stroke: var(--now-playing-close-icon-color);
 }
 
+.page .bg {
+  opacity: 0.5;
+  height: 100%;
+  text-align: center;
+  line-height: 100%;
+  float: left;
+  width: 100%;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  -webkit-filter: blur(15px);
+  -moz-filter: blur(15px);
+  -o-filter: blur(15px);
+  -ms-filter: blur(15px);
+  filter: blur(15px);
+}
+
 .page .playsong-detail {
+  position:absolute;
+  left: 10px;
+  right: 10px;
   max-width: 770px;
   margin: 0 auto;
   display: flex;

@@ -236,6 +236,14 @@ function build_netease() {
       return callback(null, tracks);
     });
   }
+  function split_array(myarray, size) {
+    var count = Math.ceil(myarray.length / size);
+    var result = [];
+    for (var i = 0; i < count; i++) {
+      result.push(myarray.slice(i * size, (i + 1) * size));
+    }
+    return result;
+  }
 
   function ne_get_playlist(url, hm, se) {
     // special thanks for @Binaryify
@@ -269,13 +277,16 @@ function build_netease() {
               title: res_data.playlist.name,
               source_url: `http://music.163.com/#/playlist?id=${list_id}`,
             };
+            var max_allow_size = 1000;
+            var trackIdsArray = split_array(res_data.playlist.trackIds, max_allow_size);
 
-            // request all tracks to fetch song info
-            ng_parse_playlist_tracks(res_data.playlist.trackIds, hm, se,
-            (err, tracks) => fn({
-              tracks,
-              info,
-            }));
+            function ng_parse_playlist_tracks_wrapper(trackIds, callback){
+              return ng_parse_playlist_tracks(trackIds, hm, se, callback);
+            }
+
+            async.concat(trackIdsArray, ng_parse_playlist_tracks_wrapper, function(err, tracks){
+              fn({tracks, info});
+            });
 
             // request every tracks to fetch song info
             // async_process_list(res_data.playlist.trackIds, ng_render_playlist_result_item, [hm, se],
