@@ -1245,7 +1245,7 @@ const main = () => {
             let currentLyric = $scope.lyricArray[lastObject.lineNumber].content;
             if ($scope.enableLyricFloatingWindowTranslation === true) {
               currentLyric = currentLyric
-                + '<br><div id="currentLyricTrans" class="content">'
+                + '<br><div id="currentLyricTrans" class="contentTrans">'
                 + $scope.lyricArray[lastObjectTrans.lineNumber].content
                 + '</div>';
             }
