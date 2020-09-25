@@ -66,6 +66,8 @@
  "_GLOBAL_SHORTCUTS_NOTICE": "Enable Global Shortcuts: Ctrl(Cmd) + Alt + Left Arrow (Previous Track)，Ctrl(Cmd) + Alt + Right Arrow (Next Track)，Ctrl(Cmd) + Alt + Space (play/pause)",
  "_LYRIC_DISPLAY": "Lyric Display",
  "_SHOW_DESKTOP_LYRIC": "Show desktop lyric",
+ "_SHOW_LYRIC_TRANSLATION": "Show lyric translation",
+ "_SHOW_DESKTOP_LYRIC_TRANSLATION": "Show lyric translation with desktop lyric",
  "_CONNECT_TO_LASTFM": "Connect to Last.fm",
  "_ABOUT": "About",
  "_HOMEPAGE": "Homepage",
