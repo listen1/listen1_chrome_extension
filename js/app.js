@@ -1243,13 +1243,11 @@ const main = () => {
           if (typeof chrome == 'undefined') {
             const { ipcRenderer } = require('electron');
             let currentLyric = $scope.lyricArray[lastObject.lineNumber].content;
-            if ($scope.enableLyricFloatingWindowTranslation === true) {
-              currentLyric = currentLyric
-                + '<br><div id="currentLyricTrans" class="contentTrans">'
-                + $scope.lyricArray[lastObjectTrans.lineNumber].content
-                + '</div>';
+            let currentLyricTrans = '';
+            if ($scope.enableLyricFloatingWindowTranslation === true && lastObjectTrans) {
+              currentLyricTrans = $scope.lyricArray[lastObjectTrans.lineNumber].content;
             }
-            ipcRenderer.send('currentLyric', currentLyric);
+            ipcRenderer.send('currentLyric', {lyric: currentLyric, tlyric: currentLyricTrans});
           }
         }
       });
