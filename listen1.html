@@ -464,7 +464,7 @@
                                     </div>
                                     <div class="lyric">
                                         <div class="placeholder"></div>
-                                        <p ng-repeat="line in lyricArray track by $index" ng-class="{ 'highlight': line.lineNumber == lyricLineNumber || line.lineNumber == lyricLineNumberTrans }">{{ line.content }} </p>
+                                        <p ng-repeat="line in lyricArray track by $index" ng-class="{ 'highlight': (line.lineNumber == lyricLineNumber) || (line.lineNumber == lyricLineNumberTrans) }">{{ line.content }} </p>
                                         <div class="placeholder"></div>
                                     </div>
                                 </div>
