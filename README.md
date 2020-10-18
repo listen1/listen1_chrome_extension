@@ -1,6 +1,6 @@
-Listen 1 (Chrome Extension) V2.13.0
+Listen 1 (Chrome Extension) V2.14.0
 ==========
-（最后更新于2020年09月12日）
+（最后更新于2020年10月18日）
 
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE)
 
@@ -59,6 +59,12 @@ Firefox打包安装
 
 更新日志
 -------
+`2020-10-18`
+* 增加歌词翻译功能，暂时只支持网易云音乐 (感谢@reservewor的提交)
+* 修复bilibili音乐无法播放的bug
+* 修复虾米播放页歌曲封面无法显示的bug
+* 修复酷我音乐歌单无法打开的bug
+
 `2020-09-12`
 * 修复网易歌单超过1000首时导入失败的bug (感谢@YueShangGuan的提交）
 * 支持显示歌曲封面作为正在播放背景 (感谢@YueShangGuan的提交）

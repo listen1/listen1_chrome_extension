@@ -1,6 +1,6 @@
-Listen 1 (Chrome Extension) V2.13.0
+Listen 1 (Chrome Extension) V2.14.0
 ==========
-（Last Update August 24th, 2020)
+（Last Update October 18th, 2020)
 
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE)
 
@@ -46,6 +46,12 @@ Install (Firefox)
 
 Changelog
 -------
+`2020-10-18`
+* add lyric translation, now for netease music only (thanks @reservewor)
+* fix bilibili play fail bug
+* fix xiami now playing page music cover missing bug
+* fix kuwo music can't open bug
+
 `2020-09-12`
 * fix netease songlist contains more than 1k tracks import error (thanks @YueShangGuan）
 * support album cover as nowplaying background (thanks @YueShangGuan）
