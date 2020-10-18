@@ -854,12 +854,11 @@ svg.searchspinner {
   text-align: center;
   font-size: 14px;
   color: var(--text-default-color);
-  margin-top: 3px;
   min-width: 0px;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
-  margin: 0 60px;
+  margin: 3px 60px 0 60px;
 }
 
 .footer .main-info .detail .more-info {
