@@ -926,6 +926,8 @@ const main = () => {
         }
         $scope.enableGlobalShortCut = localStorage.getObject('enable_global_shortcut');
         $scope.enableLyricFloatingWindow = localStorage.getObject('enable_lyric_floating_window');
+        $scope.enableLyricTranslation = localStorage.getObject('enable_lyric_translation');
+        $scope.enableLyricFloatingWindowTranslation = localStorage.getObject('enable_lyric_floating_window_translation');
         $scope.enableAutoChooseSource = localStorage.getObject('enable_auto_choose_source');
         $scope.enableNowplayingCoverBackground = localStorage.getObject('enable_nowplaying_cover_background');
         
@@ -1096,17 +1098,27 @@ const main = () => {
         }
       });
 
-      function parseLyric(lyric) {
+      function parseLyric(lyric, tlyric) {
         const lines = lyric.split('\n');
         let result = [];
         const timeResult = [];
+
+        if (typeof tlyric != 'string') {
+          tlyric = '';
+        }
+        const linesTrans = tlyric.split('\n');
+        let resultTrans = [];
+        const timeResultTrans = [];
+        if (tlyric === '') {
+          linesTrans.splice(0);
+        }
 
         function rightPadding(str, length, padChar) {
           const newstr = str + new Array(length - str.length + 1).join(padChar);
           return newstr;
         }
 
-        lines.forEach((line) => {
+        let process = (result, timeResult, translationFlag) => (line) => {
           const tagReg = /\[\D*:([^\]]+)\]/g;
           const tagRegResult = tagReg.exec(line);
           if (tagRegResult) {
@@ -1127,24 +1139,29 @@ const main = () => {
               seconds: parseInt(timeRegResult[1], 10) * 60 * 1000 // min
                 + parseInt(timeRegResult[2], 10) * 1000 // sec
                 + (timeRegResult[3] !== null ? parseInt(rightPadding(timeRegResult[3], 3, '0'), 10) : 0), // microsec
+              translationFlag: translationFlag,
             });
           }
-        });
+        };
+
+        lines.forEach(process(result, timeResult, false));
+        linesTrans.forEach(process(resultTrans, timeResultTrans, true));
 
         // sort time line
-        timeResult.sort((a, b) => {
+        result = timeResult.concat(timeResultTrans).sort((a, b) => {
           const keyA = a.seconds;
           const keyB = b.seconds;
           // Compare the 2 dates
           if (keyA < keyB) return -1;
           if (keyA > keyB) return 1;
+          if(!a.translationFlag) return -1;
           return 0;
         });
 
         // disable tag info, because music provider always write
         // tag info in lyric timeline.
         // result.push.apply(result, timeResult);
-        result = timeResult;
+        // result = timeResult; // executed up there
 
         for (let i = 0; i < result.length; i += 1) {
           result[i].lineNumber = i;
@@ -1179,11 +1196,16 @@ const main = () => {
           url = `${url}&lyric_url=${track.lyric_url}`;
         }
         loWeb.get(url).success((res) => {
-          const { lyric } = res;
+          const { lyric, tlyric } = res;
           if (lyric === null) {
             return;
           }
-          $scope.lyricArray = parseLyric(lyric);
+          $scope.lyricArrayTrans = parseLyric(lyric, tlyric);
+          if ($scope.enableLyricTranslation !== true) {
+            $scope.lyricArray = $scope.lyricArrayTrans.filter(line => line.translationFlag !== true);
+          } else {
+            $scope.lyricArray = $scope.lyricArrayTrans;
+          }
         });
         $scope.lastTrackId = data;
         if (typeof chrome == 'undefined') {
@@ -1196,9 +1218,14 @@ const main = () => {
         // update lyric position
         const currentSeconds = data;
         let lastObject = null;
+        let lastObjectTrans = null;
         $scope.lyricArray.forEach((lyric) => {
           if (currentSeconds >= lyric.seconds) {
-            lastObject = lyric;
+            if (lyric.translationFlag !== true) {
+              lastObject = lyric;
+            } else {
+              lastObjectTrans = lyric;
+            }
           }
         });
         if (lastObject && lastObject.lineNumber !== $scope.lyricLineNumber) {
@@ -1211,9 +1238,17 @@ const main = () => {
             scrollTop: `${offset}px`,
           }, 500);
           $scope.lyricLineNumber = lastObject.lineNumber;
+          if (lastObjectTrans && lastObjectTrans.lineNumber !== $scope.lyricLineNumberTrans) {
+            $scope.lyricLineNumberTrans = lastObjectTrans.lineNumber;
+          }
           if (typeof chrome == 'undefined') {
             const { ipcRenderer } = require('electron');
-            ipcRenderer.send('currentLyric', $scope.lyricArray[lastObject.lineNumber].content);
+            let currentLyric = $scope.lyricArray[lastObject.lineNumber].content;
+            let currentLyricTrans = '';
+            if ($scope.enableLyricFloatingWindowTranslation === true && lastObjectTrans) {
+              currentLyricTrans = $scope.lyricArray[lastObjectTrans.lineNumber].content;
+            }
+            ipcRenderer.send('currentLyric', {lyric: currentLyric, tlyric: currentLyricTrans});
           }
         }
       });
@@ -1333,6 +1368,16 @@ const main = () => {
         const { ipcRenderer } = require('electron');
         ipcRenderer.send('control', message);
       };
+
+      $scope.toggleLyricTranslation = () => {
+        $scope.enableLyricTranslation = !$scope.enableLyricTranslation;
+        localStorage.setObject('enable_lyric_translation', $scope.enableLyricTranslation)
+      }
+
+      $scope.toggleLyricFloatingWindowTranslation = () => {
+        $scope.enableLyricFloatingWindowTranslation = !$scope.enableLyricFloatingWindowTranslation;
+        localStorage.setObject('enable_lyric_floating_window_translation', $scope.enableLyricFloatingWindowTranslation)
+      }
 
       if (typeof chrome === 'undefined') {
         require('electron').ipcRenderer.on('globalShortcut', (event, message) => {

@@ -356,6 +356,16 @@
                               <svg class="feather" ng-show="enableLyricFloatingWindow" ng-click="openLyricFloatingWindow(true)"><use xlink:href="images/feather-sprite.svg#check-square"></use></svg>
                               <span ng-show="enableLyricFloatingWindow"></span>{{_SHOW_DESKTOP_LYRIC}}
                             </div>
+                            <div class="shortcut" class="btn btn-primary confirm-button" >
+                              <svg class="feather" ng-show="!enableLyricTranslation" ng-click="toggleLyricTranslation()"><use xlink:href="images/feather-sprite.svg#square"></use></svg>
+                              <svg class="feather" ng-show="enableLyricTranslation" ng-click="toggleLyricTranslation()"><use xlink:href="images/feather-sprite.svg#check-square"></use></svg>
+                              <span ng-show="enableLyricTranslation"></span>{{_SHOW_LYRIC_TRANSLATION}}
+                            </div>
+                            <div class="shortcut" ng-if="!isChrome" class="btn btn-primary confirm-button" >
+                              <svg class="feather" ng-show="!enableLyricFloatingWindowTranslation" ng-click="toggleLyricFloatingWindowTranslation()"><use xlink:href="images/feather-sprite.svg#square"></use></svg>
+                              <svg class="feather" ng-show="enableLyricFloatingWindowTranslation" ng-click="toggleLyricFloatingWindowTranslation()"><use xlink:href="images/feather-sprite.svg#check-square"></use></svg>
+                              <span ng-show="enableLyricFloatingWindowTranslation"></span>{{_SHOW_DESKTOP_LYRIC_TRANSLATION}}
+                            </div>
                           </div>
                           <div class="settings-title"><span>{{_ABOUT}}<span></div>
                           <div class="settings-content">
@@ -454,7 +464,7 @@
                                     </div>
                                     <div class="lyric">
                                         <div class="placeholder"></div>
-                                        <p ng-repeat="line in lyricArray track by $index" ng-class="{ 'highlight': line.lineNumber == lyricLineNumber }">{{ line.content }} </p>
+                                        <p ng-repeat="line in lyricArray track by $index" ng-class="{ 'highlight': line.lineNumber == lyricLineNumber || line.lineNumber == lyricLineNumberTrans }">{{ line.content }} </p>
                                         <div class="placeholder"></div>
                                     </div>
                                 </div>

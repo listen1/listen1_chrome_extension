@@ -491,11 +491,16 @@ function build_netease() {
         }).then((response) => {
           const { data: res_data } = response;
           let lrc = '';
+          let tlrc = '';
           if (res_data.lrc != null) {
             lrc = res_data.lrc.lyric;
           }
+          if (res_data.tlyric != null) {
+            tlrc = res_data.tlyric.lyric;
+          }
           return fn({
             lyric: lrc,
+            tlyric: tlrc
           });
         });
       },
