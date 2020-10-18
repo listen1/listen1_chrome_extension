@@ -1154,6 +1154,7 @@ const main = () => {
           // Compare the 2 dates
           if (keyA < keyB) return -1;
           if (keyA > keyB) return 1;
+          if(!a.translationFlag) return -1;
           return 0;
         });
 
