@@ -155,7 +155,7 @@ function build_xiami() {
       const { location } = data.data.trackList[0];
       // eslint-disable-next-line
       sound.url = handleProtocolRelativeUrl(caesar(location));
-      track.img_url = xm_retina_url(handleProtocolRelativeUrl(data.data.trackList[0].pic));
+      track.img_url = xm_retina_url(handleProtocolRelativeUrl(data.data.trackList[0].album_logo));
       track.album = data.data.trackList[0].album_name;
       track.album_id = `xmalbum_${data.data.trackList[0].album_id}`;
       if (handleProtocolRelativeUrl(data.data.trackList[0].lyric_url) != ""){
