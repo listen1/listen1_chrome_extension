@@ -443,7 +443,7 @@ function build_kuwo() {
 
   function kw_parse_url(url) {
     let result;
-    const match = /\/\/www.kuwo.cn\/playlist\/index\?pid=([0-9]+)/.exec(url);
+    const match = /kuwo.cn\/playlist_detail\/([0-9]+)/.exec(url);
     if (match != null) {
       const playlist_id = match[1];
       result = {
