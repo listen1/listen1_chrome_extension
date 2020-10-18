@@ -859,6 +859,7 @@ svg.searchspinner {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+  margin: 0 60px;
 }
 
 .footer .main-info .detail .more-info {
