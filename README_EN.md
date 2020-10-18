@@ -47,7 +47,7 @@ Install (Firefox)
 Changelog
 -------
 `2020-10-18`
-* add lyric translation, now for netease music only (thanks @reservewor)
+* add lyric translation, now for netease music only (thanks @reserveword)
 * fix bilibili play fail bug
 * fix xiami now playing page music cover missing bug
 * fix kuwo music can't open bug
