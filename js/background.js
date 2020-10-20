@@ -15,6 +15,7 @@ function hack_referer_header(details) {
   let add_origin = true;
 
   let referer_value = '';
+  let origin_value = "";
 
   if (details.url.indexOf('://music.163.com/') !== -1) {
     referer_value = 'http://music.163.com/';
@@ -37,7 +38,8 @@ function hack_referer_header(details) {
   }
 
   if (details.url.indexOf('c.y.qq.com/') !== -1) {
-    referer_value = 'https://y.qq.com';
+    referer_value = 'https://y.qq.com/';
+    origin_value = "https://y.qq.com";
   }
   if ((details.url.indexOf('i.y.qq.com/') !== -1)
     || (details.url.indexOf('qqmusic.qq.com/') !== -1)
@@ -62,6 +64,9 @@ function hack_referer_header(details) {
   if (details.url.indexOf('.migu.cn') !== -1) {
     referer_value = 'http://music.migu.cn/v3/music/player/audio?from=migu';
   }
+  if (origin_value == "") {
+    origin_value = referer_value;
+  }
 
   let isRefererSet = false;
   let isOriginSet = false;
@@ -73,8 +78,8 @@ function hack_referer_header(details) {
       headers[i].value = referer_value;
       isRefererSet = true;
     }
-    if (replace_origin && (headers[i].name === 'Origin') && (referer_value !== '')) {
-      headers[i].value = referer_value;
+    if (replace_origin && (headers[i].name === 'Origin') && (origin_value !== '')) {
+      headers[i].value = origin_value;
       isOriginSet = true;
     }
   }
@@ -86,10 +91,10 @@ function hack_referer_header(details) {
     });
   }
 
-  if (add_origin && (!isOriginSet) && (referer_value !== '')) {
+  if (add_origin && (!isOriginSet) && (origin_value !== '')) {
     headers.push({
       name: 'Origin',
-      value: referer_value,
+      value: origin_value,
     });
   }
 
