@@ -233,7 +233,7 @@ function build_qq() {
       + 'hostUin=0&format=json&inCharset=utf8&outCharset=utf-8&notice=0&'
       + 'platform=yqq.json&needNewCode=0&data=%7B%22req_0%22%3A%7B%22'
       + 'module%22%3A%22vkey.GetVkeyServer%22%2C%22method%22%3A%22'
-      + `CgiGetVkey%22%2C%22param%22%3A%7B%22guid%22%3A%2210000%22%2C%22songmid%22%3A%5B%22'}${
+      + `CgiGetVkey%22%2C%22param%22%3A%7B%22guid%22%3A%2210000%22%2C%22songmid%22%3A%5B%22${
       songId}%22%5D%2C%22songtype%22%3A%5B0%5D%2C%22uin%22%3A%220%22%2C%22loginflag%22`
       + '%3A1%2C%22platform%22%3A%2220%22%7D%7D%2C%22comm%22%3A%7B%22uin%22%3A0%2C%22'
       + 'format%22%3A%22json%22%2C%22ct%22%3A20%2C%22cv%22%3A0%7D%7D';
