@@ -7,11 +7,11 @@ function build_qq() {
 
   function qq_show_playlist(url, hm) {
     const offset = Number(getParameterByName('offset', url)) || 0;
-    const target_url = `${'https://c.y.qq.com/splcloud/fcgi-bin/fcg_get_diss_by_tag.fcg'
+    const target_url = 'https://c.y.qq.com/splcloud/fcgi-bin/fcg_get_diss_by_tag.fcg'
       + `?picmid=1&rnd=${Math.random()}&g_tk=732560869`
       + '&loginUin=0&hostUin=0&format=json&inCharset=utf8&outCharset=utf-8'
       + '&notice=0&platform=yqq.json&needNewCode=0'
-      + '&categoryId=10000000&sortId=5&sin='}${offset}&ein=${29 + offset}`;
+      + `&categoryId=10000000&sortId=5&sin=${offset}&ein=${29 + offset}`;
 
     return {
       success: (fn) => {
@@ -89,9 +89,9 @@ function build_qq() {
 
     return {
       success(fn) {
-        const target_url = `${'https://i.y.qq.com/qzone-music/fcg-bin/fcg_ucc_getcdinfo_'
+        const target_url = 'https://i.y.qq.com/qzone-music/fcg-bin/fcg_ucc_getcdinfo_'
           + 'byids_cp.fcg?type=1&json=1&utf8=1&onlysong=0&jsonpCallback='
-          + 'jsonCallback&nosign=1&disstid='}${list_id}&g_tk=5381&loginUin=0&hostUin=0`
+          + `jsonCallback&nosign=1&disstid=${list_id}&g_tk=5381&loginUin=0&hostUin=0`
           + '&format=jsonp&inCharset=GB2312&outCharset=utf-8&notice=0'
           + '&platform=yqq&jsonpCallback=jsonCallback&needNewCode=0';
         hm({
@@ -126,8 +126,8 @@ function build_qq() {
 
     return {
       success(fn) {
-        const target_url = `${'https://i.y.qq.com/v8/fcg-bin/fcg_v8_album_info_cp.fcg'
-          + '?platform=h5page&albummid='}${album_id}&g_tk=938407465`
+        const target_url = 'https://i.y.qq.com/v8/fcg-bin/fcg_v8_album_info_cp.fcg'
+          + `?platform=h5page&albummid=${album_id}&g_tk=938407465`
           + '&uin=0&format=jsonp&inCharset=utf-8&outCharset=utf-8'
           + '&notice=0&platform=h5&needNewCode=1&_=1459961045571'
           + '&jsonpCallback=asonglist1459961045566';
