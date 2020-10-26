@@ -1,6 +1,6 @@
-Listen 1 (Chrome Extension) V2.14.0
+Listen 1 (Chrome Extension) V2.15.0
 ==========
-（Last Update October 18th, 2020)
+（Last Update October 24th, 2020)
 
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE)
 
@@ -46,6 +46,12 @@ Install (Firefox)
 
 Changelog
 -------
+-------
+`2020-10-26`
+* add lyric translation support for qq music, xiami music (thanks @RecluseWind)
+* update xiami api including get playlist, search, play music (thanks @RecluseWind)
+* fix bug some playlist not response in qq music website after installed extension
+
 `2020-10-18`
 * add lyric translation, now for netease music only (thanks @reserveword)
 * fix bilibili play fail bug
