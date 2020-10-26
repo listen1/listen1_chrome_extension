@@ -495,7 +495,7 @@ function build_netease() {
           if (res_data.lrc != null) {
             lrc = res_data.lrc.lyric;
           }
-          if (res_data.tlyric != null) {
+          if (res_data.tlyric != null && res_data.tlyric.lyric != null) {
             tlrc = res_data.tlyric.lyric.replace(/(|\\)/g, '');
             tlrc = tlrc.replace(/[\u2005]+/g, ' ');
           }
