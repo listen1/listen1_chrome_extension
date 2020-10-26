@@ -2,50 +2,6 @@
 /* global MD5 getParameterByName parseInt */
 /* eslint-disable no-param-reassign */
 function build_xiami() {
-  function caesar(location) {
-    const num = location[0];
-    const avg_len = Math.floor(location.slice(1).length / num);
-    const remainder = location.slice(1).length % num;
-
-    const result = [];
-    for (let i = 0; i < remainder; i += 1) {
-      const line = location.slice(i * (avg_len + 1) + 1, (i + 1) * (avg_len + 1) + 1);
-      result.push(line);
-    }
-
-    for (let i = 0; i < num - remainder; i += 1) {
-      const line = location.slice((avg_len + 1) * remainder)
-        .slice(i * avg_len + 1, (i + 1) * avg_len + 1);
-      result.push(line);
-    }
-
-    const s = [];
-    for (let i = 0; i < avg_len; i += 1) {
-      for (let j = 0; j < num; j += 1) {
-        s.push(result[j][i]);
-      }
-    }
-
-    for (let i = 0; i < remainder; i += 1) {
-      s.push(result[i].slice(-1));
-    }
-
-    return unescape(s.join('')).replace(/\^/g, '0');
-  }
-
-  function handleProtocolRelativeUrl(url) {
-    const regex = /^.*?\/\//;
-    const result = url.replace(regex, 'https://');
-    return result;
-  }
-
-  function xm_retina_url(s) {
-    if (s.slice(-6, -4) === '_1') {
-      return s.slice(0, -6) + s.slice(-4);
-    }
-    return s;
-  }
-
   function xm_get_token(callback) {
     const domain = 'https://www.xiami.com';
     const name = 'xm_sg_tk';
@@ -144,34 +100,32 @@ function build_xiami() {
 
   // eslint-disable-next-line no-unused-vars
   function xm_bootstrap_track(sound, track, success, failure, hm, se) {
-    const target_url = `https://emumo.xiami.com/song/playlist/id/${track.id.slice('xmtrack_'.length)
-    }/object_name/default/object_id/0/cat/json`;
-    hm.get(target_url).then((response) => {
-      const { data } = response;
-      if (data.data.trackList == null) {
-        failure();
-        return;
-      }
-      const { location } = data.data.trackList[0];
-      // eslint-disable-next-line
-      sound.url = handleProtocolRelativeUrl(caesar(location));
-      track.img_url = xm_retina_url(handleProtocolRelativeUrl(data.data.trackList[0].album_logo));
-      track.album = data.data.trackList[0].album_name;
-      track.album_id = `xmalbum_${data.data.trackList[0].album_id}`;
-      if (handleProtocolRelativeUrl(data.data.trackList[0].lyric_url) != ""){
-        track.lyric_url = handleProtocolRelativeUrl(data.data.trackList[0].lyric_url);
-      } else {
-        track.lyric_url = handleProtocolRelativeUrl(data.data.trackList[0].lyricInfo.lyricFile);
-      }
+    if (!track.sound_url) {
+      const api = '/api/song/getPlayInfo';
+      const song_id = track.id.slice('xmtrack_'.length);
+      const params = {
+        "songIds":[song_id]
+      };
+      xm_cookie_get(hm, api, params, (response) => {
+        const { playInfos: data } = response.data.result.data.songPlayInfos[0];
+        if (data[0].listenFile || data[1].listenFile) {
+          sound.url = data[0].listenFile || data[1].listenFile;
+          success();
+        } else {
+          failure();
+        }
+      });
+    } else {
+      sound.url = track.sound_url;
       success();
-    });
+    }
   }
 
-  function xm_convert_song(song_info, artist_field_name) {
+  function xm_convert_song(song_info) {
     const track = {
       id: `xmtrack_${song_info.song_id}`,
       title: song_info.song_name,
-      artist: song_info[artist_field_name],
+      artist: song_info.artist_name,
       artist_id: `xmartist_${song_info.artist_id}`,
       album: song_info.album_name,
       album_id: `xmalbum_${song_info.album_id}`,
@@ -179,12 +133,13 @@ function build_xiami() {
       source_url: `https://www.xiami.com/song/${song_info.song_id}`,
       img_url: song_info.album_logo,
       url: `xmtrack_${song_info.song_id}`,
-      lyric_url: song_info.lyric_file,
+      lyric_url: song_info.lyric,
+      disabled: song_info.listen_file,
     };
     return track;
   }
 
-  function xm_convert_song2(song_info, artist_field_name) { // eslint-disable-line no-unused-vars
+  function xm_convert_song2(song_info) { // eslint-disable-line no-unused-vars
     const track = {
       id: `xmtrack_${song_info.songId}`,
       title: song_info.songName,
@@ -196,17 +151,30 @@ function build_xiami() {
       source_url: `https://www.xiami.com/song/${song_info.songId}`,
       img_url: song_info.albumLogo,
       url: `xmtrack_${song_info.songId}`,
-      // 'lyric_url': song_info.lyricInfo.lyricFile
+      lyric_url: song_info.lyricInfo ? song_info.lyricInfo.lyricFile : '',
     };
-    if (song_info.lyricInfo) {
-      track.lyric_url = song_info.lyricInfo.lyricFile;
+    if (song_info.listenFiles && song_info.listenFiles.length > 0) {
+      track.sound_url = get_highest_quality(song_info.listenFiles);
+    } else {
+      track.sound_url = '';
     }
     return track;
   }
 
+  function get_highest_quality(arr) {
+    var max = 0;
+    var url = "";
+    for (var i = 0; i < arr.length; i++) {
+      if (arr[i].fileSize > max) {
+        max = arr[i].fileSize;
+        url = arr[i].listenFile;
+      }
+    }
+    return url;
+  }
+
   function xm_get_playlist(url, hm, se) { // eslint-disable-line no-unused-vars
     const list_id = getParameterByName('list_id', url).split('_').pop();
-
     return {
       success(fn) {
         const api = '/api/collect/getCollectStaticUrl';
@@ -214,22 +182,16 @@ function build_xiami() {
           listId: parseInt(list_id, 10),
         };
         xm_cookie_get(hm, api, params, (response) => {
-          const collecturl = response.data.result.data.data.data.url;
-          hm({
-            url: collecturl,
-            method: 'GET',
-            transformResponse: undefined,
-          })
-          .then((response) => {
-            let { data: res_data } = response;
-            res_data = JSON.parse(res_data);
+          const collect_url = response.data.result.data.data.data.url;
+          hm.get(collect_url).then((response) => {
+            let { data } = response;
             const info = {
-              cover_img_url: xm_get_low_quality_img_url(res_data.resultObj.collectLogo),
-              title: res_data.resultObj.collectName,
+              cover_img_url: xm_get_low_quality_img_url(data.resultObj.collectLogo),
+              title: data.resultObj.collectName,
               id: `xmplaylist_${list_id}`,
               source_url: `https://www.xiami.com/collect/${list_id}`,
             };
-            const tracks = res_data.resultObj.songs.map(item => xm_convert_song2(item, 'artist_name'));
+            const tracks = data.resultObj.songs.map(item => xm_convert_song2(item));
             return fn({
               tracks,
               info,
@@ -243,22 +205,26 @@ function build_xiami() {
   function xm_search(url, hm, se) { // eslint-disable-line no-unused-vars
     return {
       success(fn) {
-        const api = '/api/search/searchSongs';
         const keyword = getParameterByName('keywords', url);
         const curpage = getParameterByName('curpage', url);
-        const pageSize = 60;
-        const params = {
-          pagingVO: {
-            page: curpage,
-            pageSize,
-          },
-          key: keyword,
+        const target_url = 'https://api.xiami.com/web?';
+        const  data = {
+          key: `${keyword}`,
+          v: '2.0',
+          app_key: 1,
+          r: 'search/songs',
+          page: `${curpage}`,
+          limit: 60
         };
-        xm_cookie_get(hm, api, params, (response) => {
-          const tracks = response.data.result.data.songs.map(item => xm_convert_song2(item, 'artistName'));
+        hm({
+          url: target_url,
+          method: 'GET',
+          params: data,
+        }).then((response) => {
+          const tracks = response.data.data.songs.map(item => xm_convert_song(item));
           return fn({
             result: tracks,
-            total: response.data.result.data.pagingVO.pages,
+            total: response.data.data.total,
           });
         });
       },
@@ -269,31 +235,24 @@ function build_xiami() {
     return {
       success(fn) {
         const album_id = getParameterByName('list_id', url).split('_').pop();
-        const target_url = `https://api.xiami.com/web?v=2.0&app_key=1&id=${album_id
-        }&page=1&limit=20&callback=jsonp217&r=album/detail`;
-        hm({
-          url: target_url,
-          method: 'GET',
-          transformResponse: undefined,
-        })
-          .then((response) => {
-            let { data } = response;
-            data = data.slice('jsonp217('.length, -')'.length);
-            data = JSON.parse(data);
-
-            const info = {
-              cover_img_url: data.data.album_logo,
-              title: data.data.album_name,
-              id: `xmalbum_${data.data.album_id}`,
-              source_url: `https://www.xiami.com/album/${data.data.album_id}`,
-            };
-
-            const tracks = data.data.songs.map(item => xm_convert_song(item, 'singers'));
-            return fn({
-              tracks,
-              info,
-            });
+        const api = '/api/album/initialize';
+        const params = {
+          "albumId":album_id
+        };
+        xm_cookie_get(hm, api, params, (response) => {
+          const { data } = response.data.result;
+          const info = {
+            cover_img_url: data.albumDetail.albumLogo,
+            title: data.albumDetail.albumName,
+            id: `xmalbum_${album_id}`,
+            source_url: `https://www.xiami.com/album/${album_id}`,
+          };
+          const tracks = data.albumDetail.songs.map(item => xm_convert_song2(item));
+          return fn({
+            tracks,
+            info,
           });
+        });
       },
     };
   }
@@ -303,74 +262,168 @@ function build_xiami() {
       success(fn) {
         const artist_id = getParameterByName('list_id', url).split('_').pop();
 
-        let target_url = `https://m.xiami.com/graphql?query=query{artistDetail(artistId:%22${artist_id
+        const target_url = `https://m.xiami.com/graphql?query=query{artistDetail(artistId:%22${artist_id
         }%22,artistStringId:%22${artist_id}%22){artistDetailVO{artistName%20artistLogo}}}`;
 
-        hm({
-          url: target_url,
-          method: 'GET',
-          transformResponse: undefined,
-        })
-          .then((response) => {
-            let { data: res_data } = response;
-            res_data = JSON.parse(res_data);
+        hm.get(target_url).then((response) => {
+          const { artistDetailVO: data } = response.data.data.artistDetail;
+          const info = {
+            cover_img_url: data.artistLogo,
+            title: data.artistName,
+            id: `xmartist_${artist_id}`,
+            source_url: `https://www.xiami.com/artist/${artist_id}`,
+          };
 
-            const info = {
-              cover_img_url: xm_retina_url(res_data.data.artistDetail.artistDetailVO.artistLogo),
-              title: res_data.data.artistDetail.artistDetailVO.artistName,
-              id: `xmartist_${artist_id}`,
-              source_url: `https://www.xiami.com/artist/${artist_id}`,
-            };
-
-            const offset = getParameterByName('offset', url);
-            const page = offset / 30 + 1;
-            const pageSize = 50; 
-            const category = 0;
-            const api = '/api/song/getArtistSongs';
-            const params = {
-               artistId: artist_id,
-               category,
-               pagingVO: {
-                page,
-                pageSize
-              }
-            };
-            xm_cookie_get(hm, api, params, (response) => {
-              const tracks = response.data.result.data.songs.map(item => xm_convert_song2(item, 'artist_name'));
-              return fn({
-                tracks,
-                info,
-              });
+          const offset = getParameterByName('offset', url);
+          const page = offset / 50 + 1;
+          const pageSize = 50; 
+          const category = 0;
+          const api = '/api/song/getArtistSongs';
+          const params = {
+            artistId: artist_id,
+            category,
+            pagingVO: {
+              page,
+              pageSize
+            }
+          };
+          xm_cookie_get(hm, api, params, (response) => {
+            const tracks = response.data.result.data.songs.map(item => xm_convert_song2(item));
+            return fn({
+              tracks,
+              info,
             });
           });
+        });
       },
     };
   }
 
   function xm_lyric(url, hm, se) { // eslint-disable-line no-unused-vars
-    // const track_id = getParameterByName('track_id', url).split('_').pop();
     const lyric_url = getParameterByName('lyric_url', url);
-    if (lyric_url == "") {
-      return;
-    } else {
-      return {
-        success(fn) {
-          hm({
-            url: lyric_url,
-            method: 'GET',
-            transformResponse: undefined,
-          }).then((response) => {
-            const reg = new RegExp("\<\\d+\>","gmi");
-            let res_data = response.data.replace(reg,"");
+    return {
+      success(fn) {
+        if (lyric_url) {
+          hm.get(lyric_url).then((response) => {
+            const data = xm_generate_translation(response.data);
             return fn({
-              lyric: res_data,
+              lyric: data.lrc,
+              tlyric: data.tlrc
             });
           });
-        },
-      };
-    }
+        } else {
+          return fn({
+            lyric: '',
+            tlyric: ''
+          });
+        }
+      },
+    };
   }
 
+    function tag2millisecond(time_tag) {
+    var reg_time_tag_grouped = /\[(\d{2,}):(\d{2})(?:\.(\d{1,3}))?\]/g;
+    var r = reg_time_tag_grouped.exec(time_tag);
+    var minute = parseInt(r[1]);
+    var second = parseInt(r[2]);
+    var millisecond = 0;
+    if (r.length >= 4) {
+      millisecond = parseInt(r[3]);
+    }
+    var result = minute * 60000 + second * 1000 + millisecond;
+    return result;
+  }
+
+  function zpad(n, width, z) {
+    z = z || "0";
+    n = n + "";
+    return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
+  }
+
+  function millisecond2tag(v) {
+    var t = Math.abs(v / 1000);
+    var h = Math.floor(t / 3600);
+    t = t - h * 3600;
+    var m = Math.floor(t / 60);
+    t = t - m * 60;
+    var s = Math.floor(t);
+    var ms = t - s;
+    var str =
+      (h ? zpad(h, 2) + ":" : "") +
+      zpad(m, 2) +
+      ":" +
+      zpad(s, 2) +
+      "." +
+      zpad(Math.floor(ms * 1000), 3);
+    return "[" + str + "]";
+  }
+
+  function xm_generate_translation(plain) {
+    var reg_xtrans_tag = /\[x-trans\]/;
+    var reg_durning_tag = /<\d+>/g;
+
+    var has_translate = plain.search(reg_xtrans_tag) !== -1;
+    var has_perword_timestamp = reg_durning_tag.test(plain);
+    if (!has_translate && !has_perword_timestamp) {
+      return {
+        lrc: plain,
+        tlrc: "",
+      };
+    }
+
+    // 处理xtrans标记，替换为上一行的时间轴标记，并加入tlrc结果中
+    var lrc = "";
+    var tlrc = "";
+    var plain_array = plain.split("\n");
+    var i = 0;
+    var last_time_tag = "[00:00.000]";
+    var last_end_timestamp = 0;
+    var MAX_ALLOW_GAP_MILLISECOND = 1000;
+
+    while (i < plain_array.length) {
+      var line = plain_array[i];
+      var reg_time_tag = /(\[\d{2,}:\d{2}(?:\.\d{1,3})?\])/g;
+      var time_tag_info = line.match(reg_time_tag);
+      if (time_tag_info) {
+        // 之前结束是否过早，是否需要添加空白行
+        var current_time_tag = time_tag_info[0];
+        var current_millisecond = tag2millisecond(current_time_tag);
+        if (
+          current_millisecond - last_end_timestamp >=
+          MAX_ALLOW_GAP_MILLISECOND
+        ) {
+          var placeholder_time_tag = millisecond2tag(last_end_timestamp);
+          lrc += placeholder_time_tag + "\n";
+          if (i - 1 >= 0 && plain_array[i - 1].match(reg_xtrans_tag)) {
+            // 上一行是翻译行
+            tlrc += placeholder_time_tag + "\n";
+          }
+        }
+        // 添加本行时间轴
+        lrc += line.replace(reg_durning_tag, "") + "\n";
+        last_time_tag = current_time_tag;
+        // 计算本行结束时间轴
+        var durning = 0;
+        line.match(reg_durning_tag).forEach((s) => {
+          durning += parseInt(s.replace(/[^\d]/g, ""));
+        });
+        last_end_timestamp = tag2millisecond(last_time_tag) + durning;
+      }
+      var xtrans_tag = line.match(reg_xtrans_tag);
+      if (xtrans_tag) {
+        tlrc +=
+          line
+            .replace(reg_xtrans_tag, last_time_tag)
+            .replace(reg_durning_tag, "") + "\n";
+      }
+      i += 1;
+    }
+    return {
+      lrc: lrc,
+      tlrc: tlrc,
+    };
+  }
+  
   function xm_parse_url(url) {
     let result;
     const match = /\/\/www.xiami.com\/collect\/([0-9]+)/.exec(url);
