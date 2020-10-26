@@ -510,6 +510,7 @@ svg {
   height: 24px;
   cursor: pointer;
   -webkit-app-region: no-drag;
+  z-index: 99;
 }
 
 .page .songdetail-wrapper .window-control svg {
