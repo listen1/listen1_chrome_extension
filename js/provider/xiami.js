@@ -321,123 +321,109 @@ function build_xiami() {
     };
   }
 
-  function xm_generate_translation(plain) {
-    var lrc = '';
-    var tlrc = '';
-    const reg_ms = /<\d+>/g;
-    if (plain.search(/\[x-trans]/) !== -1 || reg_ms.test(plain)) { // 如有翻译或者动感歌词，进行处理
-      const reg_timetamp = /\[(\d{2,}):(\d{2})(?:\.(\d{1,3}))?]/g;
-      var arr_plain = plain.split('\n');
-      var arr_lyric = arr_plain.slice(0);
-      var arr_timetamp = reg_timetamp.exec(plain);
-      var timetamp_length = arr_timetamp[0].length;  //求时间戳字符串长度
-      if (arr_lyric[arr_lyric.length - 1] !='') { // 统一歌词格式，方便后续处理
-        arr_lyric.push('');
-      }
-      if (reg_ms.test(plain)) {
-        for (var i = 0, j = 0; i < arr_plain.length; i++) {
-          if (arr_plain[i].search(/<\d+>/) !== -1) {
-            var invl = 0;
-            var timetamp = '';
-            var plain_line = arr_plain[i];
-            var indx_next = arr_plain.slice(i + 1).findIndex((nextline) => nextline.search(/<\d+>/) !== -1); //求有动态歌词的下一行下标
-            arr_ms = plain_line.match(reg_ms);
-            // 动态歌词时间间隔求和，得出总间隔
-            for (var k = 0, ms = 0; k < arr_ms.length; k++){
-              ms = parseInt(arr_ms[k].replace(/[^\d]/g,''));
-              invl += ms;
-            }
-            // 总间隔与下一行时间差值大于1000ms，则加上时间戳
-            if (Math.abs(to_millisecond(arr_plain[i].substr(1, timetamp_length - 2)) + invl - to_millisecond(arr_plain[i + 1 + indx_next].substr(1, timetamp_length - 2))) > 1000) {
-              timetamp = '[' + format_time(to_millisecond(arr_plain[i].substr(1, timetamp_length - 2)) + invl) + ']';
-              if (plain.search(/\[x-trans]/) == -1 && indx_next > -1) {
-                arr_lyric.splice(i + 1 + indx_next + j,0,timetamp);
-                j++;
-              } else if (plain.search(/\[x-trans]/) !== -1) {
-                arr_lyric.splice(i + 1 + Math.abs(indx_next) + j,0,timetamp);
-                j++;
-              } else {
-                arr_lyric.splice(i + 1 + j,0,timetamp);
-                j++;
-              }
-            }
-          }
-        }
-        lrc = (arr_lyric.join('\n')).replace(reg_ms,''); //去除类似<200>的动态歌词时间间隔表示
-      } else {
-        lrc = plain;
-      }
-      if (plain.search(/\[x-trans]/) !== -1) {  // 翻译歌词加上时间戳
-        var arr_tlyric = [];
-        for (var i = 0; i < arr_lyric.length; i++) {
-          arr_lyric[i] = arr_lyric[i].replace(/\r/,'');
-          if (arr_lyric[i].search(/\[x-trans]/) !== -1) {
-            var translation_line = arr_lyric[i].replace(/\[x-trans]/,'').trim();
-            if (translation_line != arr_lyric[i - 1].trim().substring(timetamp_length).replace(reg_ms,'').trim()) {
-              arr_tlyric = arr_tlyric.concat(arr_lyric[i - 1].substr(0, timetamp_length) + translation_line);
-            } else {
-              arr_tlyric = arr_tlyric.concat(arr_lyric[i - 1].substr(0, timetamp_length));
-            }
-          } else {
-            if (arr_lyric[i].match(reg_timetamp) && arr_lyric[i].trim().substring(timetamp_length).trim() == '') {
-              arr_tlyric = arr_tlyric.concat(arr_lyric[i]);
-            }
-          }
-        }
-        tlrc = arr_tlyric.join('\n');
-      }
-      return {
-        lrc,
-        tlrc
-      };
-    } else {
-      lrc = plain;
-      return {
-        lrc,
-        tlrc
-      };
+    function tag2millisecond(time_tag) {
+    var reg_time_tag_grouped = /\[(\d{2,}):(\d{2})(?:\.(\d{1,3}))?\]/g;
+    var r = reg_time_tag_grouped.exec(time_tag);
+    var minute = parseInt(r[1]);
+    var second = parseInt(r[2]);
+    var millisecond = 0;
+    if (r.length >= 4) {
+      millisecond = parseInt(r[3]);
     }
+    var result = minute * 60000 + second * 1000 + millisecond;
+    return result;
   }
 
-  function to_millisecond(timeString) {
-    return parseInt(timeString.slice(0, 2), 10) * 60000 + parseInt(timeString.substr(3, 2), 10) * 1000 + parseInt(timeString.substr(6, 3), 10);
+  function zpad(n, width, z) {
+    z = z || "0";
+    n = n + "";
+    return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
   }
 
-  function zpad(n) {
-    var s = n.toString();
-    if (s.length < 2) {
-      return '0' + s;
-    } else if (s.length > 2) {
-      return s.substr(0, 2);
-    } else {
-      return s;
-    }
-  }
-
-  function zpad_ms(n) {
-    var s = n.toString();
-    switch(s.length) {
-      case 1:
-        return '00'+s;
-      case 2:
-        return '0'+s;
-      default:
-        return s;
-    }
-  }
-
-  function format_time(time) {
-    var t = Math.abs(time / 1000);
+  function millisecond2tag(v) {
+    var t = Math.abs(v / 1000);
     var h = Math.floor(t / 3600);
     t = t - h * 3600;
     var m = Math.floor(t / 60);
     t = t - m * 60;
     var s = Math.floor(t);
     var ms = t - s;
-    var str = (h ? zpad(h) + ':' : '') + zpad(m) + ':' + zpad(s) + '.' + zpad_ms(Math.floor(ms * 1000));
-    return str;
+    var str =
+      (h ? zpad(h, 2) + ":" : "") +
+      zpad(m, 2) +
+      ":" +
+      zpad(s, 2) +
+      "." +
+      zpad(Math.floor(ms * 1000), 3);
+    return "[" + str + "]";
   }
 
+  function xm_generate_translation(plain) {
+    var reg_xtrans_tag = /\[x-trans\]/;
+    var reg_durning_tag = /<\d+>/g;
+
+    var has_translate = plain.search(reg_xtrans_tag) !== -1;
+    var has_perword_timestamp = reg_durning_tag.test(plain);
+    if (!has_translate && !has_perword_timestamp) {
+      return {
+        lrc: plain,
+        tlrc: "",
+      };
+    }
+
+    // 处理xtrans标记，替换为上一行的时间轴标记，并加入tlrc结果中
+    var lrc = "";
+    var tlrc = "";
+    var plain_array = plain.split("\n");
+    var i = 0;
+    var last_time_tag = "[00:00.000]";
+    var last_end_timestamp = 0;
+    var MAX_ALLOW_GAP_MILLISECOND = 1000;
+
+    while (i < plain_array.length) {
+      var line = plain_array[i];
+      var reg_time_tag = /(\[\d{2,}:\d{2}(?:\.\d{1,3})?\])/g;
+      var time_tag_info = line.match(reg_time_tag);
+      if (time_tag_info) {
+        // 之前结束是否过早，是否需要添加空白行
+        var current_time_tag = time_tag_info[0];
+        var current_millisecond = tag2millisecond(current_time_tag);
+        if (
+          current_millisecond - last_end_timestamp >=
+          MAX_ALLOW_GAP_MILLISECOND
+        ) {
+          var placeholder_time_tag = millisecond2tag(last_end_timestamp);
+          lrc += placeholder_time_tag + "\n";
+          if (i - 1 >= 0 && plain_array[i - 1].match(reg_xtrans_tag)) {
+            // 上一行是翻译行
+            tlrc += placeholder_time_tag + "\n";
+          }
+        }
+        // 添加本行时间轴
+        lrc += line.replace(reg_durning_tag, "") + "\n";
+        last_time_tag = current_time_tag;
+        // 计算本行结束时间轴
+        var durning = 0;
+        line.match(reg_durning_tag).forEach((s) => {
+          durning += parseInt(s.replace(/[^\d]/g, ""));
+        });
+        last_end_timestamp = tag2millisecond(last_time_tag) + durning;
+      }
+      var xtrans_tag = line.match(reg_xtrans_tag);
+      if (xtrans_tag) {
+        tlrc +=
+          line
+            .replace(reg_xtrans_tag, last_time_tag)
+            .replace(reg_durning_tag, "") + "\n";
+      }
+      i += 1;
+    }
+    return {
+      lrc: lrc,
+      tlrc: tlrc,
+    };
+  }
+  
   function xm_parse_url(url) {
     let result;
     const match = /\/\/www.xiami.com\/collect\/([0-9]+)/.exec(url);
