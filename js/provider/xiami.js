@@ -162,8 +162,9 @@ function build_xiami() {
   }
 
   function get_highest_quality(arr) {
-    var i = arr.length, max = -Infinity, url = '';
-    while (i--) {
+    var max = 0;
+    var url = "";
+    for (var i = 0; i < arr.length; i++) {
       if (arr[i].fileSize > max) {
         max = arr[i].fileSize;
         url = arr[i].listenFile;
