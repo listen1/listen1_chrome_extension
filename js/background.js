@@ -24,11 +24,9 @@ function hack_referer_header(details) {
     referer_value = 'https://gist.githubusercontent.com/';
   }
 
-  if (details.url.indexOf('api.xiami.com/') !== -1 || details.url.indexOf('.xiami.com/song/playlist/id/') !== -1
-    || details.url.indexOf('www.xiami.com/api/') !== -1
-  ) {
+  if (details.url.indexOf(".xiami.com/") !== -1) {
     add_origin = false;
-    referer_value = 'https://www.xiami.com';
+    referer_value = "https://www.xiami.com";
   }
 
   if (details.url.indexOf('www.xiami.com/api/search/searchSongs') !== -1) {
