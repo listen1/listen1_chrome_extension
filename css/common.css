@@ -610,6 +610,7 @@ svg {
   color: var(--lyric-on-cover-color);
 }
 .page .playsong-detail .detail-songinfo .lyric {
+  position: relative;
   flex: 0 0 380px;
   overflow-y: scroll;
   color: var(--lyric-default-color);
