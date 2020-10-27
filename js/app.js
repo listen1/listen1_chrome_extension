@@ -1138,7 +1138,7 @@ const main = () => {
               content: $('<a />').html(line.replace(timeRegResult[0], '')).text(),
               seconds: parseInt(timeRegResult[1], 10) * 60 * 1000 // min
                 + parseInt(timeRegResult[2], 10) * 1000 // sec
-                + (timeRegResult[3] !== null ? parseInt(rightPadding(timeRegResult[3], 3, '0'), 10) : 0), // microsec
+                + (timeRegResult[3] ? parseInt(rightPadding(timeRegResult[3], 3, '0'), 10) : 0), // microsec
               translationFlag: translationFlag,
             });
           }
