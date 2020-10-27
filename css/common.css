@@ -621,10 +621,10 @@ svg {
   color: var(--lyric-on-cover-color);
 }
 .page .playsong-detail .detail-songinfo .lyric p {
-  margin: var(--lyric-line-margin) 0;
+  margin: var(--lyric-line-margin) 0 0 0;
 }
 .page .playsong-detail .detail-songinfo .lyric p.translate {
-  margin-top: -10px;
+  margin: 5px 0 0 0;
 }
 .page .playsong-detail .detail-songinfo .lyric p.hide {
   display: none;

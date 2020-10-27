@@ -1233,7 +1233,9 @@ const main = () => {
             ".page .playsong-detail .detail-songinfo .lyric"
           ).height();
 
-          const offset = lineElement.offsetTop - windowHeight / 2;
+          const adjustOffset = 30;
+          const offset =
+            lineElement.offsetTop - windowHeight / 2 + adjustOffset;
           $(".lyric").animate(
             {
               scrollTop: `${offset}px`,
