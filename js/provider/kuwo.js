@@ -156,7 +156,18 @@ function build_kuwo() {
   function kw_search(url, hm, se) { // eslint-disable-line no-unused-vars
     const keyword = getParameterByName('keywords', url);
     let curpage = getParameterByName('curpage', url);
-
+    const searchType = getParameterByName('type', url);
+    if(searchType === '1'){
+      return {
+        success(fn) {
+          return fn({
+            result: [],
+            total: 0,
+            type: searchType
+          });
+        }
+      };
+    }
     return {
       success(fn) {
         kw_get_token((token) => {
@@ -201,7 +212,7 @@ function build_kuwo() {
             };
             return track;
           })
-          fn({result:tracks, total: data.data.total});
+          fn({result:tracks, total: data.data.total, type: searchType});
         });
       });
       },

@@ -301,7 +301,7 @@ svg {
 }
 
 .playlist-covers .u-cover {
-  display:flex;
+  display: flex;
   position: relative;
 }
 
@@ -432,10 +432,10 @@ svg {
   justify-content: center;
 }
 
-.playlist-button-list .playlist-button.edit-button .play-list.favorited{
+.playlist-button-list .playlist-button.edit-button .play-list.favorited {
   color: var(--text-default-color);
 }
-.playlist-button-list .playlist-button.edit-button .play-list.notfavorite{
+.playlist-button-list .playlist-button.edit-button .play-list.notfavorite {
   color: var(--text-default-color);
 }
 
@@ -540,7 +540,7 @@ svg {
 }
 
 .page .playsong-detail {
-  position:absolute;
+  position: absolute;
   left: 10px;
   right: 10px;
   max-width: 770px;
@@ -649,6 +649,10 @@ ul.detail-songlist li {
   padding: 0 20px;
   font-size: 14px;
 }
+ul.detail-songlist li.playlist-result{
+  height: 80px;
+  padding: 0 10px;
+}
 ul.detail-songlist li.even {
   background-color: var(--songlist-even-background-color);
 }
@@ -674,6 +678,21 @@ ul.detail-songlist li .title {
   max-height: 38px;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
+}
+ul.detail-songlist li.playlist-result .title {
+  max-height: 80px;
+}
+
+ul.detail-songlist li.playlist-result .title a {
+  display: flex;
+  align-items: center;
+}
+
+ul.detail-songlist li.playlist-result .title img {
+  height: 60px;
+  width: 60px;
+  display: block;
+  margin-right: 20px;
 }
 
 ul.detail-songlist li .artist {
@@ -1360,5 +1379,8 @@ svg.searchspinner {
   height: 12px;
   width: 1px;
   margin: 0 10px;
+}
+.source-list .search-type {
+  float: right;
 }
 /* widget source-list end */

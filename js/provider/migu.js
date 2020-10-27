@@ -155,6 +155,18 @@ function build_migu() {
     const keyword = getParameterByName('keywords', url);
     const curpage = getParameterByName('curpage', url);
     const target_url = 'http://m.music.migu.cn/migu/remoting/scr_search_tag?rows=20&type=2&keyword=' + keyword + '&pgc=' + curpage;
+    const searchType = getParameterByName('type', url);
+    if(searchType === '1'){
+      return {
+        success(fn) {
+          return fn({
+            result: [],
+            total: 0,
+            type: searchType
+          });
+        }
+      };
+    }
     return {
       success(fn) {
         hm({
@@ -180,6 +192,7 @@ function build_migu() {
           return fn({
             result: tracks,
             total: data.pgt * 20,
+            type: searchType
           });
         });
       },

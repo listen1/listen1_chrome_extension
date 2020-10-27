@@ -345,11 +345,16 @@ function build_netease() {
     const target_url = 'http://music.163.com/api/search/pc';
     const keyword = getParameterByName('keywords', url);
     const curpage = getParameterByName('curpage', url);
+    const searchType = getParameterByName('type', url);
+    var ne_search_type = '1';
+    if(searchType === '1'){
+      ne_search_type = '1000'
+    }
     const req_data = {
       s: keyword,
       offset: 20 * (curpage - 1),
       limit: 20,
-      type: 1,
+      type: ne_search_type,
     };
     return {
       success(fn) {
@@ -362,22 +367,42 @@ function build_netease() {
           },
         }).then((response) => {
           const { data } = response;
-          const tracks = data.result.songs.map(song_info => ({
-            id: `netrack_${song_info.id}`,
-            title: song_info.name,
-            artist: song_info.artists[0].name,
-            artist_id: `neartist_${song_info.artists[0].id}`,
-            album: song_info.album.name,
-            album_id: `nealbum_${song_info.album.id}`,
-            source: 'netease',
-            source_url: `http://music.163.com/#/song?id=${song_info.id}`,
-            img_url: song_info.album.picUrl,
-            url: `netrack_${song_info.id}`,
-            disabled: !is_playable(song_info),
-          }));
+          var result = [];
+          var total = 0;
+          if(searchType === '0') {
+            result = data.result.songs.map(song_info => ({
+              id: `netrack_${song_info.id}`,
+              title: song_info.name,
+              artist: song_info.artists[0].name,
+              artist_id: `neartist_${song_info.artists[0].id}`,
+              album: song_info.album.name,
+              album_id: `nealbum_${song_info.album.id}`,
+              source: 'netease',
+              source_url: `http://music.163.com/#/song?id=${song_info.id}`,
+              img_url: song_info.album.picUrl,
+              url: `netrack_${song_info.id}`,
+              disabled: !is_playable(song_info),
+            }));
+            total = data.result.songCount;
+          }
+          else if (searchType === '1'){
+            result = data.result.playlists.map(info => ({
+              id: `neplaylist_${info.id}`,
+              title: info.name,
+              source: 'netease',
+              source_url: `https://music.163.com/#/playlist?id=${info.id}`,
+              img_url: info.coverImgUrl,
+              url: `neplaylist_${info.id}`,
+              author: info.creator.nickname,
+              count: info.trackCount
+            }));
+            total = data.result.playlistCount;
+          }
+
           return fn({
-            result: tracks,
-            total: data.result.songCount,
+            result: result,
+            total: total,
+            type: searchType
           });
         });
       },

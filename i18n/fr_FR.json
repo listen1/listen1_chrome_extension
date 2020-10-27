@@ -33,6 +33,8 @@
  "_ARTIST": "Artiste",
  "_ALBUM": "Album",
  "_PLAYLIST_TITLE": "Titre de la Playlist",
+ "_PLAYLIST_AUTHOR": "Playlist Author",
+ "_PLAYLIST_SONG_COUNT": "Playlist Song Count",
  "_PLAYLIST_COVER_IMAGE_URL": "URL de la pochette",
  "_INPUT_PLAYLIST_TITLE": "Inserez le titre de la playlist",
  "_INPUT_PLAYLIST_COVER_IMAGE_URL":  "Entrez l'URL de la pochette",

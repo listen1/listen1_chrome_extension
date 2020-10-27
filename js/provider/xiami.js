@@ -203,10 +203,23 @@ function build_xiami() {
   }
 
   function xm_search(url, hm, se) { // eslint-disable-line no-unused-vars
+    const keyword = getParameterByName('keywords', url);
+    const curpage = getParameterByName('curpage', url);
+    const searchType = getParameterByName('type', url);
+    if(searchType === '1') {
+      return {
+        success(fn) {
+          return fn({
+            result: [],
+            total: 0,
+            type: searchType
+          });
+        }
+      };
+    }
     return {
       success(fn) {
-        const keyword = getParameterByName('keywords', url);
-        const curpage = getParameterByName('curpage', url);
+
         const target_url = 'https://api.xiami.com/web?';
         const  data = {
           key: `${keyword}`,
@@ -225,6 +238,7 @@ function build_xiami() {
           return fn({
             result: tracks,
             total: response.data.data.total,
+            type: searchType
           });
         });
       },

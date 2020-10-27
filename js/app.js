@@ -1429,6 +1429,7 @@ const main = () => {
       $scope.totalpagelog = $scope.originpagelog.slice(0);
       $scope.curpage = 1;
       $scope.totalpage = 1;
+      $scope.searchType = 0;
 
       function updateCurrentPage(cp) {
         if (cp === -1) { // when search words changes,pagenums should be reset.
@@ -1457,7 +1458,7 @@ const main = () => {
 
       function performSearch() {
         $rootScope.$broadcast('search:keyword_change', $scope.keywords);
-        loWeb.get(`/search?source=${getSourceName($scope.tab)}&keywords=${$scope.keywords}&curpage=${$scope.curpage}`).success((data) => {
+        loWeb.get(`/search?source=${getSourceName($scope.tab)}&keywords=${$scope.keywords}&curpage=${$scope.curpage}&type=${$scope.searchType}`).success((data) => {
           // update the textarea
           $scope.result = data.result;
           updateTotalPage(data.total);
@@ -1481,7 +1482,22 @@ const main = () => {
         }
       };
 
+      $scope.changeSearchType = (newSearchType) => {
+        $scope.loading = true;
+        $scope.searchType = newSearchType;
+        $scope.result = [];
+        updateCurrentPage();
+        updateTotalPage();
+
+        if ($scope.keywords === '') {
+          $scope.loading = false;
+        } else {
+          performSearch();
+        }
+      };
       $scope.isActiveTab = tab => ($scope.tab === tab);
+
+      $scope.isSearchType = searchType => ($scope.searchType === searchType);
 
       function renderSearchPage(){
         updateCurrentPage(-1);

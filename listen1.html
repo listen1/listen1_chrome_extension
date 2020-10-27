@@ -205,7 +205,6 @@
                             <div class="splitter"></div>
                             <div class="source-button" ng-class="{'active':isActiveTab(7)}" ng-click="changeTab(7)">{{_MIGU_MUSIC}}</div>
                         </div>
-
                         <div class="site-wrapper-innerd" id="hotplaylist" >
                             <div class="cover-container" id="playlist-content">
                                 <ul class="playlist-covers">
@@ -237,16 +236,24 @@
                               <!--  <li class="source-button" ng-class="{'active':isActiveTab(6)}" ng-click="changeSourceTab(6)"><a>{{_BILIBILI_MUSIC}}</a></li>-->
                              <li class="source-button" ng-class="{'active':isActiveTab(7)}" ng-click="changeSourceTab(7)"><a>{{_MIGU_MUSIC}}</a></li>
                               <svg class="searchspinner" ng-show="loading" version="1.1" id="loader-1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"  width="40px" height="40px" viewBox="0 0 40 40" enable-background="new 0 0 40 40" xml:space="preserve"> <path opacity="0.2" fill="#000" d="M20.201,5.169c-8.254,0-14.946,6.692-14.946,14.946c0,8.255,6.692,14.946,14.946,14.946 s14.946-6.691,14.946-14.946C35.146,11.861,28.455,5.169,20.201,5.169z M20.201,31.749c-6.425,0-11.634-5.208-11.634-11.634 c0-6.425,5.209-11.634,11.634-11.634c6.425,0,11.633,5.209,11.633,11.634C31.834,26.541,26.626,31.749,20.201,31.749z"/> <path fill="#000" d="M26.013,10.047l1.654-2.866c-2.198-1.272-4.743-2.012-7.466-2.012h0v3.312h0 C22.32,8.481,24.301,9.057,26.013,10.047z"> <animateTransform attributeType="xml" attributeName="transform"  type="rotate" from="0 20 20"  to="360 20 20" dur="0.6s" repeatCount="indefinite"/> </path> </svg>
-
+                              <div class="search-type">
+                              <li class="source-button" ng-class="{'active':isSearchType(0)}" ng-click="changeSearchType(0)"><a>单曲</a></li><div class="splitter"></div>
+                              <li class="source-button" ng-class="{'active':isSearchType(1)}" ng-click="changeSearchType(1)"><a>歌单</a></li>
+                            </div>
                             </ul>
                             <ul class="detail-songlist">
-                              <li class="head">
+                              <li class="head" ng-if="searchType===0 ">
                                   <div class="title"><a>{{_SONGS}}</a></div>
                                   <div class="artist"><a>{{_ARTISTS}}</a></div>
                                   <div class="album"><a>{{_ALBUMS}}</a></div>
                                   <div class="tools">{{_OPERATION}}</div>
                               </li>
-                              <li ng-repeat="song in result" ng-class-odd="'odd'" ng-class-even="'even'" ng-mouseenter="options=true" ng-mouseleave="options=false">
+                              <li class="head" ng-if="searchType===1 ">
+                                  <div class="title"><a>{{_PLAYLIST_TITLE}}</a></div>
+                                  <div class="artist"><a>{{_PLAYLIST_AUTHOR}}</a></div>
+                                  <div class="album"><a>{{_PLAYLIST_SONG_COUNT}}</a></div>
+                              </li>
+                              <li ng-if="searchType===0" ng-repeat="song in result" ng-class-odd="'odd'" ng-class-even="'even'" ng-mouseenter="options=true" ng-mouseleave="options=false">
                                   <div class="title">
                                    <!-- <a ng-if="song.disabled" class="disabled" ng-click="copyrightNotice()">{{ song.title |limitTo:30}}</a> -->
                                     <a add-and-play="song">{{ song.title |limitTo:30}}</a>
@@ -260,6 +267,16 @@
                                     <a title="{{_REMOVE_FROM_PLAYLIST}}" class="detail-delete-button" ng-click="removeSongFromPlaylist(song, list_id)" ng-show="options && is_mine=='1' "><span class="icon li-del"></span></a>
                                     <a title="{{_ORIGIN_LINK}}" class="source-button" open-url="song.source_url" ng-show="options"><span class="icon li-link"></span></a>
                                   </div>
+                              </li>
+                              <li ng-if="searchType===1" ng-repeat="playlist in result" ng-class-odd="'odd'" ng-class-even="'even'" class="playlist-result">
+                                  <div class="title">
+                                    <a ng-click="showPlaylist(playlist.id)">
+                                      <img ng-src="{{ playlist.img_url }}"/>
+                                      <div>{{ playlist.title |limitTo:30}}</div>
+                                    </a>
+                                  </div>
+                                  <div class="artist">{{ playlist.author |limitTo:20}}</div>
+                                  <div class="album">{{ playlist.count |limitTo:30}}</div>
                               </li>
                             </ul>
                             <div class="search-pagination" ng-show= "totalpage>1" pagination></div>
@@ -483,8 +500,9 @@
             <div class="main-info">
                 <div class="logo-banner" ng-if="playlist.length == 0"><svg class="logo" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="#666666" stroke="#666666" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><polygon points="7 4 7 19 16 19 16 16 10 16 10 4"></polygon><polygon points="13 4 13 13 16 13 16 4"></polygon></svg></div>
                 <div class="cover" class="cover" ng-if="playlist.length > 0" ng-click="toggleWindow('/now_playing')">
-                  <img ng-src="{{ currentPlaying.img_url }}" err-src="https://y.gtimg.cn/mediastyle/global/img/album_300.png" />
-                  <div class="mask"><svg class="feather"><use xlink:href="images/feather-sprite.svg#chevrons-up"></use></svg></div>
+                
+                <img ng-src="{{ currentPlaying.img_url }}" err-src="https://y.gtimg.cn/mediastyle/global/img/album_300.png" />
+                <div class="mask"><svg class="feather"><use xlink:href="images/feather-sprite.svg#chevrons-up"></use></svg></div>
                 </div>
                     <div class="detail" ng-if="playlist.length > 0">
 

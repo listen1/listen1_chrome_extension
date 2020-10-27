@@ -197,10 +197,22 @@ function build_qq() {
   }
 
   function qq_search(url, hm, se) { // eslint-disable-line no-unused-vars
+    const keyword = getParameterByName('keywords', url);
+    const curpage = getParameterByName('curpage', url);
+    const searchType = getParameterByName('type', url);
+    if(searchType === '1'){
+      return {
+        success(fn) {
+          return fn({
+            result: [],
+            total: 0,
+            type: searchType
+          });
+        }
+      };
+    }
     return {
       success(fn) {
-        const keyword = getParameterByName('keywords', url);
-        const curpage = getParameterByName('curpage', url);
         const target_url = 'https://i.y.qq.com/s.music/fcgi-bin/search_for_qq_cp?'
           + 'g_tk=938407465&uin=0&format=jsonp&inCharset=utf-8'
           + '&outCharset=utf-8&notice=0&platform=h5&needNewCode=1'
@@ -220,6 +232,7 @@ function build_qq() {
             return fn({
               result: tracks,
               total: data.data.song.totalnum,
+              type: searchType
             });
           });
       },

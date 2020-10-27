@@ -33,6 +33,8 @@
  "_ARTIST": "歌手",
  "_ALBUM": "专辑名",
  "_PLAYLIST_TITLE": "歌单名称",
+ "_PLAYLIST_AUTHOR": "歌单作者",
+ "_PLAYLIST_SONG_COUNT": "歌曲数",
  "_PLAYLIST_COVER_IMAGE_URL": "封面图片url",
  "_INPUT_PLAYLIST_TITLE": "输入歌单名称",
  "_INPUT_PLAYLIST_COVER_IMAGE_URL":  "输入封面URL",
