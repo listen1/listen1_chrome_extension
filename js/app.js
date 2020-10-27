@@ -1200,12 +1200,7 @@ const main = () => {
           if (lyric === null) {
             return;
           }
-          $scope.lyricArrayTrans = parseLyric(lyric, tlyric);
-          if ($scope.enableLyricTranslation !== true) {
-            $scope.lyricArray = $scope.lyricArrayTrans.filter(line => line.translationFlag !== true);
-          } else {
-            $scope.lyricArray = $scope.lyricArrayTrans;
-          }
+          $scope.lyricArray = parseLyric(lyric, tlyric);
         });
         $scope.lastTrackId = data;
         if (typeof chrome == 'undefined') {
@@ -1229,14 +1224,22 @@ const main = () => {
           }
         });
         if (lastObject && lastObject.lineNumber !== $scope.lyricLineNumber) {
-          const lineHeight = 21;
-          const lineElement = $('.lyric p')[lastObject.lineNumber];
-          const windowHeight = 380;
-          const AdditionOffset = -158;
-          const offset = lineElement.offsetTop - windowHeight / 2 + AdditionOffset;
-          $('.lyric').animate({
-            scrollTop: `${offset}px`,
-          }, 500);
+          const lineElement = $(
+            '.page .playsong-detail .detail-songinfo .lyric p[data-line="' +
+              lastObject.lineNumber +
+              '"]'
+          )[0];
+          const windowHeight = $(
+            ".page .playsong-detail .detail-songinfo .lyric"
+          ).height();
+
+          const offset = lineElement.offsetTop - windowHeight / 2;
+          $(".lyric").animate(
+            {
+              scrollTop: `${offset}px`,
+            },
+            500
+          );
           $scope.lyricLineNumber = lastObject.lineNumber;
           if (lastObjectTrans && lastObjectTrans.lineNumber !== $scope.lyricLineNumberTrans) {
             $scope.lyricLineNumberTrans = lastObjectTrans.lineNumber;

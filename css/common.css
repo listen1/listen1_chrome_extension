@@ -615,13 +615,19 @@ svg {
   color: var(--lyric-default-color);
   scrollbar-width: auto;
   scrollbar-color: var(--scroll-color) transparent;
-  font-size: 14px;
+  font-size: var(--lyric-font-size);
 }
 .page .coverbg .playsong-detail .detail-songinfo .lyric {
   color: var(--lyric-on-cover-color);
 }
 .page .playsong-detail .detail-songinfo .lyric p {
-  margin: 10px 0;
+  margin: var(--lyric-line-margin) 0;
+}
+.page .playsong-detail .detail-songinfo .lyric p.translate {
+  margin-top: -10px;
+}
+.page .playsong-detail .detail-songinfo .lyric p.hide {
+  display: none;
 }
 .page .playsong-detail .detail-songinfo .lyric p.highlight {
   color: var(--lyric-important-color);
