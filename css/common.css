@@ -833,6 +833,27 @@ svg.searchspinner {
   object-fit: cover;
   flex: 0 0 60px;
   cursor: pointer;
+  position: relative;
+  color: #ffffff;
+}
+.footer .main-info .cover img {
+  height: 60px;
+  width: 60px;
+  object-fit: cover;
+}
+.footer .main-info .cover .mask {
+  display: none;
+}
+.footer .main-info .cover:hover .mask {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.6);
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
 }
 
 .footer .main-info .detail {

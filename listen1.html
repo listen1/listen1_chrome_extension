@@ -482,8 +482,10 @@
             </div>
             <div class="main-info">
                 <div class="logo-banner" ng-if="playlist.length == 0"><svg class="logo" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="#666666" stroke="#666666" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><polygon points="7 4 7 19 16 19 16 16 10 16 10 4"></polygon><polygon points="13 4 13 13 16 13 16 4"></polygon></svg></div>
-                <img
-                    class="cover" ng-if="playlist.length > 0" ng-src="{{ currentPlaying.img_url }}" err-src="https://y.gtimg.cn/mediastyle/global/img/album_300.png"/ ng-click="toggleWindow('/now_playing')">
+                <div class="cover" class="cover" ng-if="playlist.length > 0" ng-click="toggleWindow('/now_playing')">
+                  <img ng-src="{{ currentPlaying.img_url }}" err-src="https://y.gtimg.cn/mediastyle/global/img/album_300.png" />
+                  <div class="mask"><svg class="feather"><use xlink:href="images/feather-sprite.svg#chevrons-up"></use></svg></div>
+                </div>
                     <div class="detail" ng-if="playlist.length > 0">
 
                         <div class="ctrl">
