@@ -1,4 +1,4 @@
-Listen 1 (Chrome Extension) V2.15.0
+Listen 1 (Chrome Extension) V2.16.0
 ==========
 （Last Update October 24th, 2020)
 
@@ -46,7 +46,13 @@ Install (Firefox)
 
 Changelog
 -------
--------
+
+`2020-10-27`
+* support search playlist (only for netease by now) 
+* optimaze lyric display
+* fix bilibili artist api, fix lyric time tag format parse error (thanks @RecluseWind)
+* optimaze UI, add translate button in now playing page
+
 `2020-10-26`
 * add lyric translation support for qq music, xiami music (thanks @RecluseWind)
 * update xiami api including get playlist, search, play music (thanks @RecluseWind)

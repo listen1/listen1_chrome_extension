@@ -1,6 +1,6 @@
-Listen 1 (Chrome Extension) V2.15.0
+Listen 1 (Chrome Extension) V2.16.0
 ==========
-（最后更新于2020年10月26日）
+（最后更新于2020年10月27日）
 
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE)
 
@@ -59,6 +59,12 @@ Firefox打包安装
 
 更新日志
 -------
+`2020-10-27`
+* 增加歌单搜索功能（暂时只支持网易云）
+* 优化歌词显示
+* 修复blili歌手API错误，修复歌词时间轴格式不统一产生的错误 (感谢@RecluseWind的提交)
+* 优化UI，正在播放页增加翻译按钮
+
 `2020-10-26`
 * 增加歌词翻译功能QQ音乐和虾米音乐的支持（感谢@RecluseWind的提交)
 * 更新了虾米音乐获取歌曲播放地址，获取歌单，搜索API的获取方式，增加可靠性 (感谢@RecluseWind的提交)
