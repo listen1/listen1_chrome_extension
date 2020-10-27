@@ -486,6 +486,22 @@ svg {
   -webkit-app-region: drag;
   transition: all 0.3s;
 }
+.page .songdetail-wrapper .translate-switch {
+  border: solid 1px;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  bottom: 30px;
+  right: 30px;
+  color: #888888;
+  cursor: pointer;
+}
+.page .songdetail-wrapper .translate-switch:hover{
+  color: var(--text-default-color);
+}
 .page .songdetail-wrapper.slidedown {
   top: calc(100% - 60px);
 }

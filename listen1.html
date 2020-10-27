@@ -457,6 +457,7 @@
                         <!-- now playing window-->
                         <div class="songdetail-wrapper" ng-class="{slidedown: window_type!=='track', coverbg: enableNowplayingCoverBackground}">
                             <div ng-if="enableNowplayingCoverBackground" class="bg" style="background-image: url({{ currentPlaying.img_url }});"></div>
+                            <div class="translate-switch" ng-click="toggleLyricTranslation()">译</div>
                             <div class="close" ng-class="isMac? 'mac':'' " ng-click="popWindow()"><svg class="icon"><use xlink:href="images/feather-sprite.svg#chevron-down"></use></svg></div>
 
                             <div ng-if="!isChrome && !isMac" class="window-control">
