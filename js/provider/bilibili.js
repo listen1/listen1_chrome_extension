@@ -89,31 +89,23 @@ function build_bilibili() {
     return {
       success: (fn) => {
         const artist_id = getParameterByName('list_id', url).split('_').pop();
-        let target_url = 'https://space.bilibili.com/ajax/member/GetInfo';
-        hm.post(target_url, new URLSearchParams({
-          mid: artist_id,
-        }).toString(), {
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-          },
-        })
-          .then((response) => {
-            const { data } = response.data;
-            const info = {
-              cover_img_url: data.face,
-              title: data.name,
-              id: `biartist_${artist_id}`,
-              source_url: `https://space.bilibili.com/${artist_id}/#/audio`,
-            };
-            target_url = `https://api.bilibili.com/audio/music-service-c/web/song/upper?pn=1&ps=0&order=2&uid=${artist_id}`;
-            hm.get(target_url).then((res) => {
-              const tracks = res.data.data.data.map(item => bi_convert_song(item));
-              return fn({
-                tracks,
-                info,
-              });
+        let target_url = `https://api.bilibili.com/x/space/acc/info?mid=${artist_id}&jsonp=jsonp`;
+        hm.get(target_url).then((response) => {
+          const info = {
+            cover_img_url: response.data.data.face,
+            title: response.data.data.name,
+            id: `biartist_${artist_id}`,
+            source_url: `https://space.bilibili.com/${artist_id}/#/audio`,
+          };
+          target_url = `https://api.bilibili.com/audio/music-service-c/web/song/upper?pn=1&ps=0&order=2&uid=${artist_id}`;
+          hm.get(target_url).then((res) => {
+            const tracks = res.data.data.data.map(item => bi_convert_song(item));
+            return fn({
+              tracks,
+              info,
             });
           });
+        });
       },
     };
   }
