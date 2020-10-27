@@ -498,6 +498,7 @@ svg {
   right: 30px;
   color: #888888;
   cursor: pointer;
+  -webkit-app-region: no-drag;
 }
 .page .songdetail-wrapper .translate-switch:hover{
   color: var(--text-default-color);
