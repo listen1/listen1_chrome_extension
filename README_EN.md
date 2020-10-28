@@ -1,4 +1,4 @@
-Listen 1 (Chrome Extension) V2.16.0
+Listen 1 (Chrome Extension) V2.17.0
 ==========
 （Last Update October 24th, 2020)
 
@@ -46,6 +46,8 @@ Install (Firefox)
 
 Changelog
 -------
+`2020-10-28`
+* add local music (desktop version only)
 
 `2020-10-27`
 * support search playlist (only for netease by now) 

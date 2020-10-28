@@ -487,13 +487,18 @@ svg {
   transition: all 0.3s;
 }
 
-.page .songdetail-wrapper .draggable-zone{
+.page .songdetail-wrapper .draggable-zone {
   position: absolute;
   left: 0;
   top: 0;
   right: 0;
   -webkit-app-region: drag;
   height: 80px;
+}
+
+.page .songdetail-wrapper.slidedown .draggable-zone {
+  display: none;
+  -webkit-app-region: no-drag;
 }
 
 .page .songdetail-wrapper .translate-switch {
