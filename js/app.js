@@ -260,6 +260,7 @@ const main = () => {
           $scope.playlist_source_url = data.info.source_url;
           $scope.list_id = data.info.id;
           $scope.is_mine = (data.info.id.slice(0, 2) === 'my');
+          $scope.is_local = (data.info.id.slice(0, 2) === 'lm');
           const isfavUrl = '/playlist_contains?type=favorite&list_id=' + data.info.id;
           loWeb.get(isfavUrl).success((res) => {
             $scope.is_favorite = res.result;
@@ -294,6 +295,7 @@ const main = () => {
           $scope.playlist_title = data.info.title;
           $scope.playlist_source_url = data.info.source_url;
           $scope.is_mine = (data.info.id.slice(0, 2) === 'my');
+          $scope.is_local = (data.info.id.slice(0, 2) === 'lm');
           $timeout(()=>{
             document.getElementsByClassName('browser')[0].scrollTop = offset;
           }, 0);
@@ -529,7 +531,13 @@ const main = () => {
       };
 
       $scope.removeSongFromPlaylist = (song, list_id) => {
-        const url = '/remove_track_from_myplaylist';
+        var url = '';
+        if (list_id.slice(0, 2) === 'my') {
+          url = '/remove_track_from_myplaylist';
+        }
+        else if (list_id.slice(0, 2) === 'lm') {
+          url = '/remove_track_from_playlist';
+        }
 
         loWeb.post({
           url,
@@ -823,6 +831,68 @@ const main = () => {
         });
       };
 
+      $scope.addLocalMusic = (list_id) => {
+        if (typeof chrome == 'undefined') {
+          const { remote } = require('electron');
+          const remoteFunctions = remote.require('./functions.js');
+          remote.dialog.showOpenDialog({
+            title: '添加歌曲',
+            properties: ['openFile', 'multiSelections'],
+            filters: [{
+              name: '.MP3 Files',
+              extensions: ['mp3']
+            }]
+          }).then(result => {
+            if(result.canceled){
+              return;
+            }
+  
+            result.filePaths.forEach(fp=>{
+              remoteFunctions.readAudioTags(fp).then((t)=>{
+                var track = {
+                  id: "lmtrack_"+fp,
+                  title: t.tags.title,
+                  artist: t.tags.artist,
+                  artist_id: "lmartist_"+t.tags.artist,
+                  album: t.tags.album,
+                  album_id: "lmalbum_"+t.tags.album,
+                  source: "localmusic",
+                  source_url: "",
+                  img_url: "",
+                  url: "lmtrack_"+fp,
+                  sound_url: "file://"+fp
+                };
+  
+                const list_id = 'lmplaylist_reserve';
+                const url = '/add_playlist';
+                loWeb.post({
+                  url,
+                  method: 'POST',
+                  data: $httpParamSerializerJQLike({
+                    list_id: list_id,
+                    tracks: JSON.stringify([track]),
+                  }),
+                  headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                  },
+                }).success((res) => {
+                  const playlist = res.playlist;
+                  $scope.songs = playlist.tracks;
+                  $scope.list_id = playlist.info.id;
+                  $scope.cover_img_url = playlist.info.cover_img_url;
+                  $scope.playlist_title = playlist.info.title;
+                  $scope.playlist_source_url = playlist.info.source_url;
+                  $scope.is_mine = (playlist.info.id.slice(0, 2) === 'my');
+                  $scope.is_local = (playlist.info.id.slice(0, 2) === 'lm');
+                  $scope.$apply();
+                });
+              });
+            });
+          }).catch(err => {
+            console.log(err)
+          })
+        }
+      };
     },
   ]);
 

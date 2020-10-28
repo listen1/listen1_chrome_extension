@@ -483,9 +483,19 @@ svg {
   background: var(--now-playing-page-background-color);
   overflow: hidden;
   border: solid 1px var(--windows-border-color);
-  -webkit-app-region: drag;
+  -webkit-app-region: no-drag;
   transition: all 0.3s;
 }
+
+.page .songdetail-wrapper .draggable-zone{
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  -webkit-app-region: drag;
+  height: 80px;
+}
+
 .page .songdetail-wrapper .translate-switch {
   border: solid 1px;
   width: 20px;
