@@ -18,6 +18,8 @@ function getProviderByName(sourceName) {
       return bilibili;
     case 'migu':
       return migu;
+    case 'localmusic':
+      return localmusic;
     default:
       return null;
   }
@@ -44,6 +46,8 @@ function getProviderByItemId(itemId) {
       return bilibili;
     case 'mg':
       return migu;
+    case 'lm':
+      return localmusic;
     case 'my':
       return myplaylist;
     default:
@@ -125,7 +129,13 @@ ngloWebManager.factory('loWeb', ['$rootScope', '$log', '$http', '$httpParamSeria
           success: fn => fn(),
         };
       }
-
+      if (path === '/add_playlist') {
+        const list_id = getParameterByName('list_id', `${request.url}?${request.data}`);
+        const provider = getProviderByItemId(list_id);
+        const tracks_json = getParameterByName('tracks', `${request.url}?${request.data}`);
+        const tracks = JSON.parse(tracks_json);
+        return provider.add_playlist(list_id, tracks);
+      }
       if (path === '/remove_track_from_myplaylist') {
         const list_id = getParameterByName('list_id', `${request.url}?${request.data}`);
         const track_id = getParameterByName('track_id', `${request.url}?${request.data}`);
@@ -133,6 +143,12 @@ ngloWebManager.factory('loWeb', ['$rootScope', '$log', '$http', '$httpParamSeria
         return {
           success: fn => fn(),
         };
+      }
+      if (path === '/remove_track_from_playlist') {
+        const list_id = getParameterByName('list_id', `${request.url}?${request.data}`);
+        const track_id = getParameterByName('track_id', `${request.url}?${request.data}`);
+        const provider = getProviderByItemId(list_id);
+        return provider.remove_from_playlist(list_id, track_id);
       }
       if (path === '/create_myplaylist') {
         const list_title = getParameterByName('list_title', `${request.url}?${request.data}`);
