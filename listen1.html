@@ -153,9 +153,9 @@
                 <ul class="nav masthead-nav">
                     <li ng-class="{ 'active':(current_tag==2) && (window_url_stack.length ==0) }" ng-click="showTag(2)"><span class="icon li-featured-list"></span><a>{{_PLAYLISTS}}</a></li>
                 </ul>
-                <div ng-if="!isChrome" class="menu-title"><div class="title">我的音乐</div></div>
+                <div ng-if="!isChrome" class="menu-title"><div class="title">{{_MY_MUSIC}}</div></div>
                 <ul ng-if="!isChrome" class="nav masthead-nav">
-                    <li ng-click="showPlaylist('lmplaylist_reserve')" ><span class="icon li-featured-list"></span><a>本地音乐</a></li>
+                    <li ng-click="showPlaylist('lmplaylist_reserve')" ><span class="icon li-featured-list"></span><a>{{_LOCAL_MUSIC}}</a></li>
                 </ul>
                 <div class="menu-title" ng-init="loadMyPlaylist();">
                   <div class="title">{{_CREATED_PLAYLIST}}</div>
@@ -414,7 +414,7 @@
                                             <div class="add-list" ng-click="addMylist(list_id)"><span class="icon li-add"></span></div>
                                         </div>
                                         <div class="playlist-button clone-button" ng-show="is_local" ng-click="addLocalMusic(list_id)">
-                                            <div class="play-list"><span class="icon li-songlist"></span><span>添加歌曲</span></div>
+                                            <div class="play-list"><span class="icon li-songlist"></span><span>{{_ADD_LOCAL_SONGS}}</span></div>
                                         </div>
                                         <div class="playlist-button clone-button" ng-show="!is_mine && !is_local" ng-click="clonePlaylist(list_id)">
                                             <div class="play-list"><span class="icon li-songlist"></span><span>{{_ADD_TO_PLAYLIST}}</span></div>
