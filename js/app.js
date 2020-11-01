@@ -1276,6 +1276,7 @@ const main = () => {
         if (typeof chrome == 'undefined') {
           const { ipcRenderer } = require('electron');
           ipcRenderer.send('currentLyric', track.title);
+          ipcRenderer.send('trackPlayingNow', track);
         }
       });
 
