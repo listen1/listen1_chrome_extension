@@ -6,13 +6,7 @@ Listen 1 (Chrome Extension) V2.17.0
 
 [English Version](https://github.com/listen1/listen1_chrome_extension/blob/master/README_EN.md)
 
-重要
-----
-Listen1的用户，有个坏消息希望和大家分享。Listen1最近收到了[QQ音乐的DMCA Takedown Notice](https://github.com/github/dmca/blob/master/2017/2017-11-17-Listen1.md), 主要代码库已经因为此原因而临时关闭。悲观一点看，Listen1项目可能会在今年内彻底消失。
-
-Listen1诞生的初衷从不是和大公司的争夺版权利益，而是为了给予热爱音乐的人更好的收听体验，所以，Listen1是开源，免费的，并且不接受任何形式的捐助。正是因为有热爱音乐的Listen1的你们，Listen1才发展到今天这一步。不管结果如何，Listen1团队感谢所有支持过这个项目的人们。
-
-在这个关系项目生死存亡的时刻，我寻求项目因为DMCA被github关闭的援助。如果有对这个比较了解如何解决的人，或者你想对这个事情发表看法和建议，可以在[issue](https://github.com/listen1/listen1_chrome_extension/issues/113)留言，或者发送邮件到 githublisten1@gmail.com。我们会尽最大努力，来守护Listen1，即使可能它即将成为历史。
+[Chrome Web Store 安装](https://chrome.google.com/webstore/detail/listen-1/indecfegkejajpaipjipfkkbedgaodbp)
 
 缘起
 ----
@@ -39,7 +33,11 @@ V2.9.0 新特性：自动切换播放源(Beta)
 
 还有精选歌单哦。
 
-Chrome安装
+Chrome官方商店安装（推荐）
+----
+点击[Chrome Web Store 安装](https://chrome.google.com/webstore/detail/listen-1/indecfegkejajpaipjipfkkbedgaodbp)，前往chrome官方商店安装
+
+Chrome下载安装
 ----
 1. 下载项目的zip文件，在右上方有个 `Download ZIP`, 解压到本地
 
@@ -49,13 +47,22 @@ Chrome安装
 
 Firefox打包安装
 -----------
-### 打包xpi文件（或在release页面下载已经打包好的xpi文件）
-1. 将根目录下manifest_firefox.json替换manifest.json
-2. `cd listen1_chrome_extension`
-3. `zip -r ../listen1.xpi *`
 
-### 安装
-1. 打开Firefox，加载xpi文件，完成安装
+1. 将根目录下manifest_firefox.json替换manifest.json
+
+2. `cd listen1_chrome_extension`
+
+3. `zip -r ../listen1.xpi *`, 完成打包xpi文件
+
+4. 打开Firefox，加载xpi文件，完成安装
+
+QQ音乐举报Listen1导致代码库临时关闭事件 （2017年11月）
+----
+Listen1的用户，有个坏消息希望和大家分享。Listen1最近收到了[QQ音乐的DMCA Takedown Notice](https://github.com/github/dmca/blob/master/2017/2017-11-17-Listen1.md), 主要代码库已经因为此原因而临时关闭。悲观一点看，Listen1项目可能会在今年内彻底消失。
+
+Listen1诞生的初衷从不是和大公司的争夺版权利益，而是为了给予热爱音乐的人更好的收听体验，所以，Listen1是开源，免费的，并且不接受任何形式的捐助。正是因为有热爱音乐的Listen1的你们，Listen1才发展到今天这一步。不管结果如何，Listen1团队感谢所有支持过这个项目的人们。
+
+在这个关系项目生死存亡的时刻，我寻求项目因为DMCA被github关闭的援助。如果有对这个比较了解如何解决的人，或者你想对这个事情发表看法和建议，可以在[issue](https://github.com/listen1/listen1_chrome_extension/issues/113)留言，或者发送邮件到 githublisten1@gmail.com。我们会尽最大努力，来守护Listen1，即使可能它即将成为历史。
 
 更新日志
 -------
