@@ -6,8 +6,6 @@ Listen 1 (Chrome Extension) V2.17.0
 
 [English Version](https://github.com/listen1/listen1_chrome_extension/blob/master/README_EN.md)
 
-[Chrome Web Store 安装](https://chrome.google.com/webstore/detail/listen-1/indecfegkejajpaipjipfkkbedgaodbp)
-
 缘起
 ----
 当我发现找个想听的歌因为版权听不了，需要打开好几个网站开始搜索，来回切换让我抓狂的时候，我知道是时候该做点什么了。
@@ -33,9 +31,16 @@ V2.9.0 新特性：自动切换播放源(Beta)
 
 还有精选歌单哦。
 
-Chrome官方商店安装（推荐）
+官方商店安装（推荐）
 ----
-点击[Chrome Web Store 安装](https://chrome.google.com/webstore/detail/listen-1/indecfegkejajpaipjipfkkbedgaodbp)，前往chrome官方商店安装
+按你的浏览器类型点击下面的链接安装
+* [Chrome Web Store 安装](https://chrome.google.com/webstore/detail/listen-1/indecfegkejajpaipjipfkkbedgaodbp)
+* [FireFox 安装](https://addons.mozilla.org/zh-CN/firefox/addon/listen1-from-chrome/)
+* [Microsoft Edge 安装](https://microsoftedge.microsoft.com/addons/detail/hneiglcmpeedblkmbndhfbeahcpjojjg)
+
+感谢 [@TNT-c](https://github.com/TNT-c) 维护Firefox的发布渠道
+
+感谢 [@dhxh](https://github.com/dhxh) 维护Microsoft Edge的发布渠道
 
 Chrome下载安装
 ----
