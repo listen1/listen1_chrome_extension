@@ -154,9 +154,9 @@ function build_migu() {
   function mg_search(url, hm, se) {
     const keyword = getParameterByName('keywords', url);
     const curpage = getParameterByName('curpage', url);
-    const target_url = 'http://m.music.migu.cn/migu/remoting/scr_search_tag?rows=20&type=2&keyword=' + keyword + '&pgc=' + curpage;
+    const target_url = 'https://m.music.migu.cn/migu/remoting/scr_search_tag?rows=20&type=2&keyword=' + keyword + '&pgc=' + curpage;
     const searchType = getParameterByName('type', url);
-    if(searchType === '1'){
+    if (searchType === '1') {
       return {
         success(fn) {
           return fn({

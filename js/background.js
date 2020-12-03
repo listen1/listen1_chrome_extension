@@ -62,6 +62,9 @@ function hack_referer_header(details) {
   if (details.url.indexOf('.migu.cn') !== -1) {
     referer_value = 'http://music.migu.cn/v3/music/player/audio?from=migu';
   }
+  if (details.url.indexOf('m.music.migu.cn') !== -1) {
+    referer_value = 'https://m.music.migu.cn/';
+  }
   if (origin_value == "") {
     origin_value = referer_value;
   }
@@ -105,9 +108,9 @@ const urls = ['*://music.163.com/*', '*://*.xiami.com/*', '*://i.y.qq.com/*', '*
 try {
   chrome.webRequest.onBeforeSendHeaders.addListener(hack_referer_header, {
     urls: urls,
-  }, ['requestHeaders', 'blocking','extraHeaders']);
+  }, ['requestHeaders', 'blocking', 'extraHeaders']);
 }
-catch(err) {
+catch (err) {
   // before chrome v72, extraHeader is not supported
   chrome.webRequest.onBeforeSendHeaders.addListener(hack_referer_header, {
     urls: urls,
@@ -139,6 +142,6 @@ chrome.commands.onCommand.addListener((command) => {
       viewWindow.document.querySelector('.play').click();
       break;
     default:
-      // console.log('不支持的快捷键')
+    // console.log('不支持的快捷键')
   }
 });
