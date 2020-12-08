@@ -229,6 +229,7 @@ function build_qq() {
             data = data.slice('jsonp4('.length, -')'.length);
             data = JSON.parse(data);
             result = data.data.song.list.map(item => qq_convert_song(item));
+            total = data.data.song.totalnum;
           } else if (searchType === '1') {
             data = data.slice('MusicJsonCallback('.length, -')'.length);
             data = JSON.parse(data);
