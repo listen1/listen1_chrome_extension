@@ -1,6 +1,6 @@
-Listen 1 (Chrome Extension) V2.17.0
+Listen 1 (Chrome Extension) V2.17.1
 ==========
-（最后更新于2020年10月27日）
+（最后更新于2020年12月12日）
 
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE)
 
@@ -71,6 +71,11 @@ Listen1诞生的初衷从不是和大公司的争夺版权利益，而是为了�
 
 更新日志
 -------
+`2020-12-12`
+* 支持QQ音乐歌单搜索 (感谢@RecluseWind的提交）
+* 修复网易云音乐无法打开手机分享的歌单链接的bug (感谢@RecluseWind的提交）
+* 修复咪咕音乐无法搜索的bug
+
 `2020-10-28`
 * 增加本地音乐（仅限桌面版）
 

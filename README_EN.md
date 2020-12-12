@@ -1,6 +1,6 @@
-Listen 1 (Chrome Extension) V2.17.0
+Listen 1 (Chrome Extension) V2.17.1
 ==========
-（Last Update October 24th, 2020)
+（Last Update December 12nd, 2020)
 
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE)
 
@@ -46,6 +46,11 @@ Install (Firefox)
 
 Changelog
 -------
+`2020-12-12`
+* support search songlist for qq music (thanks @RecluseWind）
+* fix bug: netease songlist shared by mobile open error (thanks @RecluseWind）
+* fix bug: migu search song error
+
 `2020-10-28`
 * add local music (desktop version only)
 
