@@ -21,9 +21,7 @@
     "permissions": [
         "notifications",
         "unlimitedStorage",
-        "downloads",
         "storage",
-        "contextMenus",
         "tabs",
         "cookies",
         "*://music.163.com/*",
