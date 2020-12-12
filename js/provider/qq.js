@@ -183,7 +183,7 @@ function build_qq() {
               cover_img_url: qq_get_image_url(artist_id, 'artist'),
               title: data.data.singer_name,
               id: `qqartist_${artist_id}`,
-              source_url: `http://y.qq.com/#type=singer&mid=${artist_id}`,
+              source_url: `https://y.qq.com/#type=singer&mid=${artist_id}`,
             };
 
             const tracks = data.data.list.map(item => qq_convert_song(item.musicData));
@@ -200,43 +200,66 @@ function build_qq() {
     const keyword = getParameterByName('keywords', url);
     const curpage = getParameterByName('curpage', url);
     const searchType = getParameterByName('type', url);
-    if(searchType === '1'){
-      return {
-        success(fn) {
-          return fn({
-            result: [],
-            total: 0,
-            type: searchType
-          });
-        }
-      };
-    }
-    return {
-      success(fn) {
-        const target_url = 'https://i.y.qq.com/s.music/fcgi-bin/search_for_qq_cp?'
+    let target_url = '';
+    switch (searchType) {
+      case '0':
+        target_url = 'https://i.y.qq.com/s.music/fcgi-bin/search_for_qq_cp?'
           + 'g_tk=938407465&uin=0&format=jsonp&inCharset=utf-8'
           + '&outCharset=utf-8&notice=0&platform=h5&needNewCode=1'
           + `&w=${keyword}&zhidaqu=1&catZhida=1`
           + `&t=0&flag=1&ie=utf-8&sem=1&aggr=0&perpage=20&n=20&p=${curpage
           }&remoteplace=txt.mqq.all&_=1459991037831&jsonpCallback=jsonp4`;
+        break;
+      case '1':
+        target_url = `https://c.y.qq.com/soso/fcgi-bin/client_music_search_songlist?`
+        +`remoteplace=txt.yqq.playlist&&outCharset=utf-8`
+        +`&page_no=${curpage - 1}&num_per_page=20&query=${keyword}`;
+    }
+    return {
+      success(fn) {
         hm({
           url: target_url,
           method: 'GET',
           transformResponse: undefined,
-        })
-          .then((response) => {
-            let { data } = response;
+        }).then((response) => {
+          let { data } = response;
+          var result = [];
+          var total = 0;
+          if (searchType === '0') {
             data = data.slice('jsonp4('.length, -')'.length);
             data = JSON.parse(data);
-            const tracks = data.data.song.list.map(item => qq_convert_song(item));
-            return fn({
-              result: tracks,
-              total: data.data.song.totalnum,
-              type: searchType
-            });
+            result = data.data.song.list.map(item => qq_convert_song(item));
+            total = data.data.song.totalnum;
+          } else if (searchType === '1') {
+            data = data.slice('MusicJsonCallback('.length, -')'.length);
+            data = JSON.parse(data);
+            result = data.data.list.map(info => ({
+                id: `qqplaylist_${info.dissid}`,
+                title: htmlDecode(info.dissname),
+                source: 'qq',
+                source_url: `https://y.qq.com/#type=taoge&id=${info.dissid}`,
+                img_url: info.imgurl,
+                url: `qqplaylist_${info.id}`,
+                author: UnicodeToAscii(info.creator.name),
+                count: info.song_count
+            }));
+            total = data.data.sum;
+          }
+          return fn({
+            result: result,
+            total: total,
+            type: searchType
           });
+        });
       },
     };
+  }
+
+  function UnicodeToAscii(str) {
+    let result = str.replace(/&#(\d+);/g, function() {
+      return String.fromCharCode(arguments[1]);
+    });
+    return result;
   }
 
   // eslint-disable-next-line no-unused-vars
@@ -282,7 +305,7 @@ function build_qq() {
     const track_id = getParameterByName('track_id', url).split('_').pop();
     // use chrome extension to modify referer.
     const target_url = `https://i.y.qq.com/lyric/fcgi-bin/fcg_query_lyric_new.fcg?`
-      + `songmid=${track_id}&g_tk=5381&format=json&inCharset=utf8&outCharset=utf-8`;
+      + `songmid=${track_id}&g_tk=5381&format=json&inCharset=utf8&outCharset=utf-8&nobase64=1`;
     return {
       success(fn) {
         hm({
@@ -292,15 +315,8 @@ function build_qq() {
         }).then((response) => {
           let { data } = response;
           data = JSON.parse(data);
-          let lrc = '';
-          let tlrc = '';
-          const td = new TextDecoder('utf8');
-          if (data.lyric) {
-            lrc = td.decode(str2ab(atob(data.lyric)));
-          }
-          if (data.trans) {
-            tlrc = td.decode(str2ab(atob(data.trans))).replace(/\/\//g,'');
-          }
+          let lrc = data.lyric || '';
+          let tlrc = data.trans.replace(/\/\//g,'') || '';
           return fn({
             lyric: lrc,
             tlyric: tlrc
