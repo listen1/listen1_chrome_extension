@@ -90,10 +90,10 @@ function build_qq() {
     return {
       success(fn) {
         const target_url = 'https://i.y.qq.com/qzone-music/fcg-bin/fcg_ucc_getcdinfo_'
-          + 'byids_cp.fcg?type=1&json=1&utf8=1&onlysong=0&jsonpCallback='
-          + `jsonCallback&nosign=1&disstid=${list_id}&g_tk=5381&loginUin=0&hostUin=0`
-          + '&format=jsonp&inCharset=GB2312&outCharset=utf-8&notice=0'
-          + '&platform=yqq&jsonpCallback=jsonCallback&needNewCode=0';
+          + 'byids_cp.fcg?type=1&json=1&utf8=1&onlysong=0'
+          + `&nosign=1&disstid=${list_id}&g_tk=5381&loginUin=0&hostUin=0`
+          + '&format=json&inCharset=GB2312&outCharset=utf-8&notice=0'
+          + '&platform=yqq&needNewCode=0';
         hm({
           url: target_url,
           method: 'GET',
@@ -101,7 +101,7 @@ function build_qq() {
         })
           .then((response) => {
             let { data } = response;
-            data = data.slice('jsonCallback('.length, -')'.length);
+            //data = data.slice('jsonCallback('.length, -')'.length);
             data = JSON.parse(data);
 
             const info = {
@@ -128,9 +128,8 @@ function build_qq() {
       success(fn) {
         const target_url = 'https://i.y.qq.com/v8/fcg-bin/fcg_v8_album_info_cp.fcg'
           + `?platform=h5page&albummid=${album_id}&g_tk=938407465`
-          + '&uin=0&format=jsonp&inCharset=utf-8&outCharset=utf-8'
-          + '&notice=0&platform=h5&needNewCode=1&_=1459961045571'
-          + '&jsonpCallback=asonglist1459961045566';
+          + '&uin=0&format=json&inCharset=utf-8&outCharset=utf-8'
+          + '&notice=0&platform=h5&needNewCode=1&_=1459961045571';
         hm({
           url: target_url,
           method: 'GET',
@@ -138,7 +137,7 @@ function build_qq() {
         })
           .then((response) => {
             let { data } = response;
-            data = data.slice(' asonglist1459961045566('.length, -')'.length);
+            //data = data.slice(' asonglist1459961045566('.length, -')'.length);
             data = JSON.parse(data);
 
             const info = {
@@ -165,10 +164,9 @@ function build_qq() {
       success(fn) {
         const target_url = 'https://i.y.qq.com/v8/fcg-bin/fcg_v8_singer_track_cp.fcg'
           + `?platform=h5page&order=listen&begin=0&num=50&singermid=${artist_id}`
-          + '&g_tk=938407465&uin=0&format=jsonp&'
+          + '&g_tk=938407465&uin=0&format=json&'
           + 'inCharset=utf-8&outCharset=utf-8&notice=0&platform='
-          + 'h5&needNewCode=1&from=h5&_=1459960621777&'
-          + 'jsonpCallback=ssonglist1459960621772';
+          + 'h5&needNewCode=1&from=h5&_=1459960621777';
         hm({
           url: target_url,
           method: 'GET',
@@ -176,7 +174,7 @@ function build_qq() {
         })
           .then((response) => {
             let { data } = response;
-            data = data.slice(' ssonglist1459960621772('.length, -')'.length);
+            //data = data.slice(' ssonglist1459960621772('.length, -')'.length);
             data = JSON.parse(data);
 
             const info = {
@@ -204,16 +202,16 @@ function build_qq() {
     switch (searchType) {
       case '0':
         target_url = 'https://i.y.qq.com/s.music/fcgi-bin/search_for_qq_cp?'
-          + 'g_tk=938407465&uin=0&format=jsonp&inCharset=utf-8'
+          + 'g_tk=938407465&uin=0&format=json&inCharset=utf-8'
           + '&outCharset=utf-8&notice=0&platform=h5&needNewCode=1'
           + `&w=${keyword}&zhidaqu=1&catZhida=1`
           + `&t=0&flag=1&ie=utf-8&sem=1&aggr=0&perpage=20&n=20&p=${curpage
-          }&remoteplace=txt.mqq.all&_=1459991037831&jsonpCallback=jsonp4`;
+          }&remoteplace=txt.mqq.all&_=1459991037831`;
         break;
       case '1':
         target_url = `https://c.y.qq.com/soso/fcgi-bin/client_music_search_songlist?`
-        +`remoteplace=txt.yqq.playlist&&outCharset=utf-8`
-        +`&page_no=${curpage - 1}&num_per_page=20&query=${keyword}`;
+        + `remoteplace=txt.yqq.playlist&&outCharset=utf-8&format=json`
+        + `&page_no=${curpage - 1}&num_per_page=20&query=${keyword}`;
     }
     return {
       success(fn) {
@@ -226,12 +224,12 @@ function build_qq() {
           var result = [];
           var total = 0;
           if (searchType === '0') {
-            data = data.slice('jsonp4('.length, -')'.length);
+            //data = data.slice('jsonp4('.length, -')'.length);
             data = JSON.parse(data);
             result = data.data.song.list.map(item => qq_convert_song(item));
             total = data.data.song.totalnum;
           } else if (searchType === '1') {
-            data = data.slice('MusicJsonCallback('.length, -')'.length);
+            //data = data.slice('MusicJsonCallback('.length, -')'.length);
             data = JSON.parse(data);
             result = data.data.list.map(info => ({
                 id: `qqplaylist_${info.dissid}`,
@@ -239,7 +237,7 @@ function build_qq() {
                 source: 'qq',
                 source_url: `https://y.qq.com/#type=taoge&id=${info.dissid}`,
                 img_url: info.imgurl,
-                url: `qqplaylist_${info.id}`,
+                url: `qqplaylist_${info.dissid}`,
                 author: UnicodeToAscii(info.creator.name),
                 count: info.song_count
             }));
