@@ -1155,6 +1155,15 @@ const main = () => {
         } else {
           $rootScope.page_title = `❚❚ ${$rootScope.page_title.slice($rootScope.page_title.indexOf(' '))}`;
         }
+        if (typeof chrome == 'undefined') {
+          const { ipcRenderer } = require('electron');
+          if (data) {
+            ipcRenderer.send('isPlaying', true);
+          }
+          else {
+            ipcRenderer.send('isPlaying', false);
+          }
+        }
         if (!lastfm.isAuthorized()) {
           return;
         }
@@ -1166,6 +1175,7 @@ const main = () => {
         } else {
           $scope.scrobbleTimer.pause();
         }
+        
       });
 
       function parseLyric(lyric, tlyric) {
