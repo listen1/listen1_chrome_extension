@@ -6577,48 +6577,71 @@ ngSoundManager.factory('angularPlayer', ['$rootScope', '$log',
                 //once all done then broadcast
                 $rootScope.$broadcast('player:playlist', playlist);
             },
-            initPlayTrack: function(trackId, isResume, isloadOnly, successCallback, failCallback) {
-                if(isResume !== true) {
+            initPlayTrack: function(trackId, isResume, isloadOnly, successCallback, failCallback, terminateCallback) {
+                if(!isResume) {
                     //stop and unload currently playing track
                     this.stop();
                     //set new track as current track
                     this.setCurrentTrack(trackId);
                 }
-                if ((bootstrapTrack != null) && (isResume !== true)) {
-                    var angularPlayerObj = this;
-                    var sound = soundManager.getSoundById(trackId);
-                    if (sound == undefined){
-                      return;
-                    }
-                    sound.setVolume(volume);
-                    bootstrapTrack(sound, this.currentTrackData(), function(){
-                        soundManager.play(trackId);
-                        $rootScope.$broadcast('track:id', trackId);
-                        //set as playing
-                        isPlaying = true;
-                        $rootScope.$broadcast('music:isPlaying', isPlaying);
-                        if (isloadOnly == true) {
-                            angularPlayerObj.pause();
-                        }
-                        if(successCallback != undefined) {
-                            successCallback();
-                        }
-                    }, function(){
-                        if(failCallback != undefined) {
-                            failCallback();
-                        }
-                    });
+                if (bootstrapTrack === null) {
+                  return;
                 }
-                else {
+                var angularPlayerObj = this;
+                var sound = soundManager.getSoundById(trackId);
+                if (sound == undefined){
+                  return;
+                }
+                if (sound.url === ""){
+                  // check if there is some songs can be played
+                  var finished = Object.values(soundManager.sounds).filter(function(oneSound){
+                    return oneSound.url === ""
+                  }).length === Object.values(soundManager.sounds).length;
+                  if (finished){
+                    return terminateCallback();
+                  }
+                  if(failCallback != undefined) {
+                    failCallback();
+                  }
+                  return;
+                }
+                if(isResume || sound.url !== undefined) {
+                  soundManager.play(trackId);
+                  $rootScope.$broadcast('track:id', trackId);
+                  isPlaying = true;
+                  $rootScope.$broadcast('music:isPlaying', true);
+                  return;
+                }
+
+                sound.setVolume(volume);
+                var player = this;
+                bootstrapTrack(sound, this.currentTrackData(), function(){
                     soundManager.play(trackId);
                     $rootScope.$broadcast('track:id', trackId);
-                    //set as playing
                     isPlaying = true;
-                    $rootScope.$broadcast('music:isPlaying', isPlaying);
-                }
+                    $rootScope.$broadcast('music:isPlaying', true);
+                    if (sound.url !== undefined && sound.url !== ""){
+                      var track = player.getTrack(trackId);
+                      track.disabled = false;
+                    }
+                    if (isloadOnly == true) {
+                        angularPlayerObj.pause();
+                    }
+                    if(successCallback != undefined) {
+                        successCallback();
+                    }
+                }, function(){
+                    var track = player.getTrack(trackId);
+                    track.disabled = true;
+                    if(failCallback != undefined) {
+                        sound.url = "";
+                        failCallback();
+                    }
+                });
             },
             play: function() {
                 var trackToPlay = null;
+                var player = this;
                 //check if no track loaded, else play loaded track
                 if(this.getCurrentTrack() === null) {
                     if(soundManager.soundIDs.length === 0) {
@@ -6626,17 +6649,16 @@ ngSoundManager.factory('angularPlayer', ['$rootScope', '$log',
                         return;
                     }
                     trackToPlay = soundManager.soundIDs[0];
-                    this.initPlayTrack(trackToPlay);
+                    this.initPlayTrack(trackToPlay, false, false, undefined, function(){player.nextTrack()}, function(){player.stop()});
                 } else {
                     trackToPlay = this.getCurrentTrack();
-                    this.initPlayTrack(trackToPlay, true);
+                    this.initPlayTrack(trackToPlay, true, false, undefined, function(){player.nextTrack()}, function(){player.stop()});
                 }
             },
             pause: function() {
                 soundManager.pause(this.getCurrentTrack());
-                //set as not playing
                 isPlaying = false;
-                $rootScope.$broadcast('music:isPlaying', isPlaying);
+                $rootScope.$broadcast('music:isPlaying', false);
             },
             stop: function() {
                 //first pause it
@@ -6654,11 +6676,11 @@ ngSoundManager.factory('angularPlayer', ['$rootScope', '$log',
             },
             playTrack: function(trackId) {
                 var player = this;
-                this.initPlayTrack(trackId, false, false, undefined, function(){player.nextTrack()});
+                this.initPlayTrack(trackId, false, false, undefined, function(){player.nextTrack()}, function(){player.stop()});
             },
             playTrackFailToPrev: function(trackId) {
                 var player = this;
-                this.initPlayTrack(trackId, false, false, undefined, function(){player.prevTrack()});
+                this.initPlayTrack(trackId, false, false, undefined, function(){player.prevTrack()},function(){player.stop()});
             },
             nextTrack: function() {
                 if (shuffle) {
@@ -6710,13 +6732,14 @@ ngSoundManager.factory('angularPlayer', ['$rootScope', '$log',
                     this.playTrack(nextTrackId);
                 } else {
                     //if no next track found
-                    if(repeat === true) {
+                    if(repeat) {
                         //start first track if repeat is on
                         this.playTrack(soundManager.soundIDs[0]);
                     } else {
                         //breadcase not playing anything
+                        $log.debug('no prev track found!');
                         isPlaying = false;
-                        $rootScope.$broadcast('music:isPlaying', isPlaying);
+                        $rootScope.$broadcast('music:isPlaying', false);
                     }
                 }
             },
@@ -6740,7 +6763,13 @@ ngSoundManager.factory('angularPlayer', ['$rootScope', '$log',
                 if(typeof prevTrackId !== 'undefined') {
                     this.playTrackFailToPrev(prevTrackId);
                 } else {
-                    $log.debug('no prev track found!');
+                    if (repeat) {
+                      this.playTrack(soundManager.soundIDs[soundManager.soundIDs.length-1]);
+                    } else {
+                      $log.debug('no prev track found!');
+                      isPlaying = false;
+                      $rootScope.$broadcast('music:isPlaying', false);
+                    }
                 }
             },
             mute: function() {
