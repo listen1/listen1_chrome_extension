@@ -78,7 +78,7 @@ function build_qq() {
       img_url: qq_get_image_url(song.albummid, 'album'),
       source: 'qq',
       source_url: `https://y.qq.com/#type=song&mid=${song.songmid}&tpl=yqq_song_detail`,
-      url: `qqtrack_${song.songmid}`,
+      //url: `qqtrack_${song.songmid}`,
       disabled: !qq_is_playable(song),
     };
     return d;
