@@ -1109,6 +1109,9 @@ svg.searchspinner {
   white-space: nowrap;
   text-overflow: ellipsis;
 }
+.footer .menu ul.menu-list li .song-title.disabled {
+  color: #777777;
+}
 .footer .menu ul.menu-list li .song-title a {
   cursor: pointer;
 }
