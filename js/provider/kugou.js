@@ -11,7 +11,7 @@ function build_kugou() {
       source: 'kugou',
       source_url: `http://www.kugou.com/song/#hash=${song.FileHash}&album_id=${song.AlbumID}`,
       img_url: '',
-      url: `kgtrack_${song.FileHash}`,
+      // url: `kgtrack_${song.FileHash}`,
       lyric_url: song.FileHash,
     };
     let singer_id = song.SingerId;
@@ -108,7 +108,7 @@ function build_kugou() {
       source_url: `http://www.kugou.com/song/#hash=${
         item.hash}&album_id=${item.album_id}`,
       img_url: '',
-      url: `xmtrack_${item.hash}`,
+      // url: `xmtrack_${item.hash}`,
       lyric_url: item.hash,
     };
     // Fix song info
@@ -180,7 +180,7 @@ function build_kugou() {
       source_url: `http://www.kugou.com/song/#hash=${
         item.hash}&album_id=${item.album_id}`,
       img_url: '',
-      url: `kgtrack_${item.hash}`,
+      // url: `kgtrack_${item.hash}`,
       lyric_url: item.hash,
     };
     const one = item.filename.split('-');
@@ -323,7 +323,7 @@ function build_kugou() {
       source_url: `http://www.kugou.com/song/#hash=${
         item.hash}&album_id=${album_id}`,
       img_url: '',
-      url: `xmtrack_${item.hash}`,
+      // url: `xmtrack_${item.hash}`,
       lyric_url: item.hash,
     };
     // Fix other data
