@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en" ng-app="listenone">
 
 <head>
@@ -568,7 +568,7 @@
                 <ul class="menu-list">
                     <li id="song{{ song.id }}" ng-repeat="song in playlist track by $index" ng-class="{ playing: currentPlaying.id == song.id }" ng-mouseenter="playlist_highlight=true" ng-mouseleave="playlist_highlight=false" ng-class-odd="'odd'" ng-class-even="'even'">
                         <div class="song-status-icon"><svg class="feather play" ng-show="currentPlaying.id == song.id"><use xlink:href="images/feather-sprite.svg#play"></use></svg></div>
-                        <div class="song-title"><a play-from-playlist="song">{{ song.title }}</a></div>
+                        <div class="song-title" ng-class="song.disabled? 'disabled':'' "><a play-from-playlist="song">{{ song.title }}</a></div>
                         <div class="song-singer"><a ng-click="showPlaylist(song.artist_id); togglePlaylist();">{{ song.artist }}</a></div>
                         <div class="tools">
                           <span remove-from-playlist="song" data-index="{{$index}}" ng-show="playlist_highlight" class="icon li-del"></span>
