@@ -1,4 +1,4 @@
-Listen 1 (Chrome Extension) V2.17.1
+Listen 1 (Chrome Extension) V2.17.2
 ==========
 （Last Update December 12nd, 2020)
 
@@ -46,6 +46,11 @@ Install (Firefox)
 
 Changelog
 -------
+`2020-12-20`
+* fix play interrupted by copyright notice bug, infinite notice popup bug
+* change style for now playing page when using album cover as background
+* fix minor bug for qq search and optimaze api handler（thanks @RecluseWind）
+
 `2020-12-12`
 * support search songlist for qq music (thanks @RecluseWind）
 * fix bug: netease songlist shared by mobile open error (thanks @RecluseWind）
