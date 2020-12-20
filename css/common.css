@@ -564,11 +564,11 @@ svg {
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
-  -webkit-filter: blur(15px);
-  -moz-filter: blur(15px);
-  -o-filter: blur(15px);
-  -ms-filter: blur(15px);
-  filter: blur(15px);
+  -webkit-filter: blur(10px) brightness(0.6);
+  -moz-filter: blur(10px) brightness(0.6);
+  -o-filter: blur(10px) brightness(0.6);
+  -ms-filter: blur(10px) brightness(0.6);
+  filter: blur(10px) brightness(0.6);
 }
 
 .page .playsong-detail {
