@@ -101,7 +101,7 @@ function build_migu() {
               source: 'migu',
               source_url: `http://music.migu.cn/v3/music/song/${cid}`,
               img_url: cover_url, // TODO: use different cover for every song solution: change to mobile api. By now some play problem exists.
-              url: `mgtrack_${cid}`,
+              // url: `mgtrack_${cid}`,
               disabled: cid == ''
             }
           });
@@ -176,6 +176,13 @@ function build_migu() {
           const {
             data
           } = response;
+          if(data.musics === undefined){
+            return fn({
+              result: [],
+              total: 0,
+              type: searchType
+            });
+          }
           const tracks = data.musics.map(song_info => ({
             id: `mgtrack_${song_info.copyrightId}`,
             title: song_info.songName,
@@ -186,7 +193,7 @@ function build_migu() {
             source: 'migu',
             source_url: `http://music.migu.cn/v3/music/song/${song_info.copyrightId}`,
             img_url: song_info.cover,
-            url: `mgtrack_${song_info.copyrightId}`,
+            // url: `mgtrack_${song_info.copyrightId}`,
             disabled: false,
           }));
           return fn({
