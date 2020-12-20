@@ -198,7 +198,7 @@ function build_netease() {
         source: 'netease',
         source_url: `http://music.163.com/#/song?id=${track_json.id}`,
         img_url: track_json.al.picUrl,
-        url: `netrack_${track_json.id}`,
+        //url: `netrack_${track_json.id}`,
       };
       return callback(null, track);
     });
@@ -230,7 +230,7 @@ function build_netease() {
         source: 'netease',
         source_url: `http://music.163.com/#/song?id=${track_json.id}`,
         img_url: track_json.al.picUrl,
-        url: `netrack_${track_json.id}`,
+        //url: `netrack_${track_json.id}`,
       }));
 
       return callback(null, tracks);
@@ -380,7 +380,7 @@ function build_netease() {
               source: 'netease',
               source_url: `http://music.163.com/#/song?id=${song_info.id}`,
               img_url: song_info.album.picUrl,
-              url: `netrack_${song_info.id}`,
+              //url: `netrack_${song_info.id}`,
               disabled: !is_playable(song_info),
             }));
             total = data.result.songCount;
@@ -439,7 +439,7 @@ function build_netease() {
             source: 'netease',
             source_url: `http://music.163.com/#/song?id=${song_info.id}`,
             img_url: song_info.album.picUrl,
-            url: `netrack_${song_info.id}`,
+            //url: `netrack_${song_info.id}`,
             disabled: !is_playable(song_info),
           }));
           return fn({
@@ -480,7 +480,7 @@ function build_netease() {
             source: 'netease',
             source_url: `http://music.163.com/#/song?id=${song_info.id}`,
             img_url: song_info.album.picUrl,
-            url: `netrack_${song_info.id}`,
+            //url: `netrack_${song_info.id}`,
             disabled: !is_playable(song_info),
           }));
           return fn({

@@ -9,7 +9,7 @@ function build_bilibili() {
       source: 'bilibili',
       source_url: `https://www.bilibili.com/audio/au${song_info.id}`,
       img_url: song_info.cover,
-      url: song_info.id,
+      // url: song_info.id,
       lyric_url: song_info.lyric,
     };
     return track;

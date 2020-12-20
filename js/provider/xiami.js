@@ -132,7 +132,7 @@ function build_xiami() {
       source: 'xiami',
       source_url: `https://www.xiami.com/song/${song_info.song_id}`,
       img_url: song_info.album_logo,
-      url: `xmtrack_${song_info.song_id}`,
+      //url: `xmtrack_${song_info.song_id}`,
       lyric_url: song_info.lyric,
       disabled: song_info.listen_file,
     };
@@ -150,7 +150,7 @@ function build_xiami() {
       source: 'xiami',
       source_url: `https://www.xiami.com/song/${song_info.songId}`,
       img_url: song_info.albumLogo,
-      url: `xmtrack_${song_info.songId}`,
+      //url: `xmtrack_${song_info.songId}`,
       lyric_url: song_info.lyricInfo ? song_info.lyricInfo.lyricFile : '',
     };
     if (song_info.listenFiles && song_info.listenFiles.length > 0) {

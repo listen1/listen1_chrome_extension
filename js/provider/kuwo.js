@@ -79,7 +79,7 @@ function build_kuwo() {
       source: 'kuwo',
       source_url: `http://www.kuwo.cn/yinyue/${item.musicrid}`,
       img_url: '',
-      url: `xmtrack_${item.musicrid}`,
+      // url: `xmtrack_${item.musicrid}`,
       lyric_url: item.musicrid,
     };
 
@@ -100,7 +100,7 @@ function build_kuwo() {
       source: 'kuwo',
       source_url: `http://www.kuwo.cn/yinyue/${item.id}`,
       img_url: '',
-      url: `xmtrack_${item.id}`,
+      // url: `xmtrack_${item.id}`,
       lyric_url: item.id,
     };
 
@@ -120,7 +120,7 @@ function build_kuwo() {
       source: 'kuwo',
       source_url: `http://www.kuwo.cn/yinyue/${item.id}`,
       img_url: '',
-      url: `xmtrack_${item.id}`,
+      // url: `xmtrack_${item.id}`,
       lyric_url: item.id,
     };
 
@@ -207,13 +207,16 @@ function build_kuwo() {
               source: 'kuwo',
               source_url: `http://www.kuwo.cn/yinyue/${musicrid}`,
               img_url: item.albumpic,
-              url: `xmtrack_${musicrid}`,
+              // url: `xmtrack_${musicrid}`,
               lyric_url: musicrid,
             };
             return track;
           })
           fn({result:tracks, total: data.data.total, type: searchType});
+        }).catch(()=>{
+          fn({result:[], total: 007, type: searchType});
         });
+        
       });
       },
     };
