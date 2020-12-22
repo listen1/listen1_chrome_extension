@@ -1,6 +1,6 @@
-Listen 1 (Chrome Extension) V2.17.2
+Listen 1 (Chrome Extension) V2.17.3
 ==========
-（Last Update December 12nd, 2020)
+（Last Update December 22nd, 2020)
 
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE)
 
@@ -46,6 +46,9 @@ Install (Firefox)
 
 Changelog
 -------
+`2020-12-22`
+* fix bug: after upgrade v2.17.2, my playlist can't be played
+
 `2020-12-20`
 * fix play interrupted by copyright notice bug, infinite notice popup bug
 * change style for now playing page when using album cover as background
