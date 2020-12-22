@@ -1,4 +1,4 @@
-Listen 1 (Chrome Extension) V2.17.3
+Listen 1 (Chrome Extension) V2.17.4
 ==========
 （Last Update December 22nd, 2020)
 
@@ -47,6 +47,7 @@ Install (Firefox)
 Changelog
 -------
 `2020-12-22`
+* fix bug: kuwo music can't be played
 * fix bug: after upgrade v2.17.2, my playlist can't be played
 
 `2020-12-20`
