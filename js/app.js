@@ -1023,6 +1023,8 @@ const main = () => {
           return;
         }
         // apply local current playing;
+        // clear url field
+        localSettings.forEach(e=>{delete e.url});
         angularPlayer.addTrackArray(localSettings);
       };
 

@@ -24,6 +24,8 @@ const myplaylistFactory = () => {
         const result = playlists.reduce((res, id) => {
           const playlist = localStorage.getObject(id);
           if (playlist !== null) {
+            // clear url field when load old playlist
+            playlist.tracks.forEach(e=>{delete e.url});
             res.push(playlist);
           }
           return res;
@@ -38,6 +40,8 @@ const myplaylistFactory = () => {
     return {
       success(fn) {
         const playlist = localStorage.getObject(list_id);
+        // clear url field when load old playlist
+        playlist.tracks.forEach(e=>{delete e.url});
         fn(playlist);
       },
     };
