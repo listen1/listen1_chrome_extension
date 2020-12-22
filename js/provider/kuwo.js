@@ -225,22 +225,25 @@ function build_kuwo() {
   // eslint-disable-next-line no-unused-vars
   function kw_bootstrap_track(sound, track, success, failure, hm, se) {
     const song_id = track.id.slice('kwtrack_'.length);
-    const target_url = `${'http://antiserver.kuwo.cn/anti.s?'
-      + 'type=convert_url&format=aac|mp3|wma&response=url&rid=MUSIC_'}${song_id}`;
+    const ts = + new Date();
+    const target_url = `http://www.kuwo.cn/url?format=mp3&rid=${song_id}&response=url&type=convert_url3&br=128kmp3&from=web&t=${ts}&httpsStatus=1`
 
     hm({
       url: target_url,
       method: 'GET',
       transformResponse: undefined,
     }).then((response) => {
-      const { data } = response;
-      if (data.length > 0) {
-        sound.url = data; // eslint-disable-line no-param-reassign
+      let { data } = response;
+      data = JSON.parse(data);
+      if (data.msg === 'success' && data.url !== undefined) {
+        sound.url = data.url; // eslint-disable-line no-param-reassign
         success();
       } else {
         failure();
       }
-    });
+    }).catch(()=>{
+      failure();
+    })
   }
 
   function kw_lyric(url, hm, se) { // eslint-disable-line no-unused-vars
