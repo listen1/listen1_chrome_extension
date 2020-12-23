@@ -832,7 +832,7 @@ const main = () => {
       };
 
       $scope.addLocalMusic = (list_id) => {
-        if (typeof chrome == 'undefined') {
+        if (isElectron()) {
           const { remote } = require('electron');
           const remoteFunctions = remote.require('./functions.js');
           remote.dialog.showOpenDialog({
@@ -935,7 +935,7 @@ const main = () => {
       $scope.scrobbleTimer = new Timer();
       $scope.adjustVolume = angularPlayer.adjustVolume;
       $scope.enableGloablShortcut = false;
-      $scope.isChrome = (typeof chrome !== 'undefined');
+      $scope.isChrome = (!isElectron());
       $scope.isMac = false;
 
       if (!$scope.isChrome) {
@@ -1157,7 +1157,7 @@ const main = () => {
         } else {
           $rootScope.page_title = `❚❚ ${$rootScope.page_title.slice($rootScope.page_title.indexOf(' '))}`;
         }
-        if (typeof chrome == 'undefined') {
+        if (isElectron()) {
           const { ipcRenderer } = require('electron');
           if (data) {
             ipcRenderer.send('isPlaying', true);
@@ -1285,7 +1285,7 @@ const main = () => {
           $scope.lyricArray = parseLyric(lyric, tlyric);
         });
         $scope.lastTrackId = data;
-        if (typeof chrome == 'undefined') {
+        if (isElectron()) {
           const { ipcRenderer } = require('electron');
           ipcRenderer.send('currentLyric', track.title);
           ipcRenderer.send('trackPlayingNow', track);
@@ -1329,7 +1329,7 @@ const main = () => {
           if (lastObjectTrans && lastObjectTrans.lineNumber !== $scope.lyricLineNumberTrans) {
             $scope.lyricLineNumberTrans = lastObjectTrans.lineNumber;
           }
-          if (typeof chrome == 'undefined') {
+          if (isElectron()) {
             const { ipcRenderer } = require('electron');
             let currentLyric = $scope.lyricArray[lastObject.lineNumber].content;
             let currentLyricTrans = '';
@@ -1419,7 +1419,7 @@ const main = () => {
 
       // electron global shortcuts
       $scope.applyGlobalShortcut = (toggle) => {
-        if (typeof chrome !== 'undefined') {
+        if (!isElectron()) {
           return;
         }
         let message = '';
@@ -1440,7 +1440,7 @@ const main = () => {
       };
 
       $scope.openLyricFloatingWindow = (toggle) => {
-        if (typeof chrome !== 'undefined') {
+        if (!isElectron()) {
           return;
         }
         let message = '';
@@ -1467,7 +1467,7 @@ const main = () => {
         localStorage.setObject('enable_lyric_floating_window_translation', $scope.enableLyricFloatingWindowTranslation)
       }
 
-      if (typeof chrome === 'undefined') {
+      if (isElectron()) {
         require('electron').ipcRenderer.on('globalShortcut', (event, message) => {
           if (message === 'right') {
             angularPlayer.nextTrack();

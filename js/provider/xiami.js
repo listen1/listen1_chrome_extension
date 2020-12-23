@@ -5,7 +5,7 @@ function build_xiami() {
   function xm_get_token(callback) {
     const domain = 'https://www.xiami.com';
     const name = 'xm_sg_tk';
-    if (typeof chrome !== 'undefined') {
+    if (!isElectron()) {
       cookieGet({
         url: domain,
         name,

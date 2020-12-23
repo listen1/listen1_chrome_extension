@@ -130,7 +130,7 @@ function build_kuwo() {
   function kw_get_token(callback) {
     const domain = 'http://www.kuwo.cn';
     const name = 'kw_token';
-    if (typeof chrome !== 'undefined') {
+    if (!isElectron()) {
       cookieGet({
         url: domain,
         name,

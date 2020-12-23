@@ -123,7 +123,7 @@ function build_netease() {
     const nuidName = '_ntes_nuid';
     const nnidName = '_ntes_nnid';
     let env = null;
-    if (typeof chrome !== 'undefined') {
+    if (!isElectron()) {
       env = 'chrome';
     } else {
       const remote = require('electron').remote; // eslint-disable-line

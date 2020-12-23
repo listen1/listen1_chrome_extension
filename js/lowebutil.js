@@ -12,8 +12,12 @@ function getParameterByName(name, url) { // eslint-disable-line no-unused-vars
   return decodeURIComponent(results[2].replace(/\+/g, ' '));
 }
 
+function isElectron(){
+  return window && window.process && window.process.type;
+}
+
 function cookieGet(cookie, callback){
-  if (typeof chrome !== 'undefined') {
+  if (!isElectron()) {
     return chrome.cookies.get(cookie, (arg1, arg2) => {
       callback(arg1, arg2);
     });
@@ -26,7 +30,7 @@ function cookieGet(cookie, callback){
 }
 
 function cookieSet(cookie, callback){
-  if (typeof chrome !== 'undefined') {
+  if (!isElectron()) {
     return chrome.cookies.set(cookie, (arg1, arg2) => {
       callback(arg1, arg2);
     });
