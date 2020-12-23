@@ -418,7 +418,7 @@ function build_xiami() {
         last_time_tag = current_time_tag;
         // 计算本行结束时间轴
         var durning = 0;
-        line.match(reg_durning_tag).forEach((s) => {
+        line.match(reg_durning_tag) && line.match(reg_durning_tag).forEach((s) => {
           durning += parseInt(s.replace(/[^\d]/g, ""));
         });
         last_end_timestamp = tag2millisecond(last_time_tag) + durning;
