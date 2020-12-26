@@ -38,6 +38,114 @@ function build_migu() {
     };
   }
 
+  function get_playlist_data_from_response(playlist_type, list_type, list_id, data){
+    let target_url = '';
+    if (playlist_type == 'playlist') {
+      target_url = `http://music.migu.cn/v3/music/playlist/${list_id}`;
+    } else if (playlist_type == 'album') {
+      target_url = `http://music.migu.cn/v3/music/album/${list_id}`;
+    } else if (playlist_type == 'artist') {
+      target_url = `http://music.migu.cn/v3/music/artist/${list_id}/song`;
+    }
+
+    const domObj = (new DOMParser()).parseFromString(data, 'text/html');
+    const song_elements = Array.from(domObj.getElementsByClassName('songlist-body')[0].children);
+    let cover_url = '';
+    let title = '';
+    if (playlist_type == 'artist') {
+      cover_url = handleProtocolRelativeUrl(domObj.getElementsByClassName('artist-avatar')[0].getElementsByTagName('img')[0].src);
+      title = domObj.getElementsByClassName('artist-avatar')[0].getElementsByTagName('img')[0].alt;
+    } else {
+      cover_url = handleProtocolRelativeUrl(domObj.getElementsByClassName('thumb-img')[0].src);
+      title = domObj.getElementsByClassName('thumb-img')[0].alt;
+    }
+    const info = {
+      id: `${list_type}_${list_id}`,
+      cover_img_url: cover_url,
+      title: title,
+      source_url: target_url,
+    };
+    const tracks = song_elements.map(item => {
+      const cid = item.getElementsByClassName('song-index')[0].dataset.cid;
+      let album_name = '';
+      if (playlist_type == 'playlist' || playlist_type == 'artist') {
+        const album_list = item.getElementsByClassName('song-belongs')[0].getElementsByTagName('a');
+        if (album_list.length > 0) {
+          album_name = album_list[0].title;
+        }
+      } else {
+        album_name = domObj.getElementsByClassName('thumb-img')[0].alt;
+      }
+
+      const artist_url_list = item.getElementsByClassName('song-singers')[0].getElementsByTagName('a')[0].href.split('/');
+      const artist_id = artist_url_list[artist_url_list.length - 1];
+
+      return {
+        id: `mgtrack_${cid}`,
+        title: item.getElementsByClassName('song-name')[0].getElementsByTagName('a')[0].innerHTML,
+        artist: item.getElementsByClassName('song-singers')[0].getElementsByTagName('a')[0].innerHTML,
+        artist_id: `mgartist_${artist_id}`,
+        album: album_name,
+        album_id: `mgalbum_${item.getElementsByClassName('song-index')[0].dataset.aid}`,
+        source: 'migu',
+        source_url: `http://music.migu.cn/v3/music/song/${cid}`,
+        img_url: cover_url, // TODO: use different cover for every song solution: change to mobile api. By now some play problem exists.
+        // url: `mgtrack_${cid}`,
+        disabled: cid == ''
+      }
+    });
+    // current page fetch only work for playlist.
+    // album page has no pager.
+    // artist page will fail and only keep default 1 page
+    // to avoid too many tracks to fetch once open
+    // TODO: customized pager/pager fit provider
+    let page_items = domObj.querySelectorAll('.page a:not(.page-c)');
+    let current = 1;
+    if(page_items.length === 0){
+      total = 1;
+      current = 1;
+    }
+    else{
+      total = page_items.length;
+      current = parseInt(domObj.querySelector('.page a.on').innerHTML);
+    }
+    
+    return {
+      info,
+      tracks,
+      total,
+      current
+    };
+  }
+
+  function get_playlist_from_url(index, url, params, callback){
+    const hm = params[0];
+    const playlist_type = params[1];
+    const list_type = params[2];
+    const list_id = params[3];
+
+    hm({
+      url: url,
+      method: 'GET'
+    }).then((response) => {
+      const {
+        data
+      } = response;
+      const result = get_playlist_data_from_response(playlist_type, list_type, list_id, data);
+      return callback(null, result);
+    });
+  }
+
+  function async_process_list(data_list, handler, handler_extra_param_list, callback) {
+    const fnDict = {};
+    data_list.forEach((item, index) => {
+      fnDict[index] = cb => handler(index, item, handler_extra_param_list, cb);
+    });
+    async.parallel(fnDict, (err, results) => {
+      callback(null, data_list.map((item, index) => results[index]));
+    });
+  }
+
   function mg_get_playlist(url, hm, se, playlist_type) {
     return {
       success(fn) {
@@ -51,67 +159,24 @@ function build_migu() {
         } else if (playlist_type == 'artist') {
           target_url = `http://music.migu.cn/v3/music/artist/${list_id}/song`;
         }
-
-        hm({
-          url: target_url,
-          method: 'GET'
-        }).then((response) => {
-          const {
-            data
-          } = response;
-          const domObj = (new DOMParser()).parseFromString(data, 'text/html');
-          const song_elements = Array.from(domObj.getElementsByClassName('songlist-body')[0].children);
-          let cover_url = '';
-          let title = '';
-          if (playlist_type == 'artist') {
-            cover_url = handleProtocolRelativeUrl(domObj.getElementsByClassName('artist-avatar')[0].getElementsByTagName('img')[0].src);
-            title = domObj.getElementsByClassName('artist-avatar')[0].getElementsByTagName('img')[0].alt;
-          } else {
-            cover_url = handleProtocolRelativeUrl(domObj.getElementsByClassName('thumb-img')[0].src);
-            title = domObj.getElementsByClassName('thumb-img')[0].alt;
+        get_playlist_from_url(0, target_url, [hm, playlist_type, list_type, list_type], function(err, result){
+          if (result.total === 1){
+            return fn(result);
           }
-          const info = {
-            id: `${list_type}_${list_id}`,
-            cover_img_url: cover_url,
-            title: title,
-            source_url: target_url,
-          };
-          const tracks = song_elements.map(item => {
-            const cid = item.getElementsByClassName('song-index')[0].dataset.cid;
-            let album_name = '';
-            if (playlist_type == 'playlist' || playlist_type == 'artist') {
-              const album_list = item.getElementsByClassName('song-belongs')[0].getElementsByTagName('a');
-              if (album_list.length > 0) {
-                album_name = album_list[0].title;
-              }
-            } else {
-              album_name = domObj.getElementsByClassName('thumb-img')[0].alt;
-            }
-
-            const artist_url_list = item.getElementsByClassName('song-singers')[0].getElementsByTagName('a')[0].href.split('/');
-            const artist_id = artist_url_list[artist_url_list.length - 1];
-
-            return {
-              id: `mgtrack_${cid}`,
-              title: item.getElementsByClassName('song-name')[0].getElementsByTagName('a')[0].innerHTML,
-              artist: item.getElementsByClassName('song-singers')[0].getElementsByTagName('a')[0].innerHTML,
-              artist_id: `mgartist_${artist_id}`,
-              album: album_name,
-              album_id: `mgalbum_${item.getElementsByClassName('song-index')[0].dataset.aid}`,
-              source: 'migu',
-              source_url: `http://music.migu.cn/v3/music/song/${cid}`,
-              img_url: cover_url, // TODO: use different cover for every song solution: change to mobile api. By now some play problem exists.
-              // url: `mgtrack_${cid}`,
-              disabled: cid == ''
-            }
-          });
-
-          return fn({
-            info,
-            tracks,
-          });
+          const urls = [];
+          for(var i=2; i<=result.total;i++){
+            let url = `${target_url}?page=${i}`
+            urls.push(url);
+          }
+          return async_process_list(urls, get_playlist_from_url, [hm, playlist_type, list_type, list_type],
+            (err, playlists) => {
+              playlists.forEach(function(playlist){
+                result.tracks = result.tracks.concat(playlist.tracks);
+              })
+              return fn(result);
+            });
         });
-      },
+      }
     };
   }
 
