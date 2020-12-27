@@ -1,6 +1,6 @@
-Listen 1 (Chrome Extension) V2.17.4
+Listen 1 (Chrome Extension) V2.17.6
 ==========
-（最后更新于2020年12月22日）
+（最后更新于2020年12月27日）
 
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE)
 
@@ -71,6 +71,11 @@ Listen1诞生的初衷从不是和大公司的争夺版权利益，而是为了�
 
 更新日志
 -------
+`2020-12-27`
+* 修复咪咕音乐歌单只显示前20首歌的bug
+* 修复虾米音乐歌词解析错误导致无法显示的bug
+* 根据chrome web store上架要求修改部分权限
+
 `2020-12-22`
 * 修复酷我音乐无法播放的问题
 * 修复我创建的歌单升级后无法播放的问题

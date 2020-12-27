@@ -1,6 +1,6 @@
-Listen 1 (Chrome Extension) V2.17.4
+Listen 1 (Chrome Extension) V2.17.6
 ==========
-（Last Update December 22nd, 2020)
+（Last Update December 27th, 2020)
 
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE)
 
@@ -46,6 +46,11 @@ Install (Firefox)
 
 Changelog
 -------
+`2020-12-27`
+* fix bug: migu playlist shows first 20 tracks
+* fix bug: xiami lyric parse error
+* change manitest permession config to pass chrome web store review
+
 `2020-12-22`
 * fix bug: kuwo music can't be played
 * fix bug: after upgrade v2.17.2, my playlist can't be played
