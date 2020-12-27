@@ -1722,7 +1722,7 @@ const main = () => {
       },
       link(scope, element, attrs) {
         element.bind('click', (event) => {
-          if ((typeof chrome) === 'undefined') {
+          if (isElectron()) {
             const { ipcRenderer } = require('electron');
             ipcRenderer.send('control', scope.action);
           }
