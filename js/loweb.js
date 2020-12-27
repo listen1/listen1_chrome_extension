@@ -88,7 +88,7 @@ ngloWebManager.factory('loWeb', ['$rootScope', '$log', '$http', '$httpParamSeria
             success: fn => {
               return async.parallel(callbackArray, function(err, platformResultArray){
                 // TODO: nicer pager, playlist support
-                let result = {result: [], total: 1000, type: '0'};
+                let result = {result: [], total: 1000, type: platformResultArray[0].type};
                 const maxLength = Math.max.apply(Math, platformResultArray.map(elem=>elem.result.length));
                 for(let i=0; i<maxLength; i++){
                   platformResultArray.forEach(function(elem){

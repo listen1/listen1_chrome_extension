@@ -278,7 +278,7 @@
                                   <div class="title">
                                     <a ng-click="showPlaylist(playlist.id)">
                                       <img ng-src="{{ playlist.img_url }}"/>
-                                      <div>{{ playlist.title |limitTo:30}}</div>
+                                      <div>{{ playlist.title |limitTo:30}}<span ng-if="isActiveTab(8)" class="source playlist">{{playlist.sourceName}}</span></div>
                                     </a>
                                   </div>
                                   <div class="artist">{{ playlist.author |limitTo:20}}</div>

@@ -704,6 +704,10 @@ ul.detail-songlist li a span.source {
   color: #ccc;
   font-size: 12px;
 }
+ul.detail-songlist li a span.source.playlist {
+  margin-left: 10px;
+  margin-right: 0;
+}
 ul.detail-songlist li.head {
   height: 28px;
   color: var(--text-disable-color);
@@ -732,7 +736,7 @@ ul.detail-songlist li.playlist-result .title img {
   height: 60px;
   width: 60px;
   display: block;
-  margin-right: 20px;
+  margin-right: 10px;
 }
 
 ul.detail-songlist li .artist {
