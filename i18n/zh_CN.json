@@ -1,5 +1,6 @@
 {
  "HELLO"        : "你好",
+ "_ALL_MUSIC": "所有音乐",
  "_NETEASE_MUSIC": "网易云音乐",
  "_QQ_MUSIC": "QQ音乐",
  "_XIAMI_MUSIC": "虾米音乐",
@@ -104,5 +105,12 @@
  "_NOWPLAYING_COVER_BACKGROUND": "正在播放背景",
  "_NOWPLAYING_COVER_BACKGROUND_NOTICE": "是否显示专辑封面作为正在播放背景",
  "_LOCAL_MUSIC": "本地音乐",
- "_ADD_LOCAL_SONGS": "添加歌曲"
+ "_ADD_LOCAL_SONGS": "添加歌曲",
+ "netease": "网易",
+ "bilibili": "哔哩",
+ "kugou": "酷狗",
+ "kuwo": "酷我",
+ "migu": "咪咕",
+ "qq": "QQ",
+ "xiami": "虾米"
 }

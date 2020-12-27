@@ -29,6 +29,10 @@ function getAllProviders() {
   return [netease, xiami, qq, kugou, kuwo, bilibili, migu];
 }
 
+function getAllSearchProviders(){
+  return [netease, xiami, qq, kugou, kuwo, migu];
+}
+
 function getProviderByItemId(itemId) {
   const prefix = itemId.slice(0, 2);
   switch (prefix) {
@@ -71,6 +75,33 @@ ngloWebManager.factory('loWeb', ['$rootScope', '$log', '$http', '$httpParamSeria
       }
       if (path === '/search') {
         const source = getParameterByName('source', url);
+        if (source === 'allmusic'){
+          // search all platform and merge result
+          const callbackArray = getAllSearchProviders().map(function(p){
+            return fn =>{
+              p.search(url, $http, $httpParamSerializerJQLike).success(r=>{
+                fn(null, r);
+              });
+            };
+          });
+          return {
+            success: fn => {
+              return async.parallel(callbackArray, function(err, platformResultArray){
+                // TODO: nicer pager, playlist support
+                let result = {result: [], total: 1000, type: '0'};
+                const maxLength = Math.max.apply(Math, platformResultArray.map(elem=>elem.result.length));
+                for(let i=0; i<maxLength; i++){
+                  platformResultArray.forEach(function(elem){
+                    if (i<elem.result.length){
+                      result.result.push(elem.result[i]);
+                    }
+                  });
+                }
+                return fn(result);
+              });
+            }
+          };
+        }
         const provider = getProviderByName(source);
         return provider.search(url, $http, $httpParamSerializerJQLike);
       }

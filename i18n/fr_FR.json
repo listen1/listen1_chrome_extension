@@ -1,5 +1,6 @@
 {
  "HELLO"        : "Bonjour",
+ "_ALL_MUSIC": "All Music",
  "_NETEASE_MUSIC": "Netease",
  "_QQ_MUSIC": "QQ",
  "_XIAMI_MUSIC": "Xiami",
@@ -104,5 +105,12 @@
  "_NOWPLAYING_COVER_BACKGROUND": "Now Playing Cover Background",
  "_NOWPLAYING_COVER_BACKGROUND_NOTICE": "Show Cover Image for Now Playing",
  "_LOCAL_MUSIC": "Local Music",
- "_ADD_LOCAL_SONGS": "Add Local Songs"
+ "_ADD_LOCAL_SONGS": "Add Local Songs",
+ "netease": "netease",
+ "bilibili": "bili",
+ "kugou": "kugou",
+ "kuwo": "kuwo",
+ "migu": "migu",
+ "qq": "qq",
+ "xiami": "xiami"
 }

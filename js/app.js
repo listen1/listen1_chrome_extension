@@ -119,6 +119,9 @@ const main = () => {
     if (sourceId === 7) {
       return 'migu';
     }
+    if (sourceId === 8) {
+      return 'allmusic';
+    }
     return '';
   }
 
@@ -1501,10 +1504,10 @@ const main = () => {
     },
   ]);
 
-  app.controller('InstantSearchController', ['$scope', '$http', '$timeout', '$rootScope', 'angularPlayer', 'loWeb',
-    ($scope, $http, $timeout, $rootScope, angularPlayer, loWeb) => {
-      // notice: douban is skipped so array should plus 1
-      $scope.originpagelog = Array(getAllProviders().length + 1).fill(1);  // [网易,虾米,QQ,NULL,酷狗,酷我,bilibili, migu]
+  app.controller('InstantSearchController', ['$scope', '$http', '$timeout', '$rootScope', 'angularPlayer', 'loWeb', '$translate',
+    ($scope, $http, $timeout, $rootScope, angularPlayer, loWeb, $translate) => {
+      // notice: douban is skipped, and add all music so array should plus 2
+      $scope.originpagelog = Array(getAllProviders().length + 2).fill(1);  // [网易,虾米,QQ,NULL,酷狗,酷我,bilibili, migu, allmusic]
       $scope.tab = 0;
       $scope.keywords = '';
       $scope.loading = false;
@@ -1543,6 +1546,9 @@ const main = () => {
         $rootScope.$broadcast('search:keyword_change', $scope.keywords);
         loWeb.get(`/search?source=${getSourceName($scope.tab)}&keywords=${$scope.keywords}&curpage=${$scope.curpage}&type=${$scope.searchType}`).success((data) => {
           // update the textarea
+          data.result.forEach(r=>{
+            r.sourceName = $translate.instant(r.source)
+          })
           $scope.result = data.result;
           updateTotalPage(data.total);
           $scope.loading = false;

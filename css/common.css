@@ -695,7 +695,15 @@ ul.detail-songlist li a {
 ul.detail-songlist li a.disabled {
   color: var(--disable-song-title-color);
 }
-
+ul.detail-songlist li a span.source {
+  border: solid 1px #ccc;
+  border-radius: 4px;
+  margin-right: 10px;
+  display: inline-block;
+  padding: 0 4px;
+  color: #ccc;
+  font-size: 12px;
+}
 ul.detail-songlist li.head {
   height: 28px;
   color: var(--text-disable-color);

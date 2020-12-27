@@ -232,6 +232,7 @@
                           <!-- Initialize a new AngularJS app and associate it with a module named "instantSearch"-->
                           <div class="searchbox"  >
                             <ul class="source-list">
+                              <li class="source-button" ng-class="{'active':isActiveTab(8)}" ng-click="changeSourceTab(8)"><a>{{_ALL_MUSIC}}(Beta)</a></li><div class="splitter"></div>
                               <li class="source-button" ng-class="{'active':isActiveTab(0)}" ng-click="changeSourceTab(0)"><a>{{_NETEASE_MUSIC}}</a></li><div class="splitter"></div>
                               <li class="source-button" ng-class="{'active':isActiveTab(1)}" ng-click="changeSourceTab(1)"><a>{{_XIAMI_MUSIC}}</a></li><div class="splitter"></div>
                               <li class="source-button" ng-class="{'active':isActiveTab(2)}" ng-click="changeSourceTab(2)"><a>{{_QQ_MUSIC}}</a></li><div class="splitter"></div>
@@ -261,7 +262,7 @@
                               <li ng-if="searchType===0" ng-repeat="song in result" ng-class-odd="'odd'" ng-class-even="'even'" ng-mouseenter="options=true" ng-mouseleave="options=false">
                                   <div class="title">
                                    <!-- <a ng-if="song.disabled" class="disabled" ng-click="copyrightNotice()">{{ song.title |limitTo:30}}</a> -->
-                                    <a add-and-play="song">{{ song.title |limitTo:30}}</a>
+                                    <a add-and-play="song"><span ng-if="isActiveTab(8)" class="source">{{song.sourceName}}</span>{{ song.title |limitTo:30}}</a>
                                   </div>
                                   <div class="artist"><a ng-click="showPlaylist(song.artist_id)">{{ song.artist |limitTo:20}}</a></div>
                                   <div class="album"><a ng-click="showPlaylist(song.album_id)">{{ song.album |limitTo:30}}</a></div>
