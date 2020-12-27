@@ -87,7 +87,14 @@ function build_kugou() {
                 total: data.data.total,
                 type: searchType
               }));
-          });
+          })
+          .catch(()=>{
+            return fn({
+              result: [],
+              total: 0,
+              type: searchType
+            });
+          });;
       },
     };
   }

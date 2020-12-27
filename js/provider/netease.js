@@ -404,6 +404,12 @@ function build_netease() {
             total: total,
             type: searchType
           });
+        }).catch(()=>{
+          return fn({
+            result: [],
+            total: 0,
+            type: searchType
+          });
         });
       },
     };
