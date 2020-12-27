@@ -1,4 +1,4 @@
-Listen 1 (Chrome Extension) V2.17.6
+Listen 1 (Chrome Extension) V2.17.7
 ==========
 （Last Update December 27th, 2020)
 
@@ -47,7 +47,10 @@ Install (Firefox)
 Changelog
 -------
 `2020-12-27`
+* fix bug: can't play favorite playlist
+* feature: search all music (beta)
 * fix bug: migu playlist shows first 20 tracks
+* fix bug: netease/kugou search error not handle
 * fix bug: xiami lyric parse error
 * change manitest permession config to pass chrome web store review
 
