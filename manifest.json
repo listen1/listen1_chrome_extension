@@ -21,8 +21,6 @@
     "permissions": [
         "notifications",
         "unlimitedStorage",
-        "storage",
-        "tabs",
         "cookies",
         "*://music.163.com/*",
         "*://*.xiami.com/*",
