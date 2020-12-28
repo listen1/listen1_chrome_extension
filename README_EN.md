@@ -1,6 +1,6 @@
-Listen 1 (Chrome Extension) V2.17.7
+Listen 1 (Chrome Extension) V2.17.8
 ==========
-（Last Update December 27th, 2020)
+（Last Update December 28th, 2020)
 
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE)
 
@@ -46,6 +46,9 @@ Install (Firefox)
 
 Changelog
 -------
+`2020-12-28`
+* fix bug for desktop: max,min,close button not available
+
 `2020-12-27`
 * fix bug: can't play favorite playlist
 * feature: search all music (beta)

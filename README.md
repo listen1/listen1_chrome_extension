@@ -1,6 +1,6 @@
-Listen 1 (Chrome Extension) V2.17.7
+Listen 1 (Chrome Extension) V2.17.8
 ==========
-（最后更新于2020年12月27日）
+（最后更新于2020年12月28日）
 
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE)
 
@@ -71,6 +71,9 @@ Listen1诞生的初衷从不是和大公司的争夺版权利益，而是为了�
 
 更新日志
 -------
+`2020-12-28`
+* 修复最大，最小，关闭按钮在桌面版失效的问题
+
 `2020-12-27`
 * 修复无法显示收藏歌单的bug
 * 支持一次输入搜索所有平台（Beta）
