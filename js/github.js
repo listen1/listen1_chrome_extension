@@ -5,7 +5,7 @@ ngGithub.factory('github', ['$rootScope',
   $rootScope => ({
     openAuthUrl: () => {
       const url = Github.getOAuthUrl();
-      if ((typeof chrome) === 'undefined') {
+      if (isElectron()) {
         // normal window for link
         const { BrowserWindow } = require('electron').remote; // eslint-disable-line import/no-unresolved
         let win = new BrowserWindow({

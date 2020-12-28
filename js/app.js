@@ -1702,7 +1702,7 @@ const main = () => {
       },
       link(scope, element, attrs) {
         element.bind('click', (event) => {
-          if ((typeof chrome) === 'undefined') {
+          if (isElectron()) {
             var shell = require('electron').shell;
             shell.openExternal(scope.url);
           }
