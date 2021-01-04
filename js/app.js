@@ -1266,6 +1266,7 @@ const main = () => {
         // update lyric
         $scope.lyricArray = [];
         $scope.lyricLineNumber = -1;
+        $scope.lyricLineNumberTrans = -1;
         $('.lyric').animate({
           scrollTop: '0px',
         }, 500);
