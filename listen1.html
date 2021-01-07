@@ -557,6 +557,7 @@
                   <div ng-click="openLyricFloatingWindow(true)" class="lyric-icon" ng-class="{'selected': enableLyricFloatingWindow}">词</div>
                 </div>
             </div>
+            <div class="menu-modal" ng-class="{slideup: !menuHidden}" ng-click="togglePlaylist()"></div>
             <div class="menu" ng-class="{slideup: !menuHidden}">
                 <div class="menu-header"><span class="menu-title">{{_TOTAL_SONG_PREFIX}}{{playlist.length}}{{_TOTAL_SONG_POSTFIX}}</span>
                   <a class="add-all" ng-click="showDialog(0, playlist)">
