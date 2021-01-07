@@ -2,5 +2,10 @@
     "extends": "airbnb-base",
     "rules": {
         "camelcase":"off"
-    }
+    },
+    "globals": {
+        "window":"readonly",
+        "chrome":"readonly"
+    },
+    "ignorePatterns": ["**/vendor/*.js"]
 }
