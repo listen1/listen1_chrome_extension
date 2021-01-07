@@ -1209,11 +1209,21 @@ svg.searchspinner {
 }
 
 .footer .right-control .volume-ctrl .icon {
-  flex: 0 0 24px;
+  flex: 0 0 20px;
   color: var(--volume-icon-color);
   cursor: pointer;
   margin-left: 21px;
 }
+
+.footer .right-control .volume-ctrl .volume-number {
+  color: var(--volume-icon-color);
+  font-size: 16px;
+  width: 32px;
+  line-height: 16px;
+  text-align: center;
+  padding-right: 8px;
+}
+
 .footer .right-control .volume-ctrl .m-pbar {
   flex: 1;
 }

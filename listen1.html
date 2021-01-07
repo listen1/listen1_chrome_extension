@@ -547,6 +547,7 @@
                 </div>
                 <div class="volume-ctrl" volume-wheel="">
                   <span class="icon"  ng-class="mute? 'li-mute': 'li-volume'" ng-click="toggleMuteStatus()"></span>
+                  <span class="volume-number">{{ volume.toFixed() }}</span>
                     <div class="m-pbar volume">
                         <div class="barbg" id="volumebar" mode="volume" draggable="">
                             <div class="cur" ng-style="{width : volume + '%' }"><span class="btn"><i></i></span></div>
