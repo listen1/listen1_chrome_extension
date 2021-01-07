@@ -1008,6 +1008,17 @@ svg.searchspinner {
   top: -5px;
 }
 
+.footer .menu-modal {
+  left: 0;
+  right: 0;
+  top: 0;
+  position: fixed;
+  background: rgba(255, 255, 255, 0.2);
+}
+.footer .menu-modal.slideup {
+  bottom: 60px;
+}
+
 .footer .menu {
   background: var(--foot-background-color);
   border: solid 1px var(--foot-border-color);
