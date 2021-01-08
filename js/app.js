@@ -82,7 +82,7 @@ const main = () => {
           getAutoChooseSource,
         ),
       );
-      l1Player.sendUpdates();
+      l1Player.connectPlayer();
     },
   ]);
 

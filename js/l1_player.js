@@ -11,6 +11,25 @@
   };
   Object.setPrototypeOf(localStorage, proto);
 
+  const initPlayer = (player) => {
+    // add songs to playlist
+    let localCurrentPlaying = localStorage.getObject('playing-list');
+    if (localCurrentPlaying === null) {
+      localCurrentPlaying = localStorage.getObject('current-playing');
+    }
+    if (localCurrentPlaying === null) {
+      return;
+    }
+    player.setNewPlaylist(localCurrentPlaying);
+
+    const localPlayerSettings = localStorage.getObject('player-settings');
+    if (localPlayerSettings === null) {
+      return;
+    }
+    const track_id = localPlayerSettings.nowplaying_track_id;
+    player.loadById(track_id);
+  };
+
   const l1Player = {
     status: {
       muted: false,
@@ -126,12 +145,16 @@
     setBootstrapTrack(fn) {
       l1Player.bootstrapTrack = fn;
     },
-    sendUpdates() {
+    connectPlayer() {
+      const player = this;
       chrome.runtime.getBackgroundPage((w) => {
         w.player.sendFullUpdate();
-        // w.player.sendPlaylistEvent();
+        w.player.sendPlaylistEvent();
         w.player.sendPlayingEvent();
         w.player.sendLoadEvent();
+        if (!w.player.playing) {
+          initPlayer(player);
+        }
       });
     },
   };
@@ -230,26 +253,6 @@
     }
     res();
   });
-
-  const initPlayer = (player) => {
-    // add songs to playlist
-    let localCurrentPlaying = localStorage.getObject('playing-list');
-    if (localCurrentPlaying === null) {
-      localCurrentPlaying = localStorage.getObject('current-playing');
-    }
-    if (localCurrentPlaying === null) {
-      return;
-    }
-    player.setNewPlaylist(localCurrentPlaying);
-
-    const localPlayerSettings = localStorage.getObject('player-settings');
-    if (localPlayerSettings === null) {
-      return;
-    }
-    const track_id = localPlayerSettings.nowplaying_track_id;
-    player.loadById(track_id);
-  };
-  initPlayer(l1Player);
 
   window.l1Player = l1Player;
 }
