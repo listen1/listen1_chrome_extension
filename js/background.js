@@ -122,6 +122,10 @@ catch (err) {
  */
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  if (request.type !== 'code') {
+    return;
+  }
+
   const code = request.query.split('=')[1];
   Github.handleCallback(code);
   sendResponse();

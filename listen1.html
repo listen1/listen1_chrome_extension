@@ -22,7 +22,6 @@
     <script src="js/vendor/angular-translate.min.js"></script>
     <script src="js/vendor/angular-translate-loader-static-files.min.js"></script>
     <script type="text/javascript" src="js/vendor/jquery-3.3.1.min.js"></script>
-    <script type="text/javascript" src="js/vendor/angular-soundmanager2.js"></script>
     <script type="text/javascript" src="js/vendor/angular-ui-notification.js"></script>
     <script type="text/javascript" src="js/vendor/hotkeys.js"></script>
     <script type="text/javascript" src="js/vendor/md5.js"></script>
@@ -46,6 +45,7 @@
     <script type="text/javascript" src="js/provider/localmusic.js"></script>
     <script type="text/javascript" src="js/myplaylist.js"></script>
     <script type="text/javascript" src="js/loweb.js"></script>
+    <script type="text/javascript" src="js/l1_player.js"></script>
     <script type="text/javascript" src="js/app.js"></script>
 
     <script>if (window.module) module = window.module;</script>
@@ -535,7 +535,6 @@
                         </div>
                         <div class="playbar">
                             <div class="barbg" id="progressbar" mode="play" draggable="">
-                                <!-- <div class="rdy" ng-style="{width : myProgress + '%' }"></div>-->
                                 <div class="cur" ng-style="{width : myProgress + '%' }"><span class="btn"><i></i></span></div>
                             </div>
                         </div>
@@ -585,8 +584,6 @@
     </div>
     </div>
     </div>
-    <!-- init soundManager2 player-->
-    <sound-manager></sound-manager>
 </body>
 
 </html>
