@@ -39,7 +39,7 @@ function build_xiami() {
       let data = xm_sign_get(token, params);
       let url = xm_get_api_url(api, data);
       hm.get(url).then((response) => {
-        if (response.data.ret[0] === 'FAIL_SYS_TOKEN_EXOIRED::令牌过期') {
+        if (response.data.ret[0] === 'FAIL_SYS_TOKEN_EXOIRED::令牌过期' || response.data.ret[0] === 'FAIL_SYS_TOKEN_EMPTY::令牌为空') {
           // token expire, refetch token and start get url
           xm_get_token((token2) => {
             data = xm_sign_get(token2, params);
