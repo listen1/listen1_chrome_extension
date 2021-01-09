@@ -147,7 +147,7 @@
       const self = this;
       if (!data.howl) {
         data.howl = new Howl({
-          src: [self._media_uri_list[data.url]],
+          src: [self._media_uri_list[data.url || data.id]],
           volume: 1,
           mute: self.muted,
           html5: true, // Force to HTML5 so that the audio can stream in (best for large files).

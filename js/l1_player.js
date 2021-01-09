@@ -234,7 +234,7 @@
            */
           set url(val) {
             chrome.runtime.getBackgroundPage((w) => {
-              w.player.setMediaURI(val, msg.data.url);
+              w.player.setMediaURI(val, msg.data.url || msg.data.id);
             });
           },
         }, msg.data, () => {
