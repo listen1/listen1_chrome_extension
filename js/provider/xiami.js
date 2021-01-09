@@ -166,7 +166,7 @@ function build_xiami() {
     var max = 0;
     var url = "";
     for (var i = 0; i < arr.length; i++) {
-      if (arr[i].fileSize > max) {
+      if (arr[i].fileSize > max && arr[i].format != 'ape') {
         max = arr[i].fileSize;
         url = arr[i].listenFile;
       }
