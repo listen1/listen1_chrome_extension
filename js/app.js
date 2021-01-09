@@ -72,13 +72,7 @@ const main = () => {
       l1Player.setBootstrapTrack(
         loWeb.bootstrapTrack(
           () => { },
-          () => {
-            const d = {
-              message: $translate.instant('_COPYRIGHT_ISSUE'),
-              replaceMessage: true,
-            };
-            Notification.info(d);
-          },
+          () => { },
           getAutoChooseSource,
         ),
       );
@@ -894,10 +888,10 @@ const main = () => {
   app.controller('PlayController', ['$scope', '$timeout', '$log',
     '$anchorScroll', '$location', '$http',
     '$httpParamSerializerJQLike', '$rootScope', 'Notification',
-    'loWeb', 'hotkeys', 'lastfm',
+    'loWeb', 'hotkeys', 'lastfm', '$translate',
     ($scope, $timeout, $log, $anchorScroll, $location,
       $http, $httpParamSerializerJQLike,
-      $rootScope, Notification, loWeb, hotkeys, lastfm) => {
+      $rootScope, Notification, loWeb, hotkeys, lastfm, $translate) => {
       $scope.menuHidden = true;
       $scope.volume = l1Player.status.volume * 100;
       $scope.mute = l1Player.status.muted;
@@ -1109,6 +1103,13 @@ const main = () => {
         if (typeof msg.type === 'string' && msg.type.split(':')[0] === 'BG_PLAYER') {
           switch (msg.type.split(':').slice(1).join('')) {
             case 'READY': {
+              break;
+            }
+            case 'PLAY_FAILED': {
+              Notification.info({
+                message: $translate.instant('_COPYRIGHT_ISSUE'),
+                replaceMessage: true,
+              });
               break;
             }
 

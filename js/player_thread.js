@@ -59,6 +59,17 @@
       this.sendPlaylistEvent();
     }
 
+    removeAudio(idx) {
+      if (!this.playlist[idx]) {
+        return;
+      }
+      if (this.playlist[idx].howl && this.playlist[idx].howl.playing()) {
+        this.skip('next');
+      }
+      this.playlist.splice(idx, 1);
+      this.sendPlaylistEvent();
+    }
+
     appendAudioList(list) {
       if (!Array.isArray(list)) {
         return;
@@ -129,9 +140,10 @@
       if (!this.playlist[index]) {
         index = 0;
       }
-      if (this.currentHowl) this.currentHowl.stop();
 
+      if (this.currentHowl && this.index !== index) this.currentHowl.stop();
       const data = this.playlist[index];
+
       if (!data.howl && !this._media_uri_list[data.url]) {
         this.retrieveMediaUrl(index, playNow);
       } else {

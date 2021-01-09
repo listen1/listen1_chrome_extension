@@ -123,6 +123,11 @@
         w.player.insertAudio(track);
       });
     },
+    removeTrack(index) {
+      chrome.runtime.getBackgroundPage((w) => {
+        w.player.removeAudio(index);
+      });
+    },
     addTracks(list) {
       chrome.runtime.getBackgroundPage((w) => {
         w.player.appendAudioList(list);
@@ -195,6 +200,18 @@
       link(scope, element) {
         element.bind('click', () => {
           l1Player.clearPlaylist();
+        });
+      },
+    }));
+
+    ngApp.directive('removeFromPlaylist', () => ({
+      restrict: 'EA',
+      scope: {
+        song: '=removeFromPlaylist',
+      },
+      link(scope, element, attrs) {
+        element.bind('click', () => {
+          l1Player.removeTrack(attrs.index);
         });
       },
     }));
