@@ -4,7 +4,7 @@
 function build_xiami() {
   function xm_get_token(callback) {
     const domain = 'https://www.xiami.com';
-    const name = 'xm_sg_tk';
+    const name = '_m_h5_tk';
     if (!isElectron()) {
       cookieGet({
         url: domain,
@@ -29,23 +29,22 @@ function build_xiami() {
     }
   }
 
-  function xm_get_api_url(api, params, token) {
-    const params_string = JSON.stringify(params);
-    const origin = `${token.split('_')[0]}_xmMain_${api}_${params_string}`;
-    const sign = MD5(origin);
-    const baseUrl = 'https://www.xiami.com';
-    return encodeURI(`${baseUrl + api}?_q=${params_string}&_s=${sign}`);
+  function xm_get_api_url(api, data) {
+    const baseUrl = 'https://acs.m.xiami.com/h5/';
+    return encodeURI(`${baseUrl + api}/1.0?api=${api}&appKey=${data.appKey}&data=${data.request_str}&dataType=json&sign=${data.sign}&t=${data.t}&type=originaljson&v=1.0`);
   }
 
   function xm_cookie_get(hm, api, params, callback) {
     xm_get_token((token) => {
-      const url = xm_get_api_url(api, params, token);
+      let data = xm_sign_get(token, params);
+      let url = xm_get_api_url(api, data);
       hm.get(url).then((response) => {
-        if (response.data.code === 'SG_TOKEN_EMPTY' || response.data.code === 'SG_TOKEN_EXPIRED' || response.data.code === 'SG_INVALID') {
+        if (response.data.ret[0] === 'FAIL_SYS_TOKEN_EXOIRED::令牌过期' || response.data.ret[0] === 'FAIL_SYS_TOKEN_EMPTY::令牌为空') {
           // token expire, refetch token and start get url
           xm_get_token((token2) => {
-            const url2 = xm_get_api_url(api, params, token2);
-            hm.get(url2).then((res) => {
+            data = xm_sign_get(token2, params);
+            url = xm_get_api_url(api, data);
+            hm.get(url).then((res) => {
               callback(res);
             });
           });
@@ -56,40 +55,59 @@ function build_xiami() {
     });
   }
 
+  function xm_sign_get(token, params) {
+    //  https://github.com/metowolf/Meting
+    //  https://github.com/LIU9293/musicAPI
+    const t = new Date().getTime();
+    const appKey = '12574478';
+    const signedToken = token.split('_')[0];
+    const data = {
+      header: {
+        //appId: 200,
+        //appVersion: 1000000,
+        //callId: ,
+        //network: 1,
+        platformId: 'h5',
+        //remoteIp: '192.168.1.101',
+        //resolution: '1178*778',
+      },
+      model: params,
+    };
+    const request_str = JSON.stringify({
+      requestStr: JSON.stringify(data),
+    });
+    let sign = MD5(`${signedToken}&${t.toString()}&${appKey}&${request_str}`);
+    return {
+      appKey,
+      t,
+      request_str,
+      sign
+    };
+  }
+
   function xm_get_low_quality_img_url(url) {
     return `${url}?x-oss-process=image/resize,m_fill,limit_0,s_330/quality,q_80`;
   }
 
   function xm_show_playlist(url, hm) {
     const offset = getParameterByName('offset', url);
-    const page = offset / 30 + 1;
-    const pageSize = 60;
-
+    const page = offset / 25 + 1;
     return {
       success(fn) {
-        const api = '/api/list/collect';
+        const api = 'mtop.alimusic.music.list.collectservice.getcollects';
         const params = {
-          pagingVO: {
-            page,
-            pageSize,
-          },
-          dataType: 'system',
+          key: '',
+          limit: 25,
+          order: 'recommend',
+          page,
         };
         xm_cookie_get(hm, api, params, (response) => {
-          const result = response.data.result.data.collects.map((d) => {
-            const default_playlist = {
-              cover_img_url: '',
-              title: '',
-              id: '',
-              source_url: '',
-            };
-            default_playlist.cover_img_url = xm_get_low_quality_img_url(d.collectLogo);
-            default_playlist.title = d.collectName;
-            const list_id = d.listId;
-            default_playlist.id = `xmplaylist_${list_id}`;
-            default_playlist.source_url = `https://www.xiami.com/collect/${list_id}`;
-            return default_playlist;
-          });
+          const result = response.data.data.data.collects.map((item) => ({
+            cover_img_url: xm_get_low_quality_img_url(item.collectLogo),
+            title: item.collectName,
+            id: `xmplaylist_${item.listId}`,
+            source_url: `https://www.xiami.com/collect/${item.listId}`,
+          }));
           return fn({
             result,
           });
@@ -101,15 +119,16 @@ function build_xiami() {
   // eslint-disable-next-line no-unused-vars
   function xm_bootstrap_track(sound, track, success, failure, hm, se) {
     if (!track.sound_url) {
-      const api = '/api/song/getPlayInfo';
+      const api = 'mtop.alimusic.music.songservice.getsongdetail';
       const song_id = track.id.slice('xmtrack_'.length);
       const params = {
-        "songIds":[song_id]
+        songId:song_id,
       };
       xm_cookie_get(hm, api, params, (response) => {
-        const { playInfos: data } = response.data.result.data.songPlayInfos[0];
-        if (data[0].listenFile || data[1].listenFile) {
-          sound.url = data[0].listenFile || data[1].listenFile;
+        const { data } = response.data.data;
+        if (data.songDetail.listenFiles.length > 0) {
+          //sound.url = datalistenFile || data[1].listenFile;
+          sound.url = get_highest_quality(data.songDetail.listenFiles);
           success();
         } else {
           failure();
@@ -121,25 +140,7 @@ function build_xiami() {
     }
   }
 
-  function xm_convert_song(song_info) {
-    const track = {
-      id: `xmtrack_${song_info.song_id}`,
-      title: song_info.song_name,
-      artist: song_info.artist_name,
-      artist_id: `xmartist_${song_info.artist_id}`,
-      album: song_info.album_name,
-      album_id: `xmalbum_${song_info.album_id}`,
-      source: 'xiami',
-      source_url: `https://www.xiami.com/song/${song_info.song_id}`,
-      img_url: song_info.album_logo,
-      //url: `xmtrack_${song_info.song_id}`,
-      lyric_url: song_info.lyric,
-      disabled: song_info.listen_file,
-    };
-    return track;
-  }
-
-  function xm_convert_song2(song_info) { // eslint-disable-line no-unused-vars
+  function xm_convert_song(song_info) { // eslint-disable-line no-unused-vars
     const track = {
       id: `xmtrack_${song_info.songId}`,
       title: song_info.songName,
@@ -165,7 +166,7 @@ function build_xiami() {
     var max = 0;
     var url = "";
     for (var i = 0; i < arr.length; i++) {
-      if (arr[i].fileSize > max) {
+      if (arr[i].fileSize > max && arr[i].format != 'ape') {
         max = arr[i].fileSize;
         url = arr[i].listenFile;
       }
@@ -177,25 +178,22 @@ function build_xiami() {
     const list_id = getParameterByName('list_id', url).split('_').pop();
     return {
       success(fn) {
-        const api = '/api/collect/getCollectStaticUrl';
+        const api = 'mtop.alimusic.music.list.collectservice.getcollectdetail';
         const params = {
           listId: parseInt(list_id, 10),
         };
         xm_cookie_get(hm, api, params, (response) => {
-          const collect_url = response.data.result.data.data.data.url;
-          hm.get(collect_url).then((response) => {
-            let { data } = response;
-            const info = {
-              cover_img_url: xm_get_low_quality_img_url(data.resultObj.collectLogo),
-              title: data.resultObj.collectName,
-              id: `xmplaylist_${list_id}`,
-              source_url: `https://www.xiami.com/collect/${list_id}`,
-            };
-            const tracks = data.resultObj.songs.map(item => xm_convert_song2(item));
-            return fn({
-              tracks,
-              info,
-            });
+          let { data } = response.data.data;
+          const info = {
+            cover_img_url: xm_get_low_quality_img_url(data.collectDetail.collectLogo),
+            title: data.collectDetail.collectName,
+            id: `xmplaylist_${list_id}`,
+            source_url: `https://www.xiami.com/collect/${list_id}`,
+          };
+          const tracks = data.collectDetail.songs.map(item => xm_convert_song(item));
+          return fn({
+            tracks,
+            info,
           });
         });
       },
@@ -206,38 +204,46 @@ function build_xiami() {
     const keyword = getParameterByName('keywords', url);
     const curpage = getParameterByName('curpage', url);
     const searchType = getParameterByName('type', url);
-    if(searchType === '1') {
-      return {
-        success(fn) {
-          return fn({
-            result: [],
-            total: 0,
-            type: searchType
-          });
-        }
-      };
+    const params = {
+      key: keyword,
+      pagingVO: {
+        page :curpage,
+        pageSize: 20
+      }
+    };
+    let api = '';
+    switch (searchType) {
+      case '0':
+        api = 'mtop.alimusic.search.searchservice.searchsongs';
+        break;
+      case '1':
+        api = 'mtop.alimusic.search.searchservice.searchcollects';
     }
     return {
       success(fn) {
-
-        const target_url = 'https://api.xiami.com/web?';
-        const  data = {
-          key: `${keyword}`,
-          v: '2.0',
-          app_key: 1,
-          r: 'search/songs',
-          page: `${curpage}`,
-          limit: 60
-        };
-        hm({
-          url: target_url,
-          method: 'GET',
-          params: data,
-        }).then((response) => {
-          const tracks = response.data.data.songs.map(item => xm_convert_song(item));
+        xm_cookie_get(hm, api, params, (response) => {
+          let result = [];
+          let total = 0;
+          let { data } = response.data.data;
+          if (searchType === '0') {
+            result = data.songs.map(item => xm_convert_song(item));
+            total = data.pagingVO.count;
+          } else if (searchType === '1') {
+            result = data.collects.map(item => ({
+              id: `xmplaylist_${item.listId}`,
+              title: item.collectName,
+              source: 'xiami',
+              source_url: `https://www.xiami.com/collect/${item.listId}`,
+              img_url: item.collectLogo,
+              url: `xmplaylist_${item.listId}`,
+              author: item.userName,
+              count: item.songCount
+            }));
+            total = data.pagingVO.count;
+          }
           return fn({
-            result: tracks,
-            total: response.data.data.total,
+            result: result,
+            total: total,
             type: searchType
           });
         });
@@ -249,19 +255,19 @@ function build_xiami() {
     return {
       success(fn) {
         const album_id = getParameterByName('list_id', url).split('_').pop();
-        const api = '/api/album/initialize';
+        const api = 'mtop.alimusic.music.albumservice.getalbumdetail';
         const params = {
-          "albumId":album_id
+          albumId: album_id,
         };
         xm_cookie_get(hm, api, params, (response) => {
-          const { data } = response.data.result;
+          const { data } = response.data.data;
           const info = {
             cover_img_url: data.albumDetail.albumLogo,
             title: data.albumDetail.albumName,
             id: `xmalbum_${album_id}`,
             source_url: `https://www.xiami.com/album/${album_id}`,
           };
-          const tracks = data.albumDetail.songs.map(item => xm_convert_song2(item));
+          const tracks = data.albumDetail.songs.map(item => xm_convert_song(item));
           return fn({
             tracks,
             info,
@@ -292,17 +298,16 @@ function build_xiami() {
           const page = offset / 50 + 1;
           const pageSize = 50; 
           const category = 0;
-          const api = '/api/song/getArtistSongs';
+          const api = 'mtop.alimusic.music.songservice.getartistsongs';
           const params = {
             artistId: artist_id,
-            category,
             pagingVO: {
               page,
               pageSize
             }
           };
           xm_cookie_get(hm, api, params, (response) => {
-            const tracks = response.data.result.data.songs.map(item => xm_convert_song2(item));
+            const tracks = response.data.data.data.songs.map(item => xm_convert_song(item));
             return fn({
               tracks,
               info,
