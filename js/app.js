@@ -856,7 +856,7 @@ const main = () => {
                   $scope.playlist_source_url = playlist.info.source_url;
                   $scope.is_mine = (playlist.info.id.slice(0, 2) === 'my');
                   $scope.is_local = (playlist.info.id.slice(0, 2) === 'lm');
-                  $scope.$apply();
+                  $scope.$evalAsync();
                 });
               });
             });
@@ -985,7 +985,7 @@ const main = () => {
       };
 
       $scope.$on('github:status', (event, data) => {
-        $scope.$apply(() => {
+        $scope.$evalAsync(() => {
           $scope.githubStatus = data;
         });
       });
@@ -1020,7 +1020,7 @@ const main = () => {
       $scope.changingProgress = false;
 
       $rootScope.$on('track:myprogress', (event, data) => {
-        $scope.$apply(() => {
+        $scope.$evalAsync(() => {
           // should use apply to force refresh ui
           $scope.myProgress = data;
         });
@@ -1114,7 +1114,7 @@ const main = () => {
             }
 
             case 'VOLUME': {
-              $scope.$apply(() => { $scope.volume = msg.data; });
+              $scope.$evalAsync(() => { $scope.volume = msg.data; });
               break;
             }
 
@@ -1196,7 +1196,7 @@ const main = () => {
 
               // 'track:progress'
               if ($scope.changingProgress === false) {
-                $scope.$apply(() => {
+                $scope.$evalAsync(() => {
                   if (msg.data.duration === 0) {
                     $scope.myProgress = 0;
                   } else {
@@ -1268,7 +1268,7 @@ const main = () => {
 
             case 'IS_PLAYING': {
               // 'music:isPlaying'
-              $scope.$apply(() => {
+              $scope.$evalAsync(() => {
                 $scope.isPlaying = !!msg.data;
               });
               if (msg.data) {
@@ -1722,7 +1722,6 @@ const main = () => {
           }
           const offsetToload = 10;
           if (remain <= offsetToload) {
-            // scope.$apply(scope.infiniteScroll);
             $rootScope.$broadcast('infinite_scroll:hit_bottom', '');
           }
         });

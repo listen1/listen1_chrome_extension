@@ -49,6 +49,7 @@
     insertAudio(audio, idx) {
       const audioData = {
         ...audio,
+        disabled: false, // avoid first time load block
         howl: null,
       };
       if (idx) {
@@ -141,10 +142,10 @@
         index = 0;
       }
 
-      if (this.currentHowl && this.index !== index) this.currentHowl.stop();
+      if (this.index !== index) Howler.stop();
       const data = this.playlist[index];
 
-      if (!data.howl && !this._media_uri_list[data.url]) {
+      if (!data.howl || !this._media_uri_list[data.url]) {
         this.retrieveMediaUrl(index, playNow);
       } else {
         this.finishLoad(index, playNow);
@@ -175,11 +176,11 @@
           onend() {
             switch (self.loop_mode) {
               case 2:
-                self.play();
+                self.skip('random');
                 break;
 
               case 1:
-                self.skip('random');
+                self.play();
                 break;
 
               case 0:
@@ -376,7 +377,7 @@
         playing: {
           id: this.currentAudio ? this.currentAudio.id : 0,
           duration: this.currentHowl ? this.currentHowl.duration() : 0,
-          pos: this.currentHowl ? this.currentHowl.seek() : 0,
+          pos: this.currentHowl && this.currentHowl.state() === 'loaded' ? this.currentHowl.seek() : 0,
           playing: this.playing,
         },
       };
