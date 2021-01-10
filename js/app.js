@@ -818,7 +818,7 @@ const main = () => {
             if(result.canceled){
               return;
             }
-  
+
             result.filePaths.forEach(fp=>{
               remoteFunctions.readAudioTags(fp).then((t)=>{
                 var track = {
@@ -834,7 +834,7 @@ const main = () => {
                   //url: "lmtrack_"+fp,
                   sound_url: "file://"+fp
                 };
-  
+
                 const list_id = 'lmplaylist_reserve';
                 const url = '/add_playlist';
                 loWeb.post({
@@ -1126,7 +1126,7 @@ const main = () => {
               let lastObject = null;
               let lastObjectTrans = null;
               $scope.lyricArray.forEach((lyric) => {
-                if (currentSeconds >= lyric.seconds) {
+                if (currentSeconds >= lyric.seconds / 1000) {
                   if (lyric.translationFlag !== true) {
                     lastObject = lyric;
                   } else {
@@ -1151,7 +1151,8 @@ const main = () => {
                   500,
                 );
                 $scope.lyricLineNumber = lastObject.lineNumber;
-                if (lastObjectTrans && lastObjectTrans.lineNumber !== $scope.lyricLineNumberTrans) {
+                if (lastObjectTrans
+                  && lastObjectTrans.lineNumber !== $scope.lyricLineNumberTrans) {
                   $scope.lyricLineNumberTrans = lastObjectTrans.lineNumber;
                 }
                 if (isElectron()) {
@@ -1170,12 +1171,15 @@ const main = () => {
                 if (!lastfm.isAuthorized()) {
                   return;
                 }
-                if (msg.data.duration === 0) {
+                const durationSec = Math.floor(msg.data.duration);
+                const durationStr = `${Math.floor(durationSec / 60)}:${(`0${durationSec % 60}`).substr(-2)}`;
+                if (msg.data.duration === 0 || $scope.currentDuration === durationStr) {
                   return;
                 }
                 if ($scope.scrobbleTrackId === l1Player.status.playing.id) {
                   return;
                 }
+                $scope.currentDuration = durationStr;
                 // new song arrives
                 $scope.scrobbleTrackId = l1Player.status.playing.id;
                 const track = l1Player.getTrackById($scope.scrobbleTrackId);
@@ -1196,9 +1200,11 @@ const main = () => {
                   if (msg.data.duration === 0) {
                     $scope.myProgress = 0;
                   } else {
-                    window.nframe += 1;
-                    $scope.myProgress = msg.data.pos / msg.data.duration * 100;
+                    $scope.myProgress = Math.round(msg.data.pos / msg.data.duration * 100);
                   }
+                  const posSec = Math.floor(msg.data.pos);
+                  const posStr = `${Math.floor(posSec / 60)}:${(`0${posSec % 60}`).substr(-2)}`;
+                  $scope.currentPosition = posStr;
                 });
               }
               break;
@@ -1206,6 +1212,7 @@ const main = () => {
 
             case 'LOAD': {
               $scope.currentPlaying = msg.data;
+              $scope.myProgress = 0;
               if ($scope.lastTrackId === msg.data.id) {
                 break;
               }
