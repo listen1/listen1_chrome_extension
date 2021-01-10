@@ -11,6 +11,10 @@
   };
   Object.setPrototypeOf(localStorage, proto);
 
+  const backgroundCall = (callback) => {
+    (chrome || browser).runtime.getBackgroundPage(callback);
+  };
+
   const initPlayer = (player) => {
     // add songs to playlist
     let localCurrentPlaying = localStorage.getObject('playing-list');
@@ -39,17 +43,17 @@
     },
     bootstrapTrack: null,
     play() {
-      chrome.runtime.getBackgroundPage((w) => {
+      backgroundCall((w) => {
         w.player.play();
       });
     },
     pause() {
-      chrome.runtime.getBackgroundPage((w) => {
+      backgroundCall((w) => {
         w.player.pause();
       });
     },
     toggleplayPause() {
-      chrome.runtime.getBackgroundPage((w) => {
+      backgroundCall((w) => {
         if (w.player.playing) {
           w.player.pause();
         } else {
@@ -58,88 +62,88 @@
       });
     },
     playById(id) {
-      chrome.runtime.getBackgroundPage((w) => {
+      backgroundCall((w) => {
         w.player.playById(id);
       });
     },
     loadById(idx) {
-      chrome.runtime.getBackgroundPage((w) => {
+      backgroundCall((w) => {
         w.player.loadById(idx);
       });
     },
     seek(per) {
-      chrome.runtime.getBackgroundPage((w) => {
+      backgroundCall((w) => {
         w.player.seek(per);
       });
     },
     next() {
-      chrome.runtime.getBackgroundPage((w) => {
+      backgroundCall((w) => {
         w.player.skip('next');
       });
     },
     prev() {
-      chrome.runtime.getBackgroundPage((w) => {
+      backgroundCall((w) => {
         w.player.skip('prev');
       });
     },
     random() {
-      chrome.runtime.getBackgroundPage((w) => {
+      backgroundCall((w) => {
         w.player.skip('random');
       });
     },
     setLoopMode(input) {
-      chrome.runtime.getBackgroundPage((w) => {
+      backgroundCall((w) => {
         w.player.setLoopMode(input);
       });
     },
     mute() {
-      chrome.runtime.getBackgroundPage((w) => {
+      backgroundCall((w) => {
         w.player.mute();
       });
     },
     unmute() {
-      chrome.runtime.getBackgroundPage((w) => {
+      backgroundCall((w) => {
         w.player.unmute();
       });
     },
     toggleMute() {
-      chrome.runtime.getBackgroundPage((w) => {
+      backgroundCall((w) => {
         if (w.player.muted) w.player.unmute();
         else w.player.mute();
       });
     },
     volume(per) {
-      chrome.runtime.getBackgroundPage((w) => {
+      backgroundCall((w) => {
         w.player.volume(per / 100);
       });
     },
     adjustVolume(increase) {
-      chrome.runtime.getBackgroundPage((w) => {
+      backgroundCall((w) => {
         w.player.adjustVolume(increase);
       });
     },
     addTrack(track) {
-      chrome.runtime.getBackgroundPage((w) => {
+      backgroundCall((w) => {
         w.player.insertAudio(track);
       });
     },
     removeTrack(index) {
-      chrome.runtime.getBackgroundPage((w) => {
+      backgroundCall((w) => {
         w.player.removeAudio(index);
       });
     },
     addTracks(list) {
-      chrome.runtime.getBackgroundPage((w) => {
+      backgroundCall((w) => {
         w.player.appendAudioList(list);
       });
     },
     clearPlaylist() {
-      chrome.runtime.getBackgroundPage((w) => {
+      backgroundCall((w) => {
         w.player.clearPlaylist();
       });
     },
     setNewPlaylist(list) {
-      chrome.runtime.getBackgroundPage((w) => {
+      backgroundCall((w) => {
         w.player.setNewPlaylist(list);
       });
     },
@@ -152,7 +156,7 @@
     },
     connectPlayer() {
       const player = this;
-      chrome.runtime.getBackgroundPage((w) => {
+      backgroundCall((w) => {
         w.player.sendFullUpdate();
         w.player.sendPlaylistEvent();
         w.player.sendPlayingEvent();
@@ -226,7 +230,7 @@
     }));
   };
 
-  chrome.runtime.onMessage.addListener((msg, sender, res) => {
+  (chrome || browser).runtime.onMessage.addListener((msg, sender, res) => {
     if (msg.type === 'BG_PLAYER:FULL_UPDATE') {
       l1Player.status = {
         ...l1Player.status,
@@ -250,17 +254,17 @@
            * @param {string} val
            */
           set url(val) {
-            chrome.runtime.getBackgroundPage((w) => {
+            backgroundCall((w) => {
               w.player.setMediaURI(val, msg.data.url || msg.data.id);
             });
           },
         }, msg.data, () => {
-          chrome.runtime.getBackgroundPage((w) => {
+          backgroundCall((w) => {
             w.player.setAudioDisabled(false, msg.data.index);
             w.player.finishLoad(msg.data.index, msg.data.playNow);
           });
         }, () => {
-          chrome.runtime.getBackgroundPage((w) => {
+          backgroundCall((w) => {
             w.player.setAudioDisabled(true, msg.data.index);
             w.player.setURL(null, msg.data.index);
             w.player.skipTo('next');

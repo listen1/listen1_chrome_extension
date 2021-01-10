@@ -351,6 +351,7 @@ const main = () => {
           $scope.current_list_id = list_id;
 
           l1Player.setNewPlaylist($scope.songs);
+          l1Player.play();
         });
       };
 
@@ -903,11 +904,12 @@ const main = () => {
       $scope.lyricLineNumber = -1;
       $scope.lastTrackId = null;
 
-      $scope.scrobbleTrackId = null;
-      $scope.scrobbleTimer = new Timer();
       $scope.enableGloablShortcut = false;
       $scope.isChrome = (!isElectron());
       $scope.isMac = false;
+
+      $scope.currentDuration = '0:00';
+      $scope.currentPosition = '0:00';
 
       if (!$scope.isChrome) {
         $scope.isMac = require('electron').remote.process.platform === 'darwin';
@@ -1099,7 +1101,7 @@ const main = () => {
       }
 
 
-      chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
+      (chrome || browser).runtime.onMessage.addListener((msg, sender, sendResponse) => {
         if (typeof msg.type === 'string' && msg.type.split(':')[0] === 'BG_PLAYER') {
           switch (msg.type.split(':').slice(1).join('')) {
             case 'READY': {
@@ -1168,30 +1170,12 @@ const main = () => {
 
               // 'currentTrack:duration'
               (() => {
-                if (!lastfm.isAuthorized()) {
-                  return;
-                }
                 const durationSec = Math.floor(msg.data.duration);
                 const durationStr = `${Math.floor(durationSec / 60)}:${(`0${durationSec % 60}`).substr(-2)}`;
                 if (msg.data.duration === 0 || $scope.currentDuration === durationStr) {
                   return;
                 }
-                if ($scope.scrobbleTrackId === l1Player.status.playing.id) {
-                  return;
-                }
                 $scope.currentDuration = durationStr;
-                // new song arrives
-                $scope.scrobbleTrackId = l1Player.status.playing.id;
-                const track = l1Player.getTrackById($scope.scrobbleTrackId);
-                const startTimestamp = Math.round((new Date()).valueOf() / 1000);
-                $scope.scrobbleTimer.start(() => {
-                  lastfm.scrobble(startTimestamp,
-                    track.title, track.artist, track.album, () => { });
-                });
-                // according to scrobble rule
-                // http://www.last.fm/api/scrobbling
-                const secondsToScrobble = Math.min(msg.data.duration / 1000 / 2, 60 * 4);
-                $scope.scrobbleTimer.update(secondsToScrobble);
               })();
 
               // 'track:progress'
@@ -1266,35 +1250,35 @@ const main = () => {
               break;
             }
 
-            case 'IS_PLAYING': {
+            case 'PLAY_STATE': {
               // 'music:isPlaying'
               $scope.$evalAsync(() => {
-                $scope.isPlaying = !!msg.data;
+                $scope.isPlaying = !!msg.data.isPlaying;
               });
-              if (msg.data) {
+              if (msg.data.isPlaying) {
                 $rootScope.page_title = `▶ ${$rootScope.page_title.slice($rootScope.page_title.indexOf(' '))}`;
               } else {
                 $rootScope.page_title = `❚❚ ${$rootScope.page_title.slice($rootScope.page_title.indexOf(' '))}`;
               }
               if (isElectron()) {
                 const { ipcRenderer } = require('electron');
-                if (msg.data) {
+                if (msg.data.isPlaying) {
                   ipcRenderer.send('isPlaying', true);
                 } else {
                   ipcRenderer.send('isPlaying', false);
                 }
               }
-              if (!lastfm.isAuthorized()) {
-                break;
+
+              if (msg.data.reason === 'Ended') {
+                if (!lastfm.isAuthorized()) {
+                  break;
+                }
+                // send lastfm scrobble
+                const track = l1Player.getTrackById(l1Player.status.playing.id);
+                lastfm.scrobble(l1Player.status.playing.playedFrom,
+                  track.title, track.artist, track.album, () => { });
               }
-              if ($scope.scrobbleTrackId === null) {
-                break;
-              }
-              if (msg.data) {
-                $scope.scrobbleTimer.resume();
-              } else {
-                $scope.scrobbleTimer.pause();
-              }
+
               break;
             }
 

@@ -3,9 +3,7 @@
 
 {
   const sendEvent = (event) => {
-    if (chrome) {
-      chrome.runtime.sendMessage(event);
-    }
+    (chrome || browser).runtime.sendMessage(event);
   };
 
   /**
@@ -19,6 +17,7 @@
       this.index = -1;
       this.loop_mode = 0;
       this._media_uri_list = {};
+      this.playedFrom = 0;
     }
 
     setRefreshRate(rate = 10) {
@@ -166,11 +165,12 @@
           html5: true, // Force to HTML5 so that the audio can stream in (best for large files).
           onplay() {
             self.currentAudio.disabled = false;
-            self.sendPlayingEvent();
+            self.playedFrom = Date.now();
+            self.sendPlayingEvent('Playing');
           },
           onload() {
             self.currentAudio.disabled = false;
-            self.sendPlayingEvent();
+            self.sendPlayingEvent('Loaded');
             self.sendFullUpdate();
           },
           onend() {
@@ -188,15 +188,15 @@
                 self.skip('next');
                 break;
             }
-            self.sendPlayingEvent();
+            self.sendPlayingEvent('Ended');
             self.sendFullUpdate();
           },
           onpause() {
-            self.sendPlayingEvent();
+            self.sendPlayingEvent('Paused');
             self.sendFullUpdate();
           },
           onstop() {
-            self.sendPlayingEvent();
+            self.sendPlayingEvent('Stopped');
             self.sendFullUpdate();
           },
           onseek() {
@@ -209,7 +209,7 @@
               data: err,
             });
             self.currentAudio.disabled = true;
-            self.sendPlayingEvent();
+            self.sendPlayingEvent('err');
           },
           onplayerror(id, err) {
             sendEvent({
@@ -217,7 +217,7 @@
               data: err,
             });
             self.currentAudio.disabled = true;
-            self.sendPlayingEvent();
+            self.sendPlayingEvent('err');
           },
         });
       }
@@ -369,7 +369,7 @@
       }
     }
 
-    sendFullUpdate() {
+    async sendFullUpdate() {
       const data = {
         muted: Player.muted,
         volume: Howler.volume(),
@@ -387,11 +387,12 @@
       });
     }
 
-    sendFrameUpdate() {
+    async sendFrameUpdate() {
       const data = {
         id: this.currentAudio ? this.currentAudio.id : 0,
         duration: this.currentHowl ? this.currentHowl.duration() : 0,
         pos: this.currentHowl ? this.currentHowl.seek() : 0,
+        playedFrom: this.playedFrom,
         playing: this.playing,
       };
       sendEvent({
@@ -400,14 +401,17 @@
       });
     }
 
-    sendPlayingEvent() {
+    async sendPlayingEvent(reason = 'UNKNOWN') {
       sendEvent({
-        type: 'BG_PLAYER:IS_PLAYING',
-        data: this.playing,
+        type: 'BG_PLAYER:PLAY_STATE',
+        data: {
+          isPlaying: this.playing,
+          reason,
+        },
       });
     }
 
-    sendLoadEvent() {
+    async sendLoadEvent() {
       sendEvent({
         type: 'BG_PLAYER:LOAD',
         data: {
@@ -417,14 +421,14 @@
       });
     }
 
-    sendVolumeEvent() {
+    async sendVolumeEvent() {
       sendEvent({
         type: 'BG_PLAYER:VOLUME',
         data: this.volume() * 100,
       });
     }
 
-    sendPlaylistEvent() {
+    async sendPlaylistEvent() {
       sendEvent({
         type: 'BG_PLAYER:PLAYLIST',
         data: this.playlist.map(audio => ({ ...audio, howl: undefined })),

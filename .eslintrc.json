@@ -5,6 +5,7 @@
     },
     "globals": {
         "window":"readonly",
+        "browser":"readonly",
         "chrome":"readonly"
     },
     "ignorePatterns": ["**/vendor/*.js"]
