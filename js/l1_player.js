@@ -248,18 +248,18 @@
     }
     if (msg.type === 'BG_PLAYER:RETRIEVE_URL') {
       if (l1Player.bootstrapTrack) {
+        let url = '';
         l1Player.bootstrapTrack({
           /**
            * A mock sound object to set url back in player.
            * @param {string} val
            */
           set url(val) {
-            backgroundCall((w) => {
-              w.player.setMediaURI(val, msg.data.url || msg.data.id);
-            });
+            url = val;
           },
         }, msg.data, () => {
           backgroundCall((w) => {
+            w.player.setMediaURI(url, msg.data.url || msg.data.id);
             w.player.setAudioDisabled(false, msg.data.index);
             w.player.finishLoad(msg.data.index, msg.data.playNow);
           });
