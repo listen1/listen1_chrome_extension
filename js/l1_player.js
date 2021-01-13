@@ -36,10 +36,10 @@
 
   const l1Player = {
     status: {
-      muted: false,
-      volume: 1,
-      loop_mode: 0,
-      playing: null,
+      muted: chrome.extension.getBackgroundPage().player.muted,
+      volume: chrome.extension.getBackgroundPage().player.volume,
+      loop_mode: chrome.extension.getBackgroundPage().player.loop_mode,
+      playing: chrome.extension.getBackgroundPage().player.playing,
     },
     bootstrapTrack: null,
     play() {
@@ -93,7 +93,8 @@
     },
     setLoopMode(input) {
       backgroundCall((w) => {
-        w.player.setLoopMode(input);
+        const { player } = w;
+        player.loop_mode = input;
       });
     },
     mute() {
@@ -114,7 +115,8 @@
     },
     volume(per) {
       backgroundCall((w) => {
-        w.player.volume(per / 100);
+        const { player } = w;
+        player.volume = per / 100;
       });
     },
     adjustVolume(increase) {
@@ -231,12 +233,6 @@
   };
 
   (chrome || browser).runtime.onMessage.addListener((msg, sender, res) => {
-    if (msg.type === 'BG_PLAYER:FULL_UPDATE') {
-      l1Player.status = {
-        ...l1Player.status,
-        ...msg.data,
-      };
-    }
     if (msg.type === 'BG_PLAYER:FRAME_UPDATE') {
       l1Player.status.playing = {
         ...l1Player.status.playing,

@@ -16,7 +16,7 @@
     constructor() {
       this.playlist = [];
       this.index = -1;
-      this.loop_mode = 0;
+      this._loop_mode = 0;
       this._media_uri_list = {};
       this.playedFrom = 0;
     }
@@ -282,7 +282,7 @@
       this.play(index);
     }
 
-    setLoopMode(input) {
+    set loop_mode(input) {
       const LOOP_MODE = {
         all: 0,
         one: 1,
@@ -297,26 +297,33 @@
       if (!Object.values(LOOP_MODE).includes(mode)) {
         return;
       }
-      this.loop_mode = mode;
+      this._loop_mode = mode;
       this.sendFullUpdate();
+    }
+
+    get loop_mode() {
+      return this._loop_mode;
     }
 
     /**
      * Set the volume and update the volume slider display.
      * @param  {Number} val Volume between 0 and 1.
      */
-    volume(val) {
+    set volume(val) {
       // Update the global volume (affecting all Howls).
       if (val) {
         Howler.volume(val);
         this.sendVolumeEvent();
         this.sendFrameUpdate();
       }
+    }
+
+    static get volume() {
       return Howler.volume();
     }
 
     adjustVolume(inc) {
-      Howler.volume(Howler.volume() + inc ? 0.1 : -0.1);
+      this.volume = (this.volume + inc ? 0.1 : -0.1);
       this.sendVolumeEvent();
       this.sendFrameUpdate();
     }
@@ -380,21 +387,23 @@
     }
 
     async sendFullUpdate() {
-      const data = {
-        muted: Player.muted,
-        volume: Howler.volume(),
-        loop_mode: this.loop_mode,
-        playing: {
-          id: this.currentAudio ? this.currentAudio.id : 0,
-          duration: this.currentHowl ? this.currentHowl.duration() : 0,
-          pos: this.currentHowl && this.currentHowl.state() === 'loaded' ? this.currentHowl.seek() : 0,
-          playing: this.playing,
-        },
-      };
-      sendEvent({
-        type: 'BG_PLAYER:FULL_UPDATE',
-        data,
-      });
+      return this;
+      // const data = {
+      //   muted: Player.muted,
+      //   volume: Howler.volume(),
+      //   loop_mode: this.loop_mode,
+      //   playing: {
+      //     id: this.currentAudio ? this.currentAudio.id : 0,
+      //     duration: this.currentHowl ? this.currentHowl.duration() : 0,
+      //     pos: this.currentHowl && this.currentHowl.state() === 'loaded' ?
+      //       this.currentHowl.seek() : 0,
+      //     playing: this.playing,
+      //   },
+      // };
+      // sendEvent({
+      //   type: 'BG_PLAYER:FULL_UPDATE',
+      //   data,
+      // });
     }
 
     async sendFrameUpdate() {
@@ -439,7 +448,7 @@
     async sendVolumeEvent() {
       sendEvent({
         type: 'BG_PLAYER:VOLUME',
-        data: this.volume() * 100,
+        data: this.volume * 100,
       });
     }
 

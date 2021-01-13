@@ -1,5 +1,5 @@
 /* global l1Player localStorage document Blob navigator */
-/* global $ angular Timer FileReader isElectron */
+/* global $ angular FileReader isElectron */
 /* eslint-disable global-require */
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-param-reassign */
@@ -561,6 +561,7 @@ const main = () => {
 
       $scope.playMylist = (list_id) => {
         l1Player.setNewPlaylist($scope.songs);
+        l1Player.play();
         $scope.setCurrentList(list_id);
       };
 
@@ -1184,7 +1185,7 @@ const main = () => {
                   if (msg.data.duration === 0) {
                     $scope.myProgress = 0;
                   } else {
-                    $scope.myProgress = Math.round(msg.data.pos / msg.data.duration * 100);
+                    $scope.myProgress = msg.data.pos / msg.data.duration * 100;
                   }
                   const posSec = Math.floor(msg.data.pos);
                   const posStr = `${Math.floor(posSec / 60)}:${(`0${posSec % 60}`).substr(-2)}`;
