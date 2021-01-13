@@ -293,7 +293,7 @@ function build_netease() {
     };
     const data = _encrypted_request(d);
 
-    axios(target_url, new URLSearchParams(data)).then((response) => {
+    axios.post(target_url, new URLSearchParams(data)).then((response) => {
       const { data: res_data } = response;
       const { url } = res_data.data[0];
       if (url != null) {
