@@ -5,7 +5,7 @@ function build_migu() {
     return result;
   }
 
-  function mg_show_playlist(url, hm) {
+  function mg_show_playlist(url) {
     const offset = getParameterByName('offset', url);
     const page_size = 25;
     let target_url = '';
@@ -18,7 +18,7 @@ function build_migu() {
 
     return {
       success(fn) {
-        hm.get(target_url).then((response) => {
+        axios.get(target_url).then((response) => {
           const {
             data
           } = response;
@@ -119,18 +119,12 @@ function build_migu() {
   }
 
   function get_playlist_from_url(index, url, params, callback){
-    const hm = params[0];
-    const playlist_type = params[1];
-    const list_type = params[2];
-    const list_id = params[3];
+    const playlist_type = params[0];
+    const list_type = params[1];
+    const list_id = params[2];
 
-    hm({
-      url: url,
-      method: 'GET'
-    }).then((response) => {
-      const {
-        data
-      } = response;
+    axios.get(url).then((response) => {
+      const { data } = response;
       const result = get_playlist_data_from_response(playlist_type, list_type, list_id, data);
       return callback(null, result);
     });
@@ -146,7 +140,7 @@ function build_migu() {
     });
   }
 
-  function mg_get_playlist(url, hm, se, playlist_type) {
+  function mg_get_playlist(url, se, playlist_type) {
     return {
       success(fn) {
         const list_id = getParameterByName('list_id', url).split('_').pop();
@@ -159,7 +153,7 @@ function build_migu() {
         } else if (playlist_type == 'artist') {
           target_url = `http://music.migu.cn/v3/music/artist/${list_id}/song`;
         }
-        get_playlist_from_url(0, target_url, [hm, playlist_type, list_type, list_id], function(err, result){
+        get_playlist_from_url(0, target_url, [playlist_type, list_type, list_id], function(err, result){
           if (result.total === 1){
             return fn(result);
           }
@@ -168,7 +162,7 @@ function build_migu() {
             let url = `${target_url}?page=${i}`
             urls.push(url);
           }
-          return async_process_list(urls, get_playlist_from_url, [hm, playlist_type, list_type, list_type],
+          return async_process_list(urls, get_playlist_from_url, [playlist_type, list_type, list_type],
             (err, playlists) => {
               playlists.forEach(function(playlist){
                 result.tracks = result.tracks.concat(playlist.tracks);
@@ -180,7 +174,7 @@ function build_migu() {
     };
   }
 
-  function mg_bootstrap_track(sound, track, success, failure, hm, se) {
+  function mg_bootstrap_track(sound, track, success, failure) {
     let song_id = track.id;
     song_id = song_id.slice('mgtrack_'.length);
 
@@ -194,16 +188,9 @@ function build_migu() {
 
     const url = `http://music.migu.cn/v3/api/music/audioPlayer/getPlayInfo?dataType=2&data=${encodeURIComponent(aesResult)}&secKey=${encodeURIComponent(secKey)}`;
 
-    hm({
-      url: url,
-      method: 'GET',
-    }).then((response) => {
-      const {
-        data: res_data
-      } = response;
-      let {
-        playUrl
-      } = res_data.data;
+    axios.get(url).then((response) => {
+      const { data: res_data } = response;
+      let { playUrl } = res_data.data;
       if (playUrl != null) {
         if (playUrl.startsWith('//')) {
           playUrl = 'https:' + playUrl;
@@ -216,7 +203,7 @@ function build_migu() {
     });
   }
 
-  function mg_search(url, hm, se) {
+  function mg_search(url) {
     const keyword = getParameterByName('keywords', url);
     const curpage = getParameterByName('curpage', url);
     const target_url = 'https://m.music.migu.cn/migu/remoting/scr_search_tag?rows=20&type=2&keyword=' + keyword + '&pgc=' + curpage;
@@ -234,13 +221,8 @@ function build_migu() {
     }
     return {
       success(fn) {
-        hm({
-          url: target_url,
-          method: 'GET',
-        }).then((response) => {
-          const {
-            data
-          } = response;
+        axios.get(target_url).then((response) => {
+          const { data } = response;
           if(data.musics === undefined){
             return fn({
               result: [],
@@ -271,18 +253,13 @@ function build_migu() {
     };
   }
 
-  function mg_lyric(url, hm, se) {
+  function mg_lyric(url) {
     const song_id = getParameterByName('track_id', url).split('_').pop();
     const target_url = 'http://music.migu.cn/v3/api/music/audioPlayer/getLyric?copyrightId=' + song_id;
     return {
       success(fn) {
-        hm({
-          url: target_url,
-          method: 'GET',
-        }).then((response) => {
-          const {
-            data: res_data
-          } = response;
+        axios.get(target_url).then((response) => {
+          const { data: res_data } = response;
           let lrc = '';
           if (res_data.lyric != null) {
             lrc = res_data.lyric;
@@ -308,15 +285,15 @@ function build_migu() {
     return result;
   }
 
-  function get_playlist(url, hm, se) {
+  function get_playlist(url) {
     const list_id = getParameterByName('list_id', url).split('_')[0];
     switch (list_id) {
       case 'mgplaylist':
-        return mg_get_playlist(url, hm, se, 'playlist');
+        return mg_get_playlist(url, 'playlist');
       case 'mgalbum':
-        return mg_get_playlist(url, hm, se, 'album');
+        return mg_get_playlist(url, 'album');
       case 'mgartist':
-        return mg_get_playlist(url, hm, se, 'artist');
+        return mg_get_playlist(url, 'artist');
       default:
         return null;
     }

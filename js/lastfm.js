@@ -23,7 +23,7 @@ function lastfm() {
 
     this.apiUrl = 'https://ws.audioscrobbler.com/2.0/';
 
-    this.$get = ['$http', '$window', ($http, $window) => {
+    this.$get = ['$window', ($window) => {
       const { options, apiUrl } = this;
       let status = 0;
 
@@ -77,13 +77,13 @@ function lastfm() {
         };
         const apiSig = generateSign(params);
         const url = `${apiUrl}?${createQueryString(params)}&api_sig=${apiSig}&format=json`;
-        $http.get(url).then((response) => {
+        axios.get(url).then((response) => {
           const { data } = response;
           mySession = data.session;
           localStorage.setObject('lastfmsession', mySession);
           callback(mySession);
-        }).error((errResponse, statusCode) => {
-          if (statusCode === 403) {
+        }).catch((error) => {
+          if (error.response.status === 403) {
             callback(null);
           }
         });
@@ -105,7 +105,7 @@ function lastfm() {
           params.api_sig = generateSign(params);
 
           const url = `${apiUrl}?${createQueryString(params)}&format=json`;
-          $http.post(url).then((response) => {
+          axios.post(url).then((response) => {
             const { data } = response;
             if (callback != null) {
               callback(data);
@@ -134,7 +134,7 @@ function lastfm() {
 
       function getAuth(callback) {
         const url = `${apiUrl}?method=auth.gettoken&api_key=${options.apiKey}&format=json`;
-        $http.get(url).then((response) => {
+        axios.get(url).then((response) => {
           const { data } = response;
           const { token } = data;
           localStorage.setObject('lastfmtoken', token);
@@ -166,7 +166,7 @@ function lastfm() {
           params.api_sig = generateSign(params);
 
           const url = `${apiUrl}?${createQueryString(params)}&format=json`;
-          $http.post(url).then((response) => {
+          axios.post(url).then((response) => {
             const { data } = response;
             if (callback != null) {
               callback(data);
@@ -193,7 +193,7 @@ function lastfm() {
           params.api_sig = generateSign(params);
 
           const url = `${apiUrl}?${createQueryString(params)}&format=json`;
-          $http.post(url).then((response) => {
+          axios.post(url).then((response) => {
             const { data } = response;
             if (callback != null) {
               callback(data);

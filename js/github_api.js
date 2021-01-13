@@ -1,4 +1,4 @@
-/* global Storage $ localStorage window */
+/* global $ localStorage window */
 function github() {
   const OAUTH_URL = 'https://github.com/login/oauth';
   const API_URL = 'https://api.github.com';
