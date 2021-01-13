@@ -1,62 +1,70 @@
 /* global angular getParameterByName async */
 /* global netease xiami qq kugou kuwo bilibili migu localmusic myplaylist */
 const ngloWebManager = angular.module('loWebManager', []);
+const PROVIDERS = [{
+  name: 'netease',
+  instance: netease,
+  searchable: true,
+  id: 'ne',
+}, {
+  name: 'xiami',
+  instance: xiami,
+  searchable: true,
+  id: 'xm',
+}, {
+  name: 'qq',
+  instance: qq,
+  searchable: true,
+  id: 'qq',
+}, {
+  name: 'kugou',
+  instance: kugou,
+  searchable: true,
+  id: 'kg',
+}, {
+  name: 'kuwo',
+  instance: kuwo,
+  searchable: true,
+  id: 'kw',
+}, {
+  name: 'bilibili',
+  instance: bilibili,
+  searchable: false,
+  id: 'bi',
+}, {
+  name: 'migu',
+  instance: migu,
+  searchable: true,
+  id: 'mg',
+}, {
+  name: 'localmusic',
+  instance: localmusic,
+  searchable: false,
+  hidden: true,
+  id: 'lm',
+}, {
+  name: 'myplaylist',
+  instance: myplaylist,
+  searchable: false,
+  hidden: true,
+  id: 'my',
+}];
 
 function getProviderByName(sourceName) {
-  switch (sourceName) {
-    case 'netease':
-      return netease;
-    case 'xiami':
-      return xiami;
-    case 'qq':
-      return qq;
-    case 'kugou':
-      return kugou;
-    case 'kuwo':
-      return kuwo;
-    case 'bilibili':
-      return bilibili;
-    case 'migu':
-      return migu;
-    case 'localmusic':
-      return localmusic;
-    default:
-      return null;
-  }
+  return (PROVIDERS.find(i => i.name === sourceName) || {}).instance;
 }
 
 function getAllProviders() {
-  return [netease, xiami, qq, kugou, kuwo, bilibili, migu];
+  return PROVIDERS.filter(i => !i.hidden).map(i => i.instance);
 }
 
 function getAllSearchProviders() {
-  return [netease, xiami, qq, kugou, kuwo, migu];
+  return PROVIDERS.filter(i => i.searchable).map(i => i.instance);
 }
 
 function getProviderByItemId(itemId) {
   const prefix = itemId.slice(0, 2);
-  switch (prefix) {
-    case 'ne':
-      return netease;
-    case 'xm':
-      return xiami;
-    case 'qq':
-      return qq;
-    case 'kg':
-      return kugou;
-    case 'kw':
-      return kuwo;
-    case 'bi':
-      return bilibili;
-    case 'mg':
-      return migu;
-    case 'lm':
-      return localmusic;
-    case 'my':
-      return myplaylist;
-    default:
-      return null;
-  }
+  return (PROVIDERS.find(i => i.id === prefix) || {}).instance;
 }
 
 ngloWebManager.factory('loWeb', ['$rootScope', '$log',
