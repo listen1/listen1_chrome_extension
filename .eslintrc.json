@@ -2,5 +2,8 @@
     "extends": "airbnb-base",
     "rules": {
         "camelcase":"off"
+    },
+    "globals": {
+        "axios": "readonly",
     }
 }
