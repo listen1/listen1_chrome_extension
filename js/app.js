@@ -895,7 +895,7 @@ const main = () => {
       $http, $httpParamSerializerJQLike,
       $rootScope, Notification, loWeb, hotkeys, lastfm, $translate) => {
       $scope.menuHidden = true;
-      $scope.volume = l1Player.status.volume * 100;
+      $scope.volume = l1Player.status.volume;
       $scope.mute = l1Player.status.muted;
       $scope.settings = {
         playmode: 0,
@@ -1295,13 +1295,7 @@ const main = () => {
         combo: 'p',
         description: '播放/暂停',
         callback() {
-          if (l1Player.status.playing.playing) {
-            // if playing then pause
-            l1Player.pause();
-          } else {
-            // else play if not playing
-            l1Player.play();
-          }
+          l1Player.togglePlayPause();
         },
       });
 
@@ -1423,13 +1417,7 @@ const main = () => {
           } else if (message === 'left') {
             l1Player.prev();
           } else if (message === 'space') {
-            if (l1Player.status.playing) {
-              // if playing then pause
-              l1Player.pause();
-            } else {
-              // else play if not playing
-              l1Player.play();
-            }
+            l1Player.togglePlayPause();
           }
         });
       }

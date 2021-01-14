@@ -37,7 +37,7 @@
   const l1Player = {
     status: {
       muted: chrome.extension.getBackgroundPage().player.muted,
-      volume: chrome.extension.getBackgroundPage().player.volume,
+      volume: chrome.extension.getBackgroundPage().player.volume * 100,
       loop_mode: chrome.extension.getBackgroundPage().player.loop_mode,
       playing: chrome.extension.getBackgroundPage().player.playing,
     },
@@ -52,7 +52,7 @@
         w.player.pause();
       });
     },
-    toggleplayPause() {
+    togglePlayPause() {
       backgroundCall((w) => {
         if (w.player.playing) {
           w.player.pause();
@@ -262,7 +262,6 @@
         }, () => {
           backgroundCall((w) => {
             w.player.setAudioDisabled(true, msg.data.index);
-            w.player.setURL(null, msg.data.index);
             w.player.skipTo('next');
           });
         });
