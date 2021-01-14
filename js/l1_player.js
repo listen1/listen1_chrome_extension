@@ -226,7 +226,7 @@
       restrict: 'EA',
       link(scope, element) {
         element.bind('click', () => {
-          l1Player.toggleplayPause();
+          l1Player.togglePlayPause();
         });
       },
     }));
