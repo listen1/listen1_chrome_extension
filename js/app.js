@@ -955,7 +955,7 @@ const main = () => {
           $scope.volume = 90;
           $scope.saveLocalSettings();
         } else {
-          l1Player.volume($scope.volume);
+          l1Player.setVolume($scope.volume);
         }
         $scope.enableGlobalShortCut = localStorage.getObject('enable_global_shortcut');
         $scope.enableLyricFloatingWindow = localStorage.getObject('enable_lyric_floating_window');
@@ -1725,7 +1725,7 @@ const main = () => {
           $rootScope.$broadcast('track:myprogress', progress * 100);
         }
         if (mode === 'volume') {
-          l1Player.volume(progress * 100);
+          l1Player.setVolume(progress * 100);
           l1Player.unmute();
         }
       }

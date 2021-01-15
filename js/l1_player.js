@@ -113,7 +113,7 @@
         else w.player.mute();
       });
     },
-    volume(per) {
+    setVolume(per) {
       backgroundCall((w) => {
         const { player } = w;
         player.volume = per / 100;

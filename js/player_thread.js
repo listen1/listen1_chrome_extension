@@ -168,7 +168,7 @@
             navigator.mediaSession.metadata = new MediaMetadata({
               title: self.currentAudio.title,
               artist: self.currentAudio.artist,
-              album: self.currentAudio.album,
+              album: `Listen1  •  ${(self.currentAudio.album || '<???>').padEnd(100)}`,
               artwork: [{
                 src: self.currentAudio.img_url,
                 sizes: '300x300',
@@ -318,7 +318,8 @@
       }
     }
 
-    static get volume() {
+    // eslint-disable-next-line class-methods-use-this
+    get volume() {
       return Howler.volume();
     }
 
@@ -465,8 +466,9 @@
   window.player = new Player();
   window.player.setRefreshRate();
   window.player.sendFullUpdate();
-  navigator.mediaSession.setActionHandler('nexttrack', () => window.player.skip('next'));
-  navigator.mediaSession.setActionHandler('previoustrack', () => window.player.skip('prev'));
+  // TODO: enable after the play url retrieve logic moved to bg
+  // navigator.mediaSession.setActionHandler('nexttrack', () => window.player.skip('next'));
+  // navigator.mediaSession.setActionHandler('previoustrack', () => window.player.skip('prev'));
   sendEvent({
     type: 'BG_PLAYER:READY',
   });
