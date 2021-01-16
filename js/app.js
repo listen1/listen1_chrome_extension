@@ -842,8 +842,8 @@ const main = () => {
             title: '添加歌曲',
             properties: ['openFile', 'multiSelections'],
             filters: [{
-              name: '.MP3 Files',
-              extensions: ['mp3']
+              name: 'Music Files',
+              extensions: ['mp3','flac']
             }]
           }).then(result => {
             if(result.canceled){
