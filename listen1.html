@@ -296,7 +296,7 @@
                     <div class="page" ng-show="current_tag==4 && is_window_hidden==1" ng-init="lastfm.updateStatus(); github.updateStatus();">
                       <div class="site-wrapper-innerd">
                         <div class="cover-container">
-                          <div class="settings-title"><span>{{_LANGUAGE}}<span></div>
+                          <div class="settings-title"><span>{{_LANGUAGE}}</span></div>
                           <div class="settings-content">
                             <div>
                               <button class="language-button" ng-click="setLang('zh_CN')">简体中文</button>
@@ -304,14 +304,14 @@
                               <button class="language-button" ng-click="setLang('fr_FR')">French</button>
                             </div>
                           </div>
-                          <div class="settings-title"><span>{{_THEME}}<span></div>
+                          <div class="settings-title"><span>{{_THEME}}</span></div>
                           <div class="settings-content">
                             <div>
                               <button class="theme-button" ng-click="setTheme('white')">{{_THEME_WHITE}}</button>
                               <button class="theme-button" ng-click="setTheme('black')">{{_THEME_BLACK}}</button>
                             </div>
                           </div>
-                          <div class="settings-title"><span>{{_AUTO_CHOOSE_SOURCE}} (Beta)<span></div>
+                          <div class="settings-title"><span>{{_AUTO_CHOOSE_SOURCE}} (Beta)</span></div>
                           <div class="settings-content">
                             <div class="shortcut" class="btn btn-primary confirm-button" >
                               <svg class="feather" ng-show="!enableAutoChooseSource" ng-click="setAutoChooseSource(true)"><use xlink:href="images/feather-sprite.svg#square"></use></svg>
@@ -319,7 +319,7 @@
                               {{_AUTO_CHOOSE_SOURCE_NOTICE}}
                             </div>
                           </div>
-                          <div class="settings-title"><span>{{_NOWPLAYING_COVER_BACKGROUND}}<span></div>
+                          <div class="settings-title"><span>{{_NOWPLAYING_COVER_BACKGROUND}}</span></div>
                           <div class="settings-content">
                             <div class="shortcut" class="btn btn-primary confirm-button" >
                               <svg class="feather" ng-show="!enableNowplayingCoverBackground" ng-click="setNowplayingCoverBackground(true)"><use xlink:href="images/feather-sprite.svg#square"></use></svg>
@@ -327,7 +327,7 @@
                               {{_NOWPLAYING_COVER_BACKGROUND_NOTICE}}
                             </div>
                           </div>
-                          <div class="settings-title"><span>{{_BACKUP_PLAYLIST}}<span></div>
+                          <div class="settings-title"><span>{{_BACKUP_PLAYLIST}}</span></div>
                           <div class="settings-content">
                             <p>{{_BACKUP_WARNING}}</p>
                             <div>
@@ -335,7 +335,7 @@
                                <button class="btn btn-primary confirm-button" ng-show="github.getStatus() == 2" ng-click="showDialog(8)">{{_EXPORT_TO_GITHUB_GIST}}</button>
                             </div>
                           </div>
-                          <div class="settings-title"><span>{{_RECOVER_PLAYLIST}}<span></div>
+                          <div class="settings-title"><span>{{_RECOVER_PLAYLIST}}</span></div>
                             <div class="settings-content">
                               <p>{{_RECOVER_WARNING}}</p>
                             <label class="upload-button" for="my-file-selector">
@@ -344,7 +344,7 @@
                             <button class="btn btn-warning confirm-button" ng-show="github.getStatus() == 2" ng-click="showDialog(10)">{{_RECOVER_FROM_GITHUB_GIST}}</button>
                           </div>
 
-                          <div class="settings-title"><span>{{_CONNECT_TO_GITHUB}}<span></div>
+                          <div class="settings-title"><span>{{_CONNECT_TO_GITHUB}}</span></div>
                           <div class="settings-content">
                             <div>
                               <p> {{_STATUS}}：{{ github.getStatusText() }} </p>
@@ -354,7 +354,7 @@
                             </div>
                           </div>
 
-                          <div class="settings-title"><span>{{_SHORTCUTS}}<span></div>
+                          <div class="settings-title"><span>{{_SHORTCUTS}}</span></div>
                           <div class="settings-content">
                             <button class="btn btn-primary confirm-button" ng-click="showShortcuts()">{{_VIEW_SHORTCUTS_LIST}}</button>
                               <div class="shortcut" ng-if="!isChrome" class="btn btn-primary confirm-button" >
@@ -363,7 +363,7 @@
                                 {{_GLOBAL_SHORTCUTS_NOTICE}}
                                 </div>
                           </div>
-                          <div class="settings-title"><span>{{_CONNECT_TO_LASTFM}}<span></div>
+                          <div class="settings-title"><span>{{_CONNECT_TO_LASTFM}}</span></div>
                           <div class="settings-content">
                             <div>
                               <p> {{_STATUS}}：{{ lastfm.getStatusText() }} </p>
@@ -390,10 +390,22 @@
                               <span ng-show="enableLyricFloatingWindowTranslation"></span>{{_SHOW_DESKTOP_LYRIC_TRANSLATION}}
                             </div>
                           </div>
-                          <div class="settings-title"><span>{{_ABOUT}}<span></div>
+                          <div class="settings-title"><span>{{_ABOUT}}</span></div>
                           <div class="settings-content">
                             <p> Listen 1 {{_HOMEPAGE}}: <a open-url="'http://listen1.github.io/listen1/'"> http://listen1.github.io/listen1/ </a> </p>
                             <p> Listen 1 {{_EMAIL}}: githublisten1@gmail.com </p>
+                            <p>
+                            {{_FEEDBACK}}: <a
+                              ng-if="isChrome"
+                              open-url="'https://github.com/listen1/listen1_chrome_extension/issues'"
+                              >https://github.com/listen1/listen1_chrome_extension/issues</a
+                            >
+                            <a
+                              ng-if="!isChrome"
+                              open-url="'https://github.com/listen1/listen1_desktop/issues'"
+                              >https://github.com/listen1/listen1_desktop/issues</a
+                            >
+                          </p>
                             <p> {{_DESIGNER}}: iparanoid </p>
                             <p> {{_VERSION}}: 2.17.8 {{_LICENSE_NOTICE}}</p>
                           </div>
