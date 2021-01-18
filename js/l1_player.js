@@ -262,7 +262,7 @@
         }, () => {
           backgroundCall((w) => {
             w.player.setAudioDisabled(true, msg.data.index);
-            w.player.skipTo('next');
+            w.player.skip('next');
           });
         });
       }

@@ -47,6 +47,8 @@
     }
 
     insertAudio(audio, idx) {
+      if (this.playlist.find(i => audio.id === i.id)) return;
+
       const audioData = {
         ...audio,
         disabled: false, // avoid first time load block
@@ -163,7 +165,7 @@
           src: [self._media_uri_list[data.url || data.id]],
           volume: 1,
           mute: self.muted,
-          html5: true, // Force to HTML5 so that the audio can stream in (best for large files).
+          // html5: true, // Force to HTML5 so that the audio can stream in (best for large files).
           onplay() {
             navigator.mediaSession.metadata = new MediaMetadata({
               title: self.currentAudio.title,
@@ -234,7 +236,7 @@
       // Keep track of the index we are currently playing.
       this.index = index;
       this.sendLoadEvent();
-      if (playNow) {
+      if (playNow && !this.currentHowl.playing()) {
         this.currentHowl.play();
       }
     }
@@ -255,21 +257,25 @@
      */
     skip(direction) {
       // Get the next track based on the direction of the track.
-      let index = 0;
-      if (direction === 'prev') {
-        index = this.index - 1;
-        if (index < 0) {
-          index = this.playlist.length - 1;
-        }
-      } else if (direction === 'random') {
-        index = Math.floor(Math.random() * this.playlist.length);
-      } else { // default to next one
-        index = this.index + 1;
-        if (index >= this.playlist.length) {
-          index = 0;
-        }
-      }
+      let { index } = this;
 
+      let nextIndex = null;
+      if (direction === 'prev') {
+        nextIndex = idx => (idx - 1) % this.playlist.length;
+      } else if (direction === 'random') {
+        nextIndex = () => Math.floor(Math.random() * this.playlist.length);
+      } else { // Default to next one.
+        nextIndex = idx => (idx + 1) % this.playlist.length;
+      }
+      let tryCount = 0;
+      while (tryCount < this.playlist.length - 1) {
+        index = nextIndex(index);
+        if (!this.playlist[index].disabled) {
+          this.skipTo(index);
+          return;
+        }
+        tryCount += 1;
+      }
       this.skipTo(index);
     }
 
