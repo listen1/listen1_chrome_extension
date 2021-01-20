@@ -159,7 +159,7 @@ function build_migu() {
         } else if (playlist_type == 'artist') {
           target_url = `http://music.migu.cn/v3/music/artist/${list_id}/song`;
         }
-        get_playlist_from_url(0, target_url, [hm, playlist_type, list_type, list_type], function(err, result){
+        get_playlist_from_url(0, target_url, [hm, playlist_type, list_type, list_id], function(err, result){
           if (result.total === 1){
             return fn(result);
           }
