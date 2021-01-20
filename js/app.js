@@ -843,7 +843,7 @@ const main = () => {
             properties: ['openFile', 'multiSelections'],
             filters: [{
               name: 'Music Files',
-              extensions: ['mp3','flac']
+              extensions: ['mp3','flac','ape']
             }]
           }).then(result => {
             if(result.canceled){
@@ -851,14 +851,14 @@ const main = () => {
             }
   
             result.filePaths.forEach(fp=>{
-              remoteFunctions.readAudioTags(fp).then((t)=>{
+              remoteFunctions.readAudioTags(fp).then((md)=>{
                 var track = {
-                  id: "lmtrack_"+fp,
-                  title: t.tags.title,
-                  artist: t.tags.artist,
-                  artist_id: "lmartist_"+t.tags.artist,
-                  album: t.tags.album,
-                  album_id: "lmalbum_"+t.tags.album,
+                  id: "lmtrack_" + fp,
+                  title: md.common.title,
+                  artist: md.common.artist,
+                  artist_id: "lmartist_" + md.common.artist,
+                  album: md.common.album,
+                  album_id: "lmalbum_" + md.common.album,
                   source: "localmusic",
                   source_url: "",
                   img_url: "",
