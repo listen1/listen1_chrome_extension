@@ -165,7 +165,7 @@
           src: [self._media_uri_list[data.url || data.id]],
           volume: 1,
           mute: self.muted,
-          // html5: true, // Force to HTML5 so that the audio can stream in (best for large files).
+          html5: true, // Force to HTML5 so that the audio can stream in (best for large files).
           onplay() {
             navigator.mediaSession.metadata = new MediaMetadata({
               title: self.currentAudio.title,
@@ -222,6 +222,8 @@
             });
             self.currentAudio.disabled = true;
             self.sendPlayingEvent('err');
+            self.currentHowl.unload();
+            delete self._media_uri_list[data.id];
           },
           onplayerror(id, err) {
             sendEvent({
