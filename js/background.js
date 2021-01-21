@@ -59,6 +59,10 @@ function hack_referer_header(details) {
   if (details.url.indexOf('.migu.cn') !== -1) {
     referer_value = 'http://music.migu.cn/v3/music/player/audio?from=migu';
   }
+  
+  if (details.url.indexOf('m.music.migu.cn') !== -1) {
+    referer_value = 'https://m.music.migu.cn/';
+  }
 
   if ((details.url.indexOf('app.c.nf.migu.cn') !== -1)
     || (details.url.indexOf('d.musicapp.migu.cn') !== -1)) {
