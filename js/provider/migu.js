@@ -195,32 +195,32 @@ function build_migu() {
     const keyword = getParameterByName('keywords', url);
     const curpage = getParameterByName('curpage', url);
     const searchType = getParameterByName('type', url);
+    const sid = (uuid() + uuid()).replace(/-/g,'');
     //let type ='';
     let searchSwitch = '';
+    let target_url = 'https://jadeite.migu.cn/music_search/v2/search/searchAll?';
     switch (searchType) { 
       case '0':
         searchSwitch = '{"song":1}';  //{"song":1,"album":0,"singer":0,"tagSong":1,"mvSong":0,"bestShow":1,"songlist":0,"lyricSong":0}
         //type = 2;
+        target_url = target_url + `sid=${sid}&isCorrect=1&isCopyright=1`
+        + `&searchSwitch=${encodeURIComponent(searchSwitch)}&pageSize=20`
+        + `&text=${encodeURIComponent(keyword)}&pageNo=${curpage}`
+        + `&feature=1000000000&sort=1`;
         break;
       case '1':
         searchSwitch = '{"songlist":1}';
         //type = 6;
+        target_url = target_url + `sid=${sid}&isCorrect=1&isCopyright=1`
+        + `&searchSwitch=${encodeURIComponent(searchSwitch)}`
+        + `&userFilter=%7B%22songlisttag%22%3A%5B%5D%7D&pageSize=20`
+        + `&text=${encodeURIComponent(keyword)}&pageNo=${curpage}`
+        //+ `&sort=1&userSort=%7B%22songlist%22%3A%22default%22%7D`;
+        + `&feature=0000000010&sort=1`;
     }
     //const target_url = `https://pd.musicapp.migu.cn/MIGUM3.0/v1.0/content/search_all.do?&isCopyright=0&isCorrect=0&text=${keyword}&pageNo=${curpage}&searchSwitch=${searchSwitch}`;
     //const target_url = `https://m.music.migu.cn/migu/remoting/scr_search_tag?rows=20&type=${type}&keyword=${keyword}'&pgc=${curpage}`;
-    const target_url = 'https://jadeite.migu.cn/music_search/v2/search/searchAll?';
-    const sid = (uuid() + uuid()).replace(/-/g,'');
-    const params = {
-      sid,
-      isCorrect: 1,
-      isCopyright: 1,
-      searchSwitch: encodeURIComponent(searchSwitch),
-      pageSize: 20,
-      text: encodeURIComponent(keyword),
-      pageNo: curpage,
-      feature: 1111000000,
-      sort: 1
-    };
+
     const deviceId = MD5(uuid().replace(/-/g,'')).toLocaleUpperCase();  //设备的UUID
     const timestamp = (new Date()).getTime();
     const signature_md5 = '6cdc72a439cef99a3418d2a78aa28c73';  //app签名证书的md5
@@ -257,7 +257,6 @@ function build_migu() {
           url: target_url,
           method: 'GET',
           headers,
-          params
         }).then((response) => {
           const { data } = response;
           var result = [];
