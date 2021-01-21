@@ -122,7 +122,7 @@ function build_migu() {
   function mg_artist(url, hm, se) {
     const artist_id = getParameterByName('list_id', url).split('_').pop();
     const offset = Number(getParameterByName('offset', url));
-    const pageSize = 50
+    const pageSize = 50;
     const page = offset / pageSize + 1;
     const target_url = `https://app.c.nf.migu.cn/MIGUM2.0/v1.0/content/singer_songs.do?pageNo=${page}&pageSize=${pageSize}&resourceType=2&singerId=${artist_id}`;
     
@@ -211,7 +211,7 @@ function build_migu() {
     const target_url = 'https://jadeite.migu.cn/music_search/v2/search/searchAll?';
     const sid = (uuid() + uuid()).replace(/-/g,'');
     const params = {
-      sid: sid,
+      sid,
       isCorrect: 1,
       isCopyright: 1,
       searchSwitch: encodeURIComponent(searchSwitch),
