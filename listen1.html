@@ -277,7 +277,7 @@
                               <li ng-if="searchType===1" ng-repeat="playlist in result" ng-class-odd="'odd'" ng-class-even="'even'" class="playlist-result">
                                   <div class="title">
                                     <a ng-click="showPlaylist(playlist.id)">
-                                      <img ng-src="{{ playlist.img_url }}"/>
+                                      <img ng-src="{{ playlist.img_url }}" err-src="https://y.gtimg.cn/mediastyle/global/img/playlist_300.png"/>
                                       <div>{{ playlist.title |limitTo:30}}<span ng-if="isActiveTab(8)" class="source playlist">{{playlist.sourceName}}</span></div>
                                     </a>
                                   </div>
