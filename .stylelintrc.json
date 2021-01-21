@@ -1,0 +1,4 @@
+{
+    "extends": "stylelint-config-standard",
+    "ignoreFiles": ["css/angular-ui-notification.css", "css/hotkeys.css"]
+}
