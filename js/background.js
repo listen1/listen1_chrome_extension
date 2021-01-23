@@ -11,11 +11,12 @@ chrome.browserAction.onClicked.addListener((tab) => { // eslint-disable-line no-
 function hack_referer_header(details) {
   const replace_referer = true;
   let replace_origin = true;
-  const add_referer = true;
+  let add_referer = true;
   let add_origin = true;
 
   let referer_value = '';
-  let origin_value = "";
+  let origin_value = '';
+  let ua_value = '';
 
   if (details.url.indexOf('://music.163.com/') !== -1) {
     referer_value = 'http://music.163.com/';
@@ -26,13 +27,8 @@ function hack_referer_header(details) {
 
   if (details.url.indexOf(".xiami.com/") !== -1) {
     add_origin = false;
-    referer_value = "https://www.xiami.com";
-  }
-
-  if (details.url.indexOf('www.xiami.com/api/search/searchSongs') !== -1) {
-    const key = /key%22:%22(.*?)%22/.exec(details.url)[1];
-    add_origin = false;
-    referer_value = `https://www.xiami.com/search?key=${key}`;
+    add_referer = false;
+    //referer_value = "https://www.xiami.com";
   }
 
   if (details.url.indexOf('c.y.qq.com/') !== -1) {
@@ -59,18 +55,35 @@ function hack_referer_header(details) {
     replace_origin = false;
     add_origin = false;
   }
+
   if (details.url.indexOf('.migu.cn') !== -1) {
     referer_value = 'http://music.migu.cn/v3/music/player/audio?from=migu';
   }
+  
   if (details.url.indexOf('m.music.migu.cn') !== -1) {
     referer_value = 'https://m.music.migu.cn/';
   }
+
+  if ((details.url.indexOf('app.c.nf.migu.cn') !== -1)
+    || (details.url.indexOf('d.musicapp.migu.cn') !== -1)) {
+    ua_value = 'Mozilla/5.0 (iPhone; CPU iPhone OS 14_3 like Mac OS X) AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Mobile Safari/534.30';
+    add_origin = false;
+    add_referer = false;
+  }
+
+  if (details.url.indexOf('jadeite.migu.cn') !== -1) {
+    ua_value = 'okhttp/3.12.12';
+    add_origin = false;
+    add_referer = false;
+  }
+
   if (origin_value == "") {
     origin_value = referer_value;
   }
 
   let isRefererSet = false;
   let isOriginSet = false;
+  let isUASet = false;
   const headers = details.requestHeaders;
   const blockingResponse = {};
 
@@ -82,6 +95,10 @@ function hack_referer_header(details) {
     if (replace_origin && (headers[i].name === 'Origin') && (origin_value !== '')) {
       headers[i].value = origin_value;
       isOriginSet = true;
+    }
+    if ((headers[i].name === 'User-Agent') && (ua_value !== '')) {
+      headers[i].value = ua_value;
+      isUASet = true;
     }
   }
 
@@ -96,6 +113,13 @@ function hack_referer_header(details) {
     headers.push({
       name: 'Origin',
       value: origin_value,
+    });
+  }
+
+    if ((!isUASet) && (ua_value !== '')) {
+    headers.push({
+      name: 'User-Agent',
+      value: ua_value,
     });
   }
 

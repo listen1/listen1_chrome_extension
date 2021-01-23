@@ -1101,7 +1101,6 @@ const main = () => {
         return result;
       }
 
-
       (chrome || browser).runtime.onMessage.addListener((msg, sender, sendResponse) => {
         if (typeof msg.type === 'string' && msg.type.split(':')[0] === 'BG_PLAYER') {
           switch (msg.type.split(':').slice(1).join('')) {
