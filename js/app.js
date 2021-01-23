@@ -1782,9 +1782,6 @@ const main = () => {
     }),
   ]);
 
-  app.controller('MyPlayListController', ['$scope', '$timeout',
-    'angularPlayer', 'loWeb',
-    ($scope, $timeout, angularPlayer, loWeb) => {
   app.controller('MyPlayListController', ['$scope', '$timeout', 'loWeb',
     ($scope, $timeout, loWeb) => {
       $scope.myplaylists = [];
@@ -1820,9 +1817,6 @@ const main = () => {
     },
   ]);
 
-  app.controller('PlayListController', ['$scope', '$timeout',
-    'angularPlayer', 'loWeb',
-    ($scope, $timeout, angularPlayer, loWeb) => {
   app.controller('PlayListController', ['$scope', '$timeout', 'loWeb',
     ($scope, $timeout, loWeb) => {
       $scope.result = [];
