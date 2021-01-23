@@ -124,7 +124,7 @@ const main = () => {
   }
 
 
-  app.controller('ProfileController', ['$scope', '$translate', ($scope, $translate) => {
+  app.controller('ProfileController', ['$scope', '$translate', '$http', ($scope, $translate, $http) => {
     let defaultLang = 'zh_CN';
     const supportLangs = ['zh_CN', 'en_US'];
     if (supportLangs.indexOf(navigator.language) !== -1) {
@@ -137,7 +137,7 @@ const main = () => {
     $scope.setLang = (langKey) => {
       // You can change the language during runtime
       $translate.use(langKey).then(() => {
-        axios.get('./i18n/zh_CN.json')
+        $http.get('./i18n/zh_CN.json')
           .then((res) => {
             Object.keys(res.data).forEach((key) => {
               $scope[key] = $translate.instant(key);
@@ -167,10 +167,10 @@ const main = () => {
   }]);
 
   // control main view of page, it can be called any place
-  app.controller('NavigationController', ['$scope',
+  app.controller('NavigationController', ['$scope', '$http',
     '$httpParamSerializerJQLike', '$timeout', 'Notification', '$rootScope', 'loWeb',
     'hotkeys', 'lastfm', 'github', 'gist', '$translate',
-    ($scope, $httpParamSerializerJQLike,
+    ($scope, $http, $httpParamSerializerJQLike,
       $timeout, Notification, $rootScope,
       loWeb, hotkeys, lastfm, github, gist, $translate) => {
       $rootScope.page_title = 'Listen 1'; // eslint-disable-line no-param-reassign
@@ -428,8 +428,7 @@ const main = () => {
         loWeb.post({
           url,
           method: 'POST',
-          data: 
-          ({
+          data: $httpParamSerializerJQLike({
             list_id: option_id,
             track: JSON.stringify($scope.dialog_song),
           }),
@@ -889,11 +888,12 @@ const main = () => {
   }));
 
   app.controller('PlayController', ['$scope', '$timeout', '$log',
-    '$anchorScroll', '$location',
-    '$rootScope', 'Notification',
-    'loWeb', 'hotkeys', 'lastfm',
+    '$anchorScroll', '$location', '$http',
+    '$httpParamSerializerJQLike', '$rootScope', 'Notification',
+    'loWeb', 'hotkeys', 'lastfm', '$translate',
     ($scope, $timeout, $log, $anchorScroll, $location,
-      $rootScope, Notification, loWeb, hotkeys, lastfm) => {
+      $http, $httpParamSerializerJQLike,
+      $rootScope, Notification, loWeb, hotkeys, lastfm, $translate) => {
       $scope.menuHidden = true;
       $scope.volume = l1Player.status.volume;
       $scope.mute = l1Player.status.muted;
@@ -1437,8 +1437,8 @@ const main = () => {
     },
   ]);
 
-  app.controller('InstantSearchController', ['$scope', '$timeout', '$rootScope', 'loWeb', '$translate',
-    ($scope, $timeout, $rootScope, loWeb, $translate) => {
+  app.controller('InstantSearchController', ['$scope', '$http', '$timeout', '$rootScope', 'loWeb', '$translate',
+    ($scope, $http, $timeout, $rootScope, loWeb, $translate) => {
       // notice: douban is skipped, and add all music so array should plus 2
       $scope.originpagelog = Array(getAllProviders().length + 2).fill(1);  // [网易,虾米,QQ,NULL,酷狗,酷我,bilibili, migu, allmusic]
       $scope.tab = 0;
@@ -1782,11 +1782,8 @@ const main = () => {
     }),
   ]);
 
-  app.controller('MyPlayListController', ['$scope', '$timeout',
-    'angularPlayer', 'loWeb',
-    ($scope, $timeout, angularPlayer, loWeb) => {
-  app.controller('MyPlayListController', ['$scope', '$timeout', 'loWeb',
-    ($scope, $timeout, loWeb) => {
+  app.controller('MyPlayListController', ['$http', '$scope', '$timeout', 'loWeb',
+    ($http, $scope, $timeout, loWeb) => {
       $scope.myplaylists = [];
       $scope.favoriteplaylists = [];
 
@@ -1820,11 +1817,8 @@ const main = () => {
     },
   ]);
 
-  app.controller('PlayListController', ['$scope', '$timeout',
-    'angularPlayer', 'loWeb',
-    ($scope, $timeout, angularPlayer, loWeb) => {
-  app.controller('PlayListController', ['$scope', '$timeout', 'loWeb',
-    ($scope, $timeout, loWeb) => {
+  app.controller('PlayListController', ['$http', '$scope', '$timeout', 'loWeb',
+    ($http, $scope, $timeout, loWeb) => {
       $scope.result = [];
       $scope.tab = 0;
       $scope.loading = true;
