@@ -4,7 +4,6 @@
         "camelcase":"off"
     },
     "globals": {
-        "axios": "readonly",
         "window":"readonly",
         "browser":"readonly",
         "chrome":"readonly"

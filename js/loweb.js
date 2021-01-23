@@ -59,19 +59,19 @@ function getProviderByItemId(itemId) {
   }
 }
 
-ngloWebManager.factory('loWeb', ['$rootScope', '$log',
-  ($rootScope, $log) => ({
+ngloWebManager.factory('loWeb', ['$rootScope', '$log', '$http', '$httpParamSerializerJQLike',
+  ($rootScope, $log, $http, $httpParamSerializerJQLike) => ({
     get(url) {
       const path = url.split('?')[0];
       if (path === '/show_playlist') {
         const source = getParameterByName('source', url);
         const provider = getProviderByName(source);
-        return provider.show_playlist(url);
+        return provider.show_playlist(url, $http);
       }
       if (path === '/playlist') {
         const list_id = getParameterByName('list_id', url);
         const provider = getProviderByItemId(list_id);
-        return provider.get_playlist(url);
+        return provider.get_playlist(url, $http, $httpParamSerializerJQLike);
       }
       if (path === '/search') {
         const source = getParameterByName('source', url);
@@ -79,7 +79,7 @@ ngloWebManager.factory('loWeb', ['$rootScope', '$log',
           // search all platform and merge result
           const callbackArray = getAllSearchProviders().map(function(p){
             return fn =>{
-              p.search(url).success(r=>{
+              p.search(url, $http, $httpParamSerializerJQLike).success(r=>{
                 fn(null, r);
               });
             };
@@ -103,12 +103,12 @@ ngloWebManager.factory('loWeb', ['$rootScope', '$log',
           };
         }
         const provider = getProviderByName(source);
-        return provider.search(url);
+        return provider.search(url, $http, $httpParamSerializerJQLike);
       }
       if (path === '/lyric') {
         const track_id = getParameterByName('track_id', url);
         const provider = getProviderByItemId(track_id);
-        return provider.lyric(url);
+        return provider.lyric(url, $http, $httpParamSerializerJQLike);
       }
       if (path === '/show_myplaylist') {
         return myplaylist.show_myplaylist('my');
@@ -136,7 +136,7 @@ ngloWebManager.factory('loWeb', ['$rootScope', '$log',
         const url = `/playlist?list_id=${list_id}`;
         return {
           success: (fn) => {
-            provider.get_playlist(url).success((data) => {
+            provider.get_playlist(url, $http, $httpParamSerializerJQLike).success((data) => {
               myplaylist.save_myplaylist(playlist_type, data);
               fn();
             });
@@ -242,7 +242,7 @@ ngloWebManager.factory('loWeb', ['$rootScope', '$log',
         const curpage = 1;
         const url = `/search?source=${source}&keywords=${keyword}&curpage=${curpage}`;
         const provider = getProviderByName(source);
-        provider.search(url).success((data)=>{
+        provider.search(url, $http, $httpParamSerializerJQLike).success((data)=>{
           for(var i = 0; i < data.result.length; i++) {
             const searchTrack = data.result[i];
             // compare search track and track to check if they are same
@@ -265,7 +265,7 @@ ngloWebManager.factory('loWeb', ['$rootScope', '$log',
         },
         ()=>{
           callback(null);
-        });
+        }, $http, $httpParamSerializerJQLike);
       }
 
       function getUrlFromSame(track, source, callback){
@@ -325,7 +325,7 @@ ngloWebManager.factory('loWeb', ['$rootScope', '$log',
         const provider = getProviderByName(source);
 
         provider.bootstrap_track(sound, track, successCallback,
-          failureCallback);
+          failureCallback, $http, $httpParamSerializerJQLike);
       };
     },
   }),

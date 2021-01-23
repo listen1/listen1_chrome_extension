@@ -35,7 +35,7 @@ const myplaylistFactory = () => {
     };
   }
 
-  function get_myplaylist(url) {
+  function get_myplaylist(url, hm, se) {
     const list_id = getParameterByName('list_id', url);
     return {
       success(fn) {

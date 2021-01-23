@@ -2,7 +2,6 @@
     "background": {
         "scripts": [
             "js/vendor/jquery-3.3.1.min.js",
-            "js/vendor/axios.min.js",
             "js/github_api.js",
             "js/background.js",
             "js/vendor/howler.core.min.js",
