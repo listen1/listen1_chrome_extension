@@ -1,5 +1,7 @@
-/* global aesjs chrome DOMParser getParameterByName */
+/* eslint-disable no-unused-vars */
+/* global aesjs DOMParser getParameterByName */
 /* global sub btoa bigInt2str dup equalsInt int2bigInt mod mult powMod str2bigInt rightShift_ */
+/* global isElectron cookieSet cookieGet async */
 function build_netease() {
   function ne_show_playlist(url, hm) {
     const order = 'hot';
@@ -17,7 +19,7 @@ function build_netease() {
         hm.get(target_url).then((response) => {
           const { data } = response;
           const list_elements = Array.from((new DOMParser()).parseFromString(data, 'text/html').getElementsByClassName('m-cvrlst')[0].children);
-          const result = list_elements.map(item => ({
+          const result = list_elements.map((item) => ({
             cover_img_url: item.getElementsByTagName('img')[0].src,
             title: item.getElementsByTagName('div')[0].getElementsByTagName('a')[0].title,
             id: `neplaylist_${getParameterByName('id', item.getElementsByTagName('div')[0].getElementsByTagName('a')[0].href)}`,
@@ -40,7 +42,6 @@ function build_netease() {
     }
     return result.join('');
   }
-
 
   function _aes_encrypt(text, sec_key) { // eslint-disable-line no-underscore-dangle
     const pad = 16 - (text.length % 16);
@@ -67,7 +68,7 @@ function build_netease() {
   }
 
   function hexify(text) {
-    return text.split('').map(x => x.charCodeAt(0).toString(16)).join('');
+    return text.split('').map((x) => x.charCodeAt(0).toString(16)).join('');
   }
 
   function zfill(num, size) {
@@ -75,7 +76,6 @@ function build_netease() {
     while (s.length < size) s = `0${s}`;
     return s;
   }
-
 
   function expmod(base, exp, mymod) {
     if (equalsInt(exp, 0) === 1) return int2bigInt(1, 10);
@@ -133,7 +133,7 @@ function build_netease() {
       url: domain,
       name: nuidName,
     }, (arg1, arg2) => {
-      if (((env === 'chrome') && (arg1 == null)) || ((env === 'electron' && arg2.length == 0))) {
+      if (((env === 'chrome') && (arg1 == null)) || ((env === 'electron' && arg2.length === 0))) {
         const nuidValue = _create_secret_key(32);
         const nnidValue = `${nuidValue},${(new Date()).getTime()}`;
         // netease default cookie expire time: 100 years
@@ -163,7 +163,7 @@ function build_netease() {
   function async_process_list(data_list, handler, handler_extra_param_list, callback) {
     const fnDict = {};
     data_list.forEach((item, index) => {
-      fnDict[index] = cb => handler(index, item, handler_extra_param_list, cb);
+      fnDict[index] = (cb) => handler(index, item, handler_extra_param_list, cb);
     });
     async.parallel(fnDict,
       (err, results) => callback(null, data_list.map((item, index) => results[index])));
@@ -175,9 +175,9 @@ function build_netease() {
     const target_url = 'https://music.163.com/weapi/v3/song/detail';
     const queryIds = [item.id];
     const d = {
-      c: '[' + queryIds.map(id => ('{"id":' + id + '}')).join(',') + ']',
-      ids: '[' + queryIds.join(',') + ']'
-    }
+      c: `[${queryIds.map((id) => (`{"id":${id}}`)).join(',')}]`,
+      ids: `[${queryIds.join(',')}]`,
+    };
     const data = _encrypted_request(d);
     hm({
       url: target_url,
@@ -186,8 +186,8 @@ function build_netease() {
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
       },
-    }).then((response)=>{
-      track_json = response.data.songs[0];
+    }).then((response) => {
+      const track_json = response.data.songs[0];
       const track = {
         id: `netrack_${track_json.id}`,
         title: track_json.name,
@@ -198,7 +198,7 @@ function build_netease() {
         source: 'netease',
         source_url: `http://music.163.com/#/song?id=${track_json.id}`,
         img_url: track_json.al.picUrl,
-        //url: `netrack_${track_json.id}`,
+        // url: `netrack_${track_json.id}`,
       };
       return callback(null, track);
     });
@@ -206,11 +206,11 @@ function build_netease() {
 
   function ng_parse_playlist_tracks(playlist_tracks, hm, se, callback) {
     const target_url = 'https://music.163.com/weapi/v3/song/detail';
-    const track_ids = playlist_tracks.map(i=>i.id);
+    const track_ids = playlist_tracks.map((i) => i.id);
     const d = {
-      c: '[' + track_ids.map(id => ('{"id":' + id + '}')).join(',') + ']',
-      ids: '[' + track_ids.join(',') + ']'
-    }
+      c: `[${track_ids.map((id) => (`{"id":${id}}`)).join(',')}]`,
+      ids: `[${track_ids.join(',')}]`,
+    };
     const data = _encrypted_request(d);
     hm({
       url: target_url,
@@ -219,8 +219,8 @@ function build_netease() {
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
       },
-    }).then((response)=>{
-      const tracks = response.data.songs.map(track_json=>({
+    }).then((response) => {
+      const tracks = response.data.songs.map((track_json) => ({
         id: `netrack_${track_json.id}`,
         title: track_json.name,
         artist: track_json.ar[0].name,
@@ -230,16 +230,16 @@ function build_netease() {
         source: 'netease',
         source_url: `http://music.163.com/#/song?id=${track_json.id}`,
         img_url: track_json.al.picUrl,
-        //url: `netrack_${track_json.id}`,
+        // url: `netrack_${track_json.id}`,
       }));
 
       return callback(null, tracks);
     });
   }
   function split_array(myarray, size) {
-    var count = Math.ceil(myarray.length / size);
-    var result = [];
-    for (var i = 0; i < count; i++) {
+    const count = Math.ceil(myarray.length / size);
+    const result = [];
+    for (let i = 0; i < count; i += 1) {
       result.push(myarray.slice(i * size, (i + 1) * size));
     }
     return result;
@@ -277,24 +277,24 @@ function build_netease() {
               title: res_data.playlist.name,
               source_url: `http://music.163.com/#/playlist?id=${list_id}`,
             };
-            var max_allow_size = 1000;
-            var trackIdsArray = split_array(res_data.playlist.trackIds, max_allow_size);
+            const max_allow_size = 1000;
+            const trackIdsArray = split_array(res_data.playlist.trackIds, max_allow_size);
 
-            function ng_parse_playlist_tracks_wrapper(trackIds, callback){
+            function ng_parse_playlist_tracks_wrapper(trackIds, callback) {
               return ng_parse_playlist_tracks(trackIds, hm, se, callback);
             }
 
-            async.concat(trackIdsArray, ng_parse_playlist_tracks_wrapper, function(err, tracks){
-              fn({tracks, info});
+            async.concat(trackIdsArray, ng_parse_playlist_tracks_wrapper, (err, tracks) => {
+              fn({ tracks, info });
             });
 
             // request every tracks to fetch song info
-            // async_process_list(res_data.playlist.trackIds, ng_render_playlist_result_item, [hm, se],
+            // async_process_list(res_data.playlist.trackIds,
+            // ng_render_playlist_result_item, [hm, se],
             //   (err, tracks) => fn({
             //     tracks,
             //     info,
             //   }));
-
           });
         });
       },
@@ -310,9 +310,9 @@ function build_netease() {
 
     const d = {
       ids: [song_id],
-      level: "standard",
-      encodeType: "aac",
-      csrf_token: ""
+      level: 'standard',
+      encodeType: 'aac',
+      csrf_token: '',
     };
     const data = _encrypted_request(d);
 
@@ -335,7 +335,6 @@ function build_netease() {
     });
   }
 
-
   function is_playable(song) {
     return (song.fee !== 4) && (song.fee !== 1);
   }
@@ -346,9 +345,9 @@ function build_netease() {
     const keyword = getParameterByName('keywords', url);
     const curpage = getParameterByName('curpage', url);
     const searchType = getParameterByName('type', url);
-    var ne_search_type = '1';
-    if(searchType === '1'){
-      ne_search_type = '1000'
+    let ne_search_type = '1';
+    if (searchType === '1') {
+      ne_search_type = '1000';
     }
     const req_data = {
       s: keyword,
@@ -367,10 +366,10 @@ function build_netease() {
           },
         }).then((response) => {
           const { data } = response;
-          var result = [];
-          var total = 0;
-          if(searchType === '0') {
-            result = data.result.songs.map(song_info => ({
+          let result = [];
+          let total = 0;
+          if (searchType === '0') {
+            result = data.result.songs.map((song_info) => ({
               id: `netrack_${song_info.id}`,
               title: song_info.name,
               artist: song_info.artists[0].name,
@@ -380,13 +379,12 @@ function build_netease() {
               source: 'netease',
               source_url: `http://music.163.com/#/song?id=${song_info.id}`,
               img_url: song_info.album.picUrl,
-              //url: `netrack_${song_info.id}`,
+              // url: `netrack_${song_info.id}`,
               disabled: !is_playable(song_info),
             }));
             total = data.result.songCount;
-          }
-          else if (searchType === '1'){
-            result = data.result.playlists.map(info => ({
+          } else if (searchType === '1') {
+            result = data.result.playlists.map((info) => ({
               id: `neplaylist_${info.id}`,
               title: info.name,
               source: 'netease',
@@ -394,27 +392,24 @@ function build_netease() {
               img_url: info.coverImgUrl,
               url: `neplaylist_${info.id}`,
               author: info.creator.nickname,
-              count: info.trackCount
+              count: info.trackCount,
             }));
             total = data.result.playlistCount;
           }
 
           return fn({
-            result: result,
-            total: total,
-            type: searchType
+            result,
+            total,
+            type: searchType,
           });
-        }).catch(()=>{
-          return fn({
-            result: [],
-            total: 0,
-            type: searchType
-          });
-        });
+        }).catch(() => fn({
+          result: [],
+          total: 0,
+          type: searchType,
+        }));
       },
     };
   }
-
 
   function ne_album(url, hm, se) { // eslint-disable-line no-unused-vars
     const album_id = getParameterByName('list_id', url).split('_').pop();
@@ -435,7 +430,7 @@ function build_netease() {
             source_url: `http://music.163.com/#/album?id=${data.album.id}`,
           };
 
-          const tracks = data.album.songs.map(song_info => ({
+          const tracks = data.album.songs.map((song_info) => ({
             id: `netrack_${song_info.id}`,
             title: song_info.name,
             artist: song_info.artists[0].name,
@@ -445,7 +440,7 @@ function build_netease() {
             source: 'netease',
             source_url: `http://music.163.com/#/song?id=${song_info.id}`,
             img_url: song_info.album.picUrl,
-            //url: `netrack_${song_info.id}`,
+            // url: `netrack_${song_info.id}`,
             disabled: !is_playable(song_info),
           }));
           return fn({
@@ -476,7 +471,7 @@ function build_netease() {
             source_url: `http://music.163.com/#/artist?id=${data.artist.id}`,
           };
 
-          const tracks = data.hotSongs.map(song_info => ({
+          const tracks = data.hotSongs.map((song_info) => ({
             id: `netrack_${song_info.id}`,
             title: song_info.name,
             artist: song_info.artists[0].name,
@@ -486,7 +481,7 @@ function build_netease() {
             source: 'netease',
             source_url: `http://music.163.com/#/song?id=${song_info.id}`,
             img_url: song_info.album.picUrl,
-            //url: `netrack_${song_info.id}`,
+            // url: `netrack_${song_info.id}`,
             disabled: !is_playable(song_info),
           }));
           return fn({
@@ -527,12 +522,13 @@ function build_netease() {
             lrc = res_data.lrc.lyric;
           }
           if (res_data.tlyric != null && res_data.tlyric.lyric != null) {
+            // eslint-disable-next-line no-control-regex
             tlrc = res_data.tlyric.lyric.replace(/(|\\)/g, '');
             tlrc = tlrc.replace(/[\u2005]+/g, ' ');
           }
           return fn({
             lyric: lrc,
-            tlyric: tlrc
+            tlyric: tlrc,
           });
         });
       },
@@ -546,22 +542,20 @@ function build_netease() {
     url = url.replace('music.163.com/#/my/m/music/', 'music.163.com/'); // eslint-disable-line no-param-reassign
     url = url.replace('music.163.com/#/m/', 'music.163.com/'); // eslint-disable-line no-param-reassign
     url = url.replace('music.163.com/#/', 'music.163.com/'); // eslint-disable-line no-param-reassign
-    if (url.search('//music.163.com/playlist') !== -1 ) {
-      let match = /\/\/music.163.com\/playlist\/([0-9]+)/.exec(url);
+    if (url.search('//music.163.com/playlist') !== -1) {
+      const match = /\/\/music.163.com\/playlist\/([0-9]+)/.exec(url);
       id = match ? match[1] : getParameterByName('id', url);
       result = {
         type: 'playlist',
         id: `neplaylist_${id}`,
       };
-    }
-    else if (url.search('//music.163.com/artist') !== -1) {
+    } else if (url.search('//music.163.com/artist') !== -1) {
       result = {
         type: 'playlist',
         id: `neartist_${getParameterByName('id', url)}`,
       };
-    }
-    else if (url.search('//music.163.com/album') !== -1) {
-      let match = /\/\/music.163.com\/album\/([0-9]+)/.exec(url);
+    } else if (url.search('//music.163.com/album') !== -1) {
+      const match = /\/\/music.163.com\/album\/([0-9]+)/.exec(url);
       id = match ? match[1] : getParameterByName('id', url);
       result = {
         type: 'playlist',

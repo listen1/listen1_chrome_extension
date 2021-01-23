@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* global async getParameterByName */
 function build_kugou() {
   function kg_convert_song(song) {
@@ -28,7 +29,7 @@ function build_kugou() {
   function async_process_list(data_list, handler, handler_extra_param_list, callback) {
     const fnDict = {};
     data_list.forEach((item, index) => {
-      fnDict[index] = cb => handler(index, item, handler_extra_param_list, cb);
+      fnDict[index] = (cb) => handler(index, item, handler_extra_param_list, cb);
     });
     async.parallel(fnDict,
       (err, results) => callback(null, data_list.map((item, index) => results[index])));
@@ -57,20 +58,19 @@ function build_kugou() {
     const keyword = getParameterByName('keywords', url);
     const curpage = getParameterByName('curpage', url);
     const searchType = getParameterByName('type', url);
-    if(searchType === '1'){
+    if (searchType === '1') {
       return {
         success(fn) {
           return fn({
             result: [],
             total: 0,
-            type: searchType
+            type: searchType,
           });
-        }
+        },
       };
     }
     return {
       success(fn) {
-
         const target_url = `${'http://songsearch.kugou.com/'
           + 'song_search_v2?keyword='}${keyword}&page=${curpage}`;
         hm({
@@ -85,16 +85,14 @@ function build_kugou() {
               (err, tracks) => fn({
                 result: tracks,
                 total: data.data.total,
-                type: searchType
+                type: searchType,
               }));
           })
-          .catch(()=>{
-            return fn({
-              result: [],
-              total: 0,
-              type: searchType
-            });
-          });;
+          .catch(() => fn({
+            result: [],
+            total: 0,
+            type: searchType,
+          }));
       },
     };
   }
@@ -277,14 +275,14 @@ function build_kugou() {
 
   function kg_bootstrap_track(sound, track, success, failure, hm, se) {
     const song_id = track.id.slice('kgtrack_'.length);
-    let target_url = `http://m.kugou.com/app/i/getSongInfo.php?cmd=playInfo&hash=${song_id}`;
+    const target_url = `http://m.kugou.com/app/i/getSongInfo.php?cmd=playInfo&hash=${song_id}`;
 
     hm({
       url: target_url,
       method: 'GET',
       transformResponse: undefined,
     }).then((response) => {
-      data = JSON.parse(response.data);
+      const data = JSON.parse(response.data);
       if (data.url !== '') {
         sound.url = data.url; // eslint-disable-line no-param-reassign
         success();
@@ -411,7 +409,7 @@ function build_kugou() {
         hm.get(target_url).then((response) => {
           const { data } = response;
           // const total = data.plist.total;
-          const result = data.plist.list.info.map(item => ({
+          const result = data.plist.list.info.map((item) => ({
             cover_img_url: item.imgurl ? item.imgurl.replace('{size}', '400') : '',
             title: item.specialname,
             id: `kgplaylist_${item.specialid}`,

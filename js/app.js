@@ -1,5 +1,6 @@
+/* eslint-disable no-shadow */
 /* global l1Player localStorage document Blob navigator */
-/* global $ angular FileReader isElectron */
+/* global $ angular FileReader isElectron getAllProviders */
 /* eslint-disable global-require */
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-param-reassign */
@@ -123,7 +124,6 @@ const main = () => {
     return '';
   }
 
-
   app.controller('ProfileController', ['$scope', '$translate', '$http', ($scope, $translate, $http) => {
     let defaultLang = 'zh_CN';
     const supportLangs = ['zh_CN', 'en_US'];
@@ -153,10 +153,10 @@ const main = () => {
       defaultTheme = localStorage.getObject('theme');
     }
     $scope.setTheme = (theme) => {
-      var themeFiles = {
-        'white': "css/iparanoid.css",
-        'black': "css/origin.css"
-      }
+      const themeFiles = {
+        white: 'css/iparanoid.css',
+        black: 'css/origin.css',
+      };
       // You can change the language during runtime
       if (themeFiles[theme] !== undefined) {
         document.getElementById('theme').href = themeFiles[theme];
@@ -211,7 +211,7 @@ const main = () => {
 
       // playlist window
       $scope.resetWindow = (offset) => {
-        if(offset === undefined){
+        if (offset === undefined) {
           offset = 0;
         }
         $scope.cover_img_url = 'images/loading.svg';
@@ -219,9 +219,9 @@ const main = () => {
         $scope.playlist_source_url = '';
         $scope.songs = [];
         $scope.window_type = 'list';
-        $timeout(()=>{
+        $timeout(() => {
           document.getElementsByClassName('browser')[0].scrollTop = offset;
-        },0);
+        }, 0);
       };
 
       $scope.showWindow = (url) => {
@@ -241,11 +241,11 @@ const main = () => {
 
         if (url === '/now_playing') {
           $scope.window_type = 'track';
-          $scope.window_url_stack.push({url:url, offset:offset});
+          $scope.window_url_stack.push({ url, offset });
           $scope.window_poped_url_stack = [];
           return;
         }
-        $scope.window_url_stack.push({url:url, offset:offset});
+        $scope.window_url_stack.push({ url, offset });
         $scope.window_poped_url_stack = [];
 
         loWeb.get(url).success((data) => {
@@ -261,7 +261,7 @@ const main = () => {
           $scope.list_id = data.info.id;
           $scope.is_mine = (data.info.id.slice(0, 2) === 'my');
           $scope.is_local = (data.info.id.slice(0, 2) === 'lm');
-          const isfavUrl = '/playlist_contains?type=favorite&list_id=' + data.info.id;
+          const isfavUrl = `/playlist_contains?type=favorite&list_id=${data.info.id}`;
           loWeb.get(isfavUrl).success((res) => {
             $scope.is_favorite = res.result;
           });
@@ -271,7 +271,7 @@ const main = () => {
       };
 
       $scope.closeWindow = (offset) => {
-        if(offset===undefined){
+        if (offset === undefined) {
           offset = 0;
         }
         $scope.is_window_hidden = 1;
@@ -281,7 +281,7 @@ const main = () => {
       };
 
       function refreshWindow(url, offset) {
-        if(offset === undefined){
+        if (offset === undefined) {
           offset = 0;
         }
         if (url === '/now_playing') {
@@ -296,17 +296,17 @@ const main = () => {
           $scope.playlist_source_url = data.info.source_url;
           $scope.is_mine = (data.info.id.slice(0, 2) === 'my');
           $scope.is_local = (data.info.id.slice(0, 2) === 'lm');
-          $timeout(()=>{
+          $timeout(() => {
             document.getElementsByClassName('browser')[0].scrollTop = offset;
           }, 0);
         });
       }
       $scope.popWindow = () => {
-        if ($scope.window_url_stack.length===0) {
+        if ($scope.window_url_stack.length === 0) {
           return;
         }
         let poped = $scope.window_url_stack.pop();
-        if ($scope.window_url_stack.length > 0 && $scope.window_url_stack[$scope.window_url_stack.length-1].url === '/now_playing'){
+        if ($scope.window_url_stack.length > 0 && $scope.window_url_stack[$scope.window_url_stack.length - 1].url === '/now_playing') {
           poped = $scope.window_url_stack.pop();
         }
         $scope.window_poped_url_stack.push(poped.url);
@@ -367,7 +367,7 @@ const main = () => {
           $scope.dialog_title = $translate.instant('_ADD_TO_PLAYLIST');
           const url = '/show_myplaylist';
           $scope.dialog_song = data;
-          loWeb.get(url).success((res) => { // eslint-disable-line no-param-reassgin
+          loWeb.get(url).success((res) => {
             $scope.myplaylist = res.result;
           });
         }
@@ -394,7 +394,7 @@ const main = () => {
         if (dialog_type === 6) {
           $scope.dialog_title = $translate.instant('_IMPORT_PLAYLIST');
           const url = '/show_myplaylist';
-          loWeb.get(url).success((res) => { // eslint-disable-line no-param-reassgin
+          loWeb.get(url).success((res) => {
             $scope.myplaylist = res.result;
           });
           $scope.dialog_type = 6;
@@ -518,11 +518,10 @@ const main = () => {
       };
 
       $scope.removeSongFromPlaylist = (song, list_id) => {
-        var url = '';
+        let url = '';
         if (list_id.slice(0, 2) === 'my') {
           url = '/remove_track_from_myplaylist';
-        }
-        else if (list_id.slice(0, 2) === 'lm') {
+        } else if (list_id.slice(0, 2) === 'lm') {
           url = '/remove_track_from_playlist';
         }
 
@@ -608,7 +607,7 @@ const main = () => {
           method: 'POST',
           data: $httpParamSerializerJQLike({
             list_id,
-            playlist_type: 'my'
+            playlist_type: 'my',
           }),
           headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
@@ -664,7 +663,7 @@ const main = () => {
               return;
             }
 
-            Object.keys(data).forEach(item => localStorage.setObject(item, data[item]));
+            Object.keys(data).forEach((item) => localStorage.setObject(item, data[item]));
             $rootScope.$broadcast('myplaylist:update');
             Notification.success('成功导入我的歌单');
           }
@@ -702,7 +701,7 @@ const main = () => {
         $scope.gistRestoreLoading = true;
         gist.importMySettingsFromGist(gistId).then((raw) => {
           gist.gist2json(raw, (data) => {
-            Object.keys(data).forEach(item => localStorage.setObject(item, data[item]));
+            Object.keys(data).forEach((item) => localStorage.setObject(item, data[item]));
             Notification.clearAll();
             Notification.success('导入我的歌单成功');
             $scope.gistRestoreLoading = false;
@@ -722,7 +721,6 @@ const main = () => {
           delay: null,
         });
       };
-
 
       $scope.showShortcuts = () => {
         hotkeys.toggleCheatSheet();
@@ -767,7 +765,7 @@ const main = () => {
           $scope.addFavoritePlaylist(list_id);
           $scope.is_favorite = 1;
         }
-      }
+      };
       $scope.addFavoritePlaylist = (list_id) => {
         loWeb.post({
           url: '/clone_playlist',
@@ -793,7 +791,7 @@ const main = () => {
           method: 'POST',
           data: $httpParamSerializerJQLike({
             list_id,
-            playlist_type: 'favorite'
+            playlist_type: 'favorite',
           }),
           headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
@@ -814,27 +812,27 @@ const main = () => {
             properties: ['openFile', 'multiSelections'],
             filters: [{
               name: 'Music Files',
-              extensions: ['mp3','flac','ape']
-            }]
-          }).then(result => {
-            if(result.canceled){
+              extensions: ['mp3', 'flac', 'ape'],
+            }],
+          }).then((result) => {
+            if (result.canceled) {
               return;
             }
 
-            result.filePaths.forEach(fp=>{
-              remoteFunctions.readAudioTags(fp).then((md)=>{
-                var track = {
-                  id: "lmtrack_" + fp,
+            result.filePaths.forEach((fp) => {
+              remoteFunctions.readAudioTags(fp).then((md) => {
+                const track = {
+                  id: `lmtrack_${fp}`,
                   title: md.common.title,
                   artist: md.common.artist,
-                  artist_id: "lmartist_" + md.common.artist,
+                  artist_id: `lmartist_${md.common.artist}`,
                   album: md.common.album,
-                  album_id: "lmalbum_" + md.common.album,
-                  source: "localmusic",
-                  source_url: "",
-                  img_url: "",
-                  //url: "lmtrack_"+fp,
-                  sound_url: "file://"+fp
+                  album_id: `lmalbum_${md.common.album}`,
+                  source: 'localmusic',
+                  source_url: '',
+                  img_url: '',
+                  // url: "lmtrack_"+fp,
+                  sound_url: `file://${fp}`,
                 };
 
                 const list_id = 'lmplaylist_reserve';
@@ -843,14 +841,14 @@ const main = () => {
                   url,
                   method: 'POST',
                   data: $httpParamSerializerJQLike({
-                    list_id: list_id,
+                    list_id,
                     tracks: JSON.stringify([track]),
                   }),
                   headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
                   },
                 }).success((res) => {
-                  const playlist = res.playlist;
+                  const { playlist } = res;
                   $scope.songs = playlist.tracks;
                   $scope.list_id = playlist.info.id;
                   $scope.cover_img_url = playlist.info.cover_img_url;
@@ -862,9 +860,9 @@ const main = () => {
                 });
               });
             });
-          }).catch(err => {
-            console.log(err)
-          })
+          }).catch((err) => {
+            console.log(err);
+          });
         }
       };
     },
@@ -916,7 +914,6 @@ const main = () => {
         $scope.isMac = require('electron').remote.process.platform === 'darwin';
       }
 
-
       function switchMode(mode) {
         // playmode 0:loop 1:shuffle 2:repeat one
         switch (mode) {
@@ -948,7 +945,6 @@ const main = () => {
         }
         // apply settings
         switchMode($scope.settings.playmode);
-
 
         $scope.volume = $scope.settings.volume;
         if ($scope.volume === null) {
@@ -1034,11 +1030,11 @@ const main = () => {
         let result = [];
         const timeResult = [];
 
-        if (typeof tlyric != 'string') {
+        if (typeof tlyric !== 'string') {
           tlyric = '';
         }
         const linesTrans = tlyric.split('\n');
-        let resultTrans = [];
+        const resultTrans = [];
         const timeResultTrans = [];
         if (tlyric === '') {
           linesTrans.splice(0);
@@ -1049,7 +1045,7 @@ const main = () => {
           return newstr;
         }
 
-        let process = (result, timeResult, translationFlag) => (line) => {
+        const process = (result, timeResult, translationFlag) => (line) => {
           const tagReg = /\[\D*:([^\]]+)\]/g;
           const tagRegResult = tagReg.exec(line);
           if (tagRegResult) {
@@ -1070,7 +1066,7 @@ const main = () => {
               seconds: parseInt(timeRegResult[1], 10) * 60 * 1000 // min
                 + parseInt(timeRegResult[2], 10) * 1000 // sec
                 + (timeRegResult[3] ? parseInt(rightPadding(timeRegResult[3], 3, '0'), 10) : 0), // microsec
-              translationFlag: translationFlag,
+              translationFlag,
             });
           }
         };
@@ -1085,7 +1081,7 @@ const main = () => {
           // Compare the 2 dates
           if (keyA < keyB) return -1;
           if (keyA > keyB) return 1;
-          if(!a.translationFlag) return -1;
+          if (!a.translationFlag) return -1;
           return 0;
         });
 
@@ -1184,7 +1180,7 @@ const main = () => {
                   if (msg.data.duration === 0) {
                     $scope.myProgress = 0;
                   } else {
-                    $scope.myProgress = msg.data.pos / msg.data.duration * 100;
+                    $scope.myProgress = (msg.data.pos / msg.data.duration) * 100;
                   }
                   const posSec = Math.floor(msg.data.pos);
                   const posStr = `${Math.floor(posSec / 60)}:${(`0${posSec % 60}`).substr(-2)}`;
@@ -1401,13 +1397,13 @@ const main = () => {
 
       $scope.toggleLyricTranslation = () => {
         $scope.enableLyricTranslation = !$scope.enableLyricTranslation;
-        localStorage.setObject('enable_lyric_translation', $scope.enableLyricTranslation)
-      }
+        localStorage.setObject('enable_lyric_translation', $scope.enableLyricTranslation);
+      };
 
       $scope.toggleLyricFloatingWindowTranslation = () => {
         $scope.enableLyricFloatingWindowTranslation = !$scope.enableLyricFloatingWindowTranslation;
-        localStorage.setObject('enable_lyric_floating_window_translation', $scope.enableLyricFloatingWindowTranslation)
-      }
+        localStorage.setObject('enable_lyric_floating_window_translation', $scope.enableLyricFloatingWindowTranslation);
+      };
 
       if (isElectron()) {
         require('electron').ipcRenderer.on('globalShortcut', (event, message) => {
@@ -1440,7 +1436,8 @@ const main = () => {
   app.controller('InstantSearchController', ['$scope', '$http', '$timeout', '$rootScope', 'loWeb', '$translate',
     ($scope, $http, $timeout, $rootScope, loWeb, $translate) => {
       // notice: douban is skipped, and add all music so array should plus 2
-      $scope.originpagelog = Array(getAllProviders().length + 2).fill(1);  // [网易,虾米,QQ,NULL,酷狗,酷我,bilibili, migu, allmusic]
+      // [网易,虾米,QQ,NULL,酷狗,酷我,bilibili, migu, allmusic]
+      $scope.originpagelog = Array(getAllProviders().length + 2).fill(1);
       $scope.tab = 0;
       $scope.keywords = '';
       $scope.loading = false;
@@ -1479,9 +1476,9 @@ const main = () => {
         $rootScope.$broadcast('search:keyword_change', $scope.keywords);
         loWeb.get(`/search?source=${getSourceName($scope.tab)}&keywords=${$scope.keywords}&curpage=${$scope.curpage}&type=${$scope.searchType}`).success((data) => {
           // update the textarea
-          data.result.forEach(r=>{
-            r.sourceName = $translate.instant(r.source)
-          })
+          data.result.forEach((r) => {
+            r.sourceName = $translate.instant(r.source);
+          });
           $scope.result = data.result;
           updateTotalPage(data.total);
           $scope.loading = false;
@@ -1517,11 +1514,12 @@ const main = () => {
           performSearch();
         }
       };
-      $scope.isActiveTab = tab => ($scope.tab === tab);
+      $scope.isActiveTab = (tab) => ($scope.tab === tab);
 
-      $scope.isSearchType = searchType => ($scope.searchType === searchType);
+      $scope.isSearchType = (searchType) => ($scope.searchType === searchType);
 
-      function renderSearchPage(){
+      // eslint-disable-next-line consistent-return
+      function renderSearchPage() {
         updateCurrentPage(-1);
         updateTotalPage(-1);
         if (!$scope.keywords || $scope.keywords.length === 0) {
@@ -1532,7 +1530,7 @@ const main = () => {
         performSearch();
       }
 
-      $scope.$watch('keywords', (tmpStr)=>{
+      $scope.$watch('keywords', (tmpStr) => {
         if (tmpStr === $scope.keywords) {
           // if searchStr is still the same..
           // go ahead and retrieve the data
@@ -1541,8 +1539,8 @@ const main = () => {
       });
 
       $scope.enterEvent = (e) => {
-        var keycode = window.event?e.keyCode:e.which;
-        if(keycode == 13){
+        const keycode = window.event ? e.keyCode : e.which;
+        if (keycode === 13) {
           // enter key
           renderSearchPage();
         }
@@ -1586,7 +1584,7 @@ const main = () => {
     },
   }));
 
-  app.directive('resize', $window => ((scope, element) => {
+  app.directive('resize', ($window) => ((scope, element) => {
     const w = angular.element($window);
     const changeHeight = () => {
       const headerHeight = 90;
@@ -1628,7 +1626,7 @@ const main = () => {
   ]);
 
   app.directive('openUrl', ['$window',
-    $window => ({
+    ($window) => ({
       restrict: 'EA',
       scope: {
         url: '=openUrl',
@@ -1636,10 +1634,9 @@ const main = () => {
       link(scope, element, attrs) {
         element.bind('click', (event) => {
           if (isElectron()) {
-            var shell = require('electron').shell;
+            const { shell } = require('electron');
             shell.openExternal(scope.url);
-          }
-          else {
+          } else {
             $window.open(scope.url, '_blank');
           }
         });
@@ -1843,8 +1840,7 @@ const main = () => {
         });
       });
 
-      $scope.isActiveTab = tab => ($scope.tab === tab);
-
+      $scope.isActiveTab = (tab) => ($scope.tab === tab);
 
       $scope.loadPlaylist = () => {
         loWeb.get(`/show_playlist?source=${getSourceName($scope.tab)}`).success((data) => {

@@ -1,5 +1,6 @@
-/* global chrome */
-/* global MD5 getParameterByName parseInt */
+/* eslint-disable radix */
+/* eslint-disable no-use-before-define */
+/* global MD5 getParameterByName isElectron cookieGet */
 /* eslint-disable no-param-reassign */
 function build_xiami() {
   function xm_get_token(callback) {
@@ -63,25 +64,25 @@ function build_xiami() {
     const signedToken = token.split('_')[0];
     const data = {
       header: {
-        //appId: 200,
-        //appVersion: 1000000,
-        //callId: ,
-        //network: 1,
+        // appId: 200,
+        // appVersion: 1000000,
+        // callId: ,
+        // network: 1,
         platformId: 'h5',
-        //remoteIp: '192.168.1.101',
-        //resolution: '1178*778',
+        // remoteIp: '192.168.1.101',
+        // resolution: '1178*778',
       },
       model: params,
     };
     const request_str = JSON.stringify({
       requestStr: JSON.stringify(data),
     });
-    let sign = MD5(`${signedToken}&${t.toString()}&${appKey}&${request_str}`);
+    const sign = MD5(`${signedToken}&${t.toString()}&${appKey}&${request_str}`);
     return {
       appKey,
       t,
       request_str,
-      sign
+      sign,
     };
   }
 
@@ -122,12 +123,12 @@ function build_xiami() {
       const api = 'mtop.alimusic.music.songservice.getsongdetail';
       const song_id = track.id.slice('xmtrack_'.length);
       const params = {
-        songId:song_id,
+        songId: song_id,
       };
       xm_cookie_get(hm, api, params, (response) => {
         const { data } = response.data.data;
         if (data.songDetail.listenFiles.length > 0) {
-          //sound.url = datalistenFile || data[1].listenFile;
+          // sound.url = datalistenFile || data[1].listenFile;
           sound.url = get_highest_quality(data.songDetail.listenFiles);
           success();
         } else {
@@ -151,7 +152,7 @@ function build_xiami() {
       source: 'xiami',
       source_url: `https://www.xiami.com/song/${song_info.songId}`,
       img_url: song_info.albumLogo,
-      //url: `xmtrack_${song_info.songId}`,
+      // url: `xmtrack_${song_info.songId}`,
       lyric_url: song_info.lyricInfo ? song_info.lyricInfo.lyricFile : '',
     };
     if (song_info.listenFiles && song_info.listenFiles.length > 0) {
@@ -163,10 +164,10 @@ function build_xiami() {
   }
 
   function get_highest_quality(arr) {
-    var max = 0;
-    var url = "";
-    for (var i = 0; i < arr.length; i++) {
-      if (arr[i].fileSize > max && arr[i].format != 'ape') {
+    let max = 0;
+    let url = '';
+    for (let i = 0; i < arr.length; i += 1) {
+      if (arr[i].fileSize > max && arr[i].format !== 'ape') {
         max = arr[i].fileSize;
         url = arr[i].listenFile;
       }
@@ -183,7 +184,7 @@ function build_xiami() {
           listId: parseInt(list_id, 10),
         };
         xm_cookie_get(hm, api, params, (response) => {
-          let { data } = response.data.data;
+          const { data } = response.data.data;
           const info = {
             cover_img_url: xm_get_low_quality_img_url(data.collectDetail.collectLogo),
             title: data.collectDetail.collectName,
@@ -192,13 +193,11 @@ function build_xiami() {
           };
           const sequence = data.collectDetail.allSongs;
           const trackDict = {};
-          data.collectDetail.songs.forEach(item => {
-            trackDict[item.songId] = xm_convert_song(item)
+          data.collectDetail.songs.forEach((item) => {
+            trackDict[item.songId] = xm_convert_song(item);
           });
 
-          const tracks = sequence.map(songid=>{
-            return trackDict[songid.toString()];
-          })
+          const tracks = sequence.map((songid) => trackDict[songid.toString()]);
 
           return fn({
             tracks,
@@ -216,9 +215,9 @@ function build_xiami() {
     const params = {
       key: keyword,
       pagingVO: {
-        page :curpage,
-        pageSize: 20
-      }
+        page: curpage,
+        pageSize: 20,
+      },
     };
     let api = '';
     switch (searchType) {
@@ -227,18 +226,21 @@ function build_xiami() {
         break;
       case '1':
         api = 'mtop.alimusic.search.searchservice.searchcollects';
+        break;
+      default:
+        break;
     }
     return {
       success(fn) {
         xm_cookie_get(hm, api, params, (response) => {
           let result = [];
           let total = 0;
-          let { data } = response.data.data;
+          const { data } = response.data.data;
           if (searchType === '0') {
-            result = data.songs.map(item => xm_convert_song(item));
+            result = data.songs.map((item) => xm_convert_song(item));
             total = data.pagingVO.count;
           } else if (searchType === '1') {
-            result = data.collects.map(item => ({
+            result = data.collects.map((item) => ({
               id: `xmplaylist_${item.listId}`,
               title: item.collectName,
               source: 'xiami',
@@ -246,14 +248,14 @@ function build_xiami() {
               img_url: item.collectLogo,
               url: `xmplaylist_${item.listId}`,
               author: item.userName,
-              count: item.songCount
+              count: item.songCount,
             }));
             total = data.pagingVO.count;
           }
           return fn({
-            result: result,
-            total: total,
-            type: searchType
+            result,
+            total,
+            type: searchType,
           });
         });
       },
@@ -276,7 +278,7 @@ function build_xiami() {
             id: `xmalbum_${album_id}`,
             source_url: `https://www.xiami.com/album/${album_id}`,
           };
-          const tracks = data.albumDetail.songs.map(item => xm_convert_song(item));
+          const tracks = data.albumDetail.songs.map((item) => xm_convert_song(item));
           return fn({
             tracks,
             info,
@@ -305,18 +307,19 @@ function build_xiami() {
 
           const offset = getParameterByName('offset', url);
           const page = offset / 50 + 1;
-          const pageSize = 50; 
-          const category = 0;
+          const pageSize = 50;
+          // const category = 0;
           const api = 'mtop.alimusic.music.songservice.getartistsongs';
           const params = {
             artistId: artist_id,
             pagingVO: {
               page,
-              pageSize
-            }
+              pageSize,
+            },
           };
+          // eslint-disable-next-line no-shadow
           xm_cookie_get(hm, api, params, (response) => {
-            const tracks = response.data.data.data.songs.map(item => xm_convert_song(item));
+            const tracks = response.data.data.data.songs.map((item) => xm_convert_song(item));
             return fn({
               tracks,
               info,
@@ -330,128 +333,129 @@ function build_xiami() {
   function xm_lyric(url, hm, se) { // eslint-disable-line no-unused-vars
     const lyric_url = getParameterByName('lyric_url', url);
     return {
+      // eslint-disable-next-line consistent-return
       success(fn) {
         if (lyric_url) {
           hm.get(lyric_url).then((response) => {
             const data = xm_generate_translation(response.data);
             return fn({
               lyric: data.lrc,
-              tlyric: data.tlrc
+              tlyric: data.tlrc,
             });
           });
         } else {
           return fn({
             lyric: '',
-            tlyric: ''
+            tlyric: '',
           });
         }
       },
     };
   }
 
-    function tag2millisecond(time_tag) {
-    var reg_time_tag_grouped = /\[(\d{2,}):(\d{2})(?:\.(\d{1,3}))?\]/g;
-    var r = reg_time_tag_grouped.exec(time_tag);
-    var minute = parseInt(r[1]);
-    var second = parseInt(r[2]);
-    var millisecond = 0;
+  function tag2millisecond(time_tag) {
+    const reg_time_tag_grouped = /\[(\d{2,}):(\d{2})(?:\.(\d{1,3}))?\]/g;
+    const r = reg_time_tag_grouped.exec(time_tag);
+    const minute = parseInt(r[1]);
+    const second = parseInt(r[2]);
+    let millisecond = 0;
     if (r.length >= 4) {
       millisecond = parseInt(r[3]);
     }
-    var result = minute * 60000 + second * 1000 + millisecond;
+    const result = minute * 60000 + second * 1000 + millisecond;
     return result;
   }
 
   function zpad(n, width, z) {
-    z = z || "0";
-    n = n + "";
+    z = z || '0';
+    n += '';
     return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
   }
 
   function millisecond2tag(v) {
-    var t = Math.abs(v / 1000);
-    var h = Math.floor(t / 3600);
-    t = t - h * 3600;
-    var m = Math.floor(t / 60);
-    t = t - m * 60;
-    var s = Math.floor(t);
-    var ms = t - s;
-    var str =
-      (h ? zpad(h, 2) + ":" : "") +
-      zpad(m, 2) +
-      ":" +
-      zpad(s, 2) +
-      "." +
-      zpad(Math.floor(ms * 1000), 3);
-    return "[" + str + "]";
+    let t = Math.abs(v / 1000);
+    const h = Math.floor(t / 3600);
+    t -= h * 3600;
+    const m = Math.floor(t / 60);
+    t -= m * 60;
+    const s = Math.floor(t);
+    const ms = t - s;
+    const str = `${(h ? `${zpad(h, 2)}:` : '')
+      + zpad(m, 2)
+    }:${
+      zpad(s, 2)
+    }.${
+      zpad(Math.floor(ms * 1000), 3)}`;
+    return `[${str}]`;
   }
 
   function xm_generate_translation(plain) {
-    var reg_xtrans_tag = /\[x-trans\]/;
-    var reg_durning_tag = /<\d+>/g;
+    const reg_xtrans_tag = /\[x-trans\]/;
+    const reg_durning_tag = /<\d+>/g;
 
-    var has_translate = plain.search(reg_xtrans_tag) !== -1;
-    var has_perword_timestamp = reg_durning_tag.test(plain);
+    const has_translate = plain.search(reg_xtrans_tag) !== -1;
+    const has_perword_timestamp = reg_durning_tag.test(plain);
     if (!has_translate && !has_perword_timestamp) {
       return {
         lrc: plain,
-        tlrc: "",
+        tlrc: '',
       };
     }
 
     // 处理xtrans标记，替换为上一行的时间轴标记，并加入tlrc结果中
-    var lrc = "";
-    var tlrc = "";
-    var plain_array = plain.split("\n");
-    var i = 0;
-    var last_time_tag = "[00:00.000]";
-    var last_end_timestamp = 0;
-    var MAX_ALLOW_GAP_MILLISECOND = 1000;
+    let lrc = '';
+    let tlrc = '';
+    const plain_array = plain.split('\n');
+    let i = 0;
+    let last_time_tag = '[00:00.000]';
+    let last_end_timestamp = 0;
+    const MAX_ALLOW_GAP_MILLISECOND = 1000;
 
     while (i < plain_array.length) {
-      var line = plain_array[i];
-      var reg_time_tag = /(\[\d{2,}:\d{2}(?:\.\d{1,3})?\])/g;
-      var time_tag_info = line.match(reg_time_tag);
+      const line = plain_array[i];
+      const reg_time_tag = /(\[\d{2,}:\d{2}(?:\.\d{1,3})?\])/g;
+      const time_tag_info = line.match(reg_time_tag);
       if (time_tag_info) {
         // 之前结束是否过早，是否需要添加空白行
-        var current_time_tag = time_tag_info[0];
-        var current_millisecond = tag2millisecond(current_time_tag);
+        const current_time_tag = time_tag_info[0];
+        const current_millisecond = tag2millisecond(current_time_tag);
         if (
-          current_millisecond - last_end_timestamp >=
-          MAX_ALLOW_GAP_MILLISECOND
+          current_millisecond - last_end_timestamp
+          >= MAX_ALLOW_GAP_MILLISECOND
         ) {
-          var placeholder_time_tag = millisecond2tag(last_end_timestamp);
-          lrc += placeholder_time_tag + "\n";
+          const placeholder_time_tag = millisecond2tag(last_end_timestamp);
+          lrc += `${placeholder_time_tag}\n`;
           if (i - 1 >= 0 && plain_array[i - 1].match(reg_xtrans_tag)) {
             // 上一行是翻译行
-            tlrc += placeholder_time_tag + "\n";
+            tlrc += `${placeholder_time_tag}\n`;
           }
         }
         // 添加本行时间轴
-        lrc += line.replace(reg_durning_tag, "") + "\n";
+        lrc += `${line.replace(reg_durning_tag, '')}\n`;
         last_time_tag = current_time_tag;
         // 计算本行结束时间轴
-        var durning = 0;
+        let durning = 0;
+        // eslint-disable-next-line
         line.match(reg_durning_tag) && line.match(reg_durning_tag).forEach((s) => {
-          durning += parseInt(s.replace(/[^\d]/g, ""));
+          durning += parseInt(s.replace(/[^\d]/g, ''));
         });
         last_end_timestamp = tag2millisecond(last_time_tag) + durning;
       }
-      var xtrans_tag = line.match(reg_xtrans_tag);
+      const xtrans_tag = line.match(reg_xtrans_tag);
       if (xtrans_tag) {
-        tlrc +=
-          line
+        tlrc
+          += `${line
             .replace(reg_xtrans_tag, last_time_tag)
-            .replace(reg_durning_tag, "") + "\n";
+            .replace(reg_durning_tag, '')}\n`;
       }
       i += 1;
     }
     return {
-      lrc: lrc,
-      tlrc: tlrc,
+      lrc,
+      tlrc,
     };
   }
-  
+
   function xm_parse_url(url) {
     let result;
     const match = /\/\/www.xiami.com\/collect\/([0-9]+)/.exec(url);

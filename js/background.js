@@ -1,4 +1,4 @@
-/* global chrome Github */
+/* global Github */
 chrome.browserAction.onClicked.addListener((tab) => { // eslint-disable-line no-unused-vars
   chrome.tabs.create({
     url: chrome.extension.getURL('listen1.html'),
@@ -6,7 +6,6 @@ chrome.browserAction.onClicked.addListener((tab) => { // eslint-disable-line no-
     // Tab opened.
   });
 });
-
 
 function hack_referer_header(details) {
   const replace_referer = true;
@@ -25,15 +24,15 @@ function hack_referer_header(details) {
     referer_value = 'https://gist.githubusercontent.com/';
   }
 
-  if (details.url.indexOf(".xiami.com/") !== -1) {
+  if (details.url.indexOf('.xiami.com/') !== -1) {
     add_origin = false;
     add_referer = false;
-    //referer_value = "https://www.xiami.com";
+    // referer_value = "https://www.xiami.com";
   }
 
   if (details.url.indexOf('c.y.qq.com/') !== -1) {
     referer_value = 'https://y.qq.com/';
-    origin_value = "https://y.qq.com";
+    origin_value = 'https://y.qq.com';
   }
   if ((details.url.indexOf('i.y.qq.com/') !== -1)
     || (details.url.indexOf('qqmusic.qq.com/') !== -1)
@@ -50,7 +49,7 @@ function hack_referer_header(details) {
     referer_value = 'http://www.kuwo.cn/';
   }
 
-  if (details.url.indexOf('.bilibili.com/') !== -1 || details.url.indexOf(".bilivideo.com/") !== -1) {
+  if (details.url.indexOf('.bilibili.com/') !== -1 || details.url.indexOf('.bilivideo.com/') !== -1) {
     referer_value = 'https://www.bilibili.com/';
     replace_origin = false;
     add_origin = false;
@@ -59,7 +58,7 @@ function hack_referer_header(details) {
   if (details.url.indexOf('.migu.cn') !== -1) {
     referer_value = 'http://music.migu.cn/v3/music/player/audio?from=migu';
   }
-  
+
   if (details.url.indexOf('m.music.migu.cn') !== -1) {
     referer_value = 'https://m.music.migu.cn/';
   }
@@ -77,7 +76,7 @@ function hack_referer_header(details) {
     add_referer = false;
   }
 
-  if (origin_value == "") {
+  if (origin_value === '') {
     origin_value = referer_value;
   }
 
@@ -116,7 +115,7 @@ function hack_referer_header(details) {
     });
   }
 
-    if ((!isUASet) && (ua_value !== '')) {
+  if ((!isUASet) && (ua_value !== '')) {
     headers.push({
       name: 'User-Agent',
       value: ua_value,
@@ -127,17 +126,16 @@ function hack_referer_header(details) {
   return blockingResponse;
 }
 
-const urls = ['*://music.163.com/*', '*://*.xiami.com/*', '*://i.y.qq.com/*', '*://c.y.qq.com/*', '*://*.kugou.com/*', '*://*.kuwo.cn/*', '*://*.bilibili.com/*', "*://*.bilivideo.com/*", '*://*.migu.cn/*', '*://*.githubusercontent.com/*'];
+const urls = ['*://music.163.com/*', '*://*.xiami.com/*', '*://i.y.qq.com/*', '*://c.y.qq.com/*', '*://*.kugou.com/*', '*://*.kuwo.cn/*', '*://*.bilibili.com/*', '*://*.bilivideo.com/*', '*://*.migu.cn/*', '*://*.githubusercontent.com/*'];
 
 try {
   chrome.webRequest.onBeforeSendHeaders.addListener(hack_referer_header, {
-    urls: urls,
+    urls,
   }, ['requestHeaders', 'blocking', 'extraHeaders']);
-}
-catch (err) {
+} catch (err) {
   // before chrome v72, extraHeader is not supported
   chrome.webRequest.onBeforeSendHeaders.addListener(hack_referer_header, {
-    urls: urls,
+    urls,
   }, ['requestHeaders', 'blocking']);
 }
 
@@ -157,7 +155,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
 // at end of background.js
 chrome.commands.onCommand.addListener((command) => {
-  const [viewWindow] = chrome.extension.getViews().filter(p => p.location.href.endsWith('listen1.html'));
+  const [viewWindow] = chrome.extension.getViews().filter((p) => p.location.href.endsWith('listen1.html'));
 
   switch (command) {
     case 'play_next':

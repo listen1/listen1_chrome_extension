@@ -1,19 +1,10 @@
-/* global Storage $ localStorage window */
+/* global  $ localStorage */
 function github() {
   const OAUTH_URL = 'https://github.com/login/oauth';
   const API_URL = 'https://api.github.com';
 
   const client_id = 'e099a4803bb1e2e773a3';
   const client_secret = '81fbfc45c65af8c0fbf2b4dae6f23f22e656cfb8';
-
-  localStorage.__proto__.setObject = function setObject(key, value) {
-    this.setItem(key, JSON.stringify(value));
-  };
-
-  localStorage.__proto__.getObject = function getObject(key) {
-    const value = this.getItem(key);
-    return value && JSON.parse(value);
-  };
 
   const Github = {
     status: 0,
@@ -101,7 +92,7 @@ function github() {
 
     isLoggedIn: () => localStorage.getObject('githubOauthAccessKey') !== null,
 
-    deparam: params => (new URLSearchParams(params).keys).reduce((r, keys) => {
+    deparam: (params) => (new URLSearchParams(params).keys).reduce((r, keys) => {
       r[keys] = params[keys]; // eslint-disable-line no-param-reassign
       return r;
     }, {}),
