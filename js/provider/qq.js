@@ -5,7 +5,7 @@ function build_qq() {
     return parser.parseFromString(value, 'text/html').body.textContent;
   }
 
-  function qq_show_playlist(url, hm) {
+  function qq_show_playlist(url) {
     const offset = Number(getParameterByName('offset', url)) || 0;
     const target_url = 'https://c.y.qq.com/splcloud/fcgi-bin/fcg_get_diss_by_tag.fcg'
       + `?picmid=1&rnd=${Math.random()}&g_tk=732560869`
@@ -15,13 +15,8 @@ function build_qq() {
 
     return {
       success: (fn) => {
-        hm({
-          url: target_url,
-          method: 'GET',
-          transformResponse: undefined,
-        }).then((response) => {
-          let { data } = response;
-          data = JSON.parse(data);
+        axios.get(target_url).then((response) => {
+          const { data } = response;
 
           const playlists = data.data.list.map(item => ({
             cover_img_url: item.imgurl,
@@ -84,7 +79,7 @@ function build_qq() {
     return d;
   }
 
-  function qq_get_playlist(url, hm, se) { // eslint-disable-line no-unused-vars
+  function qq_get_playlist(url) { // eslint-disable-line no-unused-vars
     const list_id = getParameterByName('list_id', url).split('_').pop();
 
     return {
@@ -94,15 +89,9 @@ function build_qq() {
           + `&nosign=1&disstid=${list_id}&g_tk=5381&loginUin=0&hostUin=0`
           + '&format=json&inCharset=GB2312&outCharset=utf-8&notice=0'
           + '&platform=yqq&needNewCode=0';
-        hm({
-          url: target_url,
-          method: 'GET',
-          transformResponse: undefined,
-        })
+        axios.get(target_url)
           .then((response) => {
-            let { data } = response;
-            //data = data.slice('jsonCallback('.length, -')'.length);
-            data = JSON.parse(data);
+            const { data } = response;
 
             const info = {
               cover_img_url: data.cdlist[0].logo,
@@ -121,7 +110,7 @@ function build_qq() {
     };
   }
 
-  function qq_album(url, hm) {
+  function qq_album(url) {
     const album_id = getParameterByName('list_id', url).split('_').pop();
 
     return {
@@ -130,15 +119,9 @@ function build_qq() {
           + `?platform=h5page&albummid=${album_id}&g_tk=938407465`
           + '&uin=0&format=json&inCharset=utf-8&outCharset=utf-8'
           + '&notice=0&platform=h5&needNewCode=1&_=1459961045571';
-        hm({
-          url: target_url,
-          method: 'GET',
-          transformResponse: undefined,
-        })
+        axios.get(target_url)
           .then((response) => {
-            let { data } = response;
-            //data = data.slice(' asonglist1459961045566('.length, -')'.length);
-            data = JSON.parse(data);
+            const { data } = response;
 
             const info = {
               cover_img_url: qq_get_image_url(album_id, 'album'),
@@ -157,7 +140,7 @@ function build_qq() {
     };
   }
 
-  function qq_artist(url, hm) {
+  function qq_artist(url) {
     const artist_id = getParameterByName('list_id', url).split('_').pop();
 
     return {
@@ -167,15 +150,9 @@ function build_qq() {
           + '&g_tk=938407465&uin=0&format=json&'
           + 'inCharset=utf-8&outCharset=utf-8&notice=0&platform='
           + 'h5&needNewCode=1&from=h5&_=1459960621777';
-        hm({
-          url: target_url,
-          method: 'GET',
-          transformResponse: undefined,
-        })
+        axios.get(target_url)
           .then((response) => {
-            let { data } = response;
-            //data = data.slice(' ssonglist1459960621772('.length, -')'.length);
-            data = JSON.parse(data);
+            const { data } = response;
 
             const info = {
               cover_img_url: qq_get_image_url(artist_id, 'artist'),
@@ -194,7 +171,7 @@ function build_qq() {
     };
   }
 
-  function qq_search(url, hm, se) { // eslint-disable-line no-unused-vars
+  function qq_search(url) { // eslint-disable-line no-unused-vars
     const keyword = getParameterByName('keywords', url);
     const curpage = getParameterByName('curpage', url);
     const searchType = getParameterByName('type', url);
@@ -215,22 +192,14 @@ function build_qq() {
     }
     return {
       success(fn) {
-        hm({
-          url: target_url,
-          method: 'GET',
-          transformResponse: undefined,
-        }).then((response) => {
-          let { data } = response;
+        axios.get(target_url).then((response) => {
+          const { data } = response;
           var result = [];
           var total = 0;
           if (searchType === '0') {
-            //data = data.slice('jsonp4('.length, -')'.length);
-            data = JSON.parse(data);
             result = data.data.song.list.map(item => qq_convert_song(item));
             total = data.data.song.totalnum;
           } else if (searchType === '1') {
-            //data = data.slice('MusicJsonCallback('.length, -')'.length);
-            data = JSON.parse(data);
             result = data.data.list.map(info => ({
                 id: `qqplaylist_${info.dissid}`,
                 title: htmlDecode(info.dissname),
@@ -261,7 +230,7 @@ function build_qq() {
   }
 
   // eslint-disable-next-line no-unused-vars
-  function qq_bootstrap_track(sound, track, success, failure, hm, se) {
+  function qq_bootstrap_track(sound, track, success, failure) {
     const songId = track.id.slice('qqtrack_'.length);
     const target_url = 'https://u.y.qq.com/cgi-bin/musicu.fcg?loginUin=0&'
       + 'hostUin=0&format=json&inCharset=utf8&outCharset=utf-8&notice=0&'
@@ -271,14 +240,9 @@ function build_qq() {
       songId}%22%5D%2C%22songtype%22%3A%5B0%5D%2C%22uin%22%3A%220%22%2C%22loginflag%22`
       + '%3A1%2C%22platform%22%3A%2220%22%7D%7D%2C%22comm%22%3A%7B%22uin%22%3A0%2C%22'
       + 'format%22%3A%22json%22%2C%22ct%22%3A20%2C%22cv%22%3A0%7D%7D';
-    hm({
-      url: target_url,
-      method: 'GET',
-      transformResponse: undefined,
-    })
+    axios.get(target_url)
       .then((response) => {
-        let { data } = response;
-        data = JSON.parse(data);
+        const { data } = response;
         if(data.req_0.data.midurlinfo[0].purl==''){
           // vip
           return failure();
@@ -299,20 +263,15 @@ function build_qq() {
     return buf;
   }
 
-  function qq_lyric(url, hm, se) { // eslint-disable-line no-unused-vars
+  function qq_lyric(url) { // eslint-disable-line no-unused-vars
     const track_id = getParameterByName('track_id', url).split('_').pop();
     // use chrome extension to modify referer.
     const target_url = `https://i.y.qq.com/lyric/fcgi-bin/fcg_query_lyric_new.fcg?`
       + `songmid=${track_id}&g_tk=5381&format=json&inCharset=utf8&outCharset=utf-8&nobase64=1`;
     return {
       success(fn) {
-        hm({
-          url: target_url,
-          method: 'GET',
-          transformResponse: undefined,
-        }).then((response) => {
-          let { data } = response;
-          data = JSON.parse(data);
+        axios.get(target_url).then((response) => {
+          const { data } = response;
           let lrc = data.lyric || '';
           let tlrc = data.trans.replace(/\/\//g,'') || '';
           return fn({
@@ -354,15 +313,15 @@ function build_qq() {
   }
 
 
-  function get_playlist(url, hm, se) {
+  function get_playlist(url) {
     const list_id = getParameterByName('list_id', url).split('_')[0];
     switch (list_id) {
       case 'qqplaylist':
-        return qq_get_playlist(url, hm, se);
+        return qq_get_playlist(url);
       case 'qqalbum':
-        return qq_album(url, hm, se);
+        return qq_album(url);
       case 'qqartist':
-        return qq_artist(url, hm, se);
+        return qq_artist(url);
       default:
         return null;
     }
