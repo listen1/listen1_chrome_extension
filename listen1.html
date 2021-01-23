@@ -23,7 +23,6 @@
     <script src="js/vendor/angular-translate-loader-static-files.min.js"></script>
     <script type="text/javascript" src="js/vendor/jquery-3.3.1.min.js"></script>
     <script type="text/javascript" src="js/vendor/axios.min.js"></script>
-    <script type="text/javascript" src="js/vendor/angular-soundmanager2.js"></script>
     <script type="text/javascript" src="js/vendor/angular-ui-notification.js"></script>
     <script type="text/javascript" src="js/vendor/hotkeys.js"></script>
     <script type="text/javascript" src="js/vendor/md5.js"></script>
@@ -47,6 +46,7 @@
     <script type="text/javascript" src="js/provider/localmusic.js"></script>
     <script type="text/javascript" src="js/myplaylist.js"></script>
     <script type="text/javascript" src="js/loweb.js"></script>
+    <script type="text/javascript" src="js/l1_player.js"></script>
     <script type="text/javascript" src="js/app.js"></script>
 
     <script>if (window.module) module = window.module;</script>
@@ -278,7 +278,7 @@
                               <li ng-if="searchType===1" ng-repeat="playlist in result" ng-class-odd="'odd'" ng-class-even="'even'" class="playlist-result">
                                   <div class="title">
                                     <a ng-click="showPlaylist(playlist.id)">
-                                      <img ng-src="{{ playlist.img_url }}"/>
+                                      <img ng-src="{{ playlist.img_url }}" err-src="https://y.gtimg.cn/mediastyle/global/img/playlist_300.png"/>
                                       <div>{{ playlist.title |limitTo:30}}<span ng-if="isActiveTab(8)" class="source playlist">{{playlist.sourceName}}</span></div>
                                     </a>
                                   </div>
@@ -548,7 +548,6 @@
                         </div>
                         <div class="playbar">
                             <div class="barbg" id="progressbar" mode="play" draggable="">
-                                <!-- <div class="rdy" ng-style="{width : myProgress + '%' }"></div>-->
                                 <div class="cur" ng-style="{width : myProgress + '%' }"><span class="btn"><i></i></span></div>
                             </div>
                         </div>
@@ -598,8 +597,6 @@
     </div>
     </div>
     </div>
-    <!-- init soundManager2 player-->
-    <sound-manager></sound-manager>
 </body>
 
 </html>

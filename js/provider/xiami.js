@@ -190,7 +190,16 @@ function build_xiami() {
             id: `xmplaylist_${list_id}`,
             source_url: `https://www.xiami.com/collect/${list_id}`,
           };
-          const tracks = data.collectDetail.songs.map(item => xm_convert_song(item));
+          const sequence = data.collectDetail.allSongs;
+          const trackDict = {};
+          data.collectDetail.songs.forEach(item => {
+            trackDict[item.songId] = xm_convert_song(item)
+          });
+
+          const tracks = sequence.map(songid=>{
+            return trackDict[songid.toString()];
+          })
+
           return fn({
             tracks,
             info,
