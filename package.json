@@ -17,8 +17,8 @@
   },
   "homepage": "https://github.com/Dumeng/listen1_chrome_extension#readme",
   "devDependencies": {
-    "eslint": "^5.11.1",
+    "eslint": "^7.17.0",
     "eslint-config-airbnb-base": "^13.1.0",
-    "eslint-plugin-import": "^2.14.0"
+    "eslint-plugin-import": "^2.22.1"
   }
 }
