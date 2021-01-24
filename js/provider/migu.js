@@ -391,9 +391,7 @@ function build_migu() {
   function get_playlist(url) {
     const list_id = getParameterByName('list_id', url).split('_')[0];
     switch (list_id) {
-      ca
-      
-      'mgplaylist':
+      case 'mgplaylist':
         return mg_get_playlist(url);
       case 'mgalbum':
         return mg_album(url);
