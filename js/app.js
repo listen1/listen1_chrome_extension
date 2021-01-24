@@ -4,6 +4,30 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-param-reassign */
 /* eslint-disable import/no-unresolved */
+
+class ngPromise extends Promise {
+  constructor(executor) {
+    super((_resolve, _reject) => {
+      const resolve = (data) => {
+        const res = _resolve(data);
+        if (angular.element(document.body).injector()) {
+          angular.element(document.body).injector().get('$rootScope').$applyAsync();
+        }
+        return res;
+      };
+      const reject = (err) => {
+        const rej = _reject(err);
+        if (angular.element(document.body).injector()) {
+          angular.element(document.body).injector().get('$rootScope').$applyAsync();
+        }
+        return rej;
+      };
+      return executor(resolve, reject);
+    });
+  }
+}
+window.Promise = ngPromise;
+
 const main = () => {
   const proto = Object.getPrototypeOf(localStorage);
   proto.getObject = function getObject(key) {
