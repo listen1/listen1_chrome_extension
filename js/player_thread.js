@@ -421,11 +421,13 @@
         playedFrom: this.playedFrom,
         playing: this.playing,
       };
-      navigator.mediaSession.setPositionState({
-        duration: this.currentHowl ? this.currentHowl.duration() : 0,
-        playbackRate: this.currentHowl ? this.currentHowl.rate() : 1,
-        position: this.currentHowl ? this.currentHowl.seek() : 0,
-      });
+      if ('setPositionState' in navigator.mediaSession) {
+        navigator.mediaSession.setPositionState({
+          duration: this.currentHowl ? this.currentHowl.duration() : 0,
+          playbackRate: this.currentHowl ? this.currentHowl.rate() : 1,
+          position: this.currentHowl ? this.currentHowl.seek() : 0,
+        });
+      };
       playerSendMessage(mode, {
         type: 'BG_PLAYER:FRAME_UPDATE',
         data,
