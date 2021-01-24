@@ -14,12 +14,12 @@ function getFrontPlayer() {
 }
 
 function getBackgroundPlayer() {
-  return chrome.extension.getBackgroundPage().player;
+  return chrome.extension.getBackgroundPage().threadPlayer;
 }
 
 function getBackgroundPlayerAsync(callback) {
   (chrome || browser).runtime.getBackgroundPage((w) => {
-    callback(w.player);
+    callback(w.threadPlayer);
   });
 }
 
@@ -57,7 +57,7 @@ function addBackgroundPlayerListener(listener) {
   });
 }
 
-function addPlayerLisnter(mode, listener) {
+function addPlayerListener(mode, listener) {
   if (mode === 'front') {
     return addFrontPlayerListener(listener);
   }
@@ -65,4 +65,21 @@ function addPlayerLisnter(mode, listener) {
     return addBackgroundPlayerListener(listener);
   }
   return null;
+}
+
+function frontPlayerSendMessage(message) {
+
+}
+
+function backgroundPlayerSendMessage(message) {
+  (chrome || browser).runtime.sendMessage(message);
+}
+
+function playerSendMessage(mode, message) {
+  if (mode === 'front') {
+    frontPlayerSendMessage(message);
+  }
+  if (mode === 'background') {
+    backgroundPlayerSendMessage(message);
+  }
 }
