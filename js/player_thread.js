@@ -427,7 +427,7 @@
           playbackRate: this.currentHowl ? this.currentHowl.rate() : 1,
           position: this.currentHowl ? this.currentHowl.seek() : 0,
         });
-      };
+      }
       playerSendMessage(mode, {
         type: 'BG_PLAYER:FRAME_UPDATE',
         data,
