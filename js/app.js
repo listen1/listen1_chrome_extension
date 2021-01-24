@@ -1,23 +1,15 @@
 /* eslint-disable no-shadow */
 /* global l1Player localStorage document Blob navigator */
 /* global $ angular FileReader isElectron getAllProviders */
+/* global setPrototypeOfLocalStorage addPlayerListener */
 /* eslint-disable global-require */
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-param-reassign */
 /* eslint-disable import/no-unresolved */
+
 const main = () => {
-  const proto = Object.getPrototypeOf(localStorage);
-  proto.getObject = function getObject(key) {
-    const value = this.getItem(key);
-    return value && JSON.parse(value);
-  };
-  proto.setObject = function setObject(key, value) {
-    this.setItem(key, JSON.stringify(value));
-  };
-  Object.setPrototypeOf(localStorage, proto);
-
   const app = angular.module('listenone', ['ui-notification', 'loWebManager', 'cfp.hotkeys', 'lastfmClient', 'githubClient', 'pascalprecht.translate']);
-
+  setPrototypeOfLocalStorage();
   app.config([
     '$compileProvider',
     ($compileProvider) => {
@@ -861,7 +853,7 @@ const main = () => {
               });
             });
           }).catch((err) => {
-            console.log(err);
+            // console.log(err);
           });
         }
       };
@@ -1096,8 +1088,8 @@ const main = () => {
 
         return result;
       }
-
-      (chrome || browser).runtime.onMessage.addListener((msg, sender, sendResponse) => {
+      const mode = 'front';
+      addPlayerListener(mode, (msg, sender, sendResponse) => {
         if (typeof msg.type === 'string' && msg.type.split(':')[0] === 'BG_PLAYER') {
           switch (msg.type.split(':').slice(1).join('')) {
             case 'READY': {
@@ -1282,7 +1274,9 @@ const main = () => {
               break;
           }
         }
-        sendResponse();
+        if (sendResponse !== undefined) {
+          sendResponse();
+        }
       });
 
       // define keybind
