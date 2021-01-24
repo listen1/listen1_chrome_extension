@@ -1,8 +1,8 @@
-/* global angular localStorage Github window */
+/* global angular Github isElectron require */
 /* eslint-disable global-require */
 const ngGithub = angular.module('githubClient', []);
 ngGithub.factory('github', ['$rootScope',
-  $rootScope => ({
+  ($rootScope) => ({
     openAuthUrl: () => {
       const url = Github.getOAuthUrl();
       if (isElectron()) {
@@ -85,7 +85,7 @@ ngGithub.provider('gist', {
         headers: {
           Authorization: `token ${localStorage.getObject('githubOauthAccessKey')}`,
         },
-      }).then(res => callback(res.data));
+      }).then((res) => callback(res.data));
       return null;
     }
 
@@ -97,7 +97,7 @@ ngGithub.provider('gist', {
         },
       }).then((res) => {
         const result = res.data;
-        return result.filter(backupObject => backupObject.description.startsWith('updated by Listen1'));
+        return result.filter((backupObject) => backupObject.description.startsWith('updated by Listen1'));
       });
     }
 
@@ -126,9 +126,7 @@ ngGithub.provider('gist', {
     }
 
     function restore(gistId) {
-      return axios.get(`${apiUrl}/${gistId}`).then((res) => {
-        return res.data.files;
-      });
+      return axios.get(`${apiUrl}/${gistId}`).then((res) => res.data.files);
     }
     const gistApi = {
       gist2json,

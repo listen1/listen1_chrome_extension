@@ -1,7 +1,8 @@
 {
     "extends": "airbnb-base",
     "rules": {
-        "camelcase":"off"
+        "camelcase": "off",
+        "linebreak-style": "off"
     },
     "globals": {
         "axios": "readonly",
@@ -9,5 +10,11 @@
         "browser":"readonly",
         "chrome":"readonly"
     },
-    "ignorePatterns": ["**/vendor/*.js"]
+    "env": {
+        "browser": true,
+        "node": false
+    },
+    "ignorePatterns": [
+        "**/vendor/*.js"
+    ]
 }

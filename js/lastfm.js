@@ -1,15 +1,6 @@
-/* global Storage localStorage */
+/* global  localStorage */
 /* global angular MD5 */
 function lastfm() {
-  localStorage.__proto__.setObject = function setObject(key, value) {
-    this.setItem(key, JSON.stringify(value));
-  };
-
-  localStorage.__proto__.getObject = function getObject(key) {
-    const value = this.getItem(key);
-    return value && JSON.parse(value);
-  };
-
   angular.module('lastfmClient', []).provider('lastfm', function lastfm_func() {
     this.options = {
       apiKey: 'unknown',
@@ -33,7 +24,7 @@ function lastfm() {
        * See http://www.last.fm/api/authspec#8
        */
       function generateSign(params) {
-        const keys = Object.keys(params).filter(key => (key !== 'format' || key !== 'callback'));
+        const keys = Object.keys(params).filter((key) => (key !== 'format' || key !== 'callback'));
 
         // params has to be ordered alphabetically
         keys.sort();
@@ -49,7 +40,7 @@ function lastfm() {
        */
       function createQueryString(params) {
         const parts = [];
-        Object.keys(params).forEach(key => parts.push(`${key}=${encodeURIComponent(params[key])}`));
+        Object.keys(params).forEach((key) => parts.push(`${key}=${encodeURIComponent(params[key])}`));
         return parts.join('&');
       }
 

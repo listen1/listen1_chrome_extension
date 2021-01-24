@@ -26,7 +26,7 @@ function build_bilibili() {
       success(fn) {
         axios.get(target_url).then((response) => {
           const { data } = response.data.data;
-          const result = data.map(item => ({
+          const result = data.map((item) => ({
             cover_img_url: item.cover,
             title: item.title,
             id: `biplaylist_${item.menuId}`,
@@ -55,7 +55,7 @@ function build_bilibili() {
           };
           const target = `https://www.bilibili.com/audio/music-service-c/web/song/of-menu?pn=1&ps=100&sid=${list_id}`;
           axios.get(target).then((res) => {
-            const tracks = res.data.data.data.map(item => bi_convert_song(item));
+            const tracks = res.data.data.data.map((item) => bi_convert_song(item));
             return fn({
               info,
               tracks,
@@ -67,7 +67,7 @@ function build_bilibili() {
   }
   function bi_album(url) { // eslint-disable-line no-unused-vars
     return {
-      success: fn => fn({
+      success: (fn) => fn({
         tracks: [],
         info: {},
       }),
@@ -99,7 +99,7 @@ function build_bilibili() {
           };
           target_url = `https://api.bilibili.com/audio/music-service-c/web/song/upper?pn=1&ps=0&order=2&uid=${artist_id}`;
           axios.get(target_url).then((res) => {
-            const tracks = res.data.data.data.map(item => bi_convert_song(item));
+            const tracks = res.data.data.data.map((item) => bi_convert_song(item));
             return fn({
               tracks,
               info,
@@ -161,7 +161,7 @@ function build_bilibili() {
         const target_url = `https://api.bilibili.com/x/web-interface/search/type?search_type=audio&keyword=${keyword}&page=${curpage}`;
         axios.get(target_url).then((response) => {
           const { data } = response.data;
-          const tracks = data.result.map(item => bi_convert_song(item));
+          const tracks = data.result.map((item) => bi_convert_song(item));
           return fn({
             result: tracks,
             total: data.numResults,

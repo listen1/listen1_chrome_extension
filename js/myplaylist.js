@@ -1,11 +1,12 @@
+/* eslint-disable no-param-reassign */
+/* eslint-disable no-unused-vars */
 /* global localStorage getParameterByName */
 const myplaylistFactory = () => {
-  function getPlaylistObjectKey(playlist_type){
+  function getPlaylistObjectKey(playlist_type) {
     let key = '';
-    if (playlist_type == 'my') {
+    if (playlist_type === 'my') {
       key = 'playerlists';
-    }
-    else if (playlist_type == 'favorite'){
+    } else if (playlist_type === 'favorite') {
       key = 'favoriteplayerlists';
     }
     return key;
@@ -13,9 +14,9 @@ const myplaylistFactory = () => {
   function show_myplaylist(playlist_type) {
     return {
       success(fn) {
-        let key = getPlaylistObjectKey(playlist_type);
-        if (key == '') {
-          return fn({result:[]});
+        const key = getPlaylistObjectKey(playlist_type);
+        if (key === '') {
+          return fn({ result: [] });
         }
         let playlists = localStorage.getObject(key);
         if (playlists == null) {
@@ -25,9 +26,9 @@ const myplaylistFactory = () => {
           const playlist = localStorage.getObject(id);
           if (playlist !== null && playlist.tracks !== undefined) {
             // clear url field when load old playlist
-            playlist.tracks.forEach(e=>{delete e.url});
+            playlist.tracks.forEach((e) => { delete e.url; });
           }
-            res.push(playlist);
+          res.push(playlist);
           return res;
         }, []);
         return fn({ result });
@@ -41,8 +42,8 @@ const myplaylistFactory = () => {
       success(fn) {
         const playlist = localStorage.getObject(list_id);
         // clear url field when load old playlist
-        if (playlist !== null && playlist.tracks !== undefined){
-          playlist.tracks.forEach(e=>{delete e.url});
+        if (playlist !== null && playlist.tracks !== undefined) {
+          playlist.tracks.forEach((e) => { delete e.url; });
         }
         fn(playlist);
       },
@@ -60,8 +61,8 @@ const myplaylistFactory = () => {
   }
 
   const save_myplaylist = (playlist_type, playlist) => {
-    let key = getPlaylistObjectKey(playlist_type);
-    if (key == '') {
+    const key = getPlaylistObjectKey(playlist_type);
+    if (key === '') {
       return;
     }
     let playlists = localStorage.getObject(key);
@@ -74,29 +75,28 @@ const myplaylistFactory = () => {
       playlist_id = `myplaylist_${guid()}`;
       playlist.info.id = playlist_id;
       playlist.is_mine = 1; // eslint-disable-line no-param-reassign
-    }
-    else if (playlist_type == 'favorite') {
+    } else if (playlist_type === 'favorite') {
       playlist_id = playlist.info.id;
       playlist.is_fav = 1;
       // remove all tracks info, cause favorite playlist always load latest
       delete playlist.tracks;
     }
-    
+
     playlists.push(playlist_id);
     localStorage.setObject(key, playlists);
     localStorage.setObject(playlist_id, playlist);
   };
 
   const remove_myplaylist = (playlist_type, playlist_id) => {
-    let key = getPlaylistObjectKey(playlist_type);
-    if (key == '') {
+    const key = getPlaylistObjectKey(playlist_type);
+    if (key === '') {
       return;
     }
     const playlists = localStorage.getObject(key);
     if (playlists == null) {
       return;
     }
-    const newplaylists = playlists.filter(item => item !== playlist_id);
+    const newplaylists = playlists.filter((item) => item !== playlist_id);
     localStorage.removeItem(playlist_id);
     localStorage.setObject(key, newplaylists);
   };
@@ -133,7 +133,7 @@ const myplaylistFactory = () => {
     if (playlist == null) {
       return;
     }
-    const newtracks = playlist.tracks.filter(item => item.id !== track_id);
+    const newtracks = playlist.tracks.filter((item) => item.id !== track_id);
     playlist.tracks = newtracks;
     localStorage.setObject(playlist_id, playlist);
   }
@@ -156,7 +156,7 @@ const myplaylistFactory = () => {
     } else {
       playlist.tracks = [track];
     }
-    
+
     // notice: create only used by my playlist, favorite created by clone interface
     save_myplaylist('my', playlist);
   }
@@ -172,11 +172,11 @@ const myplaylistFactory = () => {
   }
 
   function myplaylist_containers(playlist_type, list_id) {
-    let key = getPlaylistObjectKey(playlist_type);
-    if (key == '') {
+    const key = getPlaylistObjectKey(playlist_type);
+    if (key === '') {
       return false;
     }
-    let playlist = localStorage.getObject(list_id);
+    const playlist = localStorage.getObject(list_id);
     return playlist !== null && playlist.is_fav;
   }
 

@@ -47,7 +47,7 @@
     }
 
     insertAudio(audio, idx) {
-      if (this.playlist.find(i => audio.id === i.id)) return;
+      if (this.playlist.find((i) => audio.id === i.id)) return;
 
       const audioData = {
         ...audio,
@@ -92,7 +92,7 @@
       if (list.length) {
         Howler.stop();
 
-        this.playlist = list.map(audio => ({
+        this.playlist = list.map((audio) => ({
           ...audio,
           howl: null,
         }));
@@ -102,12 +102,12 @@
     }
 
     playById(id) {
-      const idx = this.playlist.findIndex(audio => audio.id === id);
+      const idx = this.playlist.findIndex((audio) => audio.id === id);
       this.play(idx);
     }
 
     loadById(id) {
-      const idx = this.playlist.findIndex(audio => audio.id === id);
+      const idx = this.playlist.findIndex((audio) => audio.id === id);
       this.load(idx);
     }
 
@@ -263,11 +263,11 @@
 
       let nextIndex = null;
       if (direction === 'prev') {
-        nextIndex = idx => (idx - 1) % this.playlist.length;
+        nextIndex = (idx) => (idx - 1) % this.playlist.length;
       } else if (direction === 'random') {
         nextIndex = () => Math.floor(Math.random() * this.playlist.length);
       } else { // Default to next one.
-        nextIndex = idx => (idx + 1) % this.playlist.length;
+        nextIndex = (idx) => (idx + 1) % this.playlist.length;
       }
       let tryCount = 0;
       while (tryCount < this.playlist.length - 1) {
@@ -464,7 +464,7 @@
     async sendPlaylistEvent() {
       sendEvent({
         type: 'BG_PLAYER:PLAYLIST',
-        data: this.playlist.map(audio => ({ ...audio, howl: undefined })),
+        data: this.playlist.map((audio) => ({ ...audio, howl: undefined })),
       });
     }
   }
