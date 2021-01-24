@@ -1,5 +1,3 @@
-/* global localStorage */
-// eslint-disable-next-line no-unused-vars
 {
   const proto = Object.getPrototypeOf(localStorage);
   proto.getObject = function getObject(key) {

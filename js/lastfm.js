@@ -1,4 +1,3 @@
-/* global  localStorage */
 /* global angular MD5 */
 function lastfm() {
   angular.module('lastfmClient', []).provider('lastfm', function lastfm_func() {
