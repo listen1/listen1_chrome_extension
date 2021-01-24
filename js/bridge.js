@@ -10,7 +10,7 @@ audio player has 2 modes, but share same protocol: front and background.
 */
 
 function getFrontPlayer() {
-  return undefined;
+  return window.threadPlayer;
 }
 
 function getBackgroundPlayer() {
@@ -43,9 +43,9 @@ function getPlayerAsync(mode, callback) {
   }
   return undefined;
 }
-
+const frontPlayerListener = [];
 function addFrontPlayerListener(listener) {
-
+  frontPlayerListener.push(listener);
 }
 
 function addBackgroundPlayerListener(listener) {
@@ -68,7 +68,11 @@ function addPlayerListener(mode, listener) {
 }
 
 function frontPlayerSendMessage(message) {
-
+  if (frontPlayerListener !== []) {
+    frontPlayerListener.forEach((listener) => {
+      listener(message);
+    });
+  }
 }
 
 function backgroundPlayerSendMessage(message) {

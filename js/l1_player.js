@@ -30,7 +30,7 @@
     player.loadById(track_id);
   };
 
-  const mode = 'background';
+  const mode = 'front';
 
   const myPlayer = getPlayer(mode);
   const l1Player = {
@@ -266,7 +266,9 @@
         });
       }
     }
-    res();
+    if (res !== undefined) {
+      res();
+    }
   });
 
   window.l1Player = l1Player;

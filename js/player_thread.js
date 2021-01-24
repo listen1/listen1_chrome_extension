@@ -3,7 +3,7 @@
 /* global Howl Howler */
 
 {
-  const mode = 'background';
+  const mode = 'front';
 
   /**
    * Player class containing the state of our playlist and where we are in it.

@@ -1088,7 +1088,7 @@ const main = () => {
 
         return result;
       }
-      const mode = 'background';
+      const mode = 'front';
       addPlayerListener(mode, (msg, sender, sendResponse) => {
         if (typeof msg.type === 'string' && msg.type.split(':')[0] === 'BG_PLAYER') {
           switch (msg.type.split(':').slice(1).join('')) {
@@ -1274,7 +1274,9 @@ const main = () => {
               break;
           }
         }
-        sendResponse();
+        if (sendResponse !== undefined) {
+          sendResponse();
+        }
       });
 
       // define keybind
