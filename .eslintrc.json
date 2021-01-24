@@ -1,12 +1,15 @@
 {
     "extends": "airbnb-base",
     "rules": {
-        "camelcase":"off"
+        "camelcase": "off",
+        "linebreak-style": "off"
     },
     "globals": {
-        "window":"readonly",
-        "browser":"readonly",
-        "chrome":"readonly"
+        "window": "readonly",
+        "browser": "readonly",
+        "chrome": "readonly"
     },
-    "ignorePatterns": ["**/vendor/*.js"]
+    "ignorePatterns": [
+        "**/vendor/*.js"
+    ]
 }

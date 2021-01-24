@@ -1,8 +1,8 @@
-/* global angular chrome localStorage Github window */
+/* global angular localStorage Github isElectron */
 /* eslint-disable global-require */
 const ngGithub = angular.module('githubClient', []);
 ngGithub.factory('github', ['$rootScope',
-  $rootScope => ({
+  ($rootScope) => ({
     openAuthUrl: () => {
       const url = Github.getOAuthUrl();
       if (isElectron()) {
@@ -87,7 +87,7 @@ ngGithub.provider('gist', {
         headers: {
           Authorization: `token ${localStorage.getObject('githubOauthAccessKey')}`,
         },
-      }).then(res => callback(res.data));
+      }).then((res) => callback(res.data));
       return null;
     }
 
@@ -102,7 +102,7 @@ ngGithub.provider('gist', {
         },
       }).then((res) => {
         let result = res.data;
-        result = result.filter(backupObject => backupObject.description.startsWith('updated by Listen1'));
+        result = result.filter((backupObject) => backupObject.description.startsWith('updated by Listen1'));
         deferred.resolve(result);
       }, (err) => {
         deferred.reject(err);

@@ -1,4 +1,6 @@
-/* global async getParameterByName */
+/* eslint-disable no-undef */
+/* eslint-disable no-unused-vars */
+/* global async getParameterByName isElectron */
 function build_kuwo() {
   // Convert html code
   function html_decode(str) {
@@ -35,7 +37,7 @@ function build_kuwo() {
   function async_process_list(data_list, handler, handler_extra_param_list, callback) {
     const fnDict = {};
     data_list.forEach((item, index) => {
-      fnDict[index] = cb => handler(index, item, handler_extra_param_list, cb);
+      fnDict[index] = (cb) => handler(index, item, handler_extra_param_list, cb);
     });
     async.parallel(fnDict, (err, results) => {
       callback(null, data_list.map((item, index) => results[index]));
@@ -155,69 +157,66 @@ function build_kuwo() {
 
   function kw_search(url, hm, se) { // eslint-disable-line no-unused-vars
     const keyword = getParameterByName('keywords', url);
-    let curpage = getParameterByName('curpage', url);
+    const curpage = getParameterByName('curpage', url);
     const searchType = getParameterByName('type', url);
-    if(searchType === '1'){
+    if (searchType === '1') {
       return {
         success(fn) {
           return fn({
             result: [],
             total: 0,
-            type: searchType
+            type: searchType,
           });
-        }
+        },
       };
     }
     return {
       success(fn) {
         kw_get_token((token) => {
-
-        const target_url = `http://www.kuwo.cn/api/www/search/searchMusicBykeyWord?key=${keyword}&pn=${curpage}&rn=30`;
-        const token_url = 'http://www.kuwo.cn/search/list?key=';
-        hm({
-          url: target_url,
-          method: 'GET',
-          ransformResponse: undefined,
-          headers: {
-            'csrf': token,
-          }
-        }).then((response) => {
-          let { data } = response;
-          if (data.success===false) {
+          const target_url = `http://www.kuwo.cn/api/www/search/searchMusicBykeyWord?key=${keyword}&pn=${curpage}&rn=30`;
+          const token_url = 'http://www.kuwo.cn/search/list?key=';
+          hm({
+            url: target_url,
+            method: 'GET',
+            ransformResponse: undefined,
+            headers: {
+              csrf: token,
+            },
+          // eslint-disable-next-line consistent-return
+          }).then((response) => {
+            const { data } = response;
+            if (data.success === false) {
             // token not valid
-            return hm({
-              url: token_url,
-              method: 'GET',
-              ransformResponse: undefined,
-            }).then((response) => {
+              return hm({
+                url: token_url,
+                method: 'GET',
+                ransformResponse: undefined,
+              }).then(() => kw_search(url, hm, se).success(fn));
               // now token valid, call myself
-              return kw_search(url, hm, se).success(fn);
-            });
-          }
+            }
 
-          let tracks = data.data.list.map((item)=>{
-            const musicrid = item.musicrid.split('_')[1];
-            const track = {
-              id: `kwtrack_${musicrid}`,
-              title: html_decode(item.name),
-              artist: item.artist,
-              artist_id: `kwartist_${item.artistid}`,
-              album: html_decode(item.album),
-              album_id: `kwalbum_${item.albumid}`,
-              source: 'kuwo',
-              source_url: `http://www.kuwo.cn/yinyue/${musicrid}`,
-              img_url: item.albumpic,
-              // url: `xmtrack_${musicrid}`,
-              lyric_url: musicrid,
-            };
-            return track;
-          })
-          fn({result:tracks, total: data.data.total, type: searchType});
-        }).catch(()=>{
-          fn({result:[], total: 007, type: searchType});
+            const tracks = data.data.list.map((item) => {
+              const musicrid = item.musicrid.split('_')[1];
+              const track = {
+                id: `kwtrack_${musicrid}`,
+                title: html_decode(item.name),
+                artist: item.artist,
+                artist_id: `kwartist_${item.artistid}`,
+                album: html_decode(item.album),
+                album_id: `kwalbum_${item.albumid}`,
+                source: 'kuwo',
+                source_url: `http://www.kuwo.cn/yinyue/${musicrid}`,
+                img_url: item.albumpic,
+                // url: `xmtrack_${musicrid}`,
+                lyric_url: musicrid,
+              };
+              return track;
+            });
+            fn({ result: tracks, total: data.data.total, type: searchType });
+          }).catch(() => {
+            fn({ result: [], total: 7, type: searchType });
+          });
         });
-        
-      });
       },
     };
   }
@@ -225,8 +224,8 @@ function build_kuwo() {
   // eslint-disable-next-line no-unused-vars
   function kw_bootstrap_track(sound, track, success, failure, hm, se) {
     const song_id = track.id.slice('kwtrack_'.length);
-    const ts = + new Date();
-    const target_url = `http://www.kuwo.cn/url?format=mp3&rid=${song_id}&response=url&type=convert_url3&br=128kmp3&from=web&t=${ts}&httpsStatus=1`
+    const ts = +new Date();
+    const target_url = `http://www.kuwo.cn/url?format=mp3&rid=${song_id}&response=url&type=convert_url3&br=128kmp3&from=web&t=${ts}&httpsStatus=1`;
 
     hm({
       url: target_url,
@@ -241,9 +240,9 @@ function build_kuwo() {
       } else {
         failure();
       }
-    }).catch(()=>{
+    }).catch(() => {
       failure();
-    })
+    });
   }
 
   function kw_lyric(url, hm, se) { // eslint-disable-line no-unused-vars
@@ -416,7 +415,7 @@ function build_kuwo() {
           if (!data[0]) {
             return fn([]);
           }
-          const result = data[0].data.map(item => ({
+          const result = data[0].data.map((item) => ({
             cover_img_url: item.img,
             title: item.name,
             id: `kwplaylist_${item.id}`,
