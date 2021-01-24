@@ -1,6 +1,7 @@
 /* eslint-disable no-shadow */
 /* global l1Player localStorage document Blob navigator */
-/* global $ angular FileReader isElectron getAllProviders setPrototypeOfLocalStorage */
+/* global $ angular FileReader isElectron getAllProviders */
+/* global setPrototypeOfLocalStorage addPlayerLisnter */
 /* eslint-disable global-require */
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-param-reassign */
@@ -1087,8 +1088,8 @@ const main = () => {
 
         return result;
       }
-
-      (chrome || browser).runtime.onMessage.addListener((msg, sender, sendResponse) => {
+      const mode = 'background';
+      addPlayerLisnter(mode, (msg, sender, sendResponse) => {
         if (typeof msg.type === 'string' && msg.type.split(':')[0] === 'BG_PLAYER') {
           switch (msg.type.split(':').slice(1).join('')) {
             case 'READY': {

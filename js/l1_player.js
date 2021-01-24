@@ -1,4 +1,4 @@
-/* global localStorage getPlayer getPlayerAsync */
+/* global localStorage getPlayer getPlayerAsync addPlayerLisnter */
 // eslint-disable-next-line no-unused-vars
 {
   const proto = Object.getPrototypeOf(localStorage);
@@ -231,7 +231,7 @@
     }));
   };
 
-  (chrome || browser).runtime.onMessage.addListener((msg, sender, res) => {
+  addPlayerLisnter(mode, (msg, sender, res) => {
     if (msg.type === 'BG_PLAYER:FRAME_UPDATE') {
       l1Player.status.playing = {
         ...l1Player.status.playing,

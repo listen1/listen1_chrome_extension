@@ -43,3 +43,26 @@ function getPlayerAsync(mode, callback) {
   }
   return undefined;
 }
+
+function addFrontPlayerListener(listener) {
+
+}
+
+function addBackgroundPlayerListener(listener) {
+  return (chrome || browser).runtime.onMessage.addListener((msg, sender, res) => {
+    if (!msg.type.startsWith('BG_PLAYER:')) {
+      return null;
+    }
+    return listener(msg, sender, res);
+  });
+}
+
+function addPlayerLisnter(mode, listener) {
+  if (mode === 'front') {
+    return addFrontPlayerListener(listener);
+  }
+  if (mode === 'background') {
+    return addBackgroundPlayerListener(listener);
+  }
+  return null;
+}
