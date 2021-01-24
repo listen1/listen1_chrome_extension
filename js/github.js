@@ -1,4 +1,4 @@
-/* global angular chrome localStorage Github window */
+/* global angular localStorage Github window */
 /* eslint-disable global-require */
 const ngGithub = angular.module('githubClient', []);
 ngGithub.factory('github', ['$rootScope',
@@ -35,7 +35,7 @@ ngGithub.factory('github', ['$rootScope',
 ]);
 
 ngGithub.provider('gist', {
-  $get: ($http, $q) => {
+  $get: () => {
     const apiUrl = 'https://api.github.com/gists';
 
     // eslint-disable-next-line no-unused-vars
@@ -81,9 +81,7 @@ ngGithub.provider('gist', {
 
       const url = gistFiles['listen1_backup.json'].raw_url;
       // const { size } = gistFiles['listen1_backup.json'];
-      $http({
-        method: 'GET',
-        url,
+      axios.get(url, {
         headers: {
           Authorization: `token ${localStorage.getObject('githubOauthAccessKey')}`,
         },
@@ -92,36 +90,28 @@ ngGithub.provider('gist', {
     }
 
     function listExistBackup() {
-      const deferred = $q.defer();
       const url = apiUrl;
-      $http({
-        method: 'GET',
-        url,
+      return axios.get(url, {
         headers: {
           Authorization: `token ${localStorage.getObject('githubOauthAccessKey')}`,
         },
       }).then((res) => {
-        let result = res.data;
-        result = result.filter(backupObject => backupObject.description.startsWith('updated by Listen1'));
-        deferred.resolve(result);
-      }, (err) => {
-        deferred.reject(err);
+        const result = res.data;
+        return result.filter(backupObject => backupObject.description.startsWith('updated by Listen1'));
       });
-      return deferred.promise;
     }
 
     function backup(files, gistId, isPublic) {
-      const deferred = $q.defer();
       let method = '';
       let url = '';
       if (gistId != null) {
-        method = 'PATCH';
+        method = 'patch';
         url = `${apiUrl}/${gistId}`;
       } else {
-        method = 'POST';
+        method = 'post';
         url = apiUrl;
       }
-      $http({
+      return axios.request({
         method,
         url,
         headers: {
@@ -132,30 +122,13 @@ ngGithub.provider('gist', {
           public: isPublic,
           files,
         },
-      }).then((res) => { // eslint-disable-line no-unused-vars
-        deferred.resolve();
-      }, (err) => {
-        deferred.reject(err);
       });
-      return deferred.promise;
     }
 
     function restore(gistId) {
-      const deferred = $q.defer();
-      $http({
-        method: 'GET',
-        url: `${apiUrl}/${gistId}`,
-      }).then((res) => {
-        try {
-          const { files } = res.data;
-          deferred.resolve(files);
-        } catch (e) {
-          deferred.reject(404);
-        }
-      }, (err) => {
-        deferred.reject(err);
+      return axios.get(`${apiUrl}/${gistId}`).then((res) => {
+        return res.data.files;
       });
-      return deferred.promise;
     }
     const gistApi = {
       gist2json,

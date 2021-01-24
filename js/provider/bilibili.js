@@ -15,7 +15,7 @@ function build_bilibili() {
     return track;
   }
 
-  function bi_show_playlist(url, hm) {
+  function bi_show_playlist(url) {
     let offset = getParameterByName('offset', url);
     if (offset === undefined) {
       offset = 0;
@@ -24,7 +24,7 @@ function build_bilibili() {
     const target_url = `https://www.bilibili.com/audio/music-service-c/web/menu/hit?ps=20&pn=${page}`;
     return {
       success(fn) {
-        hm.get(target_url).then((response) => {
+        axios.get(target_url).then((response) => {
           const { data } = response.data.data;
           const result = data.map(item => ({
             cover_img_url: item.cover,
@@ -40,12 +40,12 @@ function build_bilibili() {
     };
   }
 
-  function bi_get_playlist(url, hm, se) { // eslint-disable-line no-unused-vars
+  function bi_get_playlist(url) { // eslint-disable-line no-unused-vars
     const list_id = getParameterByName('list_id', url).split('_').pop();
     const target_url = `https://www.bilibili.com/audio/music-service-c/web/menu/info?sid=${list_id}`;
     return {
       success: (fn) => {
-        hm.get(target_url).then((response) => {
+        axios.get(target_url).then((response) => {
           const { data } = response.data;
           const info = {
             cover_img_url: data.cover,
@@ -54,7 +54,7 @@ function build_bilibili() {
             source_url: `https://www.bilibili.com/audio/am${list_id}`,
           };
           const target = `https://www.bilibili.com/audio/music-service-c/web/song/of-menu?pn=1&ps=100&sid=${list_id}`;
-          hm.get(target).then((res) => {
+          axios.get(target).then((res) => {
             const tracks = res.data.data.data.map(item => bi_convert_song(item));
             return fn({
               info,
@@ -65,7 +65,7 @@ function build_bilibili() {
       },
     };
   }
-  function bi_album(url, hm, se) { // eslint-disable-line no-unused-vars
+  function bi_album(url) { // eslint-disable-line no-unused-vars
     return {
       success: fn => fn({
         tracks: [],
@@ -74,7 +74,7 @@ function build_bilibili() {
       // bilibili havn't album
       // const album_id = getParameterByName('list_id', url).split('_').pop();
       // const target_url = '';
-      // hm.get(target_url).then((response) => {
+      // axios.get(target_url).then((response) => {
       //   const data = response.data;
       //   const info = {};
       //   const tracks = [];
@@ -85,12 +85,12 @@ function build_bilibili() {
       // });
     };
   }
-  function bi_artist(url, hm, se) { // eslint-disable-line no-unused-vars
+  function bi_artist(url) { // eslint-disable-line no-unused-vars
     return {
       success: (fn) => {
         const artist_id = getParameterByName('list_id', url).split('_').pop();
         let target_url = `https://api.bilibili.com/x/space/acc/info?mid=${artist_id}&jsonp=jsonp`;
-        hm.get(target_url).then((response) => {
+        axios.get(target_url).then((response) => {
           const info = {
             cover_img_url: response.data.data.face,
             title: response.data.data.name,
@@ -98,7 +98,7 @@ function build_bilibili() {
             source_url: `https://space.bilibili.com/${artist_id}/#/audio`,
           };
           target_url = `https://api.bilibili.com/audio/music-service-c/web/song/upper?pn=1&ps=0&order=2&uid=${artist_id}`;
-          hm.get(target_url).then((res) => {
+          axios.get(target_url).then((res) => {
             const tracks = res.data.data.data.map(item => bi_convert_song(item));
             return fn({
               tracks,
@@ -122,10 +122,10 @@ function build_bilibili() {
     return result;
   }
   // eslint-disable-next-line no-unused-vars
-  function bi_bootstrap_track(sound, track, success, failure, hm, se) {
+  function bi_bootstrap_track(sound, track, success, failure) {
     const song_id = track.id.slice('bitrack_'.length);
     const target_url = `https://www.bilibili.com/audio/music-service-c/web/url?sid=${song_id}`;
-    hm.get(target_url).then((response) => {
+    axios.get(target_url).then((response) => {
       const { data } = response;
       if (data.code === 0) {
         [sound.url] = data.data.cdns; // eslint-disable-line no-param-reassign
@@ -135,7 +135,7 @@ function build_bilibili() {
       }
     });
   }
-  function bi_search(url, hm, se) { // eslint-disable-line no-unused-vars
+  function bi_search(url) { // eslint-disable-line no-unused-vars
     return {
       success: (fn) => {
         const keyword = getParameterByName('keywords', url);
@@ -143,7 +143,7 @@ function build_bilibili() {
         const au = /\d+$/.exec(keyword);
         if (au != null) {
           const target_url = `https://www.bilibili.com/audio/music-service-c/web/song/info?sid=${au}`;
-          hm.get(target_url).then((response) => {
+          axios.get(target_url).then((response) => {
             const { data } = response.data;
             const tracks = [bi_convert_song(data)];
             return fn({
@@ -159,7 +159,7 @@ function build_bilibili() {
         }
         // inferred, not implemented yet
         const target_url = `https://api.bilibili.com/x/web-interface/search/type?search_type=audio&keyword=${keyword}&page=${curpage}`;
-        hm.get(target_url).then((response) => {
+        axios.get(target_url).then((response) => {
           const { data } = response.data;
           const tracks = data.result.map(item => bi_convert_song(item));
           return fn({
@@ -171,12 +171,12 @@ function build_bilibili() {
       },
     };
   }
-  function bi_lyric(url, hm, se) { // eslint-disable-line no-unused-vars
+  function bi_lyric(url) { // eslint-disable-line no-unused-vars
     // const track_id = getParameterByName('track_id', url).split('_').pop();
     const lyric_url = getParameterByName('lyric_url', url);
     return {
       success(fn) {
-        hm.get(lyric_url).then((response) => {
+        axios.get(lyric_url).then((response) => {
           const { data } = response;
           return fn({
             lyric: data,
@@ -186,15 +186,15 @@ function build_bilibili() {
     };
   }
 
-  function get_playlist(url, hm, se) {
+  function get_playlist(url) {
     const list_id = getParameterByName('list_id', url).split('_')[0];
     switch (list_id) {
       case 'biplaylist':
-        return bi_get_playlist(url, hm, se);
+        return bi_get_playlist(url);
       case 'bialbum':
-        return bi_album(url, hm, se);
+        return bi_album(url);
       case 'biartist':
-        return bi_artist(url, hm, se);
+        return bi_artist(url);
       default:
         return null;
     }

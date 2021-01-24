@@ -8,7 +8,7 @@ function build_localmusic() {
         source_url: ``,
       }
     };
-    function lm_show_playlist(url, hm) {
+    function lm_show_playlist(url) {
       return {
         success(fn) {
             return fn({
@@ -18,7 +18,7 @@ function build_localmusic() {
       };
     }
   
-    function lm_get_playlist(url, hm, se) {
+    function lm_get_playlist(url) {
       const list_id = getParameterByName('list_id', url);
       return {
         success(fn) {
@@ -33,7 +33,7 @@ function build_localmusic() {
     }
   
     
-    function lm_album(url, hm, se) {
+    function lm_album(url) {
       const album = getParameterByName('list_id', url).split('_').pop();
       return {
         success(fn) {
@@ -52,7 +52,7 @@ function build_localmusic() {
         },
       };
     }
-    function lm_artist(url, hm, se) {
+    function lm_artist(url) {
       const artist = getParameterByName('list_id', url).split('_').pop();
       return {
         success(fn) {
@@ -71,12 +71,12 @@ function build_localmusic() {
         },
       };
     }
-    function lm_bootstrap_track(sound, track, success, failure, hm, se) {
+    function lm_bootstrap_track(sound, track, success, failure) {
       sound.url = track.sound_url;
       success();
     }
   
-    function lm_search(url, hm, se) {
+    function lm_search(url) {
       const searchType = getParameterByName('type', url);
       return {
         success(fn) {   
@@ -89,7 +89,7 @@ function build_localmusic() {
       };
     }
   
-    function lm_lyric(url, hm, se) {
+    function lm_lyric(url) {
       return {
         success(fn){
           return fn({
@@ -125,15 +125,15 @@ function build_localmusic() {
       return result;
     }
   
-    function get_playlist(url, hm, se) {
+    function get_playlist(url) {
       const list_id = getParameterByName('list_id', url).split('_')[0];
       switch (list_id) {
         case 'lmplaylist':
-          return lm_get_playlist(url, hm, se);
+          return lm_get_playlist(url);
         case 'lmartist':
-          return lm_artist(url, hm, se);
+          return lm_artist(url);
         case 'lmalbum':
-          return lm_album(url, hm, se);
+          return lm_album(url);
         default:
           return null;
       }
