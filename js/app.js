@@ -69,7 +69,6 @@ const main = () => {
           getAutoChooseSource,
         ),
       );
-      l1Player.connectPlayer();
     },
   ]);
 
@@ -1234,7 +1233,7 @@ const main = () => {
             case 'PLAYLIST': {
               // 'player:playlist'
               $scope.playlist = msg.data;
-              localStorage.setObject('playing-list', msg.data);
+              localStorage.setObject('current-playing', msg.data);
               break;
             }
 
@@ -1278,6 +1277,9 @@ const main = () => {
           sendResponse();
         }
       });
+
+      // connect player should run after all addListener function finished
+      l1Player.connectPlayer();
 
       // define keybind
       hotkeys.add({
