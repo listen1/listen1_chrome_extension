@@ -5,6 +5,8 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-param-reassign */
 /* eslint-disable import/no-unresolved */
+Object.getPrototypeOf(axios).request = (config) => angular.element(document.body).injector().get('$rootScope').$q.when(Object.getPrototypeOf(axios).request(config));
+
 const main = () => {
   const proto = Object.getPrototypeOf(localStorage);
   proto.getObject = function getObject(key) {
