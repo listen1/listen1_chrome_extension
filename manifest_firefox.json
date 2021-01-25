@@ -12,6 +12,7 @@
             "js/github_api.js",
             "js/background.js",
             "js/vendor/howler.core.min.js",
+            "js/bridge.js",
             "js/player_thread.js"
         ],
         "persistent": true

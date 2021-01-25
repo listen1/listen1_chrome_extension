@@ -1,6 +1,7 @@
 /* eslint-disable no-shadow */
 /* global l1Player require */
 /* global $ angular isElectron getAllProviders */
+/* global setPrototypeOfLocalStorage addPlayerListener */
 /* eslint-disable global-require */
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-param-reassign */
@@ -8,18 +9,8 @@
 Object.getPrototypeOf(axios).request = (config) => angular.element(document.body).injector().get('$rootScope').$q.when(Object.getPrototypeOf(axios).request(config));
 
 const main = () => {
-  const proto = Object.getPrototypeOf(localStorage);
-  proto.getObject = function getObject(key) {
-    const value = this.getItem(key);
-    return value && JSON.parse(value);
-  };
-  proto.setObject = function setObject(key, value) {
-    this.setItem(key, JSON.stringify(value));
-  };
-  Object.setPrototypeOf(localStorage, proto);
-
   const app = angular.module('listenone', ['ui-notification', 'loWebManager', 'cfp.hotkeys', 'lastfmClient', 'githubClient', 'pascalprecht.translate']);
-
+  setPrototypeOfLocalStorage();
   app.config([
     '$compileProvider',
     ($compileProvider) => {
@@ -1098,8 +1089,8 @@ const main = () => {
 
         return result;
       }
-
-      (chrome || browser).runtime.onMessage.addListener((msg, sender, sendResponse) => {
+      const mode = 'front';
+      addPlayerListener(mode, (msg, sender, sendResponse) => {
         if (typeof msg.type === 'string' && msg.type.split(':')[0] === 'BG_PLAYER') {
           switch (msg.type.split(':').slice(1).join('')) {
             case 'READY': {
@@ -1284,7 +1275,9 @@ const main = () => {
               break;
           }
         }
-        sendResponse();
+        if (sendResponse !== undefined) {
+          sendResponse();
+        }
       });
 
       // define keybind

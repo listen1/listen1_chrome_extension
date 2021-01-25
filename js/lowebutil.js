@@ -1,6 +1,8 @@
 /* eslint-disable consistent-return */
 /* eslint-disable no-param-reassign */
 /* eslint-disable no-unused-vars */
+/* global localStorage */
+
 function getParameterByName(name, url) { // eslint-disable-line no-unused-vars
   if (!url) url = window.location.href;
   name = name.replace(/[\[\]]/g, '\\$&'); // eslint-disable-line no-useless-escape
@@ -38,4 +40,16 @@ function cookieSet(cookie, callback) {
   remote.session.defaultSession.cookies.set(cookie).then((arg1, arg2) => {
     callback(null, arg1, arg2);
   });
+}
+
+function setPrototypeOfLocalStorage() {
+  const proto = Object.getPrototypeOf(localStorage);
+  proto.getObject = function getObject(key) {
+    const value = this.getItem(key);
+    return value && JSON.parse(value);
+  };
+  proto.setObject = function setObject(key, value) {
+    this.setItem(key, JSON.stringify(value));
+  };
+  Object.setPrototypeOf(localStorage, proto);
 }

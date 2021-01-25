@@ -1,3 +1,4 @@
+/* global getPlayer getPlayerAsync addPlayerListener */
 {
   const proto = Object.getPrototypeOf(localStorage);
   proto.getObject = function getObject(key) {
@@ -8,10 +9,6 @@
     this.setItem(key, JSON.stringify(value));
   };
   Object.setPrototypeOf(localStorage, proto);
-
-  const backgroundCall = (callback) => {
-    (chrome || browser).runtime.getBackgroundPage(callback);
-  };
 
   const initPlayer = (player) => {
     // add songs to playlist
@@ -32,119 +29,122 @@
     player.loadById(track_id);
   };
 
+  const mode = 'front';
+
+  const myPlayer = getPlayer(mode);
   const l1Player = {
     status: {
-      muted: chrome.extension.getBackgroundPage().player.muted,
-      volume: chrome.extension.getBackgroundPage().player.volume * 100,
-      loop_mode: chrome.extension.getBackgroundPage().player.loop_mode,
-      playing: chrome.extension.getBackgroundPage().player.playing,
+      muted: myPlayer.muted,
+      volume: myPlayer.volume * 100,
+      loop_mode: myPlayer.loop_mode,
+      playing: myPlayer.playing,
     },
     bootstrapTrack: null,
     play() {
-      backgroundCall((w) => {
-        w.player.play();
+      getPlayerAsync(mode, (player) => {
+        player.play();
       });
     },
     pause() {
-      backgroundCall((w) => {
-        w.player.pause();
+      getPlayerAsync(mode, (player) => {
+        player.pause();
       });
     },
     togglePlayPause() {
-      backgroundCall((w) => {
-        if (w.player.playing) {
-          w.player.pause();
+      getPlayerAsync(mode, (player) => {
+        if (player.playing) {
+          player.pause();
         } else {
-          w.player.play();
+          player.play();
         }
       });
     },
     playById(id) {
-      backgroundCall((w) => {
-        w.player.playById(id);
+      getPlayerAsync(mode, (player) => {
+        player.playById(id);
       });
     },
     loadById(idx) {
-      backgroundCall((w) => {
-        w.player.loadById(idx);
+      getPlayerAsync(mode, (player) => {
+        player.loadById(idx);
       });
     },
     seek(per) {
-      backgroundCall((w) => {
-        w.player.seek(per);
+      getPlayerAsync(mode, (player) => {
+        player.seek(per);
       });
     },
     next() {
-      backgroundCall((w) => {
-        w.player.skip('next');
+      getPlayerAsync(mode, (player) => {
+        player.skip('next');
       });
     },
     prev() {
-      backgroundCall((w) => {
-        w.player.skip('prev');
+      getPlayerAsync(mode, (player) => {
+        player.skip('prev');
       });
     },
     random() {
-      backgroundCall((w) => {
-        w.player.skip('random');
+      getPlayerAsync(mode, (player) => {
+        player.skip('random');
       });
     },
     setLoopMode(input) {
-      backgroundCall((w) => {
-        const { player } = w;
+      getPlayerAsync(mode, (player) => {
+        // eslint-disable-next-line no-param-reassign
         player.loop_mode = input;
       });
     },
     mute() {
-      backgroundCall((w) => {
-        w.player.mute();
+      getPlayerAsync(mode, (player) => {
+        player.mute();
       });
     },
     unmute() {
-      backgroundCall((w) => {
-        w.player.unmute();
+      getPlayerAsync(mode, (player) => {
+        player.unmute();
       });
     },
     toggleMute() {
-      backgroundCall((w) => {
-        if (w.player.muted) w.player.unmute();
-        else w.player.mute();
+      getPlayerAsync(mode, (player) => {
+        if (player.muted) player.unmute();
+        else player.mute();
       });
     },
     setVolume(per) {
-      backgroundCall((w) => {
-        const { player } = w;
+      getPlayerAsync(mode, (player) => {
+        // eslint-disable-next-line no-param-reassign
         player.volume = per / 100;
       });
     },
     adjustVolume(increase) {
-      backgroundCall((w) => {
-        w.player.adjustVolume(increase);
+      getPlayerAsync(mode, (player) => {
+        player.adjustVolume(increase);
       });
     },
     addTrack(track) {
-      backgroundCall((w) => {
-        w.player.insertAudio(track);
+      getPlayerAsync(mode, (player) => {
+        player.insertAudio(track);
       });
     },
     removeTrack(index) {
-      backgroundCall((w) => {
-        w.player.removeAudio(index);
+      getPlayerAsync(mode, (player) => {
+        player.removeAudio(index);
       });
     },
     addTracks(list) {
-      backgroundCall((w) => {
-        w.player.appendAudioList(list);
+      getPlayerAsync(mode, (player) => {
+        player.appendAudioList(list);
       });
     },
     clearPlaylist() {
-      backgroundCall((w) => {
-        w.player.clearPlaylist();
+      getPlayerAsync(mode, (player) => {
+        player.clearPlaylist();
       });
     },
     setNewPlaylist(list) {
-      backgroundCall((w) => {
-        w.player.setNewPlaylist(list);
+      getPlayerAsync(mode, (player) => {
+        player.setNewPlaylist(list);
       });
     },
     getTrackById(id) {
@@ -155,14 +155,14 @@
       l1Player.bootstrapTrack = fn;
     },
     connectPlayer() {
-      const player = this;
-      backgroundCall((w) => {
-        w.player.sendFullUpdate();
-        w.player.sendPlaylistEvent();
-        w.player.sendPlayingEvent();
-        w.player.sendLoadEvent();
-        if (!w.player.playing) {
-          initPlayer(player);
+      const thisPlayer = this;
+      getPlayerAsync(mode, (player) => {
+        player.sendFullUpdate();
+        player.sendPlaylistEvent();
+        player.sendPlayingEvent();
+        player.sendLoadEvent();
+        if (!player.playing) {
+          initPlayer(thisPlayer);
         }
       });
     },
@@ -230,7 +230,7 @@
     }));
   };
 
-  (chrome || browser).runtime.onMessage.addListener((msg, sender, res) => {
+  addPlayerListener(mode, (msg, sender, res) => {
     if (msg.type === 'BG_PLAYER:FRAME_UPDATE') {
       l1Player.status.playing = {
         ...l1Player.status.playing,
@@ -252,20 +252,22 @@
             url = val;
           },
         }, msg.data, () => {
-          backgroundCall((w) => {
-            w.player.setMediaURI(url, msg.data.url || msg.data.id);
-            w.player.setAudioDisabled(false, msg.data.index);
-            w.player.finishLoad(msg.data.index, msg.data.playNow);
+          getPlayerAsync(mode, (player) => {
+            player.setMediaURI(url, msg.data.url || msg.data.id);
+            player.setAudioDisabled(false, msg.data.index);
+            player.finishLoad(msg.data.index, msg.data.playNow);
           });
         }, () => {
-          backgroundCall((w) => {
-            w.player.setAudioDisabled(true, msg.data.index);
-            w.player.skip('next');
+          getPlayerAsync(mode, (player) => {
+            player.setAudioDisabled(true, msg.data.index);
+            player.skip('next');
           });
         });
       }
     }
-    res();
+    if (res !== undefined) {
+      res();
+    }
   });
 
   window.l1Player = l1Player;

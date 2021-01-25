@@ -1,11 +1,9 @@
 /* eslint-disable no-underscore-dangle */
-/* global MediaMetadata */
+/* global MediaMetadata playerSendMessage */
 /* global Howl Howler */
 
 {
-  const sendEvent = (event) => {
-    (chrome || browser).runtime.sendMessage(event);
-  };
+  const mode = 'front';
 
   /**
    * Player class containing the state of our playlist and where we are in it.
@@ -121,7 +119,7 @@
     }
 
     retrieveMediaUrl(index, playNow) {
-      sendEvent({
+      playerSendMessage(mode, {
         type: 'BG_PLAYER:RETRIEVE_URL',
         data: {
           ...this.playlist[index],
@@ -216,7 +214,7 @@
           onvolume() {
           },
           onloaderror(id, err) {
-            sendEvent({
+            playerSendMessage(mode, {
               type: 'BG_PLAYER:PLAY_FAILED',
               data: err,
             });
@@ -226,7 +224,7 @@
             delete self._media_uri_list[data.id];
           },
           onplayerror(id, err) {
-            sendEvent({
+            playerSendMessage(mode, {
               type: 'BG_PLAYER:PLAY_FAILED',
               data: err,
             });
@@ -296,16 +294,16 @@
         one: 1,
         shuffle: 2,
       };
-      let mode = 0;
+      let myMode = 0;
       if (typeof input === 'string') {
-        mode = LOOP_MODE[input];
+        myMode = LOOP_MODE[input];
       } else {
-        mode = input;
+        myMode = input;
       }
-      if (!Object.values(LOOP_MODE).includes(mode)) {
+      if (!Object.values(LOOP_MODE).includes(myMode)) {
         return;
       }
-      this._loop_mode = mode;
+      this._loop_mode = myMode;
       this.sendFullUpdate();
     }
 
@@ -339,7 +337,7 @@
 
     mute() {
       Howler.mute(true);
-      sendEvent({
+      playerSendMessage(mode, {
         type: 'BG_PLAYER:MUTE',
         data: true,
       });
@@ -348,7 +346,7 @@
 
     unmute() {
       Howler.mute(false);
-      sendEvent({
+      playerSendMessage(mode, {
         type: 'BG_PLAYER:MUTE',
         data: false,
       });
@@ -409,7 +407,7 @@
       //     playing: this.playing,
       //   },
       // };
-      // sendEvent({
+      // playerSendMessage(mode, {
       //   type: 'BG_PLAYER:FULL_UPDATE',
       //   data,
       // });
@@ -428,14 +426,14 @@
         playbackRate: this.currentHowl ? this.currentHowl.rate() : 1,
         position: this.currentHowl ? this.currentHowl.seek() : 0,
       });
-      sendEvent({
+      playerSendMessage(mode, {
         type: 'BG_PLAYER:FRAME_UPDATE',
         data,
       });
     }
 
     async sendPlayingEvent(reason = 'UNKNOWN') {
-      sendEvent({
+      playerSendMessage(mode, {
         type: 'BG_PLAYER:PLAY_STATE',
         data: {
           isPlaying: this.playing,
@@ -445,7 +443,7 @@
     }
 
     async sendLoadEvent() {
-      sendEvent({
+      playerSendMessage(mode, {
         type: 'BG_PLAYER:LOAD',
         data: {
           ...this.currentAudio,
@@ -455,14 +453,14 @@
     }
 
     async sendVolumeEvent() {
-      sendEvent({
+      playerSendMessage(mode, {
         type: 'BG_PLAYER:VOLUME',
         data: this.volume * 100,
       });
     }
 
     async sendPlaylistEvent() {
-      sendEvent({
+      playerSendMessage(mode, {
         type: 'BG_PLAYER:PLAYLIST',
         data: this.playlist.map((audio) => ({ ...audio, howl: undefined })),
       });
@@ -471,13 +469,13 @@
 
   // Setup our new audio player class and pass it the playlist.
 
-  window.player = new Player();
-  window.player.setRefreshRate();
-  window.player.sendFullUpdate();
+  window.threadPlayer = new Player();
+  window.threadPlayer.setRefreshRate();
+  window.threadPlayer.sendFullUpdate();
   // TODO: enable after the play url retrieve logic moved to bg
   // navigator.mediaSession.setActionHandler('nexttrack', () => window.player.skip('next'));
   // navigator.mediaSession.setActionHandler('previoustrack', () => window.player.skip('prev'));
-  sendEvent({
+  playerSendMessage(mode, {
     type: 'BG_PLAYER:READY',
   });
 }
