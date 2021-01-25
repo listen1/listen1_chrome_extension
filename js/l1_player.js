@@ -1,35 +1,6 @@
 /* global localStorage getPlayer getPlayerAsync addPlayerListener */
 // eslint-disable-next-line no-unused-vars
 {
-  const proto = Object.getPrototypeOf(localStorage);
-  proto.getObject = function getObject(key) {
-    const value = this.getItem(key);
-    return value && JSON.parse(value);
-  };
-  proto.setObject = function setObject(key, value) {
-    this.setItem(key, JSON.stringify(value));
-  };
-  Object.setPrototypeOf(localStorage, proto);
-
-  const initPlayer = (player) => {
-    // add songs to playlist
-    let localCurrentPlaying = localStorage.getObject('playing-list');
-    if (localCurrentPlaying === null) {
-      localCurrentPlaying = localStorage.getObject('current-playing');
-    }
-    if (localCurrentPlaying === null) {
-      return;
-    }
-    player.setNewPlaylist(localCurrentPlaying);
-
-    const localPlayerSettings = localStorage.getObject('player-settings');
-    if (localPlayerSettings === null) {
-      return;
-    }
-    const track_id = localPlayerSettings.nowplaying_track_id;
-    player.loadById(track_id);
-  };
-
   const mode = 'front';
 
   const myPlayer = getPlayer(mode);
@@ -156,15 +127,23 @@
       l1Player.bootstrapTrack = fn;
     },
     connectPlayer() {
-      const thisPlayer = this;
       getPlayerAsync(mode, (player) => {
+        if (!player.playing) {
+          // load local storage settings
+          const localCurrentPlaying = localStorage.getObject('current-playing');
+          if (localCurrentPlaying !== null) {
+            player.setNewPlaylist(localCurrentPlaying);
+          }
+
+          const localPlayerSettings = localStorage.getObject('player-settings');
+          if (localPlayerSettings !== null) {
+            player.loadById(localPlayerSettings.nowplaying_track_id);
+          }
+        }
         player.sendFullUpdate();
         player.sendPlaylistEvent();
         player.sendPlayingEvent();
         player.sendLoadEvent();
-        if (!player.playing) {
-          initPlayer(thisPlayer);
-        }
       });
     },
   };
