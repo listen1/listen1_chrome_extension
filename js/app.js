@@ -6,7 +6,6 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-param-reassign */
 /* eslint-disable import/no-unresolved */
-Object.getPrototypeOf(axios).request = (config) => angular.element(document.body).injector().get('$rootScope').$q.when(Object.getPrototypeOf(axios).request(config));
 
 const main = () => {
   const app = angular.module('listenone', ['ui-notification', 'loWebManager', 'cfp.hotkeys', 'lastfmClient', 'githubClient', 'pascalprecht.translate']);
@@ -53,8 +52,8 @@ const main = () => {
     $translateProvider.preferredLanguage('zh_CN');
   }]);
 
-  app.run(['Notification', 'loWeb', '$translate',
-    (Notification, loWeb, $translate) => {
+  app.run(['$q', 'loWeb', '$translate',
+    ($q, loWeb, $translate) => {
       function getAutoChooseSource() {
         let enableAutoChooseSource = localStorage.getObject('enable_auto_choose_source');
         if (enableAutoChooseSource === null) {
@@ -71,6 +70,11 @@ const main = () => {
         ),
       );
       l1Player.connectPlayer();
+
+      axios.Axios.prototype.request_original = axios.Axios.prototype.request;
+      axios.Axios.prototype.request = function new_req(config) {
+        return $q.when(this.request_original(config));
+      };
     },
   ]);
 
@@ -422,10 +426,10 @@ const main = () => {
           url,
           method: 'POST',
           data:
-          ({
-            list_id: option_id,
-            track: JSON.stringify($scope.dialog_song),
-          }),
+            ({
+              list_id: option_id,
+              track: JSON.stringify($scope.dialog_song),
+            }),
           headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
           },
