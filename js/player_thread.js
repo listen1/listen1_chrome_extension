@@ -94,6 +94,8 @@
           ...audio,
           howl: null,
         }));
+        // TODO: random mode need random choose first song to load
+        this.index = 0;
         this.load(0);
       }
       this.sendPlaylistEvent();
