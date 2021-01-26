@@ -432,7 +432,7 @@
           position: this.currentHowl ? this.currentHowl.seek() : 0,
         });
       }
-      data.isPlaying = this.playing;
+
       playerSendMessage(mode, {
         type: 'BG_PLAYER:FRAME_UPDATE',
         data,
@@ -480,8 +480,8 @@
   window.threadPlayer.setRefreshRate();
   window.threadPlayer.sendFullUpdate();
   // TODO: enable after the play url retrieve logic moved to bg
-  navigator.mediaSession.setActionHandler('play', function() { window.threadPlayer.play() });
-  navigator.mediaSession.setActionHandler('pause', function() { window.threadPlayer.pause() });
+  navigator.mediaSession.setActionHandler('play', () => { window.threadPlayer.play(); });
+  navigator.mediaSession.setActionHandler('pause', () => { window.threadPlayer.pause(); });
   // navigator.mediaSession.setActionHandler('nexttrack', () => window.player.skip('next'));
   // navigator.mediaSession.setActionHandler('previoustrack', () => window.player.skip('prev'));
   playerSendMessage(mode, {
