@@ -1242,10 +1242,14 @@ const main = () => {
               $scope.$evalAsync(() => {
                 $scope.isPlaying = !!msg.data.isPlaying;
               });
-              if (msg.data.isPlaying) {
-                $rootScope.page_title = `▶ ${$rootScope.page_title.slice($rootScope.page_title.indexOf(' '))}`;
+              if ($rootScope.page_title !== undefined) {
+                if (msg.data.isPlaying) {
+                  $rootScope.page_title = `▶ ${$rootScope.page_title.slice($rootScope.page_title.indexOf(' '))}`;
+                } else {
+                  $rootScope.page_title = `❚❚ ${$rootScope.page_title.slice($rootScope.page_title.indexOf(' '))}`;
+                }
               } else {
-                $rootScope.page_title = `❚❚ ${$rootScope.page_title.slice($rootScope.page_title.indexOf(' '))}`;
+                $rootScope.page_title = 'Listen 1';
               }
               if (isElectron()) {
                 const { ipcRenderer } = require('electron');
