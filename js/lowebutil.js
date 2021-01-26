@@ -15,7 +15,7 @@ function getParameterByName(name, url) { // eslint-disable-line no-unused-vars
 }
 
 function isElectron() {
-  return window?.process?.type;
+  return window && window.process && window.process.type;
 }
 
 function cookieGet(cookie, callback) {
@@ -36,7 +36,7 @@ function cookieSet(cookie, callback) {
       callback(arg1, arg2);
     });
   }
-  const remote = require('electron').remote; // eslint-disable-line
+    const remote = require('electron').remote; // eslint-disable-line
   remote.session.defaultSession.cookies.set(cookie).then((arg1, arg2) => {
     callback(null, arg1, arg2);
   });

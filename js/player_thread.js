@@ -33,11 +33,11 @@
     }
 
     get currentHowl() {
-      return this.currentAudio?.howl;
+      return this.currentAudio && this.currentAudio.howl;
     }
 
     get playing() {
-      return this.currentHowl?.playing?.();
+      return this.currentHowl ? this.currentHowl.playing() : false;
     }
 
     static get muted() {
@@ -245,8 +245,10 @@
      * Pause the currently playing track.
      */
     pause() {
-      // Pause the sound.
-      this.currentHowl?.pause();
+      if (!this.currentHowl) return;
+
+      // Puase the sound.
+      this.currentHowl.pause();
     }
 
     /**
@@ -413,17 +415,19 @@
 
     async sendFrameUpdate() {
       const data = {
-        id: this.currentAudio?.id || 0,
-        duration: this.currentHowl?.duration() || 0,
-        pos: this.currentHowl?.seek() || 0,
+        id: this.currentAudio ? this.currentAudio.id : 0,
+        duration: this.currentHowl ? this.currentHowl.duration() : 0,
+        pos: this.currentHowl ? this.currentHowl.seek() : 0,
         playedFrom: this.playedFrom,
         playing: this.playing,
       };
-      navigator.mediaSession.setPositionState?.({
-        duration: this.currentHowl?.duration() || 0,
-        playbackRate: this.currentHowl?.rate() || 1,
-        position: this.currentHowl?.seek() || 0,
-      });
+      if ('setPositionState' in navigator.mediaSession) {
+        navigator.mediaSession.setPositionState({
+          duration: this.currentHowl ? this.currentHowl.duration() : 0,
+          playbackRate: this.currentHowl ? this.currentHowl.rate() : 1,
+          position: this.currentHowl ? this.currentHowl.seek() : 0,
+        });
+      }
       playerSendMessage(mode, {
         type: 'BG_PLAYER:FRAME_UPDATE',
         data,
