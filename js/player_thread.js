@@ -167,15 +167,17 @@
           mute: self.muted,
           html5: true, // Force to HTML5 so that the audio can stream in (best for large files).
           onplay() {
-            navigator.mediaSession.metadata = new MediaMetadata({
-              title: self.currentAudio.title,
-              artist: self.currentAudio.artist,
-              album: `Listen1  •  ${(self.currentAudio.album || '<???>').padEnd(100)}`,
-              artwork: [{
-                src: self.currentAudio.img_url,
-                sizes: '300x300',
-              }],
-            });
+            if ('mediaSession' in navigator) {
+              navigator.mediaSession.metadata = new MediaMetadata({
+                title: self.currentAudio.title,
+                artist: self.currentAudio.artist,
+                album: `Listen1  •  ${(self.currentAudio.album || '<???>').padEnd(100)}`,
+                artwork: [{
+                  src: self.currentAudio.img_url,
+                  sizes: '300x300',
+                }],
+              });
+            }
             self.currentAudio.disabled = false;
             self.playedFrom = Date.now();
             self.sendPlayingEvent('Playing');
