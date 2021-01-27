@@ -53,3 +53,12 @@ function setPrototypeOfLocalStorage() {
   };
   Object.setPrototypeOf(localStorage, proto);
 }
+
+function getLocalStorageValue(key, defaultValue) {
+  const keyString = localStorage.getItem(key);
+  let result = keyString && JSON.parse(keyString);
+  if (result === null) {
+    result = defaultValue;
+  }
+  return result;
+}
