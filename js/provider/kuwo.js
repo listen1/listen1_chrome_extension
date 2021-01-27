@@ -15,8 +15,8 @@ function build_kuwo() {
     // const t = parseInt(num, 10);
     return parseInt(num / 10, 10).toString() + (num % 10).toString();
   }
-
-  /*function kw_convert_song(item) {
+/*
+  function kw_convert_song(item) {
     const song_id = item.MUSICRID.split('_').pop();
     const track = {
       id: `kwtrack_${song_id}`,
@@ -28,12 +28,12 @@ function build_kuwo() {
       source: 'kuwo',
       source_url: `https://www.kuwo.cn/play_detail/${song_id}`,
       img_url: '',
-      url: `xmtrack_${song_id}`,
+      // url: `kwtrack_${song_id}`,
       lyric_url: song_id,
     };
     return track;
-  }*/
-
+  }
+*/
   function kw_convert_song2(item) {
     return {
       id: `kwtrack_${item.rid}`,
@@ -45,33 +45,11 @@ function build_kuwo() {
       source: 'kuwo',
       source_url: `https://www.kuwo.cn/play_detail/${item.rid}`,
       img_url: item.pic,
-      //url: `kwtrack_${musicrid}`,
+      // url: `kwtrack_${musicrid}`,
       lyric_url: item.rid,
     };
   }
-
-  function kw_render_tracks(url, page, hm, se, callback) {
-    const list_id = getParameterByName('list_id', url).split('_').pop();
-    const playlist_type = getParameterByName('list_id', url).split('_')[0];
-    let tracks_url = '';
-    switch (playlist_type) {
-      case 'kwplaylist': 
-        // tracks_url = `https://m.kuwo.cn/newh5app/api/mobile/v1/music/playlist/${list_id}?pn=${page}&rn=1000`
-        tracks_url = `https://www.kuwo.cn/api/www/playlist/playListInfo?pid=${list_id}&pn=${page}&rn=100&httpsStatus=1`;
-        break;
-      case 'kwalbum':
-        // tracks_url = `https://m.kuwo.cn/newh5app/api/mobile/v1/music/album/${list_id}?rn=1000`
-        tracks_url = `https://www.kuwo.cn/api/www/album/albumInfo?albumId=${list_id}&pn=${page}&rn=100&httpsStatus=1`;
-    }
-    // hm.get(tracks_url).then((response) => {
-    kw_cookie_get(hm, tracks_url, (response) => {
-      let data =  response.data.data.musicList;
-      const tracks = data.map((item) => kw_convert_song2(item));
-      return callback(null, tracks);
-    });
-  }
-
-  /*
+/*
   function async_process_list(data_list, handler, handler_extra_param_list, callback) {
     const fnDict = {};
     data_list.forEach((item, index) => {
@@ -166,8 +144,7 @@ function build_kuwo() {
 
     kw_add_song_pic_in_track(track, params, callback);
   }
-  */
-
+*/
   function kw_get_token(callback) {
     const domain = 'https://www.kuwo.cn';
     const name = 'kw_token';
@@ -222,6 +199,29 @@ function build_kuwo() {
           callback(response);
         }
       });
+    });
+  }
+
+  function kw_render_tracks(url, page, hm, se, callback) {
+    const list_id = getParameterByName('list_id', url).split('_').pop();
+    const playlist_type = getParameterByName('list_id', url).split('_')[0];
+    let tracks_url = '';
+    switch (playlist_type) {
+      case 'kwplaylist':
+        // tracks_url = `https://m.kuwo.cn/newh5app/api/mobile/v1/music/playlist/${list_id}?pn=${page}&rn=1000`
+        tracks_url = `https://www.kuwo.cn/api/www/playlist/playListInfo?pid=${list_id}&pn=${page}&rn=100&httpsStatus=1`;
+        break;
+      case 'kwalbum':
+        // tracks_url = `https://m.kuwo.cn/newh5app/api/mobile/v1/music/album/${list_id}?rn=1000`
+        tracks_url = `https://www.kuwo.cn/api/www/album/albumInfo?albumId=${list_id}&pn=${page}&rn=100&httpsStatus=1`;
+        break;
+      default:
+        break;
+    }
+    // hm.get(tracks_url).then((response) => {
+    kw_cookie_get(hm, tracks_url, (response) => {
+      const tracks = response.data.data.musicList.map((item) => kw_convert_song2(item));
+      return callback(null, tracks);
     });
   }
 
