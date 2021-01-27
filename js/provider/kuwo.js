@@ -15,7 +15,7 @@ function build_kuwo() {
     // const t = parseInt(num, 10);
     return parseInt(num / 10, 10).toString() + (num % 10).toString();
   }
-/*
+  /*
   function kw_convert_song(item) {
     const song_id = item.MUSICRID.split('_').pop();
     const track = {
@@ -33,7 +33,7 @@ function build_kuwo() {
     };
     return track;
   }
-*/
+  */
   function kw_convert_song2(item) {
     return {
       id: `kwtrack_${item.rid}`,
@@ -49,7 +49,7 @@ function build_kuwo() {
       lyric_url: item.rid,
     };
   }
-/*
+  /*
   function async_process_list(data_list, handler, handler_extra_param_list, callback) {
     const fnDict = {};
     data_list.forEach((item, index) => {
@@ -144,7 +144,7 @@ function build_kuwo() {
 
     kw_add_song_pic_in_track(track, params, callback);
   }
-*/
+  */
   function kw_get_token(callback) {
     const domain = 'https://www.kuwo.cn';
     const name = 'kw_token';
@@ -240,7 +240,7 @@ function build_kuwo() {
       default:
         break;
     }
-    let target_url = `https://www.kuwo.cn/api/www/search/${api}?key=${keyword}&pn=${curpage}&rn=20`;
+    const target_url = `https://www.kuwo.cn/api/www/search/${api}?key=${keyword}&pn=${curpage}&rn=20`;
     return {
       success(fn) {
         kw_cookie_get(hm, target_url, (response) => {
@@ -258,14 +258,14 @@ function build_kuwo() {
               img_url: item.img,
               url: `kwplaylist_${item.id}`,
               author: html_decode(item.uname),
-              count: item.total
+              count: item.total,
             }));
             total = response.data.data.total;
           }
           return fn({
             result,
             total,
-            type: searchType
+            type: searchType,
           });
         });
       },
@@ -277,7 +277,7 @@ function build_kuwo() {
     const song_id = track.id.slice('kwtrack_'.length);
     const target_url = 'https://antiserver.kuwo.cn/anti.s?'
       + `type=convert_url&format=mp3&response=url&rid=${song_id}`;
-    /*const target_url = 'http://www.kuwo.cn/url?'
+  /*const target_url = 'http://www.kuwo.cn/url?'
       + `format=mp3&rid=${song_id}&response=url&type=convert_url3&br=128kmp3&from=web`;
     https://m.kuwo.cn/newh5app/api/mobile/v1/music/src/${song_id}*/
 
@@ -309,27 +309,38 @@ function build_kuwo() {
         }).then((response) => {
           let { data } = response;
           data = JSON.parse(data);
-          data = data.status == 200 ? kw_generate_translation(data.data.lrclist) : {};
+          data = data.status === 200 ? kw_generate_translation(data.data.lrclist) : {};
           return fn({
             lyric: data.lrc || '',
-            tlyric: data.tlrc  || '',
+            tlyric: data.tlrc || '',
           });
         });
       },
     };
   }
 
+  function kw_get_lrc(arr) {
+    const lyric = arr.reduce((str, item) => {
+      const t = parseFloat(item.time);
+      const m = parseInt(t / 60, 10);
+      const s = parseInt(t - m * 60, 10);
+      const ms = parseInt((t - m * 60 - s) * 100, 10);
+      return `${str}[${num2str(m)}:${num2str(parseInt(s, 10))}.${num2str(ms)}]${item.lineLyric}\n`;
+    }, '');
+    return lyric;
+  }
+
   function kw_generate_translation(lrclist) {
     if (lrclist) {
       // 将歌词和翻译分成两个数组，并将对应歌词和翻译的时间调整为相等，数组最后一个数据无法做判断，故传给翻译数组做后续处理
-      lrclist.filter((item) => item.lineLyric !== "//");
+      lrclist.filter((item) => item.lineLyric !== '//');
       let lrc_arr = lrclist.filter((item, index, self) =>
-        index < self.length - 1 ? (Number(item.time) == 0 ? item : item.time !== self[index + 1].time) : null);
+        index < self.length - 1 ? (Number(item.time) === 0 ? item : item.time !== self[index + 1].time) : null);
       let tlrc_arr = lrclist.filter((item, index, self) => 
-        (index < self.length - 1 && Number(item.time) !== 0 && item.time == self[index + 1].time) ? item.time = self[index - 1].time : (index == self.length  -1 ? item : null));
+        (index < self.length - 1 && Number(item.time) !== 0 && item.time == self[index + 1].time) ? item.time = self[index - 1].time : (index == self.length -1 ? item : null));
       // tlrc_arr如只有一个即为没有翻译歌词
-      if (tlrc_arr.length == 1) {
-        lrc_arr.push.apply(lrc_arr, tlrc_arr);
+      if (tlrc_arr.length === 1) {
+        lrc_arr = [...lrc_arr, ...tlrc_arr];
         tlrc_arr = [];
       } else {
         tlrc_arr[tlrc_arr.length - 1].time = lrc_arr[lrc_arr.length - 1].time;
@@ -346,24 +357,13 @@ function build_kuwo() {
     }
   }
 
-  function kw_get_lrc(arr) {
-    const lyric = arr.reduce((str, item) => {
-      const t = parseFloat(item.time);
-      const m = parseInt(t / 60, 10);
-      const s = parseInt(t - m * 60, 10);
-      const ms = parseInt((t - m * 60 - s) * 100, 10);
-      return `${str}[${num2str(m)}:${num2str(parseInt(s, 10))}.${num2str(ms)}]${item.lineLyric.replace(/\/\//g, '')}\n`;
-    }, '');
-    return lyric;
-  }
-
   function kw_artist(url, hm, se) { // eslint-disable-line no-unused-vars
     const artist_id = getParameterByName('list_id', url).split('_').pop();
     return {
       success(fn) {
         let target_url = `https://www.kuwo.cn/api/www/artist/artist?artistid=${artist_id}`;
         kw_cookie_get(hm, target_url, (response) => {
-          let { data } = response.data;
+          const { data } = response.data;
           //data = JSON.parse(fix_json(data));
           const info = {
             cover_img_url: data.pic300,
@@ -375,11 +375,11 @@ function build_kuwo() {
           // Get songs
           target_url = `https://www.kuwo.cn/api/www/artist/artistMusic?artistid=${artist_id}&pn=1&rn=50`;
           kw_cookie_get(hm, target_url, (res) => {
-            let { data: res_data } = res.data;
+            const { data: res_data } = res.data;
             const tracks = res_data.list.map((item) => kw_convert_song2(item));
             return fn({
               tracks,
-              info
+              info,
             });
           });
           /* 
@@ -408,7 +408,7 @@ function build_kuwo() {
     const album_id = getParameterByName('list_id', url).split('_').pop();
     return {
       success(fn) {
-        let target_url = 'https://search.kuwo.cn/r.s?pn=0&rn=0&stype=albuminfo'
+        const target_url = 'https://search.kuwo.cn/r.s?pn=0&rn=0&stype=albuminfo'
           + `&albumid=${album_id}&alflac=1&pcmp4=1&encoding=utf8`
           + '&vipver=MUSIC_8.7.7.0_W4';
         hm({
@@ -428,7 +428,7 @@ function build_kuwo() {
           // Get songs
           const total = data.songnum;
           const page = Math.ceil(total / 100);
-          const page_array = Array.from({length: page}, (v, k) => k + 1);
+          const page_array = Array.from({ length: page }, (v, k) => k + 1);
           async.concat(page_array, function(item, callback) {
             return kw_render_tracks(url, item, hm, se, callback);
           },function(err, tracks) {
@@ -503,12 +503,14 @@ function build_kuwo() {
       35: '欧洲',
       37: '华语',
     }; */
-    /*const target_url = 'http://www.kuwo.cn/www/categoryNew/getPlayListInfoUnderCategory?'
-      + `type=taglist&digest=10000&id=${37}&start=${offset}&count=50`;*/
+    // const target_url = 'http://www.kuwo.cn/www/categoryNew/getPlayListInfoUnderCategory?'
+    // + `type=taglist&digest=10000&id=${37}&start=${offset}&count=50`;
     const target_url =`https://www.kuwo.cn/api/pc/classify/playlist/getRcmPlayList?pn=${offset / 25 + 1}&rn=25&order=hot&httpsStatus=1`;
-    /*精选歌单:roder=最热:hot, 最新:new
-      tag歌单地址 https://www.kuwo.cn/api/pc/classify/playlist/getTagPlayList?pn=${offset / 25 + 1}&rn=25&id=37&httpsStatus=1
-      id =华语:37,*/ 
+  /*
+  精选歌单:roder=最热:hot, 最新:new
+  tag歌单地址 https://www.kuwo.cn/api/pc/classify/playlist/getTagPlayList?pn=${offset / 25 + 1}&rn=25&id=37&httpsStatus=1
+  id =华语:37,
+  */ 
     return {
       success(fn) {
         hm.get(target_url).then((response) => {
@@ -549,7 +551,7 @@ function build_kuwo() {
           };
           const total = data.total;
           const page = Math.ceil(total / 100);
-          const page_array = Array.from({length: page}, (v, k) => k + 1);
+          const page_array = Array.from({ length: page }, (v, k) => k + 1);
           async.concat(page_array, function(item, callback) {
             return kw_render_tracks(url, item, hm, se, callback);
           },function(err, tracks) {
@@ -571,27 +573,28 @@ function build_kuwo() {
   }
 
   function kw_parse_url(url) {
-    let result, id;
+    let result;
+    let id;
     url = url.replace(/kuwo.cn\/(h5app|newh5(?:app){0,1})\//, 'kuwo.cn/');
     url = url.replace(/kuwo.cn\/(album\/|\?albumid=)/, 'kuwo.cn/album_detail/');
     url = url.replace(/kuwo.cn\/(artist|singers)\//, 'kuwo.cn/singer_detail/');
     url = url.replace(/kuwo.cn\/playlist\//, 'kuwo.cn/playlist_detail/');
     if (url.search('kuwo.cn/playlist_detail') !== -1) {
-      let match = /kuwo.cn\/playlist_detail\/([0-9]+)/.exec(url);
+      const match = /kuwo.cn\/playlist_detail\/([0-9]+)/.exec(url);
       id = match ? match[1] : getParameterByName('pid', url);
       result = {
         type: 'playlist',
         id: `kwplaylist_${id}`,
       };
     } else if (url.search('kuwo.cn/singer_detail') !== -1) {
-      let match = /kuwo.cn\/singer_detail\/([0-9]+)/.exec(url);
+      const match = /kuwo.cn\/singer_detail\/([0-9]+)/.exec(url);
       id = match ? match[1] : getParameterByName('id', url);
       result = {
         type: 'playlist',
         id: `kwartist_${id}`,
       };
     } else if (url.search('kuwo.cn/album_detail') !== -1) {
-      let match = /kuwo.cn\/album_detail\/([0-9]+)/.exec(url);
+      const match = /kuwo.cn\/album_detail\/([0-9]+)/.exec(url);
       if (match) {
         id = match[1];
         result = {
