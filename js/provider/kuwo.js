@@ -170,7 +170,8 @@ function build_kuwo() {
             },
           // eslint-disable-next-line consistent-return
           }).then((response) => {
-            const { data } = response;
+            let { data } = response;
+            data = JSON.parse(fix_json(data));
             if (data.success === false) {
             // token not valid
               return axios.get(token_url).then(() => kw_search(url).success(fn));
@@ -253,7 +254,8 @@ function build_kuwo() {
         const target_url = `${'http://search.kuwo.cn/r.s?stype=artistinfo'
           + '&artistid='}${artist_id}&encoding=utf8`;
         axios.get(target_url).then((response) => {
-          const { data } = response; // TODO: Check JSON Schema is correct
+          let { data } = response; // TODO: Check JSON Schema is correct
+          data = JSON.parse(fix_json(data));
           const info = {
             cover_img_url: `http://img1.sycdn.kuwo.cn/star/starheads/${data.pic}`,
             title: html_decode(data.name),
@@ -265,8 +267,11 @@ function build_kuwo() {
           const target_url = `${'http://search.kuwo.cn/r.s?stype=artist2music'
             + '&sortby=0&alflac=1&pcmp4=1&encoding=utf8'
             + '&artistid='}${artist_id}&pn=0&rn=100`;
-          axios.get(target_url).then((res) => {
-            async_process_list(res.data.musiclist, kw_render_artist_result_item, [],
+          axios.get(target_url).then((response) => {
+            let { data } = response; // TODO: Check JSON Schema is correct
+            data = JSON.parse(fix_json(data));
+
+            async_process_list(data.musiclist, kw_render_artist_result_item, [],
               (err, tracks) => fn({
                 tracks,
                 info,
@@ -285,7 +290,8 @@ function build_kuwo() {
           + '&albumid='}${album_id
         }&alflac=1&pcmp4=1&encoding=utf8&vipver=MUSIC_8.7.7.0_W4`;
         axios.get(target_url).then((response) => {
-          const { data } = response;
+          let { data } = response;
+          data = JSON.parse(fix_json(data));
 
           const info = {
             cover_img_url: `http://img1.sycdn.kuwo.cn/star/albumcover/${data.pic}`,
