@@ -69,7 +69,6 @@ const main = () => {
           getAutoChooseSource,
         ),
       );
-      l1Player.connectPlayer();
 
       axios.Axios.prototype.request_original = axios.Axios.prototype.request;
       axios.Axios.prototype.request = function new_req(config) {
@@ -1239,7 +1238,7 @@ const main = () => {
             case 'PLAYLIST': {
               // 'player:playlist'
               $scope.playlist = msg.data;
-              localStorage.setObject('playing-list', msg.data);
+              localStorage.setObject('current-playing', msg.data);
               break;
             }
 
@@ -1248,10 +1247,14 @@ const main = () => {
               $scope.$evalAsync(() => {
                 $scope.isPlaying = !!msg.data.isPlaying;
               });
-              if (msg.data.isPlaying) {
-                $rootScope.page_title = `▶ ${$rootScope.page_title.slice($rootScope.page_title.indexOf(' '))}`;
+              if ($rootScope.page_title !== undefined) {
+                if (msg.data.isPlaying) {
+                  $rootScope.page_title = `▶ ${$rootScope.page_title.slice($rootScope.page_title.indexOf(' '))}`;
+                } else {
+                  $rootScope.page_title = `❚❚ ${$rootScope.page_title.slice($rootScope.page_title.indexOf(' '))}`;
+                }
               } else {
-                $rootScope.page_title = `❚❚ ${$rootScope.page_title.slice($rootScope.page_title.indexOf(' '))}`;
+                $rootScope.page_title = 'Listen 1';
               }
               if (isElectron()) {
                 const { ipcRenderer } = require('electron');
@@ -1283,6 +1286,9 @@ const main = () => {
           sendResponse();
         }
       });
+
+      // connect player should run after all addListener function finished
+      l1Player.connectPlayer();
 
       // define keybind
       hotkeys.add({

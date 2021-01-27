@@ -94,6 +94,8 @@
           ...audio,
           howl: null,
         }));
+        // TODO: random mode need random choose first song to load
+        this.index = 0;
         this.load(0);
       }
       this.sendPlaylistEvent();
@@ -165,15 +167,17 @@
           mute: self.muted,
           html5: true, // Force to HTML5 so that the audio can stream in (best for large files).
           onplay() {
-            navigator.mediaSession.metadata = new MediaMetadata({
-              title: self.currentAudio.title,
-              artist: self.currentAudio.artist,
-              album: `Listen1  •  ${(self.currentAudio.album || '<???>').padEnd(100)}`,
-              artwork: [{
-                src: self.currentAudio.img_url,
-                sizes: '300x300',
-              }],
-            });
+            if ('mediaSession' in navigator) {
+              navigator.mediaSession.metadata = new MediaMetadata({
+                title: self.currentAudio.title,
+                artist: self.currentAudio.artist,
+                album: `Listen1  •  ${(self.currentAudio.album || '<???>').padEnd(100)}`,
+                artwork: [{
+                  src: self.currentAudio.img_url,
+                  sizes: '300x300',
+                }],
+              });
+            }
             self.currentAudio.disabled = false;
             self.playedFrom = Date.now();
             self.sendPlayingEvent('Playing');
@@ -421,11 +425,14 @@
         playedFrom: this.playedFrom,
         playing: this.playing,
       };
-      navigator.mediaSession.setPositionState({
-        duration: this.currentHowl ? this.currentHowl.duration() : 0,
-        playbackRate: this.currentHowl ? this.currentHowl.rate() : 1,
-        position: this.currentHowl ? this.currentHowl.seek() : 0,
-      });
+      if ('setPositionState' in navigator.mediaSession) {
+        navigator.mediaSession.setPositionState({
+          duration: this.currentHowl ? this.currentHowl.duration() : 0,
+          playbackRate: this.currentHowl ? this.currentHowl.rate() : 1,
+          position: this.currentHowl ? this.currentHowl.seek() : 0,
+        });
+      }
+
       playerSendMessage(mode, {
         type: 'BG_PLAYER:FRAME_UPDATE',
         data,
@@ -473,6 +480,8 @@
   window.threadPlayer.setRefreshRate();
   window.threadPlayer.sendFullUpdate();
   // TODO: enable after the play url retrieve logic moved to bg
+  navigator.mediaSession.setActionHandler('play', () => { window.threadPlayer.play(); });
+  navigator.mediaSession.setActionHandler('pause', () => { window.threadPlayer.pause(); });
   // navigator.mediaSession.setActionHandler('nexttrack', () => window.player.skip('next'));
   // navigator.mediaSession.setActionHandler('previoustrack', () => window.player.skip('prev'));
   playerSendMessage(mode, {
