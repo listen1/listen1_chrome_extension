@@ -2,6 +2,7 @@
 /* global l1Player require */
 /* global $ angular isElectron getAllProviders */
 /* global setPrototypeOfLocalStorage addPlayerListener */
+/* global getLocalStorageValue getPlayer getPlayerAsync */
 /* eslint-disable global-require */
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-param-reassign */
@@ -953,17 +954,10 @@ const main = () => {
         $scope.enableLyricFloatingWindow = localStorage.getObject('enable_lyric_floating_window');
         $scope.enableLyricTranslation = localStorage.getObject('enable_lyric_translation');
         $scope.enableLyricFloatingWindowTranslation = localStorage.getObject('enable_lyric_floating_window_translation');
-        $scope.enableAutoChooseSource = localStorage.getObject('enable_auto_choose_source');
-        $scope.enableNowplayingCoverBackground = localStorage.getObject('enable_nowplaying_cover_background');
+        $scope.enableAutoChooseSource = getLocalStorageValue('enable_auto_choose_source', true);
+        $scope.enableStopWhenClose = getLocalStorageValue('enable_stop_when_close', true);
+        $scope.enableNowplayingCoverBackground = getLocalStorageValue('enable_nowplaying_cover_background', false);
 
-        if ($scope.enableAutoChooseSource === null) {
-          // default on
-          $scope.enableAutoChooseSource = true;
-        }
-        if ($scope.enableNowplayingCoverBackground === null) {
-          // default false
-          $scope.enableNowplayingCoverBackground = false;
-        }
         $scope.applyGlobalShortcut();
         $scope.openLyricFloatingWindow();
       };
@@ -1092,7 +1086,16 @@ const main = () => {
 
         return result;
       }
-      const mode = 'front';
+      const mode = getLocalStorageValue('enable_stop_when_close', true) ? 'front' : 'background';
+
+      getPlayer(mode).setMode(mode);
+      if (mode === 'front') {
+        // avoid background keep playing when change to front mode
+        getPlayerAsync('background', (player) => {
+          player.pause();
+        });
+      }
+
       addPlayerListener(mode, (msg, sender, sendResponse) => {
         if (typeof msg.type === 'string' && msg.type.split(':')[0] === 'BG_PLAYER') {
           switch (msg.type.split(':').slice(1).join('')) {
@@ -1427,6 +1430,11 @@ const main = () => {
           $scope.enableAutoChooseSource = !$scope.enableAutoChooseSource;
         }
         localStorage.setObject('enable_auto_choose_source', $scope.enableAutoChooseSource);
+      };
+
+      $scope.setStopWhenClose = (status) => {
+        $scope.enableStopWhenClose = status;
+        localStorage.setObject('enable_stop_when_close', $scope.enableStopWhenClose);
       };
 
       $scope.setNowplayingCoverBackground = (toggle) => {

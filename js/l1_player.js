@@ -1,6 +1,6 @@
-/* global getPlayer getPlayerAsync addPlayerListener */
+/* global getPlayer getPlayerAsync addPlayerListener getLocalStorageValue */
 {
-  const mode = 'front';
+  const mode = getLocalStorageValue('enable_stop_when_close', true) ? 'front' : 'background';
 
   const myPlayer = getPlayer(mode);
   const l1Player = {
