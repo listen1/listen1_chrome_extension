@@ -3,8 +3,6 @@
 /* global Howl Howler */
 
 {
-  const mode = 'front';
-
   /**
    * Player class containing the state of our playlist and where we are in it.
    * Includes all methods for playing, skipping, updating the display, etc.
@@ -17,6 +15,11 @@
       this._loop_mode = 0;
       this._media_uri_list = {};
       this.playedFrom = 0;
+      this.mode = 'background';
+    }
+
+    setMode(newMode) {
+      this.mode = newMode;
     }
 
     setRefreshRate(rate = 10) {
@@ -121,7 +124,7 @@
     }
 
     retrieveMediaUrl(index, playNow) {
-      playerSendMessage(mode, {
+      playerSendMessage(this.mode, {
         type: 'BG_PLAYER:RETRIEVE_URL',
         data: {
           ...this.playlist[index],
@@ -147,7 +150,7 @@
       if (this.index !== index) Howler.stop();
       const data = this.playlist[index];
 
-      if (!data.howl || !this._media_uri_list[data.url]) {
+      if (!data.howl || !this._media_uri_list[data.id]) {
         this.retrieveMediaUrl(index, playNow);
       } else {
         this.finishLoad(index, playNow);
@@ -218,7 +221,7 @@
           onvolume() {
           },
           onloaderror(id, err) {
-            playerSendMessage(mode, {
+            playerSendMessage(this.mode, {
               type: 'BG_PLAYER:PLAY_FAILED',
               data: err,
             });
@@ -228,7 +231,7 @@
             delete self._media_uri_list[data.id];
           },
           onplayerror(id, err) {
-            playerSendMessage(mode, {
+            playerSendMessage(this.mode, {
               type: 'BG_PLAYER:PLAY_FAILED',
               data: err,
             });
@@ -341,7 +344,7 @@
 
     mute() {
       Howler.mute(true);
-      playerSendMessage(mode, {
+      playerSendMessage(this.mode, {
         type: 'BG_PLAYER:MUTE',
         data: true,
       });
@@ -350,7 +353,7 @@
 
     unmute() {
       Howler.mute(false);
-      playerSendMessage(mode, {
+      playerSendMessage(this.mode, {
         type: 'BG_PLAYER:MUTE',
         data: false,
       });
@@ -411,7 +414,7 @@
       //     playing: this.playing,
       //   },
       // };
-      // playerSendMessage(mode, {
+      // playerSendMessage(this.mode, {
       //   type: 'BG_PLAYER:FULL_UPDATE',
       //   data,
       // });
@@ -433,14 +436,14 @@
         });
       }
 
-      playerSendMessage(mode, {
+      playerSendMessage(this.mode, {
         type: 'BG_PLAYER:FRAME_UPDATE',
         data,
       });
     }
 
     async sendPlayingEvent(reason = 'UNKNOWN') {
-      playerSendMessage(mode, {
+      playerSendMessage(this.mode, {
         type: 'BG_PLAYER:PLAY_STATE',
         data: {
           isPlaying: this.playing,
@@ -450,7 +453,7 @@
     }
 
     async sendLoadEvent() {
-      playerSendMessage(mode, {
+      playerSendMessage(this.mode, {
         type: 'BG_PLAYER:LOAD',
         data: {
           ...this.currentAudio,
@@ -460,14 +463,14 @@
     }
 
     async sendVolumeEvent() {
-      playerSendMessage(mode, {
+      playerSendMessage(this.mode, {
         type: 'BG_PLAYER:VOLUME',
         data: this.volume * 100,
       });
     }
 
     async sendPlaylistEvent() {
-      playerSendMessage(mode, {
+      playerSendMessage(this.mode, {
         type: 'BG_PLAYER:PLAYLIST',
         data: this.playlist.map((audio) => ({ ...audio, howl: undefined })),
       });
@@ -484,7 +487,7 @@
   navigator.mediaSession.setActionHandler('pause', () => { window.threadPlayer.pause(); });
   // navigator.mediaSession.setActionHandler('nexttrack', () => window.player.skip('next'));
   // navigator.mediaSession.setActionHandler('previoustrack', () => window.player.skip('prev'));
-  playerSendMessage(mode, {
+  playerSendMessage(this.mode, {
     type: 'BG_PLAYER:READY',
   });
 }

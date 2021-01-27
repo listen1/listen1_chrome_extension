@@ -323,12 +323,41 @@
                               {{_AUTO_CHOOSE_SOURCE_NOTICE}}
                             </div>
                           </div>
+                          <div class="settings-title"><span>{{_CLOSE_TAB_ACTION}}({{_VALID_AFTER_RESTART}})</span></div>
+                          <div class="settings-content">
+                            <div class="shortcut">
+                              <svg class="feather" ng-show="!enableStopWhenClose" ng-click="setStopWhenClose(true)"><use xlink:href="images/feather-sprite.svg#square"></use></svg>
+                              <svg class="feather" ng-show="enableStopWhenClose" ng-click="setStopWhenClose(false)"><use xlink:href="images/feather-sprite.svg#check-square"></use></svg>
+                              <span style="margin-right: 20px;">{{_QUIT_APPLICATION}}</span>
+                              <svg class="feather" ng-show="enableStopWhenClose" ng-click="setStopWhenClose(false)"><use xlink:href="images/feather-sprite.svg#square"></use></svg>
+                              <svg class="feather" ng-show="!enableStopWhenClose" ng-click="setStopWhenClose(true)"><use xlink:href="images/feather-sprite.svg#check-square"></use></svg>
+                              <span> {{_MINIMIZE_TO_BACKGROUND}}</span>
+                            </div>
+                          </div>
                           <div class="settings-title"><span>{{_NOWPLAYING_COVER_BACKGROUND}}</span></div>
                           <div class="settings-content">
-                            <div class="shortcut" class="btn btn-primary confirm-button" >
+                            <div class="shortcut">
                               <svg class="feather" ng-show="!enableNowplayingCoverBackground" ng-click="setNowplayingCoverBackground(true)"><use xlink:href="images/feather-sprite.svg#square"></use></svg>
                               <svg class="feather" ng-show="enableNowplayingCoverBackground" ng-click="setNowplayingCoverBackground(true)"><use xlink:href="images/feather-sprite.svg#check-square"></use></svg>
                               {{_NOWPLAYING_COVER_BACKGROUND_NOTICE}}
+                            </div>
+                          </div>
+                          <div class="settings-title"><span>{{_LYRIC_DISPLAY}}</span></div>
+                          <div class="settings-content">
+                            <div class="shortcut" ng-if="!isChrome">
+                              <svg class="feather" ng-show="!enableLyricFloatingWindow" ng-click="openLyricFloatingWindow(true)"><use xlink:href="images/feather-sprite.svg#square"></use></svg>
+                              <svg class="feather" ng-show="enableLyricFloatingWindow" ng-click="openLyricFloatingWindow(true)"><use xlink:href="images/feather-sprite.svg#check-square"></use></svg>
+                              <span ng-show="enableLyricFloatingWindow"></span>{{_SHOW_DESKTOP_LYRIC}}
+                            </div>
+                            <div class="shortcut">
+                              <svg class="feather" ng-show="!enableLyricTranslation" ng-click="toggleLyricTranslation()"><use xlink:href="images/feather-sprite.svg#square"></use></svg>
+                              <svg class="feather" ng-show="enableLyricTranslation" ng-click="toggleLyricTranslation()"><use xlink:href="images/feather-sprite.svg#check-square"></use></svg>
+                              <span ng-show="enableLyricTranslation"></span>{{_SHOW_LYRIC_TRANSLATION}}
+                            </div>
+                            <div class="shortcut" ng-if="!isChrome" >
+                              <svg class="feather" ng-show="!enableLyricFloatingWindowTranslation" ng-click="toggleLyricFloatingWindowTranslation()"><use xlink:href="images/feather-sprite.svg#square"></use></svg>
+                              <svg class="feather" ng-show="enableLyricFloatingWindowTranslation" ng-click="toggleLyricFloatingWindowTranslation()"><use xlink:href="images/feather-sprite.svg#check-square"></use></svg>
+                              <span ng-show="enableLyricFloatingWindowTranslation"></span>{{_SHOW_DESKTOP_LYRIC_TRANSLATION}}
                             </div>
                           </div>
                           <div class="settings-title"><span>{{_BACKUP_PLAYLIST}}</span></div>
@@ -376,24 +405,7 @@
                               <button class="btn btn-primary confirm-button" ng-show="lastfm.isAuthRequested()" ng-click="lastfm.cancelAuth();">{{_CANCEL_CONNECT}}</button>
                             </div>
                           </div>
-                          <div class="settings-title"><span>{{_LYRIC_DISPLAY}}</span></div>
-                          <div class="settings-content">
-                            <div class="shortcut" ng-if="!isChrome" class="btn btn-primary confirm-button" >
-                              <svg class="feather" ng-show="!enableLyricFloatingWindow" ng-click="openLyricFloatingWindow(true)"><use xlink:href="images/feather-sprite.svg#square"></use></svg>
-                              <svg class="feather" ng-show="enableLyricFloatingWindow" ng-click="openLyricFloatingWindow(true)"><use xlink:href="images/feather-sprite.svg#check-square"></use></svg>
-                              <span ng-show="enableLyricFloatingWindow"></span>{{_SHOW_DESKTOP_LYRIC}}
-                            </div>
-                            <div class="shortcut" class="btn btn-primary confirm-button" >
-                              <svg class="feather" ng-show="!enableLyricTranslation" ng-click="toggleLyricTranslation()"><use xlink:href="images/feather-sprite.svg#square"></use></svg>
-                              <svg class="feather" ng-show="enableLyricTranslation" ng-click="toggleLyricTranslation()"><use xlink:href="images/feather-sprite.svg#check-square"></use></svg>
-                              <span ng-show="enableLyricTranslation"></span>{{_SHOW_LYRIC_TRANSLATION}}
-                            </div>
-                            <div class="shortcut" ng-if="!isChrome" class="btn btn-primary confirm-button" >
-                              <svg class="feather" ng-show="!enableLyricFloatingWindowTranslation" ng-click="toggleLyricFloatingWindowTranslation()"><use xlink:href="images/feather-sprite.svg#square"></use></svg>
-                              <svg class="feather" ng-show="enableLyricFloatingWindowTranslation" ng-click="toggleLyricFloatingWindowTranslation()"><use xlink:href="images/feather-sprite.svg#check-square"></use></svg>
-                              <span ng-show="enableLyricFloatingWindowTranslation"></span>{{_SHOW_DESKTOP_LYRIC_TRANSLATION}}
-                            </div>
-                          </div>
+
                           <div class="settings-title"><span>{{_ABOUT}}</span></div>
                           <div class="settings-content">
                             <p> Listen 1 {{_HOMEPAGE}}: <a open-url="'http://listen1.github.io/listen1/'"> http://listen1.github.io/listen1/ </a> </p>
