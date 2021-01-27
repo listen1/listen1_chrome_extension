@@ -1,6 +1,5 @@
-/* eslint-disable no-param-reassign */
 /* eslint-disable no-unused-vars */
-/* global localStorage getParameterByName */
+/* global getParameterByName */
 const myplaylistFactory = () => {
   function getPlaylistObjectKey(playlist_type) {
     let key = '';
@@ -36,7 +35,7 @@ const myplaylistFactory = () => {
     };
   }
 
-  function get_myplaylist(url, hm, se) {
+  function get_myplaylist(url) {
     const list_id = getParameterByName('list_id', url);
     return {
       success(fn) {
@@ -60,7 +59,8 @@ const myplaylistFactory = () => {
       s4()}-${s4()}${s4()}${s4()}`;
   }
 
-  const save_myplaylist = (playlist_type, playlist) => {
+  const save_myplaylist = (playlist_type, playlistObj) => {
+    const playlist = playlistObj;
     const key = getPlaylistObjectKey(playlist_type);
     if (key === '') {
       return;

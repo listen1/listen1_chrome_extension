@@ -1,5 +1,4 @@
-/* global localStorage getPlayer getPlayerAsync addPlayerListener getLocalStorageValue */
-// eslint-disable-next-line no-unused-vars
+/* global getPlayer getPlayerAsync addPlayerListener getLocalStorageValue */
 {
   const mode = getLocalStorageValue('enable_stop_when_close', true) ? 'front' : 'background';
 

@@ -1,4 +1,3 @@
-/* global  $ localStorage */
 function github() {
   const OAUTH_URL = 'https://github.com/login/oauth';
   const API_URL = 'https://api.github.com';
@@ -60,28 +59,20 @@ function github() {
         client_secret,
         code,
       };
-      $.ajax({
-        url,
-        headers: {
-          Accept: 'application/json',
-        },
-        dataType: 'json',
-        data,
-        success: (response) => {
-          const ak = response.access_token;
-          localStorage.setObject('githubOauthAccessKey', ak);
-          if (cb !== undefined) {
-            cb(ak);
-          }
-        },
+      axios.post(url, data).then((res) => {
+        const ak = res.data.access_token;
+        localStorage.setObject('githubOauthAccessKey', ak);
+        if (cb !== undefined) {
+          cb(ak);
+        }
       });
     },
 
     api: (apiPath, cb) => {
       const access_token = localStorage.getObject('githubOauthAccessKey') || '';
       const url = `${API_URL}${apiPath}?access_token=${access_token}`;
-      $.get(url, (response) => {
-        cb(response);
+      axios.get(url).then((response) => {
+        cb(response.data);
       });
     },
 

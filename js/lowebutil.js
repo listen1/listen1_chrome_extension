@@ -1,7 +1,6 @@
 /* eslint-disable consistent-return */
 /* eslint-disable no-param-reassign */
 /* eslint-disable no-unused-vars */
-/* global localStorage */
 
 function getParameterByName(name, url) { // eslint-disable-line no-unused-vars
   if (!url) url = window.location.href;

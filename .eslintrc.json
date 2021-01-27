@@ -5,9 +5,14 @@
         "linebreak-style": "off"
     },
     "globals": {
-        "window": "readonly",
-        "browser": "readonly",
-        "chrome": "readonly"
+        "axios": "readonly",
+        "window":"readonly",
+        "browser":"readonly",
+        "chrome":"readonly"
+    },
+    "env": {
+        "browser": true,
+        "node": false
     },
     "ignorePatterns": [
         "**/vendor/*.js"

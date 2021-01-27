@@ -1,9 +1,9 @@
 /* eslint-disable no-unused-vars */
-/* global aesjs DOMParser getParameterByName */
-/* global sub btoa bigInt2str dup equalsInt int2bigInt mod mult powMod str2bigInt rightShift_ */
+/* global aesjs getParameterByName */
+/* global sub bigInt2str dup equalsInt int2bigInt mod mult powMod str2bigInt rightShift_ */
 /* global isElectron cookieSet cookieGet async */
 function build_netease() {
-  function ne_show_playlist(url, hm) {
+  function ne_show_playlist(url) {
     const order = 'hot';
     const offset = getParameterByName('offset', url);
 
@@ -16,7 +16,7 @@ function build_netease() {
 
     return {
       success(fn) {
-        hm.get(target_url).then((response) => {
+        axios.get(target_url).then((response) => {
           const { data } = response;
           const list_elements = Array.from((new DOMParser()).parseFromString(data, 'text/html').getElementsByClassName('m-cvrlst')[0].children);
           const result = list_elements.map((item) => ({
@@ -169,9 +169,7 @@ function build_netease() {
       (err, results) => callback(null, data_list.map((item, index) => results[index])));
   }
 
-  function ng_render_playlist_result_item(index, item, params, callback) {
-    const hm = params[0];
-    const se = params[1];
+  function ng_render_playlist_result_item(index, item, callback) {
     const target_url = 'https://music.163.com/weapi/v3/song/detail';
     const queryIds = [item.id];
     const d = {
@@ -179,14 +177,7 @@ function build_netease() {
       ids: `[${queryIds.join(',')}]`,
     };
     const data = _encrypted_request(d);
-    hm({
-      url: target_url,
-      method: 'POST',
-      data: se(data),
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-    }).then((response) => {
+    axios.post(target_url, new URLSearchParams(data).toString()).then((response) => {
       const track_json = response.data.songs[0];
       const track = {
         id: `netrack_${track_json.id}`,
@@ -204,7 +195,7 @@ function build_netease() {
     });
   }
 
-  function ng_parse_playlist_tracks(playlist_tracks, hm, se, callback) {
+  function ng_parse_playlist_tracks(playlist_tracks, callback) {
     const target_url = 'https://music.163.com/weapi/v3/song/detail';
     const track_ids = playlist_tracks.map((i) => i.id);
     const d = {
@@ -212,14 +203,7 @@ function build_netease() {
       ids: `[${track_ids.join(',')}]`,
     };
     const data = _encrypted_request(d);
-    hm({
-      url: target_url,
-      method: 'POST',
-      data: se(data),
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-    }).then((response) => {
+    axios.post(target_url, new URLSearchParams(data)).then((response) => {
       const tracks = response.data.songs.map((track_json) => ({
         id: `netrack_${track_json.id}`,
         title: track_json.name,
@@ -245,7 +229,7 @@ function build_netease() {
     return result;
   }
 
-  function ne_get_playlist(url, hm, se) {
+  function ne_get_playlist(url) {
     // special thanks for @Binaryify
     // https://github.com/Binaryify/NeteaseCloudMusicApi
     return {
@@ -262,14 +246,7 @@ function build_netease() {
         };
         const data = _encrypted_request(d);
         ne_ensure_cookie(() => {
-          hm({
-            url: target_url,
-            method: 'POST',
-            data: se(data),
-            headers: {
-              'Content-Type': 'application/x-www-form-urlencoded',
-            },
-          }).then((response) => {
+          axios.post(target_url, new URLSearchParams(data)).then((response) => {
             const { data: res_data } = response;
             const info = {
               id: `neplaylist_${list_id}`,
@@ -281,7 +258,7 @@ function build_netease() {
             const trackIdsArray = split_array(res_data.playlist.trackIds, max_allow_size);
 
             function ng_parse_playlist_tracks_wrapper(trackIds, callback) {
-              return ng_parse_playlist_tracks(trackIds, hm, se, callback);
+              return ng_parse_playlist_tracks(trackIds, callback);
             }
 
             async.concat(trackIdsArray, ng_parse_playlist_tracks_wrapper, (err, tracks) => {
@@ -289,8 +266,7 @@ function build_netease() {
             });
 
             // request every tracks to fetch song info
-            // async_process_list(res_data.playlist.trackIds,
-            // ng_render_playlist_result_item, [hm, se],
+            // async_process_list(res_data.playlist.trackIds, ng_render_playlist_result_item,
             //   (err, tracks) => fn({
             //     tracks,
             //     info,
@@ -301,7 +277,7 @@ function build_netease() {
     };
   }
 
-  function ne_bootstrap_track(sound, track, success, failure, hm, se) {
+  function ne_bootstrap_track(sound, track, success, failure) {
     const target_url = 'http://music.163.com/weapi/song/enhance/player/url/v1?csrf_token=';
     const csrf = '';
     let song_id = track.id;
@@ -316,14 +292,7 @@ function build_netease() {
     };
     const data = _encrypted_request(d);
 
-    hm({
-      url: target_url,
-      method: 'POST',
-      data: se(data),
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-    }).then((response) => {
+    axios.post(target_url, new URLSearchParams(data)).then((response) => {
       const { data: res_data } = response;
       const { url } = res_data.data[0];
       if (url != null) {
@@ -339,7 +308,7 @@ function build_netease() {
     return (song.fee !== 4) && (song.fee !== 1);
   }
 
-  function ne_search(url, hm, se) {
+  function ne_search(url) {
     // use chrome extension to modify referer.
     const target_url = 'http://music.163.com/api/search/pc';
     const keyword = getParameterByName('keywords', url);
@@ -357,14 +326,7 @@ function build_netease() {
     };
     return {
       success(fn) {
-        hm({
-          url: target_url,
-          method: 'POST',
-          data: se(req_data),
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-          },
-        }).then((response) => {
+        axios.post(target_url, new URLSearchParams(req_data)).then((response) => {
           const { data } = response;
           let result = [];
           let total = 0;
@@ -411,17 +373,14 @@ function build_netease() {
     };
   }
 
-  function ne_album(url, hm, se) { // eslint-disable-line no-unused-vars
+  function ne_album(url) { // eslint-disable-line no-unused-vars
     const album_id = getParameterByName('list_id', url).split('_').pop();
     // use chrome extension to modify referer.
     const target_url = `http://music.163.com/api/album/${album_id}`;
 
     return {
       success(fn) {
-        hm({
-          url: target_url,
-          method: 'GET',
-        }).then((response) => {
+        axios.get(target_url).then((response) => {
           const { data } = response;
           const info = {
             cover_img_url: data.album.picUrl,
@@ -452,17 +411,14 @@ function build_netease() {
     };
   }
 
-  function ne_artist(url, hm, se) { // eslint-disable-line no-unused-vars
+  function ne_artist(url) { // eslint-disable-line no-unused-vars
     const artist_id = getParameterByName('list_id', url).split('_').pop();
     // use chrome extension to modify referer.
     const target_url = `http://music.163.com/api/artist/${artist_id}`;
 
     return {
       success(fn) {
-        hm({
-          url: target_url,
-          method: 'GET',
-        }).then((response) => {
+        axios.get(target_url).then((response) => {
           const { data } = response;
           const info = {
             cover_img_url: data.artist.picUrl,
@@ -493,7 +449,7 @@ function build_netease() {
     };
   }
 
-  function ne_lyric(url, hm, se) {
+  function ne_lyric(url) {
     const track_id = getParameterByName('track_id', url).split('_').pop();
     // use chrome extension to modify referer.
     const target_url = 'http://music.163.com/weapi/song/lyric?csrf_token=';
@@ -507,14 +463,7 @@ function build_netease() {
     const data = _encrypted_request(d);
     return {
       success(fn) {
-        hm({
-          url: target_url,
-          method: 'POST',
-          data: se(data),
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-          },
-        }).then((response) => {
+        axios.post(target_url, new URLSearchParams(data)).then((response) => {
           const { data: res_data } = response;
           let lrc = '';
           let tlrc = '';
@@ -565,15 +514,15 @@ function build_netease() {
     return result;
   }
 
-  function get_playlist(url, hm, se) {
+  function get_playlist(url) {
     const list_id = getParameterByName('list_id', url).split('_')[0];
     switch (list_id) {
       case 'neplaylist':
-        return ne_get_playlist(url, hm, se);
+        return ne_get_playlist(url);
       case 'nealbum':
-        return ne_album(url, hm, se);
+        return ne_album(url);
       case 'neartist':
-        return ne_artist(url, hm, se);
+        return ne_artist(url);
       default:
         return null;
     }

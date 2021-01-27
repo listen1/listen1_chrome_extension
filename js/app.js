@@ -1,6 +1,6 @@
 /* eslint-disable no-shadow */
-/* global l1Player localStorage document Blob navigator */
-/* global $ angular FileReader isElectron getAllProviders */
+/* global l1Player require */
+/* global $ angular isElectron getAllProviders */
 /* global setPrototypeOfLocalStorage addPlayerListener */
 /* global getLocalStorageValue getPlayer getPlayerAsync */
 /* eslint-disable global-require */
@@ -53,8 +53,8 @@ const main = () => {
     $translateProvider.preferredLanguage('zh_CN');
   }]);
 
-  app.run(['Notification', 'loWeb', '$translate',
-    (Notification, loWeb, $translate) => {
+  app.run(['$q', 'loWeb', '$translate',
+    ($q, loWeb, $translate) => {
       function getAutoChooseSource() {
         let enableAutoChooseSource = localStorage.getObject('enable_auto_choose_source');
         if (enableAutoChooseSource === null) {
@@ -70,6 +70,11 @@ const main = () => {
           getAutoChooseSource,
         ),
       );
+
+      axios.Axios.prototype.request_original = axios.Axios.prototype.request;
+      axios.Axios.prototype.request = function new_req(config) {
+        return $q.when(this.request_original(config));
+      };
     },
   ]);
 
@@ -116,7 +121,7 @@ const main = () => {
     return '';
   }
 
-  app.controller('ProfileController', ['$scope', '$translate', '$http', ($scope, $translate, $http) => {
+  app.controller('ProfileController', ['$scope', '$translate', ($scope, $translate) => {
     let defaultLang = 'zh_CN';
     const supportLangs = ['zh_CN', 'en_US'];
     if (supportLangs.indexOf(navigator.language) !== -1) {
@@ -129,7 +134,7 @@ const main = () => {
     $scope.setLang = (langKey) => {
       // You can change the language during runtime
       $translate.use(langKey).then(() => {
-        $http.get('./i18n/zh_CN.json')
+        axios.get('./i18n/zh_CN.json')
           .then((res) => {
             Object.keys(res.data).forEach((key) => {
               $scope[key] = $translate.instant(key);
@@ -159,10 +164,10 @@ const main = () => {
   }]);
 
   // control main view of page, it can be called any place
-  app.controller('NavigationController', ['$scope', '$http',
+  app.controller('NavigationController', ['$scope',
     '$httpParamSerializerJQLike', '$timeout', 'Notification', '$rootScope', 'loWeb',
     'hotkeys', 'lastfm', 'github', 'gist', '$translate',
-    ($scope, $http, $httpParamSerializerJQLike,
+    ($scope, $httpParamSerializerJQLike,
       $timeout, Notification, $rootScope,
       loWeb, hotkeys, lastfm, github, gist, $translate) => {
       $rootScope.page_title = 'Listen 1'; // eslint-disable-line no-param-reassign
@@ -420,10 +425,11 @@ const main = () => {
         loWeb.post({
           url,
           method: 'POST',
-          data: $httpParamSerializerJQLike({
-            list_id: option_id,
-            track: JSON.stringify($scope.dialog_song),
-          }),
+          data:
+            ({
+              list_id: option_id,
+              track: JSON.stringify($scope.dialog_song),
+            }),
           headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
           },
@@ -878,11 +884,10 @@ const main = () => {
   }));
 
   app.controller('PlayController', ['$scope', '$timeout', '$log',
-    '$anchorScroll', '$location', '$http',
-    '$httpParamSerializerJQLike', '$rootScope', 'Notification',
+    '$anchorScroll', '$location',
+    '$rootScope', 'Notification',
     'loWeb', 'hotkeys', 'lastfm', '$translate',
     ($scope, $timeout, $log, $anchorScroll, $location,
-      $http, $httpParamSerializerJQLike,
       $rootScope, Notification, loWeb, hotkeys, lastfm, $translate) => {
       $scope.menuHidden = true;
       $scope.volume = l1Player.status.volume;
@@ -1441,8 +1446,8 @@ const main = () => {
     },
   ]);
 
-  app.controller('InstantSearchController', ['$scope', '$http', '$timeout', '$rootScope', 'loWeb', '$translate',
-    ($scope, $http, $timeout, $rootScope, loWeb, $translate) => {
+  app.controller('InstantSearchController', ['$scope', '$timeout', '$rootScope', 'loWeb', '$translate',
+    ($scope, $timeout, $rootScope, loWeb, $translate) => {
       // notice: douban is skipped, and add all music so array should plus 2
       // [网易,虾米,QQ,NULL,酷狗,酷我,bilibili, migu, allmusic]
       $scope.originpagelog = Array(getAllProviders().length + 2).fill(1);
@@ -1787,8 +1792,8 @@ const main = () => {
     }),
   ]);
 
-  app.controller('MyPlayListController', ['$http', '$scope', '$timeout', 'loWeb',
-    ($http, $scope, $timeout, loWeb) => {
+  app.controller('MyPlayListController', ['$scope', '$timeout', 'loWeb',
+    ($scope, $timeout, loWeb) => {
       $scope.myplaylists = [];
       $scope.favoriteplaylists = [];
 
@@ -1822,8 +1827,8 @@ const main = () => {
     },
   ]);
 
-  app.controller('PlayListController', ['$http', '$scope', '$timeout', 'loWeb',
-    ($http, $scope, $timeout, loWeb) => {
+  app.controller('PlayListController', ['$scope', '$timeout', 'loWeb',
+    ($scope, $timeout, loWeb) => {
       $scope.result = [];
       $scope.tab = 0;
       $scope.loading = true;
