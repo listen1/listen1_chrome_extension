@@ -170,8 +170,7 @@ function build_kuwo() {
             },
           // eslint-disable-next-line consistent-return
           }).then((response) => {
-            let { data } = response;
-            data = JSON.parse(fix_json(data));
+            const { data } = response;
             if (data.success === false) {
             // token not valid
               return axios.get(token_url).then(() => kw_search(url).success(fn));
