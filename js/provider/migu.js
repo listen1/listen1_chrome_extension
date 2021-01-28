@@ -190,9 +190,7 @@ function build_migu() {
     const aesResult = forge.util.encode64(output.bytes());
 
     const publicKey = '-----BEGIN PUBLIC KEY-----\nMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC8asrfSaoOb4je+DSmKdriQJKW\nVJ2oDZrs3wi5W67m3LwTB9QVR+cE3XWU21Nx+YBxS0yun8wDcjgQvYt625ZCcgin\n2ro/eOkNyUOTBIbuj9CvMnhUYiR61lC1f1IGbrSYYimqBVSjpifVufxtx/I3exRe\nZosTByYp4Xwpb1+WAQIDAQAB\n-----END PUBLIC KEY-----';
-    const secKey = forge.util.encode64(
-      forge.pki.publicKeyFromPem(publicKey).encrypt(forge.util.createBuffer(k)),
-    );
+    const secKey = forge.util.encode64(forge.pki.publicKeyFromPem(publicKey).encrypt(k));
 
     const target_url = `https://music.migu.cn/v3/api/music/audioPlayer/getPlayInfo?dataType=2&data=${encodeURIComponent(aesResult)}&secKey=${encodeURIComponent(secKey)}`;
 
@@ -227,9 +225,9 @@ function build_migu() {
         searchSwitch = '{"song":1}'; // {"song":1,"album":0,"singer":0,"tagSong":1,"mvSong":0,"bestShow":1,"songlist":0,"lyricSong":0}
         // type = 2;
         target_url = `${target_url}sid=${sid}&isCorrect=1&isCopyright=1`
-        + `&searchSwitch=${encodeURIComponent(searchSwitch)}&pageSize=20`
-        + `&text=${encodeURIComponent(keyword)}&pageNo=${curpage}`
-        + '&feature=1000000000&sort=1';
+          + `&searchSwitch=${encodeURIComponent(searchSwitch)}&pageSize=20`
+          + `&text=${encodeURIComponent(keyword)}&pageNo=${curpage}`
+          + '&feature=1000000000&sort=1';
         break;
       case '1':
         searchSwitch = '{"songlist":1}';
@@ -295,7 +293,7 @@ function build_migu() {
           } else if (searchType === '1') {
             if (data.songListResultData.result) {
               result = data.songListResultData.result.map((item) => ({
-              // result = data.songLists.map(item => ({
+                // result = data.songLists.map(item => ({
                 id: `mgplaylist_${item.id}`,
                 title: item.name,
                 source: 'migu',
