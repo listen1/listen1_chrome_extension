@@ -168,15 +168,15 @@
                 </ul>
                 <div class="menu-title" ng-init="loadMyPlaylist();">
                   <div class="title">{{_CREATED_PLAYLIST}}</div>
-                  <svg class="feather icon" ng-click="showDialog(5)"><use xlink:href="#plus-square"></use></svg></div>
+                  <svg class="feather icon" ng-click="showDialog(5)"><use href="#plus-square"></use></svg></div>
                 <ul class="nav masthead-nav">
-                    <li ng-repeat="i in myplaylists track by $index" ng-class="{ 'active':window_type=='list' && (('/playlist?list_id='+i.info.id)==window_url_stack[window_url_stack.length-1]) }" ng-click="showPlaylist(i.info.id)"><svg class="feather"><use xlink:href="#disc"></use></svg><a>{{i.info.title}}</a></li>
+                    <li ng-repeat="i in myplaylists track by $index" ng-class="{ 'active':window_type=='list' && (('/playlist?list_id='+i.info.id)==window_url_stack[window_url_stack.length-1]) }" ng-click="showPlaylist(i.info.id)"><svg class="feather"><use href="#disc"></use></svg><a>{{i.info.title}}</a></li>
                 </ul>
                 <div class="menu-title" ng-init="loadFavoritePlaylist();">
                   <div class="title">{{_FAVORITED_PLAYLIST}}</div>
                 </div>
                 <ul class="nav masthead-nav">
-                  <li ng-repeat="i in favoriteplaylists track by $index" ng-class="{ 'active':window_type=='list' && (('/playlist?list_id='+i.info.id)==window_url_stack[window_url_stack.length-1]) }" ng-click="showPlaylist(i.info.id)"><svg class="feather"><use xlink:href="#disc"></use></svg><a>{{i.info.title}}</a></li>
+                  <li ng-repeat="i in favoriteplaylists track by $index" ng-class="{ 'active':window_type=='list' && (('/playlist?list_id='+i.info.id)==window_url_stack[window_url_stack.length-1]) }" ng-click="showPlaylist(i.info.id)"><svg class="feather"><use href="#disc"></use></svg><a>{{i.info.title}}</a></li>
                 </ul>
 
               </div>
@@ -196,9 +196,9 @@
                       <span class="icon li-setting"></span>
                     </div>
                     <div ng-if="!isChrome && !isMac" class="window-control">
-                      <svg class="icon" window-control="window_min"><use xlink:href="#minimize-2"></use></svg>
-                      <svg class="icon" window-control="window_max"><use xlink:href="#maximize" ></use></svg>
-                      <svg class="icon" window-control="window_close"><use xlink:href="#x"></use></svg>
+                      <svg class="icon" window-control="window_min"><use href="#minimize-2"></use></svg>
+                      <svg class="icon" window-control="window_max"><use href="#maximize" ></use></svg>
+                      <svg class="icon" window-control="window_close"><use href="#x"></use></svg>
                     </div>
                 </div>
                 <div class="browser flex-scroll-wrapper" infinite-scroll="scrolling()" content-selector="'#playlist-content'">
@@ -224,7 +224,7 @@
                                 <ul class="playlist-covers">
                                     <li ng-repeat="i in result ">
                                         <div class="u-cover"><img ng-src="{{i.cover_img_url}}" ng-click="showPlaylist(i.id)">
-                                            <div class="bottom" ng-click="directplaylist(i.id)"><svg class="feather"><use xlink:href="#play-circle"></use></svg></div>
+                                            <div class="bottom" ng-click="directplaylist(i.id)"><svg class="feather"><use href="#play-circle"></use></svg></div>
                                         </div>
                                         <div class="desc"><span class="title" ng-click="showPlaylist(i.id)">{{i.title}}</span></div>
                                     </li>
@@ -323,45 +323,45 @@
                           <div class="settings-title"><span>{{_AUTO_CHOOSE_SOURCE}} (Beta)</span></div>
                           <div class="settings-content">
                             <div class="shortcut" class="btn btn-primary confirm-button" >
-                              <svg class="feather" ng-show="!enableAutoChooseSource" ng-click="setAutoChooseSource(true)"><use xlink:href="#square"></use></svg>
-                              <svg class="feather" ng-show="enableAutoChooseSource" ng-click="setAutoChooseSource(true)"><use xlink:href="#check-square"></use></svg>
+                              <svg class="feather" ng-show="!enableAutoChooseSource" ng-click="setAutoChooseSource(true)"><use href="#square"></use></svg>
+                              <svg class="feather" ng-show="enableAutoChooseSource" ng-click="setAutoChooseSource(true)"><use href="#check-square"></use></svg>
                               {{_AUTO_CHOOSE_SOURCE_NOTICE}}
                             </div>
                           </div>
                           <div class="settings-title"><span>{{_CLOSE_TAB_ACTION}}({{_VALID_AFTER_RESTART}})</span></div>
                           <div class="settings-content">
                             <div class="shortcut">
-                              <svg class="feather" ng-show="!enableStopWhenClose" ng-click="setStopWhenClose(true)"><use xlink:href="#square"></use></svg>
-                              <svg class="feather" ng-show="enableStopWhenClose" ng-click="setStopWhenClose(false)"><use xlink:href="#check-square"></use></svg>
+                              <svg class="feather" ng-show="!enableStopWhenClose" ng-click="setStopWhenClose(true)"><use href="#square"></use></svg>
+                              <svg class="feather" ng-show="enableStopWhenClose" ng-click="setStopWhenClose(false)"><use href="#check-square"></use></svg>
                               <span style="margin-right: 20px;">{{_QUIT_APPLICATION}}</span>
-                              <svg class="feather" ng-show="enableStopWhenClose" ng-click="setStopWhenClose(false)"><use xlink:href="#square"></use></svg>
-                              <svg class="feather" ng-show="!enableStopWhenClose" ng-click="setStopWhenClose(true)"><use xlink:href="#check-square"></use></svg>
+                              <svg class="feather" ng-show="enableStopWhenClose" ng-click="setStopWhenClose(false)"><use href="#square"></use></svg>
+                              <svg class="feather" ng-show="!enableStopWhenClose" ng-click="setStopWhenClose(true)"><use href="#check-square"></use></svg>
                               <span> {{_MINIMIZE_TO_BACKGROUND}}</span>
                             </div>
                           </div>
                           <div class="settings-title"><span>{{_NOWPLAYING_COVER_BACKGROUND}}</span></div>
                           <div class="settings-content">
                             <div class="shortcut">
-                              <svg class="feather" ng-show="!enableNowplayingCoverBackground" ng-click="setNowplayingCoverBackground(true)"><use xlink:href="#square"></use></svg>
-                              <svg class="feather" ng-show="enableNowplayingCoverBackground" ng-click="setNowplayingCoverBackground(true)"><use xlink:href="#check-square"></use></svg>
+                              <svg class="feather" ng-show="!enableNowplayingCoverBackground" ng-click="setNowplayingCoverBackground(true)"><use href="#square"></use></svg>
+                              <svg class="feather" ng-show="enableNowplayingCoverBackground" ng-click="setNowplayingCoverBackground(true)"><use href="#check-square"></use></svg>
                               {{_NOWPLAYING_COVER_BACKGROUND_NOTICE}}
                             </div>
                           </div>
                           <div class="settings-title"><span>{{_LYRIC_DISPLAY}}</span></div>
                           <div class="settings-content">
                             <div class="shortcut" ng-if="!isChrome">
-                              <svg class="feather" ng-show="!enableLyricFloatingWindow" ng-click="openLyricFloatingWindow(true)"><use xlink:href="#square"></use></svg>
-                              <svg class="feather" ng-show="enableLyricFloatingWindow" ng-click="openLyricFloatingWindow(true)"><use xlink:href="#check-square"></use></svg>
+                              <svg class="feather" ng-show="!enableLyricFloatingWindow" ng-click="openLyricFloatingWindow(true)"><use href="#square"></use></svg>
+                              <svg class="feather" ng-show="enableLyricFloatingWindow" ng-click="openLyricFloatingWindow(true)"><use href="#check-square"></use></svg>
                               <span ng-show="enableLyricFloatingWindow"></span>{{_SHOW_DESKTOP_LYRIC}}
                             </div>
                             <div class="shortcut">
-                              <svg class="feather" ng-show="!enableLyricTranslation" ng-click="toggleLyricTranslation()"><use xlink:href="#square"></use></svg>
-                              <svg class="feather" ng-show="enableLyricTranslation" ng-click="toggleLyricTranslation()"><use xlink:href="#check-square"></use></svg>
+                              <svg class="feather" ng-show="!enableLyricTranslation" ng-click="toggleLyricTranslation()"><use href="#square"></use></svg>
+                              <svg class="feather" ng-show="enableLyricTranslation" ng-click="toggleLyricTranslation()"><use href="#check-square"></use></svg>
                               <span ng-show="enableLyricTranslation"></span>{{_SHOW_LYRIC_TRANSLATION}}
                             </div>
                             <div class="shortcut" ng-if="!isChrome" >
-                              <svg class="feather" ng-show="!enableLyricFloatingWindowTranslation" ng-click="toggleLyricFloatingWindowTranslation()"><use xlink:href="#square"></use></svg>
-                              <svg class="feather" ng-show="enableLyricFloatingWindowTranslation" ng-click="toggleLyricFloatingWindowTranslation()"><use xlink:href="#check-square"></use></svg>
+                              <svg class="feather" ng-show="!enableLyricFloatingWindowTranslation" ng-click="toggleLyricFloatingWindowTranslation()"><use href="#square"></use></svg>
+                              <svg class="feather" ng-show="enableLyricFloatingWindowTranslation" ng-click="toggleLyricFloatingWindowTranslation()"><use href="#check-square"></use></svg>
                               <span ng-show="enableLyricFloatingWindowTranslation"></span>{{_SHOW_DESKTOP_LYRIC_TRANSLATION}}
                             </div>
                           </div>
@@ -396,8 +396,8 @@
                           <div class="settings-content">
                             <button class="btn btn-primary confirm-button" ng-click="showShortcuts()">{{_VIEW_SHORTCUTS_LIST}}</button>
                               <div class="shortcut" ng-if="!isChrome" class="btn btn-primary confirm-button" >
-                                <svg class="feather" ng-show="!enableGlobalShortCut" ng-click="applyGlobalShortcut(true)"><use xlink:href="#square"></use></svg>
-                                <svg class="feather" ng-show="enableGlobalShortCut" ng-click="applyGlobalShortcut(true)"><use xlink:href="#check-square"></use></svg>
+                                <svg class="feather" ng-show="!enableGlobalShortCut" ng-click="applyGlobalShortcut(true)"><use href="#square"></use></svg>
+                                <svg class="feather" ng-show="enableGlobalShortCut" ng-click="applyGlobalShortcut(true)"><use href="#check-square"></use></svg>
                                 {{_GLOBAL_SHORTCUTS_NOTICE}}
                                 </div>
                           </div>
@@ -454,10 +454,10 @@
                                             <div class="play-list"><span class="icon li-songlist"></span><span>{{_ADD_TO_PLAYLIST}}</span></div>
                                         </div>
                                         <div class="playlist-button edit-button" ng-show="is_mine && !is_local" ng-click="showDialog(3, {list_id: list_id, playlist_title: playlist_title, cover_img_url: cover_img_url})">
-                                            <div class="play-list"><svg class="feather"><use xlink:href="#edit"></use></svg><span>{{_EDIT}}</span></div>
+                                            <div class="play-list"><svg class="feather"><use href="#edit"></use></svg><span>{{_EDIT}}</span></div>
                                         </div>
                                         <div class="playlist-button fav-button" ng-show="!is_mine && !is_local" ng-click="favoritePlaylist(list_id)">
-                                            <div class="play-list" ng-class="{'favorited':is_favorite,'notfavorite':!is_favorite}"><svg class="feather"><use xlink:href="#star"></use></svg><span>{{is_favorite?_FAVORITED:_FAVORITE}}</span></div>
+                                            <div class="play-list" ng-class="{'favorited':is_favorite,'notfavorite':!is_favorite}"><svg class="feather"><use href="#star"></use></svg><span>{{is_favorite?_FAVORITED:_FAVORITE}}</span></div>
                                         </div>
                                         <div class="playlist-button edit-button" ng-show="isChrome && is_favorite && !is_local" ng-click="closeWindow();showPlaylist(list_id)">
                                           <div class="play-list"><span class="icon li-loop"></span><span>{{_REFRESH_PLAYLIST}}</span></div>
@@ -466,7 +466,7 @@
                                             <div class="play-list"><span class="icon li-link"></span><span>{{_ORIGIN_LINK}}</span></div>
                                         </div>
                                         <div class="playlist-button edit-button" ng-show="is_mine && !is_local" ng-click="showDialog(6)">
-                                            <div class="play-list"><svg class="feather"><use xlink:href="#git-merge"></use></svg><span>{{_IMPORT}}</span></div>
+                                            <div class="play-list"><svg class="feather"><use href="#git-merge"></use></svg><span>{{_IMPORT}}</span></div>
                                         </div>
                                     </div>
                                   </div>
@@ -504,12 +504,12 @@
                               ng-style="{'background-image': 'url(' + currentPlaying.img_url + ')'}"
                             ></div>                            
                             <div class="translate-switch" ng-click="toggleLyricTranslation()">译</div>
-                            <div class="close" ng-class="isMac? 'mac':'' " ng-click="popWindow()"><svg class="icon"><use xlink:href="#chevron-down"></use></svg></div>
+                            <div class="close" ng-class="isMac? 'mac':'' " ng-click="popWindow()"><svg class="icon"><use href="#chevron-down"></use></svg></div>
 
                             <div ng-if="!isChrome && !isMac" class="window-control">
-                                <svg class="icon" window-control="window_min"><use xlink:href="#minimize-2"></use></svg>
-                                <svg class="icon" window-control="window_max"><use xlink:href="#maximize"></use></svg>
-                                <svg class="icon" window-control="window_close"><use xlink:href="#x"></use></svg>
+                                <svg class="icon" window-control="window_min"><use href="#minimize-2"></use></svg>
+                                <svg class="icon" window-control="window_max"><use href="#maximize"></use></svg>
+                                <svg class="icon" window-control="window_close"><use href="#x"></use></svg>
                             </div>
 
                             <div class="playsong-detail">
@@ -549,7 +549,7 @@
                 <div class="cover" class="cover" ng-if="playlist.length > 0" ng-click="toggleWindow('/now_playing')">
                 
                 <img ng-src="{{ currentPlaying.img_url }}" err-src="https://y.gtimg.cn/mediastyle/global/img/album_300.png" />
-                <div class="mask"><svg class="feather"><use xlink:href="#chevrons-up"></use></svg></div>
+                <div class="mask"><svg class="feather"><use href="#chevrons-up"></use></svg></div>
                 </div>
                     <div class="detail" ng-if="playlist.length > 0">
 
@@ -601,11 +601,11 @@
                     <span>{{_ADD_TO_PLAYLIST}}</span></a>
                   <a class="remove-all" clear-playlist=""><span class="icon li-del" ng-click="togglePlaylist()"></span><span>{{_CLEAR_ALL}}</span></a>
 
-                  <a class="close" ng-click="togglePlaylist()"><svg class="feather"><use xlink:href="#x"></use></svg></a>
+                  <a class="close" ng-click="togglePlaylist()"><svg class="feather"><use href="#x"></use></svg></a>
                 </div>
                 <ul class="menu-list">
                     <li id="song{{ song.id }}" ng-repeat="song in playlist track by $index" ng-class="{ playing: currentPlaying.id == song.id }" ng-mouseenter="playlist_highlight=true" ng-mouseleave="playlist_highlight=false" ng-class-odd="'odd'" ng-class-even="'even'">
-                        <div class="song-status-icon"><svg class="feather play" ng-show="currentPlaying.id == song.id"><use xlink:href="#play"></use></svg></div>
+                        <div class="song-status-icon"><svg class="feather play" ng-show="currentPlaying.id == song.id"><use href="#play"></use></svg></div>
                         <div class="song-title" ng-class="song.disabled? 'disabled':'' "><a play-from-playlist="song"><span ng-if="song.source === 'xiami'" style="color:orange;border-radius: 12px;border: solid 1px;padding: 0 4px;">⚠️ 🦐</span>{{ song.title }}</a></div>
                         <div class="song-singer"><a ng-click="showPlaylist(song.artist_id); togglePlaylist();">{{ song.artist }}</a></div>
                         <div class="tools">
