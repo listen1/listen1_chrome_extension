@@ -1,5 +1,5 @@
 /* eslint-disable no-underscore-dangle */
-/* global navigator MediaMetadata playerSendMessage */
+/* global MediaMetadata playerSendMessage */
 /* global Howl Howler */
 
 {

@@ -1,4 +1,4 @@
-/* global localStorage angular getParameterByName async */
+/* global angular getParameterByName async */
 /* global netease xiami qq kugou kuwo bilibili migu localmusic myplaylist */
 const ngloWebManager = angular.module('loWebManager', []);
 
@@ -59,26 +59,26 @@ function getProviderByItemId(itemId) {
   }
 }
 
-ngloWebManager.factory('loWeb', ['$rootScope', '$log', '$http', '$httpParamSerializerJQLike',
-  ($rootScope, $log, $http, $httpParamSerializerJQLike) => ({
+ngloWebManager.factory('loWeb', ['$rootScope', '$log',
+  () => ({
     get(url) {
       const path = url.split('?')[0];
       if (path === '/show_playlist') {
         const source = getParameterByName('source', url);
         const provider = getProviderByName(source);
-        return provider.show_playlist(url, $http);
+        return provider.show_playlist(url);
       }
       if (path === '/playlist') {
         const list_id = getParameterByName('list_id', url);
         const provider = getProviderByItemId(list_id);
-        return provider.get_playlist(url, $http, $httpParamSerializerJQLike);
+        return provider.get_playlist(url);
       }
       if (path === '/search') {
         const source = getParameterByName('source', url);
         if (source === 'allmusic') {
           // search all platform and merge result
           const callbackArray = getAllSearchProviders().map((p) => (fn) => {
-            p.search(url, $http, $httpParamSerializerJQLike).success((r) => {
+            p.search(url).success((r) => {
               fn(null, r);
             });
           });
@@ -99,12 +99,12 @@ ngloWebManager.factory('loWeb', ['$rootScope', '$log', '$http', '$httpParamSeria
           };
         }
         const provider = getProviderByName(source);
-        return provider.search(url, $http, $httpParamSerializerJQLike);
+        return provider.search(url);
       }
       if (path === '/lyric') {
         const track_id = getParameterByName('track_id', url);
         const provider = getProviderByItemId(track_id);
-        return provider.lyric(url, $http, $httpParamSerializerJQLike);
+        return provider.lyric(url);
       }
       if (path === '/show_myplaylist') {
         return myplaylist.show_myplaylist('my');
@@ -132,7 +132,7 @@ ngloWebManager.factory('loWeb', ['$rootScope', '$log', '$http', '$httpParamSeria
         const url = `/playlist?list_id=${list_id}`;
         return {
           success: (fn) => {
-            provider.get_playlist(url, $http, $httpParamSerializerJQLike).success((data) => {
+            provider.get_playlist(url).success((data) => {
               myplaylist.save_myplaylist(playlist_type, data);
               fn();
             });
@@ -239,7 +239,7 @@ ngloWebManager.factory('loWeb', ['$rootScope', '$log', '$http', '$httpParamSeria
         const curpage = 1;
         const url = `/search?source=${source}&keywords=${keyword}&curpage=${curpage}`;
         const provider = getProviderByName(source);
-        provider.search(url, $http, $httpParamSerializerJQLike).success((data) => {
+        provider.search(url).success((data) => {
           for (let i = 0; i < data.result.length; i += 1) {
             const searchTrack = data.result[i];
             // compare search track and track to check if they are same
@@ -262,7 +262,7 @@ ngloWebManager.factory('loWeb', ['$rootScope', '$log', '$http', '$httpParamSeria
         },
         () => {
           callback(null);
-        }, $http, $httpParamSerializerJQLike);
+        });
       }
 
       function getUrlFromSame(track, source, callback) {
@@ -321,7 +321,7 @@ ngloWebManager.factory('loWeb', ['$rootScope', '$log', '$http', '$httpParamSeria
         const provider = getProviderByName(source);
 
         provider.bootstrap_track(sound, track, successCallback,
-          failureCallback, $http, $httpParamSerializerJQLike);
+          failureCallback);
       };
     },
   }),

@@ -22,6 +22,7 @@
     <script src="js/vendor/angular-translate.min.js"></script>
     <script src="js/vendor/angular-translate-loader-static-files.min.js"></script>
     <script type="text/javascript" src="js/vendor/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript" src="js/vendor/axios.min.js"></script>
     <script type="text/javascript" src="js/vendor/angular-ui-notification.js"></script>
     <script type="text/javascript" src="js/vendor/howler.core.min.js"></script>
     <script type="text/javascript" src="js/vendor/hotkeys.js"></script>
@@ -559,7 +560,7 @@
                           </a>
                         </div>
 
-                        <div class="title">{{ currentPlaying.title }}</div>
+                        <div class="title"><span ng-if="currentPlaying.source === 'xiami'" style="color:orange; font-size: medium;">⚠️ </span>{{ currentPlaying.title }}</div>
                         <div class="more-info">
                             <div class="current">{{ currentPosition }}</div>
                             <div class="singer"><a ng-click="showPlaylist(currentPlaying.artist_id)">{{ currentPlaying.artist }}</a> - <a ng-click="showPlaylist(currentPlaying.album_id)">{{ currentPlaying.album }}</a></div>
@@ -601,7 +602,7 @@
                 <ul class="menu-list">
                     <li id="song{{ song.id }}" ng-repeat="song in playlist track by $index" ng-class="{ playing: currentPlaying.id == song.id }" ng-mouseenter="playlist_highlight=true" ng-mouseleave="playlist_highlight=false" ng-class-odd="'odd'" ng-class-even="'even'">
                         <div class="song-status-icon"><svg class="feather play" ng-show="currentPlaying.id == song.id"><use xlink:href="images/feather-sprite.svg#play"></use></svg></div>
-                        <div class="song-title" ng-class="song.disabled? 'disabled':'' "><a play-from-playlist="song">{{ song.title }}</a></div>
+                        <div class="song-title" ng-class="song.disabled? 'disabled':'' "><a play-from-playlist="song"><span ng-if="song.source === 'xiami'" style="color:orange;border-radius: 12px;border: solid 1px;padding: 0 4px;">⚠️ 🦐</span>{{ song.title }}</a></div>
                         <div class="song-singer"><a ng-click="showPlaylist(song.artist_id); togglePlaylist();">{{ song.artist }}</a></div>
                         <div class="tools">
                           <span remove-from-playlist="song" data-index="{{$index}}" ng-show="playlist_highlight" class="icon li-del"></span>
