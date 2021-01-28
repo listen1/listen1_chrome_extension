@@ -1,7 +1,7 @@
 /* eslint-disable consistent-return */
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-use-before-define */
-/* global getParameterByName async JSEncrypt forge */
+/* global getParameterByName async forge */
 function build_migu() {
   function mg_convert_song(song) {
     return {
@@ -171,10 +171,6 @@ function build_migu() {
         type = 1;
     }
     const k = '4ea5c508a6566e76240543f8feb06fd457777be39549c4016436afda65d2330e';
-    const rsaEncrypt = new JSEncrypt();
-    const publicKey = '-----BEGIN PUBLIC KEY-----\nMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC8asrfSaoOb4je+DSmKdriQJKW\nVJ2oDZrs3wi5W67m3LwTB9QVR+cE3XWU21Nx+YBxS0yun8wDcjgQvYt625ZCcgin\n2ro/eOkNyUOTBIbuj9CvMnhUYiR61lC1f1IGbrSYYimqBVSjpifVufxtx/I3exRe\nZosTByYp4Xwpb1+WAQIDAQAB\n-----END PUBLIC KEY-----';
-    rsaEncrypt.setPublicKey(publicKey);
-    const secKey = rsaEncrypt.encrypt(k);
     // type parameter for music quality: 1: normal, 2: hq, 3: sq, 4: zq, 5: z3d
     const plain = forge.util.createBuffer(`{"copyrightId":"${song_id}","type":${type},"auditionsFlag":0}`);
     const salt = forge.random.getBytesSync(8);
@@ -192,6 +188,11 @@ function build_migu() {
     output.putBytes(salt);
     output.putBuffer(cipher.output);
     const aesResult = forge.util.encode64(output.bytes());
+
+    const publicKey = '-----BEGIN PUBLIC KEY-----\nMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC8asrfSaoOb4je+DSmKdriQJKW\nVJ2oDZrs3wi5W67m3LwTB9QVR+cE3XWU21Nx+YBxS0yun8wDcjgQvYt625ZCcgin\n2ro/eOkNyUOTBIbuj9CvMnhUYiR61lC1f1IGbrSYYimqBVSjpifVufxtx/I3exRe\nZosTByYp4Xwpb1+WAQIDAQAB\n-----END PUBLIC KEY-----';
+    const secKey = forge.util.encode64(
+      forge.pki.publicKeyFromPem(publicKey).encrypt(forge.util.createBuffer(k)),
+    );
 
     const target_url = `https://music.migu.cn/v3/api/music/audioPlayer/getPlayInfo?dataType=2&data=${encodeURIComponent(aesResult)}&secKey=${encodeURIComponent(secKey)}`;
 
