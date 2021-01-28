@@ -31,7 +31,9 @@ function lastfm() {
         const o = keys.reduce((r, key) => (r + key + params[key]), '');
 
         // append secret
-        return forge.md5.create().update(o + options.apiSecret).digest().toHex();
+        return forge.md5.create()
+          .update(forge.util.encodeUtf8(o + options.apiSecret))
+          .digest().toHex();
       }
 
       /**

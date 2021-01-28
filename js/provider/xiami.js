@@ -77,7 +77,8 @@ function build_xiami() {
     const request_str = JSON.stringify({
       requestStr: JSON.stringify(data),
     });
-    const sign = forge.md5.create().update(`${signedToken}&${t.toString()}&${appKey}&${request_str}`).digest().toHex();
+    const text = `${signedToken}&${t.toString()}&${appKey}&${request_str}`;
+    const sign = forge.md5.create().update(forge.util.encodeUtf8(text)).digest().toHex();
     return {
       appKey,
       t,

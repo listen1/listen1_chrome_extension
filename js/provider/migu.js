@@ -251,7 +251,8 @@ function build_migu() {
       .toLocaleUpperCase(); // 设备的UUID
     const timestamp = (new Date()).getTime();
     const signature_md5 = '6cdc72a439cef99a3418d2a78aa28c73'; // app签名证书的md5
-    const sign = forge.md5.create().update(`${keyword + signature_md5}yyapp2d16148780a1dcc7408e06336b98cfd50${deviceId}${timestamp}`).digest().toHex();
+    const text = `${keyword + signature_md5}yyapp2d16148780a1dcc7408e06336b98cfd50${deviceId}${timestamp}`;
+    const sign = forge.md5.create(text).update(forge.util.encodeUtf8(text)).digest().toHex();
     const headers = {
       // android_id: 'db2cd8c4cdc1345f',
       appId: 'yyapp2',
