@@ -1,4 +1,4 @@
-/* global angular CryptoJS */
+/* global angular forge */
 function lastfm() {
   angular.module('lastfmClient', []).provider('lastfm', function lastfm_func() {
     this.options = {
@@ -31,7 +31,7 @@ function lastfm() {
         const o = keys.reduce((r, key) => (r + key + params[key]), '');
 
         // append secret
-        return CryptoJS.MD5(o + options.apiSecret).toString();
+        return forge.md5.create().update(o + options.apiSecret).digest().toHex();
       }
 
       /**

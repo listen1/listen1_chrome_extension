@@ -1,7 +1,7 @@
 /* eslint-disable consistent-return */
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-use-before-define */
-/* global getParameterByName async JSEncrypt CryptoJS */
+/* global getParameterByName async JSEncrypt forge */
 function build_migu() {
   function mg_convert_song(song) {
     return {
@@ -176,7 +176,22 @@ function build_migu() {
     rsaEncrypt.setPublicKey(publicKey);
     const secKey = rsaEncrypt.encrypt(k);
     // type parameter for music quality: 1: normal, 2: hq, 3: sq, 4: zq, 5: z3d
-    const aesResult = CryptoJS.AES.encrypt(`{"copyrightId":"${song_id}","type":${type},"auditionsFlag":0}`, k).toString();
+    const plain = forge.util.createBuffer(`{"copyrightId":"${song_id}","type":${type},"auditionsFlag":0}`);
+    const salt = forge.random.getBytesSync(8);
+    const derivedBytes = forge.pbe.opensslDeriveBytes(k, salt, 48);
+    const buffer = forge.util.createBuffer(derivedBytes);
+    const key = buffer.getBytes(32);
+    const iv = buffer.getBytes(16);
+
+    const cipher = forge.cipher.createCipher('AES-CBC', key);
+    cipher.start({ iv });
+    cipher.update(plain);
+    cipher.finish();
+    const output = forge.util.createBuffer();
+    output.putBytes('Salted__');
+    output.putBytes(salt);
+    output.putBuffer(cipher.output);
+    const aesResult = forge.util.encode64(output.bytes());
 
     const target_url = `https://music.migu.cn/v3/api/music/audioPlayer/getPlayInfo?dataType=2&data=${encodeURIComponent(aesResult)}&secKey=${encodeURIComponent(secKey)}`;
 
@@ -231,10 +246,11 @@ function build_migu() {
     // const target_url = `https://pd.musicapp.migu.cn/MIGUM3.0/v1.0/content/search_all.do?&isCopyright=0&isCorrect=0&text=${keyword}&pageNo=${curpage}&searchSwitch=${searchSwitch}`;
     // const target_url = `https://m.music.migu.cn/migu/remoting/scr_search_tag?rows=20&type=${type}&keyword=${keyword}'&pgc=${curpage}`;
 
-    const deviceId = CryptoJS.MD5(uuid().replace(/-/g, '')).toString().toLocaleUpperCase(); // 设备的UUID
+    const deviceId = forge.md5.create().update(uuid().replace(/-/g, '')).digest().toHex()
+      .toLocaleUpperCase(); // 设备的UUID
     const timestamp = (new Date()).getTime();
     const signature_md5 = '6cdc72a439cef99a3418d2a78aa28c73'; // app签名证书的md5
-    const sign = CryptoJS.MD5(`${keyword + signature_md5}yyapp2d16148780a1dcc7408e06336b98cfd50${deviceId}${timestamp}`).toString();
+    const sign = forge.md5.create().update(`${keyword + signature_md5}yyapp2d16148780a1dcc7408e06336b98cfd50${deviceId}${timestamp}`).digest().toHex();
     const headers = {
       // android_id: 'db2cd8c4cdc1345f',
       appId: 'yyapp2',
