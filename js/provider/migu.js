@@ -1,7 +1,7 @@
 /* eslint-disable consistent-return */
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-use-before-define */
-/* global getParameterByName MD5 async JSEncrypt CryptoJS */
+/* global getParameterByName async JSEncrypt CryptoJS */
 function build_migu() {
   function mg_convert_song(song) {
     return {
@@ -231,10 +231,10 @@ function build_migu() {
     // const target_url = `https://pd.musicapp.migu.cn/MIGUM3.0/v1.0/content/search_all.do?&isCopyright=0&isCorrect=0&text=${keyword}&pageNo=${curpage}&searchSwitch=${searchSwitch}`;
     // const target_url = `https://m.music.migu.cn/migu/remoting/scr_search_tag?rows=20&type=${type}&keyword=${keyword}'&pgc=${curpage}`;
 
-    const deviceId = MD5(uuid().replace(/-/g, '')).toLocaleUpperCase(); // 设备的UUID
+    const deviceId = CryptoJS.MD5(uuid().replace(/-/g, '')).toString().toLocaleUpperCase(); // 设备的UUID
     const timestamp = (new Date()).getTime();
     const signature_md5 = '6cdc72a439cef99a3418d2a78aa28c73'; // app签名证书的md5
-    const sign = MD5(`${keyword + signature_md5}yyapp2d16148780a1dcc7408e06336b98cfd50${deviceId}${timestamp}`);
+    const sign = CryptoJS.MD5(`${keyword + signature_md5}yyapp2d16148780a1dcc7408e06336b98cfd50${deviceId}${timestamp}`).toString();
     const headers = {
       // android_id: 'db2cd8c4cdc1345f',
       appId: 'yyapp2',

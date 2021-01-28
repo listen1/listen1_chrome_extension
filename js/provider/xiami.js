@@ -1,6 +1,6 @@
 /* eslint-disable radix */
 /* eslint-disable no-use-before-define */
-/* global MD5 getParameterByName isElectron cookieGet */
+/* global CryptoJS getParameterByName isElectron cookieGet */
 /* eslint-disable no-param-reassign */
 function build_xiami() {
   function xm_get_token(callback) {
@@ -77,7 +77,7 @@ function build_xiami() {
     const request_str = JSON.stringify({
       requestStr: JSON.stringify(data),
     });
-    const sign = MD5(`${signedToken}&${t.toString()}&${appKey}&${request_str}`);
+    const sign = CryptoJS.MD5(`${signedToken}&${t.toString()}&${appKey}&${request_str}`).toString();
     return {
       appKey,
       t,
