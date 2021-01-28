@@ -572,15 +572,15 @@ function build_kuwo() {
     return result;
   }
 
-  function get_playlist(url, hm, se) {
+  function get_playlist(url) {
     const list_id = getParameterByName('list_id', url).split('_')[0];
     switch (list_id) {
       case 'kwplaylist':
-        return kw_get_playlist(url, hm, se);
+        return kw_get_playlist(url);
       case 'kwalbum':
-        return kw_album(url, hm, se);
+        return kw_album(url);
       case 'kwartist':
-        return kw_artist(url, hm, se);
+        return kw_artist(url);
       default:
         return null;
     }
