@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-/* global aesjs getParameterByName */
+/* global getParameterByName forge */
 /* global sub bigInt2str dup equalsInt int2bigInt mod mult powMod str2bigInt rightShift_ */
 /* global isElectron cookieSet cookieGet async */
 function build_netease() {
@@ -44,27 +44,11 @@ function build_netease() {
   }
 
   function _aes_encrypt(text, sec_key) { // eslint-disable-line no-underscore-dangle
-    const pad = 16 - (text.length % 16);
-    for (let i = 0; i < pad; i += 1) {
-      text += String.fromCharCode(pad); // eslint-disable-line no-param-reassign
-    }
-    const key = aesjs.util.convertStringToBytes(sec_key);
-    // The initialization vector, which must be 16 bytes
-    const iv = aesjs.util.convertStringToBytes('0102030405060708');
-    let textBytes = aesjs.util.convertStringToBytes(text);
-    const aesCbc = new aesjs.ModeOfOperation.cbc(key, iv); // eslint-disable-line new-cap
-    const cipherArray = [];
-    while (textBytes.length !== 0) {
-      const block = aesCbc.encrypt(textBytes.slice(0, 16));
-      Array.prototype.push.apply(cipherArray, block);
-      textBytes = textBytes.slice(16);
-    }
-    let ciphertext = '';
-    for (let i = 0; i < cipherArray.length; i += 1) {
-      ciphertext += String.fromCharCode(cipherArray[i]);
-    }
-    ciphertext = btoa(ciphertext);
-    return ciphertext;
+    const cipher = forge.cipher.createCipher('AES-CBC', sec_key);
+    cipher.start({ iv: '0102030405060708' });
+    cipher.update(forge.util.createBuffer(text));
+
+    return btoa(cipher.output.data);
   }
 
   function hexify(text) {
