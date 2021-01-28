@@ -1213,12 +1213,15 @@ const main = () => {
                 lastfm.sendNowPlaying(track.title, track.artist, () => { });
               }
 
-              if (track.lyric_url !== null) {
+              if (track.lyric_url) {
                 url = `${url}&lyric_url=${track.lyric_url}`;
+              }
+              if (track.tlyric_url) {
+                url = `${url}&tlyric_url=${track.tlyric_url}`;
               }
               loWeb.get(url).success((res) => {
                 const { lyric, tlyric } = res;
-                if (lyric === null) {
+                if (!lyric) {
                   return;
                 }
                 $scope.lyricArray = parseLyric(lyric, tlyric);
