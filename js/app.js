@@ -1,6 +1,6 @@
 /* eslint-disable no-shadow */
 /* global l1Player require */
-/* global $ angular isElectron getAllProviders */
+/* global angular isElectron getAllProviders */
 /* global setPrototypeOfLocalStorage addPlayerListener */
 /* global getLocalStorageValue getPlayer getPlayerAsync */
 /* eslint-disable global-require */
@@ -355,7 +355,7 @@ const main = () => {
       $scope.showDialog = (dialog_type, data) => {
         $scope.is_dialog_hidden = 0;
         const dialogWidth = 285;
-        const left = $(window).width() / 2 - dialogWidth / 2;
+        const left = window.innerWidth / 2 - dialogWidth / 2;
         $scope.myStyle = {
           left: `${left}px`,
         };
@@ -730,7 +730,7 @@ const main = () => {
         callback() {
           $scope.showTag(3);
           $timeout(() => {
-            $('#search-input').focus();
+            document.getElementById('search-input').focus();
           }, 0);
         },
       });
@@ -1051,8 +1051,16 @@ const main = () => {
           let timeRegResult = null;
           // eslint-disable-next-line no-cond-assign
           while ((timeRegResult = timeReg.exec(line)) !== null) {
+            const htmlUnescapes = {
+              '&amp;': '&',
+              '&lt;': '<',
+              '&gt;': '>',
+              '&quot;': '"',
+              '&#39;': "'",
+            };
             timeResult.push({
-              content: $('<a />').html(line.replace(timeRegResult[0], '')).text(),
+              content: line.replace(timeRegResult[0], '')
+                .replace(/&(?:amp|lt|gt|quot|#39);/g, (match) => htmlUnescapes[match]),
               seconds: parseInt(timeRegResult[1], 10) * 60 * 1000 // min
                 + parseInt(timeRegResult[2], 10) * 1000 // sec
                 + (timeRegResult[3] ? parseInt(rightPadding(timeRegResult[3], 3, '0'), 10) : 0), // microsec
@@ -1132,21 +1140,17 @@ const main = () => {
                 }
               });
               if (lastObject && lastObject.lineNumber !== $scope.lyricLineNumber) {
-                const lineElement = $(
+                const lineElement = document.querySelector(
                   `.page .playsong-detail .detail-songinfo .lyric p[data-line="${lastObject.lineNumber}"]`,
-                )[0];
-                const windowHeight = $(
-                  '.page .playsong-detail .detail-songinfo .lyric',
-                ).height();
+                );
+                const windowHeight = document.querySelector('.page .playsong-detail .detail-songinfo .lyric').offsetHeight;
 
                 const adjustOffset = 30;
                 const offset = lineElement.offsetTop - windowHeight / 2 + adjustOffset;
-                $('.lyric').animate(
-                  {
-                    scrollTop: `${offset}px`,
-                  },
-                  500,
-                );
+                document.querySelector('.lyric').scrollTo({
+                  top: offset,
+                  behavior: 'smooth',
+                });
                 $scope.lyricLineNumber = lastObject.lineNumber;
                 if (lastObjectTrans
                   && lastObjectTrans.lineNumber !== $scope.lyricLineNumberTrans) {
@@ -1202,9 +1206,10 @@ const main = () => {
               $scope.lyricArray = [];
               $scope.lyricLineNumber = -1;
               $scope.lyricLineNumberTrans = -1;
-              $('.lyric').animate({
-                scrollTop: '0px',
-              }, 500);
+              document.querySelector('.lyric').scrollTo({
+                top: 0,
+                behavior: 'smooth',
+              });
               let url = `/lyric?track_id=${msg.data.id}`;
               const track = msg.data;
 
@@ -1496,7 +1501,6 @@ const main = () => {
           updateTotalPage(data.total);
           $scope.loading = false;
           // scroll back to top when finish searching
-          $('.site-wrapper-innerd').scrollTop(0);
         });
       }
 
