@@ -9,7 +9,7 @@
 /* eslint-disable import/no-unresolved */
 
 const main = () => {
-  const app = angular.module('listenone', ['ui-notification', 'loWebManager', 'cfp.hotkeys', 'lastfmClient', 'githubClient', 'pascalprecht.translate']);
+  const app = angular.module('listenone', ['ui-notification', 'cfp.hotkeys', 'lastfmClient', 'githubClient', 'pascalprecht.translate']);
   setPrototypeOfLocalStorage();
   app.config([
     '$compileProvider',
@@ -53,8 +53,8 @@ const main = () => {
     $translateProvider.preferredLanguage('zh_CN');
   }]);
 
-  app.run(['$q', 'loWeb', '$translate',
-    ($q, loWeb, $translate) => {
+  app.run(['$q', '$translate',
+    ($q, $translate) => {
       function getAutoChooseSource() {
         let enableAutoChooseSource = localStorage.getObject('enable_auto_choose_source');
         if (enableAutoChooseSource === null) {
@@ -165,11 +165,11 @@ const main = () => {
 
   // control main view of page, it can be called any place
   app.controller('NavigationController', ['$scope',
-    '$httpParamSerializerJQLike', '$timeout', 'Notification', '$rootScope', 'loWeb',
+    '$httpParamSerializerJQLike', '$timeout', 'Notification', '$rootScope',
     'hotkeys', 'lastfm', 'github', 'gist', '$translate',
     ($scope, $httpParamSerializerJQLike,
       $timeout, Notification, $rootScope,
-      loWeb, hotkeys, lastfm, github, gist, $translate) => {
+      hotkeys, lastfm, github, gist, $translate) => {
       $rootScope.page_title = 'Listen 1'; // eslint-disable-line no-param-reassign
       $scope.window_url_stack = [];
       $scope.window_poped_url_stack = [];
@@ -886,9 +886,9 @@ const main = () => {
   app.controller('PlayController', ['$scope', '$timeout', '$log',
     '$anchorScroll', '$location',
     '$rootScope', 'Notification',
-    'loWeb', 'hotkeys', 'lastfm', '$translate',
+    'hotkeys', 'lastfm', '$translate',
     ($scope, $timeout, $log, $anchorScroll, $location,
-      $rootScope, Notification, loWeb, hotkeys, lastfm, $translate) => {
+      $rootScope, Notification, hotkeys, lastfm, $translate) => {
       $scope.menuHidden = true;
       $scope.volume = l1Player.status.volume;
       $scope.mute = l1Player.status.muted;
@@ -1446,8 +1446,8 @@ const main = () => {
     },
   ]);
 
-  app.controller('InstantSearchController', ['$scope', '$timeout', '$rootScope', 'loWeb', '$translate',
-    ($scope, $timeout, $rootScope, loWeb, $translate) => {
+  app.controller('InstantSearchController', ['$scope', '$timeout', '$rootScope', '$translate',
+    ($scope, $timeout, $rootScope, $translate) => {
       // notice: douban is skipped, and add all music so array should plus 2
       // [网易,虾米,QQ,NULL,酷狗,酷我,bilibili, migu, allmusic]
       $scope.originpagelog = Array(getAllProviders().length + 2).fill(1);
@@ -1792,8 +1792,8 @@ const main = () => {
     }),
   ]);
 
-  app.controller('MyPlayListController', ['$scope', '$timeout', 'loWeb',
-    ($scope, $timeout, loWeb) => {
+  app.controller('MyPlayListController', ['$scope', '$timeout',
+    ($scope, $timeout) => {
       $scope.myplaylists = [];
       $scope.favoriteplaylists = [];
 
@@ -1827,8 +1827,8 @@ const main = () => {
     },
   ]);
 
-  app.controller('PlayListController', ['$scope', '$timeout', 'loWeb',
-    ($scope, $timeout, loWeb) => {
+  app.controller('PlayListController', ['$scope', '$timeout',
+    ($scope, $timeout) => {
       $scope.result = [];
       $scope.tab = 0;
       $scope.loading = true;
