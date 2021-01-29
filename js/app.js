@@ -1196,7 +1196,7 @@ const main = () => {
               if ($scope.lastTrackId === msg.data.id) {
                 break;
               }
-              const current = localStorage.getObject('player-settings');
+              const current = localStorage.getObject('player-settings') || {};
               current.nowplaying_track_id = msg.data.id;
               localStorage.setObject('player-settings', current);
               // update lyric
