@@ -1,6 +1,5 @@
 /* eslint-disable no-unused-vars */
-/* global aesjs getParameterByName */
-/* global sub bigInt2str dup equalsInt int2bigInt mod mult powMod str2bigInt rightShift_ */
+/* global getParameterByName forge */
 /* global isElectron cookieSet cookieGet async */
 function build_netease() {
   function ne_show_playlist(url) {
@@ -44,59 +43,22 @@ function build_netease() {
   }
 
   function _aes_encrypt(text, sec_key) { // eslint-disable-line no-underscore-dangle
-    const pad = 16 - (text.length % 16);
-    for (let i = 0; i < pad; i += 1) {
-      text += String.fromCharCode(pad); // eslint-disable-line no-param-reassign
-    }
-    const key = aesjs.util.convertStringToBytes(sec_key);
-    // The initialization vector, which must be 16 bytes
-    const iv = aesjs.util.convertStringToBytes('0102030405060708');
-    let textBytes = aesjs.util.convertStringToBytes(text);
-    const aesCbc = new aesjs.ModeOfOperation.cbc(key, iv); // eslint-disable-line new-cap
-    const cipherArray = [];
-    while (textBytes.length !== 0) {
-      const block = aesCbc.encrypt(textBytes.slice(0, 16));
-      Array.prototype.push.apply(cipherArray, block);
-      textBytes = textBytes.slice(16);
-    }
-    let ciphertext = '';
-    for (let i = 0; i < cipherArray.length; i += 1) {
-      ciphertext += String.fromCharCode(cipherArray[i]);
-    }
-    ciphertext = btoa(ciphertext);
-    return ciphertext;
-  }
+    const cipher = forge.cipher.createCipher('AES-CBC', sec_key);
+    cipher.start({ iv: '0102030405060708' });
+    cipher.update(forge.util.createBuffer(text));
+    cipher.finish();
 
-  function hexify(text) {
-    return text.split('').map((x) => x.charCodeAt(0).toString(16)).join('');
-  }
-
-  function zfill(num, size) {
-    let s = `${num}`;
-    while (s.length < size) s = `0${s}`;
-    return s;
-  }
-
-  function expmod(base, exp, mymod) {
-    if (equalsInt(exp, 0) === 1) return int2bigInt(1, 10);
-    if (equalsInt(mod(exp, int2bigInt(2, 10)), 0)) {
-      const newexp = dup(exp);
-      rightShift_(newexp, 1);
-      const result = powMod(expmod(base, newexp, mymod), [2, 0], mymod);
-      return result;
-    }
-    const result = mod(mult(expmod(base, sub(exp, int2bigInt(1, 10)), mymod), base), mymod);
-    return result;
+    return btoa(cipher.output.data);
   }
 
   function _rsa_encrypt(text, pubKey, modulus) { // eslint-disable-line no-underscore-dangle
     text = text.split('').reverse().join(''); // eslint-disable-line no-param-reassign
-    const base = str2bigInt(hexify(text), 16);
-    const exp = str2bigInt(pubKey, 16);
-    const mod = str2bigInt(modulus, 16);
-    const bigNumber = expmod(base, exp, mod);
-    const rs = bigInt2str(bigNumber, 16);
-    return zfill(rs, 256).toLowerCase();
+
+    const n = new forge.jsbn.BigInteger(modulus, 16);
+    const e = new forge.jsbn.BigInteger(pubKey, 16);
+    const b = new forge.jsbn.BigInteger(forge.util.bytesToHex(text), 16);
+    const enc = b.modPow(e, n).toString(16);
+    return enc;
   }
 
   function _encrypted_request(text) { // eslint-disable-line no-underscore-dangle

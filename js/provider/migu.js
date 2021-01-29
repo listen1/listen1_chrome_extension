@@ -1,7 +1,7 @@
 /* eslint-disable consistent-return */
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-use-before-define */
-/* global getParameterByName MD5 async JSEncrypt CryptoJS */
+/* global getParameterByName async forge */
 function build_migu() {
   function mg_convert_song(song) {
     return {
@@ -171,12 +171,26 @@ function build_migu() {
         type = 1;
     }
     const k = '4ea5c508a6566e76240543f8feb06fd457777be39549c4016436afda65d2330e';
-    const rsaEncrypt = new JSEncrypt();
-    const publicKey = '-----BEGIN PUBLIC KEY-----\nMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC8asrfSaoOb4je+DSmKdriQJKW\nVJ2oDZrs3wi5W67m3LwTB9QVR+cE3XWU21Nx+YBxS0yun8wDcjgQvYt625ZCcgin\n2ro/eOkNyUOTBIbuj9CvMnhUYiR61lC1f1IGbrSYYimqBVSjpifVufxtx/I3exRe\nZosTByYp4Xwpb1+WAQIDAQAB\n-----END PUBLIC KEY-----';
-    rsaEncrypt.setPublicKey(publicKey);
-    const secKey = rsaEncrypt.encrypt(k);
     // type parameter for music quality: 1: normal, 2: hq, 3: sq, 4: zq, 5: z3d
-    const aesResult = CryptoJS.AES.encrypt(`{"copyrightId":"${song_id}","type":${type},"auditionsFlag":0}`, k).toString();
+    const plain = forge.util.createBuffer(`{"copyrightId":"${song_id}","type":${type},"auditionsFlag":0}`);
+    const salt = forge.random.getBytesSync(8);
+    const derivedBytes = forge.pbe.opensslDeriveBytes(k, salt, 48);
+    const buffer = forge.util.createBuffer(derivedBytes);
+    const key = buffer.getBytes(32);
+    const iv = buffer.getBytes(16);
+
+    const cipher = forge.cipher.createCipher('AES-CBC', key);
+    cipher.start({ iv });
+    cipher.update(plain);
+    cipher.finish();
+    const output = forge.util.createBuffer();
+    output.putBytes('Salted__');
+    output.putBytes(salt);
+    output.putBuffer(cipher.output);
+    const aesResult = forge.util.encode64(output.bytes());
+
+    const publicKey = '-----BEGIN PUBLIC KEY-----\nMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC8asrfSaoOb4je+DSmKdriQJKW\nVJ2oDZrs3wi5W67m3LwTB9QVR+cE3XWU21Nx+YBxS0yun8wDcjgQvYt625ZCcgin\n2ro/eOkNyUOTBIbuj9CvMnhUYiR61lC1f1IGbrSYYimqBVSjpifVufxtx/I3exRe\nZosTByYp4Xwpb1+WAQIDAQAB\n-----END PUBLIC KEY-----';
+    const secKey = forge.util.encode64(forge.pki.publicKeyFromPem(publicKey).encrypt(k));
 
     const target_url = `https://music.migu.cn/v3/api/music/audioPlayer/getPlayInfo?dataType=2&data=${encodeURIComponent(aesResult)}&secKey=${encodeURIComponent(secKey)}`;
 
@@ -211,9 +225,9 @@ function build_migu() {
         searchSwitch = '{"song":1}'; // {"song":1,"album":0,"singer":0,"tagSong":1,"mvSong":0,"bestShow":1,"songlist":0,"lyricSong":0}
         // type = 2;
         target_url = `${target_url}sid=${sid}&isCorrect=1&isCopyright=1`
-        + `&searchSwitch=${encodeURIComponent(searchSwitch)}&pageSize=20`
-        + `&text=${encodeURIComponent(keyword)}&pageNo=${curpage}`
-        + '&feature=1000000000&sort=1';
+          + `&searchSwitch=${encodeURIComponent(searchSwitch)}&pageSize=20`
+          + `&text=${encodeURIComponent(keyword)}&pageNo=${curpage}`
+          + '&feature=1000000000&sort=1';
         break;
       case '1':
         searchSwitch = '{"songlist":1}';
@@ -231,10 +245,12 @@ function build_migu() {
     // const target_url = `https://pd.musicapp.migu.cn/MIGUM3.0/v1.0/content/search_all.do?&isCopyright=0&isCorrect=0&text=${keyword}&pageNo=${curpage}&searchSwitch=${searchSwitch}`;
     // const target_url = `https://m.music.migu.cn/migu/remoting/scr_search_tag?rows=20&type=${type}&keyword=${keyword}'&pgc=${curpage}`;
 
-    const deviceId = MD5(uuid().replace(/-/g, '')).toLocaleUpperCase(); // 设备的UUID
+    const deviceId = forge.md5.create().update(uuid().replace(/-/g, '')).digest().toHex()
+      .toLocaleUpperCase(); // 设备的UUID
     const timestamp = (new Date()).getTime();
     const signature_md5 = '6cdc72a439cef99a3418d2a78aa28c73'; // app签名证书的md5
-    const sign = MD5(`${keyword + signature_md5}yyapp2d16148780a1dcc7408e06336b98cfd50${deviceId}${timestamp}`);
+    const text = `${keyword + signature_md5}yyapp2d16148780a1dcc7408e06336b98cfd50${deviceId}${timestamp}`;
+    const sign = forge.md5.create(text).update(forge.util.encodeUtf8(text)).digest().toHex();
     const headers = {
       // android_id: 'db2cd8c4cdc1345f',
       appId: 'yyapp2',
@@ -277,7 +293,7 @@ function build_migu() {
           } else if (searchType === '1') {
             if (data.songListResultData.result) {
               result = data.songListResultData.result.map((item) => ({
-              // result = data.songLists.map(item => ({
+                // result = data.songLists.map(item => ({
                 id: `mgplaylist_${item.id}`,
                 title: item.name,
                 source: 'migu',
