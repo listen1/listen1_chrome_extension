@@ -2,7 +2,7 @@
 /* global l1Player require */
 /* global angular isElectron getAllProviders */
 /* global setPrototypeOfLocalStorage addPlayerListener */
-/* global getLocalStorageValue getPlayer getPlayerAsync */
+/* global getLocalStorageValue getPlayer getPlayerAsync smoothScrollTo */
 /* eslint-disable global-require */
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-param-reassign */
@@ -1147,10 +1147,7 @@ const main = () => {
 
                 const adjustOffset = 30;
                 const offset = lineElement.offsetTop - windowHeight / 2 + adjustOffset;
-                document.querySelector('.lyric').scrollTo({
-                  top: offset,
-                  behavior: 'smooth',
-                });
+                smoothScrollTo(document.querySelector('.lyric'), offset, 500);
                 $scope.lyricLineNumber = lastObject.lineNumber;
                 if (lastObjectTrans
                   && lastObjectTrans.lineNumber !== $scope.lyricLineNumberTrans) {
@@ -1206,10 +1203,7 @@ const main = () => {
               $scope.lyricArray = [];
               $scope.lyricLineNumber = -1;
               $scope.lyricLineNumberTrans = -1;
-              document.querySelector('.lyric').scrollTo({
-                top: 0,
-                behavior: 'smooth',
-              });
+              smoothScrollTo(document.querySelector('.lyric'), 0, 300);
               let url = `/lyric?track_id=${msg.data.id}`;
               const track = msg.data;
 
