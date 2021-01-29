@@ -1495,6 +1495,7 @@ const main = () => {
           updateTotalPage(data.total);
           $scope.loading = false;
           // scroll back to top when finish searching
+          document.querySelector('.site-wrapper-innerd').scrollTo({ top: 0 });
         });
       }
 
