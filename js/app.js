@@ -1123,10 +1123,16 @@ const main = () => {
               let lastObject = null;
               let lastObjectTrans = null;
               $scope.lyricArray.forEach((lyric) => {
-                if (currentSeconds >= lyric.seconds / 1000) {
+                if (lyric.seconds / 1000 <= currentSeconds) {
                   if (lyric.translationFlag !== true) {
+                    if (lastObject !== null && lyric.seconds === lastObject.seconds) {
+                      return;
+                    }
                     lastObject = lyric;
                   } else {
+                    if (lastObjectTrans !== null && lyric.seconds === lastObjectTrans.seconds) {
+                      return;
+                    }
                     lastObjectTrans = lyric;
                   }
                 }

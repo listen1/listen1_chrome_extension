@@ -287,39 +287,45 @@ function build_kuwo() {
 
   function kw_generate_translation(lrclist) {
     if (lrclist) {
-      // 将歌词和翻译分成两个数组，并将对应歌词和翻译的时间调整为相等，数组最后一个数据无法做判断，故传给翻译数组做后续处理
-      lrclist.filter((item) => item.lineLyric !== '//');
+      lrclist.filter((e) => e && e.lineLyric !== '//');
 
-      let lrc_arr = lrclist.filter(
-        (item, index, self) => {
-          if (index < self.length - 1) {
-            if (Number(item.time) === 0) {
-              return item;
-            }
-            return item.time !== self[index + 1].time;
-          }
-          return null;
-        },
-      );
-      let tlrc_arr = lrclist.filter(
-        (item, index, self) => {
-          if (index < self.length - 1 && Number(item.time) !== 0
-            && item.time === self[index + 1].time) {
-            return item.time === self[index - 1].time;
-          }
-          return (index === self.length - 1 ? item : null);
-        },
-      );
-      // tlrc_arr如只有一个即为没有翻译歌词
-      if (tlrc_arr.length === 1) {
-        lrc_arr = [...lrc_arr, ...tlrc_arr];
-        tlrc_arr = [];
-      } else {
-        tlrc_arr[tlrc_arr.length - 1].time = lrc_arr[lrc_arr.length - 1].time;
-      }
+      // 暂时原歌词和翻译都在原歌词显示
+      // 酷我的歌词格式中没区分，查看了几个歌词文件发现，翻译歌词也存在和原来歌词的时间轴不一致的情况
+      // 如果按照时间区分可能造成错行问题。
+
+      // 将歌词和翻译分成两个数组，并将对应歌词和翻译的时间调整为相等，数组最后一个数据无法做判断，故传给翻译数组做后续处理
+      // const lrc_arr = [];
+      // const tlrc_arr = [];
+      // let lrc_arr = lrclist.filter(
+      //   (item, index, self) => {
+      //     if (index < self.length - 1) {
+      //       if (Number(item.time) === 0) {
+      //         return item;
+      //       }
+      //       return item.time !== self[index + 1].time;
+      //     }
+      //     return null;
+      //   },
+      // );
+      // let tlrc_arr = lrclist.filter(
+      //   (item, index, self) => {
+      //     if (index < self.length - 1 && Number(item.time) !== 0
+      //       && item.time === self[index + 1].time) {
+      //       return item.time === self[index - 1].time;
+      //     }
+      //     return (index === self.length - 1 ? item : null);
+      //   },
+      // );
+      // // tlrc_arr如只有一个即为没有翻译歌词
+      // if (tlrc_arr.length === 1) {
+      //   lrc_arr = [...lrc_arr, ...tlrc_arr];
+      //   tlrc_arr = [];
+      // } else {
+      //   tlrc_arr[tlrc_arr.length - 1].time = lrc_arr[lrc_arr.length - 1].time;
+      // }
       return {
-        lrc: kw_get_lrc(lrc_arr),
-        tlrc: kw_get_lrc(tlrc_arr),
+        lrc: kw_get_lrc(lrclist),
+        tlrc: kw_get_lrc([]),
       };
     }
     return {
