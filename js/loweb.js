@@ -67,7 +67,7 @@ function getProviderByItemId(itemId) {
 }
 
 // eslint-disable-next-line no-unused-vars
-const loWeb = {
+const MediaService = {
   get(url) {
     const path = url.split('?')[0];
     if (path === '/show_playlist') {
@@ -234,100 +234,59 @@ const loWeb = {
     }
     return null;
   },
-  bootstrapTrack(success, failure, getAutoChooseSource) {
-    // eslint-disable-next-line consistent-return
-    function getTrackFromSame(track, source, callback) {
-      if (track.source === source) {
-        // come from same source, no need to check
-        return callback(null);
+  bootstrapTrack(sound, track, playerSuccessCallback, playerFailCallback) {
+    const successCallback = playerSuccessCallback;
+
+    function failureCallback() {
+      if (localStorage.getObject('enable_auto_choose_source') === false) {
+        playerFailCallback();
+        return;
       }
-      // TODO: better query method
-      const keyword = `${track.title} ${track.artist}`;
-      const curpage = 1;
-      const url = `/search?source=${source}&keywords=${keyword}&curpage=${curpage}`;
-      const provider = getProviderByName(source);
-      provider.search(url).success((data) => {
-        for (let i = 0; i < data.result.length; i += 1) {
-          const searchTrack = data.result[i];
-          // compare search track and track to check if they are same
-          // TODO: better similar compare method (duration, md5)
-          if (!searchTrack.disable) {
-            if ((searchTrack.title === track.title) && (searchTrack.artist === track.artist)) {
-              return callback(searchTrack);
-            }
-          }
-        }
-        return callback(null);
-      });
-    }
+      const failover_source_list = ['kuwo', 'qq', 'migu'];
 
-    function getUrlFromTrack(track, source, callback) {
-      const provider = getProviderByName(source);
-      const soundInfo = {};
-      provider.bootstrap_track(soundInfo, track, () => {
-        callback(soundInfo.url);
-      }, () => {
-        callback(null);
-      });
-    }
-
-    function getUrlFromSame(track, source, callback) {
-      getTrackFromSame(track, source, (sameTrack) => {
-        if (sameTrack === null) {
-          return callback(null);
-        }
-        return getUrlFromTrack(sameTrack, source, callback);
-      });
-    }
-
-    return (sound, track, playerSuccessCallback, playerFailCallback) => {
-      function successCallback() {
-        playerSuccessCallback();
-        success();
-      }
-
-      function failureCallback() {
-        if (!getAutoChooseSource()) {
-          playerFailCallback();
-          failure();
+      const getUrlPromises = failover_source_list.map((source) => new Promise((resolve, reject) => {
+        if (track.source === source) {
+          // come from same source, no need to check
+          resolve();
           return;
         }
-        const failover_source_list = ['kuwo', 'qq', 'migu'];
-
-        function makeFn(_track, source) {
-          return (cb) => {
-            getUrlFromSame(_track, source, (url) => cb(url));
-            // pass url as error to return instant when any of source available
-          };
-        }
-        const getUrlFnList = [];
-        for (let i = 0; i < failover_source_list.length; i += 1) {
-          getUrlFnList.push(makeFn(track, failover_source_list[i]));
-        }
-
-        async.parallel(
-          getUrlFnList,
-          (err) => {
-            if (err) {
-              // use error to make instant return, error contains url
-              // eslint-disable-next-line no-param-reassign
-              sound.url = err;
-              playerSuccessCallback();
-              success();
+        // TODO: better query method
+        const keyword = `${track.title} ${track.artist}`;
+        const curpage = 1;
+        const url = `/search?keywords=${keyword}&curpage=${curpage}`;
+        const provider = getProviderByName(source);
+        provider.search(url).success((data) => {
+          for (let i = 0; i < data.result.length; i += 1) {
+            const searchTrack = data.result[i];
+            // compare search track and track to check if they are same
+            // TODO: better similar compare method (duration, md5)
+            if (!searchTrack.disable
+              && (searchTrack.title === track.title)
+              && (searchTrack.artist === track.artist)) {
+              const soundInfo = {};
+              provider.bootstrap_track(soundInfo, searchTrack, () => {
+                reject(soundInfo.url); // Use Reject to return immediately
+              }, resolve);
               return;
             }
+          }
+          resolve();
+        });
+      }));
+      // TODO: Use Promise.any() in ES2021 replace the tricky workaround
+      Promise.all(getUrlPromises).catch((url) => {
+        // eslint-disable-next-line no-param-reassign
+        sound.url = url;
+        playerSuccessCallback();
+      }).then(playerFailCallback);
+    }
 
-            playerFailCallback();
-            failure();
-          },
-        );
-      }
+    const provider = getProviderByName(track.source);
 
-      const { source } = track;
-      const provider = getProviderByName(source);
-
-      provider.bootstrap_track(sound, track, successCallback,
-        failureCallback);
-    };
+    provider.bootstrap_track(sound, track, successCallback,
+      failureCallback);
   },
 };
+
+// eslint-disable-next-line no-unused-vars
+const loWeb = MediaService;

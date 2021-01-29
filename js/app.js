@@ -55,22 +55,6 @@ const main = () => {
 
   app.run(['$q', '$translate',
     ($q, $translate) => {
-      function getAutoChooseSource() {
-        let enableAutoChooseSource = localStorage.getObject('enable_auto_choose_source');
-        if (enableAutoChooseSource === null) {
-          // default on
-          enableAutoChooseSource = true;
-        }
-        return enableAutoChooseSource;
-      }
-      l1Player.setBootstrapTrack(
-        loWeb.bootstrapTrack(
-          () => { },
-          () => { },
-          getAutoChooseSource,
-        ),
-      );
-
       axios.Axios.prototype.request_original = axios.Axios.prototype.request;
       axios.Axios.prototype.request = function new_req(config) {
         return $q.when(this.request_original(config));
