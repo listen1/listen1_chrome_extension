@@ -237,7 +237,7 @@ ngloWebManager.factory('loWeb', ['$rootScope', '$log',
         // TODO: better query method
         const keyword = `${track.title} ${track.artist}`;
         const curpage = 1;
-        const url = `/search?source=${source}&keywords=${keyword}&curpage=${curpage}`;
+        const url = `/search?source=${source}&keywords=${keyword}&curpage=${curpage}&type=0`;
         const provider = getProviderByName(source);
         provider.search(url).success((data) => {
           for (let i = 0; i < data.result.length; i += 1) {
