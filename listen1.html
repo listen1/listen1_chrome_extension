@@ -322,8 +322,8 @@
                               {{_AUTO_CHOOSE_SOURCE_NOTICE}}
                             </div>
                           </div>
-                          <div class="settings-title"><span>{{_CLOSE_TAB_ACTION}}({{_VALID_AFTER_RESTART}})</span></div>
-                          <div class="settings-content">
+                          <div  ng-if="isChrome" class="settings-title"><span>{{_CLOSE_TAB_ACTION}}({{_VALID_AFTER_RESTART}})</span></div>
+                          <div  ng-if="isChrome" class="settings-content">
                             <div class="shortcut">
                               <svg class="feather" ng-show="!enableStopWhenClose" ng-click="setStopWhenClose(true)"><use href="#square"></use></svg>
                               <svg class="feather" ng-show="enableStopWhenClose" ng-click="setStopWhenClose(false)"><use href="#check-square"></use></svg>
