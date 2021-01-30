@@ -1413,8 +1413,6 @@ const main = () => {
         },
       });
 
-
-
       $scope.toggleLyricTranslation = () => {
         $scope.enableLyricTranslation = !$scope.enableLyricTranslation;
         localStorage.setObject('enable_lyric_translation', $scope.enableLyricTranslation);
