@@ -962,6 +962,46 @@ const main = () => {
         $scope.openLyricFloatingWindow();
       };
 
+      // electron global shortcuts
+      $scope.applyGlobalShortcut = (toggle) => {
+        if (!isElectron()) {
+          return;
+        }
+        let message = '';
+        if (toggle === true) {
+          $scope.enableGlobalShortCut = !$scope.enableGlobalShortCut;
+        }
+        if ($scope.enableGlobalShortCut === true) {
+          message = 'enable_global_shortcut';
+        } else {
+          message = 'disable_global_shortcut';
+        }
+
+        // check if globalShortcuts is allowed
+        localStorage.setObject('enable_global_shortcut', $scope.enableGlobalShortCut);
+
+        const { ipcRenderer } = require('electron');
+        ipcRenderer.send('control', message);
+      };
+
+      $scope.openLyricFloatingWindow = (toggle) => {
+        if (!isElectron()) {
+          return;
+        }
+        let message = '';
+        if (toggle === true) {
+          $scope.enableLyricFloatingWindow = !$scope.enableLyricFloatingWindow;
+        }
+        if ($scope.enableLyricFloatingWindow === true) {
+          message = 'enable_lyric_floating_window';
+        } else {
+          message = 'disable_lyric_floating_window';
+        }
+        localStorage.setObject('enable_lyric_floating_window', $scope.enableLyricFloatingWindow);
+        const { ipcRenderer } = require('electron');
+        ipcRenderer.send('control', message);
+      };
+
       $scope.saveLocalSettings = () => {
         localStorage.setObject('player-settings', $scope.settings);
       };
@@ -1098,10 +1138,12 @@ const main = () => {
 
       getPlayer(mode).setMode(mode);
       if (mode === 'front') {
-        // avoid background keep playing when change to front mode
-        getPlayerAsync('background', (player) => {
-          player.pause();
-        });
+        if (!isElectron()) {
+          // avoid background keep playing when change to front mode
+          getPlayerAsync('background', (player) => {
+            player.pause();
+          });
+        }
       }
 
       addPlayerListener(mode, (msg, sender, sendResponse) => {
@@ -1371,45 +1413,7 @@ const main = () => {
         },
       });
 
-      // electron global shortcuts
-      $scope.applyGlobalShortcut = (toggle) => {
-        if (!isElectron()) {
-          return;
-        }
-        let message = '';
-        if (toggle === true) {
-          $scope.enableGlobalShortCut = !$scope.enableGlobalShortCut;
-        }
-        if ($scope.enableGlobalShortCut === true) {
-          message = 'enable_global_shortcut';
-        } else {
-          message = 'disable_global_shortcut';
-        }
 
-        // check if globalShortcuts is allowed
-        localStorage.setObject('enable_global_shortcut', $scope.enableGlobalShortCut);
-
-        const { ipcRenderer } = require('electron');
-        ipcRenderer.send('control', message);
-      };
-
-      $scope.openLyricFloatingWindow = (toggle) => {
-        if (!isElectron()) {
-          return;
-        }
-        let message = '';
-        if (toggle === true) {
-          $scope.enableLyricFloatingWindow = !$scope.enableLyricFloatingWindow;
-        }
-        if ($scope.enableLyricFloatingWindow === true) {
-          message = 'enable_lyric_floating_window';
-        } else {
-          message = 'disable_lyric_floating_window';
-        }
-        localStorage.setObject('enable_lyric_floating_window', $scope.enableLyricFloatingWindow);
-        const { ipcRenderer } = require('electron');
-        ipcRenderer.send('control', message);
-      };
 
       $scope.toggleLyricTranslation = () => {
         $scope.enableLyricTranslation = !$scope.enableLyricTranslation;
