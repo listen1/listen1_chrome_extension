@@ -59,6 +59,30 @@ function getProviderByItemId(itemId) {
   }
 }
 
+/* cache for all playlist request except myplaylist and localmusic */
+const CACHE_SIZE = 100;
+const maxAge = 60 * 60 * 1000; // 1 hour cache expire;
+const playlistCache = new Cache(CACHE_SIZE);
+
+function cached(key, instance) {
+  const nowts = +new Date();
+  const hit = playlistCache.getItem(key);
+  const list_id = getParameterByName('list_id', key);
+  const provider = getProviderByItemId(list_id);
+  const shouldUseCache = (provider !== myplaylist) && (provider !== localmusic);
+  if (shouldUseCache && (hit !== null) && (nowts - hit.ts <= maxAge)) {
+    return {
+      success: (fn) => fn(hit.playlist),
+    };
+  }
+  return {
+    success: (fn) => instance.success((playlist) => {
+      playlistCache.setItem(key, { playlist, ts: nowts });
+      fn(playlist);
+    }),
+  };
+}
+
 ngloWebManager.factory('loWeb', ['$rootScope', '$log',
   () => ({
     get(url) {
@@ -71,7 +95,7 @@ ngloWebManager.factory('loWeb', ['$rootScope', '$log',
       if (path === '/playlist') {
         const list_id = getParameterByName('list_id', url);
         const provider = getProviderByItemId(list_id);
-        return provider.get_playlist(url);
+        return cached(url, provider.get_playlist(url));
       }
       if (path === '/search') {
         const source = getParameterByName('source', url);
