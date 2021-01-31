@@ -71,6 +71,28 @@ Listen1诞生的初衷从不是和大公司的争夺版权利益，而是为了�
 
 更新日志
 -------
+`2021-01`
+
+功能改进：
+* 支持插件版后台播放功能 (特别感谢 @Dumeng 的提交)
+* 优化酷我代码 (感谢 @RecluseWind 的提交)
+* 优化咪咕音乐代码  (感谢 @RecluseWind 的提交)
+* 本地音乐支持flac格式 (感谢 @mikelxk 的提交)
+* 在软件中增加反馈链接 (感谢 @mikelxk 的提交)
+* 增加虾米歌单搜索，统一端口代码 (感谢 @RecluseWind 的提交)
+
+重构：
+* 更换所有加解密库到forge (感谢 @Dumeng 的提交)
+* 去除对jquery库的依赖 (感谢 @Dumeng 的提交)
+* 更换音频播放库到 howler.js (感谢 @Dumeng 的提交)
+* 更换http请求库到 axios (感谢 @Dumeng 的提交)
+* 支持eslint的github action语法检查  (感谢 @Dumeng 的提交)
+
+bug修复：
+* 修复MediaSession不支持时的报错问题 (感谢 @Jyuaan 的提交)
+* 修复咪咕歌单的404错误
+* 修复正在播放窗口点击空白处弹回的功能 (感谢 @Demeng 的提交)
+
 `2020-12-28`
 * 修复最大，最小，关闭按钮在桌面版失效的问题
 
