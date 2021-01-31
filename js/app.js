@@ -1075,7 +1075,7 @@ const main = () => {
           return newstr;
         }
 
-        const process = (result, timeResult, translationFlag) => (line) => {
+        const process = (result, timeResult, translationFlag) => (line, index) => {
           const tagReg = /\[\D*:([^\]]+)\]/g;
           const tagRegResult = tagReg.exec(line);
           if (tagRegResult) {
@@ -1105,6 +1105,7 @@ const main = () => {
                 + parseInt(timeRegResult[2], 10) * 1000 // sec
                 + (timeRegResult[3] ? parseInt(rightPadding(timeRegResult[3], 3, '0'), 10) : 0), // microsec
               translationFlag,
+              index,
             });
           }
         };
@@ -1119,6 +1120,8 @@ const main = () => {
           // Compare the 2 dates
           if (keyA < keyB) return -1;
           if (keyA > keyB) return 1;
+          if (a.index < b.index) return -1;
+          if (a.index > b.index) return 1;
           if (!a.translationFlag) return -1;
           return 0;
         });
@@ -1173,16 +1176,10 @@ const main = () => {
               let lastObject = null;
               let lastObjectTrans = null;
               $scope.lyricArray.forEach((lyric) => {
-                if (lyric.seconds / 1000 <= currentSeconds) {
+                if (currentSeconds >= lyric.seconds / 1000) {
                   if (lyric.translationFlag !== true) {
-                    if (lastObject !== null && lyric.seconds === lastObject.seconds) {
-                      return;
-                    }
                     lastObject = lyric;
                   } else {
-                    if (lastObjectTrans !== null && lyric.seconds === lastObjectTrans.seconds) {
-                      return;
-                    }
                     lastObjectTrans = lyric;
                   }
                 }
@@ -1240,6 +1237,9 @@ const main = () => {
 
             case 'LOAD': {
               $scope.currentPlaying = msg.data;
+              if (msg.data.id === undefined) {
+                break;
+              }
               $scope.myProgress = 0;
               if ($scope.lastTrackId === msg.data.id) {
                 break;
@@ -1254,7 +1254,6 @@ const main = () => {
               smoothScrollTo(document.querySelector('.lyric'), 0, 300);
               let url = `/lyric?track_id=${msg.data.id}`;
               const track = msg.data;
-
               $rootScope.page_title = `▶ ${track.title} - ${track.artist}`;
               if (lastfm.isAuthorized()) {
                 lastfm.sendNowPlaying(track.title, track.artist, () => { });
