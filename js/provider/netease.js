@@ -8,9 +8,9 @@ function build_netease() {
 
     let target_url = '';
     if (offset != null) {
-      target_url = `http://music.163.com/discover/playlist/?order=${order}&limit=35&offset=${offset}`;
+      target_url = `https://music.163.com/discover/playlist/?order=${order}&limit=35&offset=${offset}`;
     } else {
-      target_url = `http://music.163.com/discover/playlist/?order=${order}`;
+      target_url = `https://music.163.com/discover/playlist/?order=${order}`;
     }
 
     return {
@@ -22,7 +22,7 @@ function build_netease() {
             cover_img_url: item.getElementsByTagName('img')[0].src,
             title: item.getElementsByTagName('div')[0].getElementsByTagName('a')[0].title,
             id: `neplaylist_${getParameterByName('id', item.getElementsByTagName('div')[0].getElementsByTagName('a')[0].href)}`,
-            source_url: `http://music.163.com/#/playlist?id=${getParameterByName('id', item.getElementsByTagName('div')[0].getElementsByTagName('a')[0].href)}`,
+            source_url: `https://music.163.com/#/playlist?id=${getParameterByName('id', item.getElementsByTagName('div')[0].getElementsByTagName('a')[0].href)}`,
           }));
           return fn({
             result,
@@ -149,7 +149,7 @@ function build_netease() {
         album: track_json.al.name,
         album_id: `nealbum_${track_json.al.id}`,
         source: 'netease',
-        source_url: `http://music.163.com/#/song?id=${track_json.id}`,
+        source_url: `https://music.163.com/#/song?id=${track_json.id}`,
         img_url: track_json.al.picUrl,
         // url: `netrack_${track_json.id}`,
       };
@@ -174,7 +174,7 @@ function build_netease() {
         album: track_json.al.name,
         album_id: `nealbum_${track_json.al.id}`,
         source: 'netease',
-        source_url: `http://music.163.com/#/song?id=${track_json.id}`,
+        source_url: `https://music.163.com/#/song?id=${track_json.id}`,
         img_url: track_json.al.picUrl,
         // url: `netrack_${track_json.id}`,
       }));
@@ -197,7 +197,7 @@ function build_netease() {
     return {
       success(fn) {
         const list_id = getParameterByName('list_id', url).split('_').pop();
-        const target_url = 'http://music.163.com/weapi/v3/playlist/detail';
+        const target_url = 'https://music.163.com/weapi/v3/playlist/detail';
         const d = {
           id: list_id,
           offset: 0,
@@ -214,7 +214,7 @@ function build_netease() {
               id: `neplaylist_${list_id}`,
               cover_img_url: res_data.playlist.coverImgUrl,
               title: res_data.playlist.name,
-              source_url: `http://music.163.com/#/playlist?id=${list_id}`,
+              source_url: `https://music.163.com/#/playlist?id=${list_id}`,
             };
             const max_allow_size = 1000;
             const trackIdsArray = split_array(res_data.playlist.trackIds, max_allow_size);
@@ -240,7 +240,7 @@ function build_netease() {
   }
 
   function ne_bootstrap_track(sound, track, success, failure) {
-    const target_url = 'http://music.163.com/weapi/song/enhance/player/url/v1?csrf_token=';
+    const target_url = 'https://music.163.com/weapi/song/enhance/player/url/v1?csrf_token=';
     const csrf = '';
     let song_id = track.id;
 
@@ -272,7 +272,7 @@ function build_netease() {
 
   function ne_search(url) {
     // use chrome extension to modify referer.
-    const target_url = 'http://music.163.com/api/search/pc';
+    const target_url = 'https://music.163.com/api/search/pc';
     const keyword = getParameterByName('keywords', url);
     const curpage = getParameterByName('curpage', url);
     const searchType = getParameterByName('type', url);
@@ -301,7 +301,7 @@ function build_netease() {
               album: song_info.album.name,
               album_id: `nealbum_${song_info.album.id}`,
               source: 'netease',
-              source_url: `http://music.163.com/#/song?id=${song_info.id}`,
+              source_url: `https://music.163.com/#/song?id=${song_info.id}`,
               img_url: song_info.album.picUrl,
               // url: `netrack_${song_info.id}`,
               disabled: !is_playable(song_info),
@@ -338,7 +338,7 @@ function build_netease() {
   function ne_album(url) { // eslint-disable-line no-unused-vars
     const album_id = getParameterByName('list_id', url).split('_').pop();
     // use chrome extension to modify referer.
-    const target_url = `http://music.163.com/api/album/${album_id}`;
+    const target_url = `https://music.163.com/api/album/${album_id}`;
 
     return {
       success(fn) {
@@ -348,7 +348,7 @@ function build_netease() {
             cover_img_url: data.album.picUrl,
             title: data.album.name,
             id: `nealbum_${data.album.id}`,
-            source_url: `http://music.163.com/#/album?id=${data.album.id}`,
+            source_url: `https://music.163.com/#/album?id=${data.album.id}`,
           };
 
           const tracks = data.album.songs.map((song_info) => ({
@@ -359,7 +359,7 @@ function build_netease() {
             album: song_info.album.name,
             album_id: `nealbum_${song_info.album.id}`,
             source: 'netease',
-            source_url: `http://music.163.com/#/song?id=${song_info.id}`,
+            source_url: `https://music.163.com/#/song?id=${song_info.id}`,
             img_url: song_info.album.picUrl,
             // url: `netrack_${song_info.id}`,
             disabled: !is_playable(song_info),
@@ -376,7 +376,7 @@ function build_netease() {
   function ne_artist(url) { // eslint-disable-line no-unused-vars
     const artist_id = getParameterByName('list_id', url).split('_').pop();
     // use chrome extension to modify referer.
-    const target_url = `http://music.163.com/api/artist/${artist_id}`;
+    const target_url = `https://music.163.com/api/artist/${artist_id}`;
 
     return {
       success(fn) {
@@ -386,7 +386,7 @@ function build_netease() {
             cover_img_url: data.artist.picUrl,
             title: data.artist.name,
             id: `neartist_${data.artist.id}`,
-            source_url: `http://music.163.com/#/artist?id=${data.artist.id}`,
+            source_url: `https://music.163.com/#/artist?id=${data.artist.id}`,
           };
 
           const tracks = data.hotSongs.map((song_info) => ({
@@ -397,7 +397,7 @@ function build_netease() {
             album: song_info.album.name,
             album_id: `nealbum_${song_info.album.id}`,
             source: 'netease',
-            source_url: `http://music.163.com/#/song?id=${song_info.id}`,
+            source_url: `https://music.163.com/#/song?id=${song_info.id}`,
             img_url: song_info.album.picUrl,
             // url: `netrack_${song_info.id}`,
             disabled: !is_playable(song_info),
@@ -414,7 +414,7 @@ function build_netease() {
   function ne_lyric(url) {
     const track_id = getParameterByName('track_id', url).split('_').pop();
     // use chrome extension to modify referer.
-    const target_url = 'http://music.163.com/weapi/song/lyric?csrf_token=';
+    const target_url = 'https://music.163.com/weapi/song/lyric?csrf_token=';
     const csrf = '';
     const d = {
       id: track_id,
