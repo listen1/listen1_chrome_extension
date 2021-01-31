@@ -51,6 +51,7 @@ const main = () => {
     $translateProvider.use('zh_CN');
     // Tell the module what language to use by default
     $translateProvider.preferredLanguage('zh_CN');
+    $translateProvider.useSanitizeValueStrategy('escape');
   }]);
 
   app.run(['$q', 'loWeb', '$translate',
