@@ -126,8 +126,7 @@ ngloWebManager.factory('loWeb', ['$rootScope', '$log',
     post(request) {
       const path = request.url.split('?')[0];
       if (path === '/clone_playlist') {
-        const playlist_type = getParameterByName('playlist_type', `${request.url}?${request.data}`);
-        const list_id = getParameterByName('list_id', `${request.url}?${request.data}`);
+        const { playlist_type, list_id } = request.data;
         const provider = getProviderByItemId(list_id);
         const url = `/playlist?list_id=${list_id}`;
         return {
@@ -140,48 +139,33 @@ ngloWebManager.factory('loWeb', ['$rootScope', '$log',
         };
       }
       if (path === '/remove_myplaylist') {
-        const playlist_type = getParameterByName('playlist_type', `${request.url}?${request.data}`);
-        const list_id = getParameterByName('list_id', `${request.url}?${request.data}`);
-        myplaylist.remove_myplaylist(playlist_type, list_id);
+        myplaylist.remove_myplaylist(request.data.playlist_type, request.data.list_id);
         return {
           success: (fn) => fn(),
         };
       }
       if (path === '/add_myplaylist') {
-        const list_id = getParameterByName('list_id', `${request.url}?${request.data}`);
-        const track_json = getParameterByName('track', `${request.url}?${request.data}`);
-        const track = JSON.parse(track_json);
-        myplaylist.add_myplaylist(list_id, track);
+        const newPlaylist = myplaylist.add_myplaylist(request.data.list_id, request.data.track);
         return {
-          success: (fn) => fn(),
+          success: (fn) => fn(newPlaylist),
         };
       }
       if (path === '/add_playlist') {
-        const list_id = getParameterByName('list_id', `${request.url}?${request.data}`);
-        const provider = getProviderByItemId(list_id);
-        const tracks_json = getParameterByName('tracks', `${request.url}?${request.data}`);
-        const tracks = JSON.parse(tracks_json);
-        return provider.add_playlist(list_id, tracks);
+        const provider = getProviderByItemId(request.data.list_id);
+        return provider.add_playlist(request.data.list_id, request.data.tracks);
       }
       if (path === '/remove_track_from_myplaylist') {
-        const list_id = getParameterByName('list_id', `${request.url}?${request.data}`);
-        const track_id = getParameterByName('track_id', `${request.url}?${request.data}`);
-        myplaylist.remove_from_myplaylist(list_id, track_id);
+        myplaylist.remove_from_myplaylist(request.data.list_id, request.data.track_id);
         return {
           success: (fn) => fn(),
         };
       }
       if (path === '/remove_track_from_playlist') {
-        const list_id = getParameterByName('list_id', `${request.url}?${request.data}`);
-        const track_id = getParameterByName('track_id', `${request.url}?${request.data}`);
-        const provider = getProviderByItemId(list_id);
-        return provider.remove_from_playlist(list_id, track_id);
+        const provider = getProviderByItemId(request.data.list_id);
+        return provider.remove_from_playlist(request.data.list_id, request.data.track_id);
       }
       if (path === '/create_myplaylist') {
-        const list_title = getParameterByName('list_title', `${request.url}?${request.data}`);
-        const track_json = getParameterByName('track', `${request.url}?${request.data}`);
-        const track = JSON.parse(track_json);
-        myplaylist.create_myplaylist(list_title, track);
+        myplaylist.create_myplaylist(request.data.list_title, request.data.track);
         return {
           success: (fn) => {
             fn();
@@ -189,20 +173,17 @@ ngloWebManager.factory('loWeb', ['$rootScope', '$log',
         };
       }
       if (path === '/edit_myplaylist') {
-        const list_id = getParameterByName('list_id', `${request.url}?${request.data}`);
-        const title = getParameterByName('title', `${request.url}?${request.data}`);
-        const cover_img_url = getParameterByName('cover_img_url', `${request.url}?${request.data}`);
-        myplaylist.edit_myplaylist(list_id, title, cover_img_url);
+        myplaylist.edit_myplaylist(request.data.list_id,
+          request.data.title, request.data.cover_img_url);
         return {
           success: (fn) => fn(),
         };
       }
       if (path === '/parse_url') {
-        const url = getParameterByName('url', `${request.url}?${request.data}`);
         const providers = getAllProviders();
         let result;
         providers.forEach((provider) => {
-          const r = provider.parse_url(url);
+          const r = provider.parse_url(request.data.url);
           if (r !== undefined) {
             result = r;
           }
@@ -212,8 +193,8 @@ ngloWebManager.factory('loWeb', ['$rootScope', '$log',
         };
       }
       if (path === '/merge_playlist') {
-        const source = getParameterByName('source', `${request.url}?${request.data}`);
-        const target = getParameterByName('target', `${request.url}?${request.data}`);
+        const { source, target } = request.data;
+
         const tarData = (localStorage.getObject(target)).tracks;
         const srcData = (localStorage.getObject(source)).tracks;
         tarData.forEach((tarTrack) => {

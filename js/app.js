@@ -165,9 +165,9 @@ const main = () => {
 
   // control main view of page, it can be called any place
   app.controller('NavigationController', ['$scope',
-    '$httpParamSerializerJQLike', '$timeout', 'Notification', '$rootScope', 'loWeb',
+    '$timeout', 'Notification', '$rootScope', 'loWeb',
     'hotkeys', 'lastfm', 'github', 'gist', '$translate',
-    ($scope, $httpParamSerializerJQLike,
+    ($scope,
       $timeout, Notification, $rootScope,
       loWeb, hotkeys, lastfm, github, gist, $translate) => {
       $rootScope.page_title = 'Listen 1'; // eslint-disable-line no-param-reassign
@@ -346,7 +346,6 @@ const main = () => {
         loWeb.get(url).success((data) => {
           $scope.songs = data.tracks;
           $scope.current_list_id = list_id;
-
           l1Player.setNewPlaylist($scope.songs);
           l1Player.play();
         });
@@ -428,17 +427,20 @@ const main = () => {
           data:
             ({
               list_id: option_id,
-              track: JSON.stringify($scope.dialog_song),
+              track: $scope.dialog_song,
             }),
           headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
           },
-        }).success(() => {
+        }).success((playlist) => {
           Notification.success($translate.instant('_ADD_TO_PLAYLIST_SUCCESS'));
           $scope.closeDialog();
           // add to current playing list
           if (option_id === $scope.current_list_id) {
             l1Player.addTrack($scope.dialog_song);
+          }
+          if (option_id === $scope.list_id) {
+            $scope.songs = playlist.tracks;
           }
         });
       };
@@ -457,10 +459,10 @@ const main = () => {
         loWeb.post({
           url,
           method: 'POST',
-          data: $httpParamSerializerJQLike({
+          data: {
             list_title: $scope.newlist_title,
-            track: JSON.stringify($scope.dialog_song),
-          }),
+            track: $scope.dialog_song,
+          },
           headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
           },
@@ -477,11 +479,11 @@ const main = () => {
         loWeb.post({
           url,
           method: 'POST',
-          data: $httpParamSerializerJQLike({
+          data: {
             list_id: $scope.list_id,
             title: $scope.dialog_playlist_title,
             cover_img_url: $scope.dialog_cover_img_url,
-          }),
+          },
           headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
           },
@@ -500,10 +502,10 @@ const main = () => {
         loWeb.post({
           url,
           method: 'POST',
-          data: $httpParamSerializerJQLike({
+          data: {
             source: $scope.list_id,
             target: target_list_id,
-          }),
+          },
           headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
           },
@@ -526,10 +528,10 @@ const main = () => {
         loWeb.post({
           url,
           method: 'POST',
-          data: $httpParamSerializerJQLike({
+          data: {
             list_id,
             track_id: song.id,
-          }),
+          },
           headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
           },
@@ -583,10 +585,10 @@ const main = () => {
         loWeb.post({
           url,
           method: 'POST',
-          data: $httpParamSerializerJQLike({
+          data: {
             playlist_type: 'my',
             list_id,
-          }),
+          },
           headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
           },
@@ -603,10 +605,10 @@ const main = () => {
         loWeb.post({
           url,
           method: 'POST',
-          data: $httpParamSerializerJQLike({
+          data: {
             list_id,
             playlist_type: 'my',
-          }),
+          },
           headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
           },
@@ -739,9 +741,9 @@ const main = () => {
         loWeb.post({
           url: '/parse_url',
           method: 'POST',
-          data: $httpParamSerializerJQLike({
+          data: {
             url,
-          }),
+          },
           headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
           },
@@ -768,10 +770,10 @@ const main = () => {
         loWeb.post({
           url: '/clone_playlist',
           method: 'POST',
-          data: $httpParamSerializerJQLike({
+          data: {
             playlist_type: 'favorite',
             list_id,
-          }),
+          },
           headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
           },
@@ -787,10 +789,10 @@ const main = () => {
         loWeb.post({
           url,
           method: 'POST',
-          data: $httpParamSerializerJQLike({
+          data: {
             list_id,
             playlist_type: 'favorite',
-          }),
+          },
           headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
           },
@@ -838,10 +840,10 @@ const main = () => {
                 loWeb.post({
                   url,
                   method: 'POST',
-                  data: $httpParamSerializerJQLike({
+                  data: {
                     list_id,
                     tracks: JSON.stringify([track]),
-                  }),
+                  },
                   headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
                   },
