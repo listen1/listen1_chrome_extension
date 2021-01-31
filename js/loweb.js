@@ -94,7 +94,12 @@ ngloWebManager.factory('loWeb', ['$rootScope', '$log',
       }
       if (path === '/playlist') {
         const list_id = getParameterByName('list_id', url);
+        const useCache = getParameterByName('use_cache', url) || '1';
+
         const provider = getProviderByItemId(list_id);
+        if (useCache === '0') {
+          return provider.get_playlist(url);
+        }
         return cached(url, provider.get_playlist(url));
       }
       if (path === '/search') {

@@ -336,8 +336,13 @@ const main = () => {
         refreshWindow(url);
       };
 
-      $scope.showPlaylist = (list_id) => {
-        const url = `/playlist?list_id=${list_id}`;
+      $scope.showPlaylist = (list_id, option) => {
+        let url = `/playlist?list_id=${list_id}`;
+        if (option !== undefined) {
+          if (option.useCache === false) {
+            url += '&use_cache=0';
+          }
+        }
         $scope.showWindow(url);
       };
 
