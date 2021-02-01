@@ -268,8 +268,8 @@ function build_kugou() {
         axios.get(lyric_url)
           .then((response) => {
             const { data } = response;
-            const jsonString = data.slice('jQuery('.length, data.length-1-1);
-            const info = JSON.parse(jsonString)
+            const jsonString = data.slice('jQuery('.length, data.length - 1 - 1);
+            const info = JSON.parse(jsonString);
             return fn({
               lyric: info.data.lyrics,
             });
