@@ -57,7 +57,7 @@ function build_netease() {
     const n = new forge.jsbn.BigInteger(modulus, 16);
     const e = new forge.jsbn.BigInteger(pubKey, 16);
     const b = new forge.jsbn.BigInteger(forge.util.bytesToHex(text), 16);
-    const enc = b.modPow(e, n).toString(16);
+    const enc = b.modPow(e, n).toString(16).padStart(256, '0');
     return enc;
   }
 
