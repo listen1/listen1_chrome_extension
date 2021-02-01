@@ -265,13 +265,12 @@
     skip(direction) {
       // Get the next track based on the direction of the track.
       let { index } = this;
-
       let nextIndex = null;
-      if (direction === 'prev') {
-        nextIndex = (idx) => (idx - 1) % this.playlist.length;
-      } else if (direction === 'random') {
+      if (this._loop_mode === 2 || direction === 'random') { // random
         nextIndex = () => Math.floor(Math.random() * this.playlist.length);
-      } else { // Default to next one.
+      } else if (direction === 'prev') {
+        nextIndex = (idx) => (idx - 1) % this.playlist.length;
+      } else if (direction === 'next') {
         nextIndex = (idx) => (idx + 1) % this.playlist.length;
       }
       let tryCount = 0;
