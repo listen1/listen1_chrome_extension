@@ -260,8 +260,9 @@ function build_kugou() {
 
   function kg_lyric(url) { // eslint-disable-line no-unused-vars
     const track_id = getParameterByName('track_id', url).split('_').pop();
-    const lyric_url = `http://www.kugou.com/yy/index.php?r=play/getdata&hash=${
-      track_id}`;
+    const album_id = getParameterByName('album_id', url).split('_').pop();
+    const lyric_url = `https://wwwapi.kugou.com/yy/index.php?r=play/getdata&hash=${
+      track_id}&album_id=${album_id}`;
     return {
       success(fn) {
         axios.get(lyric_url)

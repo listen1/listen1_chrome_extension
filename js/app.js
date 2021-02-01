@@ -1260,7 +1260,7 @@ const main = () => {
               $scope.lyricLineNumber = -1;
               $scope.lyricLineNumberTrans = -1;
               smoothScrollTo(document.querySelector('.lyric'), 0, 300);
-              let url = `/lyric?track_id=${msg.data.id}`;
+              let url = `/lyric?track_id=${msg.data.id}&album_id=${msg.data.album_id}`;
               const track = msg.data;
               $rootScope.page_title = `▶ ${track.title} - ${track.artist}`;
               if (lastfm.isAuthorized()) {
