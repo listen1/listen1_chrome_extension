@@ -166,13 +166,13 @@
                   <div class="title">{{_CREATED_PLAYLIST}}</div>
                   <svg class="feather icon" ng-click="showDialog(5)"><use xlink:href="images/feather-sprite.svg#plus-square"></use></svg></div>
                 <ul class="nav masthead-nav">
-                    <li ng-repeat="i in myplaylists track by $index" ng-class="{ 'active':window_type=='list' && (('/playlist?list_id='+i.info.id)==window_url_stack[window_url_stack.length-1]) }" ng-click="showPlaylist(i.info.id)"><svg class="feather"><use xlink:href="images/feather-sprite.svg#disc"></use></svg><a>{{i.info.title}}</a></li>
+                    <li ng-repeat="i in myplaylists track by $index" ng-class="{ 'active':window_type=='list' && (('/playlist?list_id='+i.info.id)==window_url_stack.reverse()[0]) }" ng-click="showPlaylist(i.info.id)"><svg class="feather"><use xlink:href="images/feather-sprite.svg#disc"></use></svg><a>{{i.info.title}}</a></li>
                 </ul>
                 <div class="menu-title" ng-init="loadFavoritePlaylist();">
                   <div class="title">{{_FAVORITED_PLAYLIST}}</div>
                 </div>
                 <ul class="nav masthead-nav">
-                  <li ng-repeat="i in favoriteplaylists track by $index" ng-class="{ 'active':window_type=='list' && (('/playlist?list_id='+i.info.id)==window_url_stack[window_url_stack.length-1]) }" ng-click="showPlaylist(i.info.id)"><svg class="feather"><use xlink:href="images/feather-sprite.svg#disc"></use></svg><a>{{i.info.title}}</a></li>
+                  <li ng-repeat="i in favoriteplaylists track by $index" ng-class="{ 'active':window_type=='list' && (('/playlist?list_id='+i.info.id)==window_url_stack.reverse()[0]) }" ng-click="showPlaylist(i.info.id)"><svg class="feather"><use xlink:href="images/feather-sprite.svg#disc"></use></svg><a>{{i.info.title}}</a></li>
                 </ul>
 
               </div>
@@ -542,7 +542,7 @@
             </div>
             <div class="main-info">
                 <div class="logo-banner" ng-if="playlist.length == 0"><svg class="logo" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="#666666" stroke="#666666" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><polygon points="7 4 7 19 16 19 16 16 10 16 10 4"></polygon><polygon points="13 4 13 13 16 13 16 4"></polygon></svg></div>
-                <div class="cover" class="cover" ng-if="playlist.length > 0" ng-click="toggleWindow('/now_playing')">
+                <div class="cover" class="cover" ng-if="playlist.length > 0" ng-click="toggleNowPlaying()">
                 
                 <img ng-src="{{ currentPlaying.img_url }}" err-src="https://y.gtimg.cn/mediastyle/global/img/album_300.png" />
                 <div class="mask"><svg class="feather"><use xlink:href="images/feather-sprite.svg#chevrons-up"></use></svg></div>

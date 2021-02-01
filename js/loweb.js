@@ -68,68 +68,72 @@ function getProviderByItemId(itemId) {
 
 // eslint-disable-next-line no-unused-vars
 const MediaService = {
-  get(url) {
-    const path = url.split('?')[0];
-    if (path === '/show_playlist') {
-      const source = getParameterByName('source', url);
-      const provider = getProviderByName(source);
-      return provider.show_playlist(url);
-    }
-    if (path === '/playlist') {
-      const list_id = getParameterByName('list_id', url);
-      const provider = getProviderByItemId(list_id);
-      return provider.get_playlist(url);
-    }
-    if (path === '/search') {
-      const source = getParameterByName('source', url);
-      if (source === 'allmusic') {
-        // search all platform and merge result
-        const callbackArray = getAllSearchProviders().map((p) => (fn) => {
-          p.search(url).success((r) => {
-            fn(null, r);
-          });
+  search(source, options) {
+    const url = `/search?${(new URLSearchParams(options)).toString()}`;
+    if (source === 'allmusic') {
+      // search all platform and merge result
+      const callbackArray = getAllSearchProviders().map((p) => (fn) => {
+        p.search(url).success((r) => {
+          fn(null, r);
         });
-        return {
-          success: (fn) => async.parallel(callbackArray, (err, platformResultArray) => {
-            // TODO: nicer pager, playlist support
-            const result = { result: [], total: 1000, type: platformResultArray[0].type };
-            const maxLength = Math.max(...platformResultArray.map((elem) => elem.result.length));
-            for (let i = 0; i < maxLength; i += 1) {
-              platformResultArray.forEach((elem) => {
-                if (i < elem.result.length) {
-                  result.result.push(elem.result[i]);
-                }
-              });
-            }
-            return fn(result);
-          }),
-        };
-      }
-      const provider = getProviderByName(source);
-      return provider.search(url);
-    }
-    if (path === '/lyric') {
-      const track_id = getParameterByName('track_id', url);
-      const provider = getProviderByItemId(track_id);
-      return provider.lyric(url);
-    }
-    if (path === '/show_myplaylist') {
-      return myplaylist.show_myplaylist('my');
-    }
-    if (path === '/show_favoriteplaylist') {
-      return myplaylist.show_myplaylist('favorite');
-    }
-
-    if (path === '/playlist_contains') {
-      const list_id = getParameterByName('list_id', url);
-      const playlist_type = getParameterByName('type', url);
-      const result = myplaylist.myplaylist_containers(playlist_type, list_id);
+      });
       return {
-        success: (fn) => fn({ result }),
+        success: (fn) => async.parallel(callbackArray, (err, platformResultArray) => {
+          // TODO: nicer pager, playlist support
+          const result = { result: [], total: 1000, type: platformResultArray[0].type };
+          const maxLength = Math.max(...platformResultArray.map((elem) => elem.result.length));
+          for (let i = 0; i < maxLength; i += 1) {
+            platformResultArray.forEach((elem) => {
+              if (i < elem.result.length) {
+                result.result.push(elem.result[i]);
+              }
+            });
+          }
+          return fn(result);
+        }),
       };
     }
-    return null;
+    const provider = getProviderByName(source);
+    return provider.search(url);
   },
+
+  showMyPlaylist() {
+    return myplaylist.show_myplaylist('my');
+  },
+
+  showPlaylist(source, offset) {
+    const provider = getProviderByName(source);
+    const url = `/show_playlist?${(new URLSearchParams({
+      offset,
+    })).toString()}`;
+    return provider.show_playlist(url);
+  },
+
+  getLyric(track_id, lyric_url) {
+    const provider = getProviderByItemId(track_id);
+    const url = `/lyric?${(new URLSearchParams({
+      track_id,
+      lyric_url,
+    })).toString()}`;
+    return provider.lyric(url);
+  },
+
+  showFavPlaylist() {
+    return myplaylist.show_myplaylist('favorite');
+  },
+
+  queryPlaylist(listId, type) {
+    const result = myplaylist.myplaylist_containers(type, listId);
+    return {
+      success: (fn) => fn({ result }),
+    };
+  },
+
+  getPlaylist(listId) {
+    const provider = getProviderByItemId(listId);
+    return provider.get_playlist(`/playlist?list_id=${listId}`);
+  },
+
   post(request) {
     const path = request.url.split('?')[0];
     if (path === '/clone_playlist') {
