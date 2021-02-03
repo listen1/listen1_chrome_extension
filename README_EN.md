@@ -1,6 +1,6 @@
-Listen 1 (Chrome Extension) V2.17.8
+Listen 1 (Chrome Extension) V2.18.0
 ==========
-（Last Update December 28th, 2020)
+（Last Update Feb 3rd, 2021)
 
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE)
 
@@ -46,6 +46,30 @@ Install (Firefox)
 
 Changelog
 -------
+
+`2021-01`
+
+Features：
+* support play music background (thanks @Dumeng)
+* optimaze kugo related code (thanks @RecluseWind)
+* optimaze migu related code  (thanks @RecluseWind)
+* support flac for local music (thanks @mikelxk)
+* add feedback link (thanks @mikelxk)
+* optimaze xiami music, add playlist search (thanks @RecluseWind)
+* optimaze cache for playlist
+
+Refactor：
+* replace encrypt lib to forge (thanks @Dumeng)
+* remove jquery (thanks @Dumeng)
+* replace ngsoundmanager2 to howler.js (thanks @Dumeng)
+* replace angular http to axios (thanks @Dumeng)
+* support eslint check in github action  (thanks @Dumeng)
+
+Fix bugs：
+* fix MediaSession error when not supported (thanks @Jyuaan)
+* fix migu playlist 404 link
+* fix current playling music list modal (thanks @Demeng)
+
 `2020-12-28`
 * fix bug for desktop: max,min,close button not available
 

@@ -49,7 +49,7 @@
         "webRequest",
         "webRequestBlocking"
     ],
-    "version": "2.17.8",
+    "version": "2.18.0",
     "web_accessible_resources": [
         "images/*"
     ],

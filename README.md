@@ -1,6 +1,6 @@
-Listen 1 (Chrome Extension) V2.17.8
+Listen 1 (Chrome Extension) V2.18.0
 ==========
-（最后更新于2020年12月28日）
+（最后更新于2021年02月03日）
 
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE)
 
