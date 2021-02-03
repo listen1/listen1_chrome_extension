@@ -1126,15 +1126,20 @@ const main = () => {
         result = timeResult.concat(timeResultTrans).sort((a, b) => {
           const keyA = a.seconds;
           const keyB = b.seconds;
+
           // Compare the 2 dates
           if (keyA < keyB) return -1;
           if (keyA > keyB) return 1;
+          if (a.translationFlag !== b.translationFlag) {
+            if (a.translationFlag === false) {
+              return -1;
+            }
+            return 1;
+          }
           if (a.index < b.index) return -1;
           if (a.index > b.index) return 1;
-          if (!a.translationFlag) return -1;
           return 0;
         });
-
         // disable tag info, because music provider always write
         // tag info in lyric timeline.
         // result.push.apply(result, timeResult);
