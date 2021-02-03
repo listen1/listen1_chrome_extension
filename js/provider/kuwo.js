@@ -228,10 +228,10 @@ function build_kuwo() {
         kw_cookie_get(target_url, (response) => {
           let result = [];
           let total = 0;
-          if (searchType === '0') {
+          if (searchType === '0' && response.data.data !== undefined) {
             result = response.data.data.list.map((item) => kw_convert_song2(item));
             total = response.data.data.total;
-          } else if (searchType === '1') {
+          } else if (searchType === '1' && response.data.data !== undefined) {
             result = response.data.data.list.map((item) => ({
               id: `kwplaylist_${item.id}`,
               title: html_decode(item.name),
