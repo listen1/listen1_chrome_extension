@@ -66,6 +66,30 @@ function getProviderByItemId(itemId) {
   return (PROVIDERS.find((i) => i.id === prefix) || {}).instance;
 }
 
+/* cache for all playlist request except myplaylist and localmusic */
+const CACHE_SIZE = 100;
+const maxAge = 60 * 60 * 1000; // 1 hour cache expire;
+const playlistCache = new Cache(CACHE_SIZE);
+
+function cached(key, instance) {
+  const nowts = +new Date();
+  const hit = playlistCache.getItem(key);
+  const list_id = (new URL(key, window.location)).searchParams.get('list_id');
+  const provider = getProviderByItemId(list_id);
+  const shouldUseCache = (provider !== myplaylist) && (provider !== localmusic);
+  if (shouldUseCache && (hit !== null) && (nowts - hit.ts <= maxAge)) {
+    return {
+      success: (fn) => fn(hit.playlist),
+    };
+  }
+  return {
+    success: (fn) => instance.success((playlist) => {
+      playlistCache.setItem(key, { playlist, ts: nowts });
+      fn(playlist);
+    }),
+  };
+}
+
 // eslint-disable-next-line no-unused-vars
 const MediaService = {
   search(source, options) {
@@ -109,11 +133,13 @@ const MediaService = {
     return provider.show_playlist(url);
   },
 
-  getLyric(track_id, lyric_url) {
+  getLyric(track_id, album_id, lyric_url, tlyric_url) {
     const provider = getProviderByItemId(track_id);
     const url = `/lyric?${(new URLSearchParams({
       track_id,
+      album_id,
       lyric_url,
+      tlyric_url,
     })).toString()}`;
     return provider.lyric(url);
   },
@@ -129,9 +155,13 @@ const MediaService = {
     };
   },
 
-  getPlaylist(listId) {
+  getPlaylist(listId, useCache = true) {
     const provider = getProviderByItemId(listId);
-    return provider.get_playlist(`/playlist?list_id=${listId}`);
+    const url = `/playlist?list_id=${listId}`;
+    if (useCache) {
+      return provider.get_playlist(url);
+    }
+    return cached(url, provider.get_playlist(url));
   },
 
   clonePlaylist(id, type) {
@@ -155,9 +185,9 @@ const MediaService = {
   },
 
   addMyPlaylist(id, track) {
-    myplaylist.add_myplaylist(id, track);
+    const newPlaylist = myplaylist.add_myplaylist(id, track);
     return {
-      success: (fn) => fn(),
+      success: (fn) => fn(newPlaylist),
     };
   },
 
@@ -234,7 +264,7 @@ const MediaService = {
         // TODO: better query method
         const keyword = `${track.title} ${track.artist}`;
         const curpage = 1;
-        const url = `/search?keywords=${keyword}&curpage=${curpage}`;
+        const url = `/search?keywords=${keyword}&curpage=${curpage}&type=0`;
         const provider = getProviderByName(source);
         provider.search(url).success((data) => {
           for (let i = 0; i < data.result.length; i += 1) {

@@ -1,8 +1,8 @@
 /* eslint-disable no-shadow */
 /* global l1Player require MediaService */
-/* global $ angular isElectron getAllProviders */
+/* global angular isElectron getAllProviders */
 /* global setPrototypeOfLocalStorage addPlayerListener */
-/* global getLocalStorageValue getPlayer getPlayerAsync */
+/* global getLocalStorageValue getPlayer getPlayerAsync smoothScrollTo */
 /* eslint-disable global-require */
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-param-reassign */
@@ -51,6 +51,7 @@ const main = () => {
     $translateProvider.use('zh_CN');
     // Tell the module what language to use by default
     $translateProvider.preferredLanguage('zh_CN');
+    $translateProvider.useSanitizeValueStrategy('escape');
   }]);
 
   app.run(['$q', '$translate',
@@ -284,7 +285,7 @@ const main = () => {
         refreshWindow(url);
       };
 
-      $scope.showPlaylist = (list_id) => {
+      $scope.showPlaylist = (list_id, useCache) => {
         const url = `/playlist?list_id=${list_id}`;
         // save current scrolltop
         const offset = document.getElementsByClassName('browser')[0].scrollTop;
@@ -302,7 +303,7 @@ const main = () => {
         $scope.window_poped_url_stack = [];
 
         const listId = (new URL(url, window.location)).searchParams.get('list_id');
-        MediaService.getPlaylist(listId).success((data) => {
+        MediaService.getPlaylist(listId, useCache).success((data) => {
           if (data.status === '0') {
             Notification.info(data.reason);
             $scope.popWindow();
@@ -328,7 +329,6 @@ const main = () => {
         MediaService.getPlaylist(list_id).success((data) => {
           $scope.songs = data.tracks;
           $scope.current_list_id = list_id;
-
           l1Player.setNewPlaylist($scope.songs);
           l1Player.play();
         });
@@ -337,7 +337,7 @@ const main = () => {
       $scope.showDialog = (dialog_type, data) => {
         $scope.is_dialog_hidden = 0;
         const dialogWidth = 285;
-        const left = $(window).width() / 2 - dialogWidth / 2;
+        const left = window.innerWidth / 2 - dialogWidth / 2;
         $scope.myStyle = {
           left: `${left}px`,
         };
@@ -401,12 +401,15 @@ const main = () => {
       };
 
       $scope.chooseDialogOption = (option_id) => {
-        MediaService.addMyPlaylist(option_id, $scope.dialog_song).success(() => {
+        MediaService.addMyPlaylist(option_id, $scope.dialog_song).success((playlist) => {
           Notification.success($translate.instant('_ADD_TO_PLAYLIST_SUCCESS'));
           $scope.closeDialog();
           // add to current playing list
           if (option_id === $scope.current_list_id) {
             l1Player.addTrack($scope.dialog_song);
+          }
+          if (option_id === $scope.list_id) {
+            $scope.songs = playlist.tracks;
           }
         });
       };
@@ -633,7 +636,7 @@ const main = () => {
         callback() {
           $scope.showTag(3);
           $timeout(() => {
-            $('#search-input').focus();
+            document.getElementById('search-input').focus();
           }, 0);
         },
       });
@@ -823,6 +826,46 @@ const main = () => {
         $scope.openLyricFloatingWindow();
       };
 
+      // electron global shortcuts
+      $scope.applyGlobalShortcut = (toggle) => {
+        if (!isElectron()) {
+          return;
+        }
+        let message = '';
+        if (toggle === true) {
+          $scope.enableGlobalShortCut = !$scope.enableGlobalShortCut;
+        }
+        if ($scope.enableGlobalShortCut === true) {
+          message = 'enable_global_shortcut';
+        } else {
+          message = 'disable_global_shortcut';
+        }
+
+        // check if globalShortcuts is allowed
+        localStorage.setObject('enable_global_shortcut', $scope.enableGlobalShortCut);
+
+        const { ipcRenderer } = require('electron');
+        ipcRenderer.send('control', message);
+      };
+
+      $scope.openLyricFloatingWindow = (toggle) => {
+        if (!isElectron()) {
+          return;
+        }
+        let message = '';
+        if (toggle === true) {
+          $scope.enableLyricFloatingWindow = !$scope.enableLyricFloatingWindow;
+        }
+        if ($scope.enableLyricFloatingWindow === true) {
+          message = 'enable_lyric_floating_window';
+        } else {
+          message = 'disable_lyric_floating_window';
+        }
+        localStorage.setObject('enable_lyric_floating_window', $scope.enableLyricFloatingWindow);
+        const { ipcRenderer } = require('electron');
+        ipcRenderer.send('control', message);
+      };
+
       $scope.saveLocalSettings = () => {
         localStorage.setObject('player-settings', $scope.settings);
       };
@@ -896,7 +939,7 @@ const main = () => {
           return newstr;
         }
 
-        const process = (result, timeResult, translationFlag) => (line) => {
+        const process = (result, timeResult, translationFlag) => (line, index) => {
           const tagReg = /\[\D*:([^\]]+)\]/g;
           const tagRegResult = tagReg.exec(line);
           if (tagRegResult) {
@@ -912,12 +955,22 @@ const main = () => {
           let timeRegResult = null;
           // eslint-disable-next-line no-cond-assign
           while ((timeRegResult = timeReg.exec(line)) !== null) {
+            const htmlUnescapes = {
+              '&amp;': '&',
+              '&lt;': '<',
+              '&gt;': '>',
+              '&quot;': '"',
+              '&#39;': "'",
+              '&apos;': "'",
+            };
             timeResult.push({
-              content: $('<a />').html(line.replace(timeRegResult[0], '')).text(),
+              content: line.replace(timeRegResult[0], '')
+                .replace(/&(?:amp|lt|gt|quot|#39|apos);/g, (match) => htmlUnescapes[match]),
               seconds: parseInt(timeRegResult[1], 10) * 60 * 1000 // min
                 + parseInt(timeRegResult[2], 10) * 1000 // sec
                 + (timeRegResult[3] ? parseInt(rightPadding(timeRegResult[3], 3, '0'), 10) : 0), // microsec
               translationFlag,
+              index,
             });
           }
         };
@@ -929,13 +982,20 @@ const main = () => {
         result = timeResult.concat(timeResultTrans).sort((a, b) => {
           const keyA = a.seconds;
           const keyB = b.seconds;
+
           // Compare the 2 dates
           if (keyA < keyB) return -1;
           if (keyA > keyB) return 1;
-          if (!a.translationFlag) return -1;
+          if (a.translationFlag !== b.translationFlag) {
+            if (a.translationFlag === false) {
+              return -1;
+            }
+            return 1;
+          }
+          if (a.index < b.index) return -1;
+          if (a.index > b.index) return 1;
           return 0;
         });
-
         // disable tag info, because music provider always write
         // tag info in lyric timeline.
         // result.push.apply(result, timeResult);
@@ -951,10 +1011,12 @@ const main = () => {
 
       getPlayer(mode).setMode(mode);
       if (mode === 'front') {
-        // avoid background keep playing when change to front mode
-        getPlayerAsync('background', (player) => {
-          player.pause();
-        });
+        if (!isElectron()) {
+          // avoid background keep playing when change to front mode
+          getPlayerAsync('background', (player) => {
+            player.pause();
+          });
+        }
       }
 
       addPlayerListener(mode, (msg, sender, sendResponse) => {
@@ -993,21 +1055,14 @@ const main = () => {
                 }
               });
               if (lastObject && lastObject.lineNumber !== $scope.lyricLineNumber) {
-                const lineElement = $(
+                const lineElement = document.querySelector(
                   `.page .playsong-detail .detail-songinfo .lyric p[data-line="${lastObject.lineNumber}"]`,
-                )[0];
-                const windowHeight = $(
-                  '.page .playsong-detail .detail-songinfo .lyric',
-                ).height();
+                );
+                const windowHeight = document.querySelector('.page .playsong-detail .detail-songinfo .lyric').offsetHeight;
 
                 const adjustOffset = 30;
                 const offset = lineElement.offsetTop - windowHeight / 2 + adjustOffset;
-                $('.lyric').animate(
-                  {
-                    scrollTop: `${offset}px`,
-                  },
-                  500,
-                );
+                smoothScrollTo(document.querySelector('.lyric'), offset, 500);
                 $scope.lyricLineNumber = lastObject.lineNumber;
                 if (lastObjectTrans
                   && lastObjectTrans.lineNumber !== $scope.lyricLineNumberTrans) {
@@ -1052,30 +1107,35 @@ const main = () => {
 
             case 'LOAD': {
               $scope.currentPlaying = msg.data;
+              if (msg.data.id === undefined) {
+                break;
+              }
               $scope.myProgress = 0;
               if ($scope.lastTrackId === msg.data.id) {
                 break;
               }
-              const current = localStorage.getObject('player-settings');
+              const current = localStorage.getObject('player-settings') || {};
               current.nowplaying_track_id = msg.data.id;
               localStorage.setObject('player-settings', current);
               // update lyric
               $scope.lyricArray = [];
               $scope.lyricLineNumber = -1;
               $scope.lyricLineNumberTrans = -1;
-              $('.lyric').animate({
-                scrollTop: '0px',
-              }, 500);
+              smoothScrollTo(document.querySelector('.lyric'), 0, 300);
               const track = msg.data;
-
               $rootScope.page_title = `▶ ${track.title} - ${track.artist}`;
               if (lastfm.isAuthorized()) {
                 lastfm.sendNowPlaying(track.title, track.artist, () => { });
               }
 
-              MediaService.getLyric(msg.data.id, track.lyric_url).success((res) => {
+              MediaService.getLyric(
+                msg.data.id,
+                msg.data.album_id,
+                track.lyric_url,
+                track.tlyric_url,
+              ).success((res) => {
                 const { lyric, tlyric } = res;
-                if (lyric === null) {
+                if (!lyric) {
                   return;
                 }
                 $scope.lyricArray = parseLyric(lyric, tlyric);
@@ -1220,46 +1280,6 @@ const main = () => {
         },
       });
 
-      // electron global shortcuts
-      $scope.applyGlobalShortcut = (toggle) => {
-        if (!isElectron()) {
-          return;
-        }
-        let message = '';
-        if (toggle === true) {
-          $scope.enableGlobalShortCut = !$scope.enableGlobalShortCut;
-        }
-        if ($scope.enableGlobalShortCut === true) {
-          message = 'enable_global_shortcut';
-        } else {
-          message = 'disable_global_shortcut';
-        }
-
-        // check if globalShortcuts is allowed
-        localStorage.setObject('enable_global_shortcut', $scope.enableGlobalShortCut);
-
-        const { ipcRenderer } = require('electron');
-        ipcRenderer.send('control', message);
-      };
-
-      $scope.openLyricFloatingWindow = (toggle) => {
-        if (!isElectron()) {
-          return;
-        }
-        let message = '';
-        if (toggle === true) {
-          $scope.enableLyricFloatingWindow = !$scope.enableLyricFloatingWindow;
-        }
-        if ($scope.enableLyricFloatingWindow === true) {
-          message = 'enable_lyric_floating_window';
-        } else {
-          message = 'disable_lyric_floating_window';
-        }
-        localStorage.setObject('enable_lyric_floating_window', $scope.enableLyricFloatingWindow);
-        const { ipcRenderer } = require('electron');
-        ipcRenderer.send('control', message);
-      };
-
       $scope.toggleLyricTranslation = () => {
         $scope.enableLyricTranslation = !$scope.enableLyricTranslation;
         localStorage.setObject('enable_lyric_translation', $scope.enableLyricTranslation);
@@ -1357,7 +1377,7 @@ const main = () => {
           updateTotalPage(data.total);
           $scope.loading = false;
           // scroll back to top when finish searching
-          $('.site-wrapper-innerd').scrollTop(0);
+          document.querySelector('.site-wrapper-innerd').scrollTo({ top: 0 });
         });
       }
 

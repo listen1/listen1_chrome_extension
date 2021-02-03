@@ -7,7 +7,6 @@
     },
     "background": {
         "scripts": [
-            "js/vendor/jquery-3.3.1.min.js",
             "js/vendor/axios.min.js",
             "js/github_api.js",
             "js/background.js",
@@ -50,7 +49,7 @@
         "webRequest",
         "webRequestBlocking"
     ],
-    "version": "2.17.8",
+    "version": "2.18.0",
     "web_accessible_resources": [
         "images/*"
     ],

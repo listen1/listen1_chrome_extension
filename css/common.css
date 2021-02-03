@@ -1030,6 +1030,7 @@ svg.searchspinner {
   right: 300px;
   -webkit-app-region: no-drag;
   transition: all 0.3s;
+  overflow: hidden;
 }
 .footer .menu.slideup {
   bottom: 60px;

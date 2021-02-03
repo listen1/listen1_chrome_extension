@@ -1,6 +1,5 @@
 /* eslint-disable no-unused-vars */
-/* global aesjs getParameterByName */
-/* global sub bigInt2str dup equalsInt int2bigInt mod mult powMod str2bigInt rightShift_ */
+/* global getParameterByName forge */
 /* global isElectron cookieSet cookieGet async */
 function build_netease() {
   function ne_show_playlist(url) {
@@ -9,9 +8,9 @@ function build_netease() {
 
     let target_url = '';
     if (offset != null) {
-      target_url = `http://music.163.com/discover/playlist/?order=${order}&limit=35&offset=${offset}`;
+      target_url = `https://music.163.com/discover/playlist/?order=${order}&limit=35&offset=${offset}`;
     } else {
-      target_url = `http://music.163.com/discover/playlist/?order=${order}`;
+      target_url = `https://music.163.com/discover/playlist/?order=${order}`;
     }
 
     return {
@@ -23,7 +22,7 @@ function build_netease() {
             cover_img_url: item.getElementsByTagName('img')[0].src,
             title: item.getElementsByTagName('div')[0].getElementsByTagName('a')[0].title,
             id: `neplaylist_${getParameterByName('id', item.getElementsByTagName('div')[0].getElementsByTagName('a')[0].href)}`,
-            source_url: `http://music.163.com/#/playlist?id=${getParameterByName('id', item.getElementsByTagName('div')[0].getElementsByTagName('a')[0].href)}`,
+            source_url: `https://music.163.com/#/playlist?id=${getParameterByName('id', item.getElementsByTagName('div')[0].getElementsByTagName('a')[0].href)}`,
           }));
           return fn({
             result,
@@ -44,59 +43,22 @@ function build_netease() {
   }
 
   function _aes_encrypt(text, sec_key) { // eslint-disable-line no-underscore-dangle
-    const pad = 16 - (text.length % 16);
-    for (let i = 0; i < pad; i += 1) {
-      text += String.fromCharCode(pad); // eslint-disable-line no-param-reassign
-    }
-    const key = aesjs.util.convertStringToBytes(sec_key);
-    // The initialization vector, which must be 16 bytes
-    const iv = aesjs.util.convertStringToBytes('0102030405060708');
-    let textBytes = aesjs.util.convertStringToBytes(text);
-    const aesCbc = new aesjs.ModeOfOperation.cbc(key, iv); // eslint-disable-line new-cap
-    const cipherArray = [];
-    while (textBytes.length !== 0) {
-      const block = aesCbc.encrypt(textBytes.slice(0, 16));
-      Array.prototype.push.apply(cipherArray, block);
-      textBytes = textBytes.slice(16);
-    }
-    let ciphertext = '';
-    for (let i = 0; i < cipherArray.length; i += 1) {
-      ciphertext += String.fromCharCode(cipherArray[i]);
-    }
-    ciphertext = btoa(ciphertext);
-    return ciphertext;
-  }
+    const cipher = forge.cipher.createCipher('AES-CBC', sec_key);
+    cipher.start({ iv: '0102030405060708' });
+    cipher.update(forge.util.createBuffer(text));
+    cipher.finish();
 
-  function hexify(text) {
-    return text.split('').map((x) => x.charCodeAt(0).toString(16)).join('');
-  }
-
-  function zfill(num, size) {
-    let s = `${num}`;
-    while (s.length < size) s = `0${s}`;
-    return s;
-  }
-
-  function expmod(base, exp, mymod) {
-    if (equalsInt(exp, 0) === 1) return int2bigInt(1, 10);
-    if (equalsInt(mod(exp, int2bigInt(2, 10)), 0)) {
-      const newexp = dup(exp);
-      rightShift_(newexp, 1);
-      const result = powMod(expmod(base, newexp, mymod), [2, 0], mymod);
-      return result;
-    }
-    const result = mod(mult(expmod(base, sub(exp, int2bigInt(1, 10)), mymod), base), mymod);
-    return result;
+    return btoa(cipher.output.data);
   }
 
   function _rsa_encrypt(text, pubKey, modulus) { // eslint-disable-line no-underscore-dangle
     text = text.split('').reverse().join(''); // eslint-disable-line no-param-reassign
-    const base = str2bigInt(hexify(text), 16);
-    const exp = str2bigInt(pubKey, 16);
-    const mod = str2bigInt(modulus, 16);
-    const bigNumber = expmod(base, exp, mod);
-    const rs = bigInt2str(bigNumber, 16);
-    return zfill(rs, 256).toLowerCase();
+
+    const n = new forge.jsbn.BigInteger(modulus, 16);
+    const e = new forge.jsbn.BigInteger(pubKey, 16);
+    const b = new forge.jsbn.BigInteger(forge.util.bytesToHex(text), 16);
+    const enc = b.modPow(e, n).toString(16).padStart(256, '0');
+    return enc;
   }
 
   function _encrypted_request(text) { // eslint-disable-line no-underscore-dangle
@@ -187,7 +149,7 @@ function build_netease() {
         album: track_json.al.name,
         album_id: `nealbum_${track_json.al.id}`,
         source: 'netease',
-        source_url: `http://music.163.com/#/song?id=${track_json.id}`,
+        source_url: `https://music.163.com/#/song?id=${track_json.id}`,
         img_url: track_json.al.picUrl,
         // url: `netrack_${track_json.id}`,
       };
@@ -212,7 +174,7 @@ function build_netease() {
         album: track_json.al.name,
         album_id: `nealbum_${track_json.al.id}`,
         source: 'netease',
-        source_url: `http://music.163.com/#/song?id=${track_json.id}`,
+        source_url: `https://music.163.com/#/song?id=${track_json.id}`,
         img_url: track_json.al.picUrl,
         // url: `netrack_${track_json.id}`,
       }));
@@ -235,7 +197,7 @@ function build_netease() {
     return {
       success(fn) {
         const list_id = getParameterByName('list_id', url).split('_').pop();
-        const target_url = 'http://music.163.com/weapi/v3/playlist/detail';
+        const target_url = 'https://music.163.com/weapi/v3/playlist/detail';
         const d = {
           id: list_id,
           offset: 0,
@@ -252,7 +214,7 @@ function build_netease() {
               id: `neplaylist_${list_id}`,
               cover_img_url: res_data.playlist.coverImgUrl,
               title: res_data.playlist.name,
-              source_url: `http://music.163.com/#/playlist?id=${list_id}`,
+              source_url: `https://music.163.com/#/playlist?id=${list_id}`,
             };
             const max_allow_size = 1000;
             const trackIdsArray = split_array(res_data.playlist.trackIds, max_allow_size);
@@ -278,7 +240,7 @@ function build_netease() {
   }
 
   function ne_bootstrap_track(sound, track, success, failure) {
-    const target_url = 'http://music.163.com/weapi/song/enhance/player/url/v1?csrf_token=';
+    const target_url = 'https://music.163.com/weapi/song/enhance/player/url/v1?csrf_token=';
     const csrf = '';
     let song_id = track.id;
 
@@ -310,7 +272,7 @@ function build_netease() {
 
   function ne_search(url) {
     // use chrome extension to modify referer.
-    const target_url = 'http://music.163.com/api/search/pc';
+    const target_url = 'https://music.163.com/api/search/pc';
     const keyword = getParameterByName('keywords', url);
     const curpage = getParameterByName('curpage', url);
     const searchType = getParameterByName('type', url);
@@ -339,10 +301,10 @@ function build_netease() {
               album: song_info.album.name,
               album_id: `nealbum_${song_info.album.id}`,
               source: 'netease',
-              source_url: `http://music.163.com/#/song?id=${song_info.id}`,
+              source_url: `https://music.163.com/#/song?id=${song_info.id}`,
               img_url: song_info.album.picUrl,
               // url: `netrack_${song_info.id}`,
-              disabled: !is_playable(song_info),
+              url: !is_playable(song_info) ? '' : undefined,
             }));
             total = data.result.songCount;
           } else if (searchType === '1') {
@@ -376,7 +338,7 @@ function build_netease() {
   function ne_album(url) { // eslint-disable-line no-unused-vars
     const album_id = getParameterByName('list_id', url).split('_').pop();
     // use chrome extension to modify referer.
-    const target_url = `http://music.163.com/api/album/${album_id}`;
+    const target_url = `https://music.163.com/api/album/${album_id}`;
 
     return {
       success(fn) {
@@ -386,7 +348,7 @@ function build_netease() {
             cover_img_url: data.album.picUrl,
             title: data.album.name,
             id: `nealbum_${data.album.id}`,
-            source_url: `http://music.163.com/#/album?id=${data.album.id}`,
+            source_url: `https://music.163.com/#/album?id=${data.album.id}`,
           };
 
           const tracks = data.album.songs.map((song_info) => ({
@@ -397,10 +359,9 @@ function build_netease() {
             album: song_info.album.name,
             album_id: `nealbum_${song_info.album.id}`,
             source: 'netease',
-            source_url: `http://music.163.com/#/song?id=${song_info.id}`,
+            source_url: `https://music.163.com/#/song?id=${song_info.id}`,
             img_url: song_info.album.picUrl,
-            // url: `netrack_${song_info.id}`,
-            disabled: !is_playable(song_info),
+            url: !is_playable(song_info) ? '' : undefined,
           }));
           return fn({
             tracks,
@@ -414,7 +375,7 @@ function build_netease() {
   function ne_artist(url) { // eslint-disable-line no-unused-vars
     const artist_id = getParameterByName('list_id', url).split('_').pop();
     // use chrome extension to modify referer.
-    const target_url = `http://music.163.com/api/artist/${artist_id}`;
+    const target_url = `https://music.163.com/api/artist/${artist_id}`;
 
     return {
       success(fn) {
@@ -424,7 +385,7 @@ function build_netease() {
             cover_img_url: data.artist.picUrl,
             title: data.artist.name,
             id: `neartist_${data.artist.id}`,
-            source_url: `http://music.163.com/#/artist?id=${data.artist.id}`,
+            source_url: `https://music.163.com/#/artist?id=${data.artist.id}`,
           };
 
           const tracks = data.hotSongs.map((song_info) => ({
@@ -435,10 +396,10 @@ function build_netease() {
             album: song_info.album.name,
             album_id: `nealbum_${song_info.album.id}`,
             source: 'netease',
-            source_url: `http://music.163.com/#/song?id=${song_info.id}`,
+            source_url: `https://music.163.com/#/song?id=${song_info.id}`,
             img_url: song_info.album.picUrl,
             // url: `netrack_${song_info.id}`,
-            disabled: !is_playable(song_info),
+            url: !is_playable(song_info) ? '' : undefined,
           }));
           return fn({
             tracks,
@@ -452,7 +413,7 @@ function build_netease() {
   function ne_lyric(url) {
     const track_id = getParameterByName('track_id', url).split('_').pop();
     // use chrome extension to modify referer.
-    const target_url = 'http://music.163.com/weapi/song/lyric?csrf_token=';
+    const target_url = 'https://music.163.com/weapi/song/lyric?csrf_token=';
     const csrf = '';
     const d = {
       id: track_id,

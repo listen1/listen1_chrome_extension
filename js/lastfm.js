@@ -1,4 +1,4 @@
-/* global angular MD5 */
+/* global angular forge */
 function lastfm() {
   angular.module('lastfmClient', []).provider('lastfm', function lastfm_func() {
     this.options = {
@@ -31,7 +31,9 @@ function lastfm() {
         const o = keys.reduce((r, key) => (r + key + params[key]), '');
 
         // append secret
-        return MD5(o + options.apiSecret);
+        return forge.md5.create()
+          .update(forge.util.encodeUtf8(o + options.apiSecret))
+          .digest().toHex();
       }
 
       /**

@@ -75,7 +75,7 @@ function build_qq() {
       source: 'qq',
       source_url: `https://y.qq.com/#type=song&mid=${song.songmid}&tpl=yqq_song_detail`,
       // url: `qqtrack_${song.songmid}`,
-      disabled: !qq_is_playable(song),
+      url: !qq_is_playable(song) ? '' : undefined,
     };
     return d;
   }

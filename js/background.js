@@ -18,7 +18,7 @@ function hack_referer_header(details) {
   let ua_value = '';
 
   if (details.url.indexOf('://music.163.com/') !== -1) {
-    referer_value = 'http://music.163.com/';
+    referer_value = 'https://music.163.com/';
   }
   if (details.url.indexOf('://gist.githubusercontent.com/') !== -1) {
     referer_value = 'https://gist.githubusercontent.com/';

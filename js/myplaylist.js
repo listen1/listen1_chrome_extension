@@ -42,7 +42,7 @@ const myplaylistFactory = () => {
         const playlist = localStorage.getObject(list_id);
         // clear url field when load old playlist
         if (playlist !== null && playlist.tracks !== undefined) {
-          playlist.tracks.forEach((e) => { delete e.url; });
+          playlist.tracks.forEach((e) => { delete e.url; e.disabled = false; });
         }
         fn(playlist);
       },
@@ -104,7 +104,7 @@ const myplaylistFactory = () => {
   function add_myplaylist(playlist_id, track) {
     const playlist = localStorage.getObject(playlist_id);
     if (playlist == null) {
-      return;
+      return null;
     }
     // new track will always insert in beginning of playlist
     if (Array.isArray(track)) {
@@ -126,6 +126,7 @@ const myplaylistFactory = () => {
     playlist.tracks = newTracks;
 
     localStorage.setObject(playlist_id, playlist);
+    return playlist;
   }
 
   function remove_from_myplaylist(playlist_id, track_id) {

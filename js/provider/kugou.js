@@ -260,15 +260,18 @@ function build_kugou() {
 
   function kg_lyric(url) { // eslint-disable-line no-unused-vars
     const track_id = getParameterByName('track_id', url).split('_').pop();
-    const lyric_url = `http://www.kugou.com/yy/index.php?r=play/getdata&hash=${
-      track_id}`;
+    const album_id = getParameterByName('album_id', url).split('_').pop();
+    const lyric_url = `https://wwwapi.kugou.com/yy/index.php?r=play/getdata&callback=jQuery&hash=${track_id}&dfid=dfid&mid=mid&platid=4&album_id=${album_id}`;
+
     return {
       success(fn) {
         axios.get(lyric_url)
           .then((response) => {
             const { data } = response;
+            const jsonString = data.slice('jQuery('.length, data.length - 1 - 1);
+            const info = JSON.parse(jsonString);
             return fn({
-              lyric: data.data.lyrics,
+              lyric: info.data.lyrics,
             });
           });
       },
