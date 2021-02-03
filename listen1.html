@@ -171,7 +171,7 @@
                   <div class="title">{{_FAVORITED_PLAYLIST}}</div>
                 </div>
                 <ul class="nav masthead-nav">
-                  <li ng-repeat="i in favoriteplaylists track by $index" ng-class="{ 'active':window_type=='list' && (('/playlist?list_id='+i.info.id)==window_url_stack.reverse()[0]) }" ng-click="showPlaylist(i.info.id, {useCache: false})"><svg class="feather"><use href="#disc"></use></svg><a>{{i.info.title}}</a></li>
+                  <li ng-repeat="i in favoriteplaylists track by $index" ng-class="{ 'active':window_type=='list' && (('/playlist?list_id='+i.info.id)==window_url_stack.reverse()[0]) }" ng-click="showPlaylist(i.info.id, false)"><svg class="feather"><use href="#disc"></use></svg><a>{{i.info.title}}</a></li>
                 </ul>
 
               </div>
