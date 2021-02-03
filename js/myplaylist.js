@@ -42,7 +42,7 @@ const myplaylistFactory = () => {
         const playlist = localStorage.getObject(list_id);
         // clear url field when load old playlist
         if (playlist !== null && playlist.tracks !== undefined) {
-          playlist.tracks.forEach((e) => { delete e.url; });
+          playlist.tracks.forEach((e) => { delete e.url; e.disabled = false; });
         }
         fn(playlist);
       },
