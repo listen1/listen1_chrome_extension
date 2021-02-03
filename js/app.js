@@ -149,9 +149,9 @@ const main = () => {
 
   // control main view of page, it can be called any place
   app.controller('NavigationController', ['$scope',
-    '$httpParamSerializerJQLike', '$timeout', 'Notification', '$rootScope',
+    '$timeout', 'Notification', '$rootScope',
     'hotkeys', 'lastfm', 'github', 'gist', '$translate',
-    ($scope, $httpParamSerializerJQLike,
+    ($scope,
       $timeout, Notification, $rootScope,
       hotkeys, lastfm, github, gist, $translate) => {
       $rootScope.page_title = 'Listen 1'; // eslint-disable-line no-param-reassign
@@ -401,19 +401,7 @@ const main = () => {
       };
 
       $scope.chooseDialogOption = (option_id) => {
-        const url = '/add_myplaylist';
-        loWeb.post({
-          url,
-          method: 'POST',
-          data:
-            ({
-              list_id: option_id,
-              track: JSON.stringify($scope.dialog_song),
-            }),
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-          },
-        }).success(() => {
+        MediaService.addMyPlaylist(option_id, $scope.dialog_song).success(() => {
           Notification.success($translate.instant('_ADD_TO_PLAYLIST_SUCCESS'));
           $scope.closeDialog();
           // add to current playing list
@@ -432,19 +420,7 @@ const main = () => {
       };
 
       $scope.createAndAddPlaylist = () => {
-        const url = '/create_myplaylist';
-
-        loWeb.post({
-          url,
-          method: 'POST',
-          data: $httpParamSerializerJQLike({
-            list_title: $scope.newlist_title,
-            track: JSON.stringify($scope.dialog_song),
-          }),
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-          },
-        }).success(() => {
+        MediaService.createMyPlaylist($scope.newlist_title, $scope.dialog_song).success(() => {
           $rootScope.$broadcast('myplaylist:update');
           Notification.success($translate.instant('_ADD_TO_PLAYLIST_SUCCESS'));
           $scope.closeDialog();
@@ -452,20 +428,11 @@ const main = () => {
       };
 
       $scope.editMyPlaylist = () => {
-        const url = '/edit_myplaylist';
-
-        loWeb.post({
-          url,
-          method: 'POST',
-          data: $httpParamSerializerJQLike({
-            list_id: $scope.list_id,
-            title: $scope.dialog_playlist_title,
-            cover_img_url: $scope.dialog_cover_img_url,
-          }),
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-          },
-        }).success(() => {
+        MediaService.editMyPlaylist(
+          $scope.list_id,
+          $scope.dialog_playlist_title,
+          $scope.dialog_cover_img_url,
+        ).success(() => {
           $rootScope.$broadcast('myplaylist:update');
           $scope.playlist_title = $scope.dialog_playlist_title;
           $scope.cover_img_url = $scope.dialog_cover_img_url;
@@ -476,18 +443,7 @@ const main = () => {
 
       $scope.mergePlaylist = (target_list_id) => {
         Notification.info($translate.instant('_IMPORTING_PLAYLIST'));
-        const url = '/merge_playlist';
-        loWeb.post({
-          url,
-          method: 'POST',
-          data: $httpParamSerializerJQLike({
-            source: $scope.list_id,
-            target: target_list_id,
-          }),
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-          },
-        }).success(() => {
+        MediaService.mergePlaylist($scope.list_id, target_list_id).success(() => {
           Notification.success($translate.instant('_IMPORTING_PLAYLIST_SUCCESS'));
           $scope.closeDialog();
           $scope.popWindow();
@@ -496,24 +452,14 @@ const main = () => {
       };
 
       $scope.removeSongFromPlaylist = (song, list_id) => {
-        let url = '';
+        let removeFunc = null;
         if (list_id.slice(0, 2) === 'my') {
-          url = '/remove_track_from_myplaylist';
+          removeFunc = MediaService.removeTrackFromMyPlaylist;
         } else if (list_id.slice(0, 2) === 'lm') {
-          url = '/remove_track_from_playlist';
+          removeFunc = MediaService.removeTrackFromPlaylist;
         }
 
-        loWeb.post({
-          url,
-          method: 'POST',
-          data: $httpParamSerializerJQLike({
-            list_id,
-            track_id: song.id,
-          }),
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-          },
-        }).success(() => {
+        removeFunc(list_id, song.id).success(() => {
           // remove song from songs
           const index = $scope.songs.indexOf(song);
           if (index > -1) {
@@ -559,18 +505,7 @@ const main = () => {
       };
 
       $scope.clonePlaylist = (list_id) => {
-        const url = '/clone_playlist';
-        loWeb.post({
-          url,
-          method: 'POST',
-          data: $httpParamSerializerJQLike({
-            playlist_type: 'my',
-            list_id,
-          }),
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-          },
-        }).success(() => {
+        MediaService.clonePlaylist(list_id, 'my').success(() => {
           $rootScope.$broadcast('myplaylist:update');
           $scope.closeWindow();
           Notification.success($translate.instant('_ADD_TO_PLAYLIST_SUCCESS'));
@@ -578,19 +513,7 @@ const main = () => {
       };
 
       $scope.removeMyPlaylist = (list_id) => {
-        const url = '/remove_myplaylist';
-
-        loWeb.post({
-          url,
-          method: 'POST',
-          data: $httpParamSerializerJQLike({
-            list_id,
-            playlist_type: 'my',
-          }),
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-          },
-        }).success(() => {
+        MediaService.removeMyPlaylist(list_id, 'my').success(() => {
           $rootScope.$broadcast('myplaylist:update');
           $scope.closeDialog();
           $scope.closeWindow();
@@ -716,16 +639,7 @@ const main = () => {
       });
 
       $scope.openUrl = (url) => {
-        loWeb.post({
-          url: '/parse_url',
-          method: 'POST',
-          data: $httpParamSerializerJQLike({
-            url,
-          }),
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-          },
-        }).success((data) => {
+        MediaService.parseURL(url).success((data) => {
           const { result } = data;
           if (result !== undefined) {
             $scope.showPlaylist(result.id);
@@ -745,36 +659,14 @@ const main = () => {
         }
       };
       $scope.addFavoritePlaylist = (list_id) => {
-        loWeb.post({
-          url: '/clone_playlist',
-          method: 'POST',
-          data: $httpParamSerializerJQLike({
-            playlist_type: 'favorite',
-            list_id,
-          }),
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-          },
-        }).success((addResult) => {
+        MediaService.clonePlaylist(list_id, 'favorite').success((addResult) => {
           $rootScope.$broadcast('favoriteplaylist:update');
           Notification.success($translate.instant('_FAVORITE_PLAYLIST_SUCCESS'));
         });
       };
 
       $scope.removeFavoritePlaylist = (list_id) => {
-        const url = '/remove_myplaylist';
-
-        loWeb.post({
-          url,
-          method: 'POST',
-          data: $httpParamSerializerJQLike({
-            list_id,
-            playlist_type: 'favorite',
-          }),
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-          },
-        }).success(() => {
+        MediaService.removeMyPlaylist(list_id, 'favorite').success(() => {
           $rootScope.$broadcast('favoriteplaylist:update');
           // $scope.closeWindow();
           Notification.success($translate.instant('_UNFAVORITE_PLAYLIST_SUCCESS'));
@@ -814,18 +706,7 @@ const main = () => {
                 };
 
                 const list_id = 'lmplaylist_reserve';
-                const url = '/add_playlist';
-                loWeb.post({
-                  url,
-                  method: 'POST',
-                  data: $httpParamSerializerJQLike({
-                    list_id,
-                    tracks: JSON.stringify([track]),
-                  }),
-                  headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                  },
-                }).success((res) => {
+                MediaService.addPlaylist(list_id, [track]).success((res) => {
                   const { playlist } = res;
                   $scope.songs = playlist.tracks;
                   $scope.list_id = playlist.info.id;

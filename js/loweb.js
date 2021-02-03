@@ -1,4 +1,4 @@
-/* global getParameterByName async */
+/* global async */
 /* global netease xiami qq kugou kuwo bilibili migu localmusic myplaylist */
 const PROVIDERS = [{
   name: 'netease',
@@ -134,110 +134,87 @@ const MediaService = {
     return provider.get_playlist(`/playlist?list_id=${listId}`);
   },
 
-  post(request) {
-    const path = request.url.split('?')[0];
-    if (path === '/clone_playlist') {
-      const playlist_type = getParameterByName('playlist_type', `${request.url}?${request.data}`);
-      const list_id = getParameterByName('list_id', `${request.url}?${request.data}`);
-      const provider = getProviderByItemId(list_id);
-      const url = `/playlist?list_id=${list_id}`;
-      return {
-        success: (fn) => {
-          provider.get_playlist(url).success((data) => {
-            myplaylist.save_myplaylist(playlist_type, data);
-            fn();
-          });
-        },
-      };
-    }
-    if (path === '/remove_myplaylist') {
-      const playlist_type = getParameterByName('playlist_type', `${request.url}?${request.data}`);
-      const list_id = getParameterByName('list_id', `${request.url}?${request.data}`);
-      myplaylist.remove_myplaylist(playlist_type, list_id);
-      return {
-        success: (fn) => fn(),
-      };
-    }
-    if (path === '/add_myplaylist') {
-      const list_id = getParameterByName('list_id', `${request.url}?${request.data}`);
-      const track_json = getParameterByName('track', `${request.url}?${request.data}`);
-      const track = JSON.parse(track_json);
-      myplaylist.add_myplaylist(list_id, track);
-      return {
-        success: (fn) => fn(),
-      };
-    }
-    if (path === '/add_playlist') {
-      const list_id = getParameterByName('list_id', `${request.url}?${request.data}`);
-      const provider = getProviderByItemId(list_id);
-      const tracks_json = getParameterByName('tracks', `${request.url}?${request.data}`);
-      const tracks = JSON.parse(tracks_json);
-      return provider.add_playlist(list_id, tracks);
-    }
-    if (path === '/remove_track_from_myplaylist') {
-      const list_id = getParameterByName('list_id', `${request.url}?${request.data}`);
-      const track_id = getParameterByName('track_id', `${request.url}?${request.data}`);
-      myplaylist.remove_from_myplaylist(list_id, track_id);
-      return {
-        success: (fn) => fn(),
-      };
-    }
-    if (path === '/remove_track_from_playlist') {
-      const list_id = getParameterByName('list_id', `${request.url}?${request.data}`);
-      const track_id = getParameterByName('track_id', `${request.url}?${request.data}`);
-      const provider = getProviderByItemId(list_id);
-      return provider.remove_from_playlist(list_id, track_id);
-    }
-    if (path === '/create_myplaylist') {
-      const list_title = getParameterByName('list_title', `${request.url}?${request.data}`);
-      const track_json = getParameterByName('track', `${request.url}?${request.data}`);
-      const track = JSON.parse(track_json);
-      myplaylist.create_myplaylist(list_title, track);
-      return {
-        success: (fn) => {
+  clonePlaylist(id, type) {
+    const provider = getProviderByItemId(id);
+    const url = `/playlist?list_id=${id}`;
+    return {
+      success: (fn) => {
+        provider.get_playlist(url).success((data) => {
+          myplaylist.save_myplaylist(type, data);
           fn();
-        },
-      };
-    }
-    if (path === '/edit_myplaylist') {
-      const list_id = getParameterByName('list_id', `${request.url}?${request.data}`);
-      const title = getParameterByName('title', `${request.url}?${request.data}`);
-      const cover_img_url = getParameterByName('cover_img_url', `${request.url}?${request.data}`);
-      myplaylist.edit_myplaylist(list_id, title, cover_img_url);
-      return {
-        success: (fn) => fn(),
-      };
-    }
-    if (path === '/parse_url') {
-      const url = getParameterByName('url', `${request.url}?${request.data}`);
-      const providers = getAllProviders();
-      let result;
-      providers.forEach((provider) => {
-        const r = provider.parse_url(url);
-        if (r !== undefined) {
-          result = r;
-        }
-      });
-      return {
-        success: (fn) => fn({ result }),
-      };
-    }
-    if (path === '/merge_playlist') {
-      const source = getParameterByName('source', `${request.url}?${request.data}`);
-      const target = getParameterByName('target', `${request.url}?${request.data}`);
-      const tarData = (localStorage.getObject(target)).tracks;
-      const srcData = (localStorage.getObject(source)).tracks;
-      tarData.forEach((tarTrack) => {
-        if (!srcData.find((srcTrack) => srcTrack.id === tarTrack.id)) {
-          myplaylist.add_myplaylist(source, tarTrack);
-        }
-      });
-      return {
-        success: (fn) => fn(),
-      };
-    }
-    return null;
+        });
+      },
+    };
   },
+
+  removeMyPlaylist(id, type) {
+    myplaylist.remove_myplaylist(type, id);
+    return {
+      success: (fn) => fn(),
+    };
+  },
+
+  addMyPlaylist(id, track) {
+    myplaylist.add_myplaylist(id, track);
+    return {
+      success: (fn) => fn(),
+    };
+  },
+
+  addPlaylist(id, tracks) {
+    const provider = getProviderByItemId(id);
+    return provider.add_playlist(id, tracks);
+  },
+
+  removeTrackFromMyPlaylist(id, track) {
+    myplaylist.remove_from_myplaylist(id, track);
+    return {
+      success: (fn) => fn(),
+    };
+  },
+
+  removeTrackFromPlaylist(id, track) {
+    const provider = getProviderByItemId(id);
+    return provider.remove_from_playlist(id, track);
+  },
+
+  createMyPlaylist(title, track) {
+    myplaylist.create_myplaylist(title, track);
+    return {
+      success: (fn) => {
+        fn();
+      },
+    };
+  },
+
+  editMyPlaylist(id, title, coverImgUrl) {
+    myplaylist.edit_myplaylist(id, title, coverImgUrl);
+    return {
+      success: (fn) => fn(),
+    };
+  },
+
+  parseURL(url) {
+    const providers = getAllProviders();
+    const result = providers.find((provider) => provider.parse_url(url)).parse_url(url);
+    return {
+      success: (fn) => fn({ result }),
+    };
+  },
+
+  mergePlaylist(source, target) {
+    const tarData = (localStorage.getObject(target)).tracks;
+    const srcData = (localStorage.getObject(source)).tracks;
+    tarData.forEach((tarTrack) => {
+      if (!srcData.find((srcTrack) => srcTrack.id === tarTrack.id)) {
+        myplaylist.add_myplaylist(source, tarTrack);
+      }
+    });
+    return {
+      success: (fn) => fn(),
+    };
+  },
+
   bootstrapTrack(sound, track, playerSuccessCallback, playerFailCallback) {
     const successCallback = playerSuccessCallback;
 
