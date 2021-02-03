@@ -156,20 +156,24 @@ function build_migu() {
 
   function mg_bootstrap_track(sound, track, success, failure) {
     const song_id = track.id.slice('mgtrack_'.length);
-    let type;
-    switch (track.quality) {
-      case '110000':
-        type = 2;
-        break;
-      case '111100':
-        type = 3;
-        break;
-      case '111111':
-        type = 4;
-        break;
-      default:
-        type = 1;
-    }
+    const type = 1;
+    // NOTICE：howler flac support is not ready for production.
+    // Sometimes network keep pending forever and block later music.
+    // So use normal quality.
+
+    // switch (track.quality) {
+    //   case '110000':
+    //     type = 2;
+    //     break;
+    //   case '111100':
+    //     type = 3;
+    //     break;
+    //   case '111111':
+    //     type = 4;
+    //     break;
+    //   default:
+    //     type = 1;
+    // }
     const k = '4ea5c508a6566e76240543f8feb06fd457777be39549c4016436afda65d2330e';
     // type parameter for music quality: 1: normal, 2: hq, 3: sq, 4: zq, 5: z3d
     const plain = forge.util.createBuffer(`{"copyrightId":"${song_id}","type":${type},"auditionsFlag":0}`);
