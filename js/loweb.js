@@ -90,10 +90,15 @@ function cached(key, instance) {
   };
 }
 
+function queryStringify(options) {
+  const query = JSON.parse(JSON.stringify(options));
+  return (new URLSearchParams(query)).toString();
+}
+
 // eslint-disable-next-line no-unused-vars
 const MediaService = {
   search(source, options) {
-    const url = `/search?${(new URLSearchParams(options)).toString()}`;
+    const url = `/search?${queryStringify(options)}`;
     if (source === 'allmusic') {
       // search all platform and merge result
       const callbackArray = getAllSearchProviders().map((p) => (fn) => {
@@ -127,20 +132,18 @@ const MediaService = {
 
   showPlaylist(source, offset) {
     const provider = getProviderByName(source);
-    const url = `/show_playlist?${(new URLSearchParams({
-      offset,
-    })).toString()}`;
+    const url = `/show_playlist?${queryStringify({ offset })}`;
     return provider.show_playlist(url);
   },
 
   getLyric(track_id, album_id, lyric_url, tlyric_url) {
     const provider = getProviderByItemId(track_id);
-    const url = `/lyric?${(new URLSearchParams({
+    const url = `/lyric?${queryStringify({
       track_id,
       album_id,
       lyric_url,
       tlyric_url,
-    })).toString()}`;
+    })}`;
     return provider.lyric(url);
   },
 
