@@ -249,19 +249,23 @@ ngloWebManager.factory('loWeb', ['$rootScope', '$log',
         const curpage = 1;
         const url = `/search?source=${source}&keywords=${keyword}&curpage=${curpage}&type=0`;
         const provider = getProviderByName(source);
-        provider.search(url).success((data) => {
-          for (let i = 0; i < data.result.length; i += 1) {
-            const searchTrack = data.result[i];
-            // compare search track and track to check if they are same
-            // TODO: better similar compare method (duration, md5)
-            if (!searchTrack.disable) {
-              if ((searchTrack.title === track.title) && (searchTrack.artist === track.artist)) {
-                return callback(searchTrack);
+        try {
+          provider.search(url).success((data) => {
+            for (let i = 0; i < data.result.length; i += 1) {
+              const searchTrack = data.result[i];
+              // compare search track and track to check if they are same
+              // TODO: better similar compare method (duration, md5)
+              if (!searchTrack.disable) {
+                if ((searchTrack.title === track.title) && (searchTrack.artist === track.artist)) {
+                  return callback(searchTrack);
+                }
               }
             }
-          }
+            return callback(null);
+          });
+        } catch (error) {
           return callback(null);
-        });
+        }
       }
 
       function getUrlFromTrack(track, source, callback) {
