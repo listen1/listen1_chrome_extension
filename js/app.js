@@ -1105,10 +1105,11 @@ const main = () => {
               '&gt;': '>',
               '&quot;': '"',
               '&#39;': "'",
+              '&apos;': "'",
             };
             timeResult.push({
               content: line.replace(timeRegResult[0], '')
-                .replace(/&(?:amp|lt|gt|quot|#39);/g, (match) => htmlUnescapes[match]),
+                .replace(/&(?:amp|lt|gt|quot|#39|apos);/g, (match) => htmlUnescapes[match]),
               seconds: parseInt(timeRegResult[1], 10) * 60 * 1000 // min
                 + parseInt(timeRegResult[2], 10) * 1000 // sec
                 + (timeRegResult[3] ? parseInt(rightPadding(timeRegResult[3], 3, '0'), 10) : 0), // microsec
