@@ -304,7 +304,7 @@ function build_netease() {
               source_url: `https://music.163.com/#/song?id=${song_info.id}`,
               img_url: song_info.album.picUrl,
               // url: `netrack_${song_info.id}`,
-              disabled: !is_playable(song_info),
+              url: !is_playable(song_info) ? '' : undefined,
             }));
             total = data.result.songCount;
           } else if (searchType === '1') {
@@ -361,8 +361,7 @@ function build_netease() {
             source: 'netease',
             source_url: `https://music.163.com/#/song?id=${song_info.id}`,
             img_url: song_info.album.picUrl,
-            // url: `netrack_${song_info.id}`,
-            disabled: !is_playable(song_info),
+            url: !is_playable(song_info) ? '' : undefined,
           }));
           return fn({
             tracks,
@@ -400,7 +399,7 @@ function build_netease() {
             source_url: `https://music.163.com/#/song?id=${song_info.id}`,
             img_url: song_info.album.picUrl,
             // url: `netrack_${song_info.id}`,
-            disabled: !is_playable(song_info),
+            url: !is_playable(song_info) ? '' : undefined,
           }));
           return fn({
             tracks,

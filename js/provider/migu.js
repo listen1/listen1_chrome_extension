@@ -18,7 +18,7 @@ function build_migu() {
       lyric_url: song.lrcUrl || '',
       tlyric_url: song.trcUrl || '',
       quality: song.toneControl,
-      disabled: song.copyright === 0,
+      url: song.copyright === 0 ? '' : undefined,
     };
   }
 
