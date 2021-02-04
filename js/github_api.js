@@ -5,6 +5,10 @@ function github() {
   const client_id = 'e099a4803bb1e2e773a3';
   const client_secret = '81fbfc45c65af8c0fbf2b4dae6f23f22e656cfb8';
 
+  const request = axios.create({
+    headers: { accept: 'application/json' },
+  });
+
   const Github = {
     status: 0,
     username: '',
@@ -59,7 +63,7 @@ function github() {
         client_secret,
         code,
       };
-      axios.post(url, data).then((res) => {
+      request.post(url, data).then((res) => {
         const ak = res.data.access_token;
         localStorage.setObject('githubOauthAccessKey', ak);
         if (cb !== undefined) {
@@ -71,7 +75,7 @@ function github() {
     api: (apiPath, cb) => {
       const access_token = localStorage.getObject('githubOauthAccessKey') || '';
       const url = `${API_URL}${apiPath}?access_token=${access_token}`;
-      axios.get(url).then((response) => {
+      request.get(url).then((response) => {
         cb(response.data);
       });
     },
