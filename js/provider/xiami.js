@@ -87,10 +87,6 @@ function build_xiami() {
     };
   }
 
-  function xm_get_low_quality_img_url(url) {
-    return `${url}?x-oss-process=image/resize,m_fill,limit_0,s_330/quality,q_80`;
-  }
-
   function xm_show_playlist(url) {
     const offset = getParameterByName('offset', url);
     const page = offset / 25 + 1;
@@ -105,7 +101,7 @@ function build_xiami() {
         };
         xm_cookie_get(api, params, (response) => {
           const result = response.data.data.data.collects.map((item) => ({
-            cover_img_url: xm_get_low_quality_img_url(item.collectLogo),
+            cover_img_url: '/images/placeholder.png',
             title: item.collectName,
             id: `xmplaylist_${item.listId}`,
             source_url: `https://www.xiami.com/collect/${item.listId}`,
@@ -152,7 +148,7 @@ function build_xiami() {
       album_id: `xmalbum_${song_info.albumId}`,
       source: 'xiami',
       source_url: `https://www.xiami.com/song/${song_info.songId}`,
-      img_url: song_info.albumLogo,
+      img_url: '/images/placeholder.png',
       // url: `xmtrack_${song_info.songId}`,
       lyric_url: song_info.lyricInfo ? song_info.lyricInfo.lyricFile : '',
     };
@@ -187,7 +183,7 @@ function build_xiami() {
         xm_cookie_get(api, params, (response) => {
           const { data } = response.data.data;
           const info = {
-            cover_img_url: xm_get_low_quality_img_url(data.collectDetail.collectLogo),
+            cover_img_url: '/images/placeholder.png',
             title: data.collectDetail.collectName,
             id: `xmplaylist_${list_id}`,
             source_url: `https://www.xiami.com/collect/${list_id}`,
@@ -246,7 +242,7 @@ function build_xiami() {
               title: item.collectName,
               source: 'xiami',
               source_url: `https://www.xiami.com/collect/${item.listId}`,
-              img_url: item.collectLogo,
+              img_url: '/images/placeholder.png',
               url: `xmplaylist_${item.listId}`,
               author: item.userName,
               count: item.songCount,
@@ -274,7 +270,7 @@ function build_xiami() {
         xm_cookie_get(api, params, (response) => {
           const { data } = response.data.data;
           const info = {
-            cover_img_url: data.albumDetail.albumLogo,
+            cover_img_url: '/images/placeholder.png',
             title: data.albumDetail.albumName,
             id: `xmalbum_${album_id}`,
             source_url: `https://www.xiami.com/album/${album_id}`,
@@ -300,7 +296,7 @@ function build_xiami() {
         axios.get(target_url).then((response) => {
           const { artistDetailVO: data } = response.data.data.artistDetail;
           const info = {
-            cover_img_url: data.artistLogo,
+            cover_img_url: '/images/placeholder.png',
             title: data.artistName,
             id: `xmartist_${artist_id}`,
             source_url: `https://www.xiami.com/artist/${artist_id}`,
