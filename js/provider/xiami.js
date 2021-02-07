@@ -237,10 +237,10 @@ function build_xiami() {
           let result = [];
           let total = 0;
           const { data } = response.data.data;
-          if (searchType === '0' & data) {
+          if (searchType === '0' && data) {
             result = data.songs.map((item) => xm_convert_song(item));
             total = data.pagingVO.count;
-          } else if (searchType === '1' & data) {
+          } else if (searchType === '1' && data) {
             result = data.collects.map((item) => ({
               id: `xmplaylist_${item.listId}`,
               title: item.collectName,
