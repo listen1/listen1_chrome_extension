@@ -1,7 +1,7 @@
 @font-face {
   font-family: 'listen1-icon';
-  src:  url('../fonts/listen1-icon.eot?4ftssm');
-  src:  url('../fonts/listen1-icon.eot?4ftssm#iefix') format('embedded-opentype'),
+  src: url('../fonts/listen1-icon.eot?4ftssm');
+  src: url('../fonts/listen1-icon.eot?4ftssm#iefix') format('embedded-opentype'),
     url('../fonts/listen1-icon.ttf?4ftssm') format('truetype'),
     url('../fonts/listen1-icon.woff?4ftssm') format('woff'),
     url('../fonts/listen1-icon.svg?4ftssm#listen1-icon') format('svg');
@@ -9,7 +9,8 @@
   font-style: normal;
 }
 
-[class^="li-"], [class*=" li-"] {
+[class^='li-'],
+[class*=' li-'] {
   /* use !important to prevent issues with browser extensions that change fonts */
   font-family: 'listen1-icon' !important;
   speak: none;
@@ -25,65 +26,65 @@
 }
 
 .li-play:before {
-  content: "\e900";
+  content: '\e900';
 }
 .li-previous:before {
-  content: "\e901";
+  content: '\e901';
 }
 .li-next:before {
-  content: "\e902";
+  content: '\e902';
 }
 .li-pause:before {
-  content: "\e903";
+  content: '\e903';
 }
 .li-random-loop:before {
-  content: "\e904";
+  content: '\e904';
 }
 .li-single-cycle:before {
-  content: "\e905";
+  content: '\e905';
 }
 .li-mute:before {
-  content: "\e906";
+  content: '\e906';
 }
 .li-volume:before {
-  content: "\e907";
+  content: '\e907';
 }
 .li-list:before {
-  content: "\e908";
+  content: '\e908';
 }
 .li-loop:before {
-  content: "\e909";
+  content: '\e909';
 }
 .li-del:before {
-  content: "\e90a";
+  content: '\e90a';
 }
 .li-close:before {
-  content: "\e90b";
+  content: '\e90b';
 }
 .li-back:before {
-  content: "\e90c";
+  content: '\e90c';
 }
 .li-play-s:before {
-  content: "\e90d";
+  content: '\e90d';
 }
 .li-collapse:before {
-  content: "\e90e";
+  content: '\e90e';
 }
 .li-add:before {
-  content: "\e90f";
+  content: '\e90f';
 }
 .li-advance:before {
-  content: "\e910";
+  content: '\e910';
 }
 .li-link:before {
-  content: "\e911";
+  content: '\e911';
 }
 .li-setting:before {
-  content: "\e912";
+  content: '\e912';
 }
 .li-songlist:before {
-  content: "\e913";
+  content: '\e913';
 }
 .li-featured-list:before {
-  content: "\e914";
+  content: '\e914';
 }
