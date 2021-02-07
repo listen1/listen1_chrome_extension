@@ -52,7 +52,7 @@ function build_xiami() {
         } else {
           callback(response);
         }
-      });
+      }).catch(() => callback(null));
     });
   }
 
@@ -237,10 +237,10 @@ function build_xiami() {
           let result = [];
           let total = 0;
           const { data } = response.data.data;
-          if (searchType === '0') {
+          if (searchType === '0' & data) {
             result = data.songs.map((item) => xm_convert_song(item));
             total = data.pagingVO.count;
-          } else if (searchType === '1') {
+          } else if (searchType === '1' & data) {
             result = data.collects.map((item) => ({
               id: `xmplaylist_${item.listId}`,
               title: item.collectName,
@@ -293,12 +293,11 @@ function build_xiami() {
     return {
       success(fn) {
         const artist_id = getParameterByName('list_id', url).split('_').pop();
+        let api = 'mtop.alimusic.music.artistservice.getartistdetail';
+        let params = { artistId: artist_id };
 
-        const target_url = `https://m.xiami.com/graphql?query=query{artistDetail(artistId:%22${artist_id
-        }%22,artistStringId:%22${artist_id}%22){artistDetailVO{artistName%20artistLogo}}}`;
-
-        axios.get(target_url).then((response) => {
-          const { artistDetailVO: data } = response.data.data.artistDetail;
+        xm_cookie_get(api, params, (response) => {
+          const { artistDetailVO: data } = response.data.data.data;
           const info = {
             cover_img_url: data.artistLogo,
             title: data.artistName,
@@ -309,9 +308,8 @@ function build_xiami() {
           const offset = getParameterByName('offset', url);
           const page = offset / 50 + 1;
           const pageSize = 50;
-          // const category = 0;
-          const api = 'mtop.alimusic.music.songservice.getartistsongs';
-          const params = {
+          api = 'mtop.alimusic.music.songservice.getartistsongs';
+          params = {
             artistId: artist_id,
             pagingVO: {
               page,
