@@ -137,50 +137,60 @@ function build_kuwo() {
     const domain = 'https://www.kuwo.cn';
     const name = 'kw_token';
     if (!isElectron()) {
-      cookieGet({
-        url: domain,
-        name,
-      }, (cookie) => {
-        if (cookie == null) {
-          return callback('');
+      cookieGet(
+        {
+          url: domain,
+          name,
+        },
+        (cookie) => {
+          if (cookie == null) {
+            return callback('');
+          }
+          return callback(cookie.value);
         }
-        return callback(cookie.value);
-      });
+      );
     } else {
-      cookieGet({
-        domain: '.kuwo.cn',
-        name,
-      }, (err, cookie) => {
-        if (cookie.length === 0) {
-          return callback('');
+      cookieGet(
+        {
+          domain: '.kuwo.cn',
+          name,
+        },
+        (err, cookie) => {
+          if (cookie.length === 0) {
+            return callback('');
+          }
+          return callback(cookie[0].value);
         }
-        return callback(cookie[0].value);
-      });
+      );
     }
   }
 
   function kw_cookie_get(url, callback) {
     kw_get_token((token) => {
-      axios.get(url, {
-        headers: {
-          csrf: token,
-        },
-      }).then((response) => {
-        if (response.data.success === false) {
-          // token expire, refetch token and start get url
-          kw_get_token((token2) => {
-            axios.get(url, {
-              headers: {
-                csrf: token2,
-              },
-            }).then((res) => {
-              callback(res);
+      axios
+        .get(url, {
+          headers: {
+            csrf: token,
+          },
+        })
+        .then((response) => {
+          if (response.data.success === false) {
+            // token expire, refetch token and start get url
+            kw_get_token((token2) => {
+              axios
+                .get(url, {
+                  headers: {
+                    csrf: token2,
+                  },
+                })
+                .then((res) => {
+                  callback(res);
+                });
             });
-          });
-        } else {
-          callback(response);
-        }
-      });
+          } else {
+            callback(response);
+          }
+        });
     });
   }
 
@@ -202,12 +212,15 @@ function build_kuwo() {
     }
     // axios.get(tracks_url).then((response) => {
     kw_cookie_get(tracks_url, (response) => {
-      const tracks = response.data.data.musicList.map((item) => kw_convert_song2(item));
+      const tracks = response.data.data.musicList.map((item) =>
+        kw_convert_song2(item)
+      );
       return callback(null, tracks);
     });
   }
 
-  function kw_search(url) { // eslint-disable-line no-unused-vars
+  function kw_search(url) {
+    // eslint-disable-line no-unused-vars
     const keyword = getParameterByName('keywords', url);
     const curpage = getParameterByName('curpage', url);
     const searchType = getParameterByName('type', url);
@@ -229,7 +242,9 @@ function build_kuwo() {
           let result = [];
           let total = 0;
           if (searchType === '0' && response.data.data !== undefined) {
-            result = response.data.data.list.map((item) => kw_convert_song2(item));
+            result = response.data.data.list.map((item) =>
+              kw_convert_song2(item)
+            );
             total = response.data.data.total;
           } else if (searchType === '1' && response.data.data !== undefined) {
             result = response.data.data.list.map((item) => ({
@@ -257,8 +272,9 @@ function build_kuwo() {
   // eslint-disable-next-line no-unused-vars
   function kw_bootstrap_track(sound, track, success, failure) {
     const song_id = track.id.slice('kwtrack_'.length);
-    const target_url = 'https://antiserver.kuwo.cn/anti.s?'
-      + `type=convert_url&format=mp3&response=url&rid=${song_id}`;
+    const target_url =
+      'https://antiserver.kuwo.cn/anti.s?' +
+      `type=convert_url&format=mp3&response=url&rid=${song_id}`;
     /* const target_url = 'http://www.kuwo.cn/url?'
       + `format=mp3&rid=${song_id}&response=url&type=convert_url3&br=128kmp3&from=web`;
     https://m.kuwo.cn/newh5app/api/mobile/v1/music/src/${song_id} */
@@ -280,7 +296,9 @@ function build_kuwo() {
       const m = parseInt(t / 60, 10);
       const s = parseInt(t - m * 60, 10);
       const ms = parseInt((t - m * 60 - s) * 100, 10);
-      return `${str}[${num2str(m)}:${num2str(parseInt(s, 10))}.${num2str(ms)}]${item.lineLyric}\n`;
+      return `${str}[${num2str(m)}:${num2str(parseInt(s, 10))}.${num2str(ms)}]${
+        item.lineLyric
+      }\n`;
     }, '');
     return lyric;
   }
@@ -334,7 +352,8 @@ function build_kuwo() {
     };
   }
 
-  function kw_lyric(url) { // eslint-disable-line no-unused-vars
+  function kw_lyric(url) {
+    // eslint-disable-line no-unused-vars
     const track_id = getParameterByName('lyric_url', url);
     const target_url = `https://m.kuwo.cn/newh5/singles/songinfoandlrc?musicId=${track_id}`;
 
@@ -342,7 +361,10 @@ function build_kuwo() {
       success(fn) {
         axios.get(target_url).then((response) => {
           let { data } = response;
-          data = data.status === 200 ? kw_generate_translation(data.data.lrclist) : {};
+          data =
+            data.status === 200
+              ? kw_generate_translation(data.data.lrclist)
+              : {};
           return fn({
             lyric: data.lrc || '',
             tlyric: data.tlrc || '',
@@ -352,7 +374,8 @@ function build_kuwo() {
     };
   }
 
-  function kw_artist(url) { // eslint-disable-line no-unused-vars
+  function kw_artist(url) {
+    // eslint-disable-line no-unused-vars
     const artist_id = getParameterByName('list_id', url).split('_').pop();
     return {
       success(fn) {
@@ -370,7 +393,9 @@ function build_kuwo() {
           // Get songs
           target_url = `https://www.kuwo.cn/api/www/artist/artistMusic?artistid=${artist_id}&pn=1&rn=50`;
           kw_cookie_get(target_url, (res) => {
-            const tracks = res.data.data.list.map((item) => kw_convert_song2(item));
+            const tracks = res.data.data.list.map((item) =>
+              kw_convert_song2(item)
+            );
             return fn({
               tracks,
               info,
@@ -395,13 +420,15 @@ function build_kuwo() {
     };
   }
 
-  function kw_album(url) { // eslint-disable-line no-unused-vars
+  function kw_album(url) {
+    // eslint-disable-line no-unused-vars
     const album_id = getParameterByName('list_id', url).split('_').pop();
     return {
       success(fn) {
-        const target_url = 'https://search.kuwo.cn/r.s?pn=0&rn=0&stype=albuminfo'
-          + `&albumid=${album_id}&alflac=1&pcmp4=1&encoding=utf8`
-          + '&vipver=MUSIC_8.7.7.0_W4';
+        const target_url =
+          'https://search.kuwo.cn/r.s?pn=0&rn=0&stype=albuminfo' +
+          `&albumid=${album_id}&alflac=1&pcmp4=1&encoding=utf8` +
+          '&vipver=MUSIC_8.7.7.0_W4';
         axios.get(target_url).then((response) => {
           let { data } = response;
           data = JSON.parse(fix_json(data));
@@ -416,14 +443,16 @@ function build_kuwo() {
           const total = data.songnum;
           const page = Math.ceil(total / 100);
           const page_array = Array.from({ length: page }, (v, k) => k + 1);
-          async.concat(page_array,
+          async.concat(
+            page_array,
             (item, callback) => kw_render_tracks(url, item, callback),
             (err, tracks) => {
               fn({
                 tracks,
                 info,
               });
-            });
+            }
+          );
           /*
           async_process_list(data.musiclist, kw_render_album_result_item, [info],
             (err, tracks) => fn({
@@ -492,7 +521,9 @@ function build_kuwo() {
     }; */
     // const target_url = 'http://www.kuwo.cn/www/categoryNew/getPlayListInfoUnderCategory?'
     // + `type=taglist&digest=10000&id=${37}&start=${offset}&count=50`;
-    const target_url = `https://www.kuwo.cn/api/pc/classify/playlist/getRcmPlayList?pn=${offset / 25 + 1}&rn=25&order=hot&httpsStatus=1`;
+    const target_url = `https://www.kuwo.cn/api/pc/classify/playlist/getRcmPlayList?pn=${
+      offset / 25 + 1
+    }&rn=25&order=hot&httpsStatus=1`;
     /*
     精选歌单:roder=最热:hot, 最新:new
     tag歌单地址 https://www.kuwo.cn/api/pc/classify/playlist/getTagPlayList?pn=${offset / 25 + 1}&rn=25&id=37&httpsStatus=1
@@ -519,11 +550,13 @@ function build_kuwo() {
     };
   }
 
-  function kw_get_playlist(url) { // eslint-disable-line no-unused-vars
+  function kw_get_playlist(url) {
+    // eslint-disable-line no-unused-vars
     const list_id = getParameterByName('list_id', url).split('_').pop();
-    const target_url = 'https://nplserver.kuwo.cn/pl.svc?'
-      + 'op=getlistinfo&pn=0&rn=0&encode=utf-8&keyset=pl2012&pcmp4=1'
-      + `&pid=${list_id}&vipver=MUSIC_9.0.2.0_W1&newver=1`;
+    const target_url =
+      'https://nplserver.kuwo.cn/pl.svc?' +
+      'op=getlistinfo&pn=0&rn=0&encode=utf-8&keyset=pl2012&pcmp4=1' +
+      `&pid=${list_id}&vipver=MUSIC_9.0.2.0_W1&newver=1`;
     // https://www.kuwo.cn/api/www/playlist/playListInfo?pid=3134372426&pn=1&rn=30
     return {
       success(fn) {
@@ -539,14 +572,16 @@ function build_kuwo() {
           const { total } = data;
           const page = Math.ceil(total / 100);
           const page_array = Array.from({ length: page }, (v, k) => k + 1);
-          async.concat(page_array,
+          async.concat(
+            page_array,
             (item, callback) => kw_render_tracks(url, item, callback),
             (err, tracks) => {
               fn({
                 tracks,
                 info,
               });
-            });
+            }
+          );
           /*
           async_process_list(data.musiclist, kw_render_playlist_result_item, [],
             (err, tracks) => fn({

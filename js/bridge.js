@@ -49,12 +49,14 @@ function addFrontPlayerListener(listener) {
 }
 
 function addBackgroundPlayerListener(listener) {
-  return (chrome || browser).runtime.onMessage.addListener((msg, sender, res) => {
-    if (!msg.type.startsWith('BG_PLAYER:')) {
-      return null;
-    }
-    return listener(msg, sender, res);
-  });
+  return (chrome || browser).runtime.onMessage.addListener(
+    (msg, sender, res) => {
+      if (!msg.type.startsWith('BG_PLAYER:')) {
+        return null;
+      }
+      return listener(msg, sender, res);
+    },
+  );
 }
 
 function addPlayerListener(mode, listener) {

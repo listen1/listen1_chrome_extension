@@ -69,21 +69,24 @@ function cached(key, instance) {
   const hit = playlistCache.getItem(key);
   const list_id = getParameterByName('list_id', key);
   const provider = getProviderByItemId(list_id);
-  const shouldUseCache = (provider !== myplaylist) && (provider !== localmusic);
-  if (shouldUseCache && (hit !== null) && (nowts - hit.ts <= maxAge)) {
+  const shouldUseCache = provider !== myplaylist && provider !== localmusic;
+  if (shouldUseCache && hit !== null && nowts - hit.ts <= maxAge) {
     return {
       success: (fn) => fn(hit.playlist),
     };
   }
   return {
-    success: (fn) => instance.success((playlist) => {
-      playlistCache.setItem(key, { playlist, ts: nowts });
-      fn(playlist);
-    }),
+    success: (fn) =>
+      instance.success((playlist) => {
+        playlistCache.setItem(key, { playlist, ts: nowts });
+        fn(playlist);
+      }),
   };
 }
 
-ngloWebManager.factory('loWeb', ['$rootScope', '$log',
+ngloWebManager.factory('loWeb', [
+  '$rootScope',
+  '$log',
   () => ({
     get(url) {
       const path = url.split('?')[0];
@@ -112,19 +115,26 @@ ngloWebManager.factory('loWeb', ['$rootScope', '$log',
             });
           });
           return {
-            success: (fn) => async.parallel(callbackArray, (err, platformResultArray) => {
-              // TODO: nicer pager, playlist support
-              const result = { result: [], total: 1000, type: platformResultArray[0].type };
-              const maxLength = Math.max(...platformResultArray.map((elem) => elem.result.length));
-              for (let i = 0; i < maxLength; i += 1) {
-                platformResultArray.forEach((elem) => {
-                  if (i < elem.result.length) {
-                    result.result.push(elem.result[i]);
-                  }
-                });
-              }
-              return fn(result);
-            }),
+            success: (fn) =>
+              async.parallel(callbackArray, (err, platformResultArray) => {
+                // TODO: nicer pager, playlist support
+                const result = {
+                  result: [],
+                  total: 1000,
+                  type: platformResultArray[0].type,
+                };
+                const maxLength = Math.max(
+                  ...platformResultArray.map((elem) => elem.result.length)
+                );
+                for (let i = 0; i < maxLength; i += 1) {
+                  platformResultArray.forEach((elem) => {
+                    if (i < elem.result.length) {
+                      result.result.push(elem.result[i]);
+                    }
+                  });
+                }
+                return fn(result);
+              }),
           };
         }
         const provider = getProviderByName(source);
@@ -168,13 +178,19 @@ ngloWebManager.factory('loWeb', ['$rootScope', '$log',
         };
       }
       if (path === '/remove_myplaylist') {
-        myplaylist.remove_myplaylist(request.data.playlist_type, request.data.list_id);
+        myplaylist.remove_myplaylist(
+          request.data.playlist_type,
+          request.data.list_id
+        );
         return {
           success: (fn) => fn(),
         };
       }
       if (path === '/add_myplaylist') {
-        const newPlaylist = myplaylist.add_myplaylist(request.data.list_id, request.data.track);
+        const newPlaylist = myplaylist.add_myplaylist(
+          request.data.list_id,
+          request.data.track
+        );
         return {
           success: (fn) => fn(newPlaylist),
         };
@@ -184,17 +200,26 @@ ngloWebManager.factory('loWeb', ['$rootScope', '$log',
         return provider.add_playlist(request.data.list_id, request.data.tracks);
       }
       if (path === '/remove_track_from_myplaylist') {
-        myplaylist.remove_from_myplaylist(request.data.list_id, request.data.track_id);
+        myplaylist.remove_from_myplaylist(
+          request.data.list_id,
+          request.data.track_id
+        );
         return {
           success: (fn) => fn(),
         };
       }
       if (path === '/remove_track_from_playlist') {
         const provider = getProviderByItemId(request.data.list_id);
-        return provider.remove_from_playlist(request.data.list_id, request.data.track_id);
+        return provider.remove_from_playlist(
+          request.data.list_id,
+          request.data.track_id
+        );
       }
       if (path === '/create_myplaylist') {
-        myplaylist.create_myplaylist(request.data.list_title, request.data.track);
+        myplaylist.create_myplaylist(
+          request.data.list_title,
+          request.data.track
+        );
         return {
           success: (fn) => {
             fn();
@@ -202,8 +227,11 @@ ngloWebManager.factory('loWeb', ['$rootScope', '$log',
         };
       }
       if (path === '/edit_myplaylist') {
-        myplaylist.edit_myplaylist(request.data.list_id,
-          request.data.title, request.data.cover_img_url);
+        myplaylist.edit_myplaylist(
+          request.data.list_id,
+          request.data.title,
+          request.data.cover_img_url
+        );
         return {
           success: (fn) => fn(),
         };
@@ -224,8 +252,8 @@ ngloWebManager.factory('loWeb', ['$rootScope', '$log',
       if (path === '/merge_playlist') {
         const { source, target } = request.data;
 
-        const tarData = (localStorage.getObject(target)).tracks;
-        const srcData = (localStorage.getObject(source)).tracks;
+        const tarData = localStorage.getObject(target).tracks;
+        const srcData = localStorage.getObject(source).tracks;
         tarData.forEach((tarTrack) => {
           if (!srcData.find((srcTrack) => srcTrack.id === tarTrack.id)) {
             myplaylist.add_myplaylist(source, tarTrack);
@@ -256,7 +284,10 @@ ngloWebManager.factory('loWeb', ['$rootScope', '$log',
               // compare search track and track to check if they are same
               // TODO: better similar compare method (duration, md5)
               if (!searchTrack.disable) {
-                if ((searchTrack.title === track.title) && (searchTrack.artist === track.artist)) {
+                if (
+                  searchTrack.title === track.title &&
+                  searchTrack.artist === track.artist
+                ) {
                   return callback(searchTrack);
                 }
               }
@@ -271,12 +302,16 @@ ngloWebManager.factory('loWeb', ['$rootScope', '$log',
       function getUrlFromTrack(track, source, callback) {
         const provider = getProviderByName(source);
         const soundInfo = {};
-        provider.bootstrap_track(soundInfo, track, () => {
-          callback(soundInfo.url);
-        },
-        () => {
-          callback(null);
-        });
+        provider.bootstrap_track(
+          soundInfo,
+          track,
+          () => {
+            callback(soundInfo.url);
+          },
+          () => {
+            callback(null);
+          }
+        );
       }
 
       function getUrlFromSame(track, source, callback) {
@@ -313,29 +348,30 @@ ngloWebManager.factory('loWeb', ['$rootScope', '$log',
             getUrlFnList.push(makeFn(track, failover_source_list[i]));
           }
 
-          async.parallel(
-            getUrlFnList,
-            (err) => {
-              if (err) {
-                // use error to make instant return, error contains url
-                // eslint-disable-next-line no-param-reassign
-                sound.url = err;
-                playerSuccessCallback();
-                success();
-                return;
-              }
+          async.parallel(getUrlFnList, (err) => {
+            if (err) {
+              // use error to make instant return, error contains url
+              // eslint-disable-next-line no-param-reassign
+              sound.url = err;
+              playerSuccessCallback();
+              success();
+              return;
+            }
 
-              playerFailCallback();
-              failure();
-            },
-          );
+            playerFailCallback();
+            failure();
+          });
         }
 
         const { source } = track;
         const provider = getProviderByName(source);
 
-        provider.bootstrap_track(sound, track, successCallback,
-          failureCallback);
+        provider.bootstrap_track(
+          sound,
+          track,
+          successCallback,
+          failureCallback
+        );
       };
     },
   }),
