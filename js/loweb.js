@@ -1,4 +1,4 @@
-/* global async */
+/* global async LRUCache */
 /* global netease xiami qq kugou kuwo bilibili migu localmusic myplaylist */
 const PROVIDERS = [{
   name: 'netease',
@@ -67,28 +67,10 @@ function getProviderByItemId(itemId) {
 }
 
 /* cache for all playlist request except myplaylist and localmusic */
-const CACHE_SIZE = 100;
-const maxAge = 60 * 60 * 1000; // 1 hour cache expire;
-const playlistCache = new Cache(CACHE_SIZE);
-
-function cached(key, instance) {
-  const nowts = +new Date();
-  const hit = playlistCache.getItem(key);
-  const list_id = (new URL(key, window.location)).searchParams.get('list_id');
-  const provider = getProviderByItemId(list_id);
-  const shouldUseCache = (provider !== myplaylist) && (provider !== localmusic);
-  if (shouldUseCache && (hit !== null) && (nowts - hit.ts <= maxAge)) {
-    return {
-      success: (fn) => fn(hit.playlist),
-    };
-  }
-  return {
-    success: (fn) => instance.success((playlist) => {
-      playlistCache.setItem(key, { playlist, ts: nowts });
-      fn(playlist);
-    }),
-  };
-}
+const playlistCache = new LRUCache({
+  max: 100,
+  maxAge: 60 * 60 * 1000, // 1 hour cache expire
+});
 
 function queryStringify(options) {
   const query = JSON.parse(JSON.stringify(options));
@@ -161,10 +143,24 @@ const MediaService = {
   getPlaylist(listId, useCache = true) {
     const provider = getProviderByItemId(listId);
     const url = `/playlist?list_id=${listId}`;
+    let hit = null;
     if (useCache) {
-      return provider.get_playlist(url);
+      hit = playlistCache.get(listId);
     }
-    return cached(url, provider.get_playlist(url));
+
+    if (hit) {
+      return {
+        success: (fn) => fn(hit),
+      };
+    }
+    return {
+      success: (fn) => provider.get_playlist(url).success((playlist) => {
+        if (provider !== myplaylist && provider !== localmusic) {
+          playlistCache.set(listId, playlist);
+        }
+        fn(playlist);
+      }),
+    };
   },
 
   clonePlaylist(id, type) {
