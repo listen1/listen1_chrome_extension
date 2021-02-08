@@ -243,7 +243,7 @@ const main = () => {
           return;
         }
         let poped = $scope.window_url_stack.pop();
-        if ($scope.window_url_stack.length > 0 && $scope.window_url_stack[$scope.window_url_stack.length - 1].url === '/now_playing') {
+        if (($scope.window_url_stack.reverse()[0] || {}).url === '/now_playing') {
           poped = $scope.window_url_stack.pop();
         }
         $scope.window_poped_url_stack.push(poped.url);
@@ -251,13 +251,13 @@ const main = () => {
           $scope.closeWindow(poped.offset);
         } else {
           $scope.resetWindow(poped.offset);
-          const lastWindow = $scope.window_url_stack[$scope.window_url_stack.length - 1];
+          const lastWindow = $scope.window_url_stack.reverse()[0].url;
           refreshWindow(lastWindow.url, poped.offset);
         }
       };
 
       $scope.toggleNowPlaying = () => {
-        if ($scope.window_url_stack.reverse()[0] === '/now_playing') {
+        if (($scope.window_url_stack.reverse()[0] || {}).url === '/now_playing') {
           $scope.popWindow();
           return;
         }
@@ -289,13 +289,13 @@ const main = () => {
         const url = `/playlist?list_id=${list_id}`;
         // save current scrolltop
         const offset = document.getElementsByClassName('browser')[0].scrollTop;
-        if ($scope.window_url_stack.reverse()[0] === url) {
+        if (($scope.window_url_stack.reverse()[0] || {}).url === url) {
           return;
         }
         $scope.is_window_hidden = 0;
         $scope.resetWindow();
 
-        if ($scope.window_url_stack.reverse()[0] === '/now_playing') {
+        if (($scope.window_url_stack.reverse()[0] || {}).url === '/now_playing') {
           // if now playing is top, pop it
           $scope.window_url_stack.pop();
         }
