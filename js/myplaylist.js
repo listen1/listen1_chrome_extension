@@ -25,7 +25,9 @@ const myplaylistFactory = () => {
           const playlist = localStorage.getObject(id);
           if (playlist !== null && playlist.tracks !== undefined) {
             // clear url field when load old playlist
-            playlist.tracks.forEach((e) => { delete e.url; });
+            playlist.tracks.forEach((e) => {
+              delete e.url;
+            });
           }
           res.push(playlist);
           return res;
@@ -42,7 +44,10 @@ const myplaylistFactory = () => {
         const playlist = localStorage.getObject(list_id);
         // clear url field when load old playlist
         if (playlist !== null && playlist.tracks !== undefined) {
-          playlist.tracks.forEach((e) => { delete e.url; e.disabled = false; });
+          playlist.tracks.forEach((e) => {
+            delete e.url;
+            e.disabled = false;
+          });
         }
         fn(playlist);
       },
@@ -55,8 +60,7 @@ const myplaylistFactory = () => {
         .toString(16)
         .substring(1);
     }
-    return `${s4() + s4()}-${s4()}-${s4()}-${
-      s4()}-${s4()}${s4()}${s4()}`;
+    return `${s4() + s4()}-${s4()}-${s4()}-${s4()}-${s4()}${s4()}${s4()}`;
   }
 
   const save_myplaylist = (playlist_type, playlistObj) => {

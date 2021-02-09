@@ -1,6 +1,8 @@
 /* global getPlayer getPlayerAsync addPlayerListener getLocalStorageValue */
 {
-  const mode = getLocalStorageValue('enable_stop_when_close', true) ? 'front' : 'background';
+  const mode = getLocalStorageValue('enable_stop_when_close', true)
+    ? 'front'
+    : 'background';
 
   const myPlayer = getPlayer(mode);
   const l1Player = {
@@ -222,26 +224,31 @@
     if (msg.type === 'BG_PLAYER:RETRIEVE_URL') {
       if (l1Player.bootstrapTrack) {
         let url = '';
-        l1Player.bootstrapTrack({
-          /**
-           * A mock sound object to set url back in player.
-           * @param {string} val
-           */
-          set url(val) {
-            url = val;
+        l1Player.bootstrapTrack(
+          {
+            /**
+             * A mock sound object to set url back in player.
+             * @param {string} val
+             */
+            set url(val) {
+              url = val;
+            },
           },
-        }, msg.data, () => {
-          getPlayerAsync(mode, (player) => {
-            player.setMediaURI(url, msg.data.url || msg.data.id);
-            player.setAudioDisabled(false, msg.data.index);
-            player.finishLoad(msg.data.index, msg.data.playNow);
-          });
-        }, () => {
-          getPlayerAsync(mode, (player) => {
-            player.setAudioDisabled(true, msg.data.index);
-            player.skip('next');
-          });
-        });
+          msg.data,
+          () => {
+            getPlayerAsync(mode, (player) => {
+              player.setMediaURI(url, msg.data.url || msg.data.id);
+              player.setAudioDisabled(false, msg.data.index);
+              player.finishLoad(msg.data.index, msg.data.playNow);
+            });
+          },
+          () => {
+            getPlayerAsync(mode, (player) => {
+              player.setAudioDisabled(true, msg.data.index);
+              player.skip('next');
+            });
+          }
+        );
       }
     }
     if (res !== undefined) {

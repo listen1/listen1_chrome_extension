@@ -87,10 +87,11 @@ function github() {
 
     isLoggedIn: () => localStorage.getObject('githubOauthAccessKey') !== null,
 
-    deparam: (params) => (new URLSearchParams(params).keys).reduce((r, keys) => {
-      r[keys] = params[keys]; // eslint-disable-line no-param-reassign
-      return r;
-    }, {}),
+    deparam: (params) =>
+      new URLSearchParams(params).keys.reduce((r, keys) => {
+        r[keys] = params[keys]; // eslint-disable-line no-param-reassign
+        return r;
+      }, {}),
   };
 
   window.Github = Github;

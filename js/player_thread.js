@@ -174,11 +174,15 @@
               navigator.mediaSession.metadata = new MediaMetadata({
                 title: self.currentAudio.title,
                 artist: self.currentAudio.artist,
-                album: `Listen1  •  ${(self.currentAudio.album || '<???>').padEnd(100)}`,
-                artwork: [{
-                  src: self.currentAudio.img_url,
-                  sizes: '300x300',
-                }],
+                album: `Listen1  •  ${(
+                  self.currentAudio.album || '<???>'
+                ).padEnd(100)}`,
+                artwork: [
+                  {
+                    src: self.currentAudio.img_url,
+                    sizes: '300x300',
+                  },
+                ],
               });
             }
             self.currentAudio.disabled = false;
@@ -216,10 +220,8 @@
             self.sendPlayingEvent('Stopped');
             self.sendFullUpdate();
           },
-          onseek() {
-          },
-          onvolume() {
-          },
+          onseek() {},
+          onvolume() {},
           onloaderror(id, err) {
             playerSendMessage(this.mode, {
               type: 'BG_PLAYER:PLAY_FAILED',
@@ -266,7 +268,8 @@
       // Get the next track based on the direction of the track.
       let { index } = this;
       let nextIndex = null;
-      if (this._loop_mode === 2 || direction === 'random') { // random
+      if (this._loop_mode === 2 || direction === 'random') {
+        // random
         nextIndex = () => Math.floor(Math.random() * this.playlist.length);
       } else if (direction === 'prev') {
         nextIndex = (idx) => (idx - 1) % this.playlist.length;
@@ -336,7 +339,7 @@
     }
 
     adjustVolume(inc) {
-      this.volume = (this.volume + inc ? 0.1 : -0.1);
+      this.volume = this.volume + inc ? 0.1 : -0.1;
       this.sendVolumeEvent();
       this.sendFrameUpdate();
     }
@@ -382,7 +385,7 @@
      */
     static formatTime(secs) {
       const minutes = Math.floor(secs / 60) || 0;
-      const seconds = (secs - minutes * 60) || 0;
+      const seconds = secs - minutes * 60 || 0;
 
       return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
     }
@@ -482,8 +485,12 @@
   window.threadPlayer.setRefreshRate();
   window.threadPlayer.sendFullUpdate();
   // TODO: enable after the play url retrieve logic moved to bg
-  navigator.mediaSession.setActionHandler('play', () => { window.threadPlayer.play(); });
-  navigator.mediaSession.setActionHandler('pause', () => { window.threadPlayer.pause(); });
+  navigator.mediaSession.setActionHandler('play', () => {
+    window.threadPlayer.play();
+  });
+  navigator.mediaSession.setActionHandler('pause', () => {
+    window.threadPlayer.pause();
+  });
   // navigator.mediaSession.setActionHandler('nexttrack', () => window.player.skip('next'));
   // navigator.mediaSession.setActionHandler('previoustrack', () => window.player.skip('prev'));
   playerSendMessage(this.mode, {

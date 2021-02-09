@@ -9,12 +9,21 @@
 /* eslint-disable import/no-unresolved */
 
 const main = () => {
-  const app = angular.module('listenone', ['ui-notification', 'loWebManager', 'cfp.hotkeys', 'lastfmClient', 'githubClient', 'pascalprecht.translate']);
+  const app = angular.module('listenone', [
+    'ui-notification',
+    'loWebManager',
+    'cfp.hotkeys',
+    'lastfmClient',
+    'githubClient',
+    'pascalprecht.translate',
+  ]);
   setPrototypeOfLocalStorage();
   app.config([
     '$compileProvider',
     ($compileProvider) => {
-      $compileProvider.imgSrcSanitizationWhitelist(/^\s*(https?|ftp|mailto|chrome-extension|moz-extension|file):/);
+      $compileProvider.imgSrcSanitizationWhitelist(
+        /^\s*(https?|ftp|mailto|chrome-extension|moz-extension|file):/
+      );
     },
   ]);
 
@@ -42,22 +51,30 @@ const main = () => {
     });
   });
 
-  app.config(['$translateProvider', ($translateProvider) => {
-    // Register a loader for the static files
-    $translateProvider.useStaticFilesLoader({
-      prefix: './i18n/',
-      suffix: '.json',
-    });
-    $translateProvider.use('zh_CN');
-    // Tell the module what language to use by default
-    $translateProvider.preferredLanguage('zh_CN');
-    $translateProvider.useSanitizeValueStrategy('escape');
-  }]);
+  app.config([
+    '$translateProvider',
+    ($translateProvider) => {
+      // Register a loader for the static files
+      $translateProvider.useStaticFilesLoader({
+        prefix: './i18n/',
+        suffix: '.json',
+      });
+      $translateProvider.use('zh_CN');
+      // Tell the module what language to use by default
+      $translateProvider.preferredLanguage('zh_CN');
+      $translateProvider.useSanitizeValueStrategy('escape');
+    },
+  ]);
 
-  app.run(['$q', 'loWeb', '$translate',
+  app.run([
+    '$q',
+    'loWeb',
+    '$translate',
     ($q, loWeb, $translate) => {
       function getAutoChooseSource() {
-        let enableAutoChooseSource = localStorage.getObject('enable_auto_choose_source');
+        let enableAutoChooseSource = localStorage.getObject(
+          'enable_auto_choose_source'
+        );
         if (enableAutoChooseSource === null) {
           // default on
           enableAutoChooseSource = true;
@@ -66,10 +83,10 @@ const main = () => {
       }
       l1Player.setBootstrapTrack(
         loWeb.bootstrapTrack(
-          () => { },
-          () => { },
-          getAutoChooseSource,
-        ),
+          () => {},
+          () => {},
+          getAutoChooseSource
+        )
       );
 
       axios.Axios.prototype.request_original = axios.Axios.prototype.request;
@@ -81,7 +98,7 @@ const main = () => {
 
   l1Player.injectDirectives(app);
 
-  app.filter('playmode_title', () => ((input) => {
+  app.filter('playmode_title', () => (input) => {
     switch (input) {
       case 0:
         return '顺序';
@@ -92,7 +109,7 @@ const main = () => {
       default:
         return '';
     }
-  }));
+  });
 
   function getSourceName(sourceId) {
     if (sourceId === 0) {
@@ -122,55 +139,75 @@ const main = () => {
     return '';
   }
 
-  app.controller('ProfileController', ['$scope', '$translate', ($scope, $translate) => {
-    let defaultLang = 'zh_CN';
-    const supportLangs = ['zh_CN', 'en_US'];
-    if (supportLangs.indexOf(navigator.language) !== -1) {
-      defaultLang = navigator.language;
-    }
-    if (supportLangs.indexOf(localStorage.getObject('language')) !== -1) {
-      defaultLang = localStorage.getObject('language');
-    }
+  app.controller('ProfileController', [
+    '$scope',
+    '$translate',
+    ($scope, $translate) => {
+      let defaultLang = 'zh_CN';
+      const supportLangs = ['zh_CN', 'en_US'];
+      if (supportLangs.indexOf(navigator.language) !== -1) {
+        defaultLang = navigator.language;
+      }
+      if (supportLangs.indexOf(localStorage.getObject('language')) !== -1) {
+        defaultLang = localStorage.getObject('language');
+      }
 
-    $scope.setLang = (langKey) => {
-      // You can change the language during runtime
-      $translate.use(langKey).then(() => {
-        axios.get('./i18n/zh_CN.json')
-          .then((res) => {
+      $scope.setLang = (langKey) => {
+        // You can change the language during runtime
+        $translate.use(langKey).then(() => {
+          axios.get('./i18n/zh_CN.json').then((res) => {
             Object.keys(res.data).forEach((key) => {
               $scope[key] = $translate.instant(key);
             });
           });
-        localStorage.setObject('language', langKey);
-      });
-    };
-    $scope.setLang(defaultLang);
-
-    let defaultTheme = 'white';
-    if (localStorage.getObject('theme') !== null) {
-      defaultTheme = localStorage.getObject('theme');
-    }
-    $scope.setTheme = (theme) => {
-      const themeFiles = {
-        white: 'css/iparanoid.css',
-        black: 'css/origin.css',
+          localStorage.setObject('language', langKey);
+        });
       };
-      // You can change the language during runtime
-      if (themeFiles[theme] !== undefined) {
-        document.getElementById('theme').href = themeFiles[theme];
-        localStorage.setObject('theme', theme);
+      $scope.setLang(defaultLang);
+
+      let defaultTheme = 'white';
+      if (localStorage.getObject('theme') !== null) {
+        defaultTheme = localStorage.getObject('theme');
       }
-    };
-    $scope.setTheme(defaultTheme);
-  }]);
+      $scope.setTheme = (theme) => {
+        const themeFiles = {
+          white: 'css/iparanoid.css',
+          black: 'css/origin.css',
+        };
+        // You can change the language during runtime
+        if (themeFiles[theme] !== undefined) {
+          document.getElementById('theme').href = themeFiles[theme];
+          localStorage.setObject('theme', theme);
+        }
+      };
+      $scope.setTheme(defaultTheme);
+    },
+  ]);
 
   // control main view of page, it can be called any place
-  app.controller('NavigationController', ['$scope',
-    '$timeout', 'Notification', '$rootScope', 'loWeb',
-    'hotkeys', 'lastfm', 'github', 'gist', '$translate',
-    ($scope,
-      $timeout, Notification, $rootScope,
-      loWeb, hotkeys, lastfm, github, gist, $translate) => {
+  app.controller('NavigationController', [
+    '$scope',
+    '$timeout',
+    'Notification',
+    '$rootScope',
+    'loWeb',
+    'hotkeys',
+    'lastfm',
+    'github',
+    'gist',
+    '$translate',
+    (
+      $scope,
+      $timeout,
+      Notification,
+      $rootScope,
+      loWeb,
+      hotkeys,
+      lastfm,
+      github,
+      gist,
+      $translate
+    ) => {
       $rootScope.page_title = 'Listen 1'; // eslint-disable-line no-param-reassign
       $scope.window_url_stack = [];
       $scope.window_poped_url_stack = [];
@@ -203,7 +240,7 @@ const main = () => {
         $scope.closeWindow();
       };
 
-      $scope.$on('search:keyword_change', (event, data) => { // eslint-disable-line no-unused-vars
+      $scope.$on('search:keyword_change', (event, data) => {
         $scope.showTag(3);
       });
 
@@ -225,14 +262,20 @@ const main = () => {
       $scope.showWindow = (url) => {
         // save current scrolltop
         const offset = document.getElementsByClassName('browser')[0].scrollTop;
-        if ($scope.window_url_stack.length > 0
-          && $scope.window_url_stack[$scope.window_url_stack.length - 1] === url) {
+        if (
+          $scope.window_url_stack.length > 0 &&
+          $scope.window_url_stack[$scope.window_url_stack.length - 1] === url
+        ) {
           return;
         }
         $scope.is_window_hidden = 0;
         $scope.resetWindow();
 
-        if ($scope.window_url_stack.length > 0 && $scope.window_url_stack[$scope.window_url_stack.length - 1] === '/now_playing') {
+        if (
+          $scope.window_url_stack.length > 0 &&
+          $scope.window_url_stack[$scope.window_url_stack.length - 1] ===
+            '/now_playing'
+        ) {
           // if now playing is top, pop it
           $scope.window_url_stack.splice(-1, 1);
         }
@@ -257,8 +300,8 @@ const main = () => {
           $scope.playlist_title = data.info.title;
           $scope.playlist_source_url = data.info.source_url;
           $scope.list_id = data.info.id;
-          $scope.is_mine = (data.info.id.slice(0, 2) === 'my');
-          $scope.is_local = (data.info.id.slice(0, 2) === 'lm');
+          $scope.is_mine = data.info.id.slice(0, 2) === 'my';
+          $scope.is_local = data.info.id.slice(0, 2) === 'lm';
           const isfavUrl = `/playlist_contains?type=favorite&list_id=${data.info.id}`;
           loWeb.get(isfavUrl).success((res) => {
             $scope.is_favorite = res.result;
@@ -292,8 +335,8 @@ const main = () => {
           $scope.cover_img_url = data.info.cover_img_url;
           $scope.playlist_title = data.info.title;
           $scope.playlist_source_url = data.info.source_url;
-          $scope.is_mine = (data.info.id.slice(0, 2) === 'my');
-          $scope.is_local = (data.info.id.slice(0, 2) === 'lm');
+          $scope.is_mine = data.info.id.slice(0, 2) === 'my';
+          $scope.is_local = data.info.id.slice(0, 2) === 'lm';
           $timeout(() => {
             document.getElementsByClassName('browser')[0].scrollTop = offset;
           }, 0);
@@ -304,7 +347,11 @@ const main = () => {
           return;
         }
         let poped = $scope.window_url_stack.pop();
-        if ($scope.window_url_stack.length > 0 && $scope.window_url_stack[$scope.window_url_stack.length - 1].url === '/now_playing') {
+        if (
+          $scope.window_url_stack.length > 0 &&
+          $scope.window_url_stack[$scope.window_url_stack.length - 1].url ===
+            '/now_playing'
+        ) {
           poped = $scope.window_url_stack.pop();
         }
         $scope.window_poped_url_stack.push(poped.url);
@@ -312,14 +359,18 @@ const main = () => {
           $scope.closeWindow(poped.offset);
         } else {
           $scope.resetWindow(poped.offset);
-          const lastWindow = $scope.window_url_stack[$scope.window_url_stack.length - 1];
+          const lastWindow =
+            $scope.window_url_stack[$scope.window_url_stack.length - 1];
           refreshWindow(lastWindow.url, poped.offset);
         }
       };
 
       $scope.toggleWindow = (url) => {
-        if ($scope.window_url_stack.length > 0
-          && $scope.window_url_stack[$scope.window_url_stack.length - 1].url === url) {
+        if (
+          $scope.window_url_stack.length > 0 &&
+          $scope.window_url_stack[$scope.window_url_stack.length - 1].url ===
+            url
+        ) {
           return $scope.popWindow();
         }
         return $scope.showWindow(url);
@@ -408,47 +459,56 @@ const main = () => {
         if (dialog_type === 8) {
           $scope.dialog_title = $translate.instant('_EXPORT_TO_GITHUB_GIST');
           $scope.dialog_type = 8;
-          gist.listExistBackup().then((res) => {
-            $scope.myBackup = res;
-          }, (err) => {
-            $scope.myBackup = [];
-          });
+          gist.listExistBackup().then(
+            (res) => {
+              $scope.myBackup = res;
+            },
+            (err) => {
+              $scope.myBackup = [];
+            }
+          );
         }
         if (dialog_type === 10) {
           $scope.dialog_title = $translate.instant('_RECOVER_FROM_GITHUB_GIST');
           $scope.dialog_type = 10;
-          gist.listExistBackup().then((res) => {
-            $scope.myBackup = res;
-          }, (err) => {
-            $scope.myBackup = [];
-          });
+          gist.listExistBackup().then(
+            (res) => {
+              $scope.myBackup = res;
+            },
+            (err) => {
+              $scope.myBackup = [];
+            }
+          );
         }
       };
 
       $scope.chooseDialogOption = (option_id) => {
         const url = '/add_myplaylist';
-        loWeb.post({
-          url,
-          method: 'POST',
-          data:
-            ({
+        loWeb
+          .post({
+            url,
+            method: 'POST',
+            data: {
               list_id: option_id,
               track: $scope.dialog_song,
-            }),
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-          },
-        }).success((playlist) => {
-          Notification.success($translate.instant('_ADD_TO_PLAYLIST_SUCCESS'));
-          $scope.closeDialog();
-          // add to current playing list
-          if (option_id === $scope.current_list_id) {
-            l1Player.addTrack($scope.dialog_song);
-          }
-          if (option_id === $scope.list_id) {
-            $scope.songs = playlist.tracks;
-          }
-        });
+            },
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded',
+            },
+          })
+          .success((playlist) => {
+            Notification.success(
+              $translate.instant('_ADD_TO_PLAYLIST_SUCCESS')
+            );
+            $scope.closeDialog();
+            // add to current playing list
+            if (option_id === $scope.current_list_id) {
+              l1Player.addTrack($scope.dialog_song);
+            }
+            if (option_id === $scope.list_id) {
+              $scope.songs = playlist.tracks;
+            }
+          });
       };
 
       $scope.newDialogOption = (option) => {
@@ -462,65 +522,75 @@ const main = () => {
       $scope.createAndAddPlaylist = () => {
         const url = '/create_myplaylist';
 
-        loWeb.post({
-          url,
-          method: 'POST',
-          data: {
-            list_title: $scope.newlist_title,
-            track: $scope.dialog_song,
-          },
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-          },
-        }).success(() => {
-          $rootScope.$broadcast('myplaylist:update');
-          Notification.success($translate.instant('_ADD_TO_PLAYLIST_SUCCESS'));
-          $scope.closeDialog();
-        });
+        loWeb
+          .post({
+            url,
+            method: 'POST',
+            data: {
+              list_title: $scope.newlist_title,
+              track: $scope.dialog_song,
+            },
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded',
+            },
+          })
+          .success(() => {
+            $rootScope.$broadcast('myplaylist:update');
+            Notification.success(
+              $translate.instant('_ADD_TO_PLAYLIST_SUCCESS')
+            );
+            $scope.closeDialog();
+          });
       };
 
       $scope.editMyPlaylist = () => {
         const url = '/edit_myplaylist';
 
-        loWeb.post({
-          url,
-          method: 'POST',
-          data: {
-            list_id: $scope.list_id,
-            title: $scope.dialog_playlist_title,
-            cover_img_url: $scope.dialog_cover_img_url,
-          },
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-          },
-        }).success(() => {
-          $rootScope.$broadcast('myplaylist:update');
-          $scope.playlist_title = $scope.dialog_playlist_title;
-          $scope.cover_img_url = $scope.dialog_cover_img_url;
-          Notification.success($translate.instant('_EDIT_PLAYLIST_SUCCESS'));
-          $scope.closeDialog();
-        });
+        loWeb
+          .post({
+            url,
+            method: 'POST',
+            data: {
+              list_id: $scope.list_id,
+              title: $scope.dialog_playlist_title,
+              cover_img_url: $scope.dialog_cover_img_url,
+            },
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded',
+            },
+          })
+          .success(() => {
+            $rootScope.$broadcast('myplaylist:update');
+            $scope.playlist_title = $scope.dialog_playlist_title;
+            $scope.cover_img_url = $scope.dialog_cover_img_url;
+            Notification.success($translate.instant('_EDIT_PLAYLIST_SUCCESS'));
+            $scope.closeDialog();
+          });
       };
 
       $scope.mergePlaylist = (target_list_id) => {
         Notification.info($translate.instant('_IMPORTING_PLAYLIST'));
         const url = '/merge_playlist';
-        loWeb.post({
-          url,
-          method: 'POST',
-          data: {
-            source: $scope.list_id,
-            target: target_list_id,
-          },
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-          },
-        }).success(() => {
-          Notification.success($translate.instant('_IMPORTING_PLAYLIST_SUCCESS'));
-          $scope.closeDialog();
-          $scope.popWindow();
-          $scope.showPlaylist($scope.list_id);
-        });
+        loWeb
+          .post({
+            url,
+            method: 'POST',
+            data: {
+              source: $scope.list_id,
+              target: target_list_id,
+            },
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded',
+            },
+          })
+          .success(() => {
+            Notification.success(
+              $translate.instant('_IMPORTING_PLAYLIST_SUCCESS')
+            );
+            $scope.closeDialog();
+            $scope.popWindow();
+            $scope.showPlaylist($scope.list_id);
+          });
       };
 
       $scope.removeSongFromPlaylist = (song, list_id) => {
@@ -531,24 +601,28 @@ const main = () => {
           url = '/remove_track_from_playlist';
         }
 
-        loWeb.post({
-          url,
-          method: 'POST',
-          data: {
-            list_id,
-            track_id: song.id,
-          },
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-          },
-        }).success(() => {
-          // remove song from songs
-          const index = $scope.songs.indexOf(song);
-          if (index > -1) {
-            $scope.songs.splice(index, 1);
-          }
-          Notification.success($translate.instant('_REMOVE_SONG_FROM_PLAYLIST_SUCCESS'));
-        });
+        loWeb
+          .post({
+            url,
+            method: 'POST',
+            data: {
+              list_id,
+              track_id: song.id,
+            },
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded',
+            },
+          })
+          .success(() => {
+            // remove song from songs
+            const index = $scope.songs.indexOf(song);
+            if (index > -1) {
+              $scope.songs.splice(index, 1);
+            }
+            Notification.success(
+              $translate.instant('_REMOVE_SONG_FROM_PLAYLIST_SUCCESS')
+            );
+          });
       };
 
       $scope.closeDialog = () => {
@@ -588,42 +662,50 @@ const main = () => {
 
       $scope.clonePlaylist = (list_id) => {
         const url = '/clone_playlist';
-        loWeb.post({
-          url,
-          method: 'POST',
-          data: {
-            playlist_type: 'my',
-            list_id,
-          },
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-          },
-        }).success(() => {
-          $rootScope.$broadcast('myplaylist:update');
-          $scope.closeWindow();
-          Notification.success($translate.instant('_ADD_TO_PLAYLIST_SUCCESS'));
-        });
+        loWeb
+          .post({
+            url,
+            method: 'POST',
+            data: {
+              playlist_type: 'my',
+              list_id,
+            },
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded',
+            },
+          })
+          .success(() => {
+            $rootScope.$broadcast('myplaylist:update');
+            $scope.closeWindow();
+            Notification.success(
+              $translate.instant('_ADD_TO_PLAYLIST_SUCCESS')
+            );
+          });
       };
 
       $scope.removeMyPlaylist = (list_id) => {
         const url = '/remove_myplaylist';
 
-        loWeb.post({
-          url,
-          method: 'POST',
-          data: {
-            list_id,
-            playlist_type: 'my',
-          },
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-          },
-        }).success(() => {
-          $rootScope.$broadcast('myplaylist:update');
-          $scope.closeDialog();
-          $scope.closeWindow();
-          Notification.success($translate.instant('_REMOVE_PLAYLIST_SUCCESS'));
-        });
+        loWeb
+          .post({
+            url,
+            method: 'POST',
+            data: {
+              list_id,
+              playlist_type: 'my',
+            },
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded',
+            },
+          })
+          .success(() => {
+            $rootScope.$broadcast('myplaylist:update');
+            $scope.closeDialog();
+            $scope.closeWindow();
+            Notification.success(
+              $translate.instant('_REMOVE_PLAYLIST_SUCCESS')
+            );
+          });
       };
 
       $scope.downloadFile = (fileName, fileType, content) => {
@@ -669,7 +751,9 @@ const main = () => {
               return;
             }
 
-            Object.keys(data).forEach((item) => localStorage.setObject(item, data[item]));
+            Object.keys(data).forEach((item) =>
+              localStorage.setObject(item, data[item])
+            );
             $rootScope.$broadcast('myplaylist:update');
             Notification.success('成功导入我的歌单');
           }
@@ -681,21 +765,25 @@ const main = () => {
       $scope.backupMySettings2Gist = (gistId, isPublic) => {
         const items = {};
         Object.keys(localStorage).forEach((key) => {
-          if (key !== 'gistid' && key !== 'githubOauthAccessKey') { // avoid token leak
+          if (key !== 'gistid' && key !== 'githubOauthAccessKey') {
+            // avoid token leak
             items[key] = localStorage.getObject(key);
           }
         });
         const gistFiles = gist.json2gist(items);
         $scope.gistBackupLoading = true;
-        gist.backupMySettings2Gist(gistFiles, gistId, isPublic).then(() => {
-          Notification.clearAll();
-          Notification.success('成功导出我的歌单到Gist');
-          $scope.gistBackupLoading = false;
-        }, (err) => {
-          Notification.clearAll();
-          Notification.warning('导出我的歌单失败，检查后重试');
-          $scope.gistBackupLoading = false;
-        });
+        gist.backupMySettings2Gist(gistFiles, gistId, isPublic).then(
+          () => {
+            Notification.clearAll();
+            Notification.success('成功导出我的歌单到Gist');
+            $scope.gistBackupLoading = false;
+          },
+          (err) => {
+            Notification.clearAll();
+            Notification.warning('导出我的歌单失败，检查后重试');
+            $scope.gistBackupLoading = false;
+          }
+        );
         Notification({
           message: '正在导出我的歌单到Gist...',
           delay: null,
@@ -705,23 +793,28 @@ const main = () => {
       $scope.gistRestoreLoading = false;
       $scope.importMySettingsFromGist = (gistId) => {
         $scope.gistRestoreLoading = true;
-        gist.importMySettingsFromGist(gistId).then((raw) => {
-          gist.gist2json(raw, (data) => {
-            Object.keys(data).forEach((item) => localStorage.setObject(item, data[item]));
+        gist.importMySettingsFromGist(gistId).then(
+          (raw) => {
+            gist.gist2json(raw, (data) => {
+              Object.keys(data).forEach((item) =>
+                localStorage.setObject(item, data[item])
+              );
+              Notification.clearAll();
+              Notification.success('导入我的歌单成功');
+              $scope.gistRestoreLoading = false;
+              $rootScope.$broadcast('myplaylist:update');
+            });
+          },
+          (err) => {
             Notification.clearAll();
-            Notification.success('导入我的歌单成功');
+            if (err === 404) {
+              Notification.warning('未找到备份歌单，请先备份');
+            } else {
+              Notification.warning('导入我的歌单失败，检查后重试');
+            }
             $scope.gistRestoreLoading = false;
-            $rootScope.$broadcast('myplaylist:update');
-          });
-        }, (err) => {
-          Notification.clearAll();
-          if (err === 404) {
-            Notification.warning('未找到备份歌单，请先备份');
-          } else {
-            Notification.warning('导入我的歌单失败，检查后重试');
           }
-          $scope.gistRestoreLoading = false;
-        });
+        );
         Notification({
           message: '正在从Gist导入我的歌单...',
           delay: null,
@@ -744,23 +837,25 @@ const main = () => {
       });
 
       $scope.openUrl = (url) => {
-        loWeb.post({
-          url: '/parse_url',
-          method: 'POST',
-          data: {
-            url,
-          },
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-          },
-        }).success((data) => {
-          const { result } = data;
-          if (result !== undefined) {
-            $scope.showPlaylist(result.id);
-          } else {
-            Notification.info($translate.instant('_FAIL_OPEN_PLAYLIST_URL'));
-          }
-        });
+        loWeb
+          .post({
+            url: '/parse_url',
+            method: 'POST',
+            data: {
+              url,
+            },
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded',
+            },
+          })
+          .success((data) => {
+            const { result } = data;
+            if (result !== undefined) {
+              $scope.showPlaylist(result.id);
+            } else {
+              Notification.info($translate.instant('_FAIL_OPEN_PLAYLIST_URL'));
+            }
+          });
       };
 
       $scope.favoritePlaylist = (list_id) => {
@@ -773,102 +868,117 @@ const main = () => {
         }
       };
       $scope.addFavoritePlaylist = (list_id) => {
-        loWeb.post({
-          url: '/clone_playlist',
-          method: 'POST',
-          data: {
-            playlist_type: 'favorite',
-            list_id,
-          },
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-          },
-        }).success((addResult) => {
-          $rootScope.$broadcast('favoriteplaylist:update');
-          Notification.success($translate.instant('_FAVORITE_PLAYLIST_SUCCESS'));
-        });
+        loWeb
+          .post({
+            url: '/clone_playlist',
+            method: 'POST',
+            data: {
+              playlist_type: 'favorite',
+              list_id,
+            },
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded',
+            },
+          })
+          .success((addResult) => {
+            $rootScope.$broadcast('favoriteplaylist:update');
+            Notification.success(
+              $translate.instant('_FAVORITE_PLAYLIST_SUCCESS')
+            );
+          });
       };
 
       $scope.removeFavoritePlaylist = (list_id) => {
         const url = '/remove_myplaylist';
 
-        loWeb.post({
-          url,
-          method: 'POST',
-          data: {
-            list_id,
-            playlist_type: 'favorite',
-          },
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-          },
-        }).success(() => {
-          $rootScope.$broadcast('favoriteplaylist:update');
-          // $scope.closeWindow();
-          Notification.success($translate.instant('_UNFAVORITE_PLAYLIST_SUCCESS'));
-        });
+        loWeb
+          .post({
+            url,
+            method: 'POST',
+            data: {
+              list_id,
+              playlist_type: 'favorite',
+            },
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded',
+            },
+          })
+          .success(() => {
+            $rootScope.$broadcast('favoriteplaylist:update');
+            // $scope.closeWindow();
+            Notification.success(
+              $translate.instant('_UNFAVORITE_PLAYLIST_SUCCESS')
+            );
+          });
       };
 
       $scope.addLocalMusic = (list_id) => {
         if (isElectron()) {
           const { remote } = require('electron');
           const remoteFunctions = remote.require('./functions.js');
-          remote.dialog.showOpenDialog({
-            title: '添加歌曲',
-            properties: ['openFile', 'multiSelections'],
-            filters: [{
-              name: 'Music Files',
-              extensions: ['mp3', 'flac', 'ape'],
-            }],
-          }).then((result) => {
-            if (result.canceled) {
-              return;
-            }
+          remote.dialog
+            .showOpenDialog({
+              title: '添加歌曲',
+              properties: ['openFile', 'multiSelections'],
+              filters: [
+                {
+                  name: 'Music Files',
+                  extensions: ['mp3', 'flac', 'ape'],
+                },
+              ],
+            })
+            .then((result) => {
+              if (result.canceled) {
+                return;
+              }
 
-            result.filePaths.forEach((fp) => {
-              remoteFunctions.readAudioTags(fp).then((md) => {
-                const track = {
-                  id: `lmtrack_${fp}`,
-                  title: md.common.title,
-                  artist: md.common.artist,
-                  artist_id: `lmartist_${md.common.artist}`,
-                  album: md.common.album,
-                  album_id: `lmalbum_${md.common.album}`,
-                  source: 'localmusic',
-                  source_url: '',
-                  img_url: '',
-                  // url: "lmtrack_"+fp,
-                  sound_url: `file://${fp}`,
-                };
+              result.filePaths.forEach((fp) => {
+                remoteFunctions.readAudioTags(fp).then((md) => {
+                  const track = {
+                    id: `lmtrack_${fp}`,
+                    title: md.common.title,
+                    artist: md.common.artist,
+                    artist_id: `lmartist_${md.common.artist}`,
+                    album: md.common.album,
+                    album_id: `lmalbum_${md.common.album}`,
+                    source: 'localmusic',
+                    source_url: '',
+                    img_url: '',
+                    // url: "lmtrack_"+fp,
+                    sound_url: `file://${fp}`,
+                  };
 
-                const list_id = 'lmplaylist_reserve';
-                const url = '/add_playlist';
-                loWeb.post({
-                  url,
-                  method: 'POST',
-                  data: {
-                    list_id,
-                    tracks: JSON.stringify([track]),
-                  },
-                  headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                  },
-                }).success((res) => {
-                  const { playlist } = res;
-                  $scope.songs = playlist.tracks;
-                  $scope.list_id = playlist.info.id;
-                  $scope.cover_img_url = playlist.info.cover_img_url;
-                  $scope.playlist_title = playlist.info.title;
-                  $scope.playlist_source_url = playlist.info.source_url;
-                  $scope.is_mine = (playlist.info.id.slice(0, 2) === 'my');
-                  $scope.is_local = (playlist.info.id.slice(0, 2) === 'lm');
-                  $scope.$evalAsync();
+                  const list_id = 'lmplaylist_reserve';
+                  const url = '/add_playlist';
+                  loWeb
+                    .post({
+                      url,
+                      method: 'POST',
+                      data: {
+                        list_id,
+                        tracks: JSON.stringify([track]),
+                      },
+                      headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                      },
+                    })
+                    .success((res) => {
+                      const { playlist } = res;
+                      $scope.songs = playlist.tracks;
+                      $scope.list_id = playlist.info.id;
+                      $scope.cover_img_url = playlist.info.cover_img_url;
+                      $scope.playlist_title = playlist.info.title;
+                      $scope.playlist_source_url = playlist.info.source_url;
+                      $scope.is_mine = playlist.info.id.slice(0, 2) === 'my';
+                      $scope.is_local = playlist.info.id.slice(0, 2) === 'lm';
+                      $scope.$evalAsync();
+                    });
                 });
               });
+            })
+            .catch((err) => {
+              // console.log(err);
             });
-          }).catch((err) => {
-            // console.log(err);
-          });
         }
       };
     },
@@ -885,18 +995,37 @@ const main = () => {
     return ret;
   });
 
-  app.directive('volumeWheel', () => ((scope, element, attrs) => {
+  app.directive('volumeWheel', () => (scope, element, attrs) => {
     element.bind('mousewheel', () => {
       l1Player.adjustVolume(window.event.wheelDelta > 0);
     });
-  }));
+  });
 
-  app.controller('PlayController', ['$scope', '$timeout', '$log',
-    '$anchorScroll', '$location',
-    '$rootScope', 'Notification',
-    'loWeb', 'hotkeys', 'lastfm', '$translate',
-    ($scope, $timeout, $log, $anchorScroll, $location,
-      $rootScope, Notification, loWeb, hotkeys, lastfm, $translate) => {
+  app.controller('PlayController', [
+    '$scope',
+    '$timeout',
+    '$log',
+    '$anchorScroll',
+    '$location',
+    '$rootScope',
+    'Notification',
+    'loWeb',
+    'hotkeys',
+    'lastfm',
+    '$translate',
+    (
+      $scope,
+      $timeout,
+      $log,
+      $anchorScroll,
+      $location,
+      $rootScope,
+      Notification,
+      loWeb,
+      hotkeys,
+      lastfm,
+      $translate
+    ) => {
       $scope.menuHidden = true;
       $scope.volume = l1Player.status.volume;
       $scope.mute = l1Player.status.muted;
@@ -909,7 +1038,7 @@ const main = () => {
       $scope.lastTrackId = null;
 
       $scope.enableGloablShortcut = false;
-      $scope.isChrome = (!isElectron());
+      $scope.isChrome = !isElectron();
       $scope.isMac = false;
 
       $scope.currentDuration = '0:00';
@@ -958,13 +1087,30 @@ const main = () => {
         } else {
           l1Player.setVolume($scope.volume);
         }
-        $scope.enableGlobalShortCut = localStorage.getObject('enable_global_shortcut');
-        $scope.enableLyricFloatingWindow = localStorage.getObject('enable_lyric_floating_window');
-        $scope.enableLyricTranslation = localStorage.getObject('enable_lyric_translation');
-        $scope.enableLyricFloatingWindowTranslation = localStorage.getObject('enable_lyric_floating_window_translation');
-        $scope.enableAutoChooseSource = getLocalStorageValue('enable_auto_choose_source', true);
-        $scope.enableStopWhenClose = getLocalStorageValue('enable_stop_when_close', true);
-        $scope.enableNowplayingCoverBackground = getLocalStorageValue('enable_nowplaying_cover_background', false);
+        $scope.enableGlobalShortCut = localStorage.getObject(
+          'enable_global_shortcut'
+        );
+        $scope.enableLyricFloatingWindow = localStorage.getObject(
+          'enable_lyric_floating_window'
+        );
+        $scope.enableLyricTranslation = localStorage.getObject(
+          'enable_lyric_translation'
+        );
+        $scope.enableLyricFloatingWindowTranslation = localStorage.getObject(
+          'enable_lyric_floating_window_translation'
+        );
+        $scope.enableAutoChooseSource = getLocalStorageValue(
+          'enable_auto_choose_source',
+          true
+        );
+        $scope.enableStopWhenClose = getLocalStorageValue(
+          'enable_stop_when_close',
+          true
+        );
+        $scope.enableNowplayingCoverBackground = getLocalStorageValue(
+          'enable_nowplaying_cover_background',
+          false
+        );
 
         $scope.applyGlobalShortcut();
         $scope.openLyricFloatingWindow();
@@ -986,7 +1132,10 @@ const main = () => {
         }
 
         // check if globalShortcuts is allowed
-        localStorage.setObject('enable_global_shortcut', $scope.enableGlobalShortCut);
+        localStorage.setObject(
+          'enable_global_shortcut',
+          $scope.enableGlobalShortCut
+        );
 
         const { ipcRenderer } = require('electron');
         ipcRenderer.send('control', message);
@@ -1005,7 +1154,10 @@ const main = () => {
         } else {
           message = 'disable_lyric_floating_window';
         }
-        localStorage.setObject('enable_lyric_floating_window', $scope.enableLyricFloatingWindow);
+        localStorage.setObject(
+          'enable_lyric_floating_window',
+          $scope.enableLyricFloatingWindow
+        );
         const { ipcRenderer } = require('electron');
         ipcRenderer.send('control', message);
       };
@@ -1016,7 +1168,8 @@ const main = () => {
 
       $scope.changePlaymode = () => {
         const playmodeCount = 3;
-        $scope.settings.playmode = ($scope.settings.playmode + 1) % playmodeCount;
+        $scope.settings.playmode =
+          ($scope.settings.playmode + 1) % playmodeCount;
         switchMode($scope.settings.playmode);
         $scope.saveLocalSettings();
       };
@@ -1083,7 +1236,10 @@ const main = () => {
           return newstr;
         }
 
-        const process = (result, timeResult, translationFlag) => (line, index) => {
+        const process = (result, timeResult, translationFlag) => (
+          line,
+          index
+        ) => {
           const tagReg = /\[\D*:([^\]]+)\]/g;
           const tagRegResult = tagReg.exec(line);
           if (tagRegResult) {
@@ -1108,11 +1264,18 @@ const main = () => {
               '&apos;': "'",
             };
             timeResult.push({
-              content: line.replace(timeRegResult[0], '')
-                .replace(/&(?:amp|lt|gt|quot|#39|apos);/g, (match) => htmlUnescapes[match]),
-              seconds: parseInt(timeRegResult[1], 10) * 60 * 1000 // min
-                + parseInt(timeRegResult[2], 10) * 1000 // sec
-                + (timeRegResult[3] ? parseInt(rightPadding(timeRegResult[3], 3, '0'), 10) : 0), // microsec
+              content: line
+                .replace(timeRegResult[0], '')
+                .replace(
+                  /&(?:amp|lt|gt|quot|#39|apos);/g,
+                  (match) => htmlUnescapes[match]
+                ),
+              seconds:
+                parseInt(timeRegResult[1], 10) * 60 * 1000 + // min
+                parseInt(timeRegResult[2], 10) * 1000 + // sec
+                (timeRegResult[3]
+                  ? parseInt(rightPadding(timeRegResult[3], 3, '0'), 10)
+                  : 0), // microsec
               translationFlag,
               index,
             });
@@ -1151,7 +1314,9 @@ const main = () => {
 
         return result;
       }
-      const mode = getLocalStorageValue('enable_stop_when_close', true) ? 'front' : 'background';
+      const mode = getLocalStorageValue('enable_stop_when_close', true)
+        ? 'front'
+        : 'background';
 
       getPlayer(mode).setMode(mode);
       if (mode === 'front') {
@@ -1164,7 +1329,10 @@ const main = () => {
       }
 
       addPlayerListener(mode, (msg, sender, sendResponse) => {
-        if (typeof msg.type === 'string' && msg.type.split(':')[0] === 'BG_PLAYER') {
+        if (
+          typeof msg.type === 'string' &&
+          msg.type.split(':')[0] === 'BG_PLAYER'
+        ) {
           switch (msg.type.split(':').slice(1).join('')) {
             case 'READY': {
               break;
@@ -1178,7 +1346,9 @@ const main = () => {
             }
 
             case 'VOLUME': {
-              $scope.$evalAsync(() => { $scope.volume = msg.data; });
+              $scope.$evalAsync(() => {
+                $scope.volume = msg.data;
+              });
               break;
             }
 
@@ -1198,36 +1368,57 @@ const main = () => {
                   }
                 }
               });
-              if (lastObject && lastObject.lineNumber !== $scope.lyricLineNumber) {
+              if (
+                lastObject &&
+                lastObject.lineNumber !== $scope.lyricLineNumber
+              ) {
                 const lineElement = document.querySelector(
-                  `.page .playsong-detail .detail-songinfo .lyric p[data-line="${lastObject.lineNumber}"]`,
+                  `.page .playsong-detail .detail-songinfo .lyric p[data-line="${lastObject.lineNumber}"]`
                 );
-                const windowHeight = document.querySelector('.page .playsong-detail .detail-songinfo .lyric').offsetHeight;
+                const windowHeight = document.querySelector(
+                  '.page .playsong-detail .detail-songinfo .lyric'
+                ).offsetHeight;
 
                 const adjustOffset = 30;
-                const offset = lineElement.offsetTop - windowHeight / 2 + adjustOffset;
+                const offset =
+                  lineElement.offsetTop - windowHeight / 2 + adjustOffset;
                 smoothScrollTo(document.querySelector('.lyric'), offset, 500);
                 $scope.lyricLineNumber = lastObject.lineNumber;
-                if (lastObjectTrans
-                  && lastObjectTrans.lineNumber !== $scope.lyricLineNumberTrans) {
+                if (
+                  lastObjectTrans &&
+                  lastObjectTrans.lineNumber !== $scope.lyricLineNumberTrans
+                ) {
                   $scope.lyricLineNumberTrans = lastObjectTrans.lineNumber;
                 }
                 if (isElectron()) {
                   const { ipcRenderer } = require('electron');
-                  const currentLyric = $scope.lyricArray[lastObject.lineNumber].content;
+                  const currentLyric =
+                    $scope.lyricArray[lastObject.lineNumber].content;
                   let currentLyricTrans = '';
-                  if ($scope.enableLyricFloatingWindowTranslation === true && lastObjectTrans) {
-                    currentLyricTrans = $scope.lyricArray[lastObjectTrans.lineNumber].content;
+                  if (
+                    $scope.enableLyricFloatingWindowTranslation === true &&
+                    lastObjectTrans
+                  ) {
+                    currentLyricTrans =
+                      $scope.lyricArray[lastObjectTrans.lineNumber].content;
                   }
-                  ipcRenderer.send('currentLyric', { lyric: currentLyric, tlyric: currentLyricTrans });
+                  ipcRenderer.send('currentLyric', {
+                    lyric: currentLyric,
+                    tlyric: currentLyricTrans,
+                  });
                 }
               }
 
               // 'currentTrack:duration'
               (() => {
                 const durationSec = Math.floor(msg.data.duration);
-                const durationStr = `${Math.floor(durationSec / 60)}:${(`0${durationSec % 60}`).substr(-2)}`;
-                if (msg.data.duration === 0 || $scope.currentDuration === durationStr) {
+                const durationStr = `${Math.floor(durationSec / 60)}:${`0${
+                  durationSec % 60
+                }`.substr(-2)}`;
+                if (
+                  msg.data.duration === 0 ||
+                  $scope.currentDuration === durationStr
+                ) {
                   return;
                 }
                 $scope.currentDuration = durationStr;
@@ -1239,10 +1430,13 @@ const main = () => {
                   if (msg.data.duration === 0) {
                     $scope.myProgress = 0;
                   } else {
-                    $scope.myProgress = (msg.data.pos / msg.data.duration) * 100;
+                    $scope.myProgress =
+                      (msg.data.pos / msg.data.duration) * 100;
                   }
                   const posSec = Math.floor(msg.data.pos);
-                  const posStr = `${Math.floor(posSec / 60)}:${(`0${posSec % 60}`).substr(-2)}`;
+                  const posStr = `${Math.floor(posSec / 60)}:${`0${
+                    posSec % 60
+                  }`.substr(-2)}`;
                   $scope.currentPosition = posStr;
                 });
               }
@@ -1270,7 +1464,7 @@ const main = () => {
               const track = msg.data;
               $rootScope.page_title = `▶ ${track.title} - ${track.artist}`;
               if (lastfm.isAuthorized()) {
-                lastfm.sendNowPlaying(track.title, track.artist, () => { });
+                lastfm.sendNowPlaying(track.title, track.artist, () => {});
               }
 
               if (track.lyric_url) {
@@ -1315,9 +1509,13 @@ const main = () => {
               });
               if ($rootScope.page_title !== undefined) {
                 if (msg.data.isPlaying) {
-                  $rootScope.page_title = `▶ ${$rootScope.page_title.slice($rootScope.page_title.indexOf(' '))}`;
+                  $rootScope.page_title = `▶ ${$rootScope.page_title.slice(
+                    $rootScope.page_title.indexOf(' ')
+                  )}`;
                 } else {
-                  $rootScope.page_title = `❚❚ ${$rootScope.page_title.slice($rootScope.page_title.indexOf(' '))}`;
+                  $rootScope.page_title = `❚❚ ${$rootScope.page_title.slice(
+                    $rootScope.page_title.indexOf(' ')
+                  )}`;
                 }
               } else {
                 $rootScope.page_title = 'Listen 1';
@@ -1337,8 +1535,13 @@ const main = () => {
                 }
                 // send lastfm scrobble
                 const track = l1Player.getTrackById(l1Player.status.playing.id);
-                lastfm.scrobble(l1Player.status.playing.playedFrom,
-                  track.title, track.artist, track.album, () => { });
+                lastfm.scrobble(
+                  l1Player.status.playing.playedFrom,
+                  track.title,
+                  track.artist,
+                  track.album,
+                  () => {}
+                );
               }
 
               break;
@@ -1428,48 +1631,71 @@ const main = () => {
 
       $scope.toggleLyricTranslation = () => {
         $scope.enableLyricTranslation = !$scope.enableLyricTranslation;
-        localStorage.setObject('enable_lyric_translation', $scope.enableLyricTranslation);
+        localStorage.setObject(
+          'enable_lyric_translation',
+          $scope.enableLyricTranslation
+        );
       };
 
       $scope.toggleLyricFloatingWindowTranslation = () => {
         $scope.enableLyricFloatingWindowTranslation = !$scope.enableLyricFloatingWindowTranslation;
-        localStorage.setObject('enable_lyric_floating_window_translation', $scope.enableLyricFloatingWindowTranslation);
+        localStorage.setObject(
+          'enable_lyric_floating_window_translation',
+          $scope.enableLyricFloatingWindowTranslation
+        );
       };
 
       if (isElectron()) {
-        require('electron').ipcRenderer.on('globalShortcut', (event, message) => {
-          if (message === 'right') {
-            l1Player.next();
-          } else if (message === 'left') {
-            l1Player.prev();
-          } else if (message === 'space') {
-            l1Player.togglePlayPause();
+        require('electron').ipcRenderer.on(
+          'globalShortcut',
+          (event, message) => {
+            if (message === 'right') {
+              l1Player.next();
+            } else if (message === 'left') {
+              l1Player.prev();
+            } else if (message === 'space') {
+              l1Player.togglePlayPause();
+            }
           }
-        });
+        );
       }
 
       $scope.setAutoChooseSource = (toggle) => {
         if (toggle === true) {
           $scope.enableAutoChooseSource = !$scope.enableAutoChooseSource;
         }
-        localStorage.setObject('enable_auto_choose_source', $scope.enableAutoChooseSource);
+        localStorage.setObject(
+          'enable_auto_choose_source',
+          $scope.enableAutoChooseSource
+        );
       };
 
       $scope.setStopWhenClose = (status) => {
         $scope.enableStopWhenClose = status;
-        localStorage.setObject('enable_stop_when_close', $scope.enableStopWhenClose);
+        localStorage.setObject(
+          'enable_stop_when_close',
+          $scope.enableStopWhenClose
+        );
       };
 
       $scope.setNowplayingCoverBackground = (toggle) => {
         if (toggle === true) {
           $scope.enableNowplayingCoverBackground = !$scope.enableNowplayingCoverBackground;
         }
-        localStorage.setObject('enable_nowplaying_cover_background', $scope.enableNowplayingCoverBackground);
+        localStorage.setObject(
+          'enable_nowplaying_cover_background',
+          $scope.enableNowplayingCoverBackground
+        );
       };
     },
   ]);
 
-  app.controller('InstantSearchController', ['$scope', '$timeout', '$rootScope', 'loWeb', '$translate',
+  app.controller('InstantSearchController', [
+    '$scope',
+    '$timeout',
+    '$rootScope',
+    'loWeb',
+    '$translate',
     ($scope, $timeout, $rootScope, loWeb, $translate) => {
       // notice: douban is skipped, and add all music so array should plus 2
       // [网易,虾米,QQ,NULL,酷狗,酷我,bilibili, migu, allmusic]
@@ -1484,13 +1710,15 @@ const main = () => {
       $scope.searchType = 0;
 
       function updateCurrentPage(cp) {
-        if (cp === -1) { // when search words changes,pagenums should be reset.
+        if (cp === -1) {
+          // when search words changes,pagenums should be reset.
           $scope.curpagelog = $scope.originpagelog.slice(0);
           $scope.curpage = 1;
         } else if (cp >= 0) {
           $scope.curpagelog[$scope.tab] = cp;
           $scope.curpage = $scope.curpagelog[$scope.tab];
-        } else { // only tab changed
+        } else {
+          // only tab changed
           $scope.curpage = $scope.curpagelog[$scope.tab];
         }
       }
@@ -1510,17 +1738,23 @@ const main = () => {
 
       function performSearch() {
         $rootScope.$broadcast('search:keyword_change', $scope.keywords);
-        loWeb.get(`/search?source=${getSourceName($scope.tab)}&keywords=${$scope.keywords}&curpage=${$scope.curpage}&type=${$scope.searchType}`).success((data) => {
-          // update the textarea
-          data.result.forEach((r) => {
-            r.sourceName = $translate.instant(r.source);
+        loWeb
+          .get(
+            `/search?source=${getSourceName($scope.tab)}&keywords=${
+              $scope.keywords
+            }&curpage=${$scope.curpage}&type=${$scope.searchType}`
+          )
+          .success((data) => {
+            // update the textarea
+            data.result.forEach((r) => {
+              r.sourceName = $translate.instant(r.source);
+            });
+            $scope.result = data.result;
+            updateTotalPage(data.total);
+            $scope.loading = false;
+            // scroll back to top when finish searching
+            document.querySelector('.site-wrapper-innerd').scrollTo({ top: 0 });
           });
-          $scope.result = data.result;
-          updateTotalPage(data.total);
-          $scope.loading = false;
-          // scroll back to top when finish searching
-          document.querySelector('.site-wrapper-innerd').scrollTo({ top: 0 });
-        });
       }
 
       $scope.changeSourceTab = (newTab) => {
@@ -1550,9 +1784,9 @@ const main = () => {
           performSearch();
         }
       };
-      $scope.isActiveTab = (tab) => ($scope.tab === tab);
+      $scope.isActiveTab = (tab) => $scope.tab === tab;
 
-      $scope.isSearchType = (searchType) => ($scope.searchType === searchType);
+      $scope.isSearchType = (searchType) => $scope.searchType === searchType;
 
       // eslint-disable-next-line consistent-return
       function renderSearchPage() {
@@ -1620,7 +1854,7 @@ const main = () => {
     },
   }));
 
-  app.directive('resize', ($window) => ((scope, element) => {
+  app.directive('resize', ($window) => (scope, element) => {
     const w = angular.element($window);
     const changeHeight = () => {
       const headerHeight = 90;
@@ -1631,22 +1865,26 @@ const main = () => {
       changeHeight(); // when window size gets changed
     });
     changeHeight(); // when page loads
-  }));
+  });
 
-  app.directive('addAndPlay', [() => ({
-    restrict: 'EA',
-    scope: {
-      song: '=addAndPlay',
-    },
-    link(scope, element, attrs) {
-      element.bind('click', (event) => {
-        l1Player.addTrack(scope.song);
-        l1Player.playById(scope.song.id);
-      });
-    },
-  })]);
+  app.directive('addAndPlay', [
+    () => ({
+      restrict: 'EA',
+      scope: {
+        song: '=addAndPlay',
+      },
+      link(scope, element, attrs) {
+        element.bind('click', (event) => {
+          l1Player.addTrack(scope.song);
+          l1Player.playById(scope.song.id);
+        });
+      },
+    }),
+  ]);
 
-  app.directive('addWithoutPlay', ['Notification', '$translate',
+  app.directive('addWithoutPlay', [
+    'Notification',
+    '$translate',
     (Notification, $translate) => ({
       restrict: 'EA',
       scope: {
@@ -1661,7 +1899,8 @@ const main = () => {
     }),
   ]);
 
-  app.directive('openUrl', ['$window',
+  app.directive('openUrl', [
+    '$window',
     ($window) => ({
       restrict: 'EA',
       scope: {
@@ -1680,7 +1919,8 @@ const main = () => {
     }),
   ]);
 
-  app.directive('windowControl', ['$window',
+  app.directive('windowControl', [
+    '$window',
     ($window) => ({
       restrict: 'EA',
       scope: {
@@ -1697,7 +1937,9 @@ const main = () => {
     }),
   ]);
 
-  app.directive('infiniteScroll', ['$window', '$rootScope',
+  app.directive('infiniteScroll', [
+    '$window',
+    '$rootScope',
     ($window, $rootScope) => ({
       restrict: 'EA',
       scope: {
@@ -1734,8 +1976,10 @@ const main = () => {
     }),
   ]);
 
-  app.directive('draggable', ['$document', '$rootScope',
-    ($document, $rootScope) => ((scope, element, attrs) => {
+  app.directive('draggable', [
+    '$document',
+    '$rootScope',
+    ($document, $rootScope) => (scope, element, attrs) => {
       let x;
       let container;
       const { mode } = attrs;
@@ -1812,10 +2056,13 @@ const main = () => {
         $document.on('mousemove', mousemove);
         $document.on('mouseup', mouseup);
       });
-    }),
+    },
   ]);
 
-  app.controller('MyPlayListController', ['$scope', '$timeout', 'loWeb',
+  app.controller('MyPlayListController', [
+    '$scope',
+    '$timeout',
+    'loWeb',
     ($scope, $timeout, loWeb) => {
       $scope.myplaylists = [];
       $scope.favoriteplaylists = [];
@@ -1850,7 +2097,10 @@ const main = () => {
     },
   ]);
 
-  app.controller('PlayListController', ['$scope', '$timeout', 'loWeb',
+  app.controller('PlayListController', [
+    '$scope',
+    '$timeout',
+    'loWeb',
     ($scope, $timeout, loWeb) => {
       $scope.result = [];
       $scope.tab = 0;
@@ -1859,9 +2109,11 @@ const main = () => {
       $scope.changeTab = (newTab) => {
         $scope.tab = newTab;
         $scope.result = [];
-        loWeb.get(`/show_playlist?source=${getSourceName($scope.tab)}`).success((data) => {
-          $scope.result = data.result;
-        });
+        loWeb
+          .get(`/show_playlist?source=${getSourceName($scope.tab)}`)
+          .success((data) => {
+            $scope.result = data.result;
+          });
       };
 
       $scope.$on('infinite_scroll:hit_bottom', (event, data) => {
@@ -1870,19 +2122,27 @@ const main = () => {
         }
         $scope.loading = true;
         const offset = $scope.result.length;
-        loWeb.get(`/show_playlist?source=${getSourceName($scope.tab)}&offset=${offset}`).success((res) => {
-          $scope.result = $scope.result.concat(res.result);
-          $scope.loading = false;
-        });
+        loWeb
+          .get(
+            `/show_playlist?source=${getSourceName(
+              $scope.tab
+            )}&offset=${offset}`
+          )
+          .success((res) => {
+            $scope.result = $scope.result.concat(res.result);
+            $scope.loading = false;
+          });
       });
 
-      $scope.isActiveTab = (tab) => ($scope.tab === tab);
+      $scope.isActiveTab = (tab) => $scope.tab === tab;
 
       $scope.loadPlaylist = () => {
-        loWeb.get(`/show_playlist?source=${getSourceName($scope.tab)}`).success((data) => {
-          $scope.result = data.result;
-          $scope.loading = false;
-        });
+        loWeb
+          .get(`/show_playlist?source=${getSourceName($scope.tab)}`)
+          .success((data) => {
+            $scope.result = data.result;
+            $scope.loading = false;
+          });
       };
     },
   ]);

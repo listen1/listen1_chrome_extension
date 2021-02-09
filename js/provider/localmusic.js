@@ -65,7 +65,9 @@ function build_localmusic() {
           playlist.info.title = artist;
         } else {
           playlist.info.title = artist;
-          playlist.tracks = playlist.tracks.filter((tr) => tr.artist === artist);
+          playlist.tracks = playlist.tracks.filter(
+            (tr) => tr.artist === artist
+          );
         }
         fn(playlist);
       },
@@ -114,7 +116,9 @@ function build_localmusic() {
     tracks.forEach((tr) => {
       tracksIdSet[tr.id] = true;
     });
-    playlist.tracks = tracks.concat(playlist.tracks.filter((tr) => tracksIdSet[tr.id] !== true));
+    playlist.tracks = tracks.concat(
+      playlist.tracks.filter((tr) => tracksIdSet[tr.id] !== true)
+    );
     localStorage.setObject(list_id, playlist);
 
     return {

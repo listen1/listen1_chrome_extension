@@ -7,52 +7,68 @@ function build_xiami() {
     const domain = 'https://www.xiami.com';
     const name = '_m_h5_tk';
     if (!isElectron()) {
-      cookieGet({
-        url: domain,
-        name,
-      }, (cookie) => {
-        if (cookie == null) {
-          return callback('');
+      cookieGet(
+        {
+          url: domain,
+          name,
+        },
+        (cookie) => {
+          if (cookie == null) {
+            return callback('');
+          }
+          return callback(cookie.value);
         }
-        return callback(cookie.value);
-      });
+      );
     } else {
       const remote = require('electron').remote; // eslint-disable-line
-      cookieGet({
-        domain: '.xiami.com',
-        name,
-      }, (err, cookie) => {
-        if (cookie.length === 0) {
-          return callback('');
+      cookieGet(
+        {
+          domain: '.xiami.com',
+          name,
+        },
+        (err, cookie) => {
+          if (cookie.length === 0) {
+            return callback('');
+          }
+          return callback(cookie[0].value);
         }
-        return callback(cookie[0].value);
-      });
+      );
     }
   }
 
   function xm_get_api_url(api, data) {
     const baseUrl = 'https://acs.m.xiami.com/h5/';
-    return encodeURI(`${baseUrl + api}/1.0?api=${api}&appKey=${data.appKey}&data=${data.request_str}&dataType=json&sign=${data.sign}&t=${data.t}&type=originaljson&v=1.0`);
+    return encodeURI(
+      `${baseUrl + api}/1.0?api=${api}&appKey=${data.appKey}&data=${
+        data.request_str
+      }&dataType=json&sign=${data.sign}&t=${data.t}&type=originaljson&v=1.0`
+    );
   }
 
   function xm_cookie_get(api, params, callback) {
     xm_get_token((token) => {
       let data = xm_sign_get(token, params);
       let url = xm_get_api_url(api, data);
-      axios.get(url).then((response) => {
-        if (response.data.ret[0] === 'FAIL_SYS_TOKEN_EXOIRED::令牌过期' || response.data.ret[0] === 'FAIL_SYS_TOKEN_EMPTY::令牌为空') {
-          // token expire, refetch token and start get url
-          xm_get_token((token2) => {
-            data = xm_sign_get(token2, params);
-            url = xm_get_api_url(api, data);
-            axios.get(url).then((res) => {
-              callback(res);
+      axios
+        .get(url)
+        .then((response) => {
+          if (
+            response.data.ret[0] === 'FAIL_SYS_TOKEN_EXOIRED::令牌过期' ||
+            response.data.ret[0] === 'FAIL_SYS_TOKEN_EMPTY::令牌为空'
+          ) {
+            // token expire, refetch token and start get url
+            xm_get_token((token2) => {
+              data = xm_sign_get(token2, params);
+              url = xm_get_api_url(api, data);
+              axios.get(url).then((res) => {
+                callback(res);
+              });
             });
-          });
-        } else {
-          callback(response);
-        }
-      }).catch(() => callback(null));
+          } else {
+            callback(response);
+          }
+        })
+        .catch(() => callback(null));
     });
   }
 
@@ -78,7 +94,11 @@ function build_xiami() {
       requestStr: JSON.stringify(data),
     });
     const text = `${signedToken}&${t.toString()}&${appKey}&${request_str}`;
-    const sign = forge.md5.create().update(forge.util.encodeUtf8(text)).digest().toHex();
+    const sign = forge.md5
+      .create()
+      .update(forge.util.encodeUtf8(text))
+      .digest()
+      .toHex();
     return {
       appKey,
       t,
@@ -142,7 +162,8 @@ function build_xiami() {
     }
   }
 
-  function xm_convert_song(song_info) { // eslint-disable-line no-unused-vars
+  function xm_convert_song(song_info) {
+    // eslint-disable-line no-unused-vars
     const track = {
       id: `xmtrack_${song_info.songId}`,
       title: song_info.songName,
@@ -176,7 +197,8 @@ function build_xiami() {
     return url;
   }
 
-  function xm_get_playlist(url) { // eslint-disable-line no-unused-vars
+  function xm_get_playlist(url) {
+    // eslint-disable-line no-unused-vars
     const list_id = getParameterByName('list_id', url).split('_').pop();
     return {
       success(fn) {
@@ -187,7 +209,9 @@ function build_xiami() {
         xm_cookie_get(api, params, (response) => {
           const { data } = response.data.data;
           const info = {
-            cover_img_url: xm_get_low_quality_img_url(data.collectDetail.collectLogo),
+            cover_img_url: xm_get_low_quality_img_url(
+              data.collectDetail.collectLogo
+            ),
             title: data.collectDetail.collectName,
             id: `xmplaylist_${list_id}`,
             source_url: `https://www.xiami.com/collect/${list_id}`,
@@ -209,7 +233,8 @@ function build_xiami() {
     };
   }
 
-  function xm_search(url) { // eslint-disable-line no-unused-vars
+  function xm_search(url) {
+    // eslint-disable-line no-unused-vars
     const keyword = getParameterByName('keywords', url);
     const curpage = getParameterByName('curpage', url);
     const searchType = getParameterByName('type', url);
@@ -263,7 +288,8 @@ function build_xiami() {
     };
   }
 
-  function xm_album(url) { // eslint-disable-line no-unused-vars
+  function xm_album(url) {
+    // eslint-disable-line no-unused-vars
     return {
       success(fn) {
         const album_id = getParameterByName('list_id', url).split('_').pop();
@@ -279,7 +305,9 @@ function build_xiami() {
             id: `xmalbum_${album_id}`,
             source_url: `https://www.xiami.com/album/${album_id}`,
           };
-          const tracks = data.albumDetail.songs.map((item) => xm_convert_song(item));
+          const tracks = data.albumDetail.songs.map((item) =>
+            xm_convert_song(item)
+          );
           return fn({
             tracks,
             info,
@@ -289,7 +317,8 @@ function build_xiami() {
     };
   }
 
-  function xm_artist(url) { // eslint-disable-line no-unused-vars
+  function xm_artist(url) {
+    // eslint-disable-line no-unused-vars
     return {
       success(fn) {
         const artist_id = getParameterByName('list_id', url).split('_').pop();
@@ -317,7 +346,9 @@ function build_xiami() {
             },
           };
           xm_cookie_get(api, params, (res) => {
-            const tracks = res.data.data.data.songs.map((item) => xm_convert_song(item));
+            const tracks = res.data.data.data.songs.map((item) =>
+              xm_convert_song(item)
+            );
             return fn({
               tracks,
               info,
@@ -328,7 +359,8 @@ function build_xiami() {
     };
   }
 
-  function xm_lyric(url) { // eslint-disable-line no-unused-vars
+  function xm_lyric(url) {
+    // eslint-disable-line no-unused-vars
     const lyric_url = getParameterByName('lyric_url', url);
     return {
       // eslint-disable-next-line consistent-return
@@ -378,12 +410,10 @@ function build_xiami() {
     t -= m * 60;
     const s = Math.floor(t);
     const ms = t - s;
-    const str = `${(h ? `${zpad(h, 2)}:` : '')
-      + zpad(m, 2)
-    }:${
-      zpad(s, 2)
-    }.${
-      zpad(Math.floor(ms * 1000), 3)}`;
+    const str = `${(h ? `${zpad(h, 2)}:` : '') + zpad(m, 2)}:${zpad(
+      s,
+      2
+    )}.${zpad(Math.floor(ms * 1000), 3)}`;
     return `[${str}]`;
   }
 
@@ -418,8 +448,8 @@ function build_xiami() {
         const current_time_tag = time_tag_info[0];
         const current_millisecond = tag2millisecond(current_time_tag);
         if (
-          current_millisecond - last_end_timestamp
-          >= MAX_ALLOW_GAP_MILLISECOND
+          current_millisecond - last_end_timestamp >=
+          MAX_ALLOW_GAP_MILLISECOND
         ) {
           const placeholder_time_tag = millisecond2tag(last_end_timestamp);
           lrc += `${placeholder_time_tag}\n`;
@@ -434,17 +464,17 @@ function build_xiami() {
         // 计算本行结束时间轴
         let durning = 0;
         // eslint-disable-next-line
-        line.match(reg_durning_tag) && line.match(reg_durning_tag).forEach((s) => {
-          durning += parseInt(s.replace(/[^\d]/g, ''));
-        });
+        line.match(reg_durning_tag) &&
+          line.match(reg_durning_tag).forEach((s) => {
+            durning += parseInt(s.replace(/[^\d]/g, ''));
+          });
         last_end_timestamp = tag2millisecond(last_time_tag) + durning;
       }
       const xtrans_tag = line.match(reg_xtrans_tag);
       if (xtrans_tag) {
-        tlrc
-          += `${line
-            .replace(reg_xtrans_tag, last_time_tag)
-            .replace(reg_durning_tag, '')}\n`;
+        tlrc += `${line
+          .replace(reg_xtrans_tag, last_time_tag)
+          .replace(reg_durning_tag, '')}\n`;
       }
       i += 1;
     }
