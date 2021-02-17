@@ -1001,6 +1001,18 @@ const main = () => {
     });
   });
 
+  function getCSSStringFromSetting(setting) {
+    return `div.content.lyric-content{
+      font-size: ${setting.fontSize}px;
+      color: ${setting.color};
+      background: rgba(36, 36, 36, ${setting.backgroundAlpha});
+    }
+    div.content.lyric-content span.contentTrans {
+      font-size: ${setting.fontSize - 4}px;
+    }
+    `;
+  }
+
   app.controller('PlayController', [
     '$scope',
     '$timeout',
@@ -1112,6 +1124,17 @@ const main = () => {
           false
         );
 
+        const defaultFloatWindowSetting = {
+          fontSize: 20,
+          color: '#ffffff',
+          backgroundAlpha: 0.2,
+        };
+
+        $scope.floatWindowSetting = getLocalStorageValue(
+          'float_window_setting',
+          defaultFloatWindowSetting
+        );
+
         $scope.applyGlobalShortcut();
         $scope.openLyricFloatingWindow();
       };
@@ -1159,8 +1182,81 @@ const main = () => {
           $scope.enableLyricFloatingWindow
         );
         const { ipcRenderer } = require('electron');
-        ipcRenderer.send('control', message);
+        ipcRenderer.send(
+          'control',
+          message,
+          getCSSStringFromSetting($scope.floatWindowSetting)
+        );
       };
+
+      if (isElectron()) {
+        require('electron').ipcRenderer.on('lyricWindow', (event, arg) => {
+          if (arg === 'float_window_close') {
+            $scope.openLyricFloatingWindow(true);
+          } else if (
+            arg === 'float_window_font_small' ||
+            arg === 'float_window_font_large'
+          ) {
+            const MIN_FONT_SIZE = 12;
+            const MAX_FONT_SIZE = 50;
+            const offset = arg === 'float_window_font_small' ? -1 : 1;
+            $scope.floatWindowSetting.fontSize += offset;
+            if ($scope.floatWindowSetting.fontSize < MIN_FONT_SIZE) {
+              $scope.floatWindowSetting.fontSize = MIN_FONT_SIZE;
+            } else if ($scope.floatWindowSetting.fontSize > MAX_FONT_SIZE) {
+              $scope.floatWindowSetting.fontSize = MAX_FONT_SIZE;
+            }
+          } else if (
+            arg === 'float_window_background_light' ||
+            arg === 'float_window_background_dark'
+          ) {
+            const MIN_BACKGROUND_ALPHA = 0;
+            const MAX_BACKGROUND_ALPHA = 1;
+            const offset = arg === 'float_window_background_light' ? -0.1 : 0.1;
+            $scope.floatWindowSetting.backgroundAlpha += offset;
+            if (
+              $scope.floatWindowSetting.backgroundAlpha < MIN_BACKGROUND_ALPHA
+            ) {
+              $scope.floatWindowSetting.backgroundAlpha = MIN_BACKGROUND_ALPHA;
+            } else if (
+              $scope.floatWindowSetting.backgroundAlpha > MAX_BACKGROUND_ALPHA
+            ) {
+              $scope.floatWindowSetting.backgroundAlpha = MAX_BACKGROUND_ALPHA;
+            }
+          } else if (arg === 'float_window_font_change_color') {
+            const floatWindowlyricColors = [
+              '#ffffff',
+              '#65d29f',
+              '#3c87eb',
+              '#ec63af',
+              '#4f5455',
+              '#eb605b',
+            ];
+            const currentIndex = floatWindowlyricColors.indexOf(
+              $scope.floatWindowSetting.color
+            );
+            const nextIndex =
+              (currentIndex + 1) % floatWindowlyricColors.length;
+            $scope.floatWindowSetting.color = floatWindowlyricColors[nextIndex];
+            console.log(
+              currentIndex,
+              nextIndex,
+              floatWindowlyricColors[nextIndex]
+            );
+          }
+          localStorage.setObject(
+            'float_window_setting',
+            $scope.floatWindowSetting
+          );
+          const { ipcRenderer } = require('electron');
+          const message = 'update_lyric_floating_window_css';
+          ipcRenderer.send(
+            'control',
+            message,
+            getCSSStringFromSetting($scope.floatWindowSetting)
+          );
+        });
+      }
 
       $scope.saveLocalSettings = () => {
         localStorage.setObject('player-settings', $scope.settings);
