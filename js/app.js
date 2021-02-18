@@ -1238,11 +1238,6 @@ const main = () => {
             const nextIndex =
               (currentIndex + 1) % floatWindowlyricColors.length;
             $scope.floatWindowSetting.color = floatWindowlyricColors[nextIndex];
-            console.log(
-              currentIndex,
-              nextIndex,
-              floatWindowlyricColors[nextIndex]
-            );
           }
           localStorage.setObject(
             'float_window_setting',
