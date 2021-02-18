@@ -76,15 +76,12 @@ function github() {
       const access_token = localStorage.getObject('githubOauthAccessKey') || '';
       const url = `${API_URL}${apiPath}`;
       fetch(url, {
-        method: 'GET',
         headers: {
           Authorization: `token ${access_token}`,
         },
-      })
-        .then((resp) => resp.json())
-        .then((data) => {
-          cb(data);
-        });
+      }).then(async (resp) => {
+        cb(await resp.json());
+      });
     },
 
     logout: () => {
