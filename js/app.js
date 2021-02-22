@@ -216,10 +216,7 @@ const main = () => {
         $scope.window_poped_url_stack = [];
       };
 
-      function refreshWindow(url, offset) {
-        if (offset === undefined) {
-          offset = 0;
-        }
+      function refreshWindow(url, offset = 0) {
         if (url === '/now_playing') {
           $scope.window_type = 'track';
           return;
@@ -243,7 +240,7 @@ const main = () => {
           return;
         }
         let poped = $scope.window_url_stack.pop();
-        if (($scope.window_url_stack.reverse()[0] || {}).url === '/now_playing') {
+        if (($scope.window_url_stack.slice(-1)[0] || {}).url === '/now_playing') {
           poped = $scope.window_url_stack.pop();
         }
         $scope.window_poped_url_stack.push(poped.url);
@@ -251,13 +248,13 @@ const main = () => {
           $scope.closeWindow(poped.offset);
         } else {
           $scope.resetWindow(poped.offset);
-          const lastWindow = $scope.window_url_stack.reverse()[0].url;
+          const lastWindow = $scope.window_url_stack.slice(-1)[0];
           refreshWindow(lastWindow.url, poped.offset);
         }
       };
 
       $scope.toggleNowPlaying = () => {
-        if (($scope.window_url_stack.reverse()[0] || {}).url === '/now_playing') {
+        if (($scope.window_url_stack.slice(-1)[0] || {}).url === '/now_playing') {
           $scope.popWindow();
           return;
         }
@@ -281,7 +278,10 @@ const main = () => {
 
         $scope.resetWindow();
         const url = $scope.window_poped_url_stack.pop();
-        $scope.window_url_stack.push(url);
+        $scope.window_url_stack.push({
+          url,
+          offset: 0,
+        });
         refreshWindow(url);
       };
 
@@ -289,13 +289,13 @@ const main = () => {
         const url = `/playlist?list_id=${list_id}`;
         // save current scrolltop
         const offset = document.getElementsByClassName('browser')[0].scrollTop;
-        if (($scope.window_url_stack.reverse()[0] || {}).url === url) {
+        if (($scope.window_url_stack.slice(-1)[0] || {}).url === url) {
           return;
         }
         $scope.is_window_hidden = 0;
         $scope.resetWindow();
 
-        if (($scope.window_url_stack.reverse()[0] || {}).url === '/now_playing') {
+        if (($scope.window_url_stack.slice(-1)[0] || {}).url === '/now_playing') {
           // if now playing is top, pop it
           $scope.window_url_stack.pop();
         }
