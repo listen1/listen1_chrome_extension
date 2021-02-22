@@ -1,80 +1,74 @@
 {
-    "background": {
-        "scripts": [
-            "js/vendor/axios.min.js",
-            "js/github_api.js",
-            "js/background.js",
-            "js/vendor/howler.core.min.js",
-            "js/bridge.js",
-            "js/player_thread.js"
-        ],
-        "persistent": true
-    },
-    "browser_action": {
-        "default_icon": "images/logo.png",
-        "default_title": "Listen 1"
-    },
-    "description": "One for all free music in China",
-    "icons": {
-        "128": "images/logo.png",
-        "16": "images/logo_16.png",
-        "48": "images/logo_48.png"
-    },
-    "manifest_version": 2,
-    "name": "Listen 1",
-    "permissions": [
-        "notifications",
-        "unlimitedStorage",
-        "cookies",
-        "*://music.163.com/*",
-        "*://*.xiami.com/*",
-        "*://*.qq.com/*",
-        "*://*.kugou.com/",
-        "*://*.kuwo.cn/",
-        "*://*.bilibili.com/*",
-        "*://*.bilivideo.com/*",
-        "*://*.migu.cn/*",
-        "*://api.github.com/*",
-        "*://github.com/*",
-        "*://gist.githubusercontent.com/*",
-        "webRequest",
-        "webRequestBlocking"
+  "background": {
+    "scripts": [
+      "js/vendor/axios.min.js",
+      "js/github_api.js",
+      "js/background.js",
+      "js/vendor/howler.core.min.js",
+      "js/bridge.js",
+      "js/player_thread.js"
     ],
-    "version": "2.18.0",
-    "web_accessible_resources": [
-        "images/*"
-    ],
-    "commands": {
-        "play_next": {
-            "suggested_key": {
-                "default": "MediaNextTrack"
-            },
-            "description": "Play next song.",
-            "global": true
-        },
-        "play_prev": {
-            "suggested_key": {
-                "default": "MediaPrevTrack"
-            },
-            "description": "Play previous song.",
-            "global": true
-        },
-        "play_pause": {
-            "suggested_key": {
-                "default": "MediaPlayPause"
-            },
-            "description": "Toggle play pause state.",
-            "global": true
-        }
+    "persistent": true
+  },
+  "browser_action": {
+    "default_icon": "images/logo.png",
+    "default_title": "Listen 1"
+  },
+  "description": "One for all free music in China",
+  "icons": {
+    "128": "images/logo.png",
+    "16": "images/logo_16.png",
+    "48": "images/logo_48.png"
+  },
+  "manifest_version": 2,
+  "name": "Listen 1",
+  "permissions": [
+    "notifications",
+    "unlimitedStorage",
+    "cookies",
+    "*://music.163.com/*",
+    "*://*.xiami.com/*",
+    "*://*.qq.com/*",
+    "*://*.kugou.com/",
+    "*://*.kuwo.cn/",
+    "*://*.bilibili.com/*",
+    "*://*.bilivideo.com/*",
+    "*://*.migu.cn/*",
+    "*://api.github.com/*",
+    "*://github.com/*",
+    "*://gist.githubusercontent.com/*",
+    "webRequest",
+    "webRequestBlocking"
+  ],
+  "version": "2.18.0",
+  "web_accessible_resources": ["images/*"],
+  "commands": {
+    "play_next": {
+      "suggested_key": {
+        "default": "MediaNextTrack"
+      },
+      "description": "Play next song.",
+      "global": true
     },
-    "content_scripts": [
-        {
-            "matches": [
-                "https://listen1.github.io/listen1/*"
-            ],
-            "js": [
-                "js/oauth_callback.js"
-            ]
-        }
-    ]
+    "play_prev": {
+      "suggested_key": {
+        "default": "MediaPrevTrack"
+      },
+      "description": "Play previous song.",
+      "global": true
+    },
+    "play_pause": {
+      "suggested_key": {
+        "default": "MediaPlayPause"
+      },
+      "description": "Toggle play pause state.",
+      "global": true
+    }
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://listen1.github.io/listen1/*"],
+      "js": ["js/oauth_callback.js"]
+    }
+  ]
 }

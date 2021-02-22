@@ -4,7 +4,7 @@ body {
   padding: 0;
   font-size: var(--text-default-size);
   color: var(--text-default-color);
-  font-family: system-ui, "PingFang SC", STHeiti, sans-serif;
+  font-family: system-ui, 'PingFang SC', STHeiti, sans-serif;
 }
 
 .wrap {
@@ -515,7 +515,7 @@ svg {
   cursor: pointer;
   -webkit-app-region: no-drag;
 }
-.page .songdetail-wrapper .translate-switch:hover{
+.page .songdetail-wrapper .translate-switch:hover {
   color: var(--text-default-color);
 }
 .page .songdetail-wrapper.slidedown {
@@ -681,7 +681,7 @@ ul.detail-songlist li {
   padding: 0 20px;
   font-size: 14px;
 }
-ul.detail-songlist li.playlist-result{
+ul.detail-songlist li.playlist-result {
   height: 80px;
   padding: 0 10px;
 }

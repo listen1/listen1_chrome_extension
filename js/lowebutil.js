@@ -2,7 +2,7 @@
 /* eslint-disable no-param-reassign */
 /* eslint-disable no-unused-vars */
 
-function getParameterByName(name, url) { // eslint-disable-line no-unused-vars
+function getParameterByName(name, url) {
   if (!url) url = window.location.href;
   name = name.replace(/[\[\]]/g, '\\$&'); // eslint-disable-line no-useless-escape
   const regex = new RegExp(`[?&]${name}(=([^&#]*)|&|#|$)`);

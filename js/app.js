@@ -9,12 +9,20 @@
 /* eslint-disable import/no-unresolved */
 
 const main = () => {
-  const app = angular.module('listenone', ['ui-notification', 'cfp.hotkeys', 'lastfmClient', 'githubClient', 'pascalprecht.translate']);
+  const app = angular.module('listenone', [
+    'ui-notification',
+    'cfp.hotkeys',
+    'lastfmClient',
+    'githubClient',
+    'pascalprecht.translate',
+  ]);
   setPrototypeOfLocalStorage();
   app.config([
     '$compileProvider',
     ($compileProvider) => {
-      $compileProvider.imgSrcSanitizationWhitelist(/^\s*(https?|ftp|mailto|chrome-extension|moz-extension|file):/);
+      $compileProvider.imgSrcSanitizationWhitelist(
+        /^\s*(https?|ftp|mailto|chrome-extension|moz-extension|file):/
+      );
     },
   ]);
 
@@ -42,19 +50,24 @@ const main = () => {
     });
   });
 
-  app.config(['$translateProvider', ($translateProvider) => {
-    // Register a loader for the static files
-    $translateProvider.useStaticFilesLoader({
-      prefix: './i18n/',
-      suffix: '.json',
-    });
-    $translateProvider.use('zh_CN');
-    // Tell the module what language to use by default
-    $translateProvider.preferredLanguage('zh_CN');
-    $translateProvider.useSanitizeValueStrategy('escape');
-  }]);
+  app.config([
+    '$translateProvider',
+    ($translateProvider) => {
+      // Register a loader for the static files
+      $translateProvider.useStaticFilesLoader({
+        prefix: './i18n/',
+        suffix: '.json',
+      });
+      $translateProvider.use('zh_CN');
+      // Tell the module what language to use by default
+      $translateProvider.preferredLanguage('zh_CN');
+      $translateProvider.useSanitizeValueStrategy('escape');
+    },
+  ]);
 
-  app.run(['$q', '$translate',
+  app.run([
+    '$q',
+    '$translate',
     ($q, $translate) => {
       axios.Axios.prototype.request_original = axios.Axios.prototype.request;
       axios.Axios.prototype.request = function new_req(config) {
@@ -65,7 +78,7 @@ const main = () => {
 
   l1Player.injectDirectives(app);
 
-  app.filter('playmode_title', () => ((input) => {
+  app.filter('playmode_title', () => (input) => {
     switch (input) {
       case 0:
         return '顺序';
@@ -76,7 +89,7 @@ const main = () => {
       default:
         return '';
     }
-  }));
+  });
 
   function getSourceName(sourceId) {
     if (sourceId === 0) {
@@ -106,55 +119,73 @@ const main = () => {
     return '';
   }
 
-  app.controller('ProfileController', ['$scope', '$translate', ($scope, $translate) => {
-    let defaultLang = 'zh_CN';
-    const supportLangs = ['zh_CN', 'en_US'];
-    if (supportLangs.indexOf(navigator.language) !== -1) {
-      defaultLang = navigator.language;
-    }
-    if (supportLangs.indexOf(localStorage.getObject('language')) !== -1) {
-      defaultLang = localStorage.getObject('language');
-    }
+  app.controller('ProfileController', [
+    '$scope',
+    '$translate',
+    ($scope, $translate) => {
+      let defaultLang = 'zh_CN';
+      const supportLangs = ['zh_CN', 'en_US'];
+      if (supportLangs.indexOf(navigator.language) !== -1) {
+        defaultLang = navigator.language;
+      }
+      if (supportLangs.indexOf(localStorage.getObject('language')) !== -1) {
+        defaultLang = localStorage.getObject('language');
+      }
 
-    $scope.setLang = (langKey) => {
-      // You can change the language during runtime
-      $translate.use(langKey).then(() => {
-        axios.get('./i18n/zh_CN.json')
-          .then((res) => {
+      $scope.setLang = (langKey) => {
+        // You can change the language during runtime
+        $translate.use(langKey).then(() => {
+          axios.get('./i18n/zh_CN.json').then((res) => {
             Object.keys(res.data).forEach((key) => {
               $scope[key] = $translate.instant(key);
             });
           });
-        localStorage.setObject('language', langKey);
-      });
-    };
-    $scope.setLang(defaultLang);
-
-    let defaultTheme = 'white';
-    if (localStorage.getObject('theme') !== null) {
-      defaultTheme = localStorage.getObject('theme');
-    }
-    $scope.setTheme = (theme) => {
-      const themeFiles = {
-        white: 'css/iparanoid.css',
-        black: 'css/origin.css',
+          localStorage.setObject('language', langKey);
+        });
       };
-      // You can change the language during runtime
-      if (themeFiles[theme] !== undefined) {
-        document.getElementById('theme').href = themeFiles[theme];
-        localStorage.setObject('theme', theme);
+      $scope.setLang(defaultLang);
+
+      let defaultTheme = 'white';
+      if (localStorage.getObject('theme') !== null) {
+        defaultTheme = localStorage.getObject('theme');
       }
-    };
-    $scope.setTheme(defaultTheme);
-  }]);
+      $scope.setTheme = (theme) => {
+        const themeFiles = {
+          white: 'css/iparanoid.css',
+          black: 'css/origin.css',
+        };
+        // You can change the language during runtime
+        if (themeFiles[theme] !== undefined) {
+          document.getElementById('theme').href = themeFiles[theme];
+          localStorage.setObject('theme', theme);
+        }
+      };
+      $scope.setTheme(defaultTheme);
+    },
+  ]);
 
   // control main view of page, it can be called any place
-  app.controller('NavigationController', ['$scope',
-    '$timeout', 'Notification', '$rootScope',
-    'hotkeys', 'lastfm', 'github', 'gist', '$translate',
-    ($scope,
-      $timeout, Notification, $rootScope,
-      hotkeys, lastfm, github, gist, $translate) => {
+  app.controller('NavigationController', [
+    '$scope',
+    '$timeout',
+    'Notification',
+    '$rootScope',
+    'hotkeys',
+    'lastfm',
+    'github',
+    'gist',
+    '$translate',
+    (
+      $scope,
+      $timeout,
+      Notification,
+      $rootScope,
+      hotkeys,
+      lastfm,
+      github,
+      gist,
+      $translate
+    ) => {
       $rootScope.page_title = 'Listen 1'; // eslint-disable-line no-param-reassign
       $scope.window_url_stack = [];
       $scope.window_poped_url_stack = [];
@@ -187,7 +218,7 @@ const main = () => {
         $scope.closeWindow();
       };
 
-      $scope.$on('search:keyword_change', (event, data) => { // eslint-disable-line no-unused-vars
+      $scope.$on('search:keyword_change', (event, data) => {
         $scope.showTag(3);
       });
 
@@ -228,8 +259,8 @@ const main = () => {
           $scope.cover_img_url = data.info.cover_img_url;
           $scope.playlist_title = data.info.title;
           $scope.playlist_source_url = data.info.source_url;
-          $scope.is_mine = (data.info.id.slice(0, 2) === 'my');
-          $scope.is_local = (data.info.id.slice(0, 2) === 'lm');
+          $scope.is_mine = data.info.id.slice(0, 2) === 'my';
+          $scope.is_local = data.info.id.slice(0, 2) === 'lm';
           $timeout(() => {
             document.getElementsByClassName('browser')[0].scrollTop = offset;
           }, 0);
@@ -383,20 +414,26 @@ const main = () => {
         if (dialog_type === 8) {
           $scope.dialog_title = $translate.instant('_EXPORT_TO_GITHUB_GIST');
           $scope.dialog_type = 8;
-          gist.listExistBackup().then((res) => {
-            $scope.myBackup = res;
-          }, (err) => {
-            $scope.myBackup = [];
-          });
+          gist.listExistBackup().then(
+            (res) => {
+              $scope.myBackup = res;
+            },
+            (err) => {
+              $scope.myBackup = [];
+            }
+          );
         }
         if (dialog_type === 10) {
           $scope.dialog_title = $translate.instant('_RECOVER_FROM_GITHUB_GIST');
           $scope.dialog_type = 10;
-          gist.listExistBackup().then((res) => {
-            $scope.myBackup = res;
-          }, (err) => {
-            $scope.myBackup = [];
-          });
+          gist.listExistBackup().then(
+            (res) => {
+              $scope.myBackup = res;
+            },
+            (err) => {
+              $scope.myBackup = [];
+            }
+          );
         }
       };
 
@@ -567,7 +604,9 @@ const main = () => {
               return;
             }
 
-            Object.keys(data).forEach((item) => localStorage.setObject(item, data[item]));
+            Object.keys(data).forEach((item) =>
+              localStorage.setObject(item, data[item])
+            );
             $rootScope.$broadcast('myplaylist:update');
             Notification.success('成功导入我的歌单');
           }
@@ -579,21 +618,25 @@ const main = () => {
       $scope.backupMySettings2Gist = (gistId, isPublic) => {
         const items = {};
         Object.keys(localStorage).forEach((key) => {
-          if (key !== 'gistid' && key !== 'githubOauthAccessKey') { // avoid token leak
+          if (key !== 'gistid' && key !== 'githubOauthAccessKey') {
+            // avoid token leak
             items[key] = localStorage.getObject(key);
           }
         });
         const gistFiles = gist.json2gist(items);
         $scope.gistBackupLoading = true;
-        gist.backupMySettings2Gist(gistFiles, gistId, isPublic).then(() => {
-          Notification.clearAll();
-          Notification.success('成功导出我的歌单到Gist');
-          $scope.gistBackupLoading = false;
-        }, (err) => {
-          Notification.clearAll();
-          Notification.warning('导出我的歌单失败，检查后重试');
-          $scope.gistBackupLoading = false;
-        });
+        gist.backupMySettings2Gist(gistFiles, gistId, isPublic).then(
+          () => {
+            Notification.clearAll();
+            Notification.success('成功导出我的歌单到Gist');
+            $scope.gistBackupLoading = false;
+          },
+          (err) => {
+            Notification.clearAll();
+            Notification.warning('导出我的歌单失败，检查后重试');
+            $scope.gistBackupLoading = false;
+          }
+        );
         Notification({
           message: '正在导出我的歌单到Gist...',
           delay: null,
@@ -603,23 +646,28 @@ const main = () => {
       $scope.gistRestoreLoading = false;
       $scope.importMySettingsFromGist = (gistId) => {
         $scope.gistRestoreLoading = true;
-        gist.importMySettingsFromGist(gistId).then((raw) => {
-          gist.gist2json(raw, (data) => {
-            Object.keys(data).forEach((item) => localStorage.setObject(item, data[item]));
+        gist.importMySettingsFromGist(gistId).then(
+          (raw) => {
+            gist.gist2json(raw, (data) => {
+              Object.keys(data).forEach((item) =>
+                localStorage.setObject(item, data[item])
+              );
+              Notification.clearAll();
+              Notification.success('导入我的歌单成功');
+              $scope.gistRestoreLoading = false;
+              $rootScope.$broadcast('myplaylist:update');
+            });
+          },
+          (err) => {
             Notification.clearAll();
-            Notification.success('导入我的歌单成功');
+            if (err === 404) {
+              Notification.warning('未找到备份歌单，请先备份');
+            } else {
+              Notification.warning('导入我的歌单失败，检查后重试');
+            }
             $scope.gistRestoreLoading = false;
-            $rootScope.$broadcast('myplaylist:update');
-          });
-        }, (err) => {
-          Notification.clearAll();
-          if (err === 404) {
-            Notification.warning('未找到备份歌单，请先备份');
-          } else {
-            Notification.warning('导入我的歌单失败，检查后重试');
           }
-          $scope.gistRestoreLoading = false;
-        });
+        );
         Notification({
           message: '正在从Gist导入我的歌单...',
           delay: null,
@@ -680,17 +728,21 @@ const main = () => {
         if (isElectron()) {
           const { remote } = require('electron');
           const remoteFunctions = remote.require('./functions.js');
-          remote.dialog.showOpenDialog({
-            title: '添加歌曲',
-            properties: ['openFile', 'multiSelections'],
-            filters: [{
-              name: 'Music Files',
-              extensions: ['mp3', 'flac', 'ape'],
-            }],
-          }).then((result) => {
-            if (result.canceled) {
-              return;
-            }
+          remote.dialog
+            .showOpenDialog({
+              title: '添加歌曲',
+              properties: ['openFile', 'multiSelections'],
+              filters: [
+                {
+                  name: 'Music Files',
+                  extensions: ['mp3', 'flac', 'ape'],
+                },
+              ],
+            })
+            .then((result) => {
+              if (result.canceled) {
+                return;
+              }
 
             result.filePaths.forEach((fp) => {
               remoteFunctions.readAudioTags(fp).then((md) => {
@@ -722,7 +774,8 @@ const main = () => {
                 });
               });
             });
-          }).catch((err) => {
+          })
+          .catch((err) => {
             // console.log(err);
           });
         }
@@ -741,18 +794,47 @@ const main = () => {
     return ret;
   });
 
-  app.directive('volumeWheel', () => ((scope, element, attrs) => {
+  app.directive('volumeWheel', () => (scope, element, attrs) => {
     element.bind('mousewheel', () => {
       l1Player.adjustVolume(window.event.wheelDelta > 0);
     });
-  }));
+  });
 
-  app.controller('PlayController', ['$scope', '$timeout', '$log',
-    '$anchorScroll', '$location',
-    '$rootScope', 'Notification',
-    'hotkeys', 'lastfm', '$translate',
-    ($scope, $timeout, $log, $anchorScroll, $location,
-      $rootScope, Notification, hotkeys, lastfm, $translate) => {
+  function getCSSStringFromSetting(setting) {
+    return `div.content.lyric-content{
+      font-size: ${setting.fontSize}px;
+      color: ${setting.color};
+      background: rgba(36, 36, 36, ${setting.backgroundAlpha});
+    }
+    div.content.lyric-content span.contentTrans {
+      font-size: ${setting.fontSize - 4}px;
+    }
+    `;
+  }
+
+  app.controller('PlayController', [
+    '$scope',
+    '$timeout',
+    '$log',
+    '$anchorScroll',
+    '$location',
+    '$rootScope',
+    'Notification',
+    'hotkeys',
+    'lastfm',
+    '$translate',
+    (
+      $scope,
+      $timeout,
+      $log,
+      $anchorScroll,
+      $location,
+      $rootScope,
+      Notification,
+      hotkeys,
+      lastfm,
+      $translate
+    ) => {
       $scope.menuHidden = true;
       $scope.volume = l1Player.status.volume;
       $scope.mute = l1Player.status.muted;
@@ -765,7 +847,7 @@ const main = () => {
       $scope.lastTrackId = null;
 
       $scope.enableGloablShortcut = false;
-      $scope.isChrome = (!isElectron());
+      $scope.isChrome = !isElectron();
       $scope.isMac = false;
 
       $scope.currentDuration = '0:00';
@@ -814,13 +896,41 @@ const main = () => {
         } else {
           l1Player.setVolume($scope.volume);
         }
-        $scope.enableGlobalShortCut = localStorage.getObject('enable_global_shortcut');
-        $scope.enableLyricFloatingWindow = localStorage.getObject('enable_lyric_floating_window');
-        $scope.enableLyricTranslation = localStorage.getObject('enable_lyric_translation');
-        $scope.enableLyricFloatingWindowTranslation = localStorage.getObject('enable_lyric_floating_window_translation');
-        $scope.enableAutoChooseSource = getLocalStorageValue('enable_auto_choose_source', true);
-        $scope.enableStopWhenClose = getLocalStorageValue('enable_stop_when_close', true);
-        $scope.enableNowplayingCoverBackground = getLocalStorageValue('enable_nowplaying_cover_background', false);
+        $scope.enableGlobalShortCut = localStorage.getObject(
+          'enable_global_shortcut'
+        );
+        $scope.enableLyricFloatingWindow = localStorage.getObject(
+          'enable_lyric_floating_window'
+        );
+        $scope.enableLyricTranslation = localStorage.getObject(
+          'enable_lyric_translation'
+        );
+        $scope.enableLyricFloatingWindowTranslation = localStorage.getObject(
+          'enable_lyric_floating_window_translation'
+        );
+        $scope.enableAutoChooseSource = getLocalStorageValue(
+          'enable_auto_choose_source',
+          true
+        );
+        $scope.enableStopWhenClose = getLocalStorageValue(
+          'enable_stop_when_close',
+          true
+        );
+        $scope.enableNowplayingCoverBackground = getLocalStorageValue(
+          'enable_nowplaying_cover_background',
+          false
+        );
+
+        const defaultFloatWindowSetting = {
+          fontSize: 20,
+          color: '#ffffff',
+          backgroundAlpha: 0.2,
+        };
+
+        $scope.floatWindowSetting = getLocalStorageValue(
+          'float_window_setting',
+          defaultFloatWindowSetting
+        );
 
         $scope.applyGlobalShortcut();
         $scope.openLyricFloatingWindow();
@@ -842,7 +952,10 @@ const main = () => {
         }
 
         // check if globalShortcuts is allowed
-        localStorage.setObject('enable_global_shortcut', $scope.enableGlobalShortCut);
+        localStorage.setObject(
+          'enable_global_shortcut',
+          $scope.enableGlobalShortCut
+        );
 
         const { ipcRenderer } = require('electron');
         ipcRenderer.send('control', message);
@@ -861,10 +974,81 @@ const main = () => {
         } else {
           message = 'disable_lyric_floating_window';
         }
-        localStorage.setObject('enable_lyric_floating_window', $scope.enableLyricFloatingWindow);
+        localStorage.setObject(
+          'enable_lyric_floating_window',
+          $scope.enableLyricFloatingWindow
+        );
         const { ipcRenderer } = require('electron');
-        ipcRenderer.send('control', message);
+        ipcRenderer.send(
+          'control',
+          message,
+          getCSSStringFromSetting($scope.floatWindowSetting)
+        );
       };
+
+      if (isElectron()) {
+        require('electron').ipcRenderer.on('lyricWindow', (event, arg) => {
+          if (arg === 'float_window_close') {
+            $scope.openLyricFloatingWindow(true);
+          } else if (
+            arg === 'float_window_font_small' ||
+            arg === 'float_window_font_large'
+          ) {
+            const MIN_FONT_SIZE = 12;
+            const MAX_FONT_SIZE = 50;
+            const offset = arg === 'float_window_font_small' ? -1 : 1;
+            $scope.floatWindowSetting.fontSize += offset;
+            if ($scope.floatWindowSetting.fontSize < MIN_FONT_SIZE) {
+              $scope.floatWindowSetting.fontSize = MIN_FONT_SIZE;
+            } else if ($scope.floatWindowSetting.fontSize > MAX_FONT_SIZE) {
+              $scope.floatWindowSetting.fontSize = MAX_FONT_SIZE;
+            }
+          } else if (
+            arg === 'float_window_background_light' ||
+            arg === 'float_window_background_dark'
+          ) {
+            const MIN_BACKGROUND_ALPHA = 0;
+            const MAX_BACKGROUND_ALPHA = 1;
+            const offset = arg === 'float_window_background_light' ? -0.1 : 0.1;
+            $scope.floatWindowSetting.backgroundAlpha += offset;
+            if (
+              $scope.floatWindowSetting.backgroundAlpha < MIN_BACKGROUND_ALPHA
+            ) {
+              $scope.floatWindowSetting.backgroundAlpha = MIN_BACKGROUND_ALPHA;
+            } else if (
+              $scope.floatWindowSetting.backgroundAlpha > MAX_BACKGROUND_ALPHA
+            ) {
+              $scope.floatWindowSetting.backgroundAlpha = MAX_BACKGROUND_ALPHA;
+            }
+          } else if (arg === 'float_window_font_change_color') {
+            const floatWindowlyricColors = [
+              '#ffffff',
+              '#65d29f',
+              '#3c87eb',
+              '#ec63af',
+              '#4f5455',
+              '#eb605b',
+            ];
+            const currentIndex = floatWindowlyricColors.indexOf(
+              $scope.floatWindowSetting.color
+            );
+            const nextIndex =
+              (currentIndex + 1) % floatWindowlyricColors.length;
+            $scope.floatWindowSetting.color = floatWindowlyricColors[nextIndex];
+          }
+          localStorage.setObject(
+            'float_window_setting',
+            $scope.floatWindowSetting
+          );
+          const { ipcRenderer } = require('electron');
+          const message = 'update_lyric_floating_window_css';
+          ipcRenderer.send(
+            'control',
+            message,
+            getCSSStringFromSetting($scope.floatWindowSetting)
+          );
+        });
+      }
 
       $scope.saveLocalSettings = () => {
         localStorage.setObject('player-settings', $scope.settings);
@@ -872,7 +1056,8 @@ const main = () => {
 
       $scope.changePlaymode = () => {
         const playmodeCount = 3;
-        $scope.settings.playmode = ($scope.settings.playmode + 1) % playmodeCount;
+        $scope.settings.playmode =
+          ($scope.settings.playmode + 1) % playmodeCount;
         switchMode($scope.settings.playmode);
         $scope.saveLocalSettings();
       };
@@ -939,7 +1124,10 @@ const main = () => {
           return newstr;
         }
 
-        const process = (result, timeResult, translationFlag) => (line, index) => {
+        const process = (result, timeResult, translationFlag) => (
+          line,
+          index
+        ) => {
           const tagReg = /\[\D*:([^\]]+)\]/g;
           const tagRegResult = tagReg.exec(line);
           if (tagRegResult) {
@@ -964,11 +1152,18 @@ const main = () => {
               '&apos;': "'",
             };
             timeResult.push({
-              content: line.replace(timeRegResult[0], '')
-                .replace(/&(?:amp|lt|gt|quot|#39|apos);/g, (match) => htmlUnescapes[match]),
-              seconds: parseInt(timeRegResult[1], 10) * 60 * 1000 // min
-                + parseInt(timeRegResult[2], 10) * 1000 // sec
-                + (timeRegResult[3] ? parseInt(rightPadding(timeRegResult[3], 3, '0'), 10) : 0), // microsec
+              content: line
+                .replace(timeRegResult[0], '')
+                .replace(
+                  /&(?:amp|lt|gt|quot|#39|apos);/g,
+                  (match) => htmlUnescapes[match]
+                ),
+              seconds:
+                parseInt(timeRegResult[1], 10) * 60 * 1000 + // min
+                parseInt(timeRegResult[2], 10) * 1000 + // sec
+                (timeRegResult[3]
+                  ? parseInt(rightPadding(timeRegResult[3], 3, '0'), 10)
+                  : 0), // microsec
               translationFlag,
               index,
             });
@@ -1007,7 +1202,9 @@ const main = () => {
 
         return result;
       }
-      const mode = getLocalStorageValue('enable_stop_when_close', true) ? 'front' : 'background';
+      const mode = getLocalStorageValue('enable_stop_when_close', true)
+        ? 'front'
+        : 'background';
 
       getPlayer(mode).setMode(mode);
       if (mode === 'front') {
@@ -1020,7 +1217,10 @@ const main = () => {
       }
 
       addPlayerListener(mode, (msg, sender, sendResponse) => {
-        if (typeof msg.type === 'string' && msg.type.split(':')[0] === 'BG_PLAYER') {
+        if (
+          typeof msg.type === 'string' &&
+          msg.type.split(':')[0] === 'BG_PLAYER'
+        ) {
           switch (msg.type.split(':').slice(1).join('')) {
             case 'READY': {
               break;
@@ -1034,7 +1234,9 @@ const main = () => {
             }
 
             case 'VOLUME': {
-              $scope.$evalAsync(() => { $scope.volume = msg.data; });
+              $scope.$evalAsync(() => {
+                $scope.volume = msg.data;
+              });
               break;
             }
 
@@ -1054,36 +1256,57 @@ const main = () => {
                   }
                 }
               });
-              if (lastObject && lastObject.lineNumber !== $scope.lyricLineNumber) {
+              if (
+                lastObject &&
+                lastObject.lineNumber !== $scope.lyricLineNumber
+              ) {
                 const lineElement = document.querySelector(
-                  `.page .playsong-detail .detail-songinfo .lyric p[data-line="${lastObject.lineNumber}"]`,
+                  `.page .playsong-detail .detail-songinfo .lyric p[data-line="${lastObject.lineNumber}"]`
                 );
-                const windowHeight = document.querySelector('.page .playsong-detail .detail-songinfo .lyric').offsetHeight;
+                const windowHeight = document.querySelector(
+                  '.page .playsong-detail .detail-songinfo .lyric'
+                ).offsetHeight;
 
                 const adjustOffset = 30;
-                const offset = lineElement.offsetTop - windowHeight / 2 + adjustOffset;
+                const offset =
+                  lineElement.offsetTop - windowHeight / 2 + adjustOffset;
                 smoothScrollTo(document.querySelector('.lyric'), offset, 500);
                 $scope.lyricLineNumber = lastObject.lineNumber;
-                if (lastObjectTrans
-                  && lastObjectTrans.lineNumber !== $scope.lyricLineNumberTrans) {
+                if (
+                  lastObjectTrans &&
+                  lastObjectTrans.lineNumber !== $scope.lyricLineNumberTrans
+                ) {
                   $scope.lyricLineNumberTrans = lastObjectTrans.lineNumber;
                 }
                 if (isElectron()) {
                   const { ipcRenderer } = require('electron');
-                  const currentLyric = $scope.lyricArray[lastObject.lineNumber].content;
+                  const currentLyric =
+                    $scope.lyricArray[lastObject.lineNumber].content;
                   let currentLyricTrans = '';
-                  if ($scope.enableLyricFloatingWindowTranslation === true && lastObjectTrans) {
-                    currentLyricTrans = $scope.lyricArray[lastObjectTrans.lineNumber].content;
+                  if (
+                    $scope.enableLyricFloatingWindowTranslation === true &&
+                    lastObjectTrans
+                  ) {
+                    currentLyricTrans =
+                      $scope.lyricArray[lastObjectTrans.lineNumber].content;
                   }
-                  ipcRenderer.send('currentLyric', { lyric: currentLyric, tlyric: currentLyricTrans });
+                  ipcRenderer.send('currentLyric', {
+                    lyric: currentLyric,
+                    tlyric: currentLyricTrans,
+                  });
                 }
               }
 
               // 'currentTrack:duration'
               (() => {
                 const durationSec = Math.floor(msg.data.duration);
-                const durationStr = `${Math.floor(durationSec / 60)}:${(`0${durationSec % 60}`).substr(-2)}`;
-                if (msg.data.duration === 0 || $scope.currentDuration === durationStr) {
+                const durationStr = `${Math.floor(durationSec / 60)}:${`0${
+                  durationSec % 60
+                }`.substr(-2)}`;
+                if (
+                  msg.data.duration === 0 ||
+                  $scope.currentDuration === durationStr
+                ) {
                   return;
                 }
                 $scope.currentDuration = durationStr;
@@ -1095,10 +1318,13 @@ const main = () => {
                   if (msg.data.duration === 0) {
                     $scope.myProgress = 0;
                   } else {
-                    $scope.myProgress = (msg.data.pos / msg.data.duration) * 100;
+                    $scope.myProgress =
+                      (msg.data.pos / msg.data.duration) * 100;
                   }
                   const posSec = Math.floor(msg.data.pos);
-                  const posStr = `${Math.floor(posSec / 60)}:${(`0${posSec % 60}`).substr(-2)}`;
+                  const posStr = `${Math.floor(posSec / 60)}:${`0${
+                    posSec % 60
+                  }`.substr(-2)}`;
                   $scope.currentPosition = posStr;
                 });
               }
@@ -1125,7 +1351,7 @@ const main = () => {
               const track = msg.data;
               $rootScope.page_title = `▶ ${track.title} - ${track.artist}`;
               if (lastfm.isAuthorized()) {
-                lastfm.sendNowPlaying(track.title, track.artist, () => { });
+                lastfm.sendNowPlaying(track.title, track.artist, () => {});
               }
 
               MediaService.getLyric(
@@ -1169,9 +1395,13 @@ const main = () => {
               });
               if ($rootScope.page_title !== undefined) {
                 if (msg.data.isPlaying) {
-                  $rootScope.page_title = `▶ ${$rootScope.page_title.slice($rootScope.page_title.indexOf(' '))}`;
+                  $rootScope.page_title = `▶ ${$rootScope.page_title.slice(
+                    $rootScope.page_title.indexOf(' ')
+                  )}`;
                 } else {
-                  $rootScope.page_title = `❚❚ ${$rootScope.page_title.slice($rootScope.page_title.indexOf(' '))}`;
+                  $rootScope.page_title = `❚❚ ${$rootScope.page_title.slice(
+                    $rootScope.page_title.indexOf(' ')
+                  )}`;
                 }
               } else {
                 $rootScope.page_title = 'Listen 1';
@@ -1191,8 +1421,13 @@ const main = () => {
                 }
                 // send lastfm scrobble
                 const track = l1Player.getTrackById(l1Player.status.playing.id);
-                lastfm.scrobble(l1Player.status.playing.playedFrom,
-                  track.title, track.artist, track.album, () => { });
+                lastfm.scrobble(
+                  l1Player.status.playing.playedFrom,
+                  track.title,
+                  track.artist,
+                  track.album,
+                  () => {}
+                );
               }
 
               break;
@@ -1282,48 +1517,70 @@ const main = () => {
 
       $scope.toggleLyricTranslation = () => {
         $scope.enableLyricTranslation = !$scope.enableLyricTranslation;
-        localStorage.setObject('enable_lyric_translation', $scope.enableLyricTranslation);
+        localStorage.setObject(
+          'enable_lyric_translation',
+          $scope.enableLyricTranslation
+        );
       };
 
       $scope.toggleLyricFloatingWindowTranslation = () => {
         $scope.enableLyricFloatingWindowTranslation = !$scope.enableLyricFloatingWindowTranslation;
-        localStorage.setObject('enable_lyric_floating_window_translation', $scope.enableLyricFloatingWindowTranslation);
+        localStorage.setObject(
+          'enable_lyric_floating_window_translation',
+          $scope.enableLyricFloatingWindowTranslation
+        );
       };
 
       if (isElectron()) {
-        require('electron').ipcRenderer.on('globalShortcut', (event, message) => {
-          if (message === 'right') {
-            l1Player.next();
-          } else if (message === 'left') {
-            l1Player.prev();
-          } else if (message === 'space') {
-            l1Player.togglePlayPause();
+        require('electron').ipcRenderer.on(
+          'globalShortcut',
+          (event, message) => {
+            if (message === 'right') {
+              l1Player.next();
+            } else if (message === 'left') {
+              l1Player.prev();
+            } else if (message === 'space') {
+              l1Player.togglePlayPause();
+            }
           }
-        });
+        );
       }
 
       $scope.setAutoChooseSource = (toggle) => {
         if (toggle === true) {
           $scope.enableAutoChooseSource = !$scope.enableAutoChooseSource;
         }
-        localStorage.setObject('enable_auto_choose_source', $scope.enableAutoChooseSource);
+        localStorage.setObject(
+          'enable_auto_choose_source',
+          $scope.enableAutoChooseSource
+        );
       };
 
       $scope.setStopWhenClose = (status) => {
         $scope.enableStopWhenClose = status;
-        localStorage.setObject('enable_stop_when_close', $scope.enableStopWhenClose);
+        localStorage.setObject(
+          'enable_stop_when_close',
+          $scope.enableStopWhenClose
+        );
       };
 
       $scope.setNowplayingCoverBackground = (toggle) => {
         if (toggle === true) {
           $scope.enableNowplayingCoverBackground = !$scope.enableNowplayingCoverBackground;
         }
-        localStorage.setObject('enable_nowplaying_cover_background', $scope.enableNowplayingCoverBackground);
+        localStorage.setObject(
+          'enable_nowplaying_cover_background',
+          $scope.enableNowplayingCoverBackground
+        );
       };
     },
   ]);
 
-  app.controller('InstantSearchController', ['$scope', '$timeout', '$rootScope', '$translate',
+  app.controller('InstantSearchController', [
+    '$scope',
+    '$timeout',
+    '$rootScope',
+    '$translate',
     ($scope, $timeout, $rootScope, $translate) => {
       // notice: douban is skipped, and add all music so array should plus 2
       // [网易,虾米,QQ,NULL,酷狗,酷我,bilibili, migu, allmusic]
@@ -1338,13 +1595,15 @@ const main = () => {
       $scope.searchType = 0;
 
       function updateCurrentPage(cp) {
-        if (cp === -1) { // when search words changes,pagenums should be reset.
+        if (cp === -1) {
+          // when search words changes,pagenums should be reset.
           $scope.curpagelog = $scope.originpagelog.slice(0);
           $scope.curpage = 1;
         } else if (cp >= 0) {
           $scope.curpagelog[$scope.tab] = cp;
           $scope.curpage = $scope.curpagelog[$scope.tab];
-        } else { // only tab changed
+        } else {
+          // only tab changed
           $scope.curpage = $scope.curpagelog[$scope.tab];
         }
       }
@@ -1408,9 +1667,9 @@ const main = () => {
           performSearch();
         }
       };
-      $scope.isActiveTab = (tab) => ($scope.tab === tab);
+      $scope.isActiveTab = (tab) => $scope.tab === tab;
 
-      $scope.isSearchType = (searchType) => ($scope.searchType === searchType);
+      $scope.isSearchType = (searchType) => $scope.searchType === searchType;
 
       // eslint-disable-next-line consistent-return
       function renderSearchPage() {
@@ -1478,7 +1737,7 @@ const main = () => {
     },
   }));
 
-  app.directive('resize', ($window) => ((scope, element) => {
+  app.directive('resize', ($window) => (scope, element) => {
     const w = angular.element($window);
     const changeHeight = () => {
       const headerHeight = 90;
@@ -1489,22 +1748,26 @@ const main = () => {
       changeHeight(); // when window size gets changed
     });
     changeHeight(); // when page loads
-  }));
+  });
 
-  app.directive('addAndPlay', [() => ({
-    restrict: 'EA',
-    scope: {
-      song: '=addAndPlay',
-    },
-    link(scope, element, attrs) {
-      element.bind('click', (event) => {
-        l1Player.addTrack(scope.song);
-        l1Player.playById(scope.song.id);
-      });
-    },
-  })]);
+  app.directive('addAndPlay', [
+    () => ({
+      restrict: 'EA',
+      scope: {
+        song: '=addAndPlay',
+      },
+      link(scope, element, attrs) {
+        element.bind('click', (event) => {
+          l1Player.addTrack(scope.song);
+          l1Player.playById(scope.song.id);
+        });
+      },
+    }),
+  ]);
 
-  app.directive('addWithoutPlay', ['Notification', '$translate',
+  app.directive('addWithoutPlay', [
+    'Notification',
+    '$translate',
     (Notification, $translate) => ({
       restrict: 'EA',
       scope: {
@@ -1519,7 +1782,8 @@ const main = () => {
     }),
   ]);
 
-  app.directive('openUrl', ['$window',
+  app.directive('openUrl', [
+    '$window',
     ($window) => ({
       restrict: 'EA',
       scope: {
@@ -1538,7 +1802,8 @@ const main = () => {
     }),
   ]);
 
-  app.directive('windowControl', ['$window',
+  app.directive('windowControl', [
+    '$window',
     ($window) => ({
       restrict: 'EA',
       scope: {
@@ -1555,7 +1820,9 @@ const main = () => {
     }),
   ]);
 
-  app.directive('infiniteScroll', ['$window', '$rootScope',
+  app.directive('infiniteScroll', [
+    '$window',
+    '$rootScope',
     ($window, $rootScope) => ({
       restrict: 'EA',
       scope: {
@@ -1592,8 +1859,10 @@ const main = () => {
     }),
   ]);
 
-  app.directive('draggable', ['$document', '$rootScope',
-    ($document, $rootScope) => ((scope, element, attrs) => {
+  app.directive('draggable', [
+    '$document',
+    '$rootScope',
+    ($document, $rootScope) => (scope, element, attrs) => {
       let x;
       let container;
       const { mode } = attrs;
@@ -1670,10 +1939,12 @@ const main = () => {
         $document.on('mousemove', mousemove);
         $document.on('mouseup', mouseup);
       });
-    }),
+    },
   ]);
 
-  app.controller('MyPlayListController', ['$scope', '$timeout',
+  app.controller('MyPlayListController', [
+    '$scope',
+    '$timeout',
     ($scope, $timeout) => {
       $scope.myplaylists = [];
       $scope.favoriteplaylists = [];
@@ -1708,7 +1979,9 @@ const main = () => {
     },
   ]);
 
-  app.controller('PlayListController', ['$scope', '$timeout',
+  app.controller('PlayListController', [
+    '$scope',
+    '$timeout',
     ($scope, $timeout) => {
       $scope.result = [];
       $scope.tab = 0;
@@ -1734,7 +2007,7 @@ const main = () => {
         });
       });
 
-      $scope.isActiveTab = (tab) => ($scope.tab === tab);
+      $scope.isActiveTab = (tab) => $scope.tab === tab;
 
       $scope.loadPlaylist = () => {
         MediaService.showPlaylist(getSourceName($scope.tab)).success((data) => {

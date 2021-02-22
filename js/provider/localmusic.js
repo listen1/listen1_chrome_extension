@@ -65,7 +65,9 @@ function build_localmusic() {
           playlist.info.title = artist;
         } else {
           playlist.info.title = artist;
-          playlist.tracks = playlist.tracks.filter((tr) => tr.artist === artist);
+          playlist.tracks = playlist.tracks.filter(
+            (tr) => tr.artist === artist
+          );
         }
         fn(playlist);
       },
@@ -101,6 +103,11 @@ function build_localmusic() {
   }
 
   function lm_add_playlist(list_id, tracks) {
+    try {
+      tracks = JSON.parse(tracks);
+    } catch (e) {
+      // compatible with string and object
+    }
     let playlist = localStorage.getObject(list_id);
     if (playlist === null) {
       playlist = JSON.parse(JSON.stringify(defaultLocalMusicPlaylist));
@@ -109,7 +116,9 @@ function build_localmusic() {
     tracks.forEach((tr) => {
       tracksIdSet[tr.id] = true;
     });
-    playlist.tracks = tracks.concat(playlist.tracks.filter((tr) => tracksIdSet[tr.id] !== true));
+    playlist.tracks = tracks.concat(
+      playlist.tracks.filter((tr) => tracksIdSet[tr.id] !== true)
+    );
     localStorage.setObject(list_id, playlist);
 
     return {

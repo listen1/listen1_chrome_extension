@@ -16,6 +16,7 @@
       this._media_uri_list = {};
       this.playedFrom = 0;
       this.mode = 'background';
+      this.skipTime = 15;
     }
 
     setMode(newMode) {
@@ -171,14 +172,20 @@
           html5: true, // Force to HTML5 so that the audio can stream in (best for large files).
           onplay() {
             if ('mediaSession' in navigator) {
-              navigator.mediaSession.metadata = new MediaMetadata({
+              const { mediaSession } = navigator;
+              mediaSession.playbackState = 'playing';
+              mediaSession.metadata = new MediaMetadata({
                 title: self.currentAudio.title,
                 artist: self.currentAudio.artist,
-                album: `Listen1  •  ${(self.currentAudio.album || '<???>').padEnd(100)}`,
-                artwork: [{
-                  src: self.currentAudio.img_url,
-                  sizes: '300x300',
-                }],
+                album: `Listen1  •  ${(
+                  self.currentAudio.album || '<???>'
+                ).padEnd(100)}`,
+                artwork: [
+                  {
+                    src: self.currentAudio.img_url,
+                    sizes: '300x300',
+                  },
+                ],
               });
             }
             self.currentAudio.disabled = false;
@@ -209,6 +216,7 @@
             self.sendFullUpdate();
           },
           onpause() {
+            navigator.mediaSession.playbackState = 'paused';
             self.sendPlayingEvent('Paused');
             self.sendFullUpdate();
           },
@@ -216,10 +224,8 @@
             self.sendPlayingEvent('Stopped');
             self.sendFullUpdate();
           },
-          onseek() {
-          },
-          onvolume() {
-          },
+          onseek() {},
+          onvolume() {},
           onloaderror(id, err) {
             playerSendMessage(this.mode, {
               type: 'BG_PLAYER:PLAY_FAILED',
@@ -266,7 +272,8 @@
       // Get the next track based on the direction of the track.
       let { index } = this;
       let nextIndex = null;
-      if (this._loop_mode === 2 || direction === 'random') { // random
+      if (this._loop_mode === 2 || direction === 'random') {
+        // random
         nextIndex = () => Math.floor(Math.random() * this.playlist.length);
       } else if (direction === 'prev') {
         nextIndex = (idx) => (idx - 1) % this.playlist.length;
@@ -336,7 +343,7 @@
     }
 
     adjustVolume(inc) {
-      this.volume = (this.volume + inc ? 0.1 : -0.1);
+      this.volume = this.volume + inc ? 0.1 : -0.1;
       this.sendVolumeEvent();
       this.sendFrameUpdate();
     }
@@ -382,7 +389,7 @@
      */
     static formatTime(secs) {
       const minutes = Math.floor(secs / 60) || 0;
-      const seconds = (secs - minutes * 60) || 0;
+      const seconds = secs - minutes * 60 || 0;
 
       return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
     }
@@ -481,11 +488,38 @@
   window.threadPlayer = new Player();
   window.threadPlayer.setRefreshRate();
   window.threadPlayer.sendFullUpdate();
+
+  const { threadPlayer } = window;
+  const { mediaSession } = navigator;
   // TODO: enable after the play url retrieve logic moved to bg
-  navigator.mediaSession.setActionHandler('play', () => { window.threadPlayer.play(); });
-  navigator.mediaSession.setActionHandler('pause', () => { window.threadPlayer.pause(); });
-  // navigator.mediaSession.setActionHandler('nexttrack', () => window.player.skip('next'));
-  // navigator.mediaSession.setActionHandler('previoustrack', () => window.player.skip('prev'));
+  mediaSession?.setActionHandler('play', () => {
+    threadPlayer.play();
+  });
+  mediaSession?.setActionHandler('pause', () => {
+    threadPlayer.pause();
+  });
+  mediaSession?.setActionHandler('seekforward', () => {
+    // User clicked "Seek Forward" media notification icon.
+    const { currentHowl } = threadPlayer;
+    const newTime = Math.min(
+      currentHowl.seek() + threadPlayer.skipTime,
+      currentHowl.duration()
+    );
+    currentHowl.seek(newTime);
+  });
+
+  mediaSession?.setActionHandler('seekbackward', () => {
+    // User clicked "Seek Backward" media notification icon.
+    const { currentHowl } = threadPlayer;
+    const newTime = Math.max(currentHowl.seek() - threadPlayer.skipTime, 0);
+    currentHowl.seek(newTime);
+  });
+  mediaSession?.setActionHandler('nexttrack', () => {
+    threadPlayer.skip('next');
+  });
+  mediaSession?.setActionHandler('previoustrack', () => {
+    threadPlayer.skip('prev');
+  });
   playerSendMessage(this.mode, {
     type: 'BG_PLAYER:READY',
   });

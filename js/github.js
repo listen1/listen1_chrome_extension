@@ -1,7 +1,8 @@
 /* global angular Github isElectron require */
 /* eslint-disable global-require */
 const ngGithub = angular.module('githubClient', []);
-ngGithub.factory('github', ['$rootScope',
+ngGithub.factory('github', [
+  '$rootScope',
   ($rootScope) => ({
     openAuthUrl: () => {
       const url = Github.getOAuthUrl();
@@ -38,8 +39,9 @@ ngGithub.provider('gist', {
   $get: () => {
     const apiUrl = 'https://api.github.com/gists';
 
-    // eslint-disable-next-line no-unused-vars
-    function _getGistId() { // eslint-disable-line no-underscore-dangle
+    // eslint-disable-next-line
+    function _getGistId() {
+      // eslint-disable-line no-underscore-dangle
       return localStorage.getObject('gistid');
     }
 
@@ -57,7 +59,11 @@ ngGithub.provider('gist', {
         const { title } = playlist.info;
         let tableHeader = '\n| 音乐标题 | 歌手 | 专辑 |\n';
         tableHeader += '| --- | --- | --- |\n';
-        const tableBody = playlist.tracks.reduce((r, track) => `${r} | ${track.title} | ${track.artist} | ${track.album} | \n`, '');
+        const tableBody = playlist.tracks.reduce(
+          (r, track) =>
+            `${r} | ${track.title} | ${track.artist} | ${track.album} | \n`,
+          ''
+        );
         const content = `<details>\n  <summary>${cover}   ${title}</summary><p>\n${tableHeader}${tableBody}</p></details>`;
         const filename = `listen1_${playlistId}.md`;
         result[filename] = {
@@ -81,24 +87,34 @@ ngGithub.provider('gist', {
 
       const url = gistFiles['listen1_backup.json'].raw_url;
       // const { size } = gistFiles['listen1_backup.json'];
-      axios.get(url, {
-        headers: {
-          Authorization: `token ${localStorage.getObject('githubOauthAccessKey')}`,
-        },
-      }).then((res) => callback(res.data));
+      axios
+        .get(url, {
+          headers: {
+            Authorization: `token ${localStorage.getObject(
+              'githubOauthAccessKey'
+            )}`,
+          },
+        })
+        .then((res) => callback(res.data));
       return null;
     }
 
     function listExistBackup() {
       const url = apiUrl;
-      return axios.get(url, {
-        headers: {
-          Authorization: `token ${localStorage.getObject('githubOauthAccessKey')}`,
-        },
-      }).then((res) => {
-        const result = res.data;
-        return result.filter((backupObject) => backupObject.description.startsWith('updated by Listen1'));
-      });
+      return axios
+        .get(url, {
+          headers: {
+            Authorization: `token ${localStorage.getObject(
+              'githubOauthAccessKey'
+            )}`,
+          },
+        })
+        .then((res) => {
+          const result = res.data;
+          return result.filter((backupObject) =>
+            backupObject.description.startsWith('updated by Listen1')
+          );
+        });
     }
 
     function backup(files, gistId, isPublic) {
@@ -115,7 +131,9 @@ ngGithub.provider('gist', {
         method,
         url,
         headers: {
-          Authorization: `token ${localStorage.getObject('githubOauthAccessKey')}`,
+          Authorization: `token ${localStorage.getObject(
+            'githubOauthAccessKey'
+          )}`,
         },
         data: {
           description: `updated by Listen1(http://listen1.github.io/listen1/) at ${new Date().toLocaleString()}`,
