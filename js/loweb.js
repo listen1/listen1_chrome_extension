@@ -284,11 +284,11 @@ const MediaService = {
         });
       }));
       // TODO: Use Promise.any() in ES2021 replace the tricky workaround
-      Promise.all(getUrlPromises).catch((url) => {
+      Promise.all(getUrlPromises).then(playerFailCallback).catch((url) => {
         // eslint-disable-next-line no-param-reassign
         sound.url = url;
         playerSuccessCallback();
-      }).then(playerFailCallback);
+      });
     }
 
     const provider = getProviderByName(track.source);
