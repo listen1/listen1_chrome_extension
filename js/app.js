@@ -1,5 +1,5 @@
 /* eslint-disable no-shadow */
-/* global l1Player require */
+/* global l1Player require MediaService */
 /* global angular isElectron getAllProviders */
 /* global setPrototypeOfLocalStorage addPlayerListener */
 /* global getLocalStorageValue getPlayer getPlayerAsync smoothScrollTo */
@@ -11,7 +11,6 @@
 const main = () => {
   const app = angular.module('listenone', [
     'ui-notification',
-    'loWebManager',
     'cfp.hotkeys',
     'lastfmClient',
     'githubClient',
@@ -68,27 +67,8 @@ const main = () => {
 
   app.run([
     '$q',
-    'loWeb',
     '$translate',
-    ($q, loWeb, $translate) => {
-      function getAutoChooseSource() {
-        let enableAutoChooseSource = localStorage.getObject(
-          'enable_auto_choose_source'
-        );
-        if (enableAutoChooseSource === null) {
-          // default on
-          enableAutoChooseSource = true;
-        }
-        return enableAutoChooseSource;
-      }
-      l1Player.setBootstrapTrack(
-        loWeb.bootstrapTrack(
-          () => {},
-          () => {},
-          getAutoChooseSource
-        )
-      );
-
+    ($q, $translate) => {
       axios.Axios.prototype.request_original = axios.Axios.prototype.request;
       axios.Axios.prototype.request = function new_req(config) {
         return $q.when(this.request_original(config));
@@ -190,7 +170,6 @@ const main = () => {
     '$timeout',
     'Notification',
     '$rootScope',
-    'loWeb',
     'hotkeys',
     'lastfm',
     'github',
@@ -201,7 +180,6 @@ const main = () => {
       $timeout,
       Notification,
       $rootScope,
-      loWeb,
       hotkeys,
       lastfm,
       github,
@@ -259,58 +237,6 @@ const main = () => {
         }, 0);
       };
 
-      $scope.showWindow = (url) => {
-        // save current scrolltop
-        const offset = document.getElementsByClassName('browser')[0].scrollTop;
-        if (
-          $scope.window_url_stack.length > 0 &&
-          $scope.window_url_stack[$scope.window_url_stack.length - 1] === url
-        ) {
-          return;
-        }
-        $scope.is_window_hidden = 0;
-        $scope.resetWindow();
-
-        if (
-          $scope.window_url_stack.length > 0 &&
-          $scope.window_url_stack[$scope.window_url_stack.length - 1] ===
-            '/now_playing'
-        ) {
-          // if now playing is top, pop it
-          $scope.window_url_stack.splice(-1, 1);
-        }
-
-        if (url === '/now_playing') {
-          $scope.window_type = 'track';
-          $scope.window_url_stack.push({ url, offset });
-          $scope.window_poped_url_stack = [];
-          return;
-        }
-        $scope.window_url_stack.push({ url, offset });
-        $scope.window_poped_url_stack = [];
-
-        loWeb.get(url).success((data) => {
-          if (data.status === '0') {
-            Notification.info(data.reason);
-            $scope.popWindow();
-            return;
-          }
-          $scope.songs = data.tracks;
-          $scope.cover_img_url = data.info.cover_img_url;
-          $scope.playlist_title = data.info.title;
-          $scope.playlist_source_url = data.info.source_url;
-          $scope.list_id = data.info.id;
-          $scope.is_mine = data.info.id.slice(0, 2) === 'my';
-          $scope.is_local = data.info.id.slice(0, 2) === 'lm';
-          const isfavUrl = `/playlist_contains?type=favorite&list_id=${data.info.id}`;
-          loWeb.get(isfavUrl).success((res) => {
-            $scope.is_favorite = res.result;
-          });
-
-          $scope.window_type = 'list';
-        });
-      };
-
       $scope.closeWindow = (offset) => {
         if (offset === undefined) {
           offset = 0;
@@ -321,15 +247,13 @@ const main = () => {
         $scope.window_poped_url_stack = [];
       };
 
-      function refreshWindow(url, offset) {
-        if (offset === undefined) {
-          offset = 0;
-        }
+      function refreshWindow(url, offset = 0) {
         if (url === '/now_playing') {
           $scope.window_type = 'track';
           return;
         }
-        loWeb.get(url).success((data) => {
+        const listId = (new URL(url, window.location)).searchParams.get('list_id');
+        MediaService.getPlaylist(listId).success((data) => {
           $scope.songs = data.tracks;
           $scope.list_id = data.info.id;
           $scope.cover_img_url = data.info.cover_img_url;
@@ -347,11 +271,7 @@ const main = () => {
           return;
         }
         let poped = $scope.window_url_stack.pop();
-        if (
-          $scope.window_url_stack.length > 0 &&
-          $scope.window_url_stack[$scope.window_url_stack.length - 1].url ===
-            '/now_playing'
-        ) {
+        if (($scope.window_url_stack.slice(-1)[0] || {}).url === '/now_playing') {
           poped = $scope.window_url_stack.pop();
         }
         $scope.window_poped_url_stack.push(poped.url);
@@ -359,21 +279,27 @@ const main = () => {
           $scope.closeWindow(poped.offset);
         } else {
           $scope.resetWindow(poped.offset);
-          const lastWindow =
-            $scope.window_url_stack[$scope.window_url_stack.length - 1];
+          const lastWindow = $scope.window_url_stack.slice(-1)[0];
           refreshWindow(lastWindow.url, poped.offset);
         }
       };
 
-      $scope.toggleWindow = (url) => {
-        if (
-          $scope.window_url_stack.length > 0 &&
-          $scope.window_url_stack[$scope.window_url_stack.length - 1].url ===
-            url
-        ) {
-          return $scope.popWindow();
+      $scope.toggleNowPlaying = () => {
+        if (($scope.window_url_stack.slice(-1)[0] || {}).url === '/now_playing') {
+          $scope.popWindow();
+          return;
         }
-        return $scope.showWindow(url);
+        // save current scrolltop
+        $scope.is_window_hidden = 0;
+        $scope.resetWindow();
+
+        $scope.window_url_stack.push({
+          url: '/now_playing',
+          offset: document.getElementsByClassName('browser')[0].scrollTop,
+        });
+        $scope.window_poped_url_stack = [];
+
+        $scope.window_type = 'track';
       };
 
       $scope.forwardWindow = () => {
@@ -383,24 +309,55 @@ const main = () => {
 
         $scope.resetWindow();
         const url = $scope.window_poped_url_stack.pop();
-        $scope.window_url_stack.push(url);
+        $scope.window_url_stack.push({
+          url,
+          offset: 0,
+        });
         refreshWindow(url);
       };
 
-      $scope.showPlaylist = (list_id, option) => {
-        let url = `/playlist?list_id=${list_id}`;
-        if (option !== undefined) {
-          if (option.useCache === false) {
-            url += '&use_cache=0';
-          }
+      $scope.showPlaylist = (list_id, useCache) => {
+        const url = `/playlist?list_id=${list_id}`;
+        // save current scrolltop
+        const offset = document.getElementsByClassName('browser')[0].scrollTop;
+        if (($scope.window_url_stack.slice(-1)[0] || {}).url === url) {
+          return;
         }
-        $scope.showWindow(url);
+        $scope.is_window_hidden = 0;
+        $scope.resetWindow();
+
+        if (($scope.window_url_stack.slice(-1)[0] || {}).url === '/now_playing') {
+          // if now playing is top, pop it
+          $scope.window_url_stack.pop();
+        }
+        $scope.window_url_stack.push({ url, offset });
+        $scope.window_poped_url_stack = [];
+
+        const listId = (new URL(url, window.location)).searchParams.get('list_id');
+        MediaService.getPlaylist(listId, useCache).success((data) => {
+          if (data.status === '0') {
+            Notification.info(data.reason);
+            $scope.popWindow();
+            return;
+          }
+          $scope.songs = data.tracks;
+          $scope.cover_img_url = data.info.cover_img_url;
+          $scope.playlist_title = data.info.title;
+          $scope.playlist_source_url = data.info.source_url;
+          $scope.list_id = data.info.id;
+          $scope.is_mine = (data.info.id.slice(0, 2) === 'my');
+          $scope.is_local = (data.info.id.slice(0, 2) === 'lm');
+
+          MediaService.queryPlaylist(data.info.id, 'favorite').success((res) => {
+            $scope.is_favorite = res.result;
+          });
+
+          $scope.window_type = 'list';
+        });
       };
 
       $scope.directplaylist = (list_id) => {
-        const url = `/playlist?list_id=${list_id}`;
-
-        loWeb.get(url).success((data) => {
+        MediaService.getPlaylist(list_id).success((data) => {
           $scope.songs = data.tracks;
           $scope.current_list_id = list_id;
           l1Player.setNewPlaylist($scope.songs);
@@ -418,9 +375,8 @@ const main = () => {
 
         if (dialog_type === 0) {
           $scope.dialog_title = $translate.instant('_ADD_TO_PLAYLIST');
-          const url = '/show_myplaylist';
           $scope.dialog_song = data;
-          loWeb.get(url).success((res) => {
+          MediaService.showMyPlaylist().success((res) => {
             $scope.myplaylist = res.result;
           });
         }
@@ -446,8 +402,7 @@ const main = () => {
         }
         if (dialog_type === 6) {
           $scope.dialog_title = $translate.instant('_IMPORT_PLAYLIST');
-          const url = '/show_myplaylist';
-          loWeb.get(url).success((res) => {
+          MediaService.showMyPlaylist().success((res) => {
             $scope.myplaylist = res.result;
           });
           $scope.dialog_type = 6;
@@ -483,32 +438,17 @@ const main = () => {
       };
 
       $scope.chooseDialogOption = (option_id) => {
-        const url = '/add_myplaylist';
-        loWeb
-          .post({
-            url,
-            method: 'POST',
-            data: {
-              list_id: option_id,
-              track: $scope.dialog_song,
-            },
-            headers: {
-              'Content-Type': 'application/x-www-form-urlencoded',
-            },
-          })
-          .success((playlist) => {
-            Notification.success(
-              $translate.instant('_ADD_TO_PLAYLIST_SUCCESS')
-            );
-            $scope.closeDialog();
-            // add to current playing list
-            if (option_id === $scope.current_list_id) {
-              l1Player.addTrack($scope.dialog_song);
-            }
-            if (option_id === $scope.list_id) {
-              $scope.songs = playlist.tracks;
-            }
-          });
+        MediaService.addMyPlaylist(option_id, $scope.dialog_song).success((playlist) => {
+          Notification.success($translate.instant('_ADD_TO_PLAYLIST_SUCCESS'));
+          $scope.closeDialog();
+          // add to current playing list
+          if (option_id === $scope.current_list_id) {
+            l1Player.addTrack($scope.dialog_song);
+          }
+          if (option_id === $scope.list_id) {
+            $scope.songs = playlist.tracks;
+          }
+        });
       };
 
       $scope.newDialogOption = (option) => {
@@ -520,109 +460,53 @@ const main = () => {
       };
 
       $scope.createAndAddPlaylist = () => {
-        const url = '/create_myplaylist';
-
-        loWeb
-          .post({
-            url,
-            method: 'POST',
-            data: {
-              list_title: $scope.newlist_title,
-              track: $scope.dialog_song,
-            },
-            headers: {
-              'Content-Type': 'application/x-www-form-urlencoded',
-            },
-          })
-          .success(() => {
-            $rootScope.$broadcast('myplaylist:update');
-            Notification.success(
-              $translate.instant('_ADD_TO_PLAYLIST_SUCCESS')
-            );
-            $scope.closeDialog();
-          });
+        MediaService.createMyPlaylist($scope.newlist_title, $scope.dialog_song).success(() => {
+          $rootScope.$broadcast('myplaylist:update');
+          Notification.success($translate.instant('_ADD_TO_PLAYLIST_SUCCESS'));
+          $scope.closeDialog();
+        });
       };
 
       $scope.editMyPlaylist = () => {
-        const url = '/edit_myplaylist';
-
-        loWeb
-          .post({
-            url,
-            method: 'POST',
-            data: {
-              list_id: $scope.list_id,
-              title: $scope.dialog_playlist_title,
-              cover_img_url: $scope.dialog_cover_img_url,
-            },
-            headers: {
-              'Content-Type': 'application/x-www-form-urlencoded',
-            },
-          })
-          .success(() => {
-            $rootScope.$broadcast('myplaylist:update');
-            $scope.playlist_title = $scope.dialog_playlist_title;
-            $scope.cover_img_url = $scope.dialog_cover_img_url;
-            Notification.success($translate.instant('_EDIT_PLAYLIST_SUCCESS'));
-            $scope.closeDialog();
-          });
+        MediaService.editMyPlaylist(
+          $scope.list_id,
+          $scope.dialog_playlist_title,
+          $scope.dialog_cover_img_url,
+        ).success(() => {
+          $rootScope.$broadcast('myplaylist:update');
+          $scope.playlist_title = $scope.dialog_playlist_title;
+          $scope.cover_img_url = $scope.dialog_cover_img_url;
+          Notification.success($translate.instant('_EDIT_PLAYLIST_SUCCESS'));
+          $scope.closeDialog();
+        });
       };
 
       $scope.mergePlaylist = (target_list_id) => {
         Notification.info($translate.instant('_IMPORTING_PLAYLIST'));
-        const url = '/merge_playlist';
-        loWeb
-          .post({
-            url,
-            method: 'POST',
-            data: {
-              source: $scope.list_id,
-              target: target_list_id,
-            },
-            headers: {
-              'Content-Type': 'application/x-www-form-urlencoded',
-            },
-          })
-          .success(() => {
-            Notification.success(
-              $translate.instant('_IMPORTING_PLAYLIST_SUCCESS')
-            );
-            $scope.closeDialog();
-            $scope.popWindow();
-            $scope.showPlaylist($scope.list_id);
-          });
+        MediaService.mergePlaylist($scope.list_id, target_list_id).success(() => {
+          Notification.success($translate.instant('_IMPORTING_PLAYLIST_SUCCESS'));
+          $scope.closeDialog();
+          $scope.popWindow();
+          $scope.showPlaylist($scope.list_id);
+        });
       };
 
       $scope.removeSongFromPlaylist = (song, list_id) => {
-        let url = '';
+        let removeFunc = null;
         if (list_id.slice(0, 2) === 'my') {
-          url = '/remove_track_from_myplaylist';
+          removeFunc = MediaService.removeTrackFromMyPlaylist;
         } else if (list_id.slice(0, 2) === 'lm') {
-          url = '/remove_track_from_playlist';
+          removeFunc = MediaService.removeTrackFromPlaylist;
         }
 
-        loWeb
-          .post({
-            url,
-            method: 'POST',
-            data: {
-              list_id,
-              track_id: song.id,
-            },
-            headers: {
-              'Content-Type': 'application/x-www-form-urlencoded',
-            },
-          })
-          .success(() => {
-            // remove song from songs
-            const index = $scope.songs.indexOf(song);
-            if (index > -1) {
-              $scope.songs.splice(index, 1);
-            }
-            Notification.success(
-              $translate.instant('_REMOVE_SONG_FROM_PLAYLIST_SUCCESS')
-            );
-          });
+        removeFunc(list_id, song.id).success(() => {
+          // remove song from songs
+          const index = $scope.songs.indexOf(song);
+          if (index > -1) {
+            $scope.songs.splice(index, 1);
+          }
+          Notification.success($translate.instant('_REMOVE_SONG_FROM_PLAYLIST_SUCCESS'));
+        });
       };
 
       $scope.closeDialog = () => {
@@ -661,51 +545,20 @@ const main = () => {
       };
 
       $scope.clonePlaylist = (list_id) => {
-        const url = '/clone_playlist';
-        loWeb
-          .post({
-            url,
-            method: 'POST',
-            data: {
-              playlist_type: 'my',
-              list_id,
-            },
-            headers: {
-              'Content-Type': 'application/x-www-form-urlencoded',
-            },
-          })
-          .success(() => {
-            $rootScope.$broadcast('myplaylist:update');
-            $scope.closeWindow();
-            Notification.success(
-              $translate.instant('_ADD_TO_PLAYLIST_SUCCESS')
-            );
-          });
+        MediaService.clonePlaylist(list_id, 'my').success(() => {
+          $rootScope.$broadcast('myplaylist:update');
+          $scope.closeWindow();
+          Notification.success($translate.instant('_ADD_TO_PLAYLIST_SUCCESS'));
+        });
       };
 
       $scope.removeMyPlaylist = (list_id) => {
-        const url = '/remove_myplaylist';
-
-        loWeb
-          .post({
-            url,
-            method: 'POST',
-            data: {
-              list_id,
-              playlist_type: 'my',
-            },
-            headers: {
-              'Content-Type': 'application/x-www-form-urlencoded',
-            },
-          })
-          .success(() => {
-            $rootScope.$broadcast('myplaylist:update');
-            $scope.closeDialog();
-            $scope.closeWindow();
-            Notification.success(
-              $translate.instant('_REMOVE_PLAYLIST_SUCCESS')
-            );
-          });
+        MediaService.removeMyPlaylist(list_id, 'my').success(() => {
+          $rootScope.$broadcast('myplaylist:update');
+          $scope.closeDialog();
+          $scope.closeWindow();
+          Notification.success($translate.instant('_REMOVE_PLAYLIST_SUCCESS'));
+        });
       };
 
       $scope.downloadFile = (fileName, fileType, content) => {
@@ -837,25 +690,14 @@ const main = () => {
       });
 
       $scope.openUrl = (url) => {
-        loWeb
-          .post({
-            url: '/parse_url',
-            method: 'POST',
-            data: {
-              url,
-            },
-            headers: {
-              'Content-Type': 'application/x-www-form-urlencoded',
-            },
-          })
-          .success((data) => {
-            const { result } = data;
-            if (result !== undefined) {
-              $scope.showPlaylist(result.id);
-            } else {
-              Notification.info($translate.instant('_FAIL_OPEN_PLAYLIST_URL'));
-            }
-          });
+        MediaService.parseURL(url).success((data) => {
+          const { result } = data;
+          if (result !== undefined) {
+            $scope.showPlaylist(result.id);
+          } else {
+            Notification.info($translate.instant('_FAIL_OPEN_PLAYLIST_URL'));
+          }
+        });
       };
 
       $scope.favoritePlaylist = (list_id) => {
@@ -868,48 +710,18 @@ const main = () => {
         }
       };
       $scope.addFavoritePlaylist = (list_id) => {
-        loWeb
-          .post({
-            url: '/clone_playlist',
-            method: 'POST',
-            data: {
-              playlist_type: 'favorite',
-              list_id,
-            },
-            headers: {
-              'Content-Type': 'application/x-www-form-urlencoded',
-            },
-          })
-          .success((addResult) => {
-            $rootScope.$broadcast('favoriteplaylist:update');
-            Notification.success(
-              $translate.instant('_FAVORITE_PLAYLIST_SUCCESS')
-            );
-          });
+        MediaService.clonePlaylist(list_id, 'favorite').success((addResult) => {
+          $rootScope.$broadcast('favoriteplaylist:update');
+          Notification.success($translate.instant('_FAVORITE_PLAYLIST_SUCCESS'));
+        });
       };
 
       $scope.removeFavoritePlaylist = (list_id) => {
-        const url = '/remove_myplaylist';
-
-        loWeb
-          .post({
-            url,
-            method: 'POST',
-            data: {
-              list_id,
-              playlist_type: 'favorite',
-            },
-            headers: {
-              'Content-Type': 'application/x-www-form-urlencoded',
-            },
-          })
-          .success(() => {
-            $rootScope.$broadcast('favoriteplaylist:update');
-            // $scope.closeWindow();
-            Notification.success(
-              $translate.instant('_UNFAVORITE_PLAYLIST_SUCCESS')
-            );
-          });
+        MediaService.removeMyPlaylist(list_id, 'favorite').success(() => {
+          $rootScope.$broadcast('favoriteplaylist:update');
+          // $scope.closeWindow();
+          Notification.success($translate.instant('_UNFAVORITE_PLAYLIST_SUCCESS'));
+        });
       };
 
       $scope.addLocalMusic = (list_id) => {
@@ -932,53 +744,40 @@ const main = () => {
                 return;
               }
 
-              result.filePaths.forEach((fp) => {
-                remoteFunctions.readAudioTags(fp).then((md) => {
-                  const track = {
-                    id: `lmtrack_${fp}`,
-                    title: md.common.title,
-                    artist: md.common.artist,
-                    artist_id: `lmartist_${md.common.artist}`,
-                    album: md.common.album,
-                    album_id: `lmalbum_${md.common.album}`,
-                    source: 'localmusic',
-                    source_url: '',
-                    img_url: '',
-                    // url: "lmtrack_"+fp,
-                    sound_url: `file://${fp}`,
-                  };
+            result.filePaths.forEach((fp) => {
+              remoteFunctions.readAudioTags(fp).then((md) => {
+                const track = {
+                  id: `lmtrack_${fp}`,
+                  title: md.common.title,
+                  artist: md.common.artist,
+                  artist_id: `lmartist_${md.common.artist}`,
+                  album: md.common.album,
+                  album_id: `lmalbum_${md.common.album}`,
+                  source: 'localmusic',
+                  source_url: '',
+                  img_url: '',
+                  // url: "lmtrack_"+fp,
+                  sound_url: `file://${fp}`,
+                };
 
-                  const list_id = 'lmplaylist_reserve';
-                  const url = '/add_playlist';
-                  loWeb
-                    .post({
-                      url,
-                      method: 'POST',
-                      data: {
-                        list_id,
-                        tracks: JSON.stringify([track]),
-                      },
-                      headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                      },
-                    })
-                    .success((res) => {
-                      const { playlist } = res;
-                      $scope.songs = playlist.tracks;
-                      $scope.list_id = playlist.info.id;
-                      $scope.cover_img_url = playlist.info.cover_img_url;
-                      $scope.playlist_title = playlist.info.title;
-                      $scope.playlist_source_url = playlist.info.source_url;
-                      $scope.is_mine = playlist.info.id.slice(0, 2) === 'my';
-                      $scope.is_local = playlist.info.id.slice(0, 2) === 'lm';
-                      $scope.$evalAsync();
-                    });
+                const list_id = 'lmplaylist_reserve';
+                MediaService.addPlaylist(list_id, [track]).success((res) => {
+                  const { playlist } = res;
+                  $scope.songs = playlist.tracks;
+                  $scope.list_id = playlist.info.id;
+                  $scope.cover_img_url = playlist.info.cover_img_url;
+                  $scope.playlist_title = playlist.info.title;
+                  $scope.playlist_source_url = playlist.info.source_url;
+                  $scope.is_mine = (playlist.info.id.slice(0, 2) === 'my');
+                  $scope.is_local = (playlist.info.id.slice(0, 2) === 'lm');
+                  $scope.$evalAsync();
                 });
               });
-            })
-            .catch((err) => {
-              // console.log(err);
             });
+          })
+          .catch((err) => {
+            // console.log(err);
+          });
         }
       };
     },
@@ -1021,7 +820,6 @@ const main = () => {
     '$location',
     '$rootScope',
     'Notification',
-    'loWeb',
     'hotkeys',
     'lastfm',
     '$translate',
@@ -1033,7 +831,6 @@ const main = () => {
       $location,
       $rootScope,
       Notification,
-      loWeb,
       hotkeys,
       lastfm,
       $translate
@@ -1551,20 +1348,18 @@ const main = () => {
               $scope.lyricLineNumber = -1;
               $scope.lyricLineNumberTrans = -1;
               smoothScrollTo(document.querySelector('.lyric'), 0, 300);
-              let url = `/lyric?track_id=${msg.data.id}&album_id=${msg.data.album_id}`;
               const track = msg.data;
               $rootScope.page_title = `▶ ${track.title} - ${track.artist}`;
               if (lastfm.isAuthorized()) {
                 lastfm.sendNowPlaying(track.title, track.artist, () => {});
               }
 
-              if (track.lyric_url) {
-                url = `${url}&lyric_url=${track.lyric_url}`;
-              }
-              if (track.tlyric_url) {
-                url = `${url}&tlyric_url=${track.tlyric_url}`;
-              }
-              loWeb.get(url).success((res) => {
+              MediaService.getLyric(
+                msg.data.id,
+                msg.data.album_id,
+                track.lyric_url,
+                track.tlyric_url,
+              ).success((res) => {
                 const { lyric, tlyric } = res;
                 if (!lyric) {
                   return;
@@ -1785,9 +1580,8 @@ const main = () => {
     '$scope',
     '$timeout',
     '$rootScope',
-    'loWeb',
     '$translate',
-    ($scope, $timeout, $rootScope, loWeb, $translate) => {
+    ($scope, $timeout, $rootScope, $translate) => {
       // notice: douban is skipped, and add all music so array should plus 2
       // [网易,虾米,QQ,NULL,酷狗,酷我,bilibili, migu, allmusic]
       $scope.originpagelog = Array(getAllProviders().length + 2).fill(1);
@@ -1829,23 +1623,21 @@ const main = () => {
 
       function performSearch() {
         $rootScope.$broadcast('search:keyword_change', $scope.keywords);
-        loWeb
-          .get(
-            `/search?source=${getSourceName($scope.tab)}&keywords=${
-              $scope.keywords
-            }&curpage=${$scope.curpage}&type=${$scope.searchType}`
-          )
-          .success((data) => {
-            // update the textarea
-            data.result.forEach((r) => {
-              r.sourceName = $translate.instant(r.source);
-            });
-            $scope.result = data.result;
-            updateTotalPage(data.total);
-            $scope.loading = false;
-            // scroll back to top when finish searching
-            document.querySelector('.site-wrapper-innerd').scrollTo({ top: 0 });
+        MediaService.search(getSourceName($scope.tab), {
+          keywords: $scope.keywords,
+          curpage: $scope.curpage,
+          type: $scope.searchType,
+        }).success((data) => {
+          // update the textarea
+          data.result.forEach((r) => {
+            r.sourceName = $translate.instant(r.source);
           });
+          $scope.result = data.result;
+          updateTotalPage(data.total);
+          $scope.loading = false;
+          // scroll back to top when finish searching
+          document.querySelector('.site-wrapper-innerd').scrollTo({ top: 0 });
+        });
       }
 
       $scope.changeSourceTab = (newTab) => {
@@ -2153,19 +1945,18 @@ const main = () => {
   app.controller('MyPlayListController', [
     '$scope',
     '$timeout',
-    'loWeb',
-    ($scope, $timeout, loWeb) => {
+    ($scope, $timeout) => {
       $scope.myplaylists = [];
       $scope.favoriteplaylists = [];
 
       $scope.loadMyPlaylist = () => {
-        loWeb.get('/show_myplaylist').success((data) => {
+        MediaService.showMyPlaylist().success((data) => {
           $scope.myplaylists = data.result;
         });
       };
 
       $scope.loadFavoritePlaylist = () => {
-        loWeb.get('/show_favoriteplaylist').success((data) => {
+        MediaService.showFavPlaylist().success((data) => {
           $scope.favoriteplaylists = data.result;
         });
       };
@@ -2191,8 +1982,7 @@ const main = () => {
   app.controller('PlayListController', [
     '$scope',
     '$timeout',
-    'loWeb',
-    ($scope, $timeout, loWeb) => {
+    ($scope, $timeout) => {
       $scope.result = [];
       $scope.tab = 0;
       $scope.loading = true;
@@ -2200,11 +1990,9 @@ const main = () => {
       $scope.changeTab = (newTab) => {
         $scope.tab = newTab;
         $scope.result = [];
-        loWeb
-          .get(`/show_playlist?source=${getSourceName($scope.tab)}`)
-          .success((data) => {
-            $scope.result = data.result;
-          });
+        MediaService.showPlaylist(getSourceName($scope.tab)).success((data) => {
+          $scope.result = data.result;
+        });
       };
 
       $scope.$on('infinite_scroll:hit_bottom', (event, data) => {
@@ -2213,27 +2001,19 @@ const main = () => {
         }
         $scope.loading = true;
         const offset = $scope.result.length;
-        loWeb
-          .get(
-            `/show_playlist?source=${getSourceName(
-              $scope.tab
-            )}&offset=${offset}`
-          )
-          .success((res) => {
-            $scope.result = $scope.result.concat(res.result);
-            $scope.loading = false;
-          });
+        MediaService.showPlaylist(getSourceName($scope.tab), offset).success((res) => {
+          $scope.result = $scope.result.concat(res.result);
+          $scope.loading = false;
+        });
       });
 
       $scope.isActiveTab = (tab) => $scope.tab === tab;
 
       $scope.loadPlaylist = () => {
-        loWeb
-          .get(`/show_playlist?source=${getSourceName($scope.tab)}`)
-          .success((data) => {
-            $scope.result = data.result;
-            $scope.loading = false;
-          });
+        MediaService.showPlaylist(getSourceName($scope.tab)).success((data) => {
+          $scope.result = data.result;
+          $scope.loading = false;
+        });
       };
     },
   ]);

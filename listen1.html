@@ -37,8 +37,8 @@
     <script type="text/javascript" src="js/vendor/howler.core.min.js"></script>
     <script type="text/javascript" src="js/vendor/hotkeys.js"></script>
     <script type="text/javascript" src="js/vendor/async.min.js"></script>
+    <script type="text/javascript" src="js/vendor/lru-cache.min.js"></script>
     <script type="text/javascript" src="js/lowebutil.js"></script>
-    <script type="text/javascript" src="js/vendor/jscache.js"></script>
     <script type="text/javascript" src="js/github_api.js"></script>
     <script type="text/javascript" src="js/github.js"></script>
     <script type="text/javascript" src="js/lastfm.js"></script>
@@ -1768,7 +1768,7 @@
                   <ul class="nav masthead-nav">
                     <li
                       ng-repeat="i in myplaylists track by $index"
-                      ng-class="{ 'active':window_type=='list' && (('/playlist?list_id='+i.info.id)==window_url_stack[window_url_stack.length-1]) }"
+                      ng-class="{ 'active':window_type=='list' && (('/playlist?list_id='+i.info.id)==window_url_stack.slice(-1)[0]) }"
                       ng-click="showPlaylist(i.info.id)"
                     >
                       <svg class="feather"><use href="#disc"></use></svg>
@@ -1781,7 +1781,7 @@
                   <ul class="nav masthead-nav">
                     <li
                       ng-repeat="i in favoriteplaylists track by $index"
-                      ng-class="{ 'active':window_type=='list' && (('/playlist?list_id='+i.info.id)==window_url_stack[window_url_stack.length-1]) }"
+                      ng-class="{ 'active':window_type=='list' && (('/playlist?list_id='+i.info.id)==window_url_stack.slice(-1)[0]) }"
                       ng-click="showPlaylist(i.info.id, {useCache: false})"
                     >
                       <svg class="feather"><use href="#disc"></use></svg>
@@ -2838,7 +2838,7 @@
                   class="cover"
                   class="cover"
                   ng-if="playlist.length > 0"
-                  ng-click="toggleWindow('/now_playing')"
+                  ng-click="toggleNowPlaying()"
                 >
                   <img
                     ng-src="{{ currentPlaying.img_url }}"

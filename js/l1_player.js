@@ -1,4 +1,4 @@
-/* global getPlayer getPlayerAsync addPlayerListener getLocalStorageValue */
+/* global MediaService getPlayer getPlayerAsync addPlayerListener getLocalStorageValue */
 {
   const mode = getLocalStorageValue('enable_stop_when_close', true)
     ? 'front'
@@ -12,7 +12,6 @@
       loop_mode: myPlayer.loop_mode,
       playing: myPlayer.playing,
     },
-    bootstrapTrack: null,
     play() {
       getPlayerAsync(mode, (player) => {
         player.play();
@@ -124,9 +123,6 @@
       if (!l1Player.status.playlist) return null;
       return l1Player.status.playlist.find((track) => track.id === id);
     },
-    setBootstrapTrack(fn) {
-      l1Player.bootstrapTrack = fn;
-    },
     connectPlayer() {
       getPlayerAsync(mode, (player) => {
         if (!player.playing) {
@@ -222,34 +218,27 @@
       l1Player.status.playlist = msg.data || [];
     }
     if (msg.type === 'BG_PLAYER:RETRIEVE_URL') {
-      if (l1Player.bootstrapTrack) {
-        let url = '';
-        l1Player.bootstrapTrack(
-          {
-            /**
-             * A mock sound object to set url back in player.
-             * @param {string} val
-             */
-            set url(val) {
-              url = val;
-            },
-          },
-          msg.data,
-          () => {
-            getPlayerAsync(mode, (player) => {
-              player.setMediaURI(url, msg.data.url || msg.data.id);
-              player.setAudioDisabled(false, msg.data.index);
-              player.finishLoad(msg.data.index, msg.data.playNow);
-            });
-          },
-          () => {
-            getPlayerAsync(mode, (player) => {
-              player.setAudioDisabled(true, msg.data.index);
-              player.skip('next');
-            });
-          }
-        );
-      }
+      let url = '';
+      MediaService.bootstrapTrack({
+        /**
+           * A mock sound object to set url back in player.
+           * @param {string} val
+           */
+        set url(val) {
+          url = val;
+        },
+      }, msg.data, () => {
+        getPlayerAsync(mode, (player) => {
+          player.setMediaURI(url, msg.data.url || msg.data.id);
+          player.setAudioDisabled(false, msg.data.index);
+          player.finishLoad(msg.data.index, msg.data.playNow);
+        });
+      }, () => {
+        getPlayerAsync(mode, (player) => {
+          player.setAudioDisabled(true, msg.data.index);
+          player.skip('next');
+        });
+      });
     }
     if (res !== undefined) {
       res();
