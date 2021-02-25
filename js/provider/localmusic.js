@@ -103,10 +103,8 @@ function build_localmusic() {
   }
 
   function lm_add_playlist(list_id, tracks) {
-    try {
+    if (typeof tracks === "string") {
       tracks = JSON.parse(tracks);
-    } catch (e) {
-      // compatible with string and object
     }
     let playlist = localStorage.getObject(list_id);
     if (playlist === null) {
