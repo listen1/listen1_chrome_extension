@@ -58,14 +58,14 @@ function github() {
 
     handleCallback: (code, cb) => {
       const url = `${OAUTH_URL}/access_token`;
-      const data = {
+      const params = {
         client_id,
         client_secret,
         code,
       };
-      request.post(url, data).then((res) => {
+      request.post(url, '', { params }).then((res) => {
         const ak = res.data.access_token;
-        localStorage.setObject('githubOauthAccessKey', ak);
+        if (ak) localStorage.setItem('githubOauthAccessKey', JSON.stringify(ak));
         if (cb !== undefined) {
           cb(ak);
         }
