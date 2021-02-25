@@ -183,8 +183,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     return;
   }
 
-  const code = request.query.split('=')[1];
-  Github.handleCallback(code);
+  Github.handleCallback(request.code);
   sendResponse();
 });
 
