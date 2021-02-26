@@ -42,29 +42,6 @@
   ],
   "version": "2.18.0",
   "web_accessible_resources": ["images/*"],
-  "commands": {
-    "play_next": {
-      "suggested_key": {
-        "default": "MediaNextTrack"
-      },
-      "description": "Play next song.",
-      "global": true
-    },
-    "play_prev": {
-      "suggested_key": {
-        "default": "MediaPrevTrack"
-      },
-      "description": "Play previous song.",
-      "global": true
-    },
-    "play_pause": {
-      "suggested_key": {
-        "default": "MediaPlayPause"
-      },
-      "description": "Toggle play pause state.",
-      "global": true
-    }
-  },
   "content_scripts": [
     {
       "matches": ["https://listen1.github.io/listen1/*"],
