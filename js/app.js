@@ -252,7 +252,9 @@ const main = () => {
           $scope.window_type = 'track';
           return;
         }
-        const listId = (new URL(url, window.location)).searchParams.get('list_id');
+        const listId = new URL(url, window.location).searchParams.get(
+          'list_id'
+        );
         MediaService.getPlaylist(listId).success((data) => {
           $scope.songs = data.tracks;
           $scope.list_id = data.info.id;
@@ -271,7 +273,9 @@ const main = () => {
           return;
         }
         let poped = $scope.window_url_stack.pop();
-        if (($scope.window_url_stack.slice(-1)[0] || {}).url === '/now_playing') {
+        if (
+          ($scope.window_url_stack.slice(-1)[0] || {}).url === '/now_playing'
+        ) {
           poped = $scope.window_url_stack.pop();
         }
         $scope.window_poped_url_stack.push(poped.url);
@@ -285,7 +289,9 @@ const main = () => {
       };
 
       $scope.toggleNowPlaying = () => {
-        if (($scope.window_url_stack.slice(-1)[0] || {}).url === '/now_playing') {
+        if (
+          ($scope.window_url_stack.slice(-1)[0] || {}).url === '/now_playing'
+        ) {
           $scope.popWindow();
           return;
         }
@@ -326,14 +332,18 @@ const main = () => {
         $scope.is_window_hidden = 0;
         $scope.resetWindow();
 
-        if (($scope.window_url_stack.slice(-1)[0] || {}).url === '/now_playing') {
+        if (
+          ($scope.window_url_stack.slice(-1)[0] || {}).url === '/now_playing'
+        ) {
           // if now playing is top, pop it
           $scope.window_url_stack.pop();
         }
         $scope.window_url_stack.push({ url, offset });
         $scope.window_poped_url_stack = [];
 
-        const listId = (new URL(url, window.location)).searchParams.get('list_id');
+        const listId = new URL(url, window.location).searchParams.get(
+          'list_id'
+        );
         MediaService.getPlaylist(listId, useCache).success((data) => {
           if (data.status === '0') {
             Notification.info(data.reason);
@@ -345,12 +355,14 @@ const main = () => {
           $scope.playlist_title = data.info.title;
           $scope.playlist_source_url = data.info.source_url;
           $scope.list_id = data.info.id;
-          $scope.is_mine = (data.info.id.slice(0, 2) === 'my');
-          $scope.is_local = (data.info.id.slice(0, 2) === 'lm');
+          $scope.is_mine = data.info.id.slice(0, 2) === 'my';
+          $scope.is_local = data.info.id.slice(0, 2) === 'lm';
 
-          MediaService.queryPlaylist(data.info.id, 'favorite').success((res) => {
-            $scope.is_favorite = res.result;
-          });
+          MediaService.queryPlaylist(data.info.id, 'favorite').success(
+            (res) => {
+              $scope.is_favorite = res.result;
+            }
+          );
 
           $scope.window_type = 'list';
         });
@@ -438,17 +450,21 @@ const main = () => {
       };
 
       $scope.chooseDialogOption = (option_id) => {
-        MediaService.addMyPlaylist(option_id, $scope.dialog_song).success((playlist) => {
-          Notification.success($translate.instant('_ADD_TO_PLAYLIST_SUCCESS'));
-          $scope.closeDialog();
-          // add to current playing list
-          if (option_id === $scope.current_list_id) {
-            l1Player.addTrack($scope.dialog_song);
+        MediaService.addMyPlaylist(option_id, $scope.dialog_song).success(
+          (playlist) => {
+            Notification.success(
+              $translate.instant('_ADD_TO_PLAYLIST_SUCCESS')
+            );
+            $scope.closeDialog();
+            // add to current playing list
+            if (option_id === $scope.current_list_id) {
+              l1Player.addTrack($scope.dialog_song);
+            }
+            if (option_id === $scope.list_id) {
+              $scope.songs = playlist.tracks;
+            }
           }
-          if (option_id === $scope.list_id) {
-            $scope.songs = playlist.tracks;
-          }
-        });
+        );
       };
 
       $scope.newDialogOption = (option) => {
@@ -460,7 +476,10 @@ const main = () => {
       };
 
       $scope.createAndAddPlaylist = () => {
-        MediaService.createMyPlaylist($scope.newlist_title, $scope.dialog_song).success(() => {
+        MediaService.createMyPlaylist(
+          $scope.newlist_title,
+          $scope.dialog_song
+        ).success(() => {
           $rootScope.$broadcast('myplaylist:update');
           Notification.success($translate.instant('_ADD_TO_PLAYLIST_SUCCESS'));
           $scope.closeDialog();
@@ -471,7 +490,7 @@ const main = () => {
         MediaService.editMyPlaylist(
           $scope.list_id,
           $scope.dialog_playlist_title,
-          $scope.dialog_cover_img_url,
+          $scope.dialog_cover_img_url
         ).success(() => {
           $rootScope.$broadcast('myplaylist:update');
           $scope.playlist_title = $scope.dialog_playlist_title;
@@ -483,12 +502,16 @@ const main = () => {
 
       $scope.mergePlaylist = (target_list_id) => {
         Notification.info($translate.instant('_IMPORTING_PLAYLIST'));
-        MediaService.mergePlaylist($scope.list_id, target_list_id).success(() => {
-          Notification.success($translate.instant('_IMPORTING_PLAYLIST_SUCCESS'));
-          $scope.closeDialog();
-          $scope.popWindow();
-          $scope.showPlaylist($scope.list_id);
-        });
+        MediaService.mergePlaylist($scope.list_id, target_list_id).success(
+          () => {
+            Notification.success(
+              $translate.instant('_IMPORTING_PLAYLIST_SUCCESS')
+            );
+            $scope.closeDialog();
+            $scope.popWindow();
+            $scope.showPlaylist($scope.list_id);
+          }
+        );
       };
 
       $scope.removeSongFromPlaylist = (song, list_id) => {
@@ -505,7 +528,9 @@ const main = () => {
           if (index > -1) {
             $scope.songs.splice(index, 1);
           }
-          Notification.success($translate.instant('_REMOVE_SONG_FROM_PLAYLIST_SUCCESS'));
+          Notification.success(
+            $translate.instant('_REMOVE_SONG_FROM_PLAYLIST_SUCCESS')
+          );
         });
       };
 
@@ -712,7 +737,9 @@ const main = () => {
       $scope.addFavoritePlaylist = (list_id) => {
         MediaService.clonePlaylist(list_id, 'favorite').success((addResult) => {
           $rootScope.$broadcast('favoriteplaylist:update');
-          Notification.success($translate.instant('_FAVORITE_PLAYLIST_SUCCESS'));
+          Notification.success(
+            $translate.instant('_FAVORITE_PLAYLIST_SUCCESS')
+          );
         });
       };
 
@@ -720,7 +747,9 @@ const main = () => {
         MediaService.removeMyPlaylist(list_id, 'favorite').success(() => {
           $rootScope.$broadcast('favoriteplaylist:update');
           // $scope.closeWindow();
-          Notification.success($translate.instant('_UNFAVORITE_PLAYLIST_SUCCESS'));
+          Notification.success(
+            $translate.instant('_UNFAVORITE_PLAYLIST_SUCCESS')
+          );
         });
       };
 
@@ -744,40 +773,40 @@ const main = () => {
                 return;
               }
 
-            result.filePaths.forEach((fp) => {
-              remoteFunctions.readAudioTags(fp).then((md) => {
-                const track = {
-                  id: `lmtrack_${fp}`,
-                  title: md.common.title,
-                  artist: md.common.artist,
-                  artist_id: `lmartist_${md.common.artist}`,
-                  album: md.common.album,
-                  album_id: `lmalbum_${md.common.album}`,
-                  source: 'localmusic',
-                  source_url: '',
-                  img_url: '',
-                  // url: "lmtrack_"+fp,
-                  sound_url: `file://${fp}`,
-                };
+              result.filePaths.forEach((fp) => {
+                remoteFunctions.readAudioTags(fp).then((md) => {
+                  const track = {
+                    id: `lmtrack_${fp}`,
+                    title: md.common.title,
+                    artist: md.common.artist,
+                    artist_id: `lmartist_${md.common.artist}`,
+                    album: md.common.album,
+                    album_id: `lmalbum_${md.common.album}`,
+                    source: 'localmusic',
+                    source_url: '',
+                    img_url: '',
+                    // url: "lmtrack_"+fp,
+                    sound_url: `file://${fp}`,
+                  };
 
-                const list_id = 'lmplaylist_reserve';
-                MediaService.addPlaylist(list_id, [track]).success((res) => {
-                  const { playlist } = res;
-                  $scope.songs = playlist.tracks;
-                  $scope.list_id = playlist.info.id;
-                  $scope.cover_img_url = playlist.info.cover_img_url;
-                  $scope.playlist_title = playlist.info.title;
-                  $scope.playlist_source_url = playlist.info.source_url;
-                  $scope.is_mine = (playlist.info.id.slice(0, 2) === 'my');
-                  $scope.is_local = (playlist.info.id.slice(0, 2) === 'lm');
-                  $scope.$evalAsync();
+                  const list_id = 'lmplaylist_reserve';
+                  MediaService.addPlaylist(list_id, [track]).success((res) => {
+                    const { playlist } = res;
+                    $scope.songs = playlist.tracks;
+                    $scope.list_id = playlist.info.id;
+                    $scope.cover_img_url = playlist.info.cover_img_url;
+                    $scope.playlist_title = playlist.info.title;
+                    $scope.playlist_source_url = playlist.info.source_url;
+                    $scope.is_mine = playlist.info.id.slice(0, 2) === 'my';
+                    $scope.is_local = playlist.info.id.slice(0, 2) === 'lm';
+                    $scope.$evalAsync();
+                  });
                 });
               });
+            })
+            .catch((err) => {
+              // console.log(err);
             });
-          })
-          .catch((err) => {
-            // console.log(err);
-          });
         }
       };
     },
@@ -1358,7 +1387,7 @@ const main = () => {
                 msg.data.id,
                 msg.data.album_id,
                 track.lyric_url,
-                track.tlyric_url,
+                track.tlyric_url
               ).success((res) => {
                 const { lyric, tlyric } = res;
                 if (!lyric) {
@@ -2001,10 +2030,12 @@ const main = () => {
         }
         $scope.loading = true;
         const offset = $scope.result.length;
-        MediaService.showPlaylist(getSourceName($scope.tab), offset).success((res) => {
-          $scope.result = $scope.result.concat(res.result);
-          $scope.loading = false;
-        });
+        MediaService.showPlaylist(getSourceName($scope.tab), offset).success(
+          (res) => {
+            $scope.result = $scope.result.concat(res.result);
+            $scope.loading = false;
+          }
+        );
       });
 
       $scope.isActiveTab = (tab) => $scope.tab === tab;

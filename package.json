@@ -8,18 +8,18 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Dumeng/listen1_chrome_extension.git"
+    "url": "https://github.com/listen1/listen1_chrome_extension.git"
   },
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Dumeng/listen1_chrome_extension/issues"
+    "url": "https://github.com/listen1/listen1_chrome_extension/issues"
   },
-  "homepage": "https://github.com/Dumeng/listen1_chrome_extension#readme",
+  "homepage": "https://github.com/listen1/listen1_chrome_extension#readme",
   "devDependencies": {
     "eslint": "^7.20.0",
     "eslint-config-airbnb-base": "^14.2.1",
-    "eslint-config-prettier": "^7.2.0",
+    "eslint-config-prettier": "^8.1.0",
     "eslint-plugin-import": "^2.22.1",
     "prettier": "^2.2.1"
   }

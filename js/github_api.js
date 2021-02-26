@@ -65,7 +65,8 @@ function github() {
       };
       request.post(url, '', { params }).then((res) => {
         const ak = res.data.access_token;
-        if (ak) localStorage.setItem('githubOauthAccessKey', JSON.stringify(ak));
+        if (ak)
+          localStorage.setItem('githubOauthAccessKey', JSON.stringify(ak));
         if (cb !== undefined) {
           cb(ak);
         }
