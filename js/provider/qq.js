@@ -8,12 +8,16 @@ function build_qq() {
 
   function qq_show_playlist(url) {
     const offset = Number(getParameterByName('offset', url)) || 0;
+    let filterId = Number(getParameterByName('filter_id', url)) || '';
+    if (filterId === '') {
+      filterId = '10000000';
+    }
     const target_url =
       'https://c.y.qq.com/splcloud/fcgi-bin/fcg_get_diss_by_tag.fcg' +
       `?picmid=1&rnd=${Math.random()}&g_tk=732560869` +
       '&loginUin=0&hostUin=0&format=json&inCharset=utf8&outCharset=utf-8' +
       '&notice=0&platform=yqq.json&needNewCode=0' +
-      `&categoryId=10000000&sortId=5&sin=${offset}&ein=${29 + offset}`;
+      `&categoryId=${filterId}&sortId=5&sin=${offset}&ein=${29 + offset}`;
 
     return {
       success: (fn) => {
@@ -345,9 +349,40 @@ function build_qq() {
   }
 
   function get_playlist_filters() {
+    const target_url =
+      'https://c.y.qq.com/splcloud/fcgi-bin/fcg_get_diss_tag_conf.fcg' +
+      `?picmid=1&rnd=${Math.random()}&g_tk=732560869` +
+      '&loginUin=0&hostUin=0&format=json&inCharset=utf8&outCharset=utf-8' +
+      '&notice=0&platform=yqq.json&needNewCode=0';
+
     return {
-      success(fn) {
-        return fn({ recommend: [], all: [] });
+      success: (fn) => {
+        axios.get(target_url).then((response) => {
+          const { data } = response;
+          const all = [];
+          data.data.categories.forEach((cate) => {
+            const result = { category: cate.categoryGroupName, filters: [] };
+            if (cate.usable === 1) {
+              cate.items.forEach((item) => {
+                result.filters.push({
+                  id: item.categoryId,
+                  name: htmlDecode(item.categoryName),
+                });
+              });
+              all.push(result);
+            }
+          });
+          const recommendLimit = 8;
+          const recommend = [
+            { id: '', name: '全部' },
+            ...all[1].filters.slice(0, recommendLimit),
+          ];
+
+          return fn({
+            recommend,
+            all,
+          });
+        });
       },
     };
   }
