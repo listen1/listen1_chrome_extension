@@ -512,10 +512,9 @@ function build_xiami() {
   }
 
   function get_playlist_filters() {
-    const result = [];
     return {
       success(fn) {
-        return fn(result);
+        return fn({ recommend: [], all: [] });
       },
     };
   }

@@ -2015,8 +2015,10 @@ const main = () => {
       $scope.result = [];
       $scope.tab = 0;
       $scope.playlistFilters = [];
+      $scope.allPlaylistFilters = [];
       $scope.currentFilterId = '';
       $scope.loading = true;
+      $scope.showMore = false;
 
       $scope.$on('infinite_scroll:hit_bottom', (event, data) => {
         if ($scope.loading === true) {
@@ -2038,6 +2040,7 @@ const main = () => {
 
       $scope.loadPlaylist = () => {
         const offset = 0;
+        $scope.showMore = false;
         MediaService.showPlaylistArray(
           getSourceName($scope.tab),
           offset,
@@ -2048,7 +2051,8 @@ const main = () => {
         });
         MediaService.getPlaylistFilters(getSourceName($scope.tab)).success(
           (res) => {
-            $scope.playlistFilters = res;
+            $scope.playlistFilters = res.recommend;
+            $scope.allPlaylistFilters = res.all;
           }
         );
       };
@@ -2065,6 +2069,10 @@ const main = () => {
         $scope.result = [];
         $scope.currentFilterId = filterId;
         $scope.loadPlaylist();
+      };
+
+      $scope.toggleMorePlaylists = () => {
+        $scope.showMore = !$scope.showMore;
       };
     },
   ]);

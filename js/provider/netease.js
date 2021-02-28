@@ -559,7 +559,7 @@ function build_netease() {
   // R&B/Soul| 古典| 民族| 英伦| 金属| 朋克| 蓝调| 雷鬼| 世界音乐| 拉丁| New Age| 古风| 后摇| Bossa Nova|
 
   function get_playlist_filters() {
-    const result = [
+    const recommend = [
       { id: '', name: '全部' },
       { id: '流行', name: '流行' },
       { id: '民谣', name: '民谣' },
@@ -570,9 +570,106 @@ function build_netease() {
       { id: '爵士', name: '爵士' },
       { id: '乡村', name: '乡村' },
     ];
+
+    const all = [
+      {
+        category: '语种',
+        filters: [
+          { id: '华语', name: '华语' },
+          { id: '欧美', name: '欧美' },
+          { id: '日语', name: '日语' },
+          { id: '韩语', name: '韩语' },
+          { id: '粤语', name: '粤语' },
+        ],
+      },
+      {
+        category: '风格',
+        filters: [
+          { id: '流行', name: '流行' },
+          { id: '民谣', name: '民谣' },
+          { id: '电子', name: '电子' },
+          { id: '舞曲', name: '舞曲' },
+          { id: '说唱', name: '说唱' },
+          { id: '轻音乐', name: '轻音乐' },
+          { id: '爵士', name: '爵士' },
+          { id: '乡村', name: '乡村' },
+          { id: 'R%26B%2FSoul', name: 'R&B/Soul' },
+          { id: '古典', name: '古典' },
+          { id: '民族', name: '民族' },
+          { id: '英伦', name: '英伦' },
+          { id: '金属', name: '金属' },
+          { id: '朋克', name: '朋克' },
+          { id: '蓝调', name: '蓝调' },
+          { id: '雷鬼', name: '雷鬼' },
+          { id: '世界音乐', name: '世界音乐' },
+          { id: '拉丁', name: '拉丁' },
+          { id: 'New Age', name: 'New Age' },
+          { id: '古风', name: '古风' },
+          { id: '后摇', name: '后摇' },
+          { id: 'Bossa Nova', name: 'Bossa Nova' },
+        ],
+      },
+      {
+        category: '场景',
+        filters: [
+          { id: '清晨', name: '清晨' },
+          { id: '夜晚', name: '夜晚' },
+          { id: '学习', name: '学习' },
+          { id: '工作', name: '工作' },
+          { id: '午休', name: '午休' },
+          { id: '下午茶', name: '下午茶' },
+          { id: '地铁', name: '地铁' },
+          { id: '驾车', name: '驾车' },
+          { id: '运动', name: '运动' },
+          { id: '旅行', name: '旅行' },
+          { id: '散步', name: '散步' },
+          { id: '酒吧', name: '酒吧' },
+        ],
+      },
+      {
+        category: '情感',
+        filters: [
+          { id: '怀旧', name: '怀旧' },
+          { id: '清新', name: '清新' },
+          { id: '浪漫', name: '浪漫' },
+          { id: '伤感', name: '伤感' },
+          { id: '治愈', name: '治愈' },
+          { id: '放松', name: '放松' },
+          { id: '孤独', name: '孤独' },
+          { id: '感动', name: '感动' },
+          { id: '兴奋', name: '兴奋' },
+          { id: '快乐', name: '快乐' },
+          { id: '安静', name: '安静' },
+          { id: '思念', name: '思念' },
+        ],
+      },
+      {
+        category: '主题',
+        filters: [
+          { id: '综艺', name: '综艺' },
+          { id: '影视原声', name: '影视原声' },
+          { id: 'ACG', name: 'ACG' },
+          { id: '儿童', name: '儿童' },
+          { id: '校园', name: '校园' },
+          { id: '游戏', name: '游戏' },
+          { id: '70后', name: '70后' },
+          { id: '80后', name: '80后' },
+          { id: '90后', name: '90后' },
+          { id: '网络歌曲', name: '网络歌曲' },
+          { id: 'KTV', name: 'KTV' },
+          { id: '经典', name: '经典' },
+          { id: '翻唱', name: '翻唱' },
+          { id: '吉他', name: '吉他' },
+          { id: '钢琴', name: '钢琴' },
+          { id: '器乐', name: '器乐' },
+          { id: '榜单', name: '榜单' },
+          { id: '00后', name: '00后' },
+        ],
+      },
+    ];
     return {
       success(fn) {
-        return fn(result);
+        return fn({ recommend, all });
       },
     };
   }

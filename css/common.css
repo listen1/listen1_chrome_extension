@@ -1475,3 +1475,37 @@ svg.searchspinner {
 }
 
 /* widget playlist-filter end */
+
+/* widget all-playlist-filter start */
+.all-playlist-filter .category {
+  margin-bottom: 10px;
+  display: flex;
+}
+
+.all-playlist-filter .category .category-title {
+  margin-left: 30px;
+  margin-top: 12px;
+  min-width: 50px;
+  font-size: 18px;
+}
+.all-playlist-filter .category .category-filters {
+  margin-left: 10px;
+  display: flex;
+  flex-wrap: wrap;
+}
+.all-playlist-filter .category .category-filters .filter-item {
+  min-width: 80px;
+  margin-top: 10px;
+  display: flex;
+}
+.all-playlist-filter .category .category-filters .filter-item span {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  padding: 5px 10px;
+}
+.all-playlist-filter .category .category-filters .filter-item span:hover {
+  background-color: var(--button-background-color);
+}
+/* widget all-playlist-filter end */
