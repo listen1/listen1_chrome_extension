@@ -48,9 +48,9 @@ function build_kugou() {
   function kg_render_search_result_item(index, item, params, callback) {
     const track = kg_convert_song(item);
     // Add singer img
-    const url = `${
-      'http://www.kugou.com/yy/index.php?r=play/getdata&hash='
-    }${track.lyric_url}`;
+    const url = `${'http://www.kugou.com/yy/index.php?r=play/getdata&hash='}${
+      track.lyric_url
+    }`;
     axios.get(url).then((response) => {
       const { data } = response;
       track.img_url = data.data.img;
@@ -76,9 +76,7 @@ function build_kugou() {
     }
     return {
       success(fn) {
-        const target_url = `${
-          'http://songsearch.kugou.com/song_search_v2?keyword='
-        }${keyword}&page=${curpage}`;
+        const target_url = `${'http://songsearch.kugou.com/song_search_v2?keyword='}${keyword}&page=${curpage}`;
         axios
           .get(target_url)
           .then((response) => {
@@ -107,9 +105,9 @@ function build_kugou() {
   }
 
   function kg_render_playlist_result_item(index, item, params, callback) {
-    let target_url = `${
-      'http://m.kugou.com/app/i/getSongInfo.php?cmd=playInfo&hash='
-    }${item.hash}`;
+    let target_url = `${'http://m.kugou.com/app/i/getSongInfo.php?cmd=playInfo&hash='}${
+      item.hash
+    }`;
 
     const track = {
       id: `kgtrack_${item.hash}`,
@@ -209,9 +207,9 @@ function build_kugou() {
     track.title = one[1].trim();
     track.artist = one[0].trim();
     // Fix album name and img
-    const target_url = `${
-      'http://www.kugou.com/yy/index.php?r=play/getdata&hash='
-    }${item.hash}`;
+    const target_url = `${'http://www.kugou.com/yy/index.php?r=play/getdata&hash='}${
+      item.hash
+    }`;
     axios
       .get(
         `http://mobilecdnbj.kugou.com/api/v3/album/info?albumid=${item.album_id}`
@@ -334,9 +332,9 @@ function build_kugou() {
       lyric_url: item.hash,
     };
     // Fix other data
-    const target_url = `${
-      'http://m.kugou.com/app/i/getSongInfo.php?cmd=playInfo&hash='
-    }${item.hash}`;
+    const target_url = `${'http://m.kugou.com/app/i/getSongInfo.php?cmd=playInfo&hash='}${
+      item.hash
+    }`;
     axios.get(target_url).then((response) => {
       const { data } = response;
       track.title = data.songName;
@@ -352,9 +350,7 @@ function build_kugou() {
     return {
       success(fn) {
         const album_id = getParameterByName('list_id', url).split('_').pop();
-        let target_url = `${
-          'http://mobilecdnbj.kugou.com/api/v3/album/info?albumid='
-        }${album_id}`;
+        let target_url = `${'http://mobilecdnbj.kugou.com/api/v3/album/info?albumid='}${album_id}`;
 
         let info;
         // info
@@ -371,9 +367,7 @@ function build_kugou() {
             ),
           };
 
-          target_url = `${
-            'http://mobilecdnbj.kugou.com/api/v3/album/song?albumid='
-          }${album_id}&page=1&pagesize=-1`;
+          target_url = `${'http://mobilecdnbj.kugou.com/api/v3/album/song?albumid='}${album_id}&page=1&pagesize=-1`;
           axios.get(target_url).then((res) => {
             async_process_list(
               res.data.data.info,
@@ -397,9 +391,7 @@ function build_kugou() {
       offset = 0;
     }
     // const page = offset / 30 + 1;
-    const target_url = `${
-      'http://m.kugou.com/plist/index&json=true&page='
-    }${offset}`;
+    const target_url = `${'http://m.kugou.com/plist/index&json=true&page='}${offset}`;
     return {
       success(fn) {
         axios.get(target_url).then((response) => {
@@ -454,8 +446,18 @@ function build_kugou() {
     }
   }
 
+  function get_playlist_filters() {
+    const result = [];
+    return {
+      success(fn) {
+        return fn(result);
+      },
+    };
+  }
+
   return {
     show_playlist: kg_show_playlist,
+    get_playlist_filters,
     get_playlist,
     parse_url: kg_parse_url,
     bootstrap_track: kg_bootstrap_track,

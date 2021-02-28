@@ -510,8 +510,19 @@ function build_xiami() {
         return null;
     }
   }
+
+  function get_playlist_filters() {
+    const result = [];
+    return {
+      success(fn) {
+        return fn(result);
+      },
+    };
+  }
+
   return {
     show_playlist: xm_show_playlist,
+    get_playlist_filters,
     get_playlist,
     parse_url: xm_parse_url,
     bootstrap_track: xm_bootstrap_track,

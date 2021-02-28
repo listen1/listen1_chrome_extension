@@ -473,9 +473,17 @@ function build_migu() {
         return null;
     }
   }
-
+  function get_playlist_filters() {
+    const result = [];
+    return {
+      success(fn) {
+        return fn(result);
+      },
+    };
+  }
   return {
     show_playlist: mg_show_playlist,
+    get_playlist_filters,
     get_playlist,
     parse_url: mg_parse_url,
     bootstrap_track: mg_bootstrap_track,

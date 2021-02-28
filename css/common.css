@@ -43,6 +43,19 @@ button {
 button:hover {
   background-color: var(--button-hover-background-color);
 }
+.l1-button {
+  background-color: var(--button-background-color);
+  color: var(--text-default-color);
+  border: solid 1px var(--button-background-color);
+  padding: 5px;
+  margin-right: 4px;
+  color: var(--text-default-color);
+  cursor: pointer;
+  display: inline-block;
+}
+.l1-button:hover {
+  background: var(--button-hover-background-color);
+}
 svg {
   width: 24px;
   height: 24px;
@@ -1415,7 +1428,7 @@ svg.searchspinner {
 
 /* widget source-list start */
 .source-list {
-  margin: 20px 26px 25px 26px;
+  margin: 20px 26px 0 26px;
 }
 
 .source-list .source-button {
@@ -1443,3 +1456,21 @@ svg.searchspinner {
   float: right;
 }
 /* widget source-list end */
+
+/* widget playlist-filter start */
+
+.playlist-filter {
+  margin: 10px 26px 10px 26px;
+}
+
+.playlist-filter .filter-item {
+  padding: 5px 15px;
+  margin-right: 10px;
+}
+
+.playlist-filter .filter-item.active {
+  font-weight: 600;
+  background: var(--button-hover-background-color);
+}
+
+/* widget playlist-filter end */

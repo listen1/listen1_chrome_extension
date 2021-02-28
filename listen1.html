@@ -1899,6 +1899,16 @@
                         {{_MIGU_MUSIC}}
                       </div>
                     </div>
+                    <div class="playlist-filter">
+                      <div
+                        class="l1-button filter-item"
+                        ng-repeat="filter in playlistFilters"
+                        ng-click="changeFilter(filter.id)"
+                        ng-class="{'active':filter.id === currentFilterId}"
+                      >
+                        {{filter.name}}
+                      </div>
+                    </div>
                     <div class="site-wrapper-innerd" id="hotplaylist">
                       <div class="cover-container" id="playlist-content">
                         <ul class="playlist-covers">

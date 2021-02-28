@@ -6,12 +6,17 @@ function build_netease() {
   function ne_show_playlist(url) {
     const order = 'hot';
     const offset = getParameterByName('offset', url);
+    const filterId = getParameterByName('filter_id', url);
 
+    let filter = '';
+    if (filterId !== '') {
+      filter = `&cat=${filterId}`;
+    }
     let target_url = '';
     if (offset != null) {
-      target_url = `https://music.163.com/discover/playlist/?order=${order}&limit=35&offset=${offset}`;
+      target_url = `https://music.163.com/discover/playlist/?order=${order}${filter}&limit=35&offset=${offset}`;
     } else {
-      target_url = `https://music.163.com/discover/playlist/?order=${order}`;
+      target_url = `https://music.163.com/discover/playlist/?order=${order}${filter}`;
     }
 
     return {
@@ -551,8 +556,30 @@ function build_netease() {
     }
   }
 
+  // R&B/Soul| 古典| 民族| 英伦| 金属| 朋克| 蓝调| 雷鬼| 世界音乐| 拉丁| New Age| 古风| 后摇| Bossa Nova|
+
+  function get_playlist_filters() {
+    const result = [
+      { id: '', name: '全部' },
+      { id: '流行', name: '流行' },
+      { id: '民谣', name: '民谣' },
+      { id: '电子', name: '电子' },
+      { id: '舞曲', name: '舞曲' },
+      { id: '说唱', name: '说唱' },
+      { id: '轻音乐', name: '轻音乐' },
+      { id: '爵士', name: '爵士' },
+      { id: '乡村', name: '乡村' },
+    ];
+    return {
+      success(fn) {
+        return fn(result);
+      },
+    };
+  }
+
   return {
     show_playlist: ne_show_playlist,
+    get_playlist_filters,
     get_playlist,
     parse_url: ne_parse_url,
     bootstrap_track: ne_bootstrap_track,
