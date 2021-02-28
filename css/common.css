@@ -1460,12 +1460,13 @@ svg.searchspinner {
 /* widget playlist-filter start */
 
 .playlist-filter {
-  margin: 10px 26px 10px 26px;
+  margin: 0 26px 10px 26px;
 }
 
 .playlist-filter .filter-item {
   padding: 5px 15px;
   margin-right: 10px;
+  margin-top: 10px;
 }
 
 .playlist-filter .filter-item.active {
