@@ -1754,7 +1754,10 @@
                     <div class="title">{{_MY_MUSIC}}</div>
                   </div>
                   <ul ng-if="!isChrome" class="nav masthead-nav">
-                    <li ng-click="showPlaylist('lmplaylist_reserve')">
+                    <li
+                      ng-click="showPlaylist('lmplaylist_reserve')"
+                      ng-class="{ 'active':window_type=='list' && ( '/playlist?list_id=lmplaylist_reserve' === getCurrentUrl() ) }"
+                    >
                       <span class="icon li-featured-list"></span
                       ><a>{{_LOCAL_MUSIC}}</a>
                     </li>
