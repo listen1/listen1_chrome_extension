@@ -589,8 +589,6 @@ function build_netease() {
     }
   }
 
-  // R&B/Soul| 古典| 民族| 英伦| 金属| 朋克| 蓝调| 雷鬼| 世界音乐| 拉丁| New Age| 古风| 后摇| Bossa Nova|
-
   function get_playlist_filters() {
     const recommend = [
       { id: '', name: '全部' },
