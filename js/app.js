@@ -273,9 +273,7 @@ const main = () => {
           return;
         }
         let poped = $scope.window_url_stack.pop();
-        if (
-          ($scope.window_url_stack.slice(-1)[0] || {}).url === '/now_playing'
-        ) {
+        if ($scope.getCurrentUrl() === '/now_playing') {
           poped = $scope.window_url_stack.pop();
         }
         $scope.window_poped_url_stack.push(poped.url);
@@ -289,9 +287,7 @@ const main = () => {
       };
 
       $scope.toggleNowPlaying = () => {
-        if (
-          ($scope.window_url_stack.slice(-1)[0] || {}).url === '/now_playing'
-        ) {
+        if ($scope.getCurrentUrl() === '/now_playing') {
           $scope.popWindow();
           return;
         }
@@ -322,19 +318,20 @@ const main = () => {
         refreshWindow(url);
       };
 
+      $scope.getCurrentUrl = () =>
+        ($scope.window_url_stack.slice(-1)[0] || {}).url;
+
       $scope.showPlaylist = (list_id, useCache) => {
         const url = `/playlist?list_id=${list_id}`;
         // save current scrolltop
         const offset = document.getElementsByClassName('browser')[0].scrollTop;
-        if (($scope.window_url_stack.slice(-1)[0] || {}).url === url) {
+        if ($scope.getCurrentUrl() === url) {
           return;
         }
         $scope.is_window_hidden = 0;
         $scope.resetWindow();
 
-        if (
-          ($scope.window_url_stack.slice(-1)[0] || {}).url === '/now_playing'
-        ) {
+        if ($scope.getCurrentUrl() === '/now_playing') {
           // if now playing is top, pop it
           $scope.window_url_stack.pop();
         }

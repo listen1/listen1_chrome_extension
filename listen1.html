@@ -1768,7 +1768,7 @@
                   <ul class="nav masthead-nav">
                     <li
                       ng-repeat="i in myplaylists track by $index"
-                      ng-class="{ 'active':window_type=='list' && (('/playlist?list_id='+i.info.id)==window_url_stack.slice(-1)[0]) }"
+                      ng-class="{ 'active':window_type=='list' && ( ('/playlist?list_id='+i.info.id) === getCurrentUrl() ) }"
                       ng-click="showPlaylist(i.info.id)"
                     >
                       <svg class="feather"><use href="#disc"></use></svg>
@@ -1781,7 +1781,7 @@
                   <ul class="nav masthead-nav">
                     <li
                       ng-repeat="i in favoriteplaylists track by $index"
-                      ng-class="{ 'active':window_type=='list' && (('/playlist?list_id='+i.info.id)==window_url_stack.slice(-1)[0]) }"
+                      ng-class="{ 'active':window_type=='list' && ( ('/playlist?list_id='+i.info.id) === getCurrentUrl() ) }"
                       ng-click="showPlaylist(i.info.id, {useCache: false})"
                     >
                       <svg class="feather"><use href="#disc"></use></svg>
