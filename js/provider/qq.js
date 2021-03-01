@@ -6,12 +6,46 @@ function build_qq() {
     return parser.parseFromString(value, 'text/html').body.textContent;
   }
 
+  function qq_show_toplist(offset) {
+    if (offset !== undefined && offset > 0) {
+      return {
+        success(fn) {
+          return fn({ result: [] });
+        },
+      };
+    }
+    const url =
+      'https://c.y.qq.com/v8/fcg-bin/fcg_myqq_toplist.fcg?g_tk=5381&inCharset=utf-8&outCharset=utf-8&notice=0&format=json&uin=0&needNewCode=1&platform=h5';
+
+    return {
+      success(fn) {
+        axios.get(url).then((response) => {
+          const result = [];
+          response.data.data.topList.forEach((item) => {
+            const playlist = {
+              cover_img_url: item.picUrl,
+              id: `qqtoplist_${item.id}`,
+              source_url: `https://y.qq.com/n/yqq/toplist/${item.id}.html`,
+              title: item.topTitle,
+            };
+            result.push(playlist);
+          });
+          return fn({ result });
+        });
+      },
+    };
+  }
+
   function qq_show_playlist(url) {
     const offset = Number(getParameterByName('offset', url)) || 0;
-    let filterId = Number(getParameterByName('filter_id', url)) || '';
+    let filterId = getParameterByName('filter_id', url) || '';
+    if (filterId === 'toplist') {
+      return qq_show_toplist(offset);
+    }
     if (filterId === '') {
       filterId = '10000000';
     }
+
     const target_url =
       'https://c.y.qq.com/splcloud/fcgi-bin/fcg_get_diss_by_tag.fcg' +
       `?picmid=1&rnd=${Math.random()}&g_tk=732560869` +
@@ -50,7 +84,6 @@ function build_qq() {
     if (img_type === 'album') {
       category = 'T002R300x300M000';
     }
-
     const s = category + qqimgid;
     const url = `https://y.gtimg.cn/music/photo_new/${s}.jpg`;
     return url;
@@ -83,6 +116,96 @@ function build_qq() {
       url: !qq_is_playable(song) ? '' : undefined,
     };
     return d;
+  }
+
+  function get_toplist_url(id, period, limit) {
+    return `https://u.y.qq.com/cgi-bin/musicu.fcg?format=json&inCharset=utf8&outCharset=utf-8&platform=yqq.json&needNewCode=0&data=${encodeURIComponent(
+      JSON.stringify({
+        comm: {
+          cv: 1602,
+          ct: 20,
+        },
+        toplist: {
+          module: 'musicToplist.ToplistInfoServer',
+          method: 'GetDetail',
+          param: {
+            topid: id,
+            num: limit,
+            period,
+          },
+        },
+      })
+    )}`;
+  }
+
+  function get_periods(topid) {
+    const periodUrl = 'https://c.y.qq.com/node/pc/wk_v15/top.html';
+    const regExps = {
+      periodList: /<i class="play_cover__btn c_tx_link js_icon_play" data-listkey=".+?" data-listname=".+?" data-tid=".+?" data-date=".+?" .+?<\/i>/g,
+      period: /data-listname="(.+?)" data-tid=".*?\/(.+?)" data-date="(.+?)" .+?<\/i>/,
+    };
+    const periods = {};
+    return axios.get(periodUrl).then((response) => {
+      const html = response.data;
+      const pl = html.match(regExps.periodList);
+      if (!pl) return Promise.reject();
+      pl.forEach((p) => {
+        const pr = p.match(regExps.period);
+        if (!pr) return;
+        periods[pr[2]] = {
+          name: pr[1],
+          id: pr[2],
+          period: pr[3],
+        };
+      });
+      const info = periods[topid];
+      return info && info.period;
+    });
+  }
+
+  function qq_toplist(url) {
+    // special thanks to lx-music-desktop solution
+    // https://github.com/lyswhut/lx-music-desktop/blob/24521bf50d80512a44048596639052e3194b2bf1/src/renderer/utils/music/tx/leaderboard.js
+
+    const list_id = Number(getParameterByName('list_id', url).split('_').pop());
+
+    return {
+      success(fn) {
+        get_periods(list_id).then((listPeriod) => {
+          const limit = 100;
+          // TODO: visit all pages of toplist
+          const target_url = get_toplist_url(list_id, listPeriod, limit);
+
+          axios.get(target_url).then((response) => {
+            const { data } = response;
+            const tracks = data.toplist.data.songInfoList.map((song) => {
+              const d = {
+                id: `qqtrack_${song.mid}`,
+                title: htmlDecode(song.name),
+                artist: htmlDecode(song.singer[0].name),
+                artist_id: `qqartist_${song.singer[0].mid}`,
+                album: htmlDecode(song.album.name),
+                album_id: `qqalbum_${song.album.mid}`,
+                img_url: qq_get_image_url(song.album.mid, 'album'),
+                source: 'qq',
+                source_url: `https://y.qq.com/#type=song&mid=${song.mid}&tpl=yqq_song_detail`,
+              };
+              return d;
+            });
+            const info = {
+              cover_img_url: data.toplist.data.data.frontPicUrl,
+              title: data.toplist.data.data.title,
+              id: `qqtoplist_${list_id}`,
+              source_url: `https://y.qq.com/n/yqq/toplist/${list_id}.html`,
+            };
+            return fn({
+              tracks,
+              info,
+            });
+          });
+        });
+      },
+    };
   }
 
   function qq_get_playlist(url) {
@@ -343,6 +466,8 @@ function build_qq() {
         return qq_album(url);
       case 'qqartist':
         return qq_artist(url);
+      case 'qqtoplist':
+        return qq_toplist(url);
       default:
         return null;
     }
@@ -375,6 +500,7 @@ function build_qq() {
           const recommendLimit = 8;
           const recommend = [
             { id: '', name: '全部' },
+            { id: 'toplist', name: '排行榜' },
             ...all[1].filters.slice(0, recommendLimit),
           ];
 
