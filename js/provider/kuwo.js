@@ -644,8 +644,17 @@ function build_kuwo() {
     }
   }
 
+  function get_playlist_filters() {
+    return {
+      success(fn) {
+        return fn({ recommend: [], all: [] });
+      },
+    };
+  }
+
   return {
     show_playlist: kw_show_playlist,
+    get_playlist_filters,
     get_playlist,
     parse_url: kw_parse_url,
     bootstrap_track: kw_bootstrap_track,

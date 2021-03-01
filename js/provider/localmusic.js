@@ -103,7 +103,7 @@ function build_localmusic() {
   }
 
   function lm_add_playlist(list_id, tracks) {
-    if (typeof tracks === "string") {
+    if (typeof tracks === 'string') {
       tracks = JSON.parse(tracks);
     }
     let playlist = localStorage.getObject(list_id);
@@ -162,8 +162,17 @@ function build_localmusic() {
     };
   }
 
+  function get_playlist_filters() {
+    return {
+      success(fn) {
+        return fn({ recommend: [], all: [] });
+      },
+    };
+  }
+
   return {
     show_playlist: lm_show_playlist,
+    get_playlist_filters,
     get_playlist,
     parse_url: lm_parse_url,
     bootstrap_track: lm_bootstrap_track,

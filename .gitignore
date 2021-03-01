@@ -1,5 +1,6 @@
 # Folder view configuration files
 .DS_Store
 .vscode
+.eslintcache
 
 node_modules

@@ -1899,6 +1899,41 @@
                         {{_MIGU_MUSIC}}
                       </div>
                     </div>
+                    <div class="playlist-filter">
+                      <div
+                        class="l1-button filter-item"
+                        ng-repeat="filter in playlistFilters"
+                        ng-click="changeFilter(filter.id)"
+                        ng-class="{'active':filter.id === currentFilterId}"
+                      >
+                        {{filter.name}}
+                      </div>
+                      <div
+                        class="l1-button filter-item"
+                        ng-show="playlistFilters.length > 0"
+                        ng-click="toggleMorePlaylists()"
+                      >
+                        更多...
+                      </div>
+                    </div>
+                    <div class="all-playlist-filter" ng-show="showMore">
+                      <div
+                        ng-repeat="category in allPlaylistFilters"
+                        class="category"
+                      >
+                        <div class="category-title">{{category.category}}</div>
+                        <div class="category-filters">
+                          <div
+                            class="filter-item"
+                            ng-repeat="filter in category.filters"
+                          >
+                            <span ng-click="changeFilter(filter.id)">
+                              {{filter.name}}</span
+                            >
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                     <div class="site-wrapper-innerd" id="hotplaylist">
                       <div class="cover-container" id="playlist-content">
                         <ul class="playlist-covers">

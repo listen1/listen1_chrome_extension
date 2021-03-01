@@ -2011,18 +2011,14 @@ const main = () => {
   app.controller('PlayListController', [
     '$scope',
     '$timeout',
-    ($scope, $timeout) => {
+    ($scope) => {
       $scope.result = [];
       $scope.tab = 0;
+      $scope.playlistFilters = [];
+      $scope.allPlaylistFilters = [];
+      $scope.currentFilterId = '';
       $scope.loading = true;
-
-      $scope.changeTab = (newTab) => {
-        $scope.tab = newTab;
-        $scope.result = [];
-        MediaService.showPlaylist(getSourceName($scope.tab)).success((data) => {
-          $scope.result = data.result;
-        });
-      };
+      $scope.showMore = false;
 
       $scope.$on('infinite_scroll:hit_bottom', (event, data) => {
         if ($scope.loading === true) {
@@ -2030,21 +2026,53 @@ const main = () => {
         }
         $scope.loading = true;
         const offset = $scope.result.length;
-        MediaService.showPlaylist(getSourceName($scope.tab), offset).success(
-          (res) => {
-            $scope.result = $scope.result.concat(res.result);
-            $scope.loading = false;
-          }
-        );
+        MediaService.showPlaylistArray(
+          getSourceName($scope.tab),
+          offset,
+          $scope.currentFilterId
+        ).success((res) => {
+          $scope.result = $scope.result.concat(res.result);
+          $scope.loading = false;
+        });
       });
 
       $scope.isActiveTab = (tab) => $scope.tab === tab;
 
       $scope.loadPlaylist = () => {
-        MediaService.showPlaylist(getSourceName($scope.tab)).success((data) => {
-          $scope.result = data.result;
+        const offset = 0;
+        $scope.showMore = false;
+        MediaService.showPlaylistArray(
+          getSourceName($scope.tab),
+          offset,
+          $scope.currentFilterId
+        ).success((res) => {
+          $scope.result = res.result;
           $scope.loading = false;
         });
+        MediaService.getPlaylistFilters(getSourceName($scope.tab)).success(
+          (res) => {
+            $scope.playlistFilters = res.recommend;
+            $scope.allPlaylistFilters = res.all;
+          }
+        );
+      };
+
+      $scope.changeTab = (newTab) => {
+        $scope.tab = newTab;
+        $scope.result = [];
+        $scope.currentFilterId = '';
+        $scope.playlistFilters = [];
+        $scope.loadPlaylist();
+      };
+
+      $scope.changeFilter = (filterId) => {
+        $scope.result = [];
+        $scope.currentFilterId = filterId;
+        $scope.loadPlaylist();
+      };
+
+      $scope.toggleMorePlaylists = () => {
+        $scope.showMore = !$scope.showMore;
       };
     },
   ]);

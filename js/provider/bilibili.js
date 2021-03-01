@@ -210,8 +210,17 @@ function build_bilibili() {
     }
   }
 
+  function get_playlist_filters() {
+    return {
+      success(fn) {
+        return fn({ recommend: [], all: [] });
+      },
+    };
+  }
+
   return {
     show_playlist: bi_show_playlist,
+    get_playlist_filters,
     get_playlist,
     parse_url: bi_parse_url,
     bootstrap_track: bi_bootstrap_track,

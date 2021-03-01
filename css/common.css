@@ -43,6 +43,19 @@ button {
 button:hover {
   background-color: var(--button-hover-background-color);
 }
+.l1-button {
+  background-color: var(--button-background-color);
+  color: var(--text-default-color);
+  border: solid 1px var(--button-background-color);
+  padding: 5px;
+  margin-right: 4px;
+  color: var(--text-default-color);
+  cursor: pointer;
+  display: inline-block;
+}
+.l1-button:hover {
+  background: var(--button-hover-background-color);
+}
 svg {
   width: 24px;
   height: 24px;
@@ -1415,7 +1428,7 @@ svg.searchspinner {
 
 /* widget source-list start */
 .source-list {
-  margin: 20px 26px 25px 26px;
+  margin: 20px 26px 0 26px;
 }
 
 .source-list .source-button {
@@ -1443,3 +1456,56 @@ svg.searchspinner {
   float: right;
 }
 /* widget source-list end */
+
+/* widget playlist-filter start */
+
+.playlist-filter {
+  margin: 0 26px 10px 26px;
+}
+
+.playlist-filter .filter-item {
+  padding: 5px 15px;
+  margin-right: 10px;
+  margin-top: 10px;
+}
+
+.playlist-filter .filter-item.active {
+  font-weight: 600;
+  background: var(--button-hover-background-color);
+}
+
+/* widget playlist-filter end */
+
+/* widget all-playlist-filter start */
+.all-playlist-filter .category {
+  margin-bottom: 10px;
+  display: flex;
+}
+
+.all-playlist-filter .category .category-title {
+  margin-left: 30px;
+  margin-top: 12px;
+  min-width: 50px;
+  font-size: 18px;
+}
+.all-playlist-filter .category .category-filters {
+  margin-left: 10px;
+  display: flex;
+  flex-wrap: wrap;
+}
+.all-playlist-filter .category .category-filters .filter-item {
+  min-width: 80px;
+  margin-top: 10px;
+  display: flex;
+}
+.all-playlist-filter .category .category-filters .filter-item span {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  padding: 5px 10px;
+}
+.all-playlist-filter .category .category-filters .filter-item span:hover {
+  background-color: var(--button-background-color);
+}
+/* widget all-playlist-filter end */

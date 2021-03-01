@@ -129,10 +129,15 @@ const MediaService = {
     return myplaylist.show_myplaylist('my');
   },
 
-  showPlaylist(source, offset) {
+  showPlaylistArray(source, offset, filter_id) {
     const provider = getProviderByName(source);
-    const url = `/show_playlist?${queryStringify({ offset })}`;
+    const url = `/show_playlist?${queryStringify({ offset, filter_id })}`;
     return provider.show_playlist(url);
+  },
+
+  getPlaylistFilters(source) {
+    const provider = getProviderByName(source);
+    return provider.get_playlist_filters();
   },
 
   getLyric(track_id, album_id, lyric_url, tlyric_url) {
