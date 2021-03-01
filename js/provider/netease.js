@@ -3,55 +3,6 @@
 /* global getParameterByName forge */
 /* global isElectron cookieSet cookieGet async */
 function build_netease() {
-  function ne_show_playlist(url) {
-    const order = 'hot';
-    const offset = getParameterByName('offset', url);
-    const filterId = getParameterByName('filter_id', url);
-
-    let filter = '';
-    if (filterId !== '') {
-      filter = `&cat=${filterId}`;
-    }
-    let target_url = '';
-    if (offset != null) {
-      target_url = `https://music.163.com/discover/playlist/?order=${order}${filter}&limit=35&offset=${offset}`;
-    } else {
-      target_url = `https://music.163.com/discover/playlist/?order=${order}${filter}`;
-    }
-
-    return {
-      success(fn) {
-        axios.get(target_url).then((response) => {
-          const { data } = response;
-          const list_elements = Array.from(
-            new DOMParser()
-              .parseFromString(data, 'text/html')
-              .getElementsByClassName('m-cvrlst')[0].children
-          );
-          const result = list_elements.map((item) => ({
-            cover_img_url: item.getElementsByTagName('img')[0].src,
-            title: item
-              .getElementsByTagName('div')[0]
-              .getElementsByTagName('a')[0].title,
-            id: `neplaylist_${getParameterByName(
-              'id',
-              item.getElementsByTagName('div')[0].getElementsByTagName('a')[0]
-                .href
-            )}`,
-            source_url: `https://music.163.com/#/playlist?id=${getParameterByName(
-              'id',
-              item.getElementsByTagName('div')[0].getElementsByTagName('a')[0]
-                .href
-            )}`,
-          }));
-          return fn({
-            result,
-          });
-        });
-      },
-    };
-  }
-
   function _create_secret_key(size) {
     const result = [];
     const choice = '012345679abcdef'.split('');
@@ -99,6 +50,88 @@ function build_netease() {
     };
 
     return data;
+  }
+
+  function ne_show_toplist(offset) {
+    if (offset !== undefined && offset > 0) {
+      return {
+        success(fn) {
+          return fn({ result: [] });
+        },
+      };
+    }
+    const url = 'https://music.163.com/weapi/toplist/detail';
+    const data = _encrypted_request({});
+    return {
+      success(fn) {
+        axios.post(url, new URLSearchParams(data)).then((response) => {
+          const result = [];
+          response.data.list.forEach((item) => {
+            const playlist = {
+              cover_img_url: item.coverImgUrl,
+              id: `neplaylist_${item.id}`,
+              source_url: `https://music.163.com/#/playlist?id=${item.id}`,
+              title: item.name,
+            };
+            result.push(playlist);
+          });
+          return fn({ result });
+        });
+      },
+    };
+  }
+
+  function ne_show_playlist(url) {
+    const order = 'hot';
+    const offset = getParameterByName('offset', url);
+    const filterId = getParameterByName('filter_id', url);
+
+    if (filterId === 'toplist') {
+      return ne_show_toplist(offset);
+    }
+
+    let filter = '';
+    if (filterId !== '') {
+      filter = `&cat=${filterId}`;
+    }
+    let target_url = '';
+    if (offset != null) {
+      target_url = `https://music.163.com/discover/playlist/?order=${order}${filter}&limit=35&offset=${offset}`;
+    } else {
+      target_url = `https://music.163.com/discover/playlist/?order=${order}${filter}`;
+    }
+
+    return {
+      success(fn) {
+        axios.get(target_url).then((response) => {
+          const { data } = response;
+          const list_elements = Array.from(
+            new DOMParser()
+              .parseFromString(data, 'text/html')
+              .getElementsByClassName('m-cvrlst')[0].children
+          );
+          const result = list_elements.map((item) => ({
+            cover_img_url: item.getElementsByTagName('img')[0].src,
+            title: item
+              .getElementsByTagName('div')[0]
+              .getElementsByTagName('a')[0].title,
+            id: `neplaylist_${getParameterByName(
+              'id',
+              item.getElementsByTagName('div')[0].getElementsByTagName('a')[0]
+                .href
+            )}`,
+            source_url: `https://music.163.com/#/playlist?id=${getParameterByName(
+              'id',
+              item.getElementsByTagName('div')[0].getElementsByTagName('a')[0]
+                .href
+            )}`,
+          }));
+          return fn({
+            result,
+          });
+        });
+      },
+    };
   }
 
   function ne_ensure_cookie(callback) {
@@ -561,6 +594,7 @@ function build_netease() {
   function get_playlist_filters() {
     const recommend = [
       { id: '', name: '全部' },
+      { id: 'toplist', name: '排行榜' },
       { id: '流行', name: '流行' },
       { id: '民谣', name: '民谣' },
       { id: '电子', name: '电子' },
