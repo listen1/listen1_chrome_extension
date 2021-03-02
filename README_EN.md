@@ -50,7 +50,7 @@ Making your own playlist is also supported.
 
 Features:
 
-- Support playlist filters and top playlist （special thanks https://github.com/lyswhut/lx-music-desktop）
+- Support playlist filters and top playlist （special thanks [lyswhut/lx-music-desktop](https://github.com/lyswhut/lx-music-desktop) ）
 - Add Traditional Chinese language (thanks @yujiangqaq)
 - Add chrome media panel functino: prev/next track, back/forward (thanks @mikelxk）
 - New lyric floating window, support config font size, color and background transparency
