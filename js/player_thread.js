@@ -490,37 +490,38 @@
   window.threadPlayer.sendFullUpdate();
 
   const { threadPlayer } = window;
-  const { mediaSession } = navigator;
-  // TODO: enable after the play url retrieve logic moved to bg
-  mediaSession?.setActionHandler('play', () => {
-    threadPlayer.play();
-  });
-  mediaSession?.setActionHandler('pause', () => {
-    threadPlayer.pause();
-  });
-  mediaSession?.setActionHandler('seekforward', () => {
-    // User clicked "Seek Forward" media notification icon.
-    const { currentHowl } = threadPlayer;
-    const newTime = Math.min(
-      currentHowl.seek() + threadPlayer.skipTime,
-      currentHowl.duration()
-    );
-    currentHowl.seek(newTime);
-  });
+  if ('mediaSession' in navigator) {
+    const { mediaSession } = navigator;
+    mediaSession.setActionHandler('play', () => {
+      threadPlayer.play();
+    });
+    mediaSession.setActionHandler('pause', () => {
+      threadPlayer.pause();
+    });
+    mediaSession.setActionHandler('seekforward', () => {
+      // User clicked "Seek Forward" media notification icon.
+      const { currentHowl } = threadPlayer;
+      const newTime = Math.min(
+        currentHowl.seek() + threadPlayer.skipTime,
+        currentHowl.duration()
+      );
+      currentHowl.seek(newTime);
+    });
 
-  mediaSession?.setActionHandler('seekbackward', () => {
-    // User clicked "Seek Backward" media notification icon.
-    const { currentHowl } = threadPlayer;
-    const newTime = Math.max(currentHowl.seek() - threadPlayer.skipTime, 0);
-    currentHowl.seek(newTime);
-  });
-  mediaSession?.setActionHandler('nexttrack', () => {
-    threadPlayer.skip('next');
-  });
-  mediaSession?.setActionHandler('previoustrack', () => {
-    threadPlayer.skip('prev');
-  });
-  playerSendMessage(this.mode, {
-    type: 'BG_PLAYER:READY',
-  });
+    mediaSession.setActionHandler('seekbackward', () => {
+      // User clicked "Seek Backward" media notification icon.
+      const { currentHowl } = threadPlayer;
+      const newTime = Math.max(currentHowl.seek() - threadPlayer.skipTime, 0);
+      currentHowl.seek(newTime);
+    });
+    mediaSession.setActionHandler('nexttrack', () => {
+      threadPlayer.skip('next');
+    });
+    mediaSession.setActionHandler('previoustrack', () => {
+      threadPlayer.skip('prev');
+    });
+    playerSendMessage(this.mode, {
+      type: 'BG_PLAYER:READY',
+    });
+  }
 }
