@@ -507,7 +507,6 @@
       );
       currentHowl.seek(newTime);
     });
-
     mediaSession.setActionHandler('seekbackward', () => {
       // User clicked "Seek Backward" media notification icon.
       const { currentHowl } = threadPlayer;
@@ -520,8 +519,8 @@
     mediaSession.setActionHandler('previoustrack', () => {
       threadPlayer.skip('prev');
     });
-    playerSendMessage(this.mode, {
-      type: 'BG_PLAYER:READY',
-    });
   }
+  playerSendMessage(this.mode, {
+    type: 'BG_PLAYER:READY',
+  });
 }
