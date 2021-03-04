@@ -343,7 +343,7 @@
     }
 
     adjustVolume(inc) {
-      this.volume = this.volume + inc ? 0.1 : -0.1;
+      this.volume += inc ? 0.1 : -0.1;
       this.sendVolumeEvent();
       this.sendFrameUpdate();
     }
