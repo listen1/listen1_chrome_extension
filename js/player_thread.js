@@ -330,7 +330,7 @@
      */
     set volume(val) {
       // Update the global volume (affecting all Howls).
-      if (val) {
+      if (typeof val === 'number') {
         Howler.volume(val);
         this.sendVolumeEvent();
         this.sendFrameUpdate();
