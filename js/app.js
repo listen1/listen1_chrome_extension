@@ -1013,7 +1013,12 @@ const main = () => {
       };
 
       if (isElectron()) {
-        require('electron').ipcRenderer.on('lyricWindow', (event, arg) => {
+        const { webFrame, ipcRenderer } = require('electron');
+        // webFrame.setVisualZoomLevelLimits(1, 3);
+        ipcRenderer.on('setZoomLevel', (event, level) => {
+          webFrame.setZoomLevel(level);
+        });
+        ipcRenderer.on('lyricWindow', (event, arg) => {
           if (arg === 'float_window_close') {
             $scope.openLyricFloatingWindow(true);
           } else if (
