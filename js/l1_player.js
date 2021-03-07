@@ -127,9 +127,11 @@
       getPlayerAsync(mode, (player) => {
         if (!player.playing) {
           // load local storage settings
-          const localCurrentPlaying = localStorage.getObject('current-playing');
-          if (localCurrentPlaying !== null) {
-            player.setNewPlaylist(localCurrentPlaying);
+          if (!player.playlist.length) {
+            const localCurrentPlaying = localStorage.getObject('current-playing');
+            if (localCurrentPlaying !== null) {
+              player.setNewPlaylist(localCurrentPlaying);
+            }
           }
 
           const localPlayerSettings = localStorage.getObject('player-settings');
