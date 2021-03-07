@@ -8,6 +8,34 @@
 /* eslint-disable no-param-reassign */
 /* eslint-disable import/no-unresolved */
 
+const sourceList = [{
+  name: 'netease',
+  displayId: '_NETEASE_MUSIC',
+}, {
+  name: 'xiami',
+  displayId: '_XIAMI_MUSIC',
+}, {
+  name: 'qq',
+  displayId: '_QQ_MUSIC',
+}, {
+  name: 'kugou',
+  displayId: '_KUGOU_MUSIC',
+}, {
+  name: 'kuwo',
+  displayId: '_KUWO_MUSIC',
+}, {
+  name: 'bilibili',
+  displayId: '_BILIBILI_MUSIC',
+  searchable: false,
+}, {
+  name: 'migu',
+  displayId: '_MIGU_MUSIC',
+}, {
+  name: 'taihe',
+  displayId: '_TAIHE_MUSIC',
+}];
+
+
 const main = () => {
   const app = angular.module('listenone', [
     'ui-notification',
@@ -90,34 +118,6 @@ const main = () => {
         return '';
     }
   });
-
-  function getSourceName(sourceId) {
-    if (sourceId === 0) {
-      return 'netease';
-    }
-    if (sourceId === 1) {
-      return 'xiami';
-    }
-    if (sourceId === 2) {
-      return 'qq';
-    }
-    if (sourceId === 4) {
-      return 'kugou';
-    }
-    if (sourceId === 5) {
-      return 'kuwo';
-    }
-    if (sourceId === 6) {
-      return 'bilibili';
-    }
-    if (sourceId === 7) {
-      return 'migu';
-    }
-    if (sourceId === 8) {
-      return 'allmusic';
-    }
-    return '';
-  }
 
   app.controller('ProfileController', [
     '$scope',
@@ -1099,24 +1099,11 @@ const main = () => {
         });
       });
 
-      $scope.gotoAnchor = (newHash) => {
-        if ($location.hash() !== newHash) {
-          // set the $location.hash to `newHash` and
-          // $anchorScroll will automatically scroll to it
-          $location.hash(newHash);
-          $anchorScroll();
-        } else {
-          // call $anchorScroll() explicitly,
-          // since $location.hash hasn't changed
-          $anchorScroll();
-        }
-      };
-
       $scope.togglePlaylist = () => {
         const anchor = `song${l1Player.status.playing.id}`;
         $scope.menuHidden = !$scope.menuHidden;
         if (!$scope.menuHidden) {
-          $scope.gotoAnchor(anchor);
+          $anchorScroll(anchor);;
         }
       };
 
@@ -1616,7 +1603,8 @@ const main = () => {
       // notice: douban is skipped, and add all music so array should plus 2
       // [网易,虾米,QQ,NULL,酷狗,酷我,bilibili, migu, allmusic]
       $scope.originpagelog = Array(getAllProviders().length + 2).fill(1);
-      $scope.tab = 0;
+      $scope.sourceList = sourceList.filter(i => i.searchable !== false);
+      $scope.tab = sourceList[0].name;
       $scope.keywords = '';
       $scope.loading = false;
       $scope.curpagelog = $scope.originpagelog.slice(0);
@@ -1654,7 +1642,7 @@ const main = () => {
 
       function performSearch() {
         $rootScope.$broadcast('search:keyword_change', $scope.keywords);
-        MediaService.search(getSourceName($scope.tab), {
+        MediaService.search($scope.tab, {
           keywords: $scope.keywords,
           curpage: $scope.curpage,
           type: $scope.searchType,
@@ -2015,7 +2003,8 @@ const main = () => {
     '$timeout',
     ($scope) => {
       $scope.result = [];
-      $scope.tab = 0;
+      $scope.tab = sourceList[0].name;
+      $scope.sourceList = sourceList;
       $scope.playlistFilters = [];
       $scope.allPlaylistFilters = [];
       $scope.currentFilterId = '';
@@ -2029,7 +2018,7 @@ const main = () => {
         $scope.loading = true;
         const offset = $scope.result.length;
         MediaService.showPlaylistArray(
-          getSourceName($scope.tab),
+          $scope.tab,
           offset,
           $scope.currentFilterId
         ).success((res) => {
@@ -2038,20 +2027,18 @@ const main = () => {
         });
       });
 
-      $scope.isActiveTab = (tab) => $scope.tab === tab;
-
       $scope.loadPlaylist = () => {
         const offset = 0;
         $scope.showMore = false;
         MediaService.showPlaylistArray(
-          getSourceName($scope.tab),
+          $scope.tab,
           offset,
           $scope.currentFilterId
         ).success((res) => {
           $scope.result = res.result;
           $scope.loading = false;
         });
-        MediaService.getPlaylistFilters(getSourceName($scope.tab)).success(
+        MediaService.getPlaylistFilters($scope.tab).success(
           (res) => {
             $scope.playlistFilters = res.recommend;
             $scope.allPlaylistFilters = res.all;
