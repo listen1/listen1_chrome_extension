@@ -1,6 +1,6 @@
 /* eslint-disable no-shadow */
 /* global l1Player require MediaService */
-/* global angular isElectron getAllProviders */
+/* global angular isElectron */
 /* global setPrototypeOfLocalStorage addPlayerListener */
 /* global getLocalStorageValue getPlayer getPlayerAsync smoothScrollTo */
 /* eslint-disable global-require */
@@ -1318,9 +1318,8 @@ const main = () => {
               // 'currentTrack:duration'
               (() => {
                 const durationSec = Math.floor(msg.data.duration);
-                const durationStr = `${Math.floor(durationSec / 60)}:${`0${
-                  durationSec % 60
-                }`.substr(-2)}`;
+                const durationStr = `${Math.floor(durationSec / 60)}:${`0${durationSec % 60
+                  }`.substr(-2)}`;
                 if (
                   msg.data.duration === 0 ||
                   $scope.currentDuration === durationStr
@@ -1602,13 +1601,13 @@ const main = () => {
     ($scope, $timeout, $rootScope, $translate) => {
       // notice: douban is skipped, and add all music so array should plus 2
       // [网易,虾米,QQ,NULL,酷狗,酷我,bilibili, migu, allmusic]
-      $scope.originpagelog = Array(getAllProviders().length + 2).fill(1);
+      $scope.originpagelog = sourceList.reduce((r, i) => ({ ...r, [i.name]: 1 }), { 'allmusic': 1 });
       $scope.sourceList = sourceList.filter(i => i.searchable !== false);
       $scope.tab = sourceList[0].name;
       $scope.keywords = '';
       $scope.loading = false;
-      $scope.curpagelog = $scope.originpagelog.slice(0);
-      $scope.totalpagelog = $scope.originpagelog.slice(0);
+      $scope.curpagelog = { ...$scope.originpagelog };
+      $scope.totalpagelog = { ...$scope.originpagelog };
       $scope.curpage = 1;
       $scope.totalpage = 1;
       $scope.searchType = 0;
@@ -1616,7 +1615,7 @@ const main = () => {
       function updateCurrentPage(cp) {
         if (cp === -1) {
           // when search words changes,pagenums should be reset.
-          $scope.curpagelog = $scope.originpagelog.slice(0);
+          $scope.curpagelog = { ...$scope.originpagelog };
           $scope.curpage = 1;
         } else if (cp >= 0) {
           $scope.curpagelog[$scope.tab] = cp;
@@ -1629,7 +1628,7 @@ const main = () => {
 
       function updateTotalPage(totalItem) {
         if (totalItem === -1) {
-          $scope.totalpagelog = $scope.originpagelog.slice(0);
+          $scope.totalpagelog = { ...$scope.originpagelog };
           $scope.totalpage = 1;
         } else if (totalItem >= 0) {
           $scope.totalpage = Math.ceil(totalItem / 20);
