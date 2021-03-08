@@ -82,7 +82,11 @@ function build_taihe() {
 
     return {
       success: (fn) => {
-        axiosTH.get('/tracklist/info').then((response) => {
+        axiosTH.get('/tracklist/info', {
+          params: {
+            id: list_id,
+          },
+        }).then((response) => {
           const { data } = response.data;
     
           const info = {
