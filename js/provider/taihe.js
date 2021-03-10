@@ -21,8 +21,6 @@ function build_taihe() {
     const track = {
       id: `thtrack_${song.id}`,
       title: song.title,
-      artist: song.artist[0].name,
-      artist_id: song.artist[0].artistCode,
       album: song.albumTitle,
       album_id: `thalbum_${song.albumAssetCode}`,
       source: 'taihe',
@@ -30,6 +28,10 @@ function build_taihe() {
       img_url: song.pic,
       lyric_url: song.lyric,
     };
+    if (song.artist && song.artist.length) {
+      track.artist = song.artist[0].name;
+      track.artist_id = song.artist[0].artistCode;
+    }
     return track;
   }
 
