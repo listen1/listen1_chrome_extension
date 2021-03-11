@@ -6,7 +6,7 @@ function build_taihe() {
   });
   axiosTH.interceptors.request.use((config) => {
     const params = {...config.params};
-    params.timestamp = 1614872801;// Math.round(Date.now() / 1000);
+    params.timestamp = Math.round(Date.now() / 1000);
     params.appid = '16073360';
     const q = new URLSearchParams(params);
     q.sort();
