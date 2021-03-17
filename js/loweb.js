@@ -1,5 +1,5 @@
 /* global async LRUCache */
-/* global netease xiami qq kugou kuwo bilibili migu localmusic myplaylist */
+/* global netease xiami qq kugou kuwo bilibili migu taihe localmusic myplaylist */
 const PROVIDERS = [
   {
     name: 'netease',
@@ -42,6 +42,12 @@ const PROVIDERS = [
     instance: migu,
     searchable: true,
     id: 'mg',
+  },
+  {
+    name: 'taihe',
+    instance: taihe,
+    searchable: true,
+    id: 'th',
   },
   {
     name: 'localmusic',
