@@ -1599,9 +1599,10 @@ const main = () => {
     '$rootScope',
     '$translate',
     ($scope, $timeout, $rootScope, $translate) => {
-      // notice: douban is skipped, and add all music so array should plus 2
-      // [网易,虾米,QQ,NULL,酷狗,酷我,bilibili, migu, allmusic]
-      $scope.originpagelog = sourceList.reduce((r, i) => ({ ...r, [i.name]: 1 }), { 'allmusic': 1 });
+      $scope.originpagelog = { allmusic: 1 };
+      sourceList.forEach((i) => {
+        $scope.originpagelog[i.name] = 1;
+      });
       $scope.sourceList = sourceList.filter(i => i.searchable !== false);
       $scope.tab = sourceList[0].name;
       $scope.keywords = '';
