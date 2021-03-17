@@ -1103,7 +1103,7 @@ const main = () => {
         const anchor = `song${l1Player.status.playing.id}`;
         $scope.menuHidden = !$scope.menuHidden;
         if (!$scope.menuHidden) {
-          $anchorScroll(anchor);;
+          $anchorScroll(anchor);
         }
       };
 
