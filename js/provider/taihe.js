@@ -253,18 +253,7 @@ function build_taihe() {
   }
 
   function th_parse_url(url) {
-    let result;
-    const match = /\/\/www.kugou.com\/songlist\/([0-9]+)/.exec(
-      url
-    );
-    if (match != null) {
-      const playlist_id = match[1];
-      result = {
-        type: 'playlist',
-        id: `thplaylist_${playlist_id}`,
-      };
-    }
-    return result;
+    return undefined;
   }
 
   function get_playlist(url) {
