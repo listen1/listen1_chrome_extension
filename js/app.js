@@ -8,33 +8,37 @@
 /* eslint-disable no-param-reassign */
 /* eslint-disable import/no-unresolved */
 
-const sourceList = [{
-  name: 'netease',
-  displayId: '_NETEASE_MUSIC',
-}, {
-  name: 'xiami',
-  displayId: '_XIAMI_MUSIC',
-}, {
-  name: 'qq',
-  displayId: '_QQ_MUSIC',
-}, {
-  name: 'kugou',
-  displayId: '_KUGOU_MUSIC',
-}, {
-  name: 'kuwo',
-  displayId: '_KUWO_MUSIC',
-}, {
-  name: 'bilibili',
-  displayId: '_BILIBILI_MUSIC',
-  searchable: false,
-}, {
-  name: 'migu',
-  displayId: '_MIGU_MUSIC',
-}, {
-  name: 'taihe',
-  displayId: '_TAIHE_MUSIC',
-}];
-
+const sourceList = [
+  {
+    name: 'netease',
+    displayId: '_NETEASE_MUSIC',
+  },
+  {
+    name: 'qq',
+    displayId: '_QQ_MUSIC',
+  },
+  {
+    name: 'kugou',
+    displayId: '_KUGOU_MUSIC',
+  },
+  {
+    name: 'kuwo',
+    displayId: '_KUWO_MUSIC',
+  },
+  {
+    name: 'bilibili',
+    displayId: '_BILIBILI_MUSIC',
+    searchable: false,
+  },
+  {
+    name: 'migu',
+    displayId: '_MIGU_MUSIC',
+  },
+  {
+    name: 'taihe',
+    displayId: '_TAIHE_MUSIC',
+  },
+];
 
 const main = () => {
   const app = angular.module('listenone', [
@@ -1318,8 +1322,9 @@ const main = () => {
               // 'currentTrack:duration'
               (() => {
                 const durationSec = Math.floor(msg.data.duration);
-                const durationStr = `${Math.floor(durationSec / 60)}:${`0${durationSec % 60
-                  }`.substr(-2)}`;
+                const durationStr = `${Math.floor(durationSec / 60)}:${`0${
+                  durationSec % 60
+                }`.substr(-2)}`;
                 if (
                   msg.data.duration === 0 ||
                   $scope.currentDuration === durationStr
@@ -1603,7 +1608,7 @@ const main = () => {
       sourceList.forEach((i) => {
         $scope.originpagelog[i.name] = 1;
       });
-      $scope.sourceList = sourceList.filter(i => i.searchable !== false);
+      $scope.sourceList = sourceList.filter((i) => i.searchable !== false);
       $scope.tab = sourceList[0].name;
       $scope.keywords = '';
       $scope.loading = false;
@@ -2038,12 +2043,10 @@ const main = () => {
           $scope.result = res.result;
           $scope.loading = false;
         });
-        MediaService.getPlaylistFilters($scope.tab).success(
-          (res) => {
-            $scope.playlistFilters = res.recommend;
-            $scope.allPlaylistFilters = res.all;
-          }
-        );
+        MediaService.getPlaylistFilters($scope.tab).success((res) => {
+          $scope.playlistFilters = res.recommend;
+          $scope.allPlaylistFilters = res.all;
+        });
       };
 
       $scope.changeTab = (newTab) => {

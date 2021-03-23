@@ -2033,7 +2033,7 @@
                               <div class="title">
                                 <!-- <a ng-if="song.disabled" class="disabled" ng-click="copyrightNotice()">{{ song.title |limitTo:30}}</a> -->
                                 <a add-and-play="song"
-                                  ><span ng-if="isActiveTab(8)" class="source"
+                                  ><span ng-if="isActiveTab('allmusic')" class="source"
                                     >{{song.sourceName}}</span
                                   >{{ song.title |limitTo:30}}</a
                                 >
@@ -2095,7 +2095,7 @@
                                   />
                                   <div>
                                     {{ playlist.title |limitTo:30}}<span
-                                      ng-if="isActiveTab(8)"
+                                      ng-if="isActiveTab('allmusic')"
                                       class="source playlist"
                                       >{{playlist.sourceName}}</span
                                     >
