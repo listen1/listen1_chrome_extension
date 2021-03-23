@@ -10,7 +10,8 @@ const PROVIDERS = [
   {
     name: 'xiami',
     instance: xiami,
-    searchable: true,
+    searchable: false,
+    hidden: true,
     id: 'xm',
   },
   {
