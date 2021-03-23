@@ -10,7 +10,8 @@ const PROVIDERS = [
   {
     name: 'xiami',
     instance: xiami,
-    searchable: true,
+    searchable: false,
+    hidden: true,
     id: 'xm',
   },
   {
@@ -337,6 +338,12 @@ const MediaService = {
     const provider = getProviderByName(track.source);
 
     provider.bootstrap_track(sound, track, successCallback, failureCallback);
+  },
+  login(source, options) {
+    const url = `/login?${queryStringify(options)}`;
+    const provider = getProviderByName(source);
+
+    return provider.login(url);
   },
 };
 

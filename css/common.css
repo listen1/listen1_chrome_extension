@@ -788,6 +788,71 @@ ul.detail-songlist li .tools .icon {
 }
 /* page song detail end */
 
+/* page login start */
+.page .login {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 192px);
+}
+.page .login .login-logo {
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+}
+.page .login .login-logo img {
+  height: 64px;
+  margin: 20px;
+}
+.page .login .login-title {
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+.page .login .login-form .login-form_field {
+  display: flex;
+  align-items: center;
+  height: 40px;
+  margin: 24px;
+  width: 270px;
+  border: solid 1px var(--button-background-color);
+}
+.page .login .login-form .login-form_field svg {
+  margin-left: 12px;
+  margin-right: 12px;
+  color: var(--icon-default-color);
+  width: 18px;
+  height: 18px;
+}
+.page .login .login-form .login-form_field input {
+  border: none;
+  flex: 1;
+  font-size: 16px;
+}
+.page .login .login-submit_button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  margin-top: 24px;
+  padding: 8px;
+  width: 270px;
+  cursor: pointer;
+  border: solid 1px var(--button-border-color);
+}
+.page .login .login-switcher {
+  margin-top: 24px;
+}
+.page .login .login-notice {
+  width: 270px;
+  border-top: 1px solid var(--button-border-color);
+  margin-top: 30px;
+  padding-top: 12px;
+  font-size: 12px;
+  color: var(--text-subtitle-color);
+}
+/* page login end */
+
 /* page setting start */
 .page .settings-title {
   border-bottom: solid 1px var(--line-default-color);

@@ -1817,6 +1817,17 @@
                   </div>
                   <div
                     ng-class="{ 'active': (current_tag==4) && (window_url_stack.length ==0)}"
+                    ng-click="showTag(5)"
+                    class="settings"
+                  >
+                    <span class="icon">
+                      <svg class="feather">
+                        <use href="#users"></use>
+                      </svg>
+                    </span>
+                  </div>
+                  <div
+                    ng-class="{ 'active': (current_tag==4) && (window_url_stack.length ==0)}"
                     ng-click="showTag(4)"
                     class="settings"
                   >
@@ -1855,7 +1866,7 @@
                       >
                         {{source.displayId | translate}}
                       </div>
-                      <div ng-repeat-end ng-if='!$last' class="splitter"></div>
+                      <div ng-repeat-end ng-if="!$last" class="splitter"></div>
                     </div>
                     <div class="playlist-filter">
                       <div
@@ -1950,7 +1961,11 @@
                             >
                               {{source.displayId | translate}}
                             </div>
-                            <div ng-repeat-end ng-if='!$last' class="splitter"></div>
+                            <div
+                              ng-repeat-end
+                              ng-if="!$last"
+                              class="splitter"
+                            ></div>
                             <svg
                               class="searchspinner"
                               ng-show="loading"
@@ -2033,7 +2048,9 @@
                               <div class="title">
                                 <!-- <a ng-if="song.disabled" class="disabled" ng-click="copyrightNotice()">{{ song.title |limitTo:30}}</a> -->
                                 <a add-and-play="song"
-                                  ><span ng-if="isActiveTab(8)" class="source"
+                                  ><span
+                                    ng-if="isActiveTab('allmusic')"
+                                    class="source"
                                     >{{song.sourceName}}</span
                                   >{{ song.title |limitTo:30}}</a
                                 >
@@ -2095,7 +2112,7 @@
                                   />
                                   <div>
                                     {{ playlist.title |limitTo:30}}<span
-                                      ng-if="isActiveTab(8)"
+                                      ng-if="isActiveTab('allmusic')"
                                       class="source playlist"
                                       >{{playlist.sourceName}}</span
                                     >
@@ -2490,6 +2507,40 @@
                           <p>{{_DESIGNER}}: iparanoid</p>
                           <p>{{_VERSION}}: 2.19.0 {{_LICENSE_NOTICE}}</p>
                         </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- content page: 登录 -->
+                  <div
+                    class="page"
+                    ng-show="current_tag==5 && is_window_hidden==1"
+                  >
+                    <div class="login">
+                      <div class="login-logo">
+                        <img src="images/netease-logo.png" />
+                      </div>
+                      <div class="login-title">登录网易云账号</div>
+                      <div class="login-form">
+                        <div class="login-form_field">
+                          <svg class="feather">
+                            <use href="#mail"></use>
+                          </svg>
+                          <input placeholder="邮箱" id="login-email"/>
+                        </div>
+                        <div class="login-form_field">
+                          <svg class="feather">
+                            <use href="#lock"></use>
+                          </svg>
+                          <input placeholder="密码" type="password" id="login-password"/>
+                        </div>
+                      </div>
+                      <div class="login-submit">
+                        <button class="login-submit_button" ng-click="login()">登录</button>
+                      </div>
+                      <div class="login-switcher">使用手机号登录</div>
+                      <div class="login-notice">
+                        Listen1
+                        不会传输你的账号数据到任何非网易云音乐官方的服务器。
                       </div>
                     </div>
                   </div>

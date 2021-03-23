@@ -706,6 +706,56 @@ function build_netease() {
     };
   }
 
+  function ne_login(url) {
+    // use chrome extension to modify referer.
+    const target_url = 'https://music.163.com/weapi/login';
+    const email = getParameterByName('email', url);
+    const password = getParameterByName('password', url);
+
+    const req_data = {
+      username: email,
+      password: forge.md5
+        .create()
+        .update(forge.util.encodeUtf8(password))
+        .digest()
+        .toHex(),
+      rememberLogin: 'true',
+    };
+    const encrypt_req_data = _encrypted_request(req_data);
+    const expire =
+      (new Date().getTime() + 1e3 * 60 * 60 * 24 * 365 * 100) / 1000;
+
+    cookieSet(
+      {
+        url: 'https://music.163.com',
+        name: 'os',
+        value: 'pc',
+        expirationDate: expire,
+      },
+      (cookie) => {}
+    );
+    return {
+      success(fn) {
+        axios
+          .post(target_url, new URLSearchParams(encrypt_req_data))
+          .then((response) => {
+            const { data } = response;
+            console.log(data);
+            return fn({
+              status: 'success',
+              data,
+            });
+          })
+          .catch(() =>
+            fn({
+              status: 'fail',
+              data: {},
+            })
+          );
+      },
+    };
+  }
+
   return {
     show_playlist: ne_show_playlist,
     get_playlist_filters,
@@ -714,6 +764,7 @@ function build_netease() {
     bootstrap_track: ne_bootstrap_track,
     search: ne_search,
     lyric: ne_lyric,
+    login: ne_login,
   };
 }
 
