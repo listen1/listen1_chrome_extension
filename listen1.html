@@ -1732,6 +1732,23 @@
                     <h2>{{ backup.id }} {{backup.description}}</h2>
                   </li>
                 </ul>
+                <div class="" ng-show="dialog_type==='diagnostic'">
+                  <ul>
+                    <strong></strong>
+                    <li><strong>Player:</strong></li>
+                    <li>Track: {{dg_trackid}}</li>
+                    <li>Source: {{dg_src}}</li>
+                    <li>Ready State: {{dg_ready}}</li>
+                    <li>Network State: {{dg_network}}</li>
+                    <li>Error: {{dg_error}}</li>
+                    <br>
+                    <li><strong>Network:</strong></li>
+                    <li>GeoIP 1: {{geoip1}}</li>
+                    <li>GeoIP 2: {{geoip2}}</li>
+                    <li>GeoIP 3: {{geoip3}}</li>
+                    <li>GeoIP 4: {{geoip4}}</li>
+                  </ul>
+                </div>
               </div>
             </div>
 
@@ -2893,6 +2910,9 @@
                   >
                     词
                   </div>
+                </div>
+                <div>
+                  <svg class="feather" ng-click="showDialog('diagnostic')"><use href="#activity"></use></svg>
                 </div>
               </div>
               <div

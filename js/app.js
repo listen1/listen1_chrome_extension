@@ -448,6 +448,35 @@ const main = () => {
             }
           );
         }
+        if (dialog_type === 'diagnostic') {
+          $scope.dialog_type = 'diagnostic';
+          $scope.dialog_title = $translate.instant('Diagnostic Info');
+          [$scope.geoip1, $scope.geoip2, $scope.geoip3, $scope.geoip4] = Array(4).fill('Loading...');
+          axios.get('https://get.geojs.io/v1/ip/country.json').then((res)=>{
+            $scope.geoip1 = res.data.country;
+          })
+          axios.get('http://ip-api.com/json/').then((res)=>{
+            $scope.geoip2 = res.data.countryCode;
+          })
+          axios.get('https://whois.pconline.com.cn/ipJson.jsp?json=true').then((res)=>{
+            $scope.geoip3 = res.data.addr;
+          })
+          axios.get('https://www.ip.cn/api/index?ip=&type=0').then((res)=>{
+            $scope.geoip4 = res.data.address;
+          })
+          $scope.dg_trackid = l1Player.getPlayer().currentAudio.id;
+
+          // eslint-disable-next-line no-underscore-dangle
+          $scope.dg_src = new URL(l1Player.getPlayer().currentHowl._src).host;
+          
+          const readyConst = ['HAVE_NOTHING', 'HAVE_METADATA', 'HAVE_CURRENT_DATA', 'HAVE_FUTURE_DATA', 'HAVE_ENOUGH_DATA'];
+          // eslint-disable-next-line no-underscore-dangle
+          const audioNode = l1Player.getPlayer().currentHowl._inactiveSound()._node;
+          $scope.dg_ready = readyConst[audioNode.readyState];
+          const networkConst = ['NETWORK_EMPTY', 'NETWORK_IDLE', 'NETWORK_LOADING', 'NETWORK_NO_SOURCE'];
+          $scope.dg_network = networkConst[audioNode.networkState];
+          $scope.dg_error = audioNode.error || '<NONE>';
+        }
       };
 
       $scope.chooseDialogOption = (option_id) => {
@@ -1160,7 +1189,7 @@ const main = () => {
             return;
           }
 
-          const timeReg = /\[(\d{2,})\:(\d{2})(?:\.(\d{1,3}))?\]/g; // eslint-disable-line no-useless-escape
+          const timeReg = /\[(\d{2,}):(\d{2})(?:\.(\d{1,3}))?\]/g;
 
           let timeRegResult = null;
           // eslint-disable-next-line no-cond-assign
