@@ -126,6 +126,8 @@
  "_LOGIN": "登录",
  "_LOGOUT": "退出登录",
  "_LOGIN_ERROR": "登录失败，请检查用户名和密码",
+ "_LOGIN_EMAIL_ERROR": "请输入正确的邮箱地址",
+ "_LOGIN_PASSWORD_ERROR": "密码不能为空",
  "_LOGIN_NETEASE": "登录网易云音乐",
  "_MY_NETEASE": "我的网易云音乐"
 }

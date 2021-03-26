@@ -229,12 +229,28 @@ const main = () => {
       $scope.login = (source) => {
         const email = document.getElementById('login-email').value;
         const password = document.getElementById('login-password').value;
+        // valid email/password
+        function validateEmail(email_str) {
+          const re = /\S+@\S+\.\S+/;
+          return re.test(email_str);
+        }
+        function validatePassword(password_str) {
+          return password_str !== '';
+        }
+        if (!validateEmail(email)) {
+          return Notification.warning($translate.instant('_LOGIN_EMAIL_ERROR'));
+        }
+        if (!validatePassword(password)) {
+          return Notification.warning(
+            $translate.instant('_LOGIN_PASSWORD_ERROR')
+          );
+        }
         const options = {
           email,
           password,
         };
         $scope.loginProgress = true;
-        MediaService.login(source, options).success((data) => {
+        return MediaService.login(source, options).success((data) => {
           $scope.loginProgress = false;
           if (data.status === 'success') {
             $scope.setMusicAuth(source, data.data);
