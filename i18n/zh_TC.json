@@ -127,7 +127,12 @@
  "_LOGOUT": "退出登錄",
  "_LOGIN_ERROR": "登錄失敗，請檢查用戶名和密碼",
  "_LOGIN_EMAIL_ERROR": "請輸入正確的郵箱地址",
+ "_LOGIN_COUNTRYCODE_ERROR": "請輸入正確的國家或地區代碼",
+ "_LOGIN_PHONE_ERROR": "請輸入正確的手機號",
  "_LOGIN_PASSWORD_ERROR": "密碼不能為空",
  "_LOGIN_NETEASE": "登錄網易雲音樂",
+ "_LOGIN_BY_MOBILE_PHONE": "手機號登錄",
+ "_LOGIN_BY_EMAIL": "郵箱登錄",
+ "_MOBILE_PHONE": "手機號",
  "_MY_NETEASE": "我的網易雲音樂"
 }

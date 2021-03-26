@@ -708,19 +708,40 @@ function build_netease() {
 
   function ne_login(url) {
     // use chrome extension to modify referer.
-    const target_url = 'https://music.163.com/weapi/login';
-    const email = getParameterByName('email', url);
+    let target_url = 'https://music.163.com/weapi/login';
+    const loginType = getParameterByName('type', url);
+
     const password = getParameterByName('password', url);
 
-    const req_data = {
-      username: email,
-      password: forge.md5
-        .create()
-        .update(forge.util.encodeUtf8(password))
-        .digest()
-        .toHex(),
-      rememberLogin: 'true',
-    };
+    let req_data = {};
+    if (loginType === 'email') {
+      const email = getParameterByName('email', url);
+
+      req_data = {
+        username: email,
+        password: forge.md5
+          .create()
+          .update(forge.util.encodeUtf8(password))
+          .digest()
+          .toHex(),
+        rememberLogin: 'true',
+      };
+    } else if (loginType === 'phone') {
+      target_url = `https://music.163.com/weapi/login/cellphone`;
+      const countrycode = getParameterByName('countrycode', url);
+      const phone = getParameterByName('phone', url);
+      req_data = {
+        phone,
+        countrycode,
+        password: forge.md5
+          .create()
+          .update(forge.util.encodeUtf8(password))
+          .digest()
+          .toHex(),
+        rememberLogin: 'true',
+      };
+    }
+
     const encrypt_req_data = _encrypted_request(req_data);
     const expire =
       (new Date().getTime() + 1e3 * 60 * 60 * 24 * 365 * 100) / 1000;

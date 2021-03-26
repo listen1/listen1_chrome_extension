@@ -825,6 +825,10 @@ ul.detail-songlist li .tools .icon {
   background: var(--content-background-color);
   color: var(--text-default-color);
 }
+.page .login .login-form .login-form_field input.login-form_field_countrycode {
+  flex: 0 0 40px;
+  width: 40px;
+}
 .page .login .login-form .login-form_field svg {
   margin-left: 12px;
   margin-right: 12px;
@@ -850,6 +854,7 @@ ul.detail-songlist li .tools .icon {
 }
 .page .login .login-switcher {
   margin-top: 24px;
+  cursor: pointer;
 }
 .page .login .login-notice {
   width: 270px;

@@ -225,30 +225,82 @@ const main = () => {
       // login
 
       $scope.loginProgress = false;
+      $scope.loginType = 'email';
 
+      $scope.setLoginType = (newType) => {
+        $scope.loginType = newType;
+        if (newType === 'phone') {
+          document.getElementById('login-countrycode').value = '+86';
+        }
+      };
+      // valid email/password
+      function validateEmail(email_str) {
+        const re = /\S+@\S+\.\S+/;
+        return re.test(email_str);
+      }
+      function validatePhone(phone_str) {
+        const re = /^[0-9]{7,16}$/;
+        return re.test(phone_str);
+      }
+      function validateCountrycode(countrycode_str) {
+        console.log(countrycode_str);
+        const re = /^\+[0-9]{1,4}$/;
+        return re.test(countrycode_str);
+      }
+      function validatePassword(password_str) {
+        return password_str !== '';
+      }
       $scope.login = (source) => {
-        const email = document.getElementById('login-email').value;
-        const password = document.getElementById('login-password').value;
-        // valid email/password
-        function validateEmail(email_str) {
-          const re = /\S+@\S+\.\S+/;
-          return re.test(email_str);
+        let options = {};
+        if ($scope.loginType === 'email') {
+          const email = document.getElementById('login-email').value;
+          const password = document.getElementById('login-password').value;
+
+          if (!validateEmail(email)) {
+            return Notification.warning(
+              $translate.instant('_LOGIN_EMAIL_ERROR')
+            );
+          }
+          if (!validatePassword(password)) {
+            return Notification.warning(
+              $translate.instant('_LOGIN_PASSWORD_ERROR')
+            );
+          }
+          options = {
+            type: $scope.loginType,
+            email,
+            password,
+          };
+        } else if ($scope.loginType === 'phone') {
+          const countrycode = document.getElementById('login-countrycode')
+            .value;
+
+          const phone = document.getElementById('login-phone').value;
+          const password = document.getElementById('login-password').value;
+          if (!validateCountrycode(countrycode)) {
+            return Notification.warning(
+              $translate.instant('_LOGIN_COUNTRYCODE_ERROR')
+            );
+          }
+          if (!validatePhone(phone)) {
+            return Notification.warning(
+              $translate.instant('_LOGIN_PHONE_ERROR')
+            );
+          }
+          if (!validatePassword(password)) {
+            return Notification.warning(
+              $translate.instant('_LOGIN_PASSWORD_ERROR')
+            );
+          }
+          options = {
+            type: $scope.loginType,
+            phone,
+            countrycode: countrycode.slice(1),
+            password,
+          };
+        } else {
+          return Notification.error('not support login type');
         }
-        function validatePassword(password_str) {
-          return password_str !== '';
-        }
-        if (!validateEmail(email)) {
-          return Notification.warning($translate.instant('_LOGIN_EMAIL_ERROR'));
-        }
-        if (!validatePassword(password)) {
-          return Notification.warning(
-            $translate.instant('_LOGIN_PASSWORD_ERROR')
-          );
-        }
-        const options = {
-          email,
-          password,
-        };
         $scope.loginProgress = true;
         return MediaService.login(source, options).success((data) => {
           $scope.loginProgress = false;

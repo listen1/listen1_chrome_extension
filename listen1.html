@@ -2593,11 +2593,30 @@
                       </div>
                       <div class="login-title">{{_LOGIN_NETEASE}}</div>
                       <div class="login-form">
-                        <div class="login-form_field">
+                        <div
+                          class="login-form_field"
+                          ng-show="loginType==='email'"
+                        >
                           <svg class="feather">
                             <use href="#mail"></use>
                           </svg>
-                          <input placeholder="{{ _LOGIN }}" id="login-email" />
+                          <input placeholder="{{ _EMAIL }}" id="login-email" />
+                        </div>
+                        <div
+                          class="login-form_field"
+                          ng-show="loginType==='phone'"
+                        >
+                          <svg class="feather">
+                            <use href="#smartphone"></use>
+                          </svg>
+                          <input
+                            id="login-countrycode"
+                            class="login-form_field_countrycode"
+                          />
+                          <input
+                            placeholder="{{ _MOBILE_PHONE }}"
+                            id="login-phone"
+                          />
                         </div>
                         <div class="login-form_field">
                           <svg class="feather">
@@ -2619,7 +2638,20 @@
                           {{_LOGIN}}
                         </button>
                       </div>
-                      <!-- <div class="login-switcher">使用手机号登录</div> -->
+                      <div
+                        class="login-switcher"
+                        ng-show="loginType==='email'"
+                        ng-click="setLoginType('phone')"
+                      >
+                        {{_LOGIN_BY_MOBILE_PHONE}}
+                      </div>
+                      <div
+                        class="login-switcher"
+                        ng-show="loginType==='phone'"
+                        ng-click="setLoginType('email')"
+                      >
+                        {{_LOGIN_BY_EMAIL}}
+                      </div>
                       <div class="login-notice">
                         {{ _LISTEN1_LOGIN_NOTICE }}
                       </div>
