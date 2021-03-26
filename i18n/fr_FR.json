@@ -118,5 +118,14 @@
  "_CLOSE_TAB_ACTION": "Close tab action",
  "_VALID_AFTER_RESTART": "Valid after restart",
  "_QUIT_APPLICATION": "Quit Application",
- "_MINIMIZE_TO_BACKGROUND": "Minimize to background"
+ "_MINIMIZE_TO_BACKGROUND": "Minimize to background",
+ "_MY_PLAYLIST": "My Playlist",
+ "_RECOMMEND_PLAYLIST": "Recommend Playlist",
+ "_LISTEN1_LOGIN_NOTICE": "Listen1 NE transférera PAS les données de votre compte vers un serveur autre que le serveur de la plate-forme musicale.",
+ "_PASSWORD": "Password",
+ "_LOGIN": "Login",
+ "_LOGOUT": "Logout",
+ "_LOGIN_ERROR": "Login error, please check user name and password",
+ "_LOGIN_NETEASE": "Login Netease",
+ "_MY_NETEASE": "My Netease"
 }

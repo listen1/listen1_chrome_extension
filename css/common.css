@@ -99,6 +99,7 @@ svg {
   height: 49px;
   border: 5px solid rgba(0, 0, 0, 0);
   background-clip: padding-box;
+  border-radius: 7px;
   -webkit-border-radius: 7px;
   background-color: var(--scroll-color);
   /*rgba(151, 151, 151, 0.4);*/
@@ -851,6 +852,25 @@ ul.detail-songlist li .tools .icon {
   font-size: 12px;
   color: var(--text-subtitle-color);
 }
+.page .login .usercard {
+  display: flex;
+  align-items: center;
+  width: 300px;
+  border: solid 1px var(--button-border-color);
+}
+.page .login .usercard img {
+  width: 60px;
+  margin: 10px;
+}
+.page .login .usercard .usercard-title {
+  flex: 1;
+  height: 50px;
+  font-size: 16px;
+  font-weight: 700;
+}
+.page .login .usercard button {
+  margin: 10px;
+}
 /* page login end */
 
 /* page setting start */
@@ -1493,7 +1513,7 @@ svg.searchspinner {
 
 /* widget source-list start */
 .source-list {
-  margin: 20px 26px 0 26px;
+  margin: 20px 26px 10px 26px;
 }
 
 .source-list .source-button {
@@ -1531,7 +1551,6 @@ svg.searchspinner {
 .playlist-filter .filter-item {
   padding: 5px 15px;
   margin-right: 10px;
-  margin-top: 10px;
 }
 
 .playlist-filter .filter-item.active {

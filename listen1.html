@@ -1751,16 +1751,28 @@
                       ><a>{{_PLAYLISTS}}</a>
                     </li>
                   </ul>
-                  <div ng-if="!isChrome" class="menu-title">
+                  <div
+                    ng-if="!isChrome || is_login('netease')"
+                    class="menu-title"
+                  >
                     <div class="title">{{_MY_MUSIC}}</div>
                   </div>
-                  <ul ng-if="!isChrome" class="nav masthead-nav">
+                  <ul class="nav masthead-nav">
                     <li
+                      ng-if="!isChrome"
                       ng-click="showPlaylist('lmplaylist_reserve')"
                       ng-class="{ 'active':window_type=='list' && ( '/playlist?list_id=lmplaylist_reserve' === getCurrentUrl() ) }"
                     >
                       <span class="icon li-featured-list"></span
                       ><a>{{_LOCAL_MUSIC}}</a>
+                    </li>
+                    <li
+                      ng-if="is_login('netease')"
+                      ng-click="showTag(6)"
+                      ng-class="{ 'active':(current_tag==6) && (window_url_stack.length ==0) }"
+                    >
+                      <svg class="feather"><use href="#globe"></use></svg>
+                      <a>{{_MY_NETEASE}}</a>
                     </li>
                   </ul>
                   <div class="menu-title" ng-init="loadMyPlaylist();">
@@ -1930,6 +1942,55 @@
                           <div class="loading_bottom">
                             <img src="images/loading-1.gif" height="40px" />
                           </div>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- my netease window-->
+                  <div
+                    class="page page-hot-playlist"
+                    ng-show="current_tag==6 && is_window_hidden==1"
+                    ng-controller="PlatformController"
+                    ng-init="initPlatformController(musicAuth.netease);"
+                  >
+                    <div class="source-list" ng-show="is_window_hidden==1">
+                      <div
+                        ng-repeat-start="source in ::platformSourceList"
+                        class="source-button"
+                        ng-class="{'active':tab === source.name}"
+                        ng-click="changePlatformTab(source.name)"
+                      >
+                        {{source.displayId | translate}}
+                      </div>
+                      <div ng-repeat-end ng-if="!$last" class="splitter"></div>
+                    </div>
+                    <div class="site-wrapper-innerd" id="hotplaylist">
+                      <div class="cover-container" id="playlist-content">
+                        <ul class="playlist-covers">
+                          <li ng-repeat="i in myPlatformPlaylists">
+                            <div class="u-cover">
+                              <img
+                                ng-src="{{i.cover_img_url}}"
+                                ng-click="showPlaylist(i.id)"
+                              />
+                              <div
+                                class="bottom"
+                                ng-click="directplaylist(i.id)"
+                              >
+                                <svg class="feather">
+                                  <use href="#play-circle"></use>
+                                </svg>
+                              </div>
+                            </div>
+                            <div class="desc">
+                              <span class="title" ng-click="showPlaylist(i.id)"
+                                >{{i.title}}</span
+                              >
+                            </div>
+                          </li>
+                          <!-- <div class="loading_bottom">
+                            <img src="images/loading-1.gif" height="40px" />
+                          </div> -->
                         </ul>
                       </div>
                     </div>
@@ -2515,35 +2576,56 @@
                     class="page"
                     ng-show="current_tag==5 && is_window_hidden==1"
                   >
-                    <div class="login">
+                    <div class="login" ng-show="is_login('netease')">
+                      <div class="usercard">
+                        <img src="{{musicAuth.netease.avatar}}" />
+                        <div class="usercard-title">
+                          {{musicAuth.netease.nickname}}
+                        </div>
+                        <button ng-click="logout('netease')">
+                          {{_LOGOUT}}
+                        </button>
+                      </div>
+                    </div>
+                    <div class="login" ng-show="!is_login('netease')">
                       <div class="login-logo">
                         <img src="images/netease-logo.png" />
                       </div>
-                      <div class="login-title">登录网易云账号</div>
+                      <div class="login-title">{{_LOGIN_NETEASE}}</div>
                       <div class="login-form">
                         <div class="login-form_field">
                           <svg class="feather">
                             <use href="#mail"></use>
                           </svg>
-                          <input placeholder="邮箱" id="login-email"/>
+                          <input placeholder="{{ _LOGIN }}" id="login-email" />
                         </div>
                         <div class="login-form_field">
                           <svg class="feather">
                             <use href="#lock"></use>
                           </svg>
-                          <input placeholder="密码" type="password" id="login-password"/>
+                          <input
+                            placeholder="{{ _PASSWORD }}"
+                            type="password"
+                            id="login-password"
+                          />
                         </div>
                       </div>
                       <div class="login-submit">
-                        <button class="login-submit_button" ng-click="login()">登录</button>
+                        <button
+                          ng-show="!loginProgress"
+                          class="login-submit_button"
+                          ng-click="login('netease')"
+                        >
+                          {{_LOGIN}}
+                        </button>
                       </div>
-                      <div class="login-switcher">使用手机号登录</div>
+                      <!-- <div class="login-switcher">使用手机号登录</div> -->
                       <div class="login-notice">
-                        Listen1
-                        不会传输你的账号数据到任何非网易云音乐官方的服务器。
+                        {{ _LISTEN1_LOGIN_NOTICE }}
                       </div>
                     </div>
                   </div>
+
                   <!-- track list window-->
                   <div class="page">
                     <div

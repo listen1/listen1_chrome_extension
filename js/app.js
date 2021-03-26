@@ -222,17 +222,41 @@ const main = () => {
         $scope.closeWindow();
       };
 
-      $scope.login = () => {
-        const source = 'netease';
+      // login
+
+      $scope.loginProgress = false;
+
+      $scope.login = (source) => {
         const email = document.getElementById('login-email').value;
         const password = document.getElementById('login-password').value;
         const options = {
           email,
           password,
         };
+        $scope.loginProgress = true;
         MediaService.login(source, options).success((data) => {
-          console.log(data);
+          $scope.loginProgress = false;
+          if (data.status === 'success') {
+            $scope.setMusicAuth(source, data.data);
+          } else {
+            Notification.error($translate.instant('_LOGIN_ERROR'));
+          }
         });
+      };
+
+      $scope.logout = (source) => {
+        $scope.setMusicAuth(source, {});
+        // TODO: clear cookie
+      };
+
+      $scope.is_login = (source) =>
+        $scope.musicAuth[source] && $scope.musicAuth[source].is_login;
+
+      $scope.musicAuth = localStorage.getObject('music_auth') || {};
+
+      $scope.setMusicAuth = (source, data) => {
+        $scope.musicAuth[source] = data;
+        localStorage.setObject('music_auth', $scope.musicAuth);
       };
 
       $scope.$on('search:keyword_change', (event, data) => {
@@ -2013,6 +2037,54 @@ const main = () => {
       $scope.$on('favoriteplaylist:update', (event, data) => {
         $scope.loadFavoritePlaylist();
       });
+    },
+  ]);
+
+  const platformSourceList = [
+    {
+      name: 'my_playlist',
+      displayId: '_MY_PLAYLIST',
+    },
+    {
+      name: 'recommend_playlist',
+      displayId: '_RECOMMEND_PLAYLIST',
+    },
+  ];
+
+  app.controller('PlatformController', [
+    '$scope',
+    ($scope) => {
+      $scope.myPlatformPlaylists = [];
+      $scope.myPlatformUser = {};
+      $scope.platformSourceList = platformSourceList;
+      $scope.tab = platformSourceList[0].name;
+
+      $scope.loadPlatformPlaylists = () => {
+        if ($scope.myPlatformUser.platform === undefined) {
+          return;
+        }
+        let getPlaylistFn = MediaService.getUserPlaylist;
+        if ($scope.tab === 'recommend_playlist') {
+          getPlaylistFn = MediaService.getRecommendPlaylist;
+        }
+        const user = $scope.myPlatformUser;
+        getPlaylistFn(user.platform, {
+          user_id: user.user_id,
+        }).success((response) => {
+          const { data } = response;
+          $scope.myPlatformPlaylists = data.playlists;
+        });
+      };
+
+      $scope.initPlatformController = (user) => {
+        $scope.myPlatformUser = user;
+        $scope.loadPlatformPlaylists();
+      };
+
+      $scope.changePlatformTab = (name) => {
+        $scope.tab = name;
+        $scope.loadPlatformPlaylists();
+      };
     },
   ]);
 

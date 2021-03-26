@@ -740,10 +740,18 @@ function build_netease() {
           .post(target_url, new URLSearchParams(encrypt_req_data))
           .then((response) => {
             const { data } = response;
-            console.log(data);
+            const result = {
+              is_login: true,
+              user_id: data.account.id,
+              user_name: data.account.userName,
+              nickname: data.profile.nickname,
+              avatar: data.profile.avatarUrl,
+              platform: 'netease',
+              data,
+            };
             return fn({
               status: 'success',
-              data,
+              data: result,
             });
           })
           .catch(() =>
@@ -752,6 +760,80 @@ function build_netease() {
               data: {},
             })
           );
+      },
+    };
+  }
+
+  function ne_get_user_playlist(url) {
+    const user_id = getParameterByName('user_id', url);
+    const target_url = 'https://music.163.com/api/user/playlist';
+
+    const req_data = {
+      uid: user_id,
+      limit: 1000,
+      offset: 0,
+      includeVideo: true,
+    };
+
+    return {
+      success(fn) {
+        axios
+          .post(target_url, new URLSearchParams(req_data))
+          .then((response) => {
+            const playlists = [];
+            response.data.playlist.forEach((item) => {
+              const playlist = {
+                cover_img_url: item.coverImgUrl,
+                id: `neplaylist_${item.id}`,
+                source_url: `https://music.163.com/#/playlist?id=${item.id}`,
+                title: item.name,
+              };
+              playlists.push(playlist);
+            });
+            return fn({
+              status: 'success',
+              data: {
+                playlists,
+              },
+            });
+          });
+      },
+    };
+  }
+
+  function ne_get_recommend_playlist() {
+    const target_url = 'https://music.163.com/weapi/personalized/playlist';
+
+    const req_data = {
+      limit: 30,
+      total: true,
+      n: 1000,
+    };
+
+    const encrypt_req_data = _encrypted_request(req_data);
+
+    return {
+      success(fn) {
+        axios
+          .post(target_url, new URLSearchParams(encrypt_req_data))
+          .then((response) => {
+            const playlists = [];
+            response.data.result.forEach((item) => {
+              const playlist = {
+                cover_img_url: item.picUrl,
+                id: `neplaylist_${item.id}`,
+                source_url: `https://music.163.com/#/playlist?id=${item.id}`,
+                title: item.name,
+              };
+              playlists.push(playlist);
+            });
+            return fn({
+              status: 'success',
+              data: {
+                playlists,
+              },
+            });
+          });
       },
     };
   }
@@ -765,6 +847,8 @@ function build_netease() {
     search: ne_search,
     lyric: ne_lyric,
     login: ne_login,
+    get_user_playlist: ne_get_user_playlist,
+    get_recommend_playlist: ne_get_recommend_playlist,
   };
 }
 

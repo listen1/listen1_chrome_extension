@@ -118,5 +118,14 @@
  "_CLOSE_TAB_ACTION": "关闭标签页时行为",
  "_VALID_AFTER_RESTART": "需重启生效",
  "_QUIT_APPLICATION": "退出应用",
- "_MINIMIZE_TO_BACKGROUND": "最小化到后台"
+ "_MINIMIZE_TO_BACKGROUND": "最小化到后台",
+ "_MY_PLAYLIST": "我的歌单",
+ "_RECOMMEND_PLAYLIST": "推荐歌单",
+ "_LISTEN1_LOGIN_NOTICE": "Listen1不会传输你的账号数据到任何非音乐平台官方的服务器。",
+ "_PASSWORD": "密码",
+ "_LOGIN": "登录",
+ "_LOGOUT": "退出登录",
+ "_LOGIN_ERROR": "登录失败，请检查用户名和密码",
+ "_LOGIN_NETEASE": "登录网易云音乐",
+ "_MY_NETEASE": "我的网易云音乐"
 }

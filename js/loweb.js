@@ -345,6 +345,17 @@ const MediaService = {
 
     return provider.login(url);
   },
+  getUserPlaylist(source, options) {
+    const provider = getProviderByName(source);
+    const url = `/get_user_playlist?${queryStringify(options)}`;
+
+    return provider.get_user_playlist(url);
+  },
+  getRecommendPlaylist(source) {
+    const provider = getProviderByName(source);
+
+    return provider.get_recommend_playlist();
+  },
 };
 
 // eslint-disable-next-line no-unused-vars
