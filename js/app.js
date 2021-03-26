@@ -171,7 +171,8 @@ const main = () => {
   app.controller('AuthController', [
     '$scope',
     '$translate',
-    ($scope, $translate) => {
+    'Notification',
+    ($scope, $translate, Notification) => {
       $scope.loginProgress = false;
       $scope.loginType = 'email';
 
