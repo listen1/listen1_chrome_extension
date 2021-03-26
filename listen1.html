@@ -1949,7 +1949,7 @@
                   <!-- my netease window-->
                   <div
                     class="page page-hot-playlist"
-                    ng-show="current_tag==6 && is_window_hidden==1"
+                    ng-if="current_tag==6 && is_window_hidden==1"
                     ng-controller="PlatformController"
                     ng-init="initPlatformController(musicAuth.netease);"
                   >
