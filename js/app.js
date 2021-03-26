@@ -168,62 +168,10 @@ const main = () => {
     },
   ]);
 
-  // control main view of page, it can be called any place
-  app.controller('NavigationController', [
+  app.controller('AuthController', [
     '$scope',
-    '$timeout',
-    'Notification',
-    '$rootScope',
-    'hotkeys',
-    'lastfm',
-    'github',
-    'gist',
     '$translate',
-    (
-      $scope,
-      $timeout,
-      Notification,
-      $rootScope,
-      hotkeys,
-      lastfm,
-      github,
-      gist,
-      $translate
-    ) => {
-      $rootScope.page_title = 'Listen 1'; // eslint-disable-line no-param-reassign
-      $scope.window_url_stack = [];
-      $scope.window_poped_url_stack = [];
-      $scope.current_tag = 2;
-      $scope.is_window_hidden = 1;
-      $scope.is_dialog_hidden = 1;
-
-      $scope.songs = [];
-      $scope.current_list_id = -1;
-
-      $scope.dialog_song = '';
-      $scope.dialog_type = 0;
-      $scope.dialog_title = '';
-
-      $scope.isDoubanLogin = false;
-
-      $scope.lastfm = lastfm;
-      $scope.github = github;
-
-      $scope.$on('isdoubanlogin:update', (event, data) => {
-        $scope.isDoubanLogin = data;
-      });
-
-      // tag
-      $scope.showTag = (tag_id) => {
-        $scope.current_tag = tag_id;
-        $scope.is_window_hidden = 1;
-        $scope.window_url_stack = [];
-        $scope.window_poped_url_stack = [];
-        $scope.closeWindow();
-      };
-
-      // login
-
+    ($scope, $translate) => {
       $scope.loginProgress = false;
       $scope.loginType = 'email';
 
@@ -324,6 +272,62 @@ const main = () => {
       $scope.setMusicAuth = (source, data) => {
         $scope.musicAuth[source] = data;
         localStorage.setObject('music_auth', $scope.musicAuth);
+      };
+    },
+  ]);
+
+  // control main view of page, it can be called any place
+  app.controller('NavigationController', [
+    '$scope',
+    '$timeout',
+    'Notification',
+    '$rootScope',
+    'hotkeys',
+    'lastfm',
+    'github',
+    'gist',
+    '$translate',
+    (
+      $scope,
+      $timeout,
+      Notification,
+      $rootScope,
+      hotkeys,
+      lastfm,
+      github,
+      gist,
+      $translate
+    ) => {
+      $rootScope.page_title = 'Listen 1'; // eslint-disable-line no-param-reassign
+      $scope.window_url_stack = [];
+      $scope.window_poped_url_stack = [];
+      $scope.current_tag = 2;
+      $scope.is_window_hidden = 1;
+      $scope.is_dialog_hidden = 1;
+
+      $scope.songs = [];
+      $scope.current_list_id = -1;
+
+      $scope.dialog_song = '';
+      $scope.dialog_type = 0;
+      $scope.dialog_title = '';
+
+      $scope.isDoubanLogin = false;
+
+      $scope.lastfm = lastfm;
+      $scope.github = github;
+
+      $scope.$on('isdoubanlogin:update', (event, data) => {
+        $scope.isDoubanLogin = data;
+      });
+
+      // tag
+      $scope.showTag = (tag_id) => {
+        $scope.current_tag = tag_id;
+        $scope.is_window_hidden = 1;
+        $scope.window_url_stack = [];
+        $scope.window_poped_url_stack = [];
+        $scope.closeWindow();
       };
 
       $scope.$on('search:keyword_change', (event, data) => {
