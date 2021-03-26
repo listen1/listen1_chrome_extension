@@ -16,8 +16,8 @@
     <link href="css/origin.css" rel="stylesheet" id="theme" />
     <link href="css/common.css" rel="stylesheet" />
 
-    <link rel="preload" href="/images/feather-sprite.svg">
-    
+    <link rel="preload" href="/images/feather-sprite.svg" />
+
     <script>
       if (typeof module === 'object') {
         window.module = module;
@@ -316,7 +316,9 @@
                       ng-class="{ 'active':window_type=='list' && ( ('/playlist?list_id='+i.info.id) === getCurrentUrl() ) }"
                       ng-click="showPlaylist(i.info.id)"
                     >
-                      <svg class="feather"><use href="/images/feather-sprite.svg#disc"></use></svg>
+                      <svg class="feather">
+                        <use href="/images/feather-sprite.svg#disc"></use>
+                      </svg>
                       <a>{{i.info.title}}</a>
                     </li>
                   </ul>
@@ -329,7 +331,9 @@
                       ng-class="{ 'active':window_type=='list' && ( ('/playlist?list_id='+i.info.id) === getCurrentUrl() ) }"
                       ng-click="showPlaylist(i.info.id, {useCache: false})"
                     >
-                      <svg class="feather"><use href="/images/feather-sprite.svg#disc"></use></svg>
+                      <svg class="feather">
+                        <use href="/images/feather-sprite.svg#disc"></use>
+                      </svg>
                       <a>{{i.info.title}}</a>
                     </li>
                   </ul>
@@ -396,7 +400,7 @@
                       >
                         {{source.displayId | translate}}
                       </div>
-                      <div ng-repeat-end ng-if='!$last' class="splitter"></div>
+                      <div ng-repeat-end ng-if="!$last" class="splitter"></div>
                     </div>
                     <div class="playlist-filter">
                       <div
@@ -447,7 +451,9 @@
                                 ng-click="directplaylist(i.id)"
                               >
                                 <svg class="feather">
-                                  <use href="/images/feather-sprite.svg#play-circle"></use>
+                                  <use
+                                    href="/images/feather-sprite.svg#play-circle"
+                                  ></use>
                                 </svg>
                               </div>
                             </div>
@@ -491,7 +497,11 @@
                             >
                               {{source.displayId | translate}}
                             </div>
-                            <div ng-repeat-end ng-if='!$last' class="splitter"></div>
+                            <div
+                              ng-repeat-end
+                              ng-if="!$last"
+                              class="splitter"
+                            ></div>
                             <svg
                               class="searchspinner"
                               ng-show="loading"
@@ -574,7 +584,9 @@
                               <div class="title">
                                 <!-- <a ng-if="song.disabled" class="disabled" ng-click="copyrightNotice()">{{ song.title |limitTo:30}}</a> -->
                                 <a add-and-play="song"
-                                  ><span ng-if="isActiveTab('allmusic')" class="source"
+                                  ><span
+                                    ng-if="isActiveTab('allmusic')"
+                                    class="source"
                                     >{{song.sourceName}}</span
                                   >{{ song.title |limitTo:30}}</a
                                 >
@@ -732,14 +744,18 @@
                               ng-show="!enableAutoChooseSource"
                               ng-click="setAutoChooseSource(true)"
                             >
-                              <use href="/images/feather-sprite.svg#square"></use>
+                              <use
+                                href="/images/feather-sprite.svg#square"
+                              ></use>
                             </svg>
                             <svg
                               class="feather"
                               ng-show="enableAutoChooseSource"
                               ng-click="setAutoChooseSource(true)"
                             >
-                              <use href="/images/feather-sprite.svg#check-square"></use>
+                              <use
+                                href="/images/feather-sprite.svg#check-square"
+                              ></use>
                             </svg>
                             {{_AUTO_CHOOSE_SOURCE_NOTICE}}
                           </div>
@@ -756,14 +772,18 @@
                               ng-show="!enableStopWhenClose"
                               ng-click="setStopWhenClose(true)"
                             >
-                              <use href="/images/feather-sprite.svg#square"></use>
+                              <use
+                                href="/images/feather-sprite.svg#square"
+                              ></use>
                             </svg>
                             <svg
                               class="feather"
                               ng-show="enableStopWhenClose"
                               ng-click="setStopWhenClose(false)"
                             >
-                              <use href="/images/feather-sprite.svg#check-square"></use>
+                              <use
+                                href="/images/feather-sprite.svg#check-square"
+                              ></use>
                             </svg>
                             <span style="margin-right: 20px"
                               >{{_QUIT_APPLICATION}}</span
@@ -773,14 +793,18 @@
                               ng-show="enableStopWhenClose"
                               ng-click="setStopWhenClose(false)"
                             >
-                              <use href="/images/feather-sprite.svg#square"></use>
+                              <use
+                                href="/images/feather-sprite.svg#square"
+                              ></use>
                             </svg>
                             <svg
                               class="feather"
                               ng-show="!enableStopWhenClose"
                               ng-click="setStopWhenClose(true)"
                             >
-                              <use href="/images/feather-sprite.svg#check-square"></use>
+                              <use
+                                href="/images/feather-sprite.svg#check-square"
+                              ></use>
                             </svg>
                             <span> {{_MINIMIZE_TO_BACKGROUND}}</span>
                           </div>
@@ -795,14 +819,18 @@
                               ng-show="!enableNowplayingCoverBackground"
                               ng-click="setNowplayingCoverBackground(true)"
                             >
-                              <use href="/images/feather-sprite.svg#square"></use>
+                              <use
+                                href="/images/feather-sprite.svg#square"
+                              ></use>
                             </svg>
                             <svg
                               class="feather"
                               ng-show="enableNowplayingCoverBackground"
                               ng-click="setNowplayingCoverBackground(true)"
                             >
-                              <use href="/images/feather-sprite.svg#check-square"></use>
+                              <use
+                                href="/images/feather-sprite.svg#check-square"
+                              ></use>
                             </svg>
                             {{_NOWPLAYING_COVER_BACKGROUND_NOTICE}}
                           </div>
@@ -817,14 +845,18 @@
                               ng-show="!enableLyricFloatingWindow"
                               ng-click="openLyricFloatingWindow(true)"
                             >
-                              <use href="/images/feather-sprite.svg#square"></use>
+                              <use
+                                href="/images/feather-sprite.svg#square"
+                              ></use>
                             </svg>
                             <svg
                               class="feather"
                               ng-show="enableLyricFloatingWindow"
                               ng-click="openLyricFloatingWindow(true)"
                             >
-                              <use href="/images/feather-sprite.svg#check-square"></use>
+                              <use
+                                href="/images/feather-sprite.svg#check-square"
+                              ></use>
                             </svg>
                             <span ng-show="enableLyricFloatingWindow"></span
                             >{{_SHOW_DESKTOP_LYRIC}}
@@ -835,14 +867,18 @@
                               ng-show="!enableLyricTranslation"
                               ng-click="toggleLyricTranslation()"
                             >
-                              <use href="/images/feather-sprite.svg#square"></use>
+                              <use
+                                href="/images/feather-sprite.svg#square"
+                              ></use>
                             </svg>
                             <svg
                               class="feather"
                               ng-show="enableLyricTranslation"
                               ng-click="toggleLyricTranslation()"
                             >
-                              <use href="/images/feather-sprite.svg#check-square"></use>
+                              <use
+                                href="/images/feather-sprite.svg#check-square"
+                              ></use>
                             </svg>
                             <span ng-show="enableLyricTranslation"></span
                             >{{_SHOW_LYRIC_TRANSLATION}}
@@ -853,14 +889,18 @@
                               ng-show="!enableLyricFloatingWindowTranslation"
                               ng-click="toggleLyricFloatingWindowTranslation()"
                             >
-                              <use href="/images/feather-sprite.svg#square"></use>
+                              <use
+                                href="/images/feather-sprite.svg#square"
+                              ></use>
                             </svg>
                             <svg
                               class="feather"
                               ng-show="enableLyricFloatingWindowTranslation"
                               ng-click="toggleLyricFloatingWindowTranslation()"
                             >
-                              <use href="/images/feather-sprite.svg#check-square"></use>
+                              <use
+                                href="/images/feather-sprite.svg#check-square"
+                              ></use>
                             </svg>
                             <span
                               ng-show="enableLyricFloatingWindowTranslation"
@@ -962,14 +1002,18 @@
                               ng-show="!enableGlobalShortCut"
                               ng-click="applyGlobalShortcut(true)"
                             >
-                              <use href="/images/feather-sprite.svg#square"></use>
+                              <use
+                                href="/images/feather-sprite.svg#square"
+                              ></use>
                             </svg>
                             <svg
                               class="feather"
                               ng-show="enableGlobalShortCut"
                               ng-click="applyGlobalShortcut(true)"
                             >
-                              <use href="/images/feather-sprite.svg#check-square"></use>
+                              <use
+                                href="/images/feather-sprite.svg#check-square"
+                              ></use>
                             </svg>
                             {{_GLOBAL_SHORTCUTS_NOTICE}}
                           </div>
@@ -1092,7 +1136,9 @@
                             >
                               <div class="play-list">
                                 <svg class="feather">
-                                  <use href="/images/feather-sprite.svg#edit"></use>
+                                  <use
+                                    href="/images/feather-sprite.svg#edit"
+                                  ></use>
                                 </svg>
                                 <span>{{_EDIT}}</span>
                               </div>
@@ -1107,7 +1153,9 @@
                                 ng-class="{'favorited':is_favorite,'notfavorite':!is_favorite}"
                               >
                                 <svg class="feather">
-                                  <use href="/images/feather-sprite.svg#star"></use>
+                                  <use
+                                    href="/images/feather-sprite.svg#star"
+                                  ></use>
                                 </svg>
                                 <span
                                   >{{is_favorite?_FAVORITED:_FAVORITE}}</span
@@ -1141,7 +1189,9 @@
                             >
                               <div class="play-list">
                                 <svg class="feather">
-                                  <use href="/images/feather-sprite.svg#git-merge"></use>
+                                  <use
+                                    href="/images/feather-sprite.svg#git-merge"
+                                  ></use>
                                 </svg>
                                 <span>{{_IMPORT}}</span>
                               </div>
@@ -1234,12 +1284,18 @@
                         ng-class="isMac? 'mac':'' "
                         ng-click="popWindow()"
                       >
-                        <svg class="icon"><use href="/images/feather-sprite.svg#chevron-down"></use></svg>
+                        <svg class="icon">
+                          <use
+                            href="/images/feather-sprite.svg#chevron-down"
+                          ></use>
+                        </svg>
                       </div>
 
                       <div ng-if="!isChrome && !isMac" class="window-control">
                         <svg class="icon" window-control="window_min">
-                          <use href="/images/feather-sprite.svg#minimize-2"></use>
+                          <use
+                            href="/images/feather-sprite.svg#minimize-2"
+                          ></use>
                         </svg>
                         <svg class="icon" window-control="window_max">
                           <use href="/images/feather-sprite.svg#maximize"></use>
@@ -1339,7 +1395,9 @@
                     err-src="https://y.gtimg.cn/mediastyle/global/img/album_300.png"
                   />
                   <div class="mask">
-                    <svg class="feather"><use href="/images/feather-sprite.svg#chevrons-up"></use></svg>
+                    <svg class="feather">
+                      <use href="/images/feather-sprite.svg#chevrons-up"></use>
+                    </svg>
                   </div>
                 </div>
                 <div class="detail" ng-if="playlist.length > 0">
@@ -1462,7 +1520,9 @@
                   >
 
                   <a class="close" ng-click="togglePlaylist()"
-                    ><svg class="feather"><use href="/images/feather-sprite.svg#x"></use></svg>
+                    ><svg class="feather">
+                      <use href="/images/feather-sprite.svg#x"></use>
+                    </svg>
                   </a>
                 </div>
                 <ul class="menu-list">
