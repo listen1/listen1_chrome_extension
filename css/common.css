@@ -232,6 +232,9 @@ svg {
   height: 18px;
   color: var(--icon-default-color);
 }
+.navigation .icon svg {
+  color: var(--text-default-color);
+}
 .navigation .backfront {
   flex: 0 0 45px;
   line-height: 46px;
@@ -817,6 +820,10 @@ ul.detail-songlist li .tools .icon {
   margin: 24px;
   width: 270px;
   border: solid 1px var(--button-background-color);
+}
+.page .login .login-form .login-form_field input {
+  background: var(--content-background-color);
+  color: var(--text-default-color);
 }
 .page .login .login-form .login-form_field svg {
   margin-left: 12px;
