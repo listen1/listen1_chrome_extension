@@ -243,7 +243,6 @@ const main = () => {
         return re.test(phone_str);
       }
       function validateCountrycode(countrycode_str) {
-        console.log(countrycode_str);
         const re = /^\+[0-9]{1,4}$/;
         return re.test(countrycode_str);
       }
