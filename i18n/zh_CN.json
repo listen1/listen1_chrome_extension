@@ -119,5 +119,21 @@
  "_CLOSE_TAB_ACTION": "关闭标签页时行为",
  "_VALID_AFTER_RESTART": "需重启生效",
  "_QUIT_APPLICATION": "退出应用",
- "_MINIMIZE_TO_BACKGROUND": "最小化到后台"
+ "_MINIMIZE_TO_BACKGROUND": "最小化到后台",
+ "_MY_PLAYLIST": "我的歌单",
+ "_RECOMMEND_PLAYLIST": "推荐歌单",
+ "_LISTEN1_LOGIN_NOTICE": "Listen1不会传输你的账号数据到任何非音乐平台官方的服务器。",
+ "_PASSWORD": "密码",
+ "_LOGIN": "登录",
+ "_LOGOUT": "退出登录",
+ "_LOGIN_ERROR": "登录失败，请检查用户名和密码",
+ "_LOGIN_EMAIL_ERROR": "请输入正确的邮箱地址",
+ "_LOGIN_COUNTRYCODE_ERROR": "请输入正确的国家或地区代码",
+ "_LOGIN_PHONE_ERROR": "请输入正确的手机号",
+ "_LOGIN_PASSWORD_ERROR": "密码不能为空",
+ "_LOGIN_NETEASE": "登录网易云音乐",
+ "_LOGIN_BY_MOBILE_PHONE": "手机号登录",
+ "_LOGIN_BY_EMAIL": "邮箱登录",
+ "_MOBILE_PHONE": "手机号",
+ "_MY_NETEASE": "我的网易云音乐"
 }

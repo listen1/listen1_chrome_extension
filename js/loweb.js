@@ -339,6 +339,23 @@ const MediaService = {
 
     provider.bootstrap_track(sound, track, successCallback, failureCallback);
   },
+  login(source, options) {
+    const url = `/login?${queryStringify(options)}`;
+    const provider = getProviderByName(source);
+
+    return provider.login(url);
+  },
+  getUserPlaylist(source, options) {
+    const provider = getProviderByName(source);
+    const url = `/get_user_playlist?${queryStringify(options)}`;
+
+    return provider.get_user_playlist(url);
+  },
+  getRecommendPlaylist(source) {
+    const provider = getProviderByName(source);
+
+    return provider.get_recommend_playlist();
+  },
 };
 
 // eslint-disable-next-line no-unused-vars
