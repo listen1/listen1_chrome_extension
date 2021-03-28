@@ -14,8 +14,9 @@ function build_xiami() {
   }
 
   // eslint-disable-next-line no-unused-vars
-  function xm_bootstrap_track(sound, track, success, failure) {
-    failure();
+  function xm_bootstrap_track(track, success, failure) {
+    const sound = {};
+    failure(sound);
   }
 
   function xm_get_playlist(url) {

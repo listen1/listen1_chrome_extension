@@ -327,10 +327,10 @@ function build_netease() {
     };
   }
 
-  function ne_bootstrap_track(sound, track, success, failure) {
+  function ne_bootstrap_track(track, success, failure) {
+    const sound = {};
     const target_url =
       'https://music.163.com/weapi/song/enhance/player/url/v1?csrf_token=';
-    const csrf = '';
     let song_id = track.id;
 
     song_id = song_id.slice('netrack_'.length);
@@ -348,9 +348,9 @@ function build_netease() {
       const { url } = res_data.data[0];
       if (url != null) {
         sound.url = url; // eslint-disable-line no-param-reassign
-        success();
+        success(sound);
       } else {
-        failure();
+        failure(sound);
       }
     });
   }

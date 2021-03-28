@@ -158,7 +158,8 @@ function build_taihe() {
     };
   }
 
-  function th_bootstrap_track(sound, track, success, failure) {
+  function th_bootstrap_track(track, success, failure) {
+    const sound = {};
     const song_id = track.id.slice('thtrack_'.length);
 
     axiosTH
@@ -172,9 +173,9 @@ function build_taihe() {
           const { data } = res;
           if (data.path) {
             sound.url = data.path; // eslint-disable-line no-param-reassign
-            success();
+            success(sound);
           } else {
-            failure();
+            failure(sound);
           }
         });
       });

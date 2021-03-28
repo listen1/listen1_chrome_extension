@@ -276,9 +276,9 @@ const MediaService = {
     };
   },
 
-  bootstrapTrack(sound, track, playerSuccessCallback, playerFailCallback) {
+  bootstrapTrack(track, playerSuccessCallback, playerFailCallback) {
     const successCallback = playerSuccessCallback;
-
+    const sound = {};
     function failureCallback() {
       if (localStorage.getObject('enable_auto_choose_source') === false) {
         playerFailCallback();
@@ -309,35 +309,32 @@ const MediaService = {
                   searchTrack.title === track.title &&
                   searchTrack.artist === track.artist
                 ) {
-                  const soundInfo = {};
                   provider.bootstrap_track(
-                    soundInfo,
                     searchTrack,
-                    () => {
-                      reject(soundInfo.url); // Use Reject to return immediately
+                    (response) => {
+                      sound.url = response.url;
+                      reject(sound); // Use Reject to return immediately
                     },
                     resolve
                   );
                   return;
                 }
               }
-              resolve();
+              resolve(sound);
             });
           })
       );
       // TODO: Use Promise.any() in ES2021 replace the tricky workaround
       Promise.all(getUrlPromises)
         .then(playerFailCallback)
-        .catch((url) => {
-          // eslint-disable-next-line no-param-reassign
-          sound.url = url;
-          playerSuccessCallback();
+        .catch((response) => {
+          playerSuccessCallback(response);
         });
     }
 
     const provider = getProviderByName(track.source);
 
-    provider.bootstrap_track(sound, track, successCallback, failureCallback);
+    provider.bootstrap_track(track, successCallback, failureCallback);
   },
   login(source, options) {
     const url = `/login?${queryStringify(options)}`;

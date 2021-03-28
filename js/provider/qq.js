@@ -370,7 +370,8 @@ function build_qq() {
   }
 
   // eslint-disable-next-line no-unused-vars
-  function qq_bootstrap_track(sound, track, success, failure) {
+  function qq_bootstrap_track(track, success, failure) {
+    const sound = {};
     const songId = track.id.slice('qqtrack_'.length);
     const target_url =
       'https://u.y.qq.com/cgi-bin/musicu.fcg?loginUin=0&' +
@@ -389,7 +390,7 @@ function build_qq() {
       }
       const url = data.req_0.data.sip[0] + data.req_0.data.midurlinfo[0].purl;
       sound.url = url; // eslint-disable-line no-param-reassign
-      success();
+      success(sound);
     });
   }
 

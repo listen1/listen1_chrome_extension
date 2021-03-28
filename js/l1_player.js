@@ -128,7 +128,9 @@
         if (!player.playing) {
           // load local storage settings
           if (!player.playlist.length) {
-            const localCurrentPlaying = localStorage.getObject('current-playing');
+            const localCurrentPlaying = localStorage.getObject(
+              'current-playing'
+            );
             if (localCurrentPlaying !== null) {
               player.setNewPlaylist(localCurrentPlaying);
             }
@@ -220,21 +222,11 @@
       l1Player.status.playlist = msg.data || [];
     }
     if (msg.type === 'BG_PLAYER:RETRIEVE_URL') {
-      let url = '';
       MediaService.bootstrapTrack(
-        {
-          /**
-           * A mock sound object to set url back in player.
-           * @param {string} val
-           */
-          set url(val) {
-            url = val;
-          },
-        },
         msg.data,
-        () => {
+        (response) => {
           getPlayerAsync(mode, (player) => {
-            player.setMediaURI(url, msg.data.url || msg.data.id);
+            player.setMediaURI(response.url, msg.data.url || msg.data.id);
             player.setAudioDisabled(false, msg.data.index);
             player.finishLoad(msg.data.index, msg.data.playNow);
           });

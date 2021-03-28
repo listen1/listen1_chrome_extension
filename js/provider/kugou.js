@@ -280,7 +280,8 @@ function build_kugou() {
     return result;
   }
 
-  function kg_bootstrap_track(sound, track, success, failure) {
+  function kg_bootstrap_track(track, success, failure) {
+    const sound = {};
     const song_id = track.id.slice('kgtrack_'.length);
     const target_url = `http://m.kugou.com/app/i/getSongInfo.php?cmd=playInfo&hash=${song_id}`;
 
@@ -288,9 +289,9 @@ function build_kugou() {
       const { data } = response;
       if (data.url !== '') {
         sound.url = data.url; // eslint-disable-line no-param-reassign
-        success();
+        success(sound);
       } else {
-        failure();
+        failure(sound);
       }
     });
   }

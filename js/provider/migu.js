@@ -165,7 +165,8 @@ function build_migu() {
     };
   }
 
-  function mg_bootstrap_track(sound, track, success, failure) {
+  function mg_bootstrap_track(track, success, failure) {
+    const sound = {};
     const song_id = track.id.slice('mgtrack_'.length);
     const type = 1;
     // NOTICE：howler flac support is not ready for production.
@@ -228,9 +229,9 @@ function build_migu() {
         // 无损 formatType=SQ resourceType=E
         // 高品 formatType=HQ resourceType=2
         // https://app.pd.nf.migu.cn/MIGUM2.0/v1.0/content/sub/listenSong.do?toneFlag=${formatType}&netType=00&userId=15548614588710179085069&ua=Android_migu&version=5.1&copyrightId=0&contentId={$contentId}&resourceType=${resourceType}&channel=0
-        success();
+        success(sound);
       } else {
-        failure();
+        failure(sound);
       }
     });
   }
