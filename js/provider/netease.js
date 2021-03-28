@@ -345,9 +345,11 @@ function build_netease() {
 
     axios.post(target_url, new URLSearchParams(data)).then((response) => {
       const { data: res_data } = response;
-      const { url } = res_data.data[0];
+      const { url, br } = res_data.data[0];
       if (url != null) {
-        sound.url = url; // eslint-disable-line no-param-reassign
+        sound.url = url;
+        sound.bitrate = br;
+
         success(sound);
       } else {
         failure(sound);

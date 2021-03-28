@@ -1,4 +1,4 @@
-/* global async LRUCache */
+/* global async LRUCache setPrototypeOfLocalStorage */
 /* global netease xiami qq kugou kuwo bilibili migu taihe localmusic myplaylist */
 const PROVIDERS = [
   {
@@ -93,6 +93,8 @@ function queryStringify(options) {
   const query = JSON.parse(JSON.stringify(options));
   return new URLSearchParams(query).toString();
 }
+
+setPrototypeOfLocalStorage();
 
 // eslint-disable-next-line no-unused-vars
 const MediaService = {

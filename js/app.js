@@ -1563,7 +1563,10 @@ const main = () => {
 
               break;
             }
-
+            case 'RETRIEVE_URL_SUCCESS': {
+              $scope.currentPlaying = msg.data;
+              break;
+            }
             default:
               break;
           }
