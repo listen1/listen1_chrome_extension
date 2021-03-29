@@ -2,10 +2,29 @@
   "background": {
     "scripts": [
       "js/vendor/axios.min.js",
+      "js/vendor/forge_listen1_fork.min.js",
+
       "js/github_api.js",
       "js/background.js",
       "js/vendor/howler.core.min.js",
       "js/bridge.js",
+
+      "js/vendor/async.min.js",
+      "js/vendor/lru-cache.min.js",
+      "js/lowebutil.js",
+
+      "js/provider/xiami.js",
+      "js/provider/qq.js",
+      "js/provider/netease.js",
+      "js/provider/kugou.js",
+      "js/provider/kuwo.js",
+      "js/provider/bilibili.js",
+      "js/provider/migu.js",
+      "js/provider/taihe.js",
+      "js/provider/localmusic.js",
+      "js/myplaylist.js",
+
+      "js/loweb.js",
       "js/player_thread.js"
     ],
     "persistent": true

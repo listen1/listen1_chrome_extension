@@ -1,4 +1,4 @@
-/* global MediaService getPlayer getPlayerAsync addPlayerListener getLocalStorageValue */
+/* global getPlayer getPlayerAsync addPlayerListener getLocalStorageValue */
 {
   const mode = getLocalStorageValue('enable_stop_when_close', true)
     ? 'front'
@@ -217,27 +217,8 @@
         ...l1Player.status.playing,
         ...msg.data,
       };
-    }
-    if (msg.type === 'BG_PLAYER:PLAYLIST') {
+    } else if (msg.type === 'BG_PLAYER:PLAYLIST') {
       l1Player.status.playlist = msg.data || [];
-    }
-    if (msg.type === 'BG_PLAYER:RETRIEVE_URL') {
-      MediaService.bootstrapTrack(
-        msg.data,
-        (response) => {
-          getPlayerAsync(mode, (player) => {
-            player.setMediaURI(response.url, msg.data.url || msg.data.id);
-            player.setAudioDisabled(false, msg.data.index);
-            player.finishLoad(msg.data.index, msg.data.playNow);
-          });
-        },
-        () => {
-          getPlayerAsync(mode, (player) => {
-            player.setAudioDisabled(true, msg.data.index);
-            player.skip('next');
-          });
-        }
-      );
     }
     if (res !== undefined) {
       res();
