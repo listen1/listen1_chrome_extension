@@ -287,9 +287,14 @@ function build_kugou() {
       const { data } = response;
       const jsonString = data.slice('jQuery('.length, data.length - 1 - 1);
       const info = JSON.parse(jsonString);
+      const { play_url } = info.data;
+
+      if (play_url === '') {
+        return failure({});
+      }
 
       return success({
-        url: info.data.play_url,
+        url: play_url,
         bitrate: `${info.data.bitrate}kbps`,
       });
     });
