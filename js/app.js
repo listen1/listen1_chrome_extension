@@ -671,14 +671,6 @@ const main = () => {
         }, 0);
       };
 
-      $scope.copyrightNotice = () => {
-        const d = {
-          message: $translate.instant('_COPYRIGHT_ISSUE'),
-          replaceMessage: true,
-        };
-        Notification.info(d);
-      };
-
       $scope.clonePlaylist = (list_id) => {
         MediaService.clonePlaylist(list_id, 'my').success(() => {
           $rootScope.$broadcast('myplaylist:update');
@@ -1228,6 +1220,14 @@ const main = () => {
       $scope.myProgress = 0;
       $scope.changingProgress = false;
 
+      $scope.copyrightNotice = () => {
+        const d = {
+          message: $translate.instant('_COPYRIGHT_ISSUE'),
+          replaceMessage: true,
+        };
+        Notification.info(d);
+      };
+
       $rootScope.$on('track:myprogress', (event, data) => {
         $scope.$evalAsync(() => {
           // should use apply to force refresh ui
@@ -1565,6 +1565,10 @@ const main = () => {
             }
             case 'RETRIEVE_URL_SUCCESS': {
               $scope.currentPlaying = msg.data;
+              break;
+            }
+            case 'RETRIEVE_URL_FAIL': {
+              $scope.copyrightNotice();
               break;
             }
             default:
