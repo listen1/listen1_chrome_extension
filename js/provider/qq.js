@@ -373,23 +373,85 @@ function build_qq() {
   function qq_bootstrap_track(track, success, failure) {
     const sound = {};
     const songId = track.id.slice('qqtrack_'.length);
-    const target_url =
-      'https://u.y.qq.com/cgi-bin/musicu.fcg?loginUin=0&' +
-      'hostUin=0&format=json&inCharset=utf8&outCharset=utf-8&notice=0&' +
-      'platform=yqq.json&needNewCode=0&data=%7B%22req_0%22%3A%7B%22' +
-      'module%22%3A%22vkey.GetVkeyServer%22%2C%22method%22%3A%22' +
-      `CgiGetVkey%22%2C%22param%22%3A%7B%22guid%22%3A%2210000%22%2C%22songmid%22%3A%5B%22${songId}%22%5D%2C%22songtype%22%3A%5B0%5D%2C%22uin%22%3A%220%22%2C%22loginflag%22` +
-      '%3A1%2C%22platform%22%3A%2220%22%7D%7D%2C%22comm%22%3A%7B%22uin%22%3A0%2C%22' +
-      'format%22%3A%22json%22%2C%22ct%22%3A20%2C%22cv%22%3A0%7D%7D';
-    axios.get(target_url).then((response) => {
+    const target_url = 'https://u.y.qq.com/cgi-bin/musicu.fcg';
+    // thanks to https://github.com/Rain120/qq-music-api/blob/2b9cb811934888a532545fbd0bf4e4ab2aea5dbe/routers/context/getMusicPlay.js
+    const guid = '10000';
+    const songmidList = [songId];
+    const uin = '0';
+
+    const fileType = '128';
+    const fileConfig = {
+      m4a: {
+        s: 'C400',
+        e: '.m4a',
+        bitrate: 'M4A',
+      },
+      128: {
+        s: 'M500',
+        e: '.mp3',
+        bitrate: '128kbps',
+      },
+      320: {
+        s: 'M800',
+        e: '.mp3',
+        bitrate: '320kbps',
+      },
+      ape: {
+        s: 'A000',
+        e: '.ape',
+        bitrate: 'APE',
+      },
+      flac: {
+        s: 'F000',
+        e: '.flac',
+        bitrate: 'FLAC',
+      },
+    };
+    const fileInfo = fileConfig[fileType];
+    const file =
+      songmidList.length === 1 &&
+      `${fileInfo.s}${songId}${songId}${fileInfo.e}`;
+
+    const reqData = {
+      req_0: {
+        module: 'vkey.GetVkeyServer',
+        method: 'CgiGetVkey',
+        param: {
+          filename: file ? [file] : [],
+          guid,
+          songmid: songmidList,
+          songtype: [0],
+          uin,
+          loginflag: 1,
+          platform: '20',
+        },
+      },
+      loginUin: uin,
+      comm: {
+        uin,
+        format: 'json',
+        ct: 24,
+        cv: 0,
+      },
+    };
+    const params = {
+      format: 'json',
+      data: JSON.stringify(reqData),
+    };
+    axios.get(target_url, { params }).then((response) => {
       const { data } = response;
-      if (data.req_0.data.midurlinfo[0].purl === '') {
+      const { purl } = data.req_0.data.midurlinfo[0];
+
+      if (purl === '') {
         // vip
-        failure();
+        failure(sound);
         return;
       }
-      const url = data.req_0.data.sip[0] + data.req_0.data.midurlinfo[0].purl;
-      sound.url = url; // eslint-disable-line no-param-reassign
+      const url = data.req_0.data.sip[0] + purl;
+      sound.url = url;
+      const prefix = purl.slice(0, 4);
+      const found = Object.values(fileConfig).filter((i) => i.s === prefix);
+      sound.bitrate = found.length > 0 ? found[0].bitrate : '';
       success(sound);
     });
   }

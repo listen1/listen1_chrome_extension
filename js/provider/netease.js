@@ -348,7 +348,8 @@ function build_netease() {
       const { url, br } = res_data.data[0];
       if (url != null) {
         sound.url = url;
-        sound.bitrate = br;
+        const bitrate = `${(br / 1000).toFixed(0)}kbps`;
+        sound.bitrate = bitrate;
 
         success(sound);
       } else {
