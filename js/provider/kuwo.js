@@ -133,7 +133,13 @@ function build_kuwo() {
     kw_add_song_pic_in_track(track, params, callback);
   }
   */
-  function kw_get_token(callback) {
+  function kw_get_token(callback, isRetry) {
+    let isRetryValue = true;
+    if (isRetry === undefined) {
+      isRetryValue = false;
+    } else {
+      isRetryValue = isRetry;
+    }
     const domain = 'https://www.kuwo.cn';
     const name = 'kw_token';
     if (!isElectron()) {
@@ -144,7 +150,12 @@ function build_kuwo() {
         },
         (cookie) => {
           if (cookie == null) {
-            return callback('');
+            if (isRetryValue) {
+              return callback('');
+            }
+            return axios.get('http://www.kuwo.cn/').then(() => {
+              kw_get_token(callback, true);
+            });
           }
           return callback(cookie.value);
         }
@@ -157,7 +168,12 @@ function build_kuwo() {
         },
         (err, cookie) => {
           if (cookie.length === 0) {
-            return callback('');
+            if (isRetryValue) {
+              return callback('');
+            }
+            return axios.get('http://www.kuwo.cn/').then(() => {
+              kw_get_token(callback, true);
+            });
           }
           return callback(cookie[0].value);
         }
