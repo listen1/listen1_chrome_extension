@@ -296,6 +296,7 @@ function build_kugou() {
       return success({
         url: play_url,
         bitrate: `${info.data.bitrate}kbps`,
+        platform: 'kugou',
       });
     });
   }

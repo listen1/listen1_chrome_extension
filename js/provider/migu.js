@@ -229,6 +229,8 @@ function build_migu() {
         // 无损 formatType=SQ resourceType=E
         // 高品 formatType=HQ resourceType=2
         // https://app.pd.nf.migu.cn/MIGUM2.0/v1.0/content/sub/listenSong.do?toneFlag=${formatType}&netType=00&userId=15548614588710179085069&ua=Android_migu&version=5.1&copyrightId=0&contentId={$contentId}&resourceType=${resourceType}&channel=0
+        sound.platform = 'migu';
+
         success(sound);
       } else {
         failure(sound);

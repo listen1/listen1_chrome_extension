@@ -152,6 +152,7 @@
           msg.data = { ...msg.data, ...bootinfo };
 
           this.playlist[index].bitrate = bootinfo.bitrate;
+          this.playlist[index].platform = bootinfo.platform;
 
           this.setMediaURI(msg.data.url, msg.data.id);
           this.setAudioDisabled(false, msg.data.index);
@@ -292,6 +293,7 @@
      * @param  {String} direction 'next' or 'prev'.
      */
     skip(direction) {
+      Howler.stop();
       // Get the next track based on the direction of the track.
       let nextIndexFn = null;
       if (this._loop_mode === 2 || direction === 'random') {

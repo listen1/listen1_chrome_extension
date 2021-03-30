@@ -190,6 +190,9 @@ function build_kuwo() {
           } else {
             callback(response);
           }
+        })
+        .catch(() => {
+          callback();
         });
     });
   }
@@ -241,6 +244,13 @@ function build_kuwo() {
         kw_cookie_get(target_url, (response) => {
           let result = [];
           let total = 0;
+          if (response === undefined) {
+            return fn({
+              result,
+              total,
+              type: searchType,
+            });
+          }
           if (searchType === '0' && response.data.data !== undefined) {
             result = response.data.data.list.map((item) =>
               kw_convert_song2(item)
@@ -283,7 +293,9 @@ function build_kuwo() {
     axios.get(target_url).then((response) => {
       const { data } = response;
       if (data.length > 0) {
-        sound.url = data; // eslint-disable-line no-param-reassign
+        sound.url = data;
+        sound.platform = 'kuwo';
+
         success(sound);
       } else {
         failure(sound);

@@ -137,7 +137,9 @@ function build_bilibili() {
     axios.get(target_url).then((response) => {
       const { data } = response;
       if (data.code === 0) {
-        [sound.url] = data.data.cdns; // eslint-disable-line no-param-reassign
+        [sound.url] = data.data.cdns;
+        sound.platform = 'bilibili';
+
         success(sound);
       } else {
         failure(sound);
