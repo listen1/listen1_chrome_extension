@@ -76,6 +76,8 @@ function build_localmusic() {
   function lm_bootstrap_track(track, success, failure) {
     const sound = {};
     sound.url = track.sound_url;
+    sound.platform = 'localmusic';
+
     success(sound);
   }
 

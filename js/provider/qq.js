@@ -452,6 +452,8 @@ function build_qq() {
       const prefix = purl.slice(0, 4);
       const found = Object.values(fileConfig).filter((i) => i.s === prefix);
       sound.bitrate = found.length > 0 ? found[0].bitrate : '';
+      sound.platform = 'qq';
+
       success(sound);
     });
   }

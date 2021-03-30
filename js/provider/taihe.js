@@ -161,7 +161,6 @@ function build_taihe() {
   function th_bootstrap_track(track, success, failure) {
     const sound = {};
     const song_id = track.id.slice('thtrack_'.length);
-
     axiosTH
       .get('/song/tracklink', {
         params: {
@@ -169,15 +168,16 @@ function build_taihe() {
         },
       })
       .then((response) => {
-        axios.get(response.data.data.lyric).then((res) => {
-          const { data } = res;
-          if (data.path) {
-            sound.url = data.path; // eslint-disable-line no-param-reassign
-            success(sound);
-          } else {
-            failure(sound);
-          }
-        });
+        const { data } = response;
+        if (data.data && data.data.path) {
+          sound.url = data.data.path;
+          sound.platform = 'taihe';
+          sound.bitrate = `${data.data.rate}kbps`;
+
+          success(sound);
+        } else {
+          failure(sound);
+        }
       });
   }
 

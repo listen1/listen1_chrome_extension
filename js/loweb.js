@@ -315,6 +315,8 @@ const MediaService = {
                     searchTrack,
                     (response) => {
                       sound.url = response.url;
+                      sound.bitrate = response.bitrate;
+                      sound.platform = response.platform;
                       reject(sound); // Use Reject to return immediately
                     },
                     resolve
