@@ -299,7 +299,7 @@ const main = () => {
       gist,
       $translate
     ) => {
-      $rootScope.page_title = 'Listen 1'; // eslint-disable-line no-param-reassign
+      $rootScope.page_title = { title: 'Listen 1', artist: '', status: '' }; // eslint-disable-line no-param-reassign
       $scope.window_url_stack = [];
       $scope.window_poped_url_stack = [];
       $scope.current_tag = 2;
@@ -1080,6 +1080,14 @@ const main = () => {
           'enable_nowplaying_cover_background',
           false
         );
+        $scope.enableNowplayingBitrate = getLocalStorageValue(
+          'enable_nowplaying_bitrate',
+          false
+        );
+        $scope.enableNowplayingPlatform = getLocalStorageValue(
+          'enable_nowplaying_platform',
+          false
+        );
 
         const defaultFloatWindowSetting = {
           fontSize: 20,
@@ -1256,7 +1264,14 @@ const main = () => {
         };
         Notification.info(d);
       };
-
+      $scope.failAllNotice = () => {
+        const d = {
+          message: $translate.instant('_FAIL_ALL_NOTICE'),
+          replaceMessage: true,
+          delay: 5000,
+        };
+        Notification.warning(d);
+      };
       $rootScope.$on('track:myprogress', (event, data) => {
         $scope.$evalAsync(() => {
           // should use apply to force refresh ui
@@ -1509,7 +1524,11 @@ const main = () => {
               $scope.lyricLineNumberTrans = -1;
               smoothScrollTo(document.querySelector('.lyric'), 0, 300);
               const track = msg.data;
-              $rootScope.page_title = `▶ ${track.title} - ${track.artist}`;
+              $rootScope.page_title = {
+                title: track.title,
+                artist: track.artist,
+                status: 'playing',
+              };
               if (lastfm.isAuthorized()) {
                 lastfm.sendNowPlaying(track.title, track.artist, () => {});
               }
@@ -1553,19 +1572,28 @@ const main = () => {
               $scope.$evalAsync(() => {
                 $scope.isPlaying = !!msg.data.isPlaying;
               });
+              let title = 'Listen 1';
               if ($rootScope.page_title !== undefined) {
+                title = '';
                 if (msg.data.isPlaying) {
-                  $rootScope.page_title = `▶ ${$rootScope.page_title.slice(
-                    $rootScope.page_title.indexOf(' ')
-                  )}`;
+                  $rootScope.page_title.status = 'playing';
                 } else {
-                  $rootScope.page_title = `❚❚ ${$rootScope.page_title.slice(
-                    $rootScope.page_title.indexOf(' ')
-                  )}`;
+                  $rootScope.page_title.status = 'paused';
                 }
-              } else {
-                $rootScope.page_title = 'Listen 1';
+                if ($rootScope.page_title.status !== '') {
+                  if ($rootScope.page_title.status === 'playing') {
+                    title += '▶ ';
+                  } else if ($rootScope.page_title.status === 'paused') {
+                    title += '❚❚ ';
+                  }
+                }
+                title += $rootScope.page_title.title;
+                if ($rootScope.page_title.artist !== '') {
+                  title += ` - ${$rootScope.page_title.artist}`;
+                }
               }
+
+              $rootScope.document_title = title;
               if (isElectron()) {
                 const { ipcRenderer } = require('electron');
                 if (msg.data.isPlaying) {
@@ -1598,6 +1626,10 @@ const main = () => {
             }
             case 'RETRIEVE_URL_FAIL': {
               $scope.copyrightNotice();
+              break;
+            }
+            case 'RETRIEVE_URL_FAIL_ALL': {
+              $scope.failAllNotice();
               break;
             }
             default:
@@ -1743,6 +1775,24 @@ const main = () => {
 
       $scope.setDiagnosticEnabled = (toggle) => {
         $scope.diagnosticEnabled = toggle;
+      };
+      $scope.setNowplayingBitrate = (toggle) => {
+        if (toggle === true) {
+          $scope.enableNowplayingBitrate = !$scope.enableNowplayingBitrate;
+        }
+        localStorage.setObject(
+          'enable_nowplaying_bitrate',
+          $scope.enableNowplayingBitrate
+        );
+      };
+      $scope.setNowplayingPlatform = (toggle) => {
+        if (toggle === true) {
+          $scope.enableNowplayingPlatform = !$scope.enableNowplayingPlatform;
+        }
+        localStorage.setObject(
+          'enable_nowplaying_platform',
+          $scope.enableNowplayingPlatform
+        );
       };
     },
   ]);

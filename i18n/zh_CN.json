@@ -104,8 +104,10 @@
  "_THEME_BLACK": "深空灰",
  "_AUTO_CHOOSE_SOURCE": "自动切换源",
  "_AUTO_CHOOSE_SOURCE_NOTICE": "如果播放音乐失败，是否自动切换播放源(默认从酷我，QQ和咪咕音乐搜索)",
- "_NOWPLAYING_COVER_BACKGROUND": "正在播放背景",
- "_NOWPLAYING_COVER_BACKGROUND_NOTICE": "是否显示专辑封面作为正在播放背景",
+ "_NOWPLAYING_DISPLAY": "正在播放显示",
+ "_NOWPLAYING_COVER_BACKGROUND_NOTICE": "显示专辑封面作为背景",
+ "_NOWPLAYING_BITRATE_NOTICE": "显示比特率",
+ "_NOWPLAYING_PLATFORM_NOTICE": "显示音乐平台",
  "_LOCAL_MUSIC": "本地音乐",
  "_ADD_LOCAL_SONGS": "添加歌曲",
  "netease": "网易",
@@ -122,7 +124,7 @@
  "_MINIMIZE_TO_BACKGROUND": "最小化到后台",
  "_MY_PLAYLIST": "我的歌单",
  "_RECOMMEND_PLAYLIST": "推荐歌单",
- "_LISTEN1_LOGIN_NOTICE": "Listen1不会传输你的账号数据到任何非音乐平台官方的服务器。",
+ "_LISTEN1_LOGIN_NOTICE": "Listen1不会传输你的账号数据到任何第三方服务器。",
  "_PASSWORD": "密码",
  "_LOGIN": "登录",
  "_LOGOUT": "退出登录",
@@ -135,5 +137,6 @@
  "_LOGIN_BY_MOBILE_PHONE": "手机号登录",
  "_LOGIN_BY_EMAIL": "邮箱登录",
  "_MOBILE_PHONE": "手机号",
- "_MY_NETEASE": "我的网易云音乐"
+ "_MY_NETEASE": "我的网易云音乐",
+ "_FAIL_ALL_NOTICE": "当前播放列表没有可播放的歌曲"
 }

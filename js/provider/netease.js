@@ -350,6 +350,7 @@ function build_netease() {
         sound.url = url;
         const bitrate = `${(br / 1000).toFixed(0)}kbps`;
         sound.bitrate = bitrate;
+        sound.platform = 'netease';
 
         success(sound);
       } else {

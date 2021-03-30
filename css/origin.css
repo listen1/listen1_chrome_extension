@@ -52,7 +52,9 @@
   --default-border-radius: 2px;
   --text-default-size: 13px;
   --h2-title-font-size: 24px;
-
+  --badge-font-size: 12px;
+  --badge-font-color: #c3473a;
+  --badge-border-color: #843932;
   --songlist-even-background-color: #2d2d2d;
   --songlist-border-color: transparent;
 

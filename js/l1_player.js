@@ -144,7 +144,7 @@
             player.loadById(localPlayerSettings.nowplaying_track_id);
           }
         }
-        player.sendFullUpdate();
+
         player.sendPlaylistEvent();
         player.sendPlayingEvent();
         player.sendLoadEvent();

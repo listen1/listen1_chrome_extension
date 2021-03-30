@@ -7,6 +7,10 @@ body {
   font-family: system-ui, 'PingFang SC', STHeiti, sans-serif;
 }
 
+a {
+  cursor: pointer;
+}
+
 .wrap {
   /* https://stackoverflow.com/questions/28897089/z-index-on-borders */
   outline: solid 1px var(--windows-border-color);
@@ -623,11 +627,35 @@ svg {
   overflow: hidden;
   -webkit-app-region: no-drag;
 }
-.page .playsong-detail .detail-songinfo h2 {
+.page .playsong-detail .detail-songinfo .title {
+  display: flex;
+  align-items: center;
+}
+.page .playsong-detail .detail-songinfo .title h2 {
   font-size: var(--h2-title-font-size);
-  margin-top: 20px;
-  margin-bottom: 12px;
   font-weight: 400;
+}
+.page .playsong-detail .detail-songinfo .title .badge {
+  font-size: var(--badge-font-size);
+  color: var(--badge-font-color);
+  border: solid 1px var(--badge-border-color);
+  border-radius: 3px;
+  margin-left: 5px;
+  padding-left: 4px;
+  padding-right: 4px;
+  margin-top: 4px;
+  box-sizing: border-box;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+}
+.page .playsong-detail .detail-songinfo .title .badge.platform {
+  padding-top: 1px;
+}
+.page .playsong-detail .detail-songinfo .title .badge:first-of-type {
+  margin-left: 15px;
 }
 .page .playsong-detail .detail-songinfo .info {
   border-bottom: solid 1px var(--line-default-color);
@@ -720,6 +748,8 @@ ul.detail-songlist li a span.source {
   padding: 0 4px;
   color: #ccc;
   font-size: 12px;
+  width: 24px;
+  text-align: center;
 }
 ul.detail-songlist li a span.source.playlist {
   margin-left: 10px;

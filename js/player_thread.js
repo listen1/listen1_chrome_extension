@@ -62,6 +62,7 @@
         this.playlist.push(audioData);
       }
       this.sendPlaylistEvent();
+      this.sendLoadEvent();
     }
 
     removeAudio(idx) {
@@ -73,6 +74,7 @@
       }
       this.playlist.splice(idx, 1);
       this.sendPlaylistEvent();
+      this.sendLoadEvent();
     }
 
     appendAudioList(list) {
@@ -88,6 +90,7 @@
       this.playlist = [];
       Howler.stop();
       this.sendPlaylistEvent();
+      this.sendLoadEvent();
     }
 
     setNewPlaylist(list) {
@@ -121,7 +124,14 @@
      * (leave empty to play the first or current).
      */
     play(idx) {
-      this.load(idx, true);
+      this.load(idx);
+
+      const data = this.playlist[this.index];
+      if (!data.howl || !this._media_uri_list[data.id]) {
+        this.retrieveMediaUrl(this.index, true);
+      } else {
+        this.finishLoad(this.index, true);
+      }
     }
 
     retrieveMediaUrl(index, playNow) {
@@ -142,17 +152,20 @@
           msg.data = { ...msg.data, ...bootinfo };
 
           this.playlist[index].bitrate = bootinfo.bitrate;
+          this.playlist[index].platform = bootinfo.platform;
 
           this.setMediaURI(msg.data.url, msg.data.id);
           this.setAudioDisabled(false, msg.data.index);
-          this.finishLoad(msg.data.index, msg.data.playNow);
+          this.finishLoad(msg.data.index, playNow);
           playerSendMessage(this.mode, msg);
         },
         () => {
           msg.type = 'BG_PLAYER:RETRIEVE_URL_FAIL';
+
           this.setAudioDisabled(true, msg.data.index);
-          this.skip('next');
           playerSendMessage(this.mode, msg);
+
+          this.skip('next');
         }
       );
     }
@@ -162,7 +175,7 @@
      * @param  {Number} index Index of the song in the playlist
      * (leave empty to load the first or current).
      */
-    load(idx, playNow = false) {
+    load(idx) {
       let index = typeof idx === 'number' ? idx : this.index;
       if (index < 0) return;
       if (!this.playlist[index]) {
@@ -170,13 +183,9 @@
       }
 
       if (this.index !== index) Howler.stop();
-      const data = this.playlist[index];
+      this.index = index;
 
-      if (!data.howl || !this._media_uri_list[data.id]) {
-        this.retrieveMediaUrl(index, playNow);
-      } else {
-        this.finishLoad(index, playNow);
-      }
+      this.sendLoadEvent();
     }
 
     finishLoad(index, playNow) {
@@ -216,7 +225,6 @@
           onload() {
             self.currentAudio.disabled = false;
             self.sendPlayingEvent('Loaded');
-            self.sendFullUpdate();
           },
           onend() {
             switch (self.loop_mode) {
@@ -234,16 +242,13 @@
                 break;
             }
             self.sendPlayingEvent('Ended');
-            self.sendFullUpdate();
           },
           onpause() {
             navigator.mediaSession.playbackState = 'paused';
             self.sendPlayingEvent('Paused');
-            self.sendFullUpdate();
           },
           onstop() {
             self.sendPlayingEvent('Stopped');
-            self.sendFullUpdate();
           },
           onseek() {},
           onvolume() {},
@@ -267,9 +272,7 @@
           },
         });
       }
-      // Keep track of the index we are currently playing.
-      this.index = index;
-      this.sendLoadEvent();
+
       if (playNow && !this.currentHowl.playing()) {
         this.currentHowl.play();
       }
@@ -290,36 +293,32 @@
      * @param  {String} direction 'next' or 'prev'.
      */
     skip(direction) {
+      Howler.stop();
       // Get the next track based on the direction of the track.
-      let { index } = this;
-      let nextIndex = null;
+      let nextIndexFn = null;
       if (this._loop_mode === 2 || direction === 'random') {
-        // random
-        nextIndex = () => Math.floor(Math.random() * this.playlist.length);
+        // TODO: shuffle algorithm instead of random
+        nextIndexFn = () => Math.floor(Math.random() * this.playlist.length);
       } else if (direction === 'prev') {
-        nextIndex = (idx) => (idx - 1) % this.playlist.length;
+        nextIndexFn = (idx) => (idx - 1) % this.playlist.length;
       } else if (direction === 'next') {
-        nextIndex = (idx) => (idx + 1) % this.playlist.length;
+        nextIndexFn = (idx) => (idx + 1) % this.playlist.length;
       }
+      this.index = nextIndexFn(this.index);
+
       let tryCount = 0;
-      while (tryCount < this.playlist.length - 1) {
-        index = nextIndex(index);
-        if (!this.playlist[index].disabled) {
-          this.skipTo(index);
+      while (tryCount < this.playlist.length) {
+        if (!this.playlist[this.index].disabled) {
+          this.play(this.index);
           return;
         }
+        this.index = nextIndexFn(this.index);
         tryCount += 1;
       }
-      this.skipTo(index);
-    }
-
-    /**
-     * Skip to a specific track based on its playlist index.
-     * @param  {Number} index Index in the playlist.
-     */
-    skipTo(index) {
-      // Play the new track.
-      this.play(index);
+      playerSendMessage(this.mode, {
+        type: 'BG_PLAYER:RETRIEVE_URL_FAIL_ALL',
+      });
+      this.sendLoadEvent();
     }
 
     set loop_mode(input) {
@@ -338,7 +337,6 @@
         return;
       }
       this._loop_mode = myMode;
-      this.sendFullUpdate();
     }
 
     get loop_mode() {
@@ -377,7 +375,6 @@
         type: 'BG_PLAYER:MUTE',
         data: true,
       });
-      this.sendFullUpdate();
     }
 
     unmute() {
@@ -386,7 +383,6 @@
         type: 'BG_PLAYER:MUTE',
         data: false,
       });
-      this.sendFullUpdate();
     }
 
     /**
@@ -427,26 +423,6 @@
       if (this.playlist[idx]) {
         this.playlist[idx].disabled = disabled;
       }
-    }
-
-    async sendFullUpdate() {
-      return this;
-      // const data = {
-      //   muted: Player.muted,
-      //   volume: Howler.volume(),
-      //   loop_mode: this.loop_mode,
-      //   playing: {
-      //     id: this.currentAudio ? this.currentAudio.id : 0,
-      //     duration: this.currentHowl ? this.currentHowl.duration() : 0,
-      //     pos: this.currentHowl && this.currentHowl.state() === 'loaded' ?
-      //       this.currentHowl.seek() : 0,
-      //     playing: this.playing,
-      //   },
-      // };
-      // playerSendMessage(this.mode, {
-      //   type: 'BG_PLAYER:FULL_UPDATE',
-      //   data,
-      // });
     }
 
     async sendFrameUpdate() {
@@ -510,7 +486,6 @@
 
   window.threadPlayer = new Player();
   window.threadPlayer.setRefreshRate();
-  window.threadPlayer.sendFullUpdate();
 
   const { threadPlayer } = window;
   if ('mediaSession' in navigator) {
