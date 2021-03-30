@@ -312,6 +312,7 @@
           this.play(this.index);
           return;
         }
+        this.index = nextIndexFn(this.index);
         tryCount += 1;
       }
       playerSendMessage(this.mode, {
