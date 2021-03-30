@@ -1161,6 +1161,33 @@
                           </div>
 
                           <div class="settings-title">
+                            <span>Diagnostic Tool</span>
+                          </div>
+                          <div class="settings-content">
+                            <div class="shortcut">
+                              <svg
+                                class="feather"
+                                ng-show="!diagnosticEnabled"
+                                ng-click="setDiagnosticEnabled(true)"
+                              >
+                                <use
+                                  href="images/feather-sprite.svg#square"
+                                ></use>
+                              </svg>
+                              <svg
+                                class="feather"
+                                ng-show="diagnosticEnabled"
+                                ng-click="setDiagnosticEnabled(false)"
+                              >
+                                <use
+                                  href="images/feather-sprite.svg#check-square"
+                                ></use>
+                              </svg>
+                              Enabled
+                            </div>
+                          </div>
+
+                          <div class="settings-title">
                             <span>{{_ABOUT}}</span>
                           </div>
                           <div class="settings-content">
@@ -1703,9 +1730,11 @@
                     >
                       词
                     </div>
-                    <div>
-                      <svg class="feather" ng-click="showDialog('diagnostic')"><use href="#activity"></use></svg>
-                    </div>
+                  </div>
+                  <div>
+                    <svg class="feather" ng-click="showDialog('diagnostic')" ng-if="diagnosticEnabled">
+                      <use href="/images/feather-sprite.svg#activity"></use>
+                    </svg>
                   </div>
                 </div>
                 <div

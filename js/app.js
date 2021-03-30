@@ -1740,6 +1740,10 @@ const main = () => {
           $scope.enableNowplayingCoverBackground
         );
       };
+
+      $scope.setDiagnosticEnabled = (toggle) => {
+        $scope.diagnosticEnabled = toggle;
+      };
     },
   ]);
 
