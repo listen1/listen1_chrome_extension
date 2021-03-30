@@ -2349,7 +2349,7 @@
                             </div>
                           </div>
                           <div class="settings-title">
-                            <span>{{_NOWPLAYING_COVER_BACKGROUND}}</span>
+                            <span>{{_NOWPLAYING_DISPLAY}}</span>
                           </div>
                           <div class="settings-content">
                             <div class="shortcut">
@@ -2368,6 +2368,40 @@
                                 <use href="#check-square"></use>
                               </svg>
                               {{_NOWPLAYING_COVER_BACKGROUND_NOTICE}}
+                            </div>
+                            <div class="shortcut">
+                              <svg
+                                class="feather"
+                                ng-show="!enableNowplayingBitrate"
+                                ng-click="setNowplayingBitrate(true)"
+                              >
+                                <use href="#square"></use>
+                              </svg>
+                              <svg
+                                class="feather"
+                                ng-show="enableNowplayingBitrate"
+                                ng-click="setNowplayingBitrate(true)"
+                              >
+                                <use href="#check-square"></use>
+                              </svg>
+                              {{_NOWPLAYING_BITRATE_NOTICE}}
+                            </div>
+                            <div class="shortcut">
+                              <svg
+                                class="feather"
+                                ng-show="!enableNowplayingPlatform"
+                                ng-click="setNowplayingPlatform(true)"
+                              >
+                                <use href="#square"></use>
+                              </svg>
+                              <svg
+                                class="feather"
+                                ng-show="enableNowplayingPlatform"
+                                ng-click="setNowplayingPlatform(true)"
+                              >
+                                <use href="#check-square"></use>
+                              </svg>
+                              {{_NOWPLAYING_PLATFORM_NOTICE}}
                             </div>
                           </div>
                           <div class="settings-title">
@@ -2918,7 +2952,19 @@
                             </div>
                           </div>
                           <div class="detail-songinfo">
-                            <h2>{{ currentPlaying.title }}</h2>
+                            <div class="title">
+                              <h2>{{ currentPlaying.title }}</h2>
+                              <span
+                                class="badge"
+                                ng-if="enableNowplayingBitrate && currentPlaying.bitrate !== undefined"
+                                >{{ currentPlaying.bitrate }}</span
+                              >
+                              <span
+                                class="badge platform"
+                                ng-if="enableNowplayingPlatform && currentPlaying.platform !== undefined"
+                                >{{ currentPlaying.platform | translate }}</span
+                              >
+                            </div>
                             <div class="info">
                               <div class="singer">
                                 <span>{{_ARTIST}}： </span

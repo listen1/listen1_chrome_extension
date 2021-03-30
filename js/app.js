@@ -1051,6 +1051,14 @@ const main = () => {
           'enable_nowplaying_cover_background',
           false
         );
+        $scope.enableNowplayingBitrate = getLocalStorageValue(
+          'enable_nowplaying_bitrate',
+          false
+        );
+        $scope.enableNowplayingPlatform = getLocalStorageValue(
+          'enable_nowplaying_platform',
+          false
+        );
 
         const defaultFloatWindowSetting = {
           fontSize: 20,
@@ -1720,6 +1728,24 @@ const main = () => {
         localStorage.setObject(
           'enable_nowplaying_cover_background',
           $scope.enableNowplayingCoverBackground
+        );
+      };
+      $scope.setNowplayingBitrate = (toggle) => {
+        if (toggle === true) {
+          $scope.enableNowplayingBitrate = !$scope.enableNowplayingBitrate;
+        }
+        localStorage.setObject(
+          'enable_nowplaying_bitrate',
+          $scope.enableNowplayingBitrate
+        );
+      };
+      $scope.setNowplayingPlatform = (toggle) => {
+        if (toggle === true) {
+          $scope.enableNowplayingPlatform = !$scope.enableNowplayingPlatform;
+        }
+        localStorage.setObject(
+          'enable_nowplaying_platform',
+          $scope.enableNowplayingPlatform
         );
       };
     },
