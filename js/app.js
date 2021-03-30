@@ -49,14 +49,14 @@ const main = () => {
     'pascalprecht.translate',
   ]);
   setPrototypeOfLocalStorage();
-  app.config([
-    '$compileProvider',
-    ($compileProvider) => {
-      $compileProvider.imgSrcSanitizationWhitelist(
-        /^\s*(https?|ftp|mailto|chrome-extension|moz-extension|file):/
-      );
-    },
-  ]);
+  // app.config([
+  //   '$compileProvider',
+  //   ($compileProvider) => {
+  //     $compileProvider.imgSrcSanitizationWhitelist(
+  //       /^\s*(https?|ftp|mailto|chrome-extension|moz-extension|file):/
+  //     );
+  //   },
+  // ]);
 
   app.config((NotificationProvider) => {
     NotificationProvider.setOptions({
