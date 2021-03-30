@@ -126,8 +126,8 @@ function build_kugou() {
       track.title = data.songName;
       track.artist = data.singerId === 0 ? '未知' : data.singerName;
       track.artist_id = `kgartist_${data.singerId}`;
-      if (data.imgUrl !== undefined) {
-        track.img_url = data.imgUrl.replace('{size}', '400');
+      if (data.album_img !== undefined) {
+        track.img_url = data.album_img.replace('{size}', '400');
       } else {
         // track['img_url'] = data.imgUrl.replace('{size}', '400');
       }
