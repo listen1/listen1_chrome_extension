@@ -134,5 +134,6 @@
  "_LOGIN_BY_MOBILE_PHONE": "手機號登錄",
  "_LOGIN_BY_EMAIL": "郵箱登錄",
  "_MOBILE_PHONE": "手機號",
- "_MY_NETEASE": "我的網易雲音樂"
+ "_MY_NETEASE": "我的網易雲音樂",
+ "_FAIL_ALL_NOTICE": "停止播放，因為所有當前歌單中的歌曲都不能找到可用播放源"
 }

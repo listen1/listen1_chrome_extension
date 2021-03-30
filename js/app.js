@@ -1227,7 +1227,14 @@ const main = () => {
         };
         Notification.info(d);
       };
-
+      $scope.failAllNotice = () => {
+        const d = {
+          message: $translate.instant('_FAIL_ALL_NOTICE'),
+          replaceMessage: true,
+          delay: 5000,
+        };
+        Notification.warning(d);
+      };
       $rootScope.$on('track:myprogress', (event, data) => {
         $scope.$evalAsync(() => {
           // should use apply to force refresh ui
@@ -1569,6 +1576,10 @@ const main = () => {
             }
             case 'RETRIEVE_URL_FAIL': {
               $scope.copyrightNotice();
+              break;
+            }
+            case 'RETRIEVE_URL_FAIL_ALL': {
+              $scope.failAllNotice();
               break;
             }
             default:

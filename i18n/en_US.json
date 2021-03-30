@@ -134,5 +134,6 @@
  "_LOGIN_BY_MOBILE_PHONE": "Login by mobile phone",
  "_LOGIN_BY_EMAIL": "Login by email",
  "_MOBILE_PHONE": "Mobile Phone",
- "_MY_NETEASE": "My Netease"
+ "_MY_NETEASE": "My Netease",
+ "_FAIL_ALL_NOTICE": "Stop playing because no available track in current playlist"
 }

@@ -135,5 +135,6 @@
  "_LOGIN_BY_MOBILE_PHONE": "手机号登录",
  "_LOGIN_BY_EMAIL": "邮箱登录",
  "_MOBILE_PHONE": "手机号",
- "_MY_NETEASE": "我的网易云音乐"
+ "_MY_NETEASE": "我的网易云音乐",
+ "_FAIL_ALL_NOTICE": "停止播放，因为所有当前歌单中的歌曲都不能找到可用播放源"
 }
