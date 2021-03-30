@@ -168,6 +168,115 @@ const main = () => {
     },
   ]);
 
+  app.controller('AuthController', [
+    '$scope',
+    '$translate',
+    'Notification',
+    ($scope, $translate, Notification) => {
+      $scope.loginProgress = false;
+      $scope.loginType = 'email';
+
+      $scope.setLoginType = (newType) => {
+        $scope.loginType = newType;
+        if (newType === 'phone') {
+          document.getElementById('login-countrycode').value = '+86';
+        }
+      };
+      // valid email/password
+      function validateEmail(email_str) {
+        const re = /\S+@\S+\.\S+/;
+        return re.test(email_str);
+      }
+      function validatePhone(phone_str) {
+        const re = /^[0-9]{7,16}$/;
+        return re.test(phone_str);
+      }
+      function validateCountrycode(countrycode_str) {
+        const re = /^\+[0-9]{1,4}$/;
+        return re.test(countrycode_str);
+      }
+      function validatePassword(password_str) {
+        return password_str !== '';
+      }
+      $scope.login = (source) => {
+        let options = {};
+        if ($scope.loginType === 'email') {
+          const email = document.getElementById('login-email').value;
+          const password = document.getElementById('login-password').value;
+
+          if (!validateEmail(email)) {
+            return Notification.warning(
+              $translate.instant('_LOGIN_EMAIL_ERROR')
+            );
+          }
+          if (!validatePassword(password)) {
+            return Notification.warning(
+              $translate.instant('_LOGIN_PASSWORD_ERROR')
+            );
+          }
+          options = {
+            type: $scope.loginType,
+            email,
+            password,
+          };
+        } else if ($scope.loginType === 'phone') {
+          const countrycode = document.getElementById('login-countrycode')
+            .value;
+
+          const phone = document.getElementById('login-phone').value;
+          const password = document.getElementById('login-password').value;
+          if (!validateCountrycode(countrycode)) {
+            return Notification.warning(
+              $translate.instant('_LOGIN_COUNTRYCODE_ERROR')
+            );
+          }
+          if (!validatePhone(phone)) {
+            return Notification.warning(
+              $translate.instant('_LOGIN_PHONE_ERROR')
+            );
+          }
+          if (!validatePassword(password)) {
+            return Notification.warning(
+              $translate.instant('_LOGIN_PASSWORD_ERROR')
+            );
+          }
+          options = {
+            type: $scope.loginType,
+            phone,
+            countrycode: countrycode.slice(1),
+            password,
+          };
+        } else {
+          return Notification.error('not support login type');
+        }
+        $scope.loginProgress = true;
+        return MediaService.login(source, options).success((data) => {
+          $scope.loginProgress = false;
+          if (data.status === 'success') {
+            $scope.setMusicAuth(source, data.data);
+          } else {
+            Notification.error($translate.instant('_LOGIN_ERROR'));
+          }
+        });
+      };
+
+      $scope.logout = (source) => {
+        $scope.setMusicAuth(source, {});
+        // TODO: clear cookie
+      };
+
+      $scope.is_login = (source) =>
+        $scope.musicAuth[source] && $scope.musicAuth[source].is_login;
+
+      $scope.musicAuth = localStorage.getObject('music_auth') || {};
+
+      $scope.setMusicAuth = (source, data) => {
+        $scope.musicAuth[source] = data;
+        localStorage.setObject('music_auth', $scope.musicAuth);
+      };
+    },
+  ]);
+
   // control main view of page, it can be called any place
   app.controller('NavigationController', [
     '$scope',
@@ -589,14 +698,6 @@ const main = () => {
           l1Player.addTracks($scope.songs);
           Notification.success($translate.instant('_ADD_TO_QUEUE_SUCCESS'));
         }, 0);
-      };
-
-      $scope.copyrightNotice = () => {
-        const d = {
-          message: $translate.instant('_COPYRIGHT_ISSUE'),
-          replaceMessage: true,
-        };
-        Notification.info(d);
       };
 
       $scope.clonePlaylist = (list_id) => {
@@ -1148,6 +1249,14 @@ const main = () => {
       $scope.myProgress = 0;
       $scope.changingProgress = false;
 
+      $scope.copyrightNotice = () => {
+        const d = {
+          message: $translate.instant('_COPYRIGHT_ISSUE'),
+          replaceMessage: true,
+        };
+        Notification.info(d);
+      };
+
       $rootScope.$on('track:myprogress', (event, data) => {
         $scope.$evalAsync(() => {
           // should use apply to force refresh ui
@@ -1483,7 +1592,14 @@ const main = () => {
 
               break;
             }
-
+            case 'RETRIEVE_URL_SUCCESS': {
+              $scope.currentPlaying = msg.data;
+              break;
+            }
+            case 'RETRIEVE_URL_FAIL': {
+              $scope.copyrightNotice();
+              break;
+            }
             default:
               break;
           }
@@ -2029,6 +2145,54 @@ const main = () => {
       $scope.$on('favoriteplaylist:update', (event, data) => {
         $scope.loadFavoritePlaylist();
       });
+    },
+  ]);
+
+  const platformSourceList = [
+    {
+      name: 'my_playlist',
+      displayId: '_MY_PLAYLIST',
+    },
+    {
+      name: 'recommend_playlist',
+      displayId: '_RECOMMEND_PLAYLIST',
+    },
+  ];
+
+  app.controller('PlatformController', [
+    '$scope',
+    ($scope) => {
+      $scope.myPlatformPlaylists = [];
+      $scope.myPlatformUser = {};
+      $scope.platformSourceList = platformSourceList;
+      $scope.tab = platformSourceList[0].name;
+
+      $scope.loadPlatformPlaylists = () => {
+        if ($scope.myPlatformUser.platform === undefined) {
+          return;
+        }
+        let getPlaylistFn = MediaService.getUserPlaylist;
+        if ($scope.tab === 'recommend_playlist') {
+          getPlaylistFn = MediaService.getRecommendPlaylist;
+        }
+        const user = $scope.myPlatformUser;
+        getPlaylistFn(user.platform, {
+          user_id: user.user_id,
+        }).success((response) => {
+          const { data } = response;
+          $scope.myPlatformPlaylists = data.playlists;
+        });
+      };
+
+      $scope.initPlatformController = (user) => {
+        $scope.myPlatformUser = user;
+        $scope.loadPlatformPlaylists();
+      };
+
+      $scope.changePlatformTab = (name) => {
+        $scope.tab = name;
+        $scope.loadPlatformPlaylists();
+      };
     },
   ]);
 

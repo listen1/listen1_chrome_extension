@@ -105,22 +105,20 @@ function build_kugou() {
   }
 
   function kg_render_playlist_result_item(index, item, params, callback) {
-    let target_url = `${'http://m.kugou.com/app/i/getSongInfo.php?cmd=playInfo&hash='}${
-      item.hash
-    }`;
+    const { hash } = item;
 
+    let target_url = `${'http://m.kugou.com/app/i/getSongInfo.php?cmd=playInfo&hash='}${hash}`;
     const track = {
-      id: `kgtrack_${item.hash}`,
+      id: `kgtrack_${hash}`,
       title: '',
       artist: '',
       artist_id: '',
       album: '',
       album_id: `kgalbum_${item.album_id}`,
       source: 'kugou',
-      source_url: `http://www.kugou.com/song/#hash=${item.hash}&album_id=${item.album_id}`,
+      source_url: `http://www.kugou.com/song/#hash=${hash}&album_id=${item.album_id}`,
       img_url: '',
-      // url: `xmtrack_${item.hash}`,
-      lyric_url: item.hash,
+      lyric_url: hash,
     };
     // Fix song info
     axios.get(target_url).then((response) => {
@@ -280,18 +278,25 @@ function build_kugou() {
     return result;
   }
 
-  function kg_bootstrap_track(sound, track, success, failure) {
-    const song_id = track.id.slice('kgtrack_'.length);
-    const target_url = `http://m.kugou.com/app/i/getSongInfo.php?cmd=playInfo&hash=${song_id}`;
+  function kg_bootstrap_track(track, success, failure) {
+    const track_id = track.id.slice('kgtrack_'.length);
+    const album_id = track.album_id.slice('kgalbum_'.length);
+    const target_url = `https://wwwapi.kugou.com/yy/index.php?r=play/getdata&callback=jQuery&hash=${track_id}&dfid=dfid&mid=mid&platid=4&album_id=${album_id}`;
 
     axios.get(target_url).then((response) => {
       const { data } = response;
-      if (data.url !== '') {
-        sound.url = data.url; // eslint-disable-line no-param-reassign
-        success();
-      } else {
-        failure();
+      const jsonString = data.slice('jQuery('.length, data.length - 1 - 1);
+      const info = JSON.parse(jsonString);
+      const { play_url } = info.data;
+
+      if (play_url === '') {
+        return failure({});
       }
+
+      return success({
+        url: play_url,
+        bitrate: `${info.data.bitrate}kbps`,
+      });
     });
   }
 

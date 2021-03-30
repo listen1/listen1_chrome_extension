@@ -118,5 +118,21 @@
  "_CLOSE_TAB_ACTION": "Close tab action",
  "_VALID_AFTER_RESTART": "Valid after restart",
  "_QUIT_APPLICATION": "Quit Application",
- "_MINIMIZE_TO_BACKGROUND": "Minimize to background"
+ "_MINIMIZE_TO_BACKGROUND": "Minimize to background",
+ "_MY_PLAYLIST": "My Playlist",
+ "_RECOMMEND_PLAYLIST": "Recommend Playlist",
+ "_LISTEN1_LOGIN_NOTICE": "Listen1 WILL NOT transfer your account data to any server other than music platform server.",
+ "_PASSWORD": "Password",
+ "_LOGIN": "Login",
+ "_LOGOUT": "Logout",
+ "_LOGIN_ERROR": "Login error, please check user name and password",
+ "_LOGIN_EMAIL_ERROR": "Please enter correct email address",
+ "_LOGIN_COUNTRYCODE_ERROR": "Please enter correct country code",
+ "_LOGIN_PHONE_ERROR": "Please enter correct phone number",
+ "_LOGIN_PASSWORD_ERROR": "Password can't be empty",
+ "_LOGIN_NETEASE": "Login Netease",
+ "_LOGIN_BY_MOBILE_PHONE": "Login by mobile phone",
+ "_LOGIN_BY_EMAIL": "Login by email",
+ "_MOBILE_PHONE": "Mobile Phone",
+ "_MY_NETEASE": "My Netease"
 }

@@ -327,10 +327,10 @@ function build_netease() {
     };
   }
 
-  function ne_bootstrap_track(sound, track, success, failure) {
+  function ne_bootstrap_track(track, success, failure) {
+    const sound = {};
     const target_url =
       'https://music.163.com/weapi/song/enhance/player/url/v1?csrf_token=';
-    const csrf = '';
     let song_id = track.id;
 
     song_id = song_id.slice('netrack_'.length);
@@ -345,12 +345,15 @@ function build_netease() {
 
     axios.post(target_url, new URLSearchParams(data)).then((response) => {
       const { data: res_data } = response;
-      const { url } = res_data.data[0];
+      const { url, br } = res_data.data[0];
       if (url != null) {
-        sound.url = url; // eslint-disable-line no-param-reassign
-        success();
+        sound.url = url;
+        const bitrate = `${(br / 1000).toFixed(0)}kbps`;
+        sound.bitrate = bitrate;
+
+        success(sound);
       } else {
-        failure();
+        failure(sound);
       }
     });
   }
@@ -706,6 +709,159 @@ function build_netease() {
     };
   }
 
+  function ne_login(url) {
+    // use chrome extension to modify referer.
+    let target_url = 'https://music.163.com/weapi/login';
+    const loginType = getParameterByName('type', url);
+
+    const password = getParameterByName('password', url);
+
+    let req_data = {};
+    if (loginType === 'email') {
+      const email = getParameterByName('email', url);
+
+      req_data = {
+        username: email,
+        password: forge.md5
+          .create()
+          .update(forge.util.encodeUtf8(password))
+          .digest()
+          .toHex(),
+        rememberLogin: 'true',
+      };
+    } else if (loginType === 'phone') {
+      target_url = `https://music.163.com/weapi/login/cellphone`;
+      const countrycode = getParameterByName('countrycode', url);
+      const phone = getParameterByName('phone', url);
+      req_data = {
+        phone,
+        countrycode,
+        password: forge.md5
+          .create()
+          .update(forge.util.encodeUtf8(password))
+          .digest()
+          .toHex(),
+        rememberLogin: 'true',
+      };
+    }
+
+    const encrypt_req_data = _encrypted_request(req_data);
+    const expire =
+      (new Date().getTime() + 1e3 * 60 * 60 * 24 * 365 * 100) / 1000;
+
+    cookieSet(
+      {
+        url: 'https://music.163.com',
+        name: 'os',
+        value: 'pc',
+        expirationDate: expire,
+      },
+      (cookie) => {}
+    );
+    return {
+      success(fn) {
+        axios
+          .post(target_url, new URLSearchParams(encrypt_req_data))
+          .then((response) => {
+            const { data } = response;
+            const result = {
+              is_login: true,
+              user_id: data.account.id,
+              user_name: data.account.userName,
+              nickname: data.profile.nickname,
+              avatar: data.profile.avatarUrl,
+              platform: 'netease',
+              data,
+            };
+            return fn({
+              status: 'success',
+              data: result,
+            });
+          })
+          .catch(() =>
+            fn({
+              status: 'fail',
+              data: {},
+            })
+          );
+      },
+    };
+  }
+
+  function ne_get_user_playlist(url) {
+    const user_id = getParameterByName('user_id', url);
+    const target_url = 'https://music.163.com/api/user/playlist';
+
+    const req_data = {
+      uid: user_id,
+      limit: 1000,
+      offset: 0,
+      includeVideo: true,
+    };
+
+    return {
+      success(fn) {
+        axios
+          .post(target_url, new URLSearchParams(req_data))
+          .then((response) => {
+            const playlists = [];
+            response.data.playlist.forEach((item) => {
+              const playlist = {
+                cover_img_url: item.coverImgUrl,
+                id: `neplaylist_${item.id}`,
+                source_url: `https://music.163.com/#/playlist?id=${item.id}`,
+                title: item.name,
+              };
+              playlists.push(playlist);
+            });
+            return fn({
+              status: 'success',
+              data: {
+                playlists,
+              },
+            });
+          });
+      },
+    };
+  }
+
+  function ne_get_recommend_playlist() {
+    const target_url = 'https://music.163.com/weapi/personalized/playlist';
+
+    const req_data = {
+      limit: 30,
+      total: true,
+      n: 1000,
+    };
+
+    const encrypt_req_data = _encrypted_request(req_data);
+
+    return {
+      success(fn) {
+        axios
+          .post(target_url, new URLSearchParams(encrypt_req_data))
+          .then((response) => {
+            const playlists = [];
+            response.data.result.forEach((item) => {
+              const playlist = {
+                cover_img_url: item.picUrl,
+                id: `neplaylist_${item.id}`,
+                source_url: `https://music.163.com/#/playlist?id=${item.id}`,
+                title: item.name,
+              };
+              playlists.push(playlist);
+            });
+            return fn({
+              status: 'success',
+              data: {
+                playlists,
+              },
+            });
+          });
+      },
+    };
+  }
+
   return {
     show_playlist: ne_show_playlist,
     get_playlist_filters,
@@ -714,6 +870,9 @@ function build_netease() {
     bootstrap_track: ne_bootstrap_track,
     search: ne_search,
     lyric: ne_lyric,
+    login: ne_login,
+    get_user_playlist: ne_get_user_playlist,
+    get_recommend_playlist: ne_get_recommend_playlist,
   };
 }
 

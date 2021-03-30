@@ -1,5 +1,5 @@
 /* eslint-disable no-underscore-dangle */
-/* global MediaMetadata playerSendMessage */
+/* global MediaMetadata playerSendMessage MediaService */
 /* global Howl Howler */
 
 {
@@ -125,7 +125,7 @@
     }
 
     retrieveMediaUrl(index, playNow) {
-      playerSendMessage(this.mode, {
+      const msg = {
         type: 'BG_PLAYER:RETRIEVE_URL',
         data: {
           ...this.playlist[index],
@@ -133,7 +133,28 @@
           index,
           playNow,
         },
-      });
+      };
+      MediaService.bootstrapTrack(
+        msg.data,
+        (bootinfo) => {
+          msg.type = 'BG_PLAYER:RETRIEVE_URL_SUCCESS';
+
+          msg.data = { ...msg.data, ...bootinfo };
+
+          this.playlist[index].bitrate = bootinfo.bitrate;
+
+          this.setMediaURI(msg.data.url, msg.data.id);
+          this.setAudioDisabled(false, msg.data.index);
+          this.finishLoad(msg.data.index, msg.data.playNow);
+          playerSendMessage(this.mode, msg);
+        },
+        () => {
+          msg.type = 'BG_PLAYER:RETRIEVE_URL_FAIL';
+          this.setAudioDisabled(true, msg.data.index);
+          this.skip('next');
+          playerSendMessage(this.mode, msg);
+        }
+      );
     }
 
     /**

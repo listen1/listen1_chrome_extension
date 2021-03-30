@@ -270,7 +270,8 @@ function build_kuwo() {
   }
 
   // eslint-disable-next-line no-unused-vars
-  function kw_bootstrap_track(sound, track, success, failure) {
+  function kw_bootstrap_track(track, success, failure) {
+    const sound = {};
     const song_id = track.id.slice('kwtrack_'.length);
     const target_url =
       'https://antiserver.kuwo.cn/anti.s?' +
@@ -283,9 +284,9 @@ function build_kuwo() {
       const { data } = response;
       if (data.length > 0) {
         sound.url = data; // eslint-disable-line no-param-reassign
-        success();
+        success(sound);
       } else {
-        failure();
+        failure(sound);
       }
     });
   }

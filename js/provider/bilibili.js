@@ -130,16 +130,17 @@ function build_bilibili() {
     return result;
   }
   // eslint-disable-next-line no-unused-vars
-  function bi_bootstrap_track(sound, track, success, failure) {
+  function bi_bootstrap_track(track, success, failure) {
+    const sound = {};
     const song_id = track.id.slice('bitrack_'.length);
     const target_url = `https://www.bilibili.com/audio/music-service-c/web/url?sid=${song_id}`;
     axios.get(target_url).then((response) => {
       const { data } = response;
       if (data.code === 0) {
         [sound.url] = data.data.cdns; // eslint-disable-line no-param-reassign
-        success();
+        success(sound);
       } else {
-        failure();
+        failure(sound);
       }
     });
   }
