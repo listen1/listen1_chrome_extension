@@ -121,7 +121,7 @@
  "_MINIMIZE_TO_BACKGROUND": "最小化到後臺",
  "_MY_PLAYLIST": "我的歌單",
  "_RECOMMEND_PLAYLIST": "推薦歌單",
- "_LISTEN1_LOGIN_NOTICE": "Listen1不會傳輸你的賬號數據到任何非音樂平台官方的伺服器。",
+ "_LISTEN1_LOGIN_NOTICE": "Listen1不會傳輸你的賬號數據到任何第三方伺服器。",
  "_PASSWORD": "密碼",
  "_LOGIN": "登錄",
  "_LOGOUT": "退出登錄",
@@ -135,5 +135,5 @@
  "_LOGIN_BY_EMAIL": "郵箱登錄",
  "_MOBILE_PHONE": "手機號",
  "_MY_NETEASE": "我的網易雲音樂",
- "_FAIL_ALL_NOTICE": "停止播放，因為所有當前歌單中的歌曲都不能找到可用播放源"
+ "_FAIL_ALL_NOTICE": "當前播放列表沒有可播放的歌曲"
 }
