@@ -640,6 +640,10 @@ angular.module('listenone').controller('PlayController', [
           }
           case 'RETRIEVE_URL_SUCCESS': {
             $scope.currentPlaying = msg.data;
+            // update translate whenever set value
+            $scope.currentPlaying.platformText = i18next.t(
+              $scope.currentPlaying.platform
+            );
             break;
           }
           case 'RETRIEVE_URL_FAIL': {
