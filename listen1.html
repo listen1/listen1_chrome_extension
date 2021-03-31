@@ -55,6 +55,17 @@
     <script type="text/javascript" src="js/loweb.js"></script>
     <script type="text/javascript" src="js/l1_player.js"></script>
     <script type="text/javascript" src="js/app.js"></script>
+    <script type="text/javascript" src="js/controller/profile.js"></script>
+    <script type="text/javascript" src="js/controller/auth.js"></script>
+    <script type="text/javascript" src="js/controller/navigation.js"></script>
+    <script type="text/javascript" src="js/controller/my_playlist.js"></script>
+    <script type="text/javascript" src="js/controller/platform.js"></script>
+    <script type="text/javascript" src="js/controller/playlist.js"></script>
+    <script type="text/javascript" src="js/controller/play.js"></script>
+    <script
+      type="text/javascript"
+      src="js/controller/instant_searsh.js"
+    ></script>
 
     <script>
       if (window.module) module = window.module;
@@ -62,9 +73,10 @@
   </head>
 
   <body>
-    <div id="feather-container"
-      style="visibility: hidden; position: absolute; width: 0px; height: 0px" >
-    </div>
+    <div
+      id="feather-container"
+      style="visibility: hidden; position: absolute; width: 0px; height: 0px"
+    ></div>
     <div
       ng-controller="PlayController as playCtrl"
       ng-init="loadLocalSettings()"
