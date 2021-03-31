@@ -1,6 +1,6 @@
 /* eslint-disable no-shadow */
 /* global l1Player require MediaService */
-/* global angular isElectron */
+/* global angular isElectron i18next i18nextHttpBackend */
 /* global setPrototypeOfLocalStorage addPlayerListener */
 /* global getLocalStorageValue getPlayer getPlayerAsync smoothScrollTo */
 /* eslint-disable global-require */
@@ -46,7 +46,6 @@ const main = () => {
     'cfp.hotkeys',
     'lastfmClient',
     'githubClient',
-    'pascalprecht.translate',
   ]);
   setPrototypeOfLocalStorage();
   // app.config([
@@ -82,25 +81,8 @@ const main = () => {
     });
   });
 
-  app.config([
-    '$translateProvider',
-    ($translateProvider) => {
-      // Register a loader for the static files
-      $translateProvider.useStaticFilesLoader({
-        prefix: './i18n/',
-        suffix: '.json',
-      });
-      $translateProvider.use('zh_CN');
-      // Tell the module what language to use by default
-      $translateProvider.preferredLanguage('zh_CN');
-      $translateProvider.useSanitizeValueStrategy('escape');
-    },
-  ]);
-
   app.run([
-    '$q',
-    '$translate',
-    ($q, $translate) => {
+    '$q', ($q) => {
       axios.Axios.prototype.request_original = axios.Axios.prototype.request;
       axios.Axios.prototype.request = function new_req(config) {
         return $q.when(this.request_original(config));
@@ -125,10 +107,9 @@ const main = () => {
 
   app.controller('ProfileController', [
     '$scope',
-    '$translate',
-    ($scope, $translate) => {
-      let defaultLang = 'zh_CN';
-      const supportLangs = ['zh_CN', 'en_US'];
+    ($scope) => {
+      let defaultLang = 'zh-CN';
+      const supportLangs = ['zh-CN', 'en-US'];
       if (supportLangs.indexOf(navigator.language) !== -1) {
         defaultLang = navigator.language;
       }
@@ -138,10 +119,13 @@ const main = () => {
 
       $scope.setLang = (langKey) => {
         // You can change the language during runtime
-        $translate.use(langKey).then(() => {
-          axios.get('./i18n/zh_CN.json').then((res) => {
+        i18next.changeLanguage(langKey).then((t) => {
+          axios.get('./i18n/zh-CN.json').then((res) => {
             Object.keys(res.data).forEach((key) => {
-              $scope[key] = $translate.instant(key);
+              $scope[key] = t(key);
+            });
+            sourceList.forEach((item)=>{
+              item.displayText = t(item.displayId);
             });
           });
           localStorage.setObject('language', langKey);
@@ -170,9 +154,8 @@ const main = () => {
 
   app.controller('AuthController', [
     '$scope',
-    '$translate',
     'Notification',
-    ($scope, $translate, Notification) => {
+    ($scope, Notification) => {
       $scope.loginProgress = false;
       $scope.loginType = 'email';
 
@@ -206,12 +189,12 @@ const main = () => {
 
           if (!validateEmail(email)) {
             return Notification.warning(
-              $translate.instant('_LOGIN_EMAIL_ERROR')
+              i18next.t('_LOGIN_EMAIL_ERROR')
             );
           }
           if (!validatePassword(password)) {
             return Notification.warning(
-              $translate.instant('_LOGIN_PASSWORD_ERROR')
+              i18next.t('_LOGIN_PASSWORD_ERROR')
             );
           }
           options = {
@@ -227,17 +210,17 @@ const main = () => {
           const password = document.getElementById('login-password').value;
           if (!validateCountrycode(countrycode)) {
             return Notification.warning(
-              $translate.instant('_LOGIN_COUNTRYCODE_ERROR')
+              i18next.t('_LOGIN_COUNTRYCODE_ERROR')
             );
           }
           if (!validatePhone(phone)) {
             return Notification.warning(
-              $translate.instant('_LOGIN_PHONE_ERROR')
+              i18next.t('_LOGIN_PHONE_ERROR')
             );
           }
           if (!validatePassword(password)) {
             return Notification.warning(
-              $translate.instant('_LOGIN_PASSWORD_ERROR')
+              i18next.t('_LOGIN_PASSWORD_ERROR')
             );
           }
           options = {
@@ -255,7 +238,7 @@ const main = () => {
           if (data.status === 'success') {
             $scope.setMusicAuth(source, data.data);
           } else {
-            Notification.error($translate.instant('_LOGIN_ERROR'));
+            Notification.error(i18next.t('_LOGIN_ERROR'));
           }
         });
       };
@@ -287,7 +270,6 @@ const main = () => {
     'lastfm',
     'github',
     'gist',
-    '$translate',
     (
       $scope,
       $timeout,
@@ -297,7 +279,6 @@ const main = () => {
       lastfm,
       github,
       gist,
-      $translate
     ) => {
       $rootScope.page_title = { title: 'Listen 1', artist: '', status: '' }; // eslint-disable-line no-param-reassign
       $scope.window_url_stack = [];
@@ -496,7 +477,7 @@ const main = () => {
         };
 
         if (dialog_type === 0) {
-          $scope.dialog_title = $translate.instant('_ADD_TO_PLAYLIST');
+          $scope.dialog_title = i18next.t('_ADD_TO_PLAYLIST');
           $scope.dialog_song = data;
           MediaService.showMyPlaylist().success((res) => {
             $scope.myplaylist = res.result;
@@ -509,32 +490,32 @@ const main = () => {
         // }
 
         if (dialog_type === 3) {
-          $scope.dialog_title = $translate.instant('_EDIT_PLAYLIST');
+          $scope.dialog_title = i18next.t('_EDIT_PLAYLIST');
           $scope.dialog_type = 3;
           $scope.dialog_cover_img_url = data.cover_img_url;
           $scope.dialog_playlist_title = data.playlist_title;
         }
         if (dialog_type === 4) {
-          $scope.dialog_title = $translate.instant('_CONNECT_TO_LASTFM');
+          $scope.dialog_title = i18next.t('_CONNECT_TO_LASTFM');
           $scope.dialog_type = 4;
         }
         if (dialog_type === 5) {
-          $scope.dialog_title = $translate.instant('_OPEN_PLAYLIST');
+          $scope.dialog_title = i18next.t('_OPEN_PLAYLIST');
           $scope.dialog_type = 5;
         }
         if (dialog_type === 6) {
-          $scope.dialog_title = $translate.instant('_IMPORT_PLAYLIST');
+          $scope.dialog_title = i18next.t('_IMPORT_PLAYLIST');
           MediaService.showMyPlaylist().success((res) => {
             $scope.myplaylist = res.result;
           });
           $scope.dialog_type = 6;
         }
         if (dialog_type === 7) {
-          $scope.dialog_title = $translate.instant('_CONNECT_TO_GITHUB');
+          $scope.dialog_title = i18next.t('_CONNECT_TO_GITHUB');
           $scope.dialog_type = 7;
         }
         if (dialog_type === 8) {
-          $scope.dialog_title = $translate.instant('_EXPORT_TO_GITHUB_GIST');
+          $scope.dialog_title = i18next.t('_EXPORT_TO_GITHUB_GIST');
           $scope.dialog_type = 8;
           gist.listExistBackup().then(
             (res) => {
@@ -546,7 +527,7 @@ const main = () => {
           );
         }
         if (dialog_type === 10) {
-          $scope.dialog_title = $translate.instant('_RECOVER_FROM_GITHUB_GIST');
+          $scope.dialog_title = i18next.t('_RECOVER_FROM_GITHUB_GIST');
           $scope.dialog_type = 10;
           gist.listExistBackup().then(
             (res) => {
@@ -563,7 +544,7 @@ const main = () => {
         MediaService.addMyPlaylist(option_id, $scope.dialog_song).success(
           (playlist) => {
             Notification.success(
-              $translate.instant('_ADD_TO_PLAYLIST_SUCCESS')
+              i18next.t('_ADD_TO_PLAYLIST_SUCCESS')
             );
             $scope.closeDialog();
             // add to current playing list
@@ -591,7 +572,7 @@ const main = () => {
           $scope.dialog_song
         ).success(() => {
           $rootScope.$broadcast('myplaylist:update');
-          Notification.success($translate.instant('_ADD_TO_PLAYLIST_SUCCESS'));
+          Notification.success(i18next.t('_ADD_TO_PLAYLIST_SUCCESS'));
           $scope.closeDialog();
         });
       };
@@ -605,17 +586,17 @@ const main = () => {
           $rootScope.$broadcast('myplaylist:update');
           $scope.playlist_title = $scope.dialog_playlist_title;
           $scope.cover_img_url = $scope.dialog_cover_img_url;
-          Notification.success($translate.instant('_EDIT_PLAYLIST_SUCCESS'));
+          Notification.success(i18next.t('_EDIT_PLAYLIST_SUCCESS'));
           $scope.closeDialog();
         });
       };
 
       $scope.mergePlaylist = (target_list_id) => {
-        Notification.info($translate.instant('_IMPORTING_PLAYLIST'));
+        Notification.info(i18next.t('_IMPORTING_PLAYLIST'));
         MediaService.mergePlaylist($scope.list_id, target_list_id).success(
           () => {
             Notification.success(
-              $translate.instant('_IMPORTING_PLAYLIST_SUCCESS')
+              i18next.t('_IMPORTING_PLAYLIST_SUCCESS')
             );
             $scope.closeDialog();
             $scope.popWindow();
@@ -639,7 +620,7 @@ const main = () => {
             $scope.songs.splice(index, 1);
           }
           Notification.success(
-            $translate.instant('_REMOVE_SONG_FROM_PLAYLIST_SUCCESS')
+            i18next.t('_REMOVE_SONG_FROM_PLAYLIST_SUCCESS')
           );
         });
       };
@@ -667,7 +648,7 @@ const main = () => {
         $timeout(() => {
           // add songs to playlist
           l1Player.addTracks($scope.songs);
-          Notification.success($translate.instant('_ADD_TO_QUEUE_SUCCESS'));
+          Notification.success(i18next.t('_ADD_TO_QUEUE_SUCCESS'));
         }, 0);
       };
 
@@ -675,7 +656,7 @@ const main = () => {
         MediaService.clonePlaylist(list_id, 'my').success(() => {
           $rootScope.$broadcast('myplaylist:update');
           $scope.closeWindow();
-          Notification.success($translate.instant('_ADD_TO_PLAYLIST_SUCCESS'));
+          Notification.success(i18next.t('_ADD_TO_PLAYLIST_SUCCESS'));
         });
       };
 
@@ -684,7 +665,7 @@ const main = () => {
           $rootScope.$broadcast('myplaylist:update');
           $scope.closeDialog();
           $scope.closeWindow();
-          Notification.success($translate.instant('_REMOVE_PLAYLIST_SUCCESS'));
+          Notification.success(i18next.t('_REMOVE_PLAYLIST_SUCCESS'));
         });
       };
 
@@ -822,7 +803,7 @@ const main = () => {
           if (result !== undefined) {
             $scope.showPlaylist(result.id);
           } else {
-            Notification.info($translate.instant('_FAIL_OPEN_PLAYLIST_URL'));
+            Notification.info(i18next.t('_FAIL_OPEN_PLAYLIST_URL'));
           }
         });
       };
@@ -840,7 +821,7 @@ const main = () => {
         MediaService.clonePlaylist(list_id, 'favorite').success((addResult) => {
           $rootScope.$broadcast('favoriteplaylist:update');
           Notification.success(
-            $translate.instant('_FAVORITE_PLAYLIST_SUCCESS')
+            i18next.t('_FAVORITE_PLAYLIST_SUCCESS')
           );
         });
       };
@@ -850,7 +831,7 @@ const main = () => {
           $rootScope.$broadcast('favoriteplaylist:update');
           // $scope.closeWindow();
           Notification.success(
-            $translate.instant('_UNFAVORITE_PLAYLIST_SUCCESS')
+            i18next.t('_UNFAVORITE_PLAYLIST_SUCCESS')
           );
         });
       };
@@ -953,7 +934,6 @@ const main = () => {
     'Notification',
     'hotkeys',
     'lastfm',
-    '$translate',
     (
       $scope,
       $timeout,
@@ -964,7 +944,6 @@ const main = () => {
       Notification,
       hotkeys,
       lastfm,
-      $translate
     ) => {
       $scope.menuHidden = true;
       $scope.volume = l1Player.status.volume;
@@ -1230,14 +1209,14 @@ const main = () => {
 
       $scope.copyrightNotice = () => {
         const d = {
-          message: $translate.instant('_COPYRIGHT_ISSUE'),
+          message: i18next.t('_COPYRIGHT_ISSUE'),
           replaceMessage: true,
         };
         Notification.info(d);
       };
       $scope.failAllNotice = () => {
         const d = {
-          message: $translate.instant('_FAIL_ALL_NOTICE'),
+          message: i18next.t('_FAIL_ALL_NOTICE'),
           replaceMessage: true,
           delay: 5000,
         };
@@ -1373,7 +1352,7 @@ const main = () => {
             }
             case 'PLAY_FAILED': {
               Notification.info({
-                message: $translate.instant('_COPYRIGHT_ISSUE'),
+                message: i18next.t('_COPYRIGHT_ISSUE'),
                 replaceMessage: true,
               });
               break;
@@ -1482,6 +1461,7 @@ const main = () => {
               if (msg.data.id === undefined) {
                 break;
               }
+              $scope.currentPlaying.platformText = i18next.t($scope.currentPlaying.platform);
               $scope.myProgress = 0;
               if ($scope.lastTrackId === msg.data.id) {
                 break;
@@ -1768,8 +1748,7 @@ const main = () => {
     '$scope',
     '$timeout',
     '$rootScope',
-    '$translate',
-    ($scope, $timeout, $rootScope, $translate) => {
+    ($scope, $timeout, $rootScope) => {
       $scope.originpagelog = { allmusic: 1 };
       sourceList.forEach((i) => {
         $scope.originpagelog[i.name] = 1;
@@ -1820,7 +1799,7 @@ const main = () => {
         }).success((data) => {
           // update the textarea
           data.result.forEach((r) => {
-            r.sourceName = $translate.instant(r.source);
+            r.sourceName = i18next.t(r.source);
           });
           $scope.result = data.result;
           updateTotalPage(data.total);
@@ -1957,8 +1936,7 @@ const main = () => {
 
   app.directive('addWithoutPlay', [
     'Notification',
-    '$translate',
-    (Notification, $translate) => ({
+    (Notification) => ({
       restrict: 'EA',
       scope: {
         song: '=addWithoutPlay',
@@ -1966,7 +1944,7 @@ const main = () => {
       link(scope, element, attrs) {
         element.bind('click', (event) => {
           l1Player.addTrack(scope.song);
-          Notification.success($translate.instant('_ADD_TO_QUEUE_SUCCESS'));
+          Notification.success(i18next.t('_ADD_TO_QUEUE_SUCCESS'));
         });
       },
     }),
@@ -2284,4 +2262,14 @@ const main = () => {
   ]);
 };
 
+i18next.use(i18nextHttpBackend).init({
+  lng: 'zh-CN',
+  fallbackLng: 'zh-CN',
+  supportedLngs: ['zh-CN', 'zh-TC', 'en-US', 'fr-FR'],
+  preload: ['zh-CN', 'zh-TC', 'en-US', 'fr-FR'],
+  debug: false,
+  backend: {
+    loadPath: '/i18n/{{lng}}.json',
+  },
+});
 main();

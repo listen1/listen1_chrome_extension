@@ -22,8 +22,8 @@
       }
     </script>
     <script type="text/javascript" src="js/vendor/angular.min.js"></script>
-    <script src="js/vendor/angular-translate.min.js"></script>
-    <script src="js/vendor/angular-translate-loader-static-files.min.js"></script>
+    <script src="js/vendor/i18next.min.js"></script>
+    <script src="js/vendor/i18nextHttpBackend.min.js"></script>
     <script
       type="text/javascript"
       src="js/vendor/forge_listen1_fork.min.js"
@@ -37,6 +37,7 @@
     <script type="text/javascript" src="js/vendor/hotkeys.js"></script>
     <script type="text/javascript" src="js/vendor/async.min.js"></script>
     <script type="text/javascript" src="js/vendor/lru-cache.min.js"></script>
+
     <script type="text/javascript" src="js/lowebutil.js"></script>
     <script type="text/javascript" src="js/github_api.js"></script>
     <script type="text/javascript" src="js/github.js"></script>
@@ -1888,7 +1889,7 @@
                           ng-class="{'active':tab === source.name}"
                           ng-click="changeTab(source.name)"
                         >
-                          {{source.displayId | translate}}
+                          {{source.displayText}}
                         </div>
                         <div
                           ng-repeat-end
@@ -1980,7 +1981,7 @@
                           ng-class="{'active':tab === source.name}"
                           ng-click="changePlatformTab(source.name)"
                         >
-                          {{source.displayId | translate}}
+                          {{source.displayText}}
                         </div>
                         <div
                           ng-repeat-end
@@ -2046,7 +2047,7 @@
                                 ng-class="{'active':tab === source.name}"
                                 ng-click="changeSourceTab(source.name)"
                               >
-                                {{source.displayId | translate}}
+                                {{source.displayText}}
                               </div>
                               <div
                                 ng-repeat-end
@@ -2239,25 +2240,25 @@
                             <div>
                               <button
                                 class="language-button"
-                                ng-click="setLang('zh_CN')"
+                                ng-click="setLang('zh-CN')"
                               >
                                 简体中文
                               </button>
                               <button
                                 class="language-button"
-                                ng-click="setLang('zh_TC')"
+                                ng-click="setLang('zh-TC')"
                               >
                                 繁体中文
                               </button>
                               <button
                                 class="language-button"
-                                ng-click="setLang('en_US')"
+                                ng-click="setLang('en-US')"
                               >
                                 English
                               </button>
                               <button
                                 class="language-button"
-                                ng-click="setLang('fr_FR')"
+                                ng-click="setLang('fr-FR')"
                               >
                                 French
                               </button>
@@ -2638,7 +2639,7 @@
                     >
                       <div class="login" ng-show="is_login('netease')">
                         <div class="usercard">
-                          <img src="{{musicAuth.netease.avatar}}" />
+                          <img ng-src="{{musicAuth.netease.avatar}}" />
                           <div class="usercard-title">
                             {{musicAuth.netease.nickname}}
                           </div>
@@ -2962,7 +2963,7 @@
                               <span
                                 class="badge platform"
                                 ng-if="enableNowplayingPlatform && currentPlaying.platform !== undefined"
-                                >{{ currentPlaying.platform | translate }}</span
+                                >{{ currentPlaying.platformText }}</span
                               >
                             </div>
                             <div class="info">
