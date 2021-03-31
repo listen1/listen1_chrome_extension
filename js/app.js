@@ -1,6 +1,6 @@
 /* eslint-disable no-shadow */
 /* global l1Player require MediaService */
-/* global angular isElectron i18next i18nextHttpBackend Notyf notyf */
+/* global angular isElectron i18next i18nextHttpBackend Notyf notyf hotkeys */
 /* global setPrototypeOfLocalStorage addPlayerListener */
 /* global getLocalStorageValue getPlayer getPlayerAsync smoothScrollTo */
 /* eslint-disable global-require */
@@ -42,7 +42,6 @@ const sourceList = [
 
 const main = () => {
   const app = angular.module('listenone', [
-    'cfp.hotkeys',
     'lastfmClient',
     'githubClient',
   ]);
@@ -55,11 +54,6 @@ const main = () => {
   //     );
   //   },
   // ]);
-
-  app.config((hotkeysProvider) => {
-    hotkeysProvider.templateTitle = '快捷键列表'; // eslint-disable-line no-param-reassign
-    hotkeysProvider.cheatSheetDescription = '显示/隐藏快捷键列表'; // eslint-disable-line no-param-reassign
-  });
 
   app.config((lastfmProvider) => {
     lastfmProvider.setOptions({
@@ -276,7 +270,6 @@ const main = () => {
     '$scope',
     '$timeout',
     '$rootScope',
-    'hotkeys',
     'lastfm',
     'github',
     'gist',
@@ -284,7 +277,6 @@ const main = () => {
       $scope,
       $timeout,
       $rootScope,
-      hotkeys,
       lastfm,
       github,
       gist,
@@ -786,18 +778,15 @@ const main = () => {
       };
 
       $scope.showShortcuts = () => {
-        hotkeys.toggleCheatSheet();
+        
       };
 
-      hotkeys.add({
-        combo: 'f',
-        description: '快速搜索',
-        callback() {
-          $scope.showTag(3);
-          $timeout(() => {
-            document.getElementById('search-input').focus();
-          }, 0);
-        },
+      // description: '快速搜索',
+      hotkeys('f', () => {
+        $scope.showTag(3);
+        $timeout(() => {
+          document.getElementById('search-input').focus();
+        }, 0);
       });
 
       $scope.openUrl = (url) => {
@@ -934,7 +923,6 @@ const main = () => {
     '$anchorScroll',
     '$location',
     '$rootScope',
-    'hotkeys',
     'lastfm',
     (
       $scope,
@@ -943,7 +931,6 @@ const main = () => {
       $anchorScroll,
       $location,
       $rootScope,
-      hotkeys,
       lastfm,
     ) => {
       $scope.menuHidden = true;
@@ -1595,73 +1582,36 @@ const main = () => {
       l1Player.connectPlayer();
 
       // define keybind
-      hotkeys.add({
-        combo: 'p',
-        description: '播放/暂停',
-        callback() {
-          l1Player.togglePlayPause();
-        },
+      // description: '播放/暂停',
+      hotkeys('p', l1Player.togglePlayPause);
+
+      // description: '上一首',
+      hotkeys('[', l1Player.prev);
+
+      // description: '下一首',
+      hotkeys(']', l1Player.next);
+
+      // description: '静音/取消静音',
+      hotkeys('m', l1Player.toggleMute);
+
+      // description: '打开/关闭播放列表',
+      hotkeys('l', $scope.togglePlaylist);
+
+      // description: '切换播放模式（顺序/随机/单曲循环）',
+      hotkeys('s', $scope.changePlaymode);
+
+      // description: '音量增加',
+      hotkeys('u', () => {
+        $timeout(() => {
+          l1Player.adjustVolume(true);
+        });
       });
 
-      hotkeys.add({
-        combo: '[',
-        description: '上一首',
-        callback() {
-          l1Player.prev();
-        },
-      });
-
-      hotkeys.add({
-        combo: ']',
-        description: '下一首',
-        callback() {
-          l1Player.next();
-        },
-      });
-
-      hotkeys.add({
-        combo: 'm',
-        description: '静音/取消静音',
-        callback() {
-          // mute indeed toggle mute status
-          l1Player.toggleMute();
-        },
-      });
-
-      hotkeys.add({
-        combo: 'l',
-        description: '打开/关闭播放列表',
-        callback() {
-          $scope.togglePlaylist();
-        },
-      });
-
-      hotkeys.add({
-        combo: 's',
-        description: '切换播放模式（顺序/随机/单曲循环）',
-        callback() {
-          $scope.changePlaymode();
-        },
-      });
-
-      hotkeys.add({
-        combo: 'u',
-        description: '音量增加',
-        callback() {
-          $timeout(() => {
-            l1Player.adjustVolume(true);
-          });
-        },
-      });
-
-      hotkeys.add({
-        combo: 'd',
-        description: '音量减少',
-        callback() {
-          $timeout(() => {
-            l1Player.adjustVolume(false);
-          });
-        },
+      // description: '音量减少',
+      hotkeys('d', () => {
+        $timeout(() => {
+          l1Player.adjustVolume(false);
+        });
       });
 
       $scope.toggleLyricTranslation = () => {
