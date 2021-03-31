@@ -1,6 +1,6 @@
 /* eslint-disable no-shadow */
 /* global l1Player require MediaService */
-/* global angular isElectron i18next i18nextHttpBackend */
+/* global angular isElectron i18next i18nextHttpBackend Notyf notyf */
 /* global setPrototypeOfLocalStorage addPlayerListener */
 /* global getLocalStorageValue getPlayer getPlayerAsync smoothScrollTo */
 /* eslint-disable global-require */
@@ -42,7 +42,6 @@ const sourceList = [
 
 const main = () => {
   const app = angular.module('listenone', [
-    'ui-notification',
     'cfp.hotkeys',
     'lastfmClient',
     'githubClient',
@@ -56,18 +55,6 @@ const main = () => {
   //     );
   //   },
   // ]);
-
-  app.config((NotificationProvider) => {
-    NotificationProvider.setOptions({
-      delay: 2000,
-      startTop: 20,
-      startRight: 10,
-      verticalSpacing: 20,
-      horizontalSpacing: 20,
-      positionX: 'center',
-      positionY: 'top',
-    });
-  });
 
   app.config((hotkeysProvider) => {
     hotkeysProvider.templateTitle = '快捷键列表'; // eslint-disable-line no-param-reassign
@@ -87,6 +74,31 @@ const main = () => {
       axios.Axios.prototype.request = function new_req(config) {
         return $q.when(this.request_original(config));
       };
+      window.notyf = new Notyf({
+        duration: 5000,
+        ripple: false,
+        position: { x: 'center', y: 'top' },
+        types: [
+          {
+            type: 'warning',
+            background: 'darkorange',
+            icon: false,
+          },
+          {
+            type: 'info',
+            background: 'deepskyblue',
+            icon: false,
+          },
+        ],
+      });
+      window.notyf.warning = (msg) => window.notyf.open({
+        type: 'warning',
+        message: msg,
+      });
+      window.notyf.info = (msg) => window.notyf.open({
+        type: 'info',
+        message: msg,
+      });
     },
   ]);
 
@@ -124,7 +136,7 @@ const main = () => {
             Object.keys(res.data).forEach((key) => {
               $scope[key] = t(key);
             });
-            sourceList.forEach((item)=>{
+            sourceList.forEach((item) => {
               item.displayText = t(item.displayId);
             });
           });
@@ -154,8 +166,7 @@ const main = () => {
 
   app.controller('AuthController', [
     '$scope',
-    'Notification',
-    ($scope, Notification) => {
+    ($scope) => {
       $scope.loginProgress = false;
       $scope.loginType = 'email';
 
@@ -188,12 +199,12 @@ const main = () => {
           const password = document.getElementById('login-password').value;
 
           if (!validateEmail(email)) {
-            return Notification.warning(
+            return notyf.warning(
               i18next.t('_LOGIN_EMAIL_ERROR')
             );
           }
           if (!validatePassword(password)) {
-            return Notification.warning(
+            return notyf.warning(
               i18next.t('_LOGIN_PASSWORD_ERROR')
             );
           }
@@ -209,17 +220,17 @@ const main = () => {
           const phone = document.getElementById('login-phone').value;
           const password = document.getElementById('login-password').value;
           if (!validateCountrycode(countrycode)) {
-            return Notification.warning(
+            return notyf.warning(
               i18next.t('_LOGIN_COUNTRYCODE_ERROR')
             );
           }
           if (!validatePhone(phone)) {
-            return Notification.warning(
+            return notyf.warning(
               i18next.t('_LOGIN_PHONE_ERROR')
             );
           }
           if (!validatePassword(password)) {
-            return Notification.warning(
+            return notyf.warning(
               i18next.t('_LOGIN_PASSWORD_ERROR')
             );
           }
@@ -230,7 +241,7 @@ const main = () => {
             password,
           };
         } else {
-          return Notification.error('not support login type');
+          return notyf.error('not support login type');
         }
         $scope.loginProgress = true;
         return MediaService.login(source, options).success((data) => {
@@ -238,7 +249,7 @@ const main = () => {
           if (data.status === 'success') {
             $scope.setMusicAuth(source, data.data);
           } else {
-            Notification.error(i18next.t('_LOGIN_ERROR'));
+            notyf.error(i18next.t('_LOGIN_ERROR'));
           }
         });
       };
@@ -264,7 +275,6 @@ const main = () => {
   app.controller('NavigationController', [
     '$scope',
     '$timeout',
-    'Notification',
     '$rootScope',
     'hotkeys',
     'lastfm',
@@ -273,7 +283,6 @@ const main = () => {
     (
       $scope,
       $timeout,
-      Notification,
       $rootScope,
       hotkeys,
       lastfm,
@@ -437,7 +446,7 @@ const main = () => {
         );
         MediaService.getPlaylist(listId, useCache).success((data) => {
           if (data.status === '0') {
-            Notification.info(data.reason);
+            notyf.info(data.reason);
             $scope.popWindow();
             return;
           }
@@ -543,7 +552,7 @@ const main = () => {
       $scope.chooseDialogOption = (option_id) => {
         MediaService.addMyPlaylist(option_id, $scope.dialog_song).success(
           (playlist) => {
-            Notification.success(
+            notyf.success(
               i18next.t('_ADD_TO_PLAYLIST_SUCCESS')
             );
             $scope.closeDialog();
@@ -572,7 +581,7 @@ const main = () => {
           $scope.dialog_song
         ).success(() => {
           $rootScope.$broadcast('myplaylist:update');
-          Notification.success(i18next.t('_ADD_TO_PLAYLIST_SUCCESS'));
+          notyf.success(i18next.t('_ADD_TO_PLAYLIST_SUCCESS'));
           $scope.closeDialog();
         });
       };
@@ -586,16 +595,16 @@ const main = () => {
           $rootScope.$broadcast('myplaylist:update');
           $scope.playlist_title = $scope.dialog_playlist_title;
           $scope.cover_img_url = $scope.dialog_cover_img_url;
-          Notification.success(i18next.t('_EDIT_PLAYLIST_SUCCESS'));
+          notyf.success(i18next.t('_EDIT_PLAYLIST_SUCCESS'));
           $scope.closeDialog();
         });
       };
 
       $scope.mergePlaylist = (target_list_id) => {
-        Notification.info(i18next.t('_IMPORTING_PLAYLIST'));
+        notyf.info(i18next.t('_IMPORTING_PLAYLIST'));
         MediaService.mergePlaylist($scope.list_id, target_list_id).success(
           () => {
-            Notification.success(
+            notyf.success(
               i18next.t('_IMPORTING_PLAYLIST_SUCCESS')
             );
             $scope.closeDialog();
@@ -619,7 +628,7 @@ const main = () => {
           if (index > -1) {
             $scope.songs.splice(index, 1);
           }
-          Notification.success(
+          notyf.success(
             i18next.t('_REMOVE_SONG_FROM_PLAYLIST_SUCCESS')
           );
         });
@@ -648,7 +657,7 @@ const main = () => {
         $timeout(() => {
           // add songs to playlist
           l1Player.addTracks($scope.songs);
-          Notification.success(i18next.t('_ADD_TO_QUEUE_SUCCESS'));
+          notyf.success(i18next.t('_ADD_TO_QUEUE_SUCCESS'));
         }, 0);
       };
 
@@ -656,7 +665,7 @@ const main = () => {
         MediaService.clonePlaylist(list_id, 'my').success(() => {
           $rootScope.$broadcast('myplaylist:update');
           $scope.closeWindow();
-          Notification.success(i18next.t('_ADD_TO_PLAYLIST_SUCCESS'));
+          notyf.success(i18next.t('_ADD_TO_PLAYLIST_SUCCESS'));
         });
       };
 
@@ -665,7 +674,7 @@ const main = () => {
           $rootScope.$broadcast('myplaylist:update');
           $scope.closeDialog();
           $scope.closeWindow();
-          Notification.success(i18next.t('_REMOVE_PLAYLIST_SUCCESS'));
+          notyf.success(i18next.t('_REMOVE_PLAYLIST_SUCCESS'));
         });
       };
 
@@ -696,7 +705,7 @@ const main = () => {
       $scope.importMySettings = (event) => {
         const fileObject = event.target.files[0];
         if (fileObject === null) {
-          Notification.warning('请选择备份文件');
+          notyf.warning('请选择备份文件');
           return;
         }
         const reader = new FileReader();
@@ -708,7 +717,7 @@ const main = () => {
             try {
               data = JSON.parse(data_json);
             } catch (e) {
-              Notification.warning('备份文件格式错误，请重新选择');
+              notyf.warning('备份文件格式错误，请重新选择');
               return;
             }
 
@@ -716,7 +725,7 @@ const main = () => {
               localStorage.setObject(item, data[item])
             );
             $rootScope.$broadcast('myplaylist:update');
-            Notification.success('成功导入我的歌单');
+            notyf.success('成功导入我的歌单');
           }
         };
         reader.readAsText(fileObject);
@@ -735,20 +744,17 @@ const main = () => {
         $scope.gistBackupLoading = true;
         gist.backupMySettings2Gist(gistFiles, gistId, isPublic).then(
           () => {
-            Notification.clearAll();
-            Notification.success('成功导出我的歌单到Gist');
+            notyf.dismissAll();
+            notyf.success('成功导出我的歌单到Gist');
             $scope.gistBackupLoading = false;
           },
           (err) => {
-            Notification.clearAll();
-            Notification.warning('导出我的歌单失败，检查后重试');
+            notyf.dismissAll();
+            notyf.warning('导出我的歌单失败，检查后重试');
             $scope.gistBackupLoading = false;
           }
         );
-        Notification({
-          message: '正在导出我的歌单到Gist...',
-          delay: null,
-        });
+        notyf.info('正在导出我的歌单到Gist...');
       };
 
       $scope.gistRestoreLoading = false;
@@ -760,26 +766,23 @@ const main = () => {
               Object.keys(data).forEach((item) =>
                 localStorage.setObject(item, data[item])
               );
-              Notification.clearAll();
-              Notification.success('导入我的歌单成功');
+              notyf.dismissAll();
+              notyf.success('导入我的歌单成功');
               $scope.gistRestoreLoading = false;
               $rootScope.$broadcast('myplaylist:update');
             });
           },
           (err) => {
-            Notification.clearAll();
+            notyf.dismissAll();
             if (err === 404) {
-              Notification.warning('未找到备份歌单，请先备份');
+              notyf.warning('未找到备份歌单，请先备份');
             } else {
-              Notification.warning('导入我的歌单失败，检查后重试');
+              notyf.warning('导入我的歌单失败，检查后重试');
             }
             $scope.gistRestoreLoading = false;
           }
         );
-        Notification({
-          message: '正在从Gist导入我的歌单...',
-          delay: null,
-        });
+        notyf.info('正在从Gist导入我的歌单...');
       };
 
       $scope.showShortcuts = () => {
@@ -803,7 +806,7 @@ const main = () => {
           if (result !== undefined) {
             $scope.showPlaylist(result.id);
           } else {
-            Notification.info(i18next.t('_FAIL_OPEN_PLAYLIST_URL'));
+            notyf.info(i18next.t('_FAIL_OPEN_PLAYLIST_URL'));
           }
         });
       };
@@ -820,7 +823,7 @@ const main = () => {
       $scope.addFavoritePlaylist = (list_id) => {
         MediaService.clonePlaylist(list_id, 'favorite').success((addResult) => {
           $rootScope.$broadcast('favoriteplaylist:update');
-          Notification.success(
+          notyf.success(
             i18next.t('_FAVORITE_PLAYLIST_SUCCESS')
           );
         });
@@ -830,7 +833,7 @@ const main = () => {
         MediaService.removeMyPlaylist(list_id, 'favorite').success(() => {
           $rootScope.$broadcast('favoriteplaylist:update');
           // $scope.closeWindow();
-          Notification.success(
+          notyf.success(
             i18next.t('_UNFAVORITE_PLAYLIST_SUCCESS')
           );
         });
@@ -931,7 +934,6 @@ const main = () => {
     '$anchorScroll',
     '$location',
     '$rootScope',
-    'Notification',
     'hotkeys',
     'lastfm',
     (
@@ -941,7 +943,6 @@ const main = () => {
       $anchorScroll,
       $location,
       $rootScope,
-      Notification,
       hotkeys,
       lastfm,
     ) => {
@@ -1212,7 +1213,7 @@ const main = () => {
           message: i18next.t('_COPYRIGHT_ISSUE'),
           replaceMessage: true,
         };
-        Notification.info(d);
+        notyf.info(d);
       };
       $scope.failAllNotice = () => {
         const d = {
@@ -1220,7 +1221,7 @@ const main = () => {
           replaceMessage: true,
           delay: 5000,
         };
-        Notification.warning(d);
+        notyf.warning(d);
       };
       $rootScope.$on('track:myprogress', (event, data) => {
         $scope.$evalAsync(() => {
@@ -1351,7 +1352,7 @@ const main = () => {
               break;
             }
             case 'PLAY_FAILED': {
-              Notification.info({
+              notyf.info({
                 message: i18next.t('_COPYRIGHT_ISSUE'),
                 replaceMessage: true,
               });
@@ -1425,9 +1426,8 @@ const main = () => {
               // 'currentTrack:duration'
               (() => {
                 const durationSec = Math.floor(msg.data.duration);
-                const durationStr = `${Math.floor(durationSec / 60)}:${`0${
-                  durationSec % 60
-                }`.substr(-2)}`;
+                const durationStr = `${Math.floor(durationSec / 60)}:${`0${durationSec % 60
+                  }`.substr(-2)}`;
                 if (
                   msg.data.duration === 0 ||
                   $scope.currentDuration === durationStr
@@ -1447,9 +1447,8 @@ const main = () => {
                       (msg.data.pos / msg.data.duration) * 100;
                   }
                   const posSec = Math.floor(msg.data.pos);
-                  const posStr = `${Math.floor(posSec / 60)}:${`0${
-                    posSec % 60
-                  }`.substr(-2)}`;
+                  const posStr = `${Math.floor(posSec / 60)}:${`0${posSec % 60
+                    }`.substr(-2)}`;
                   $scope.currentPosition = posStr;
                 });
               }
@@ -1481,7 +1480,7 @@ const main = () => {
                 status: 'playing',
               };
               if (lastfm.isAuthorized()) {
-                lastfm.sendNowPlaying(track.title, track.artist, () => {});
+                lastfm.sendNowPlaying(track.title, track.artist, () => { });
               }
 
               MediaService.getLyric(
@@ -1565,7 +1564,7 @@ const main = () => {
                   track.title,
                   track.artist,
                   track.album,
-                  () => {}
+                  () => { }
                 );
               }
 
@@ -1935,8 +1934,7 @@ const main = () => {
   ]);
 
   app.directive('addWithoutPlay', [
-    'Notification',
-    (Notification) => ({
+    () => ({
       restrict: 'EA',
       scope: {
         song: '=addWithoutPlay',
@@ -1944,7 +1942,7 @@ const main = () => {
       link(scope, element, attrs) {
         element.bind('click', (event) => {
           l1Player.addTrack(scope.song);
-          Notification.success(i18next.t('_ADD_TO_QUEUE_SUCCESS'));
+          notyf.success(i18next.t('_ADD_TO_QUEUE_SUCCESS'));
         });
       },
     }),
@@ -2272,4 +2270,5 @@ i18next.use(i18nextHttpBackend).init({
     loadPath: '/i18n/{{lng}}.json',
   },
 });
+
 main();
