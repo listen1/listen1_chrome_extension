@@ -70,7 +70,7 @@ const main = () => {
       };
       window.notyf = new Notyf({
         duration: 5000,
-        ripple: false,
+        ripple: true,
         position: { x: 'center', y: 'top' },
         types: [
           {
@@ -1199,19 +1199,10 @@ const main = () => {
       $scope.changingProgress = false;
 
       $scope.copyrightNotice = () => {
-        const d = {
-          message: i18next.t('_COPYRIGHT_ISSUE'),
-          replaceMessage: true,
-        };
-        notyf.info(d);
+        notyf.info(i18next.t('_COPYRIGHT_ISSUE'));
       };
       $scope.failAllNotice = () => {
-        const d = {
-          message: i18next.t('_FAIL_ALL_NOTICE'),
-          replaceMessage: true,
-          delay: 5000,
-        };
-        notyf.warning(d);
+        notyf.warning(i18next.t('_FAIL_ALL_NOTICE'));
       };
       $rootScope.$on('track:myprogress', (event, data) => {
         $scope.$evalAsync(() => {
@@ -1342,10 +1333,7 @@ const main = () => {
               break;
             }
             case 'PLAY_FAILED': {
-              notyf.info({
-                message: i18next.t('_COPYRIGHT_ISSUE'),
-                replaceMessage: true,
-              });
+              notyf.info(i18next.t('_COPYRIGHT_ISSUE'));
               break;
             }
 
