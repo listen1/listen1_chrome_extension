@@ -93,6 +93,9 @@ const main = () => {
         type: 'info',
         message: msg,
       });
+      axios.get('/images/feather-sprite.svg').then((res) => {
+        document.getElementById('feather-container').innerHTML = res.data;
+      });
     },
   ]);
 
