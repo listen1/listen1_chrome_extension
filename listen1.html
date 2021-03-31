@@ -280,6 +280,23 @@
                       <h2>{{ backup.id }} {{backup.description}}</h2>
                     </li>
                   </ul>
+                  <div class="" ng-show="dialog_type==='diagnostic'">
+                    <ul>
+                      <strong></strong>
+                      <li><strong>Player:</strong></li>
+                      <li>Track: {{dg_trackid}}</li>
+                      <li>Source: {{dg_src}}</li>
+                      <li>Ready State: {{dg_ready}}</li>
+                      <li>Network State: {{dg_network}}</li>
+                      <li>Error: {{dg_error}}</li>
+                      <br>
+                      <li><strong>Network:</strong></li>
+                      <li>GeoIP 1: {{geoip1}}</li>
+                      <li>GeoIP 2: {{geoip2}}</li>
+                      <li>GeoIP 3: {{geoip3}}</li>
+                      <li>GeoIP 4: {{geoip4}}</li>
+                    </ul>
+                  </div>
                 </div>
               </div>
 
@@ -1144,6 +1161,33 @@
                           </div>
 
                           <div class="settings-title">
+                            <span>Diagnostic Tool</span>
+                          </div>
+                          <div class="settings-content">
+                            <div class="shortcut">
+                              <svg
+                                class="feather"
+                                ng-show="!diagnosticEnabled"
+                                ng-click="setDiagnosticEnabled(true)"
+                              >
+                                <use
+                                  href="images/feather-sprite.svg#square"
+                                ></use>
+                              </svg>
+                              <svg
+                                class="feather"
+                                ng-show="diagnosticEnabled"
+                                ng-click="setDiagnosticEnabled(false)"
+                              >
+                                <use
+                                  href="images/feather-sprite.svg#check-square"
+                                ></use>
+                              </svg>
+                              Enabled
+                            </div>
+                          </div>
+
+                          <div class="settings-title">
                             <span>{{_ABOUT}}</span>
                           </div>
                           <div class="settings-content">
@@ -1684,6 +1728,11 @@
                     >
                       词
                     </div>
+                  </div>
+                  <div>
+                    <svg class="feather" ng-click="showDialog('diagnostic')" ng-if="diagnosticEnabled">
+                      <use href="/images/feather-sprite.svg#activity"></use>
+                    </svg>
                   </div>
                 </div>
                 <div

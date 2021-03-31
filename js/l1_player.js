@@ -123,6 +123,9 @@
       if (!l1Player.status.playlist) return null;
       return l1Player.status.playlist.find((track) => track.id === id);
     },
+    getPlayer() {
+      return myPlayer;
+    },
     connectPlayer() {
       getPlayerAsync(mode, (player) => {
         if (!player.playing) {
