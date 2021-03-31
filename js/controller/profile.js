@@ -1,5 +1,5 @@
 /* eslint-disable no-param-reassign */
-/* global angular i18next sourceList */
+/* global angular i18next sourceList platformSourceList */
 angular.module('listenone').controller('ProfileController', [
   '$scope',
   ($scope) => {
@@ -20,6 +20,9 @@ angular.module('listenone').controller('ProfileController', [
             $scope[key] = t(key);
           });
           sourceList.forEach((item) => {
+            item.displayText = t(item.displayId);
+          });
+          platformSourceList.forEach((item) => {
             item.displayText = t(item.displayId);
           });
         });
