@@ -8,8 +8,8 @@ angular.module('listenone').controller('PlayListController', [
     $scope.result = [];
     $scope.tab = sourceList[0].name;
     $scope.sourceList = sourceList;
-    $scope.playlistFilters = [];
-    $scope.allPlaylistFilters = [];
+    $scope.playlistFilters = {};
+    $scope.allPlaylistFilters = {};
     $scope.currentFilterId = '';
     $scope.loading = true;
     $scope.showMore = false;
@@ -41,17 +41,22 @@ angular.module('listenone').controller('PlayListController', [
         $scope.result = res.result;
         $scope.loading = false;
       });
-      MediaService.getPlaylistFilters($scope.tab).success((res) => {
-        $scope.playlistFilters = res.recommend;
-        $scope.allPlaylistFilters = res.all;
-      });
+
+      if (
+        $scope.playlistFilters[$scope.tab] === undefined &&
+        $scope.allPlaylistFilters[$scope.tab] === undefined
+      ) {
+        MediaService.getPlaylistFilters($scope.tab).success((res) => {
+          $scope.playlistFilters[$scope.tab] = res.recommend;
+          $scope.allPlaylistFilters[$scope.tab] = res.all;
+        });
+      }
     };
 
     $scope.changeTab = (newTab) => {
       $scope.tab = newTab;
       $scope.result = [];
       $scope.currentFilterId = '';
-      $scope.playlistFilters = [];
       $scope.loadPlaylist();
     };
 

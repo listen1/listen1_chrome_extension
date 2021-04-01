@@ -451,7 +451,7 @@
                       <div class="playlist-filter">
                         <div
                           class="l1-button filter-item"
-                          ng-repeat="filter in playlistFilters"
+                          ng-repeat="filter in playlistFilters[tab] || []"
                           ng-click="changeFilter(filter.id)"
                           ng-class="{'active':filter.id === currentFilterId}"
                         >
@@ -459,7 +459,7 @@
                         </div>
                         <div
                           class="l1-button filter-item"
-                          ng-show="playlistFilters.length > 0"
+                          ng-show="playlistFilters[tab] && playlistFilters[tab].length > 0"
                           ng-click="toggleMorePlaylists()"
                         >
                           更多...
@@ -467,7 +467,7 @@
                       </div>
                       <div class="all-playlist-filter" ng-show="showMore">
                         <div
-                          ng-repeat="category in allPlaylistFilters"
+                          ng-repeat="category in allPlaylistFilters[tab] || []"
                           class="category"
                         >
                           <div class="category-title">
