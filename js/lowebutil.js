@@ -47,9 +47,11 @@ function cookieRemove(cookie, callback) {
     });
   }
   const remote = require('electron').remote; // eslint-disable-line
-  remote.session.defaultSession.cookies.remove(cookie).then((arg1, arg2) => {
-    callback(null, arg1, arg2);
-  });
+  remote.session.defaultSession.cookies
+    .remove(cookie.url, cookie.name)
+    .then((arg1, arg2) => {
+      callback(null, arg1, arg2);
+    });
 }
 
 function setPrototypeOfLocalStorage() {
