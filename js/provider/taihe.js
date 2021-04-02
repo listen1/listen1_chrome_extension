@@ -35,13 +35,29 @@ function build_taihe() {
       source: 'taihe',
       source_url: `https://music.taihe.com/song/${song.id}`,
       img_url: song.pic,
-      lyric_url: song.lyric,
+      lyric_url: song.lyric || '',
     };
     if (song.artist && song.artist.length) {
       track.artist = song.artist[0].name;
-      track.artist_id = song.artist[0].artistCode;
+      track.artist_id = `thartist_${song.artist[0].artistCode}`;
     }
     return track;
+  }
+
+  function th_render_tracks(url, page, callback) {
+    const list_id = getParameterByName('list_id', url).split('_').pop();
+    axiosTH
+      .get('/tracklist/info', {
+        params: {
+          id: list_id,
+          pageNo: page,
+          pageSize: 100,
+        },
+      }).then((response) => {
+        const data = response.data.data.trackList;
+        const tracks = data.map(th_convert_song);
+        return callback(null, tracks);
+      });
   }
 
   function th_search(url) {
@@ -111,11 +127,19 @@ function build_taihe() {
               source_url: `https://music.taihe.com/songlist/${list_id}`,
             };
 
-            const tracks = data.trackList.map(th_convert_song);
-            return fn({
-              tracks,
-              info,
-            });
+            const total = data.trackCount;
+            const page = Math.ceil(total / 100);
+            const page_array = Array.from({ length: page }, (v, k) => k + 1);
+            async.concat(
+              page_array,
+              (item, callback) => th_render_tracks(url, item, callback),
+              (err, tracks) => {
+                fn({
+                  tracks,
+                  info,
+                });
+              }
+            );
           });
       },
     };
@@ -126,34 +150,33 @@ function build_taihe() {
     return {
       success(fn) {
         const artist_id = getParameterByName('list_id', url).split('_').pop();
-        Promise.all([
-          axiosTH.get('/artist/info', {
+        axiosTH
+          .get('/artist/info', {
             params: {
               artistCode: artist_id,
             },
-          }),
-          axiosTH.get('/artist/song', {
-            params: {
-              artistCode: artist_id,
-              pageSize: 50,
-            },
-          }),
-        ]).then((infoRes, songsRes) => {
-          const infoData = infoRes.data.data;
-          const songData = songsRes.data.data;
-          const info = {
-            cover_img_url: infoData.pic,
-            title: infoData.name,
-            id: `thartist_${artist_id}`,
-            source_url: `https://music.taihe.com/artist/${artist_id}`,
-          };
-
-          const tracks = songData.result.map(th_convert_song);
-          return fn({
-            tracks,
-            info,
+          }).then((response) => {
+            const info = {
+              cover_img_url: response.data.data.pic,
+              title: response.data.data.name,
+              id: `thartist_${artist_id}`,
+              source_url: `https://music.taihe.com/artist/${artist_id}`,
+            };
+            axiosTH
+              .get('/artist/song', {
+                params: {
+                  artistCode: artist_id,
+                  pageNo: 1,
+                  pageSize: 50,
+                },
+              }).then((res) => {
+                const tracks = res.data.data.result.map(th_convert_song);
+                return fn({
+                  tracks,
+                  info,
+                });
+              });
           });
-        });
       },
     };
   }
@@ -183,23 +206,27 @@ function build_taihe() {
 
   function th_lyric(url) {
     // eslint-disable-line no-unused-vars
-    const track_id = getParameterByName('track_id', url).split('_').pop();
+    const lyric_url = getParameterByName('lyric_url', url);
 
     return {
       success(fn) {
-        axiosTH
-          .get('/song/tracklink', {
-            params: {
-              TSID: track_id,
-            },
-          })
-          .then((response) => {
-            axios.get(response.data.data.lyric).then((res) =>
-              fn({
+        if (lyric_url) {
+          axios.get(lyric_url).then((response) => fn({
+            lyric: response.data,
+          }));
+        } else {
+          const track_id = getParameterByName('track_id', url).split('_').pop();
+          axiosTH
+            .get('/song/tracklink', {
+              params: {
+                TSID: track_id,
+              }
+            }).then((response) => {
+              axios.get(response.data.data.lyric).then((res) => fn({
                 lyric: res.data,
-              })
-            );
-          });
+              }));
+            });
+        }
       },
     };
   }
@@ -210,33 +237,36 @@ function build_taihe() {
       success(fn) {
         const album_id = getParameterByName('list_id', url).split('_').pop();
 
-        Promise.all([
-          axiosTH.get('/album/info', {
+        axiosTH
+          .get('/album/info', {
             params: {
               albumAssetCode: album_id,
-            },
-          }),
-          axiosTH.get('/album/song', {
-            params: {
-              albumAssetCode: album_id,
-              pageNo: 50,
-            },
-          }),
-        ]).then(([infoRes, songRes]) => {
-          const infoData = infoRes.data.data;
-          const songData = songRes.data.data;
-          const info = {
-            cover_img_url: infoData.pic,
-            title: infoData.title,
-            id: `thalbum_${album_id}`,
-            source_url: `https://music.taihe.com/ablum/${album_id}`,
-          };
+            }
+          }).then((response) => {
+            const { data } = response.data;
+            const info = {
+              cover_img_url: data.pic,
+              title: data.title,
+              id: `thalbum_${album_id}`,
+              source_url: `https://music.taihe.com/album/${album_id}`,
+            };
 
-          const tracks = songData.result.map(th_convert_song);
-          return fn({
-            tracks,
-            info,
-          });
+            const tracks = data.trackList.map((song) => ({
+              id: `thtrack_${song.assetId}`,
+              title: song.title,
+              artist: song.artist ? song.artist[0].name : '',
+              artist_id: song.artist ? `thartist_${song.artist[0].artistCode}` : 'thartist_',
+              album: info.title,
+              album_id: `thalbum_${album_id}`,
+              source: 'taihe',
+              source_url: `https://music.taihe.com/song/${song.assetId}`,
+              img_url: info.cover_img_url,
+              lyric_url: '',
+            }));
+            return fn({
+              tracks,
+              info,
+            });
         });
       },
     };
@@ -251,15 +281,15 @@ function build_taihe() {
         axiosTH
           .get('/tracklist/list', {
             params: {
-              pageNo: offset,
-              pageSize: 50,
+              pageNo: offset / 25 + 1,
+              pageSize: 25,
               subCateId: subCate,
             },
           })
           .then((response) => {
-            const { data } = response;
+            const { data } = response.data;
 
-            const playlists = data.data.result.map((item) => ({
+            const result = data.result.map((item) => ({
               cover_img_url: item.pic,
               title: item.title,
               id: `thplaylist_${item.id}`,
@@ -267,7 +297,7 @@ function build_taihe() {
             }));
 
             return fn({
-              result: playlists,
+              result,
             });
           });
       },
@@ -275,7 +305,32 @@ function build_taihe() {
   }
 
   function th_parse_url(url) {
-    return undefined;
+    let result;
+    let id = '';
+    let match = /\/\/music.taihe.com\/([a-z]+)\//.exec(url);
+    if (match) {
+      switch (match[1]) {
+        case 'songlist':
+          match = /\/\/music.taihe.com\/songlist\/([0-9]+)/.exec(url);
+          id = match ? `thplaylist_${match[1]}` : '';
+          break;
+        case 'artist':
+          match = /\/\/music.taihe.com\/artist\/(A[0-9]+)/.exec(url);
+          id = match ? `thartist_${match[1]}` : '';
+          break;
+        case 'album':
+          match = /\/\/music.taihe.com\/album\/(P[0-9]+)/.exec(url);
+          id = match ? `thalbum_${match[1]}` : '';
+          break;
+        default:
+          break;
+      }
+      result = {
+        type: 'playlist',
+        id,
+      };
+    }
+    return result;
   }
 
   function get_playlist(url) {
