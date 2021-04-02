@@ -286,10 +286,10 @@ angular.module('listenone').controller('PlayController', [
     $scope.changingProgress = false;
 
     $scope.copyrightNotice = () => {
-      notyf.info(i18next.t('_COPYRIGHT_ISSUE'));
+      notyf.info(i18next.t('_COPYRIGHT_ISSUE'), true);
     };
     $scope.failAllNotice = () => {
-      notyf.warning(i18next.t('_FAIL_ALL_NOTICE'));
+      notyf.warning(i18next.t('_FAIL_ALL_NOTICE'), true);
     };
     $rootScope.$on('track:myprogress', (event, data) => {
       $scope.$evalAsync(() => {
@@ -420,7 +420,7 @@ angular.module('listenone').controller('PlayController', [
             break;
           }
           case 'PLAY_FAILED': {
-            notyf.info(i18next.t('_COPYRIGHT_ISSUE'));
+            notyf.info(i18next.t('_COPYRIGHT_ISSUE'), true);
             break;
           }
 

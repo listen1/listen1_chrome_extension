@@ -82,16 +82,24 @@ const main = () => {
           },
         ],
       });
-      window.notyf.warning = (msg) =>
+      window.notyf.warning = (msg, replace) => {
+        if (replace) {
+          notyf.dismissAll();
+        }
         window.notyf.open({
           type: 'warning',
           message: msg,
         });
-      window.notyf.info = (msg) =>
+      };
+      window.notyf.info = (msg, replace) => {
+        if (replace) {
+          notyf.dismissAll();
+        }
         window.notyf.open({
           type: 'info',
           message: msg,
         });
+      };
       axios.get('/images/feather-sprite.svg').then((res) => {
         document.getElementById('feather-container').innerHTML = res.data;
       });
