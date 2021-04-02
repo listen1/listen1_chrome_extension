@@ -15,7 +15,7 @@ angular.module('listenone').controller('ProfileController', [
     $scope.setLang = (langKey) => {
       // You can change the language during runtime
       i18next.changeLanguage(langKey).then((t) => {
-        axios.get('./i18n/zh-CN.json').then((res) => {
+        axios.get('i18n/zh-CN.json').then((res) => {
           Object.keys(res.data).forEach((key) => {
             $scope[key] = t(key);
           });

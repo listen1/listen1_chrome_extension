@@ -365,7 +365,7 @@ i18next.use(i18nextHttpBackend).init({
   preload: ['zh-CN', 'zh-TC', 'en-US', 'fr-FR'],
   debug: false,
   backend: {
-    loadPath: '/i18n/{{lng}}.json',
+    loadPath: 'i18n/{{lng}}.json',
   },
 });
 
