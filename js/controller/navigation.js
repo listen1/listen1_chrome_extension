@@ -3,15 +3,14 @@
 /* eslint-disable no-shadow */
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-param-reassign */
-/* global angular notyf i18next MediaService l1Player hotkeys isElectron require GithubClient */
+/* global angular notyf i18next MediaService l1Player hotkeys isElectron require GithubClient lastfm */
 
 // control main view of page, it can be called any place
 angular.module('listenone').controller('NavigationController', [
   '$scope',
   '$timeout',
   '$rootScope',
-  'lastfm',
-  ($scope, $timeout, $rootScope, lastfm) => {
+  ($scope, $timeout, $rootScope) => {
     $rootScope.page_title = { title: 'Listen 1', artist: '', status: '' }; // eslint-disable-line no-param-reassign
     $scope.window_url_stack = [];
     $scope.window_poped_url_stack = [];

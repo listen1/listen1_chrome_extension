@@ -40,7 +40,7 @@ const sourceList = [
 ];
 
 const main = () => {
-  const app = angular.module('listenone', ['lastfmClient']);
+  const app = angular.module('listenone', []);
   setPrototypeOfLocalStorage();
   app.config([
     '$compileProvider',
@@ -50,13 +50,6 @@ const main = () => {
       );
     },
   ]);
-
-  app.config((lastfmProvider) => {
-    lastfmProvider.setOptions({
-      apiKey: '6790c00a181128dc7c4ce06cd99d17c8',
-      apiSecret: 'd68f1dfc6ff43044c96a79ae7dfb5c27',
-    });
-  });
 
   app.run([
     '$q',
