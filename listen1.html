@@ -81,7 +81,7 @@
       ng-controller="PlayController as playCtrl"
       ng-init="loadLocalSettings()"
     >
-      <div ng-controller="AuthController">
+      <div ng-controller="AuthController" ng-init="refreshAuthStatus()">
         <div ng-controller="ProfileController">
           <div ng-controller="NavigationController">
             <div class="wrap">
@@ -290,6 +290,23 @@
                       <h2>{{ backup.id }} {{backup.description}}</h2>
                     </li>
                   </ul>
+                  <div class="dialog-open-login" ng-show="dialog_type==11">
+                    <p>{{_LOGIN_DIALOG_NOTICE}}</p>
+                    <div class="buttons">
+                      <button
+                        class="btn btn-primary confirm-button"
+                        ng-click="closeDialog();refreshAuthStatus();"
+                      >
+                        {{_LOGIN_SUCCESS}}
+                      </button>
+                      <button
+                        class="btn btn-warning warning-button"
+                        ng-click="openLogin(dialog_data);"
+                      >
+                        {{_LOGIN_FAIL_RETRY}}
+                      </button>
+                    </div>
+                  </div>
                 </div>
               </div>
 
@@ -1296,87 +1313,40 @@
                       class="page"
                       ng-show="current_tag==5 && is_window_hidden==1"
                     >
-                      <div class="login" ng-show="is_login('netease')">
-                        <div class="usercard">
-                          <img ng-src="{{musicAuth.netease.avatar}}" />
-                          <div class="usercard-title">
-                            {{musicAuth.netease.nickname}}
+                      <div class="login">
+                        <div ng-repeat="source in loginSourceList">
+                          <div ng-show="is_login(source)">
+                            <div class="usercard">
+                              <img ng-src="{{musicAuth[source].avatar}}" />
+                              <div class="usercard-title">
+                                <div class="usercard-nickname">
+                                  {{musicAuth[source].nickname}}
+                                </div>
+                                <div class="usercard-info">{{source}}</div>
+                              </div>
+                              <button ng-click="logout(source)">
+                                {{_LOGOUT}}
+                              </button>
+                            </div>
                           </div>
-                          <button ng-click="logout('netease')">
-                            {{_LOGOUT}}
-                          </button>
-                        </div>
-                      </div>
-                      <div class="login" ng-show="!is_login('netease')">
-                        <div class="login-logo">
-                          <img src="images/netease-logo.png" />
-                        </div>
-                        <div class="login-title">{{_LOGIN_NETEASE}}</div>
-                        <div class="login-form">
-                          <div
-                            class="login-form_field"
-                            ng-show="loginType==='email'"
-                          >
-                            <svg class="feather">
-                              <use href="#mail"></use>
-                            </svg>
-                            <input
-                              placeholder="{{ _EMAIL }}"
-                              id="login-email"
-                            />
+                          <div ng-show="!is_login(source)">
+                            <div class="usercard">
+                              <img src="/images/placeholder.png" />
+
+                              <div class="usercard-title">
+                                <div class="usercard-nickname">
+                                  {{_NOT_LOGIN_NICKNAME}}
+                                </div>
+                                <div class="usercard-info">{{source}}</div>
+                              </div>
+
+                              <button
+                                ng-click=" openLogin(source);showDialog(11, source);"
+                              >
+                                {{_LOGIN}}
+                              </button>
+                            </div>
                           </div>
-                          <div
-                            class="login-form_field"
-                            ng-show="loginType==='phone'"
-                          >
-                            <svg class="feather">
-                              <use href="#smartphone"></use>
-                            </svg>
-                            <input
-                              id="login-countrycode"
-                              class="login-form_field_countrycode"
-                            />
-                            <input
-                              placeholder="{{ _MOBILE_PHONE }}"
-                              id="login-phone"
-                            />
-                          </div>
-                          <div class="login-form_field">
-                            <svg class="feather">
-                              <use href="#lock"></use>
-                            </svg>
-                            <input
-                              placeholder="{{ _PASSWORD }}"
-                              type="password"
-                              id="login-password"
-                            />
-                          </div>
-                        </div>
-                        <div class="login-submit">
-                          <button
-                            ng-show="!loginProgress"
-                            class="login-submit_button"
-                            ng-click="login('netease')"
-                          >
-                            {{_LOGIN}}
-                          </button>
-                        </div>
-                        <div
-                          class="login-switcher"
-                          ng-show="loginType==='email'"
-                          ng-click="setLoginType('phone')"
-                        >
-                          {{_LOGIN_BY_MOBILE_PHONE}}
-                        </div>
-                        <div
-                          class="login-switcher"
-                          ng-show="loginType==='phone'"
-                          ng-click="setLoginType('email')"
-                        >
-                          {{_LOGIN_BY_EMAIL}}
-                        </div>
-                        <div class="login-notice">
-                          {{ _LISTEN1_LOGIN_NOTICE }}
                         </div>
                       </div>
                     </div>

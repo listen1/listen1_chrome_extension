@@ -40,6 +40,17 @@ function cookieSet(cookie, callback) {
     callback(null, arg1, arg2);
   });
 }
+function cookieRemove(cookie, callback) {
+  if (!isElectron()) {
+    return chrome.cookies.remove(cookie, (arg1, arg2) => {
+      callback(arg1, arg2);
+    });
+  }
+  const remote = require('electron').remote; // eslint-disable-line
+  remote.session.defaultSession.cookies.remove(cookie).then((arg1, arg2) => {
+    callback(null, arg1, arg2);
+  });
+}
 
 function setPrototypeOfLocalStorage() {
   const proto = Object.getPrototypeOf(localStorage);

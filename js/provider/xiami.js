@@ -128,6 +128,18 @@ function build_xiami() {
     };
   }
 
+  function xm_get_user() {
+    return {
+      success: (fn) => {
+        fn({ status: 'fail', data: {} });
+      },
+    };
+  }
+  function xm_get_login_url() {
+    return `https://www.xiami.com`;
+  }
+  function xm_logout() {}
+
   return {
     show_playlist: xm_show_playlist,
     get_playlist_filters,
@@ -136,6 +148,9 @@ function build_xiami() {
     bootstrap_track: xm_bootstrap_track,
     search: xm_search,
     lyric: xm_lyric,
+    get_user: xm_get_user,
+    get_login_url: xm_get_login_url,
+    logout: xm_logout,
   };
 }
 

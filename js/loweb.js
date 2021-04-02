@@ -1,10 +1,12 @@
 /* global async LRUCache setPrototypeOfLocalStorage */
 /* global netease xiami qq kugou kuwo bilibili migu taihe localmusic myplaylist */
+
 const PROVIDERS = [
   {
     name: 'netease',
     instance: netease,
     searchable: true,
+    support_login: true,
     id: 'ne',
   },
   {
@@ -12,42 +14,49 @@ const PROVIDERS = [
     instance: xiami,
     searchable: false,
     hidden: true,
+    support_login: false,
     id: 'xm',
   },
   {
     name: 'qq',
     instance: qq,
     searchable: true,
+    support_login: false,
     id: 'qq',
   },
   {
     name: 'kugou',
     instance: kugou,
     searchable: true,
+    support_login: false,
     id: 'kg',
   },
   {
     name: 'kuwo',
     instance: kuwo,
     searchable: true,
+    support_login: false,
     id: 'kw',
   },
   {
     name: 'bilibili',
     instance: bilibili,
     searchable: false,
+    support_login: false,
     id: 'bi',
   },
   {
     name: 'migu',
     instance: migu,
     searchable: true,
+    support_login: true,
     id: 'mg',
   },
   {
     name: 'taihe',
     instance: taihe,
     searchable: true,
+    support_login: false,
     id: 'th',
   },
   {
@@ -55,6 +64,7 @@ const PROVIDERS = [
     instance: localmusic,
     searchable: false,
     hidden: true,
+    support_login: false,
     id: 'lm',
   },
   {
@@ -62,6 +72,7 @@ const PROVIDERS = [
     instance: myplaylist,
     searchable: false,
     hidden: true,
+    support_login: false,
     id: 'my',
   },
 ];
@@ -98,6 +109,9 @@ setPrototypeOfLocalStorage();
 
 // eslint-disable-next-line no-unused-vars
 const MediaService = {
+  getLoginProviders() {
+    return PROVIDERS.filter((i) => !i.hidden && i.support_login);
+  },
   search(source, options) {
     const url = `/search?${queryStringify(options)}`;
     if (source === 'allmusic') {
@@ -340,11 +354,20 @@ const MediaService = {
 
     provider.bootstrap_track(track, successCallback, failureCallback);
   },
+
   login(source, options) {
     const url = `/login?${queryStringify(options)}`;
     const provider = getProviderByName(source);
 
     return provider.login(url);
+  },
+  getUser(source) {
+    const provider = getProviderByName(source);
+    return provider.get_user();
+  },
+  getLoginUrl(source) {
+    const provider = getProviderByName(source);
+    return provider.get_login_url();
   },
   getUserPlaylist(source, options) {
     const provider = getProviderByName(source);
@@ -356,6 +379,11 @@ const MediaService = {
     const provider = getProviderByName(source);
 
     return provider.get_recommend_playlist();
+  },
+  logout(source) {
+    const provider = getProviderByName(source);
+
+    return provider.logout();
   },
 };
 

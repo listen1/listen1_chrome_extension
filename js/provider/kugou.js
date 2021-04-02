@@ -459,6 +459,17 @@ function build_kugou() {
       },
     };
   }
+  function kg_get_user() {
+    return {
+      success: (fn) => {
+        fn({ status: 'fail', data: {} });
+      },
+    };
+  }
+  function kg_get_login_url() {
+    return `https://www.kugou.com`;
+  }
+  function kg_logout() {}
 
   return {
     show_playlist: kg_show_playlist,
@@ -468,6 +479,9 @@ function build_kugou() {
     bootstrap_track: kg_bootstrap_track,
     search: kg_search,
     lyric: kg_lyric,
+    get_user: kg_get_user,
+    get_login_url: kg_get_login_url,
+    logout: kg_logout,
   };
 }
 

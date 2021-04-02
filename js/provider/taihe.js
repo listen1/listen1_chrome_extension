@@ -53,7 +53,8 @@ function build_taihe() {
           pageNo: page,
           pageSize: 100,
         },
-      }).then((response) => {
+      })
+      .then((response) => {
         const data = response.data.data.trackList;
         const tracks = data.map(th_convert_song);
         return callback(null, tracks);
@@ -155,7 +156,8 @@ function build_taihe() {
             params: {
               artistCode: artist_id,
             },
-          }).then((response) => {
+          })
+          .then((response) => {
             const info = {
               cover_img_url: response.data.data.pic,
               title: response.data.data.name,
@@ -169,7 +171,8 @@ function build_taihe() {
                   pageNo: 1,
                   pageSize: 50,
                 },
-              }).then((res) => {
+              })
+              .then((res) => {
                 const tracks = res.data.data.result.map(th_convert_song);
                 return fn({
                   tracks,
@@ -211,20 +214,25 @@ function build_taihe() {
     return {
       success(fn) {
         if (lyric_url) {
-          axios.get(lyric_url).then((response) => fn({
-            lyric: response.data,
-          }));
+          axios.get(lyric_url).then((response) =>
+            fn({
+              lyric: response.data,
+            })
+          );
         } else {
           const track_id = getParameterByName('track_id', url).split('_').pop();
           axiosTH
             .get('/song/tracklink', {
               params: {
                 TSID: track_id,
-              }
-            }).then((response) => {
-              axios.get(response.data.data.lyric).then((res) => fn({
-                lyric: res.data,
-              }));
+              },
+            })
+            .then((response) => {
+              axios.get(response.data.data.lyric).then((res) =>
+                fn({
+                  lyric: res.data,
+                })
+              );
             });
         }
       },
@@ -241,8 +249,9 @@ function build_taihe() {
           .get('/album/info', {
             params: {
               albumAssetCode: album_id,
-            }
-          }).then((response) => {
+            },
+          })
+          .then((response) => {
             const { data } = response.data;
             const info = {
               cover_img_url: data.pic,
@@ -255,7 +264,9 @@ function build_taihe() {
               id: `thtrack_${song.assetId}`,
               title: song.title,
               artist: song.artist ? song.artist[0].name : '',
-              artist_id: song.artist ? `thartist_${song.artist[0].artistCode}` : 'thartist_',
+              artist_id: song.artist
+                ? `thartist_${song.artist[0].artistCode}`
+                : 'thartist_',
               album: info.title,
               album_id: `thalbum_${album_id}`,
               source: 'taihe',
@@ -267,7 +278,7 @@ function build_taihe() {
               tracks,
               info,
             });
-        });
+          });
       },
     };
   }
@@ -367,6 +378,18 @@ function build_taihe() {
     };
   }
 
+  function th_get_user() {
+    return {
+      success: (fn) => {
+        fn({ status: 'fail', data: {} });
+      },
+    };
+  }
+  function th_get_login_url() {
+    return `https://music.taihe.com`;
+  }
+  function th_logout() {}
+
   return {
     show_playlist: th_show_playlist,
     get_playlist_filters,
@@ -375,6 +398,9 @@ function build_taihe() {
     bootstrap_track: th_bootstrap_track,
     search: th_search,
     lyric: th_lyric,
+    get_user: th_get_user,
+    get_login_url: th_get_login_url,
+    logout: th_logout,
   };
 }
 
