@@ -40,7 +40,7 @@ const sourceList = [
 ];
 
 const main = () => {
-  const app = angular.module('listenone', ['lastfmClient', 'githubClient']);
+  const app = angular.module('listenone', ['lastfmClient']);
   setPrototypeOfLocalStorage();
   app.config([
     '$compileProvider',

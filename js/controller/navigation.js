@@ -3,7 +3,7 @@
 /* eslint-disable no-shadow */
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-param-reassign */
-/* global angular notyf i18next MediaService l1Player hotkeys isElectron require */
+/* global angular notyf i18next MediaService l1Player hotkeys isElectron require GithubClient */
 
 // control main view of page, it can be called any place
 angular.module('listenone').controller('NavigationController', [
@@ -11,9 +11,7 @@ angular.module('listenone').controller('NavigationController', [
   '$timeout',
   '$rootScope',
   'lastfm',
-  'github',
-  'gist',
-  ($scope, $timeout, $rootScope, lastfm, github, gist) => {
+  ($scope, $timeout, $rootScope, lastfm) => {
     $rootScope.page_title = { title: 'Listen 1', artist: '', status: '' }; // eslint-disable-line no-param-reassign
     $scope.window_url_stack = [];
     $scope.window_poped_url_stack = [];
@@ -31,7 +29,6 @@ angular.module('listenone').controller('NavigationController', [
     $scope.isDoubanLogin = false;
 
     $scope.lastfm = lastfm;
-    $scope.github = github;
 
     $scope.$on('isdoubanlogin:update', (event, data) => {
       $scope.isDoubanLogin = data;
@@ -245,7 +242,7 @@ angular.module('listenone').controller('NavigationController', [
       if (dialog_type === 8) {
         $scope.dialog_title = i18next.t('_EXPORT_TO_GITHUB_GIST');
         $scope.dialog_type = 8;
-        gist.listExistBackup().then(
+        GithubClient.gist.listExistBackup().then(
           (res) => {
             $scope.myBackup = res;
           },
@@ -257,7 +254,7 @@ angular.module('listenone').controller('NavigationController', [
       if (dialog_type === 10) {
         $scope.dialog_title = i18next.t('_RECOVER_FROM_GITHUB_GIST');
         $scope.dialog_type = 10;
-        gist.listExistBackup().then(
+        GithubClient.gist.listExistBackup().then(
           (res) => {
             $scope.myBackup = res;
           },
@@ -451,9 +448,9 @@ angular.module('listenone').controller('NavigationController', [
           items[key] = localStorage.getObject(key);
         }
       });
-      const gistFiles = gist.json2gist(items);
+      const gistFiles = GithubClient.gist.json2gist(items);
       $scope.gistBackupLoading = true;
-      gist.backupMySettings2Gist(gistFiles, gistId, isPublic).then(
+      GithubClient.gist.backupMySettings2Gist(gistFiles, gistId, isPublic).then(
         () => {
           notyf.dismissAll();
           notyf.success('成功导出我的歌单到Gist');
@@ -471,9 +468,9 @@ angular.module('listenone').controller('NavigationController', [
     $scope.gistRestoreLoading = false;
     $scope.importMySettingsFromGist = (gistId) => {
       $scope.gistRestoreLoading = true;
-      gist.importMySettingsFromGist(gistId).then(
+      GithubClient.gist.importMySettingsFromGist(gistId).then(
         (raw) => {
-          gist.gist2json(raw, (data) => {
+          GithubClient.gist.gist2json(raw, (data) => {
             Object.keys(data).forEach((item) =>
               localStorage.setObject(item, data[item])
             );

@@ -2,7 +2,7 @@
 /* eslint-disable no-shadow */
 /* eslint-disable import/no-unresolved */
 /* eslint-disable global-require */
-/* global angular notyf i18next MediaService l1Player hotkeys isElectron require getLocalStorageValue getPlayer getPlayerAsync addPlayerListener smoothScrollTo */
+/* global angular notyf i18next MediaService l1Player hotkeys GithubClient isElectron require getLocalStorageValue getPlayer getPlayerAsync addPlayerListener smoothScrollTo */
 
 function getCSSStringFromSetting(setting) {
   return `div.content.lyric-content{
@@ -263,11 +263,13 @@ angular.module('listenone').controller('PlayController', [
       $scope.saveLocalSettings();
     };
 
-    $scope.$on('github:status', (event, data) => {
-      $scope.$evalAsync(() => {
-        $scope.githubStatus = data;
+    $rootScope.updateGithubStatus = () => {
+      GithubClient.github.updateStatus((data) => {
+        $scope.$evalAsync(() => {
+          $scope.githubStatus = data;
+        });
       });
-    });
+    };
 
     $scope.togglePlaylist = () => {
       const anchor = `song${l1Player.status.playing.id}`;

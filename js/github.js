@@ -1,41 +1,37 @@
-/* global angular Github isElectron require */
+/* global Github isElectron require */
 /* eslint-disable global-require */
-const ngGithub = angular.module('githubClient', []);
-ngGithub.factory('github', [
-  '$rootScope',
-  ($rootScope) => ({
-    openAuthUrl: () => {
-      const url = Github.getOAuthUrl();
-      if (isElectron()) {
-        // normal window for link
-        const { BrowserWindow } = require('electron').remote; // eslint-disable-line import/no-unresolved
-        let win = new BrowserWindow({
-          width: 1000,
-          height: 670,
-        });
-        win.on('closed', () => {
-          win = null;
-        });
-        win.loadURL(url);
-        return;
-      }
-      window.open(url, '_blank');
-    },
-    getStatusText: () => Github.getStatusText(),
-    getStatus: () => Github.getStatus(),
-    updateStatus: () => {
-      // console.log('github update status');
-      Github.updateStatus((newStatus) => {
-        $rootScope.$broadcast('github:status', newStatus);
-      });
-    },
-    logout: () => {
-      Github.logout();
-    },
-  }),
-]);
+const GithubClient = {};
 
-ngGithub.provider('gist', {
+GithubClient.github = {
+  openAuthUrl: () => {
+    const url = Github.getOAuthUrl();
+    if (isElectron()) {
+      // normal window for link
+      const { BrowserWindow } = require('electron').remote; // eslint-disable-line import/no-unresolved
+      let win = new BrowserWindow({
+        width: 1000,
+        height: 670,
+      });
+      win.on('closed', () => {
+        win = null;
+      });
+      win.loadURL(url);
+      return;
+    }
+    window.open(url, '_blank');
+  },
+  getStatusText: () => Github.getStatusText(),
+  getStatus: () => Github.getStatus(),
+  updateStatus: (cb) => {
+    // console.log('github update status');
+    Github.updateStatus(cb);
+  },
+  logout: () => {
+    Github.logout();
+  },
+};
+
+GithubClient.gist = {
   $get: () => {
     const apiUrl = 'https://api.github.com/gists';
 
@@ -155,4 +151,4 @@ ngGithub.provider('gist', {
     };
     return gistApi;
   },
-});
+};
