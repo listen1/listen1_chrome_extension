@@ -67,7 +67,7 @@
  "_CANCEL_CONNECT": "取消连接",
  "_SHORTCUTS": "快捷键",
  "_VIEW_SHORTCUTS_LIST": "查看快捷键列表",
- "_GLOBAL_SHORTCUTS_NOTICE": "启用全局快捷键: Ctrl(Cmd) + Alt + 左箭头 (上一首)，Ctrl(Cmd) + Alt + 右箭头 (下一首)，Ctrl(Cmd) + Alt + 空格 (播放/暂停)",
+ "_GLOBAL_SHORTCUTS_NOTICE": "启用全局快捷键",
  "_LYRIC_DISPLAY": "歌词显示",
  "_SHOW_DESKTOP_LYRIC": "启用桌面歌词",
  "_SHOW_LYRIC_TRANSLATION": "外文歌词显示翻译（播放页）",
@@ -138,5 +138,15 @@
  "_LOGIN_BY_EMAIL": "邮箱登录",
  "_MOBILE_PHONE": "手机号",
  "_MY_NETEASE": "我的网易云音乐",
- "_FAIL_ALL_NOTICE": "当前播放列表没有可播放的歌曲"
+ "_FAIL_ALL_NOTICE": "当前播放列表没有可播放的歌曲",
+ "_SHORTCUTS_FUNCTION": "功能说明",
+ "_GLOBAL_SHORTCUTS": "全局快捷键",
+ "_PLAY_OR_PAUSE": "播放/暂停",
+ "_PREVIOUS_TRACK": "上一首",
+ "_NEXT_TRACK": "下一首",
+ "_VOLUME_UP": "音量加",
+ "_VOLUME_DOWN": "音量减",
+ "_SHORTCUTS_NOT_SET": "空",
+ "_QUICK_SEARCH": "快速搜索",
+ "_KEYBOARD_SPACE": "空格"
 }

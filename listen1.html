@@ -1092,38 +1092,6 @@
                           </div>
 
                           <div class="settings-title">
-                            <span>{{_SHORTCUTS}}</span>
-                          </div>
-                          <div class="settings-content">
-                            <button
-                              class="btn btn-primary confirm-button"
-                              ng-click="showShortcuts()"
-                            >
-                              {{_VIEW_SHORTCUTS_LIST}}
-                            </button>
-                            <div
-                              class="shortcut"
-                              ng-if="!isChrome"
-                              class="btn btn-primary confirm-button"
-                            >
-                              <svg
-                                class="feather"
-                                ng-show="!enableGlobalShortCut"
-                                ng-click="applyGlobalShortcut(true)"
-                              >
-                                <use href="#square"></use>
-                              </svg>
-                              <svg
-                                class="feather"
-                                ng-show="enableGlobalShortCut"
-                                ng-click="applyGlobalShortcut(true)"
-                              >
-                                <use href="#check-square"></use>
-                              </svg>
-                              {{_GLOBAL_SHORTCUTS_NOTICE}}
-                            </div>
-                          </div>
-                          <div class="settings-title">
                             <span>{{_CONNECT_TO_LASTFM}}</span>
                           </div>
                           <div class="settings-content">
@@ -1152,7 +1120,147 @@
                               </button>
                             </div>
                           </div>
-
+                          <div class="settings-title">
+                            <span>{{_SHORTCUTS}}</span>
+                          </div>
+                          <div class="settings-content">
+                            <div class="shortcut_table">
+                              <div class="shortcut_table-header">
+                                <div class="shortcut_table-function">
+                                  {{_SHORTCUTS_FUNCTION}}
+                                </div>
+                                <div class="shortcut_table-key">
+                                  {{_SHORTCUTS}}
+                                </div>
+                                <div
+                                  ng-if="!isChrome"
+                                  class="shortcut_table-globalkey"
+                                >
+                                  {{_GLOBAL_SHORTCUTS}}
+                                </div>
+                              </div>
+                              <div class="shortcut_table-line">
+                                <div class="shortcut_table-function">
+                                  {{_PLAY_OR_PAUSE}}
+                                </div>
+                                <div class="shortcut_table-key">p</div>
+                                <div
+                                  ng-if="!isChrome"
+                                  class="shortcut_table-globalkey"
+                                >
+                                  Ctrl(Cmd) + Alt + {{_KEYBOARD_SPACE}}
+                                </div>
+                              </div>
+                              <div class="shortcut_table-line">
+                                <div class="shortcut_table-function">
+                                  {{_PREVIOUS_TRACK}}
+                                </div>
+                                <div class="shortcut_table-key">[</div>
+                                <div
+                                  ng-if="!isChrome"
+                                  class="shortcut_table-globalkey"
+                                >
+                                  Ctrl(Cmd) + Alt + ←
+                                </div>
+                              </div>
+                              <div class="shortcut_table-line">
+                                <div class="shortcut_table-function">
+                                  {{_NEXT_TRACK}}
+                                </div>
+                                <div class="shortcut_table-key">]</div>
+                                <div
+                                  ng-if="!isChrome"
+                                  class="shortcut_table-globalkey"
+                                >
+                                  Ctrl(Cmd) + Alt + →
+                                </div>
+                              </div>
+                              <div class="shortcut_table-line">
+                                <div class="shortcut_table-function">
+                                  {{_VOLUME_UP}}
+                                </div>
+                                <div class="shortcut_table-key">u</div>
+                                <div
+                                  ng-if="!isChrome"
+                                  class="shortcut_table-globalkey"
+                                >
+                                  {{_SHORTCUTS_NOT_SET}}
+                                </div>
+                              </div>
+                              <div class="shortcut_table-line">
+                                <div class="shortcut_table-function">
+                                  {{_VOLUME_DOWN}}
+                                </div>
+                                <div class="shortcut_table-key">d</div>
+                                <div
+                                  ng-if="!isChrome"
+                                  class="shortcut_table-globalkey"
+                                >
+                                  {{_SHORTCUTS_NOT_SET}}
+                                </div>
+                              </div>
+                              <!-- <div class="shortcut_table-line">
+                                <div class="shortcut_table-function">
+                                  静音/取消静音
+                                </div>
+                                <div class="shortcut_table-key">m</div>
+                                <div ng-if="!isChrome" class="shortcut_table-globalkey">
+                                  全局快捷键
+                                </div>
+                              </div> -->
+                              <div class="shortcut_table-line">
+                                <div class="shortcut_table-function">
+                                  {{_QUICK_SEARCH}}
+                                </div>
+                                <div class="shortcut_table-key">f</div>
+                                <div
+                                  ng-if="!isChrome"
+                                  class="shortcut_table-globalkey"
+                                >
+                                  {{_SHORTCUTS_NOT_SET}}
+                                </div>
+                              </div>
+                              <!-- <div class="shortcut_table-line">
+                                <div class="shortcut_table-function">
+                                  打开/关闭播放列表
+                                </div>
+                                <div class="shortcut_table-key">l</div>
+                                <div ng-if="!isChrome" class="shortcut_table-globalkey">
+                                  全局快捷键
+                                </div>
+                              </div>
+                              <div class="shortcut_table-line">
+                                <div class="shortcut_table-function">
+                                  切换播放模式
+                                </div>
+                                <div class="shortcut_table-key">s</div>
+                                <div ng-if="!isChrome" class="shortcut_table-globalkey">
+                                  全局快捷键
+                                </div>
+                              </div> -->
+                            </div>
+                            <div
+                              class="shortcut"
+                              ng-if="!isChrome"
+                              class="btn btn-primary confirm-button"
+                            >
+                              <svg
+                                class="feather"
+                                ng-show="!enableGlobalShortCut"
+                                ng-click="applyGlobalShortcut(true)"
+                              >
+                                <use href="#square"></use>
+                              </svg>
+                              <svg
+                                class="feather"
+                                ng-show="enableGlobalShortCut"
+                                ng-click="applyGlobalShortcut(true)"
+                              >
+                                <use href="#check-square"></use>
+                              </svg>
+                              {{_GLOBAL_SHORTCUTS_NOTICE}}
+                            </div>
+                          </div>
                           <div class="settings-title">
                             <span>{{_ABOUT}}</span>
                           </div>

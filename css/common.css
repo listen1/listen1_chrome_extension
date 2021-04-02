@@ -956,6 +956,57 @@ ul.detail-songlist li .tools .icon {
   text-align: center;
   padding: 15px;
 }
+.page .settings-content .shortcut_table .shortcut_table-header,
+.page .settings-content .shortcut_table .shortcut_table-line {
+  display: flex;
+  color: var(--text-default-color);
+  box-sizing: border-box;
+  align-items: center;
+  height: 40px;
+}
+.page .settings-content .shortcut_table .shortcut_table-header {
+  color: var(--link-default-color);
+  height: 30px;
+}
+.page .settings-content .shortcut_table .shortcut_table-function {
+  flex: 0 140px;
+  padding: 0 10px;
+  box-sizing: border-box;
+}
+.page .settings-content .shortcut_table .shortcut_table-key {
+  flex: 0 200px;
+  margin-right: 20px;
+  box-sizing: border-box;
+}
+.page .settings-content .shortcut_table .shortcut_table-globalkey {
+  flex: 0 240px;
+  box-sizing: border-box;
+}
+.page
+  .settings-content
+  .shortcut_table
+  .shortcut_table-line
+  .shortcut_table-key {
+  border: solid 1px var(--button-border-color);
+  border-radius: 5px;
+  padding: 0 10px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+}
+.page
+  .settings-content
+  .shortcut_table
+  .shortcut_table-line
+  .shortcut_table-globalkey {
+  border: solid 1px var(--button-border-color);
+  border-radius: 5px;
+  height: 30px;
+  padding: 0 10px;
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+}
 /* page setting end */
 
 .loading_bottom {

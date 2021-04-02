@@ -67,7 +67,7 @@
  "_CANCEL_CONNECT": "取消連結",
  "_SHORTCUTS": "快速鍵",
  "_VIEW_SHORTCUTS_LIST": "查看快速鍵列表",
- "_GLOBAL_SHORTCUTS_NOTICE": "啟用全域快速鍵: Ctrl(Cmd) + Alt + 左箭頭 (上一首)，Ctrl(Cmd) + Alt + 右箭頭 (下一首)，Ctrl(Cmd) + Alt + 空格 (播放/暫停)",
+ "_GLOBAL_SHORTCUTS_NOTICE": "啟用全域快速鍵",
  "_LYRIC_DISPLAY": "歌詞顯示",
  "_SHOW_DESKTOP_LYRIC": "啟用桌面歌詞",
  "_SHOW_LYRIC_TRANSLATION": "外文歌詞顯示翻譯（播放頁）",
@@ -137,5 +137,15 @@
  "_LOGIN_BY_EMAIL": "郵箱登錄",
  "_MOBILE_PHONE": "手機號",
  "_MY_NETEASE": "我的網易雲音樂",
- "_FAIL_ALL_NOTICE": "當前播放列表沒有可播放的歌曲"
+ "_FAIL_ALL_NOTICE": "當前播放列表沒有可播放的歌曲",
+ "_SHORTCUTS_FUNCTION": "功能說明",
+ "_GLOBAL_SHORTCUTS": "全局快捷鍵",
+ "_PLAY_OR_PAUSE": "播放/暫停",
+ "_PREVIOUS_TRACK": "上一首",
+ "_NEXT_TRACK": "下一首",
+ "_VOLUME_UP": "音量加",
+ "_VOLUME_DOWN": "音量減",
+ "_SHORTCUTS_NOT_SET": "空",
+ "_QUICK_SEARCH": "快速搜索",
+ "_KEYBOARD_SPACE": "空格"
 }

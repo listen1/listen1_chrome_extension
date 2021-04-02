@@ -67,7 +67,7 @@
  "_CANCEL_CONNECT": "Cancel Connect",
  "_SHORTCUTS": "Shortcuts",
  "_VIEW_SHORTCUTS_LIST": "View Shortcuts List",
- "_GLOBAL_SHORTCUTS_NOTICE": "Enable Global Shortcuts: Ctrl(Cmd) + Alt + Left Arrow (Previous Track)，Ctrl(Cmd) + Alt + Right Arrow (Next Track)，Ctrl(Cmd) + Alt + Space (play/pause)",
+ "_GLOBAL_SHORTCUTS_NOTICE": "Enable Global Shortcuts",
  "_LYRIC_DISPLAY": "Lyric Display",
  "_SHOW_DESKTOP_LYRIC": "Show desktop lyric",
  "_SHOW_LYRIC_TRANSLATION": "Show lyric translation",
@@ -137,5 +137,15 @@
  "_LOGIN_BY_EMAIL": "Login by email",
  "_MOBILE_PHONE": "Mobile Phone",
  "_MY_NETEASE": "My Netease",
- "_FAIL_ALL_NOTICE": "No available track in current playlist"
+ "_FAIL_ALL_NOTICE": "No available track in current playlist",
+ "_SHORTCUTS_FUNCTION": "Shortcuts Function",
+ "_GLOBAL_SHORTCUTS": "Global Shortcuts",
+ "_PLAY_OR_PAUSE": "Play/Pause",
+ "_PREVIOUS_TRACK": "Previous Track",
+ "_NEXT_TRACK": "Next Track",
+ "_VOLUME_UP": "Volume Up",
+ "_VOLUME_DOWN": "Volume Down",
+ "_SHORTCUTS_NOT_SET": "N/A",
+ "_QUICK_SEARCH": "Quick Search",
+ "_KEYBOARD_SPACE": "Space"
 }
