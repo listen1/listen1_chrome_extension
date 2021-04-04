@@ -220,6 +220,19 @@ function build_bilibili() {
       },
     };
   }
+  function bi_get_user() {
+    return {
+      success: (fn) => {
+        fn({ status: 'fail', data: {} });
+      },
+    };
+  }
+
+  function bi_get_login_url() {
+    return `https://www.bilibili.com`;
+  }
+
+  function bi_logout() {}
 
   return {
     show_playlist: bi_show_playlist,
@@ -229,6 +242,9 @@ function build_bilibili() {
     bootstrap_track: bi_bootstrap_track,
     search: bi_search,
     lyric: bi_lyric,
+    get_user: bi_get_user,
+    get_login_url: bi_get_login_url,
+    logout: bi_logout,
   };
 }
 

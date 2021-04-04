@@ -93,7 +93,7 @@ const main = () => {
           message: msg,
         });
       };
-      axios.get('/images/feather-sprite.svg').then((res) => {
+      axios.get('images/feather-sprite.svg').then((res) => {
         document.getElementById('feather-container').innerHTML = res.data;
       });
     },

@@ -1,7 +1,7 @@
 /* eslint-disable consistent-return */
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-use-before-define */
-/* global getParameterByName async forge */
+/* global getParameterByName cookieRemove async forge */
 function build_migu() {
   function mg_convert_song(song) {
     return {
@@ -57,50 +57,60 @@ function build_migu() {
       };
     }
 
-    const url = 'https://app.c.nf.migu.cn/MIGUM3.0/v1.0/template/rank-list/release?dataVersion=1616469593718&templateVersion=9';
+    const url =
+      'https://app.c.nf.migu.cn/MIGUM3.0/v1.0/template/rank-list/release?dataVersion=1616469593718&templateVersion=9';
     return {
       success(fn) {
         axios.get(url).then((response) => {
-          const migu_board = response.data.data.contentItemList[4].itemList.map((item) => ({
-            cover_img_url: item.imageUrl,
-            title: item.displayLogId.param.rankName,
-            id: `mgtoplist_${item.displayLogId.param.rankId}`,
-            source_url: '',
-          }));
-          migu_board.splice(0,2);
-          const  global_board = response.data.data.contentItemList[7].itemList.map((item) => ({
-            cover_img_url: item.imageUrl,
-            title: item.displayLogId.param.rankName,
-            id: `mgtoplist_${item.displayLogId.param.rankId}`,
-            source_url: '',
-          }));
+          const migu_board = response.data.data.contentItemList[4].itemList.map(
+            (item) => ({
+              cover_img_url: item.imageUrl,
+              title: item.displayLogId.param.rankName,
+              id: `mgtoplist_${item.displayLogId.param.rankId}`,
+              source_url: '',
+            })
+          );
+          migu_board.splice(0, 2);
+          const global_board = response.data.data.contentItemList[7].itemList.map(
+            (item) => ({
+              cover_img_url: item.imageUrl,
+              title: item.displayLogId.param.rankName,
+              id: `mgtoplist_${item.displayLogId.param.rankId}`,
+              source_url: '',
+            })
+          );
           const chart_board = [
             {
-              cover_img_url: 'https://cdnmusic.migu.cn/tycms_picture/20/02/36/20020512065402_360x360_2997.png',
+              cover_img_url:
+                'https://cdnmusic.migu.cn/tycms_picture/20/02/36/20020512065402_360x360_2997.png',
               title: '尖叫新歌榜',
               id: 'mgtoplist_27553319',
               source: '',
             },
             {
-              cover_img_url: 'https://cdnmusic.migu.cn/tycms_picture/20/04/99/200408163640868_360x360_6587.png',
+              cover_img_url:
+                'https://cdnmusic.migu.cn/tycms_picture/20/04/99/200408163640868_360x360_6587.png',
               title: '尖叫热歌榜',
               id: 'mgtoplist_27186466',
               source: '',
             },
             {
-              cover_img_url: 'https://cdnmusic.migu.cn/tycms_picture/20/04/99/200408163702795_360x360_1614.png',
+              cover_img_url:
+                'https://cdnmusic.migu.cn/tycms_picture/20/04/99/200408163702795_360x360_1614.png',
               title: '尖叫原创榜',
               id: 'mgtoplist_27553408',
               source: '',
             },
             {
-              cover_img_url: 'https://cdnmusic.migu.cn/tycms_picture/20/05/136/200515161733982_360x360_1523.png',
+              cover_img_url:
+                'https://cdnmusic.migu.cn/tycms_picture/20/05/136/200515161733982_360x360_1523.png',
               title: '音乐榜',
               id: 'mgtoplist_1',
               source: '',
             },
             {
-              cover_img_url: 'https://cdnmusic.migu.cn/tycms_picture/20/05/136/200515161848938_360x360_673.png',
+              cover_img_url:
+                'https://cdnmusic.migu.cn/tycms_picture/20/05/136/200515161848938_360x360_673.png',
               title: '影视榜',
               id: 'mgtoplist_2',
               source: '',
@@ -120,17 +130,17 @@ function build_migu() {
       return mg_show_toplist(offset);
     }
     const pageSize = 30;
-    let target_url ='';
+    let target_url = '';
     if (!filterId) {
       target_url = `https://app.c.nf.migu.cn/MIGUM2.0/v2.0/content/getMusicData.do?count=${pageSize}&start=${
         offset / pageSize + 1
       }&templateVersion=5&type=1`;
     } else {
-      target_url= `http://app.c.nf.migu.cn/MIGUM3.0/v1.0/template/musiclistplaza-listbytag?pageNumber=${
+      target_url = `http://app.c.nf.migu.cn/MIGUM3.0/v1.0/template/musiclistplaza-listbytag?pageNumber=${
         offset / pageSize + 1
       }&tagId=${filterId}&templateVersion=1`;
-    // const target_url = `https://m.music.migu.cn/migu/remoting/playlist_bycolumnid_tag?playListType=2&type=1&columnId=15127315&tagId=&startIndex=${offset}`;
-    // columnId=15127315为推荐，15127272为最新
+      // const target_url = `https://m.music.migu.cn/migu/remoting/playlist_bycolumnid_tag?playListType=2&type=1&columnId=15127315&tagId=&startIndex=${offset}`;
+      // columnId=15127315为推荐，15127272为最新
     }
     return {
       success(fn) {
@@ -227,7 +237,8 @@ function build_migu() {
           33683712: {
             name: '数字专辑畅销榜',
             url: '',
-            img: 'http://d.musicapp.migu.cn/prod/file-service/file-down/bcb5ddaf77828caee4eddc172edaa105/2297b53efa678bbc8a5b83064622c4c8/ebfe5bff9fd9981b5ae1c043f743bfb3',
+            img:
+              'http://d.musicapp.migu.cn/prod/file-service/file-down/bcb5ddaf77828caee4eddc172edaa105/2297b53efa678bbc8a5b83064622c4c8/ebfe5bff9fd9981b5ae1c043f743bfb3',
           },
           23217754: {
             name: 'MV榜',
@@ -271,9 +282,10 @@ function build_migu() {
           const { data } = response;
           const info = {
             id: `mgtoplist_${list_id}`,
-            cover_img_url: list_id === 33683712
-              ? board_list[list_id].img
-              : `https://cdnmusic.migu.cn/tycms_picture${board_list[list_id].img}`,
+            cover_img_url:
+              list_id === 33683712
+                ? board_list[list_id].img
+                : `https://cdnmusic.migu.cn/tycms_picture${board_list[list_id].img}`,
             title: data.data
               ? data.data.columnInfo.title
               : board_list[list_id].name,
@@ -282,11 +294,9 @@ function build_migu() {
           let tracks = {};
           if (list_id === 1 || list_id === 2) {
             // 音乐榜及影视榜
-            const list_elements = (
-              new DOMParser()
-                .parseFromString(data, 'text/html')
-                .getElementsByTagName('script')
-            );
+            const list_elements = new DOMParser()
+              .parseFromString(data, 'text/html')
+              .getElementsByTagName('script');
             const result = JSON.parse(
               list_elements[1].outerText.split('=').pop()
             );
@@ -297,7 +307,10 @@ function build_migu() {
                 artist: song.singers[0].name,
                 artist_id: `mgartist_${song.singers[0].id}`,
                 album: song.album.albumId !== 1 ? song.album.albumName : '',
-                album_id: song.album.albumId !== 1 ? `mgalbum_${song.album.albumId}` : 'mgalbum_',
+                album_id:
+                  song.album.albumId !== 1
+                    ? `mgalbum_${song.album.albumId}`
+                    : 'mgalbum_',
                 source: 'migu',
                 source_url: `https://music.migu.cn/v3/music/song/${song.copyrightId}`,
                 img_url: `https:${song.mediumPic}`,
@@ -315,7 +328,7 @@ function build_migu() {
               }
               return track;
             });
-          } else if (list_id === 23217754) { 
+          } else if (list_id === 23217754) {
             //  MV榜
             tracks = data.data.columnInfo.dataList.map((song) => ({
               id: `mgtrack_${song.copyrightId}`,
@@ -342,7 +355,9 @@ function build_migu() {
               album: item.title,
               album_id: item.albumId ? `mgalbum_${item.albumId}` : 'mgalbum_',
               source: 'migu',
-              source_url: `https://music.migu.cn/v3/music/album/${item.albumId || ''}`,
+              source_url: `https://music.migu.cn/v3/music/album/${
+                item.albumId || ''
+              }`,
               img_url: item.imgItems[1].img,
               // url: `mgtrack_${song.copyrightId}`,
               lyric_url: '',
@@ -350,7 +365,9 @@ function build_migu() {
               url: '',
             }));
           } else {
-            tracks = data.data.columnInfo.dataList.map((item) => mg_convert_song(item));
+            tracks = data.data.columnInfo.dataList.map((item) =>
+              mg_convert_song(item)
+            );
           }
           return fn({
             tracks,
@@ -692,7 +709,10 @@ function build_migu() {
           const song_id = getParameterByName('track_id', url).split('_').pop();
           const target_url = `https://music.migu.cn/v3/api/music/audioPlayer/getLyric?copyrightId=${song_id}`;
           axios.get(target_url).then((response) => {
-            const data = mg_generate_translation(response.data.lyric, response.data.translatedLyric);
+            const data = mg_generate_translation(
+              response.data.lyric,
+              response.data.translatedLyric
+            );
             return fn({
               lyric: data.lrc,
               tlyric: data.tlrc,
@@ -779,7 +799,8 @@ function build_migu() {
   function get_playlist_filters() {
     return {
       success(fn) {
-        let target_url = 'https://app.c.nf.migu.cn/MIGUM3.0/v1.0/template/musiclistplaza-hottaglist/release';
+        let target_url =
+          'https://app.c.nf.migu.cn/MIGUM3.0/v1.0/template/musiclistplaza-hottaglist/release';
         axios.get(target_url).then((response) => {
           const recommend = response.data.data.contentItemList.map((item) => ({
             id: item.tagId,
@@ -787,9 +808,10 @@ function build_migu() {
           }));
           recommend.unshift(
             { id: '', name: '推荐' },
-            { id: 'toplist', name: '排行榜' },
+            { id: 'toplist', name: '排行榜' }
           );
-          target_url = 'https://app.c.nf.migu.cn/MIGUM3.0/v1.0/template/musiclistplaza-taglist/release?templateVersion=1';
+          target_url =
+            'https://app.c.nf.migu.cn/MIGUM3.0/v1.0/template/musiclistplaza-taglist/release?templateVersion=1';
           axios.get(target_url).then((res) => {
             const all = res.data.data.map((cate) => {
               const result = { category: cate.header.title };
@@ -808,6 +830,70 @@ function build_migu() {
       },
     };
   }
+  function migu_get_user() {
+    const ts = +new Date();
+    const url = `https://music.migu.cn/v3/api/user/getUserInfo?_=${ts}`;
+    return {
+      success(fn) {
+        axios.get(url).then((res) => {
+          let result = { is_login: false };
+          let status = 'fail';
+
+          if (res.data.success) {
+            status = 'success';
+            const { data } = res;
+            result = {
+              is_login: true,
+              user_id: data.user.uid,
+              user_name: data.user.mobile,
+              nickname: data.user.nickname,
+              avatar: data.user.avatar.midAvatar,
+              platform: 'migu',
+              data,
+            };
+          }
+
+          return fn({
+            status,
+            data: result,
+          });
+        });
+      },
+    };
+  }
+
+  function migu_get_login_url() {
+    return `https://music.migu.cn`;
+  }
+
+  function mg_logout() {
+    const removeFn = (url, name) =>
+      cookieRemove(
+        {
+          url,
+          name,
+        },
+        () => {}
+      );
+    const musicCookieList = [
+      'migu_music_sid',
+      'migu_music_platinum',
+      'migu_music_level',
+      'migu_music_nickname',
+      'migu_music_avatar',
+      'migu_music_uid',
+      'migu_music_credit_level',
+      'migu_music_passid',
+      'migu_music_email',
+      'migu_music_msisdn',
+      'migu_music_status',
+    ];
+    const passportCookieList = ['USessionID', 'LTToken'];
+    musicCookieList.map((name) => removeFn('https://music.migu.cn', name));
+    passportCookieList.map((name) =>
+      removeFn('https://passport.migu.cn', name)
+    );
+  }
 
   return {
     show_playlist: mg_show_playlist,
@@ -817,6 +903,9 @@ function build_migu() {
     bootstrap_track: mg_bootstrap_track,
     search: mg_search,
     lyric: mg_lyric,
+    get_user: migu_get_user,
+    get_login_url: migu_get_login_url,
+    logout: mg_logout,
   };
 }
 

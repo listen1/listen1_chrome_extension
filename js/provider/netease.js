@@ -1,7 +1,7 @@
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable no-unused-vars */
 /* global getParameterByName forge */
-/* global isElectron cookieSet cookieGet async */
+/* global isElectron cookieSet cookieGet cookieRemove async */
 function build_netease() {
   function _create_secret_key(size) {
     const result = [];
@@ -863,6 +863,52 @@ function build_netease() {
     };
   }
 
+  function ne_get_user() {
+    const url = `https://music.163.com/api/nuser/account/get`;
+
+    const encrypt_req_data = _encrypted_request({});
+    return {
+      success(fn) {
+        axios.post(url, new URLSearchParams(encrypt_req_data)).then((res) => {
+          let result = { is_login: false };
+          let status = 'fail';
+          if (res.data.account !== null) {
+            status = 'success';
+            const { data } = res;
+            result = {
+              is_login: true,
+              user_id: data.account.id,
+              user_name: data.account.userName,
+              nickname: data.profile.nickname,
+              avatar: data.profile.avatarUrl,
+              platform: 'netease',
+              data,
+            };
+          }
+
+          return fn({
+            status,
+            data: result,
+          });
+        });
+      },
+    };
+  }
+
+  function ne_get_login_url() {
+    return `https://music.163.com/#/login`;
+  }
+
+  function ne_logout() {
+    cookieRemove(
+      {
+        url: 'https://music.163.com',
+        name: 'MUSIC_U',
+      },
+      (cookie) => {}
+    );
+  }
+
   return {
     show_playlist: ne_show_playlist,
     get_playlist_filters,
@@ -874,6 +920,9 @@ function build_netease() {
     login: ne_login,
     get_user_playlist: ne_get_user_playlist,
     get_recommend_playlist: ne_get_recommend_playlist,
+    get_user: ne_get_user,
+    get_login_url: ne_get_login_url,
+    logout: ne_logout,
   };
 }
 

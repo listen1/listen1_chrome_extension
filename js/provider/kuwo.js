@@ -680,6 +680,17 @@ function build_kuwo() {
       },
     };
   }
+  function kw_get_user() {
+    return {
+      success: (fn) => {
+        fn({ status: 'fail', data: {} });
+      },
+    };
+  }
+  function kw_get_login_url() {
+    return `https://www.kuwo.com`;
+  }
+  function kw_logout() {}
 
   return {
     show_playlist: kw_show_playlist,
@@ -689,6 +700,9 @@ function build_kuwo() {
     bootstrap_track: kw_bootstrap_track,
     search: kw_search,
     lyric: kw_lyric,
+    get_user: kw_get_user,
+    get_login_url: kw_get_login_url,
+    logout: kw_logout,
   };
 }
 

@@ -578,6 +578,18 @@ function build_qq() {
     };
   }
 
+  function qq_get_user() {
+    return {
+      success: (fn) => {
+        fn({ status: 'fail', data: {} });
+      },
+    };
+  }
+
+  function qq_get_login_url() {
+    return `https://y.qq.com/portal/profile.html`;
+  }
+  function qq_logout() {}
   return {
     show_playlist: qq_show_playlist,
     get_playlist_filters,
@@ -586,6 +598,9 @@ function build_qq() {
     bootstrap_track: qq_bootstrap_track,
     search: qq_search,
     lyric: qq_lyric,
+    get_user: qq_get_user,
+    get_login_url: qq_get_login_url,
+    logout: qq_logout,
   };
 }
 

@@ -147,5 +147,9 @@
  "_VOLUME_DOWN": "音量減",
  "_SHORTCUTS_NOT_SET": "空",
  "_QUICK_SEARCH": "快速搜索",
- "_KEYBOARD_SPACE": "空格"
+ "_KEYBOARD_SPACE": "空格",
+ "_NOT_LOGIN_NICKNAME": "未登錄",
+ "_LOGIN_DIALOG_NOTICE": "正在打開音樂平臺的登錄頁，請在打開網頁中完成登錄流程，然後點擊登錄完成",
+ "_LOGIN_SUCCESS": "登錄完成",
+ "_LOGIN_FAIL_RETRY": "登錄遇到問題，再打開登錄頁面"
 }

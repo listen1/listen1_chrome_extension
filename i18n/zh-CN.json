@@ -148,5 +148,9 @@
  "_VOLUME_DOWN": "音量减",
  "_SHORTCUTS_NOT_SET": "空",
  "_QUICK_SEARCH": "快速搜索",
- "_KEYBOARD_SPACE": "空格"
+ "_KEYBOARD_SPACE": "空格",
+ "_NOT_LOGIN_NICKNAME": "未登录",
+ "_LOGIN_DIALOG_NOTICE": "正在打开音乐平台的登录页，请在打开网页中完成登录流程，然后点击登录完成",
+ "_LOGIN_SUCCESS": "登录完成",
+ "_LOGIN_FAIL_RETRY": "登录遇到问题，再打开登录页面"
 }

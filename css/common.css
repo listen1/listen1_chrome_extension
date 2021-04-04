@@ -691,7 +691,7 @@ svg {
   flex: 0 0 380px;
   overflow-y: scroll;
   color: var(--lyric-default-color);
-  scrollbar-width: auto;
+  scrollbar-width: thin;
   scrollbar-color: var(--scroll-color) transparent;
   font-size: var(--lyric-font-size);
 }
@@ -897,11 +897,13 @@ ul.detail-songlist li .tools .icon {
 .page .login .usercard {
   display: flex;
   align-items: center;
-  width: 300px;
+  width: 400px;
   border: solid 1px var(--button-border-color);
+  margin-bottom: 20px;
 }
 .page .login .usercard img {
   width: 60px;
+  height: 60px;
   margin: 10px;
 }
 .page .login .usercard .usercard-title {
@@ -909,6 +911,10 @@ ul.detail-songlist li .tools .icon {
   height: 50px;
   font-size: 16px;
   font-weight: 700;
+}
+.page .login .usercard .usercard-title .usercard-info {
+  color: var(--link-inactive-color);
+  font-size: 12px;
 }
 .page .login .usercard button {
   margin: 10px;
@@ -1493,10 +1499,15 @@ svg.searchspinner {
 }
 
 .dialog-body {
-  width: 100%;
+  padding: 0 20px;
   height: 370px;
   overflow-y: auto;
   background-color: var(--dialog-background-color);
+}
+
+.dialog-body .buttons button {
+  margin-right: 20px;
+  margin-bottom: 20px;
 }
 
 .dialog .detail-songlist li:hover {

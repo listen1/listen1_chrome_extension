@@ -194,12 +194,13 @@ angular.module('listenone').controller('NavigationController', [
 
     $scope.showDialog = (dialog_type, data) => {
       $scope.is_dialog_hidden = 0;
+      $scope.dialog_data = data;
       const dialogWidth = 285;
       const left = window.innerWidth / 2 - dialogWidth / 2;
       $scope.myStyle = {
         left: `${left}px`,
       };
-
+      $scope.dialog_type = dialog_type;
       if (dialog_type === 0) {
         $scope.dialog_title = i18next.t('_ADD_TO_PLAYLIST');
         $scope.dialog_song = data;
@@ -215,28 +216,23 @@ angular.module('listenone').controller('NavigationController', [
 
       if (dialog_type === 3) {
         $scope.dialog_title = i18next.t('_EDIT_PLAYLIST');
-        $scope.dialog_type = 3;
         $scope.dialog_cover_img_url = data.cover_img_url;
         $scope.dialog_playlist_title = data.playlist_title;
       }
       if (dialog_type === 4) {
         $scope.dialog_title = i18next.t('_CONNECT_TO_LASTFM');
-        $scope.dialog_type = 4;
       }
       if (dialog_type === 5) {
         $scope.dialog_title = i18next.t('_OPEN_PLAYLIST');
-        $scope.dialog_type = 5;
       }
       if (dialog_type === 6) {
         $scope.dialog_title = i18next.t('_IMPORT_PLAYLIST');
         MediaService.showMyPlaylist().success((res) => {
           $scope.myplaylist = res.result;
         });
-        $scope.dialog_type = 6;
       }
       if (dialog_type === 7) {
         $scope.dialog_title = i18next.t('_CONNECT_TO_GITHUB');
-        $scope.dialog_type = 7;
       }
       if (dialog_type === 8) {
         $scope.dialog_title = i18next.t('_EXPORT_TO_GITHUB_GIST');
@@ -254,6 +250,7 @@ angular.module('listenone').controller('NavigationController', [
         $scope.dialog_title = i18next.t('_RECOVER_FROM_GITHUB_GIST');
         $scope.dialog_type = 10;
         GithubClient.gist.listExistBackup().then(
+
           (res) => {
             $scope.myBackup = res;
           },
@@ -261,6 +258,9 @@ angular.module('listenone').controller('NavigationController', [
             $scope.myBackup = [];
           }
         );
+      }
+      if (dialog_type === 11) {
+        $scope.dialog_title = i18next.t('_LOGIN');
       }
     };
 
