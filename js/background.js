@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-/* global GithubClient */
+/* global Github */
 chrome.browserAction.onClicked.addListener((tab) => {
   chrome.tabs.create(
     {
@@ -183,7 +183,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     return;
   }
 
-  GithubClient.github.handleCallback(request.code);
+  Github.handleCallback(request.code);
   sendResponse();
 });
 
