@@ -69,10 +69,16 @@
       if (!this.playlist[idx]) {
         return;
       }
+
+      const { id: trackId } = this.currentAudio;
       if (this.playlist[idx].howl && this.playlist[idx].howl.playing()) {
-        this.skip('next');
+        this.pause();
       }
       this.playlist.splice(idx, 1);
+      const newIndex = this.playlist.findIndex((i) => i.id === trackId);
+      if (newIndex >= 0) {
+        this.index = newIndex;
+      }
       this.sendPlaylistEvent();
       this.sendLoadEvent();
     }
