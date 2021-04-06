@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 /* global getPlayer getPlayerAsync addPlayerListener getLocalStorageValue */
 {
   const mode = getLocalStorageValue('enable_stop_when_close', true)
@@ -132,6 +133,9 @@
               'current-playing'
             );
             if (localCurrentPlaying !== null) {
+              localCurrentPlaying.forEach((i) => {
+                i.disabled = false;
+              });
               player.setNewPlaylist(localCurrentPlaying);
             }
           }

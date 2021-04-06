@@ -48,11 +48,11 @@ function hack_referer_header(details) {
   }
 
   if (details.url.includes('.kugou.com/')) {
-    referer_value = 'http://www.kugou.com/';
+    referer_value = 'https://www.kugou.com/';
   }
 
   if (details.url.includes('.kuwo.cn/')) {
-    referer_value = 'http://www.kuwo.cn/';
+    referer_value = 'https://www.kuwo.cn/';
   }
 
   if (
@@ -65,7 +65,7 @@ function hack_referer_header(details) {
   }
 
   if (details.url.includes('.migu.cn')) {
-    referer_value = 'http://music.migu.cn/v3/music/player/audio?from=migu';
+    referer_value = 'https://music.migu.cn/v3/music/player/audio?from=migu';
   }
 
   if (details.url.includes('m.music.migu.cn')) {

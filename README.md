@@ -1,6 +1,6 @@
-# Listen 1 (Chrome Extension) V2.19.0
+# Listen 1 (Chrome Extension) V2.20.0
 
-（最后更新于 2021 年 03 月 02 日）
+（最后更新于 2021 年 04 月 06 日）
 
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE)
 
@@ -15,12 +15,12 @@
 支持音乐平台
 
 - 网易云音乐
-- 虾米
 - QQ 音乐
 - 酷狗音乐
 - 酷我音乐
 - bilibili
 - 咪咕音乐
+- 千千音乐
 
 搜歌，听歌，就用 `Listen1`。
 
@@ -71,6 +71,37 @@ Listen1 诞生的初衷从不是和大公司的争夺版权利益，而是为了
 在这个关系项目生死存亡的时刻，我寻求项目因为 DMCA 被 github 关闭的援助。如果有对这个比较了解如何解决的人，或者你想对这个事情发表看法和建议，可以在[issue](https://github.com/listen1/listen1_chrome_extension/issues/113)留言，或者发送邮件到 githublisten1@gmail.com。我们会尽最大努力，来守护 Listen1，即使可能它即将成为历史。
 
 ## 更新日志
+
+`2021-03`
+
+功能改进：
+
+- 新增千千音乐平台 (感谢 @Dumeng 的提交)
+- 支持咪咕音乐的分类歌单和排行榜歌单功能 (感谢 @RecluseWind 的提交)
+- 桌面版支持放大功能 (感谢 @mikelxk 的提交)
+- 支持网易登录功能，支持打开我的歌单和推荐歌单
+- 支持咪咕登录功能
+- 支持在正在播放页面显示当前播放歌曲的码率和平台
+- 移除虾米平台
+
+重构和优化：
+
+- 替换了对 translate，i18n, hotkeys 的 angular 模块依赖，替换为纯 js 库 (感谢 @Dumeng 的提交)
+- 优化载入 feather 图标库的效率 (感谢 @Dumeng 的提交)
+- 改善了多个平台默认码率，默认播放高码率音乐文件
+- 将 app.js 按多个 controller 模块分为多个文件
+- 优化显示了因为版权问题无法播放的通知
+- 将大部分链接改成 https 协议
+
+修复：
+
+- 修复新语法导致媒体控制在某些系统中不可用的问题 (感谢 @mikelxk 的提交)
+- 修复音量控制快捷键失效的问题 (感谢 @mikelxk 的提交)
+- 修复了在 firefox 上的滚动条样式 (感谢 @RecluseWind 的提交)
+- 修复酷狗音乐封面的错误
+- 修复酷狗某些歌曲不能播放的问题
+- 修复通知无法显示的问题
+- 修复了删除当前播放列表歌曲后导致的各种异常
 
 `2021-02`
 

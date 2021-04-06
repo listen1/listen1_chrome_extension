@@ -583,8 +583,11 @@ angular.module('listenone').controller('PlayController', [
 
           case 'PLAYLIST': {
             // 'player:playlist'
-            $scope.playlist = msg.data;
-            localStorage.setObject('current-playing', msg.data);
+            $scope.$evalAsync(() => {
+              $scope.playlist = msg.data;
+              localStorage.setObject('current-playing', msg.data);
+            });
+
             break;
           }
 
