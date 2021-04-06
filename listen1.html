@@ -234,7 +234,7 @@
                       </button>
                       <button
                         class="btn btn-warning warning-button"
-                        ng-click="GithubClient.github.openAuthUrl();"
+                        ng-click="openGithubAuth();"
                       >
                         {{_AUTHORIZED_REOPEN}}
                       </button>
@@ -1087,7 +1087,7 @@
                               <button
                                 class="btn btn-primary confirm-button"
                                 ng-show="githubStatus == 0"
-                                ng-click="GithubClient.github.openAuthUrl(); showDialog(7);"
+                                ng-click="openGithubAuth(); showDialog(7);"
                               >
                                 {{_CONNECT_TO_GITHUB}}
                               </button>

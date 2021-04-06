@@ -262,6 +262,7 @@ angular.module('listenone').controller('PlayController', [
       $scope.saveLocalSettings();
     };
 
+    $rootScope.openGithubAuth = GithubClient.github.openAuthUrl;
     $rootScope.updateGithubStatus = () => {
       GithubClient.github.updateStatus((data) => {
         $scope.$evalAsync(() => {

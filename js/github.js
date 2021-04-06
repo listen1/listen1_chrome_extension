@@ -75,25 +75,23 @@ function github() {
             return '???';
         }
       },
-      updateStatus: (callback) => {
+      updateStatus: async (callback) => {
         const access_token = localStorage.getObject('githubOauthAccessKey');
         if (access_token == null) {
           Github.status = 0;
-          return;
-        }
-        const self = Github;
-        GithubAPI.get('/user').then((res) => {
-          const { data } = res;
+        } else {
+          const { data } = await GithubAPI.get('/user');
           if (data.login === undefined) {
-            self.status = 1;
+            Github.status = 1;
           } else {
-            self.status = 2;
-            self.username = data.login;
+            Github.status = 2;
+            Github.username = data.login;
           }
-          if (callback != null) {
-            callback(self.status);
-          }
-        });
+        }
+        if (callback != null) {
+          callback(Github.status);
+        }
+
       },
       logout: () => {
         localStorage.removeItem('githubOauthAccessKey');
