@@ -69,6 +69,8 @@
       if (!this.playlist[idx]) {
         return;
       }
+      // restore playing status before change
+      const isPlaying = this.playing;
 
       const { id: trackId } = this.currentAudio;
 
@@ -83,7 +85,9 @@
         } else {
           this.index = idx;
         }
-        this.play();
+        if (isPlaying) {
+          this.play();
+        }
       }
 
       this.sendPlaylistEvent();
