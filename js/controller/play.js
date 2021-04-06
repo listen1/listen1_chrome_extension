@@ -266,6 +266,7 @@ angular.module('listenone').controller('PlayController', [
       GithubClient.github.updateStatus((data) => {
         $scope.$evalAsync(() => {
           $scope.githubStatus = data;
+          $scope.githubStatusText = GithubClient.github.getStatusText();
         });
       });
     };

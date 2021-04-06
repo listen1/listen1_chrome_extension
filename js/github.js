@@ -62,8 +62,8 @@ function github() {
         }
         window.open(url, '_blank');
       },
-      getStatusText: () => Github.status,
-      getStatus: () => {
+      getStatus: () => Github.status,
+      getStatusText: () => {
         switch (Github.status) {
           case 0:
             return '未连接';
