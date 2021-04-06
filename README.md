@@ -1,4 +1,4 @@
-# Listen 1 (Chrome Extension) V2.20.0
+# Listen 1 (Chrome Extension) V2.20.1
 
 （最后更新于 2021 年 04 月 06 日）
 
