@@ -71,14 +71,21 @@
       }
 
       const { id: trackId } = this.currentAudio;
-      if (this.playlist[idx].howl && this.playlist[idx].howl.playing()) {
-        this.pause();
-      }
+
       this.playlist.splice(idx, 1);
       const newIndex = this.playlist.findIndex((i) => i.id === trackId);
       if (newIndex >= 0) {
         this.index = newIndex;
+      } else {
+        // current playing is deleted
+        if (idx >= this.playlist.length) {
+          this.index = this.playlist.length - 1;
+        } else {
+          this.index = idx;
+        }
+        this.play();
       }
+
       this.sendPlaylistEvent();
       this.sendLoadEvent();
     }
@@ -187,8 +194,8 @@
       if (!this.playlist[index]) {
         index = 0;
       }
-
-      if (this.index !== index) Howler.stop();
+      // stop when load new track to avoid multiple songs play in same time
+      Howler.stop();
       this.index = index;
 
       this.sendLoadEvent();
