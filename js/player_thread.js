@@ -71,8 +71,11 @@
       }
       // restore playing status before change
       const isPlaying = this.playing;
-
       const { id: trackId } = this.currentAudio;
+
+      if (isPlaying && this.playlist[idx].id === trackId) {
+        this.pause();
+      }
 
       this.playlist.splice(idx, 1);
       const newIndex = this.playlist.findIndex((i) => i.id === trackId);
@@ -199,7 +202,9 @@
         index = 0;
       }
       // stop when load new track to avoid multiple songs play in same time
-      Howler.stop();
+      if (index !== this.index) {
+        Howler.stop();
+      }
       this.index = index;
 
       this.sendLoadEvent();
