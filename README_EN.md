@@ -1,4 +1,4 @@
-# Listen 1 (Chrome Extension) V2.19.0
+# Listen 1 (Chrome Extension) V2.20.0
 
 （Last Update Feb 3rd, 2021)
 
@@ -17,6 +17,7 @@ Supported music platform:
 - Kuwo
 - Bilibili
 - Migu
+- Qianqian (taihe)
 
 Search songs, listen songs from multiple platforms, that's `Listen 1`.
 
@@ -45,6 +46,36 @@ Making your own playlist is also supported.
 2. Click Add to Firefox button
 
 ## Changelog
+
+`2021-03`
+Features:
+
+- Add qianqian music platform (thanks @Dumeng)
+- Support playlist filters and top list in migu (thanks @RecluseWind)
+- Zoom in/out function for desktop version (thanks @mikelxk)
+- Support netease login, show my playlist and recommend playlist
+- Support migu login
+- Show bitrate and music platform in now playing page
+- deprecated xiami
+
+Refactor:
+
+- Replace angular module dependencies: translate，i18n, hotkeys，replace with js library (thanks @Dumeng)
+- Optimaze feather load performance (thanks @Dumeng)
+- Optimaze bitrate for qq and kugou platform, default high bitrate
+- Split app.js into files by controller
+- Optimaze copyright notice show
+- Change http to https for several links
+
+Fix bugs:
+
+- Fix media control invalid because new es6 optional chain (thanks @mikelxk)
+- Fix volume control not working (thanks @mikelxk)
+- Fix scorll bar style in firefox (thanks @RecluseWind)
+- Fix kugou music cover url
+- Fix kugou music play url
+- Fix notification not shown bug
+- Fix delete songs in current playlist mess up playing bug
 
 `2021-02`
 
