@@ -147,7 +147,7 @@ const main = () => {
   }));
 
   app.directive('errSrc', () => ({
-    // http://stackoverflow.com/questions/16310298/if-a-ngsrc-path-resolves-to-a-404-is-there-a-way-to-fallback-to-a-default
+    // https://stackoverflow.com/questions/16310298/if-a-ngsrc-path-resolves-to-a-404-is-there-a-way-to-fallback-to-a-default
     link: (scope, element, attrs) => {
       element.bind('error', () => {
         if (attrs.src !== attrs.errSrc) {

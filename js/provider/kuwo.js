@@ -153,7 +153,7 @@ function build_kuwo() {
             if (isRetryValue) {
               return callback('');
             }
-            return axios.get('http://www.kuwo.cn/').then(() => {
+            return axios.get('https://www.kuwo.cn/').then(() => {
               kw_get_token(callback, true);
             });
           }
@@ -171,7 +171,7 @@ function build_kuwo() {
             if (isRetryValue) {
               return callback('');
             }
-            return axios.get('http://www.kuwo.cn/').then(() => {
+            return axios.get('https://www.kuwo.cn/').then(() => {
               kw_get_token(callback, true);
             });
           }
@@ -302,7 +302,7 @@ function build_kuwo() {
     const target_url =
       'https://antiserver.kuwo.cn/anti.s?' +
       `type=convert_url&format=mp3&response=url&rid=${song_id}`;
-    /* const target_url = 'http://www.kuwo.cn/url?'
+    /* const target_url = 'https://www.kuwo.cn/url?'
       + `format=mp3&rid=${song_id}&response=url&type=convert_url3&br=128kmp3&from=web`;
     https://m.kuwo.cn/newh5app/api/mobile/v1/music/src/${song_id} */
 
@@ -548,7 +548,7 @@ function build_kuwo() {
       35: '欧洲',
       37: '华语',
     }; */
-    // const target_url = 'http://www.kuwo.cn/www/categoryNew/getPlayListInfoUnderCategory?'
+    // const target_url = 'https://www.kuwo.cn/www/categoryNew/getPlayListInfoUnderCategory?'
     // + `type=taglist&digest=10000&id=${37}&start=${offset}&count=50`;
     const target_url = `https://www.kuwo.cn/api/pc/classify/playlist/getRcmPlayList?pn=${
       offset / 25 + 1

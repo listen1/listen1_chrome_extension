@@ -136,7 +136,7 @@ function build_migu() {
         offset / pageSize + 1
       }&templateVersion=5&type=1`;
     } else {
-      target_url = `http://app.c.nf.migu.cn/MIGUM3.0/v1.0/template/musiclistplaza-listbytag?pageNumber=${
+      target_url = `https://app.c.nf.migu.cn/MIGUM3.0/v1.0/template/musiclistplaza-listbytag?pageNumber=${
         offset / pageSize + 1
       }&tagId=${filterId}&templateVersion=1`;
       // const target_url = `https://m.music.migu.cn/migu/remoting/playlist_bycolumnid_tag?playListType=2&type=1&columnId=15127315&tagId=&startIndex=${offset}`;
@@ -238,7 +238,7 @@ function build_migu() {
             name: '数字专辑畅销榜',
             url: '',
             img:
-              'http://d.musicapp.migu.cn/prod/file-service/file-down/bcb5ddaf77828caee4eddc172edaa105/2297b53efa678bbc8a5b83064622c4c8/ebfe5bff9fd9981b5ae1c043f743bfb3',
+              'https://d.musicapp.migu.cn/prod/file-service/file-down/bcb5ddaf77828caee4eddc172edaa105/2297b53efa678bbc8a5b83064622c4c8/ebfe5bff9fd9981b5ae1c043f743bfb3',
           },
           23217754: {
             name: 'MV榜',

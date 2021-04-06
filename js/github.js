@@ -71,7 +71,7 @@ ngGithub.provider('gist', {
         };
         return count + playlist.tracks.length;
       }, 0);
-      const summary = `本歌单由[Listen1](http://listen1.github.io/listen1/)创建, 歌曲数：${songsCount}，歌单数：${playlistIds.length}，点击查看更多`;
+      const summary = `本歌单由[Listen1](https://listen1.github.io/listen1/)创建, 歌曲数：${songsCount}，歌单数：${playlistIds.length}，点击查看更多`;
       result['listen1_aha_playlist.md'] = {
         content: summary,
       };
@@ -136,7 +136,7 @@ ngGithub.provider('gist', {
           )}`,
         },
         data: {
-          description: `updated by Listen1(http://listen1.github.io/listen1/) at ${new Date().toLocaleString()}`,
+          description: `updated by Listen1(https://listen1.github.io/listen1/) at ${new Date().toLocaleString()}`,
           public: isPublic,
           files,
         },

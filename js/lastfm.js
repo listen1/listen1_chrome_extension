@@ -23,7 +23,7 @@ function lastfm() {
         /**
          * Computes string for signing request
          *
-         * See http://www.last.fm/api/authspec#8
+         * See https://www.last.fm/api/authspec#8
          */
         function generateSign(params) {
           const keys = Object.keys(params).filter(
@@ -145,7 +145,7 @@ function lastfm() {
             const { data } = response;
             const { token } = data;
             localStorage.setObject('lastfmtoken', token);
-            const grant_url = `http://www.last.fm/api/auth/?api_key=${options.apiKey}&token=${token}`;
+            const grant_url = `https://www.last.fm/api/auth/?api_key=${options.apiKey}&token=${token}`;
             $window.open(grant_url, '_blank');
             status = 1;
             if (callback != null) {

@@ -10,7 +10,7 @@ function build_kugou() {
       album: song.AlbumName,
       album_id: `kgalbum_${song.AlbumID}`,
       source: 'kugou',
-      source_url: `http://www.kugou.com/song/#hash=${song.FileHash}&album_id=${song.AlbumID}`,
+      source_url: `https://www.kugou.com/song/#hash=${song.FileHash}&album_id=${song.AlbumID}`,
       img_url: '',
       // url: `kgtrack_${song.FileHash}`,
       lyric_url: song.FileHash,
@@ -48,7 +48,7 @@ function build_kugou() {
   function kg_render_search_result_item(index, item, params, callback) {
     const track = kg_convert_song(item);
     // Add singer img
-    const url = `${'http://www.kugou.com/yy/index.php?r=play/getdata&hash='}${
+    const url = `${'https://www.kugou.com/yy/index.php?r=play/getdata&hash='}${
       track.lyric_url
     }`;
     axios.get(url).then((response) => {
@@ -76,7 +76,7 @@ function build_kugou() {
     }
     return {
       success(fn) {
-        const target_url = `${'http://songsearch.kugou.com/song_search_v2?keyword='}${keyword}&page=${curpage}`;
+        const target_url = `${'https://songsearch.kugou.com/song_search_v2?keyword='}${keyword}&page=${curpage}`;
         axios
           .get(target_url)
           .then((response) => {
@@ -116,7 +116,7 @@ function build_kugou() {
       album: '',
       album_id: `kgalbum_${item.album_id}`,
       source: 'kugou',
-      source_url: `http://www.kugou.com/song/#hash=${hash}&album_id=${item.album_id}`,
+      source_url: `https://www.kugou.com/song/#hash=${hash}&album_id=${item.album_id}`,
       img_url: '',
       lyric_url: hash,
     };
@@ -165,7 +165,7 @@ function build_kugou() {
               : '',
             title: data.info.list.specialname,
             id: `kgplaylist_${data.info.list.specialid}`,
-            source_url: 'http://www.kugou.com/yy/special/single/{size}.html'.replace(
+            source_url: 'https://www.kugou.com/yy/special/single/{size}.html'.replace(
               '{size}',
               data.info.list.specialid
             ),
@@ -196,7 +196,7 @@ function build_kugou() {
       album: '',
       album_id: `kgalbum_${item.album_id}`,
       source: 'kugou',
-      source_url: `http://www.kugou.com/song/#hash=${item.hash}&album_id=${item.album_id}`,
+      source_url: `https://www.kugou.com/song/#hash=${item.hash}&album_id=${item.album_id}`,
       img_url: '',
       // url: `kgtrack_${item.hash}`,
       lyric_url: item.hash,
@@ -205,7 +205,7 @@ function build_kugou() {
     track.title = one[1].trim();
     track.artist = one[0].trim();
     // Fix album name and img
-    const target_url = `${'http://www.kugou.com/yy/index.php?r=play/getdata&hash='}${
+    const target_url = `${'https://www.kugou.com/yy/index.php?r=play/getdata&hash='}${
       item.hash
     }`;
     axios
@@ -238,7 +238,7 @@ function build_kugou() {
             cover_img_url: data.data.imgurl.replace('{size}', '400'),
             title: data.data.singername,
             id: `kgartist_${artist_id}`,
-            source_url: 'http://www.kugou.com/singer/{id}.html'.replace(
+            source_url: 'https://www.kugou.com/singer/{id}.html'.replace(
               '{id}',
               artist_id
             ),
@@ -332,7 +332,7 @@ function build_kugou() {
       album: info.title,
       album_id: `kgalbum_${album_id}`,
       source: 'kugou',
-      source_url: `http://www.kugou.com/song/#hash=${item.hash}&album_id=${album_id}`,
+      source_url: `https://www.kugou.com/song/#hash=${item.hash}&album_id=${album_id}`,
       img_url: '',
       // url: `xmtrack_${item.hash}`,
       lyric_url: item.hash,
@@ -367,7 +367,7 @@ function build_kugou() {
             cover_img_url: data.data.imgurl.replace('{size}', '400'),
             title: data.data.albumname,
             id: `kgalbum_${data.data.albumid}`,
-            source_url: 'http://www.kugou.com/album/{id}.html'.replace(
+            source_url: 'https://www.kugou.com/album/{id}.html'.replace(
               '{id}',
               data.data.albumid
             ),
@@ -409,7 +409,7 @@ function build_kugou() {
               : '',
             title: item.specialname,
             id: `kgplaylist_${item.specialid}`,
-            source_url: 'http://www.kugou.com/yy/special/single/{size}.html'.replace(
+            source_url: 'https://www.kugou.com/yy/special/single/{size}.html'.replace(
               '{size}',
               item.specialid
             ),
