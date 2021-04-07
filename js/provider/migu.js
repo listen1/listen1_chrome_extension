@@ -21,6 +21,7 @@ function build_migu() {
       tlyric_url: song.trcUrl || '',
       quality: song.toneControl,
       url: song.copyright === 0 ? '' : undefined,
+      song_id: song.songId,
     };
   }
 
@@ -298,7 +299,7 @@ function build_migu() {
               .parseFromString(data, 'text/html')
               .getElementsByTagName('script');
             const result = JSON.parse(
-              list_elements[1].outerText.split('=').pop()
+              list_elements[1].innerText.split('=').pop()
             );
             tracks = result.songs.items.map((song) => {
               const track = {
@@ -317,14 +318,15 @@ function build_migu() {
                 // url: `mgtrack_${song.copyrightId}`,
                 lyric_url: 'null',
                 tlyric_url: '',
+                song_id: song.id,
                 url: undefined,
               };
               if (song.bit24) {
-                track.quality = 111111;
+                track.quality = '111111';
               } else if (song.sq) {
-                track.quality = 111100;
+                track.quality = '111100';
               } else {
-                track.quality = 110000;
+                track.quality = '110000';
               }
               return track;
             });
@@ -343,6 +345,7 @@ function build_migu() {
               // url: `mgtrack_${song.copyrightId}`,
               lyric_url: null,
               tlyric_url: '',
+              song_id: song.songId,
               url: song.copyright === 0 ? '' : undefined,
             }));
           } else if (list_id === 23218151 || list_id === 33683712) {
@@ -469,7 +472,9 @@ function build_migu() {
 
   function mg_bootstrap_track(track, success, failure) {
     const sound = {};
-    const song_id = track.id.slice('mgtrack_'.length);
+    const songId =  track.song_id;
+    /*
+    const copyrightId = track.id.slice('mgtrack_'.length);
     const type = 1;
     // NOTICE：howler flac support is not ready for production.
     // Sometimes network keep pending forever and block later music.
@@ -492,7 +497,7 @@ function build_migu() {
       '4ea5c508a6566e76240543f8feb06fd457777be39549c4016436afda65d2330e';
     // type parameter for music quality: 1: normal, 2: hq, 3: sq, 4: zq, 5: z3d
     const plain = forge.util.createBuffer(
-      `{"copyrightId":"${song_id}","type":${type},"auditionsFlag":0}`
+      `{"copyrightId":"${copyrightId}","type":${type},"auditionsFlag":0}`
     );
     const salt = forge.random.getBytesSync(8);
     const derivedBytes = forge.pbe.opensslDeriveBytes(k, salt, 48);
@@ -519,20 +524,50 @@ function build_migu() {
     const target_url = `https://music.migu.cn/v3/api/music/audioPlayer/getPlayInfo?dataType=2&data=${encodeURIComponent(
       aesResult
     )}&secKey=${encodeURIComponent(secKey)}`;
-
-    axios.get(target_url).then((response) => {
+    */
+    let toneFlag;
+    switch (track.quality) {
+      case '110000':
+        toneFlag = 'HQ';
+        break;
+      case '111100':
+        toneFlag = 'SQ';
+        break;
+      case '111111':
+        toneFlag = 'ZQ';
+        break;
+      default:
+        toneFlag = 'PQ';
+    }
+    const target_url = `https://app.c.nf.migu.cn/MIGUM2.0/strategy/listen-url/v2.2?netType=01&resourceType=E&songId=${songId}&toneFlag=${toneFlag}`;
+    axios.get(target_url, {
+      headers : {
+        channel: '0146951',
+        uid: 1234,
+      },
+    }).then((response) => {
       // const { data } = response.data;
-      let playUrl = response.data.data ? response.data.data.playUrl : null;
+      // let playUrl = response.data.data ? response.data.data.playUrl : null;
+      let playUrl = response.data.data ? response.data.data.url : null;
       if (playUrl) {
         if (playUrl.startsWith('//')) {
           playUrl = `https:${playUrl}`;
         }
         sound.url = playUrl.replace(/\+/g, '%2B'); // eslint-disable-line no-param-reassign
-        // 无损 formatType=SQ resourceType=E
-        // 高品 formatType=HQ resourceType=2
-        // https://app.pd.nf.migu.cn/MIGUM2.0/v1.0/content/sub/listenSong.do?toneFlag=${formatType}&netType=00&userId=15548614588710179085069&ua=Android_migu&version=5.1&copyrightId=0&contentId={$contentId}&resourceType=${resourceType}&channel=0
         sound.platform = 'migu';
-
+        switch (toneFlag) {
+          case 'HQ':
+            sound.bitrate = '320kbps';
+            break;
+          case 'SQ':
+            sound.bitrate = '999kbps';
+            break;
+          case 'ZQ':
+            sound.bitrate = '999kbps';
+            break;
+          default:
+            sound.bitrate = '128kbps';
+        }
         success(sound);
       } else {
         failure(sound);
