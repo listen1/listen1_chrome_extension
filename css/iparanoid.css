@@ -22,6 +22,8 @@
   --sidebar-background-color: rgba(245, 245, 245, 0.7);
   --sidebar-highlight-background-color: #4d4d4d;
   --sidebar-highlight-text-color: #ffffff;
+  --sidebar-hover-background-color: #5f5f5f;
+  --sidebar-hover-text-color: #ffffff;
 
   --content-background-color: #ffffff;
 

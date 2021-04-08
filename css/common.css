@@ -224,10 +224,17 @@ svg {
   text-overflow: ellipsis;
 }
 
-.sidebar ul li.active {
+.sidebar ul li:hover {
+  background: var(--sidebar-hover-background-color);
+  color: var(--sidebar-hover-text-color);
+}
+
+.sidebar ul li.active,
+.sidebar ul li.active:hover {
   background: var(--sidebar-highlight-background-color);
   color: var(--sidebar-highlight-text-color);
 }
+
 /* main sidebar end */
 
 /* widget navigation start */
