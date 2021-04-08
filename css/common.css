@@ -1519,14 +1519,21 @@ svg.searchspinner {
   background-color: var(--dialog-background-color);
 }
 
-.dialog-body .buttons button {
-  margin-right: 20px;
-  margin-bottom: 20px;
+.dialog-body .buttons {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
 }
 
+.dialog-body .buttons .confirm-button {
+  margin-right: 20px;
+}
 .dialog .detail-songlist li:hover {
   background-color: #e3e3e5;
   cursor: pointer;
+}
+.dialog-body input {
+  width: 100%;
 }
 
 .dialog-playlist,
@@ -1565,7 +1572,7 @@ svg.searchspinner {
 .dialog-playlist li h2,
 .dialog-backuplist li h2,
 .dialog-merge-playlist li h2 {
-  margin-left: 58px;
+  margin: 0 0 0 58px;
   font-size: 13px;
   font-weight: inherit;
 }
@@ -1575,28 +1582,11 @@ svg.searchspinner {
 .dialog-newplaylist {
   padding: 10px;
 }
-.dialog-newplaylist input {
-  width: 260px;
-}
-
-.dialog-newplaylist .confirm-button {
-  margin-left: 36px;
-  margin-right: 58px;
-  margin-top: 20px;
-}
 
 .dialog-newbackup {
   text-align: center;
 }
 
-.dialog-newbackup .confirm-button {
-  margin-right: 12px;
-}
-
-.dialog-editplaylist input,
-.dialog-open-url input {
-  width: 100%;
-}
 .dialog-editplaylist label,
 .dialog-open-url label {
   display: block;
@@ -1609,21 +1599,6 @@ svg.searchspinner {
   bottom: 20px;
 }
 
-.dialog-editplaylist .confirm-button,
-.dialog-open-url .confirm-button {
-  margin-right: 26px;
-  margin-left: 61px;
-  margin-top: 20px;
-}
-
-.dialog-connect-lastfm .buttons {
-  margin-top: 30px;
-}
-
-.dialog-connect-lastfm .confirm-button {
-  margin-left: 40px;
-  margin-right: 48px;
-}
 /* dialog end */
 
 /* widget source-list start */
