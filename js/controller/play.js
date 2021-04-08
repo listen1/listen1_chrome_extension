@@ -263,6 +263,13 @@ angular.module('listenone').controller('PlayController', [
     };
 
     $rootScope.openGithubAuth = GithubClient.github.openAuthUrl;
+    $rootScope.GithubLogout = () => {
+      GithubClient.github.logout();
+      $scope.$evalAsync(() => {
+        $scope.githubStatus = 0;
+        $scope.githubStatusText = GithubClient.github.getStatusText();
+      });
+    };
     $rootScope.updateGithubStatus = () => {
       GithubClient.github.updateStatus((data) => {
         $scope.$evalAsync(() => {

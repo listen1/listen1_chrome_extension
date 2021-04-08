@@ -32,17 +32,19 @@ function github() {
           client_secret,
           code,
         };
-        axios.post(url, '', {
-          params,
-          headers: { accept: 'application/json' },
-        }).then((res) => {
-          const ak = res.data.access_token;
-          if (ak)
-            localStorage.setItem('githubOauthAccessKey', JSON.stringify(ak));
-          if (cb !== undefined) {
-            cb(ak);
-          }
-        });
+        axios
+          .post(url, '', {
+            params,
+            headers: { accept: 'application/json' },
+          })
+          .then((res) => {
+            const ak = res.data.access_token;
+            if (ak)
+              localStorage.setItem('githubOauthAccessKey', JSON.stringify(ak));
+            if (cb !== undefined) {
+              cb(ak);
+            }
+          });
       },
       openAuthUrl: () => {
         Github.status = 1;
@@ -91,7 +93,6 @@ function github() {
         if (callback != null) {
           callback(Github.status);
         }
-
       },
       logout: () => {
         localStorage.removeItem('githubOauthAccessKey');
@@ -142,19 +143,17 @@ function github() {
 
         const url = gistFiles['listen1_backup.json'].raw_url;
         // const { size } = gistFiles['listen1_backup.json'];
-        GithubAPI.get(url)
-          .then((res) => callback(res.data));
+        GithubAPI.get(url).then((res) => callback(res.data));
         return null;
       },
 
       listExistBackup() {
-        return GithubAPI.get('/gists')
-          .then((res) => {
-            const result = res.data;
-            return result.filter((backupObject) =>
-              backupObject.description.startsWith('updated by Listen1')
-            );
-          });
+        return GithubAPI.get('/gists').then((res) => {
+          const result = res.data;
+          return result.filter((backupObject) =>
+            backupObject.description.startsWith('updated by Listen1')
+          );
+        });
       },
 
       backupMySettings2Gist(files, gistId, isPublic) {
@@ -180,12 +179,9 @@ function github() {
 
       importMySettingsFromGist(gistId) {
         return GithubAPI.get(`/gists/${gistId}`).then((res) => res.data.files);
-      }
+      },
     },
   };
 }
 
 github();
-
-
-
