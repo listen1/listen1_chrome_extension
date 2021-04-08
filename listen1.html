@@ -120,18 +120,20 @@
                       placeholder="{{_INPUT_NEW_PLAYLIST_TITLE}}"
                       ng-model="newlist_title"
                     />
-                    <button
-                      class="btn btn-primary confirm-button"
-                      ng-click="createAndAddPlaylist()"
-                    >
-                      {{_COMFIRM}}
-                    </button>
-                    <button
-                      class="btn btn-default"
-                      ng-click="cancelNewDialog(0)"
-                    >
-                      {{_CANCEL}}
-                    </button>
+                    <div class="buttons">
+                      <button
+                        class="btn btn-primary confirm-button"
+                        ng-click="createAndAddPlaylist()"
+                      >
+                        {{_COMFIRM}}
+                      </button>
+                      <button
+                        class="btn btn-default"
+                        ng-click="cancelNewDialog(0)"
+                      >
+                        {{_CANCEL}}
+                      </button>
+                    </div>
                   </div>
                   <!-- edit playlist dialog-->
                   <div class="dialog-editplaylist" ng-show="dialog_type==3">
@@ -153,15 +155,17 @@
                         ng-model="dialog_cover_img_url"
                       />
                     </div>
-                    <button
-                      class="btn btn-primary confirm-button"
-                      ng-click="editMyPlaylist(list_id)"
-                    >
-                      {{_COMFIRM}}
-                    </button>
-                    <button class="btn btn-default" ng-click="closeDialog()">
-                      {{_CANCEL}}
-                    </button>
+                    <div class="buttons">
+                      <button
+                        class="btn btn-primary confirm-button"
+                        ng-click="editMyPlaylist(list_id)"
+                      >
+                        {{_COMFIRM}}
+                      </button>
+                      <button class="btn btn-default" ng-click="closeDialog()">
+                        {{_CANCEL}}
+                      </button>
+                    </div>
                     <div class="dialog-footer">
                       <button
                         class="btn btn-danger remove-button"
@@ -200,15 +204,17 @@
                         ng-model="dialog_url"
                       />
                     </div>
-                    <button
-                      class="btn btn-primary confirm-button"
-                      ng-click="openUrl(dialog_url);closeDialog();dialog_url='';"
-                    >
-                      {{_COMFIRM}}
-                    </button>
-                    <button class="btn btn-default" ng-click="closeDialog()">
-                      {{_CANCEL}}
-                    </button>
+                    <div class="buttons">
+                      <button
+                        class="btn btn-primary confirm-button"
+                        ng-click="openUrl(dialog_url);closeDialog();dialog_url='';"
+                      >
+                        {{_COMFIRM}}
+                      </button>
+                      <button class="btn btn-default" ng-click="closeDialog()">
+                        {{_CANCEL}}
+                      </button>
+                    </div>
                   </div>
                   <ul class="dialog-merge-playlist" ng-show="dialog_type==6">
                     <li
@@ -527,9 +533,9 @@
                                 >
                               </div>
                             </li>
-                            <div class="loading_bottom">
+                            <!-- <div class="loading_bottom">
                               <img src="images/loading-1.gif" height="40px" />
-                            </div>
+                            </div> -->
                           </ul>
                         </div>
                       </div>

@@ -19,9 +19,11 @@
 
   --line-default-color: #333333;
 
-  --sidebar-background-color: #333333;
+  --sidebar-background-color: #2e2e2e;
   --sidebar-highlight-background-color: #4d4d4d;
   --sidebar-highlight-text-color: #ffffff;
+  --sidebar-hover-background-color: #3c3c3c;
+  --sidebar-hover-text-color: #ffffff;
 
   --content-background-color: #333333;
 
@@ -57,6 +59,7 @@
   --badge-border-color: #843932;
   --songlist-even-background-color: #2d2d2d;
   --songlist-border-color: transparent;
+  --songlist-hover-background-color: #3e3e3e;
 
   --player-left-icon-color: #b3b3b3;
   --player-icon-color: #b3b3b3;

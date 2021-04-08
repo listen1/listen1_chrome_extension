@@ -195,10 +195,14 @@ angular.module('listenone').controller('NavigationController', [
     $scope.showDialog = (dialog_type, data) => {
       $scope.is_dialog_hidden = 0;
       $scope.dialog_data = data;
-      const dialogWidth = 285;
+      const dialogWidth = 400;
+      const dialogHeight = 430;
       const left = window.innerWidth / 2 - dialogWidth / 2;
+      const top = window.innerHeight / 2 - dialogHeight / 2;
+
       $scope.myStyle = {
         left: `${left}px`,
+        top: `${top}px`,
       };
       $scope.dialog_type = dialog_type;
       if (dialog_type === 0) {
@@ -248,7 +252,6 @@ angular.module('listenone').controller('NavigationController', [
       if (dialog_type === 10) {
         $scope.dialog_title = i18next.t('_RECOVER_FROM_GITHUB_GIST');
         GithubClient.gist.listExistBackup().then(
-
           (res) => {
             $scope.myBackup = res;
           },

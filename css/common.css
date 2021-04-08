@@ -43,6 +43,8 @@ button {
   cursor: pointer;
   border: solid 1px var(--button-background-color);
   padding: 5px;
+  min-width: 80px;
+  min-height: 32px;
 }
 button:hover {
   background-color: var(--button-hover-background-color);
@@ -224,10 +226,17 @@ svg {
   text-overflow: ellipsis;
 }
 
-.sidebar ul li.active {
+.sidebar ul li:hover {
+  background: var(--sidebar-hover-background-color);
+  color: var(--sidebar-hover-text-color);
+}
+
+.sidebar ul li.active,
+.sidebar ul li.active:hover {
   background: var(--sidebar-highlight-background-color);
   color: var(--sidebar-highlight-text-color);
 }
+
 /* main sidebar end */
 
 /* widget navigation start */
@@ -726,12 +735,18 @@ ul.detail-songlist li {
   padding: 0 20px;
   font-size: 14px;
 }
+
 ul.detail-songlist li.playlist-result {
   height: 80px;
   padding: 0 10px;
 }
 ul.detail-songlist li.even {
   background-color: var(--songlist-even-background-color);
+}
+
+ul.detail-songlist li:hover,
+ul.detail-songlist li.even:hover {
+  background-color: var(--songlist-hover-background-color);
 }
 
 ul.detail-songlist li a {
@@ -1473,7 +1488,7 @@ svg.searchspinner {
 .dialog {
   position: absolute;
   top: 120px;
-  width: 285px;
+  width: 400px;
   height: 430px;
   z-index: 10000;
   overflow: hidden;
@@ -1505,14 +1520,21 @@ svg.searchspinner {
   background-color: var(--dialog-background-color);
 }
 
-.dialog-body .buttons button {
-  margin-right: 20px;
-  margin-bottom: 20px;
+.dialog-body .buttons {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
 }
 
+.dialog-body .buttons .confirm-button {
+  margin-right: 20px;
+}
 .dialog .detail-songlist li:hover {
   background-color: #e3e3e5;
   cursor: pointer;
+}
+.dialog-body input {
+  width: 100%;
 }
 
 .dialog-playlist,
@@ -1551,7 +1573,7 @@ svg.searchspinner {
 .dialog-playlist li h2,
 .dialog-backuplist li h2,
 .dialog-merge-playlist li h2 {
-  margin-left: 58px;
+  margin: 0 0 0 58px;
   font-size: 13px;
   font-weight: inherit;
 }
@@ -1561,31 +1583,11 @@ svg.searchspinner {
 .dialog-newplaylist {
   padding: 10px;
 }
-.dialog-newplaylist input {
-  width: 260px;
-}
-
-.dialog-newplaylist .confirm-button {
-  margin-left: 36px;
-  margin-right: 58px;
-  margin-top: 20px;
-}
 
 .dialog-newbackup {
   text-align: center;
 }
 
-.dialog-newbackup .confirm-button {
-  margin-right: 12px;
-}
-.dialog-editplaylist,
-.dialog-open-url {
-  padding: 10px;
-}
-.dialog-editplaylist input,
-.dialog-open-url input {
-  width: 260px;
-}
 .dialog-editplaylist label,
 .dialog-open-url label {
   display: block;
@@ -1598,21 +1600,6 @@ svg.searchspinner {
   bottom: 20px;
 }
 
-.dialog-editplaylist .confirm-button,
-.dialog-open-url .confirm-button {
-  margin-right: 26px;
-  margin-left: 61px;
-  margin-top: 20px;
-}
-
-.dialog-connect-lastfm .buttons {
-  margin-top: 30px;
-}
-
-.dialog-connect-lastfm .confirm-button {
-  margin-left: 40px;
-  margin-right: 48px;
-}
 /* dialog end */
 
 /* widget source-list start */
@@ -1628,7 +1615,8 @@ svg.searchspinner {
   font-size: 14px;
 }
 
-.source-list .source-button.active {
+.source-list .source-button.active,
+.source-list .source-button:hover {
   color: var(--link-active-color);
   border-bottom: solid 1px var(--link-active-color);
 }
