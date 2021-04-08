@@ -236,7 +236,6 @@ angular.module('listenone').controller('NavigationController', [
       }
       if (dialog_type === 8) {
         $scope.dialog_title = i18next.t('_EXPORT_TO_GITHUB_GIST');
-        $scope.dialog_type = 8;
         GithubClient.gist.listExistBackup().then(
           (res) => {
             $scope.myBackup = res;
@@ -248,7 +247,6 @@ angular.module('listenone').controller('NavigationController', [
       }
       if (dialog_type === 10) {
         $scope.dialog_title = i18next.t('_RECOVER_FROM_GITHUB_GIST');
-        $scope.dialog_type = 10;
         GithubClient.gist.listExistBackup().then(
 
           (res) => {
