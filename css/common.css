@@ -733,12 +733,18 @@ ul.detail-songlist li {
   padding: 0 20px;
   font-size: 14px;
 }
+
 ul.detail-songlist li.playlist-result {
   height: 80px;
   padding: 0 10px;
 }
 ul.detail-songlist li.even {
   background-color: var(--songlist-even-background-color);
+}
+
+ul.detail-songlist li:hover,
+ul.detail-songlist li.even:hover {
+  background-color: var(--songlist-hover-background-color);
 }
 
 ul.detail-songlist li a {
