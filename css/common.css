@@ -44,6 +44,7 @@ button {
   border: solid 1px var(--button-background-color);
   padding: 5px;
   min-width: 80px;
+  min-height: 32px;
 }
 button:hover {
   background-color: var(--button-hover-background-color);
