@@ -1641,7 +1641,8 @@ svg.searchspinner {
   font-size: 14px;
 }
 
-.source-list .source-button.active {
+.source-list .source-button.active,
+.source-list .source-button:hover {
   color: var(--link-active-color);
   border-bottom: solid 1px var(--link-active-color);
 }
