@@ -72,7 +72,7 @@
         api_key: options.apiKey,
         token,
       };
-      params['api_sig'] = generateSign(params);
+      params.api_sig = generateSign(params);
       params.format = 'json';
 
       axios
