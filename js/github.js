@@ -148,7 +148,7 @@ function github() {
       },
 
       listExistBackup() {
-        return GithubAPI.get('/gist')
+        return GithubAPI.get('/gists')
           .then((res) => {
             const result = res.data;
             return result.filter((backupObject) =>
