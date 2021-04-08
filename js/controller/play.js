@@ -282,7 +282,7 @@ angular.module('listenone').controller('PlayController', [
 
     $scope.toggleMuteStatus = () => {
       // mute function is indeed toggle mute status.
-      l1Player.mute();
+      l1Player.toggleMute();
     };
 
     $scope.myProgress = 0;
@@ -577,7 +577,9 @@ angular.module('listenone').controller('PlayController', [
 
           case 'MUTE': {
             // 'music:mute'
-            $scope.mute = msg.data;
+            $scope.$evalAsync(() => {
+              $scope.mute = msg.data;
+            });
             break;
           }
 

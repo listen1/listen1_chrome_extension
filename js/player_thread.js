@@ -44,7 +44,8 @@
       return this.currentHowl ? this.currentHowl.playing() : false;
     }
 
-    static get muted() {
+    // eslint-disable-next-line class-methods-use-this
+    get muted() {
       return !!Howler._muted;
     }
 
