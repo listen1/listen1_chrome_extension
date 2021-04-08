@@ -162,10 +162,10 @@ function github() {
         let url = '';
         if (gistId != null) {
           method = 'patch';
-          url = `/gist/${gistId}`;
+          url = `/gists/${gistId}`;
         } else {
           method = 'post';
-          url = '/gist';
+          url = '/gists';
         }
         return GithubAPI.request({
           method,
@@ -179,7 +179,7 @@ function github() {
       },
 
       importMySettingsFromGist(gistId) {
-        return GithubAPI.get(`/gist/${gistId}`).then((res) => res.data.files);
+        return GithubAPI.get(`/gists/${gistId}`).then((res) => res.data.files);
       }
     },
   };
