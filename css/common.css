@@ -1488,7 +1488,7 @@ svg.searchspinner {
 .dialog {
   position: absolute;
   top: 120px;
-  width: 285px;
+  width: 400px;
   height: 430px;
   z-index: 10000;
   overflow: hidden;
