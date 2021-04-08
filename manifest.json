@@ -4,7 +4,7 @@
       "js/vendor/axios.min.js",
       "js/vendor/forge_listen1_fork.min.js",
 
-      "js/github_api.js",
+      "js/github.js",
       "js/background.js",
       "js/vendor/howler.core.min.js",
       "js/bridge.js",

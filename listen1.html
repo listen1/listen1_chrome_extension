@@ -36,7 +36,6 @@
     <script type="text/javascript" src="js/vendor/lru-cache.min.js"></script>
 
     <script type="text/javascript" src="js/lowebutil.js"></script>
-    <script type="text/javascript" src="js/github_api.js"></script>
     <script type="text/javascript" src="js/github.js"></script>
     <script type="text/javascript" src="js/lastfm.js"></script>
     <script type="text/javascript" src="js/provider/xiami.js"></script>
@@ -228,13 +227,13 @@
                     <div class="buttons">
                       <button
                         class="btn btn-primary confirm-button"
-                        ng-click="github.updateStatus();closeDialog();"
+                        ng-click="updateGithubStatus();closeDialog();"
                       >
                         {{_AUTHORIZED_FINISHED}}
                       </button>
                       <button
                         class="btn btn-warning warning-button"
-                        ng-click="github.openAuthUrl();"
+                        ng-click="openGithubAuth();"
                       >
                         {{_AUTHORIZED_REOPEN}}
                       </button>
@@ -797,7 +796,7 @@
                     <div
                       class="page"
                       ng-show="current_tag==4 && is_window_hidden==1"
-                      ng-init="lastfm.updateStatus(); github.updateStatus();"
+                      ng-init="lastfm.updateStatus(); updateGithubStatus();"
                     >
                       <div class="site-wrapper-innerd">
                         <div class="cover-container">
@@ -1048,7 +1047,7 @@
                               </button>
                               <button
                                 class="btn btn-primary confirm-button"
-                                ng-show="github.getStatus() == 2"
+                                ng-show="githubStatus == 2"
                                 ng-click="showDialog(8)"
                               >
                                 {{_EXPORT_TO_GITHUB_GIST}}
@@ -1071,7 +1070,7 @@
                             </label>
                             <button
                               class="btn btn-warning confirm-button"
-                              ng-show="github.getStatus() == 2"
+                              ng-show="githubStatus == 2"
                               ng-click="showDialog(10)"
                             >
                               {{_RECOVER_FROM_GITHUB_GIST}}
@@ -1083,25 +1082,25 @@
                           </div>
                           <div class="settings-content">
                             <div>
-                              <p>{{_STATUS}}：{{ github.getStatusText() }}</p>
+                              <p>{{_STATUS}}：{{ githubStatusText }}</p>
                               <button
                                 class="btn btn-primary confirm-button"
-                                ng-show="github.getStatus() == 0"
-                                ng-click="github.openAuthUrl(); showDialog(7);"
+                                ng-show="githubStatus == 0"
+                                ng-click="openGithubAuth(); showDialog(7);"
                               >
                                 {{_CONNECT_TO_GITHUB}}
                               </button>
                               <button
                                 class="btn btn-warning confirm-button"
-                                ng-show="github.getStatus() == 1"
+                                ng-show="githubStatus == 1"
                                 ng-click="showDialog(7);"
                               >
                                 {{_RECONNECT}}
                               </button>
                               <button
                                 class="btn btn-primary confirm-button"
-                                ng-show="github.getStatus() == 2"
-                                ng-click="github.logout();"
+                                ng-show="githubStatus == 2"
+                                ng-click="GithubClient.github.logout();"
                               >
                                 {{_CANCEL_CONNECT}}
                               </button>
