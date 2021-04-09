@@ -548,6 +548,9 @@ svg {
 .page .songdetail-wrapper .translate-switch:hover {
   color: var(--text-default-color);
 }
+.page .songdetail-wrapper .translate-switch.selected {
+  color: var(--text-default-color);
+}
 .page .songdetail-wrapper.slidedown {
   top: calc(100% - 60px);
 }
