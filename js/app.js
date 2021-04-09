@@ -282,14 +282,34 @@ const main = () => {
       restrict: 'A',
       scope: {
         dragobject: '=dragZoneObject',
+        dragtitle: '=dragZoneTitle',
       },
       link(scope, element, attrs) {
+        // https://stackoverflow.com/questions/34200023/drag-drop-set-custom-html-as-drag-image
         element.on('dragstart', (ev) => {
           ev.dataTransfer.setData(
             'application/my-app',
             JSON.stringify(scope.dragobject)
           );
+          const elem = document.createElement('div');
+          elem.id = 'drag-ghost';
+          elem.innerHTML = scope.dragtitle;
+          elem.style.position = 'absolute';
+          elem.style.top = '-1000px';
+          elem.style.padding = '3px';
+          elem.style.background = '#eeeeee';
+          elem.style.color = '#333';
+          elem.style['border-radius'] = '3px';
+
+          document.body.appendChild(elem);
+          ev.dataTransfer.setDragImage(elem, 0, 40);
           ev.dataTransfer.dropEffect = 'copy';
+        });
+        element.on('dragend', (ev) => {
+          const ghost = document.getElementById('drag-ghost');
+          if (ghost.parentNode) {
+            ghost.parentNode.removeChild(ghost);
+          }
         });
       },
     }),
