@@ -24,6 +24,9 @@ function hack_referer_header(details) {
   if (details.url.includes('://music.163.com/')) {
     referer_value = 'https://music.163.com/';
   }
+  if (details.url.includes('://interface3.music.163.com/')) {
+    referer_value = 'https://music.163.com/';
+  }
   if (details.url.includes('://gist.githubusercontent.com/')) {
     referer_value = 'https://gist.githubusercontent.com/';
   }
@@ -143,6 +146,7 @@ function hack_referer_header(details) {
 }
 
 const urls = [
+  '*://*.music.163.com/*',
   '*://music.163.com/*',
   '*://*.xiami.com/*',
   '*://i.y.qq.com/*',

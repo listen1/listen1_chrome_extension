@@ -13,13 +13,13 @@ function build_netease() {
     return result.join('');
   }
 
-  function _aes_encrypt(text, sec_key) {
-    const cipher = forge.cipher.createCipher('AES-CBC', sec_key);
+  function _aes_encrypt(text, sec_key, algo) {
+    const cipher = forge.cipher.createCipher(algo, sec_key);
     cipher.start({ iv: '0102030405060708' });
     cipher.update(forge.util.createBuffer(text));
     cipher.finish();
 
-    return btoa(cipher.output.data);
+    return cipher.output;
   }
 
   function _rsa_encrypt(text, pubKey, modulus) {
@@ -31,7 +31,7 @@ function build_netease() {
     return enc;
   }
 
-  function _encrypted_request(text) {
+  function weapi(text) {
     // eslint-disable-line no-underscore-dangle
     const modulus =
       '00e0b509f6259df8642dbc35662901477df22677ec152b5ff68ace615bb7b72' +
@@ -42,7 +42,13 @@ function build_netease() {
     const pubKey = '010001';
     text = JSON.stringify(text); // eslint-disable-line no-param-reassign
     const sec_key = _create_secret_key(16);
-    const enc_text = _aes_encrypt(_aes_encrypt(text, nonce), sec_key);
+    const enc_text = btoa(
+      _aes_encrypt(
+        btoa(_aes_encrypt(text, nonce, 'AES-CBC').data),
+        sec_key,
+        'AES-CBC'
+      ).data
+    );
     const enc_sec_key = _rsa_encrypt(sec_key, pubKey, modulus);
     const data = {
       params: enc_text,
@@ -51,6 +57,24 @@ function build_netease() {
 
     return data;
   }
+
+  // refer to https://github.com/Binaryify/NeteaseCloudMusicApi/blob/master/util/crypto.js
+  const eapi = (url, object) => {
+    const eapiKey = 'e82ckenh8dichen8';
+
+    const text = typeof object === 'object' ? JSON.stringify(object) : object;
+    const message = `nobody${url}use${text}md5forencrypt`;
+    const digest = forge.md5
+      .create()
+      .update(forge.util.encodeUtf8(message))
+      .digest()
+      .toHex();
+    const data = `${url}-36cd479b6b5-${text}-36cd479b6b5-${digest}`;
+
+    return {
+      params: _aes_encrypt(data, eapiKey, 'AES-ECB').toHex().toUpperCase(),
+    };
+  };
 
   function ne_show_toplist(offset) {
     if (offset !== undefined && offset > 0) {
@@ -61,7 +85,7 @@ function build_netease() {
       };
     }
     const url = 'https://music.163.com/weapi/toplist/detail';
-    const data = _encrypted_request({});
+    const data = weapi({});
     return {
       success(fn) {
         axios.post(url, new URLSearchParams(data)).then((response) => {
@@ -217,7 +241,7 @@ function build_netease() {
       c: `[${queryIds.map((id) => `{"id":${id}}`).join(',')}]`,
       ids: `[${queryIds.join(',')}]`,
     };
-    const data = _encrypted_request(d);
+    const data = weapi(d);
     axios
       .post(target_url, new URLSearchParams(data).toString())
       .then((response) => {
@@ -245,7 +269,7 @@ function build_netease() {
       c: `[${track_ids.map((id) => `{"id":${id}}`).join(',')}]`,
       ids: `[${track_ids.join(',')}]`,
     };
-    const data = _encrypted_request(d);
+    const data = weapi(d);
     axios.post(target_url, new URLSearchParams(data)).then((response) => {
       const tracks = response.data.songs.map((track_json) => ({
         id: `netrack_${track_json.id}`,
@@ -287,7 +311,7 @@ function build_netease() {
           n: 1000,
           csrf_token: '',
         };
-        const data = _encrypted_request(d);
+        const data = weapi(d);
         ne_ensure_cookie(() => {
           axios.post(target_url, new URLSearchParams(data)).then((response) => {
             const { data: res_data } = response;
@@ -329,34 +353,44 @@ function build_netease() {
 
   function ne_bootstrap_track(track, success, failure) {
     const sound = {};
-    const target_url =
-      'https://music.163.com/weapi/song/enhance/player/url/v1?csrf_token=';
+    const target_url = `https://interface3.music.163.com/eapi/song/enhance/player/url`;
     let song_id = track.id;
+    const eapiUrl = '/api/song/enhance/player/url';
 
     song_id = song_id.slice('netrack_'.length);
 
     const d = {
-      ids: [song_id],
-      level: 'standard',
-      encodeType: 'aac',
-      csrf_token: '',
+      ids: `[${song_id}]`,
+      br: 999000,
     };
-    const data = _encrypted_request(d);
+    const data = eapi(eapiUrl, d);
+    const expire =
+      (new Date().getTime() + 1e3 * 60 * 60 * 24 * 365 * 100) / 1000;
 
-    axios.post(target_url, new URLSearchParams(data)).then((response) => {
-      const { data: res_data } = response;
-      const { url, br } = res_data.data[0];
-      if (url != null) {
-        sound.url = url;
-        const bitrate = `${(br / 1000).toFixed(0)}kbps`;
-        sound.bitrate = bitrate;
-        sound.platform = 'netease';
+    cookieSet(
+      {
+        url: 'https://interface3.music.163.com',
+        name: 'os',
+        value: 'pc',
+        expirationDate: expire,
+      },
+      (cookie) => {
+        axios.post(target_url, new URLSearchParams(data)).then((response) => {
+          const { data: res_data } = response;
+          const { url, br } = res_data.data[0];
+          if (url != null) {
+            sound.url = url;
+            const bitrate = `${(br / 1000).toFixed(0)}kbps`;
+            sound.bitrate = bitrate;
+            sound.platform = 'netease';
 
-        success(sound);
-      } else {
-        failure(sound);
+            success(sound);
+          } else {
+            failure(sound);
+          }
+        });
       }
-    });
+    );
   }
 
   function is_playable(song) {
@@ -521,7 +555,7 @@ function build_netease() {
       tv: -1,
       csrf_token: csrf,
     };
-    const data = _encrypted_request(d);
+    const data = weapi(d);
     return {
       success(fn) {
         axios.post(target_url, new URLSearchParams(data)).then((response) => {
@@ -746,7 +780,7 @@ function build_netease() {
       };
     }
 
-    const encrypt_req_data = _encrypted_request(req_data);
+    const encrypt_req_data = weapi(req_data);
     const expire =
       (new Date().getTime() + 1e3 * 60 * 60 * 24 * 365 * 100) / 1000;
 
@@ -835,7 +869,7 @@ function build_netease() {
       n: 1000,
     };
 
-    const encrypt_req_data = _encrypted_request(req_data);
+    const encrypt_req_data = weapi(req_data);
 
     return {
       success(fn) {
@@ -866,7 +900,7 @@ function build_netease() {
   function ne_get_user() {
     const url = `https://music.163.com/api/nuser/account/get`;
 
-    const encrypt_req_data = _encrypted_request({});
+    const encrypt_req_data = weapi({});
     return {
       success(fn) {
         axios.post(url, new URLSearchParams(encrypt_req_data)).then((res) => {

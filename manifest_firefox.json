@@ -37,6 +37,7 @@
     "tabs",
     "cookies",
     "*://music.163.com/*",
+    "*://*.music.163.com/*",
     "*://*.xiami.com/*",
     "*://*.qq.com/*",
     "*://*.kugou.com/",
