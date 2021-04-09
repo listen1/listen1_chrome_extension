@@ -275,7 +275,56 @@ const main = () => {
     }),
   ]);
 
-  app.directive('draggable', [
+  /* drag drop support */
+  app.directive('dragZone', [
+    '$window',
+    ($window) => ({
+      restrict: 'A',
+      scope: {
+        dragobject: '=dragZoneObject',
+      },
+      link(scope, element, attrs) {
+        element.on('dragstart', (ev) => {
+          ev.dataTransfer.setData(
+            'application/my-app',
+            JSON.stringify(scope.dragobject)
+          );
+          ev.dataTransfer.dropEffect = 'copy';
+        });
+      },
+    }),
+  ]);
+
+  app.directive('dropZone', [
+    '$window',
+    ($window) => ({
+      restrict: 'A',
+      scope: {
+        ondrop: '&dropZoneOndrop',
+      },
+      link(scope, element, attrs) {
+        element.on('dragenter', () => {
+          element[0].classList.add('dragover');
+        });
+        element.on('dragleave', () => {
+          element[0].classList.remove('dragover');
+        });
+        element.on('dragover', (ev) => {
+          ev.preventDefault();
+          ev.dataTransfer.dropEffect = 'copy';
+        });
+        element.on('drop', (ev) => {
+          const jsonString = ev.dataTransfer.getData('application/my-app');
+          const song = JSON.parse(jsonString);
+          // https://stackoverflow.com/questions/19889615/can-an-angular-directive-pass-arguments-to-functions-in-expressions-specified-in
+          scope.ondrop({ arg2: song });
+          element[0].classList.remove('dragover');
+        });
+      },
+    }),
+  ]);
+
+  app.directive('draggableBar', [
     '$document',
     '$rootScope',
     ($document, $rootScope) => (scope, element, attrs) => {

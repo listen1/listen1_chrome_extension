@@ -264,21 +264,22 @@ angular.module('listenone').controller('NavigationController', [
         $scope.dialog_title = i18next.t('_LOGIN');
       }
     };
+    $scope.addMyPlaylist = (option_id, song) => {
+      MediaService.addMyPlaylist(option_id, song).success((playlist) => {
+        notyf.success(i18next.t('_ADD_TO_PLAYLIST_SUCCESS'));
+        $scope.closeDialog();
+        // add to current playing list
+        if (option_id === $scope.current_list_id) {
+          l1Player.addTrack($scope.dialog_song);
+        }
+        if (option_id === $scope.list_id) {
+          $scope.songs = playlist.tracks;
+        }
+      });
+    };
 
     $scope.chooseDialogOption = (option_id) => {
-      MediaService.addMyPlaylist(option_id, $scope.dialog_song).success(
-        (playlist) => {
-          notyf.success(i18next.t('_ADD_TO_PLAYLIST_SUCCESS'));
-          $scope.closeDialog();
-          // add to current playing list
-          if (option_id === $scope.current_list_id) {
-            l1Player.addTrack($scope.dialog_song);
-          }
-          if (option_id === $scope.list_id) {
-            $scope.songs = playlist.tracks;
-          }
-        }
-      );
+      $scope.addMyPlaylist(option_id, $scope.dialog_song);
     };
 
     $scope.newDialogOption = (option) => {

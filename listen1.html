@@ -368,6 +368,8 @@
                         ng-repeat="i in myplaylists track by $index"
                         ng-class="{ 'active':window_type=='list' && ( ('/playlist?list_id='+i.info.id) === getCurrentUrl() ) }"
                         ng-click="showPlaylist(i.info.id)"
+                        drop-zone
+                        drop-zone-ondrop="addMyPlaylist(i.info.id, arg2)"
                       >
                         <svg class="feather">
                           <use href="#disc"></use>
@@ -1488,6 +1490,9 @@
                             ng-class-even="'even'"
                             ng-mouseenter="options=true"
                             ng-mouseleave="options=false"
+                            draggable="true"
+                            drag-zone
+                            drag-zone-object="song"
                           >
                             <div class="title">
                               <!-- <a class="disabled" ng-if="song.disabled" ng-click="copyrightNotice()">{{ song.title }}</a> -->
@@ -1737,7 +1742,7 @@
                         class="barbg"
                         id="progressbar"
                         mode="play"
-                        draggable=""
+                        draggable-bar=""
                       >
                         <div class="cur" ng-style="{width : myProgress + '%' }">
                           <span class="btn"><i></i></span>
@@ -1764,7 +1769,7 @@
                         class="barbg"
                         id="volumebar"
                         mode="volume"
-                        draggable=""
+                        draggable-bar=""
                       >
                         <div class="cur" ng-style="{width : volume + '%' }">
                           <span class="btn"><i></i></span>

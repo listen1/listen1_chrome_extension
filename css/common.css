@@ -236,7 +236,17 @@ svg {
   background: var(--sidebar-highlight-background-color);
   color: var(--sidebar-highlight-text-color);
 }
-
+.sidebar ul li.dragover {
+  background: var(--sidebar-highlight-background-color);
+  color: var(--sidebar-highlight-text-color);
+}
+/*
+avoid hover effect trigger dragleave event
+https://stackoverflow.com/questions/19889615/can-an-angular-directive-pass-arguments-to-functions-in-expressions-specified-in
+*/
+.sidebar ul li * {
+  pointer-events: none;
+}
 /* main sidebar end */
 
 /* widget navigation start */
