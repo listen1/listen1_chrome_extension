@@ -4,7 +4,8 @@
     },
     "extends": [
         "airbnb-base",
-        "prettier"
+        "prettier",
+        "plugin:vue/vue3-recommended"
     ],
     "rules": {
         "camelcase": "off",
@@ -18,7 +19,8 @@
     },
     "env": {
         "browser": true,
-        "node": false
+        "node": false,
+        "webextensions": true
     },
     "ignorePatterns": [
         "**/vendor/*.js"
