@@ -3,7 +3,7 @@
 /* eslint-disable no-shadow */
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-param-reassign */
-/* global angular notyf i18next MediaService l1Player hotkeys isElectron require GithubClient lastfm */
+/* global angular notyf i18next MediaService l1Player hotkeys isElectron require GithubClient lastfm vm */
 
 // control main view of page, it can be called any place
 angular.module('listenone').controller('NavigationController', [
@@ -29,18 +29,34 @@ angular.module('listenone').controller('NavigationController', [
 
     $scope.lastfm = lastfm;
 
+    $scope.$watch()
+
     $scope.$on('isdoubanlogin:update', (event, data) => {
       $scope.isDoubanLogin = data;
     });
 
+    $scope.windowHidden = (state) => {
+      vm.windowHidden = Boolean(state);
+      $scope.is_window_hidden = state;
+    }
+
     // tag
     $scope.showTag = (tag_id) => {
       $scope.current_tag = tag_id;
-      $scope.is_window_hidden = 1;
+      vm.currentTag = tag_id;
+      $scope.windowHidden(1);
       $scope.window_url_stack = [];
       $scope.window_poped_url_stack = [];
       $scope.closeWindow();
     };
+
+    document.addEventListener('show_playlist', (e) => {
+      $scope.showPlaylist(e.detail);
+    });
+
+    document.addEventListener('directplaylist', (e) => {
+      $scope.directplaylist(e.detail);
+    });
 
     $scope.$on('search:keyword_change', (event, data) => {
       $scope.showTag(3);
@@ -65,7 +81,7 @@ angular.module('listenone').controller('NavigationController', [
       if (offset === undefined) {
         offset = 0;
       }
-      $scope.is_window_hidden = 1;
+      $scope.windowHidden(1);
       $scope.resetWindow(offset);
       $scope.window_url_stack = [];
       $scope.window_poped_url_stack = [];
@@ -114,7 +130,7 @@ angular.module('listenone').controller('NavigationController', [
         return;
       }
       // save current scrolltop
-      $scope.is_window_hidden = 0;
+      $scope.windowHidden(0);
       $scope.resetWindow();
 
       $scope.window_url_stack.push({
@@ -150,7 +166,7 @@ angular.module('listenone').controller('NavigationController', [
       if ($scope.getCurrentUrl() === url) {
         return;
       }
-      $scope.is_window_hidden = 0;
+      $scope.windowHidden(0);
       $scope.resetWindow();
 
       if ($scope.getCurrentUrl() === '/now_playing') {

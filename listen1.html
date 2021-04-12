@@ -60,12 +60,14 @@
     <script type="text/javascript" src="js/controller/navigation.js"></script>
     <script type="text/javascript" src="js/controller/my_playlist.js"></script>
     <script type="text/javascript" src="js/controller/platform.js"></script>
-    <script type="text/javascript" src="js/controller/playlist.js"></script>
     <script type="text/javascript" src="js/controller/play.js"></script>
     <script
       type="text/javascript"
       src="js/controller/instant_search.js"
     ></script>
+
+    <script type="text/javascript" src="js/vueapp.js"></script>
+    <script type="text/javascript" src="js/components/playlist.js"></script>
 
     <script>
       if (window.module) module = window.module;
@@ -73,6 +75,94 @@
   </head>
 
   <body>
+    <div id="templates">
+      <template id='tpl-playlist'>
+        <div class="page page-hot-playlist">
+        <div class="source-list">
+          <template v-for="(source, index) in sourceList">
+            <div
+            class="source-button"
+            :class="{ active:tab === source.name }"
+            @click="changeTab(source.name)"
+            >
+              {{source.displayText}}
+            </div>
+            <div
+              v-if="index<sourceList.length-1"
+              class="splitter"
+            ></div>
+          </template>
+
+        </div>
+        <div class="playlist-filter">
+          <div
+            class="l1-button filter-item"
+            v-for="filter in currentFilters"
+            @click="changeFilter(filter.id)"
+            :class="{ active:filter.id === currentFilterId}"
+          >
+            {{filter.name}}
+          </div>
+          <div
+            class="l1-button filter-item"
+            v-show="currentFilters.length"
+            @click="toggleMorePlaylists()"
+          >
+            更多...
+          </div>
+        </div>
+        <div class="all-playlist-filter" v-show="showMore">
+          <div
+            v-for="category in allPlaylistFilters[tab] || []"
+            class="category"
+          >
+            <div class="category-title">
+              {{category.category}}
+            </div>
+            <div class="category-filters">
+              <div
+                class="filter-item"
+                v-for="filter in category.filters"
+              >
+                <span @click="changeFilter(filter.id)">
+                  {{filter.name}}</span
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="site-wrapper-innerd" id="hotplaylist">
+          <div class="cover-container" id="playlist-content">
+            <ul class="playlist-covers">
+              <li v-for="i in result ">
+                <div class="u-cover">
+                  <img
+                    :src="i.cover_img_url"
+                    @click="showPlaylist(i.id)"
+                  />
+                  <div
+                    class="bottom"
+                    @click="directplaylist(i.id)"
+                  >
+                    <svg class="feather">
+                      <use href="#play-circle"></use>
+                    </svg>
+                  </div>
+                </div>
+                <div class="desc">
+                  <span
+                    class="title"
+                    @click="showPlaylist(i.id)"
+                    >{{i.title}}</span
+                  >
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      </template>
+    </div>
     <div
       id="feather-container"
       style="visibility: hidden; position: absolute; width: 0px; height: 0px"
@@ -449,98 +539,10 @@
                     infinite-scroll="scrolling()"
                     content-selector="'#playlist-content'"
                   >
-                    <!-- hot playlist window-->
-                    <div
-                      class="page page-hot-playlist"
-                      ng-show="current_tag==2 && is_window_hidden==1"
-                      ng-controller="PlayListController"
-                      ng-init="loadPlaylist();"
-                    >
-                      <div class="source-list" ng-show="is_window_hidden==1">
-                        <div
-                          ng-repeat-start="source in ::sourceList"
-                          class="source-button"
-                          ng-class="{'active':tab === source.name}"
-                          ng-click="changeTab(source.name)"
-                        >
-                          {{source.displayText}}
-                        </div>
-                        <div
-                          ng-repeat-end
-                          ng-if="!$last"
-                          class="splitter"
-                        ></div>
-                      </div>
-                      <div class="playlist-filter">
-                        <div
-                          class="l1-button filter-item"
-                          ng-repeat="filter in playlistFilters[tab] || []"
-                          ng-click="changeFilter(filter.id)"
-                          ng-class="{'active':filter.id === currentFilterId}"
-                        >
-                          {{filter.name}}
-                        </div>
-                        <div
-                          class="l1-button filter-item"
-                          ng-show="playlistFilters[tab] && playlistFilters[tab].length > 0"
-                          ng-click="toggleMorePlaylists()"
-                        >
-                          更多...
-                        </div>
-                      </div>
-                      <div class="all-playlist-filter" ng-show="showMore">
-                        <div
-                          ng-repeat="category in allPlaylistFilters[tab] || []"
-                          class="category"
-                        >
-                          <div class="category-title">
-                            {{category.category}}
-                          </div>
-                          <div class="category-filters">
-                            <div
-                              class="filter-item"
-                              ng-repeat="filter in category.filters"
-                            >
-                              <span ng-click="changeFilter(filter.id)">
-                                {{filter.name}}</span
-                              >
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="site-wrapper-innerd" id="hotplaylist">
-                        <div class="cover-container" id="playlist-content">
-                          <ul class="playlist-covers">
-                            <li ng-repeat="i in result ">
-                              <div class="u-cover">
-                                <img
-                                  ng-src="{{i.cover_img_url}}"
-                                  ng-click="showPlaylist(i.id)"
-                                />
-                                <div
-                                  class="bottom"
-                                  ng-click="directplaylist(i.id)"
-                                >
-                                  <svg class="feather">
-                                    <use href="#play-circle"></use>
-                                  </svg>
-                                </div>
-                              </div>
-                              <div class="desc">
-                                <span
-                                  class="title"
-                                  ng-click="showPlaylist(i.id)"
-                                  >{{i.title}}</span
-                                >
-                              </div>
-                            </li>
-                            <!-- <div class="loading_bottom">
-                              <img src="images/loading-1.gif" height="40px" />
-                            </div> -->
-                          </ul>
-                        </div>
-                      </div>
-                    </div>
+                  <div id="vue-root">
+                    <!-- hot splaylist window-->
+                    <playlist v-show="currentTag===2 && windowHidden"></playlist>
+                  </div>
                     <!-- my netease window-->
                     <div
                       class="page page-hot-playlist"

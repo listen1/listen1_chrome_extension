@@ -268,6 +268,7 @@ const main = () => {
           }
           const offsetToload = 10;
           if (remain <= offsetToload) {
+            document.dispatchEvent(new Event('infinite_scroll:hit_bottom'));
             $rootScope.$broadcast('infinite_scroll:hit_bottom', '');
           }
         });
