@@ -235,7 +235,17 @@ const MediaService = {
       success: (fn) => fn(newPlaylist),
     };
   },
-
+  insertMyPlaylist(id, track, to_track, direction) {
+    const newPlaylist = myplaylist.insert_myplaylist(
+      id,
+      track,
+      to_track,
+      direction
+    );
+    return {
+      success: (fn) => fn(newPlaylist),
+    };
+  },
   addPlaylist(id, tracks) {
     const provider = getProviderByItemId(id);
     return provider.add_playlist(id, tracks);

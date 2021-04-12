@@ -132,6 +132,33 @@ const myplaylistFactory = () => {
     localStorage.setObject(playlist_id, playlist);
     return playlist;
   }
+  function array_move(arr, old_index, new_index) {
+    // https://stackoverflow.com/questions/5306680/move-an-array-element-from-one-array-position-to-another
+    if (new_index >= arr.length) {
+      let k = new_index - arr.length + 1;
+      while (k > 0) {
+        k -= 1;
+        arr.push(undefined);
+      }
+    }
+    arr.splice(new_index, 0, arr.splice(old_index, 1)[0]);
+    return arr; // for testing
+  }
+  function insert_myplaylist(playlist_id, track, to_track, direction) {
+    const playlist = localStorage.getObject(playlist_id);
+    if (playlist == null) {
+      return null;
+    }
+    const index = playlist.tracks.findIndex((i) => i.id === track.id);
+    let insertIndex = playlist.tracks.findIndex((i) => i.id === to_track.id);
+    if (insertIndex > index) {
+      insertIndex -= 1;
+    }
+    const offset = direction === 'top' ? 0 : 1;
+    array_move(playlist.tracks, index, insertIndex + offset);
+    localStorage.setObject(playlist_id, playlist);
+    return playlist;
+  }
 
   function remove_from_myplaylist(playlist_id, track_id) {
     const playlist = localStorage.getObject(playlist_id);
@@ -195,6 +222,7 @@ const myplaylistFactory = () => {
     create_myplaylist,
     edit_myplaylist,
     myplaylist_containers,
+    insert_myplaylist,
   };
 };
 

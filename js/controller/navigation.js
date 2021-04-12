@@ -264,6 +264,29 @@ angular.module('listenone').controller('NavigationController', [
         $scope.dialog_title = i18next.t('_LOGIN');
       }
     };
+
+    $scope.onSidebarPlaylistDrop = (list_id, data, dataType) => {
+      if (dataType === 'application/listen1-song') {
+        $scope.addMyPlaylist(list_id, data);
+      }
+    };
+
+    $scope.onPlaylistSongDrop = (list_id, song, data, dataType, direction) => {
+      if (dataType === 'application/listen1-song') {
+        // insert song
+        MediaService.insertMyPlaylist(list_id, data, song, direction).success(
+          (playlist) => {
+            $scope.closeDialog();
+            if (list_id === $scope.list_id) {
+              $scope.$evalAsync(() => {
+                $scope.songs = playlist.tracks;
+              });
+            }
+          }
+        );
+      }
+    };
+
     $scope.addMyPlaylist = (option_id, song) => {
       MediaService.addMyPlaylist(option_id, song).success((playlist) => {
         notyf.success(i18next.t('_ADD_TO_PLAYLIST_SUCCESS'));

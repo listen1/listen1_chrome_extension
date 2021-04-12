@@ -368,8 +368,8 @@
                         ng-repeat="i in myplaylists track by $index"
                         ng-class="{ 'active':window_type=='list' && ( ('/playlist?list_id='+i.info.id) === getCurrentUrl() ) }"
                         ng-click="showPlaylist(i.info.id)"
-                        drop-zone
-                        drop-zone-ondrop="addMyPlaylist(i.info.id, arg2)"
+                        drag-drop-zone
+                        drop-zone-ondrop="onSidebarPlaylistDrop(i.info.id, arg1, arg2)"
                       >
                         <svg class="feather">
                           <use href="#disc"></use>
@@ -1491,9 +1491,12 @@
                             ng-mouseenter="options=true"
                             ng-mouseleave="options=false"
                             draggable="true"
-                            drag-zone
+                            drag-drop-zone
                             drag-zone-object="song"
                             drag-zone-title="song.title"
+                            sortable="true"
+                            drag-zone-type="'application/listen1-song'"
+                            drop-zone-ondrop="onPlaylistSongDrop(list_id, song, arg1, arg2, arg3)"
                           >
                             <div class="title">
                               <!-- <a class="disabled" ng-if="song.disabled" ng-click="copyrightNotice()">{{ song.title }}</a> -->

@@ -276,19 +276,29 @@ const main = () => {
   ]);
 
   /* drag drop support */
-  app.directive('dragZone', [
+  app.directive('dragDropZone', [
     '$window',
     ($window) => ({
       restrict: 'A',
       scope: {
         dragobject: '=dragZoneObject',
         dragtitle: '=dragZoneTitle',
+        dragtype: '=dragZoneType',
+        ondrop: '&dropZoneOndrop',
+        ondragleave: '&dropZoneOndragleave',
+        sortable: '=',
       },
       link(scope, element, attrs) {
         // https://stackoverflow.com/questions/34200023/drag-drop-set-custom-html-as-drag-image
         element.on('dragstart', (ev) => {
+          if (scope.dragobject === undefined) {
+            return;
+          }
+          if (scope.dragtype === undefined) {
+            return;
+          }
           ev.dataTransfer.setData(
-            'application/my-app',
+            scope.dragtype,
             JSON.stringify(scope.dragobject)
           );
           const elem = document.createElement('div');
@@ -305,40 +315,74 @@ const main = () => {
           ev.dataTransfer.setDragImage(elem, 0, 40);
           ev.dataTransfer.dropEffect = 'copy';
         });
-        element.on('dragend', (ev) => {
+        element.on('dragend', () => {
           const ghost = document.getElementById('drag-ghost');
           if (ghost.parentNode) {
             ghost.parentNode.removeChild(ghost);
           }
         });
-      },
-    }),
-  ]);
-
-  app.directive('dropZone', [
-    '$window',
-    ($window) => ({
-      restrict: 'A',
-      scope: {
-        ondrop: '&dropZoneOndrop',
-      },
-      link(scope, element, attrs) {
         element.on('dragenter', () => {
           element[0].classList.add('dragover');
         });
-        element.on('dragleave', () => {
+        element.on('dragleave', (event) => {
           element[0].classList.remove('dragover');
+          if (scope.ondragleave !== undefined) {
+            scope.ondragleave();
+          }
+          if (scope.sortable !== undefined) {
+            const target = element[0];
+            target.style['z-index'] = '0';
+            target.style['border-bottom'] = 'solid 1px transparent';
+            target.style['border-top'] = 'solid 1px transparent';
+          }
         });
-        element.on('dragover', (ev) => {
-          ev.preventDefault();
-          ev.dataTransfer.dropEffect = 'copy';
+
+        element.on('dragover', (event) => {
+          event.preventDefault();
+          event.dataTransfer.dropEffect = 'copy';
+          let dragType = '';
+          if (event.dataTransfer.types.length > 0) {
+            [dragType] = event.dataTransfer.types;
+          }
+
+          if (scope.dragtype === dragType && scope.sortable !== undefined) {
+            event.dataTransfer.dropEffect = 'move';
+            const bounding = event.target.getBoundingClientRect();
+            const offset = bounding.y + bounding.height / 2;
+
+            const direction = event.clientY - offset > 0 ? 'bottom' : 'top';
+            const target = element[0];
+            if (direction === 'bottom') {
+              target.style['border-bottom'] = 'solid 1px red';
+              target.style['border-top'] = 'solid 1px transparent';
+              target.style['z-index'] = '9';
+            } else if (direction === 'top') {
+              target.style['border-top'] = 'solid 1px red';
+              target.style['border-bottom'] = 'solid 1px transparent';
+              target.style['z-index'] = '9';
+            }
+          }
         });
-        element.on('drop', (ev) => {
-          const jsonString = ev.dataTransfer.getData('application/my-app');
-          const song = JSON.parse(jsonString);
+
+        element.on('drop', (event) => {
+          if (scope.ondrop === undefined) {
+            return;
+          }
+          const [dragType] = event.dataTransfer.types;
+          const jsonString = event.dataTransfer.getData(dragType);
+          const data = JSON.parse(jsonString);
+          let direction = '';
+          const bounding = event.target.getBoundingClientRect();
+          const offset = bounding.y + bounding.height / 2;
+          direction = event.clientY - offset > 0 ? 'bottom' : 'top';
           // https://stackoverflow.com/questions/19889615/can-an-angular-directive-pass-arguments-to-functions-in-expressions-specified-in
-          scope.ondrop({ arg2: song });
+          scope.ondrop({ arg1: data, arg2: dragType, arg3: direction });
           element[0].classList.remove('dragover');
+          if (scope.sortable !== undefined) {
+            const target = element[0];
+            target.style['border-top'] = 'solid 1px transparent';
+            target.style['border-bottom'] = 'solid 1px transparent';
+          }
         });
       },
     }),
