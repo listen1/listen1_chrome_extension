@@ -744,13 +744,13 @@ ul.detail-songlist li {
   /* https://stackoverflow.com/questions/4157005/css-positioning-z-index-negative-margins */
   position: relative;
   display: flex;
-  border-top: solid 1px var(--songlist-border-color);
-  border-bottom: solid 1px var(--songlist-border-color);
+  border-top: solid 2px var(--songlist-border-color);
+  border-bottom: solid 2px var(--songlist-border-color);
   height: 37px;
   align-items: center;
   padding: 0 20px;
   font-size: 14px;
-  margin-bottom: -1px;
+  margin-bottom: -2px;
 }
 
 ul.detail-songlist li.playlist-result {

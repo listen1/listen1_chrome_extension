@@ -313,7 +313,6 @@ const main = () => {
 
           document.body.appendChild(elem);
           ev.dataTransfer.setDragImage(elem, 0, 40);
-          ev.dataTransfer.dropEffect = 'copy';
         });
         element.on('dragend', () => {
           const ghost = document.getElementById('drag-ghost');
@@ -329,23 +328,23 @@ const main = () => {
           if (scope.ondragleave !== undefined) {
             scope.ondragleave();
           }
-          if (scope.sortable !== undefined) {
+          if (scope.sortable) {
             const target = element[0];
             target.style['z-index'] = '0';
-            target.style['border-bottom'] = 'solid 1px transparent';
-            target.style['border-top'] = 'solid 1px transparent';
+            target.style['border-bottom'] = 'solid 2px transparent';
+            target.style['border-top'] = 'solid 2px transparent';
           }
         });
 
         element.on('dragover', (event) => {
           event.preventDefault();
-          event.dataTransfer.dropEffect = 'copy';
+          const dragLineColor = '#FF4444';
           let dragType = '';
           if (event.dataTransfer.types.length > 0) {
             [dragType] = event.dataTransfer.types;
           }
 
-          if (scope.dragtype === dragType && scope.sortable !== undefined) {
+          if (scope.dragtype === dragType && scope.sortable) {
             event.dataTransfer.dropEffect = 'move';
             const bounding = event.target.getBoundingClientRect();
             const offset = bounding.y + bounding.height / 2;
@@ -353,14 +352,19 @@ const main = () => {
             const direction = event.clientY - offset > 0 ? 'bottom' : 'top';
             const target = element[0];
             if (direction === 'bottom') {
-              target.style['border-bottom'] = 'solid 1px red';
-              target.style['border-top'] = 'solid 1px transparent';
+              target.style['border-bottom'] = `solid 2px ${dragLineColor}`;
+              target.style['border-top'] = 'solid 2px transparent';
               target.style['z-index'] = '9';
             } else if (direction === 'top') {
-              target.style['border-top'] = 'solid 1px red';
-              target.style['border-bottom'] = 'solid 1px transparent';
+              target.style['border-top'] = `solid 2px ${dragLineColor}`;
+              target.style['border-bottom'] = 'solid 2px transparent';
               target.style['z-index'] = '9';
             }
+          } else if (
+            scope.dragtype === 'application/listen1-playlist' &&
+            dragType === 'application/listen1-song'
+          ) {
+            event.dataTransfer.dropEffect = 'copy';
           }
         });
 
@@ -376,12 +380,14 @@ const main = () => {
           const offset = bounding.y + bounding.height / 2;
           direction = event.clientY - offset > 0 ? 'bottom' : 'top';
           // https://stackoverflow.com/questions/19889615/can-an-angular-directive-pass-arguments-to-functions-in-expressions-specified-in
-          scope.ondrop({ arg1: data, arg2: dragType, arg3: direction });
+          if (scope.dragtype === dragType && scope.sortable) {
+            scope.ondrop({ arg1: data, arg2: dragType, arg3: direction });
+          }
           element[0].classList.remove('dragover');
-          if (scope.sortable !== undefined) {
+          if (scope.sortable) {
             const target = element[0];
-            target.style['border-top'] = 'solid 1px transparent';
-            target.style['border-bottom'] = 'solid 1px transparent';
+            target.style['border-top'] = 'solid 2px transparent';
+            target.style['border-bottom'] = 'solid 2px transparent';
           }
         });
       },
