@@ -375,8 +375,8 @@
                         ng-class="{ 'active':window_type=='list' && ( ('/playlist?list_id='+i.info.id) === getCurrentUrl() ) }"
                         ng-click="showPlaylist(i.info.id)"
                         drag-drop-zone
-                        drag-zone-type="'application/listen1-playlist'"
-                        drop-zone-ondrop="onSidebarPlaylistDrop(i.info.id, arg1, arg2, arg3)"
+                        drag-zone-type="'application/listen1-myplaylist'"
+                        drop-zone-ondrop="onSidebarPlaylistDrop('my', i.info.id, arg1, arg2, arg3)"
                         draggable="true"
                         sortable="true"
                         drag-zone-object="i"
@@ -398,6 +398,13 @@
                         ng-repeat="i in favoriteplaylists track by $index"
                         ng-class="{ 'active':window_type=='list' && ( ('/playlist?list_id='+i.info.id) === getCurrentUrl() ) }"
                         ng-click="showPlaylist(i.info.id, {useCache: false})"
+                        drag-drop-zone
+                        drag-zone-type="'application/listen1-favoriteplaylist'"
+                        drop-zone-ondrop="onSidebarPlaylistDrop('favorite', i.info.id, arg1, arg2, arg3)"
+                        draggable="true"
+                        sortable="true"
+                        drag-zone-object="i"
+                        drag-zone-title="i.info.title"
                       >
                         <div class="sidebar-block">
                           <svg class="feather">

@@ -326,7 +326,7 @@ const main = () => {
             [dragType] = event.dataTransfer.types;
           }
           if (
-            scope.dragtype === 'application/listen1-playlist' &&
+            scope.dragtype === 'application/listen1-myplaylist' &&
             dragType === 'application/listen1-song'
           ) {
             element[0].classList.add('dragover');
@@ -370,7 +370,7 @@ const main = () => {
               target.style['z-index'] = '9';
             }
           } else if (
-            scope.dragtype === 'application/listen1-playlist' &&
+            scope.dragtype === 'application/listen1-myplaylist' &&
             dragType === 'application/listen1-song'
           ) {
             event.dataTransfer.dropEffect = 'copy';

@@ -265,18 +265,33 @@ angular.module('listenone').controller('NavigationController', [
       }
     };
 
-    $scope.onSidebarPlaylistDrop = (list_id, data, dataType, direction) => {
-      if (dataType === 'application/listen1-song') {
+    $scope.onSidebarPlaylistDrop = (
+      playlistType,
+      list_id,
+      data,
+      dataType,
+      direction
+    ) => {
+      if (playlistType === 'my' && dataType === 'application/listen1-song') {
         $scope.addMyPlaylist(list_id, data);
-      } else if (dataType === 'application/listen1-playlist') {
+      } else if (
+        (playlistType === 'my' &&
+          dataType === 'application/listen1-myplaylist') ||
+        (playlistType === 'favorite' &&
+          dataType === 'application/listen1-favoriteplaylist')
+      ) {
         MediaService.insertMyplaylistToMyplaylists(
-          'my',
+          playlistType,
           data.info.id,
           list_id,
           direction
-        ).success((playlists) => {
-          $scope.myplaylists = playlists;
-          $rootScope.$broadcast('myplaylist:update');
+        ).success(() => {
+          if (playlistType === 'my') {
+            $rootScope.$broadcast('myplaylist:update');
+          }
+          if (playlistType === 'favorite') {
+            $rootScope.$broadcast('favoriteplaylist:update');
+          }
         });
       }
     };
