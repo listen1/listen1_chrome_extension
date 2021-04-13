@@ -389,9 +389,8 @@ const main = () => {
           const offset = bounding.y + bounding.height / 2;
           direction = event.clientY - offset > 0 ? 'bottom' : 'top';
           // https://stackoverflow.com/questions/19889615/can-an-angular-directive-pass-arguments-to-functions-in-expressions-specified-in
-          if (scope.dragtype === dragType && scope.sortable) {
-            scope.ondrop({ arg1: data, arg2: dragType, arg3: direction });
-          }
+          scope.ondrop({ arg1: data, arg2: dragType, arg3: direction });
+
           element[0].classList.remove('dragover');
           if (scope.sortable) {
             const target = element[0];
