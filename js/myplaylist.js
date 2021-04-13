@@ -89,6 +89,9 @@ const myplaylistFactory = () => {
 
     const index = playlists.findIndex((i) => i === playlist_id);
     let insertIndex = playlists.findIndex((i) => i === to_playlist_id);
+    if (index === insertIndex) {
+      return playlists;
+    }
     if (insertIndex > index) {
       insertIndex -= 1;
     }
@@ -177,6 +180,9 @@ const myplaylistFactory = () => {
     }
     const index = playlist.tracks.findIndex((i) => i.id === track.id);
     let insertIndex = playlist.tracks.findIndex((i) => i.id === to_track.id);
+    if (index === insertIndex) {
+      return playlist;
+    }
     if (insertIndex > index) {
       insertIndex -= 1;
     }
