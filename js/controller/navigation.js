@@ -3,7 +3,7 @@
 /* eslint-disable no-shadow */
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-param-reassign */
-/* global angular notyf i18next MediaService l1Player hotkeys isElectron require GithubClient lastfm vm */
+/* global angular notyf i18next MediaService l1Player hotkeys isElectron require GithubClient lastfm vstore */
 
 // control main view of page, it can be called any place
 angular.module('listenone').controller('NavigationController', [
@@ -36,14 +36,14 @@ angular.module('listenone').controller('NavigationController', [
     });
 
     $scope.windowHidden = (state) => {
-      vm.windowHidden = Boolean(state);
+      vstore.commit('windowHidden', Boolean(state));
       $scope.is_window_hidden = state;
     }
 
     // tag
     $scope.showTag = (tag_id) => {
       $scope.current_tag = tag_id;
-      vm.currentTag = tag_id;
+      vstore.commit('currentTag', tag_id);
       $scope.windowHidden(1);
       $scope.window_url_stack = [];
       $scope.window_poped_url_stack = [];
