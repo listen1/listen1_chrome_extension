@@ -13,6 +13,7 @@
     },
     "globals": {
         "axios": "readonly",
+        "emitter": "readonly",
         "window": "readonly",
         "browser": "readonly",
         "chrome": "readonly"

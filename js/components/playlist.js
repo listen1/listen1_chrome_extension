@@ -24,7 +24,7 @@ vueApp.component('Playlist', {
 
     // Global Event
     const self = this;
-    document.addEventListener('infinite_scroll:hit_bottom', () => {
+    emitter.on('infinite_scroll:hit_bottom', () => {
       if (this.loading === true) {
         return;
       }
@@ -57,14 +57,10 @@ vueApp.component('Playlist', {
       this.showMore = !this.showMore;
     },
     directplaylist(id) {
-      document.dispatchEvent(new CustomEvent('directplaylist', {
-        detail: id,
-      }));
+      emitter.emit('directplaylist', id);
     },
     showPlaylist(id) {
-      document.dispatchEvent(new CustomEvent('show_playlist', {
-        detail: id,
-      }));
+      emitter.emit('show_playlist', id);
     },
     loadPlaylist() {
       this.showMore = false;

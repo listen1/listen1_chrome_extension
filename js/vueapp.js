@@ -31,6 +31,8 @@ const vstore = Vuex.createStore({
 
 vueApp.use(vstore);
 
+window.emitter = mitt();
+
 window.onload = () => {
   window.vm = vueApp.mount('#vue-root');
 };

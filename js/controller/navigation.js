@@ -50,12 +50,12 @@ angular.module('listenone').controller('NavigationController', [
       $scope.closeWindow();
     };
 
-    document.addEventListener('show_playlist', (e) => {
-      $scope.showPlaylist(e.detail);
+    emitter.on('show_playlist', (data)=> {
+      $scope.showPlaylist(data);
     });
 
-    document.addEventListener('directplaylist', (e) => {
-      $scope.directplaylist(e.detail);
+    emitter.on('directplaylist', (data)=> {
+      $scope.directplaylist(data);
     });
 
     $scope.$on('search:keyword_change', (event, data) => {
