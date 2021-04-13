@@ -235,7 +235,7 @@ const MediaService = {
       success: (fn) => fn(newPlaylist),
     };
   },
-  insertMyPlaylist(id, track, to_track, direction) {
+  insertTrackToMyPlaylist(id, track, to_track, direction) {
     const newPlaylist = myplaylist.insert_track_to_myplaylist(
       id,
       track,
@@ -271,7 +271,22 @@ const MediaService = {
       },
     };
   },
-
+  insertMyplaylistToMyplaylists(
+    playlistType,
+    playlistId,
+    toPlaylistId,
+    direction
+  ) {
+    const newPlaylists = myplaylist.insert_myplaylist_to_myplaylists(
+      playlistType,
+      playlistId,
+      toPlaylistId,
+      direction
+    );
+    return {
+      success: (fn) => fn(newPlaylists),
+    };
+  },
   editMyPlaylist(id, title, coverImgUrl) {
     myplaylist.edit_myplaylist(id, title, coverImgUrl);
     return {

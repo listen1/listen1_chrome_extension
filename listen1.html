@@ -327,8 +327,10 @@
                         ng-class="{ 'active':(current_tag==2) && (window_url_stack.length ==0) }"
                         ng-click="showTag(2)"
                       >
-                        <span class="icon li-featured-list"></span
-                        ><a>{{_PLAYLISTS}}</a>
+                        <div class="sidebar-block">
+                          <span class="icon li-featured-list"></span
+                          ><a>{{_PLAYLISTS}}</a>
+                        </div>
                       </li>
                     </ul>
                     <div
@@ -343,18 +345,22 @@
                         ng-click="showPlaylist('lmplaylist_reserve')"
                         ng-class="{ 'active':window_type=='list' && ( '/playlist?list_id=lmplaylist_reserve' === getCurrentUrl() ) }"
                       >
-                        <span class="icon li-featured-list"></span
-                        ><a>{{_LOCAL_MUSIC}}</a>
+                        <div class="sidebar-block">
+                          <span class="icon li-featured-list"></span
+                          ><a>{{_LOCAL_MUSIC}}</a>
+                        </div>
                       </li>
                       <li
                         ng-if="is_login('netease')"
                         ng-click="showTag(6)"
                         ng-class="{ 'active':(current_tag==6) && (window_url_stack.length ==0) }"
                       >
-                        <svg class="feather">
-                          <use href="#globe"></use>
-                        </svg>
-                        <a>{{_MY_NETEASE}}</a>
+                        <div class="sidebar-block">
+                          <svg class="feather">
+                            <use href="#globe"></use>
+                          </svg>
+                          <a>{{_MY_NETEASE}}</a>
+                        </div>
                       </li>
                     </ul>
                     <div class="menu-title" ng-init="loadMyPlaylist();">
@@ -370,12 +376,18 @@
                         ng-click="showPlaylist(i.info.id)"
                         drag-drop-zone
                         drag-zone-type="'application/listen1-playlist'"
-                        drop-zone-ondrop="onSidebarPlaylistDrop(i.info.id, arg1, arg2)"
+                        drop-zone-ondrop="onSidebarPlaylistDrop(i.info.id, arg1, arg2, arg3)"
+                        draggable="true"
+                        sortable="true"
+                        drag-zone-object="i"
+                        drag-zone-title="i.info.title"
                       >
-                        <svg class="feather">
-                          <use href="#disc"></use>
-                        </svg>
-                        <a>{{i.info.title}}</a>
+                        <div class="sidebar-block">
+                          <svg class="feather">
+                            <use href="#disc"></use>
+                          </svg>
+                          <a>{{i.info.title}}</a>
+                        </div>
                       </li>
                     </ul>
                     <div class="menu-title" ng-init="loadFavoritePlaylist();">
@@ -387,10 +399,12 @@
                         ng-class="{ 'active':window_type=='list' && ( ('/playlist?list_id='+i.info.id) === getCurrentUrl() ) }"
                         ng-click="showPlaylist(i.info.id, {useCache: false})"
                       >
-                        <svg class="feather">
-                          <use href="#disc"></use>
-                        </svg>
-                        <a>{{i.info.title}}</a>
+                        <div class="sidebar-block">
+                          <svg class="feather">
+                            <use href="#disc"></use>
+                          </svg>
+                          <a>{{i.info.title}}</a>
+                        </div>
                       </li>
                     </ul>
                   </div>

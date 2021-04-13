@@ -320,8 +320,17 @@ const main = () => {
             ghost.parentNode.removeChild(ghost);
           }
         });
-        element.on('dragenter', () => {
-          element[0].classList.add('dragover');
+        element.on('dragenter', (event) => {
+          let dragType = '';
+          if (event.dataTransfer.types.length > 0) {
+            [dragType] = event.dataTransfer.types;
+          }
+          if (
+            scope.dragtype === 'application/listen1-playlist' &&
+            dragType === 'application/listen1-song'
+          ) {
+            element[0].classList.add('dragover');
+          }
         });
         element.on('dragleave', (event) => {
           element[0].classList.remove('dragover');

@@ -203,14 +203,21 @@ svg {
 }
 
 .sidebar ul li {
+  cursor: pointer;
+  padding-left: 10px;
+  border-top: solid 2px transparent;
+  border-bottom: solid 2px transparent;
+  margin-bottom: -2px;
+}
+.sidebar ul li .sidebar-block {
   display: flex;
   align-items: center;
   line-height: 28px;
-  margin: 0 0 6px 12px;
+  padding-left: 12px;
+  margin: 3px 0;
   color: var(--text-default-color);
-  cursor: pointer;
+
   border-radius: var(--default-border-radius);
-  padding-left: 10px;
 }
 
 .sidebar svg {
@@ -226,17 +233,17 @@ svg {
   text-overflow: ellipsis;
 }
 
-.sidebar ul li:hover {
+.sidebar ul li:hover .sidebar-block {
   background: var(--sidebar-hover-background-color);
   color: var(--sidebar-hover-text-color);
 }
 
-.sidebar ul li.active,
-.sidebar ul li.active:hover {
+.sidebar ul li.active .sidebar-block,
+.sidebar ul li.active:hover .sidebar-block {
   background: var(--sidebar-highlight-background-color);
   color: var(--sidebar-highlight-text-color);
 }
-.sidebar ul li.dragover {
+.sidebar ul li.dragover .sidebar-block {
   background: var(--sidebar-highlight-background-color);
   color: var(--sidebar-highlight-text-color);
 }
