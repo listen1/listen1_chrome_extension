@@ -105,7 +105,7 @@ const myplaylistFactory = () => {
     localStorage.setObject(key, newplaylists);
   };
 
-  function add_myplaylist(playlist_id, track) {
+  function add_track_to_myplaylist(playlist_id, track) {
     const playlist = localStorage.getObject(playlist_id);
     if (playlist == null) {
       return null;
@@ -144,7 +144,7 @@ const myplaylistFactory = () => {
     arr.splice(new_index, 0, arr.splice(old_index, 1)[0]);
     return arr; // for testing
   }
-  function insert_myplaylist(playlist_id, track, to_track, direction) {
+  function insert_track_to_myplaylist(playlist_id, track, to_track, direction) {
     const playlist = localStorage.getObject(playlist_id);
     if (playlist == null) {
       return null;
@@ -160,7 +160,7 @@ const myplaylistFactory = () => {
     return playlist;
   }
 
-  function remove_from_myplaylist(playlist_id, track_id) {
+  function remove_track_from_myplaylist(playlist_id, track_id) {
     const playlist = localStorage.getObject(playlist_id);
     if (playlist == null) {
       return;
@@ -217,12 +217,12 @@ const myplaylistFactory = () => {
     save_myplaylist,
     get_playlist: get_myplaylist,
     remove_myplaylist,
-    add_myplaylist,
-    remove_from_myplaylist,
+    add_track_to_myplaylist,
+    remove_track_from_myplaylist,
     create_myplaylist,
     edit_myplaylist,
     myplaylist_containers,
-    insert_myplaylist,
+    insert_track_to_myplaylist,
   };
 };
 

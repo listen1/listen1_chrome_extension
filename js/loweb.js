@@ -230,13 +230,13 @@ const MediaService = {
   },
 
   addMyPlaylist(id, track) {
-    const newPlaylist = myplaylist.add_myplaylist(id, track);
+    const newPlaylist = myplaylist.add_track_to_myplaylist(id, track);
     return {
       success: (fn) => fn(newPlaylist),
     };
   },
   insertMyPlaylist(id, track, to_track, direction) {
-    const newPlaylist = myplaylist.insert_myplaylist(
+    const newPlaylist = myplaylist.insert_track_to_myplaylist(
       id,
       track,
       to_track,
@@ -252,7 +252,7 @@ const MediaService = {
   },
 
   removeTrackFromMyPlaylist(id, track) {
-    myplaylist.remove_from_myplaylist(id, track);
+    myplaylist.remove_track_from_myplaylist(id, track);
     return {
       success: (fn) => fn(),
     };
@@ -294,7 +294,7 @@ const MediaService = {
     const srcData = localStorage.getObject(source).tracks;
     tarData.forEach((tarTrack) => {
       if (!srcData.find((srcTrack) => srcTrack.id === tarTrack.id)) {
-        myplaylist.add_myplaylist(source, tarTrack);
+        myplaylist.add_track_to_myplaylist(source, tarTrack);
       }
     });
     return {
