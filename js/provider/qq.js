@@ -1,5 +1,5 @@
 /* eslint-disable no-use-before-define */
-/* global getParameterByName */
+/* global getParameterByName cookieGet cookieRemove */
 function build_qq() {
   function htmlDecode(value) {
     const parser = new DOMParser();
@@ -578,10 +578,69 @@ function build_qq() {
     };
   }
 
+  function qq_get_user_by_uin(uin, callback) {
+    const infoUrl = `https://u.y.qq.com/cgi-bin/musicu.fcg?format=json&&loginUin=${uin}&hostUin=0inCharset=utf8&outCharset=utf-8&platform=yqq.json&needNewCode=0&data=${encodeURIComponent(
+      JSON.stringify({
+        comm: { ct: 24, cv: 0 },
+        vip: {
+          module: 'userInfo.VipQueryServer',
+          method: 'SRFVipQuery_V2',
+          param: { uin_list: [uin] },
+        },
+        base: {
+          module: 'userInfo.BaseUserInfoServer',
+          method: 'get_user_baseinfo_v2',
+          param: { vec_uin: [uin] },
+        },
+      })
+    )}`;
+
+    return axios.get(infoUrl).then((response) => {
+      const { data } = response;
+      const info = data.base.data.map_userinfo[uin];
+      const result = {
+        is_login: true,
+        user_id: uin,
+        user_name: uin,
+        nickname: info.nick,
+        avatar: info.headurl,
+        platform: 'qq',
+        data,
+      };
+      return callback({ status: 'success', data: result });
+    });
+  }
+
   function qq_get_user() {
     return {
       success: (fn) => {
-        fn({ status: 'fail', data: {} });
+        const domain = 'https://y.qq.com';
+        cookieGet(
+          {
+            url: domain,
+            name: 'uin',
+          },
+          (qqCookie) => {
+            if (qqCookie === null) {
+              return cookieGet(
+                {
+                  url: domain,
+                  name: 'wxuin',
+                },
+                (wxCookie) => {
+                  if (wxCookie == null) {
+                    return fn({ status: 'fail', data: {} });
+                  }
+                  let { value: uin } = wxCookie;
+                  uin = uin.slice('o'.length); // remove prefix o
+                  return qq_get_user_by_uin(uin, fn);
+                }
+              );
+            }
+            const { value: uin } = qqCookie;
+            return qq_get_user_by_uin(uin, fn);
+          }
+        );
       },
     };
   }
@@ -589,7 +648,23 @@ function build_qq() {
   function qq_get_login_url() {
     return `https://y.qq.com/portal/profile.html`;
   }
-  function qq_logout() {}
+  function qq_logout() {
+    cookieRemove(
+      {
+        url: 'https://y.qq.com',
+        name: 'uin',
+      },
+      () => {
+        cookieRemove(
+          {
+            url: 'https://y.qq.com',
+            name: 'wxuin',
+          },
+          () => {}
+        );
+      }
+    );
+  }
   return {
     show_playlist: qq_show_playlist,
     get_playlist_filters,

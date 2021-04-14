@@ -21,7 +21,7 @@ const PROVIDERS = [
     name: 'qq',
     instance: qq,
     searchable: true,
-    support_login: false,
+    support_login: true,
     id: 'qq',
   },
   {
