@@ -287,7 +287,6 @@ class taihe {
   static show_playlist(url) {
     const offset = Number(getParameterByName('offset', url));
     const subCate = getParameterByName('filter_id', url);
-    console.log(this.axiosTH);
     return {
       success: (fn) => {
         this.axiosTH
