@@ -1,22 +1,24 @@
 /* eslint-disable no-undef */
 /* eslint-disable no-unused-vars */
 /* global async getParameterByName isElectron */
-function build_kuwo() {
+class kuwo {
   // Convert html code
-  function html_decode(str) {
+  static html_decode(str) {
     return str.replace(/(&nbsp;)/g, ' ');
   }
+
   // Fix single quote in json
-  function fix_json(data) {
+  static fix_json(data) {
     return data.replace(/(')/g, '"');
   }
 
-  function num2str(num) {
+  static num2str(num) {
     // const t = parseInt(num, 10);
     return parseInt(num / 10, 10).toString() + (num % 10).toString();
   }
+
   /*
-  function kw_convert_song(item) {
+  static kw_convert_song(item) {
     const song_id = item.MUSICRID.split('_').pop();
     const track = {
       id: `kwtrack_${song_id}`,
@@ -34,13 +36,13 @@ function build_kuwo() {
     return track;
   }
   */
-  function kw_convert_song2(item) {
+  static kw_convert_song2(item) {
     return {
       id: `kwtrack_${item.rid}`,
-      title: html_decode(item.name),
+      title: this.html_decode(item.name),
       artist: item.artist,
       artist_id: `kwartist_${item.artistid}`,
-      album: html_decode(item.album),
+      album: this.html_decode(item.album),
       album_id: `kwalbum_${item.albumid}`,
       source: 'kuwo',
       source_url: `https://www.kuwo.cn/play_detail/${item.rid}`,
@@ -49,6 +51,7 @@ function build_kuwo() {
       lyric_url: item.rid,
     };
   }
+
   /*
   function async_process_list(data_list, handler, handler_extra_param_list, callback) {
     const fnDict = {};
@@ -133,7 +136,7 @@ function build_kuwo() {
     kw_add_song_pic_in_track(track, params, callback);
   }
   */
-  function kw_get_token(callback, isRetry) {
+  static kw_get_token(callback, isRetry) {
     let isRetryValue = true;
     if (isRetry === undefined) {
       isRetryValue = false;
@@ -154,7 +157,7 @@ function build_kuwo() {
               return callback('');
             }
             return axios.get('https://www.kuwo.cn/').then(() => {
-              kw_get_token(callback, true);
+              this.kw_get_token(callback, true);
             });
           }
           return callback(cookie.value);
@@ -172,7 +175,7 @@ function build_kuwo() {
               return callback('');
             }
             return axios.get('https://www.kuwo.cn/').then(() => {
-              kw_get_token(callback, true);
+              this.kw_get_token(callback, true);
             });
           }
           return callback(cookie[0].value);
@@ -181,8 +184,8 @@ function build_kuwo() {
     }
   }
 
-  function kw_cookie_get(url, callback) {
-    kw_get_token((token) => {
+  static kw_cookie_get(url, callback) {
+    this.kw_get_token((token) => {
       axios
         .get(url, {
           headers: {
@@ -192,7 +195,7 @@ function build_kuwo() {
         .then((response) => {
           if (response.data.success === false) {
             // token expire, refetch token and start get url
-            kw_get_token((token2) => {
+            this.kw_get_token((token2) => {
               axios
                 .get(url, {
                   headers: {
@@ -213,7 +216,7 @@ function build_kuwo() {
     });
   }
 
-  function kw_render_tracks(url, page, callback) {
+  static kw_render_tracks(url, page, callback) {
     const list_id = getParameterByName('list_id', url).split('_').pop();
     const playlist_type = getParameterByName('list_id', url).split('_')[0];
     let tracks_url = '';
@@ -230,15 +233,15 @@ function build_kuwo() {
         break;
     }
     // axios.get(tracks_url).then((response) => {
-    kw_cookie_get(tracks_url, (response) => {
+    this.kw_cookie_get(tracks_url, (response) => {
       const tracks = response.data.data.musicList.map((item) =>
-        kw_convert_song2(item)
+        this.kw_convert_song2(item)
       );
       return callback(null, tracks);
     });
   }
 
-  function kw_search(url) {
+  static search(url) {
     // eslint-disable-line no-unused-vars
     const keyword = getParameterByName('keywords', url);
     const curpage = getParameterByName('curpage', url);
@@ -257,7 +260,7 @@ function build_kuwo() {
     const target_url = `https://www.kuwo.cn/api/www/search/${api}?key=${keyword}&pn=${curpage}&rn=20`;
     return {
       success(fn) {
-        kw_cookie_get(target_url, (response) => {
+        kuwo.kw_cookie_get(target_url, (response) => {
           let result = [];
           let total = 0;
           if (response === undefined) {
@@ -269,18 +272,18 @@ function build_kuwo() {
           }
           if (searchType === '0' && response.data.data !== undefined) {
             result = response.data.data.list.map((item) =>
-              kw_convert_song2(item)
+              kuwo.kw_convert_song2(item)
             );
             total = response.data.data.total;
           } else if (searchType === '1' && response.data.data !== undefined) {
             result = response.data.data.list.map((item) => ({
               id: `kwplaylist_${item.id}`,
-              title: html_decode(item.name),
+              title: kuwo.html_decode(item.name),
               source: 'kuwo',
               source_url: `https://www.kuwo.cn/playlist_detail/${item.id}`,
               img_url: item.img,
               url: `kwplaylist_${item.id}`,
-              author: html_decode(item.uname),
+              author: kuwo.html_decode(item.uname),
               count: item.total,
             }));
             total = response.data.data.total;
@@ -296,7 +299,7 @@ function build_kuwo() {
   }
 
   // eslint-disable-next-line no-unused-vars
-  function kw_bootstrap_track(track, success, failure) {
+  static bootstrap_track(track, success, failure) {
     const sound = {};
     const song_id = track.id.slice('kwtrack_'.length);
     const target_url =
@@ -319,7 +322,7 @@ function build_kuwo() {
     });
   }
 
-  function kw_get_lrc(arr) {
+  static kw_get_lrc(arr) {
     const lyric = arr.reduce((str, item) => {
       const t = parseFloat(item.time);
       const m = parseInt(t / 60, 10);
@@ -332,7 +335,7 @@ function build_kuwo() {
     return lyric;
   }
 
-  function kw_generate_translation(lrclist) {
+  static kw_generate_translation(lrclist) {
     if (lrclist) {
       lrclist.filter((e) => e && e.lineLyric !== '//');
 
@@ -371,8 +374,8 @@ function build_kuwo() {
       //   tlrc_arr[tlrc_arr.length - 1].time = lrc_arr[lrc_arr.length - 1].time;
       // }
       return {
-        lrc: kw_get_lrc(lrclist),
-        tlrc: kw_get_lrc([]),
+        lrc: kuwo.kw_get_lrc(lrclist),
+        tlrc: kuwo.kw_get_lrc([]),
       };
     }
     return {
@@ -381,7 +384,7 @@ function build_kuwo() {
     };
   }
 
-  function kw_lyric(url) {
+  static lyric(url) {
     // eslint-disable-line no-unused-vars
     const track_id = getParameterByName('lyric_url', url);
     const target_url = `https://m.kuwo.cn/newh5/singles/songinfoandlrc?musicId=${track_id}`;
@@ -392,7 +395,7 @@ function build_kuwo() {
           let { data } = response;
           data =
             data.status === 200
-              ? kw_generate_translation(data.data.lrclist)
+              ? kuwo.kw_generate_translation(data.data.lrclist)
               : {};
           return fn({
             lyric: data.lrc || '',
@@ -403,27 +406,27 @@ function build_kuwo() {
     };
   }
 
-  function kw_artist(url) {
+  static kw_artist(url) {
     // eslint-disable-line no-unused-vars
     const artist_id = getParameterByName('list_id', url).split('_').pop();
     return {
       success(fn) {
         let target_url = `https://www.kuwo.cn/api/www/artist/artist?artistid=${artist_id}`;
-        kw_cookie_get(target_url, (response) => {
+        kuwo.kw_cookie_get(target_url, (response) => {
           const { data } = response.data;
           // data = JSON.parse(fix_json(data));
           const info = {
             cover_img_url: data.pic300,
-            title: html_decode(data.name),
+            title: kuwo.html_decode(data.name),
             id: `kwartist_${data.id}`,
             source_url: `https://www.kuwo.cn/singer_detail/${data.id}`,
           };
 
           // Get songs
           target_url = `https://www.kuwo.cn/api/www/artist/artistMusic?artistid=${artist_id}&pn=1&rn=50`;
-          kw_cookie_get(target_url, (res) => {
+          kuwo.kw_cookie_get(target_url, (res) => {
             const tracks = res.data.data.list.map((item) =>
-              kw_convert_song2(item)
+              kuwo.kw_convert_song2(item)
             );
             return fn({
               tracks,
@@ -449,7 +452,7 @@ function build_kuwo() {
     };
   }
 
-  function kw_album(url) {
+  static kw_album(url) {
     // eslint-disable-line no-unused-vars
     const album_id = getParameterByName('list_id', url).split('_').pop();
     return {
@@ -460,11 +463,11 @@ function build_kuwo() {
           '&vipver=MUSIC_8.7.7.0_W4';
         axios.get(target_url).then((response) => {
           let { data } = response;
-          data = JSON.parse(fix_json(data));
+          data = JSON.parse(kuwo.fix_json(data));
 
           const info = {
             cover_img_url: data.hts_img.replace('/120/', '/400/'),
-            title: html_decode(data.name),
+            title: kuwo.html_decode(data.name),
             id: `kwalbum_${data.albumid}`,
             source_url: `https://www.kuwo.cn/album_detail/${data.albumid}`,
           };
@@ -474,7 +477,7 @@ function build_kuwo() {
           const page_array = Array.from({ length: page }, (v, k) => k + 1);
           async.concat(
             page_array,
-            (item, callback) => kw_render_tracks(url, item, callback),
+            (item, callback) => kuwo.kw_render_tracks(url, item, callback),
             (err, tracks) => {
               fn({
                 tracks,
@@ -494,7 +497,7 @@ function build_kuwo() {
     };
   }
 
-  function kw_show_playlist(url) {
+  static show_playlist(url) {
     const offset = Number(getParameterByName('offset', url));
 
     /* const id_available = {
@@ -579,7 +582,7 @@ function build_kuwo() {
     };
   }
 
-  function kw_get_playlist(url) {
+  static kw_get_playlist(url) {
     // eslint-disable-line no-unused-vars
     const list_id = getParameterByName('list_id', url).split('_').pop();
     const target_url =
@@ -603,7 +606,7 @@ function build_kuwo() {
           const page_array = Array.from({ length: page }, (v, k) => k + 1);
           async.concat(
             page_array,
-            (item, callback) => kw_render_tracks(url, item, callback),
+            (item, callback) => kuwo.kw_render_tracks(url, item, callback),
             (err, tracks) => {
               fn({
                 tracks,
@@ -623,7 +626,7 @@ function build_kuwo() {
     };
   }
 
-  function kw_parse_url(myurl) {
+  static parse_url(myurl) {
     let result;
     let id;
     let url = myurl;
@@ -659,51 +662,52 @@ function build_kuwo() {
     return result;
   }
 
-  function get_playlist(url) {
+  static get_playlist(url) {
     const list_id = getParameterByName('list_id', url).split('_')[0];
     switch (list_id) {
       case 'kwplaylist':
-        return kw_get_playlist(url);
+        return this.kw_get_playlist(url);
       case 'kwalbum':
-        return kw_album(url);
+        return this.kw_album(url);
       case 'kwartist':
-        return kw_artist(url);
+        return this.kw_artist(url);
       default:
         return null;
     }
   }
 
-  function get_playlist_filters() {
+  static get_playlist_filters() {
     return {
       success(fn) {
         return fn({ recommend: [], all: [] });
       },
     };
   }
-  function kw_get_user() {
+
+  static get_user() {
     return {
       success: (fn) => {
         fn({ status: 'fail', data: {} });
       },
     };
   }
-  function kw_get_login_url() {
+
+  static get_login_url() {
     return `https://www.kuwo.com`;
   }
-  function kw_logout() {}
 
-  return {
-    show_playlist: kw_show_playlist,
-    get_playlist_filters,
-    get_playlist,
-    parse_url: kw_parse_url,
-    bootstrap_track: kw_bootstrap_track,
-    search: kw_search,
-    lyric: kw_lyric,
-    get_user: kw_get_user,
-    get_login_url: kw_get_login_url,
-    logout: kw_logout,
-  };
+  static logout() {}
+
+  // return {
+  //   show_playlist: kw_show_playlist,
+  //   get_playlist_filters,
+  //   get_playlist,
+  //   parse_url: kw_parse_url,
+  //   bootstrap_track: kw_bootstrap_track,
+  //   search: kw_search,
+  //   lyric: kw_lyric,
+  //   get_user: kw_get_user,
+  //   get_login_url: kw_get_login_url,
+  //   logout: kw_logout,
+  // };
 }
-
-const kuwo = build_kuwo(); // eslint-disable-line no-unused-vars
