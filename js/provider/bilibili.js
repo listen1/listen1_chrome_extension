@@ -42,7 +42,6 @@ class bilibili {
   }
 
   static bi_get_playlist(url) {
-    // eslint-disable-line no-unused-vars
     const list_id = getParameterByName('list_id', url).split('_').pop();
     const target_url = `https://www.bilibili.com/audio/music-service-c/web/menu/info?sid=${list_id}`;
     return {
@@ -94,7 +93,6 @@ class bilibili {
   }
 
   static bi_artist(url) {
-    // eslint-disable-line no-unused-vars
     return {
       success: (fn) => {
         const artist_id = getParameterByName('list_id', url).split('_').pop();
@@ -134,7 +132,6 @@ class bilibili {
     return result;
   }
 
-  // eslint-disable-next-line no-unused-vars
   static bootstrap_track(track, success, failure) {
     const sound = {};
     const song_id = track.id.slice('bitrack_'.length);
@@ -153,7 +150,6 @@ class bilibili {
   }
 
   static search(url) {
-    // eslint-disable-line no-unused-vars
     return {
       success: (fn) => {
         const keyword = getParameterByName('keywords', url);
@@ -191,7 +187,6 @@ class bilibili {
   }
 
   static lyric(url) {
-    // eslint-disable-line no-unused-vars
     // const track_id = getParameterByName('track_id', url).split('_').pop();
     const lyric_url = getParameterByName('lyric_url', url);
     return {

@@ -21,7 +21,6 @@ class xiami{
   }
 
   static xm_get_playlist(url) {
-    // eslint-disable-line no-unused-vars
     const list_id = getParameterByName('list_id', url).split('_').pop();
     return {
       success(fn) {
@@ -53,7 +52,6 @@ class xiami{
   }
 
   static xm_album(url) {
-    // eslint-disable-line no-unused-vars
     return {
       success(fn) {
         const album_id = getParameterByName('list_id', url).split('_').pop();
@@ -72,7 +70,6 @@ class xiami{
   }
 
   static xm_artist(url) {
-    // eslint-disable-line no-unused-vars
     return {
       success(fn) {
         const artist_id = getParameterByName('list_id', url).split('_').pop();
@@ -92,7 +89,6 @@ class xiami{
 
   static lyric() {
     return {
-      // eslint-disable-next-line consistent-return
       success(fn) {
         return fn({
           lyric: '',

@@ -159,7 +159,6 @@ class localmusic {
     playlist.tracks = newtracks;
     localStorage.setObject(list_id, playlist);
 
-    // eslint-disable-next-line consistent-return
     return {
       success(fn) {
         return fn();

@@ -31,7 +31,7 @@ class netease {
     return enc;
   }
 
-   static weapi(text) {
+  static weapi(text) {
     const modulus =
       '00e0b509f6259df8642dbc35662901477df22677ec152b5ff68ace615bb7b72' +
       '5152b3ab17a876aea8a5aa76d2e417629ec4ee341f56135fccf695280104e0312ecbd' +
@@ -58,7 +58,7 @@ class netease {
   }
 
   // refer to https://github.com/Binaryify/NeteaseCloudMusicApi/blob/master/util/crypto.js
-  static eapi  (url, object){
+  static eapi(url, object) {
     const eapiKey = 'e82ckenh8dichen8';
 
     const text = typeof object === 'object' ? JSON.stringify(object) : object;
@@ -73,7 +73,7 @@ class netease {
     return {
       params: this._aes_encrypt(data, eapiKey, 'AES-ECB').toHex().toUpperCase(),
     };
-  };
+  }
 
   static ne_show_toplist(offset) {
     if (offset !== undefined && offset > 0) {
@@ -192,7 +192,6 @@ class netease {
               expirationDate: expire,
             },
             (cookie) => {
-              // eslint-disable-line no-unused-vars
               cookieSet(
                 {
                   url: domain,
@@ -201,7 +200,6 @@ class netease {
                   expirationDate: expire,
                 },
                 (cookie2) => {
-                  // eslint-disable-line no-unused-vars
                   callback(null);
                 }
               );
@@ -468,7 +466,6 @@ class netease {
   }
 
   static ne_album(url) {
-    // eslint-disable-line no-unused-vars
     const album_id = getParameterByName('list_id', url).split('_').pop();
     // use chrome extension to modify referer.
     const target_url = `https://music.163.com/api/album/${album_id}`;
@@ -506,7 +503,6 @@ class netease {
   }
 
   static ne_artist(url) {
-    // eslint-disable-line no-unused-vars
     const artist_id = getParameterByName('list_id', url).split('_').pop();
     // use chrome extension to modify referer.
     const target_url = `https://music.163.com/api/artist/${artist_id}`;

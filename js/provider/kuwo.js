@@ -328,9 +328,9 @@ class kuwo {
       const m = parseInt(t / 60, 10);
       const s = parseInt(t - m * 60, 10);
       const ms = parseInt((t - m * 60 - s) * 100, 10);
-      return `${str}[${num2str(m)}:${num2str(parseInt(s, 10))}.${num2str(ms)}]${
-        item.lineLyric
-      }\n`;
+      return `${str}[${this.num2str(m)}:${this.num2str(
+        parseInt(s, 10)
+      )}.${this.num2str(ms)}]${item.lineLyric}\n`;
     }, '');
     return lyric;
   }

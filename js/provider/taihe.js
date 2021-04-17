@@ -150,7 +150,6 @@ class taihe {
   }
 
   static th_artist(url) {
-    // eslint-disable-line no-unused-vars
     return {
       success(fn) {
         const artist_id = getParameterByName('list_id', url).split('_').pop();
@@ -243,7 +242,6 @@ class taihe {
   }
 
   static th_album(url) {
-    // eslint-disable-line no-unused-vars
     return {
       success(fn) {
         const album_id = getParameterByName('list_id', url).split('_').pop();
