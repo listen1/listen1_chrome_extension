@@ -1,16 +1,17 @@
 /* eslint-disable no-param-reassign */
 /* eslint-disable no-unused-vars */
 /* global getParameterByName */
+const defaultLocalMusicPlaylist = {
+  tracks: [],
+  info: {
+    id: 'lmplaylist_reserve',
+    cover_img_url: 'images/mycover.jpg',
+    title: '本地音乐',
+    source_url: '',
+  },
+};
+
 class localmusic {
-  static defaultLocalMusicPlaylist = {
-    tracks: [],
-    info: {
-      id: 'lmplaylist_reserve',
-      cover_img_url: 'images/mycover.jpg',
-      title: '本地音乐',
-      source_url: '',
-    },
-  };
   static lm_show_playlist(url, hm) {
     return {
       success: (fn) =>
@@ -154,6 +155,7 @@ class localmusic {
     playlist.tracks = newtracks;
     localStorage.setObject(list_id, playlist);
 
+    // eslint-disable-next-line consistent-return
     return {
       success: (fn) => fn(),
     };

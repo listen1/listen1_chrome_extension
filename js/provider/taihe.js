@@ -1,35 +1,31 @@
 /* eslint-disable no-unused-vars */
 /* global async getParameterByName forge */
-class taihe {
-  static initTH() {
-    const TH = axios.create({
-      baseURL: 'https://music.taihe.com/v1',
-    });
-    TH.interceptors.request.use(
-      (config) => {
-        const params = { ...config.params };
-        params.timestamp = Math.round(Date.now() / 1000);
-        params.appid = '16073360';
-        const q = new URLSearchParams(params);
-        q.sort();
-        const signStr = decodeURIComponent(
-          `${q.toString()}0b50b02fd0d73a9c4c8c3a781c30845f`
-        );
-        params.sign = forge.md5
-          .create()
-          .update(forge.util.encodeUtf8(signStr))
-          .digest()
-          .toHex();
-
-        return { ...config, params };
-      },
-      null,
-      { synchronous: true }
+const axiosTH = axios.create({
+  baseURL: 'https://music.taihe.com/v1',
+});
+axiosTH.interceptors.request.use(
+  (config) => {
+    const params = { ...config.params };
+    params.timestamp = Math.round(Date.now() / 1000);
+    params.appid = '16073360';
+    const q = new URLSearchParams(params);
+    q.sort();
+    const signStr = decodeURIComponent(
+      `${q.toString()}0b50b02fd0d73a9c4c8c3a781c30845f`
     );
-    return TH;
-  }
-  static axiosTH = this.initTH();
+    params.sign = forge.md5
+      .create()
+      .update(forge.util.encodeUtf8(signStr))
+      .digest()
+      .toHex();
 
+    return { ...config, params };
+  },
+  null,
+  { synchronous: true }
+);
+
+class taihe {
   static th_convert_song(song) {
     const track = {
       id: `thtrack_${song.id}`,
@@ -50,7 +46,7 @@ class taihe {
 
   static th_render_tracks(url, page, callback) {
     const list_id = getParameterByName('list_id', url).split('_').pop();
-    this.axiosTH
+    axiosTH
       .get('/tracklist/info', {
         params: {
           id: list_id,
@@ -71,18 +67,17 @@ class taihe {
     const searchType = getParameterByName('type', url);
     if (searchType === '1') {
       return {
-        success: (fn) => {
-          return fn({
+        success: (fn) =>
+          fn({
             result: [],
             total: 0,
             type: searchType,
-          });
-        },
+          }),
       };
     }
     return {
       success: (fn) => {
-        this.axiosTH
+        axiosTH
           .get('/search', {
             params: {
               word: keyword,
@@ -115,7 +110,7 @@ class taihe {
 
     return {
       success: (fn) => {
-        this.axiosTH
+        axiosTH
           .get('/tracklist/info', {
             params: {
               id: list_id,
@@ -153,7 +148,7 @@ class taihe {
     return {
       success: (fn) => {
         const artist_id = getParameterByName('list_id', url).split('_').pop();
-        this.axiosTH
+        axiosTH
           .get('/artist/info', {
             params: {
               artistCode: artist_id,
@@ -166,7 +161,7 @@ class taihe {
               id: `thartist_${artist_id}`,
               source_url: `https://music.taihe.com/artist/${artist_id}`,
             };
-            this.axiosTH
+            axiosTH
               .get('/artist/song', {
                 params: {
                   artistCode: artist_id,
@@ -189,7 +184,7 @@ class taihe {
   static bootstrap_track(track, success, failure) {
     const sound = {};
     const song_id = track.id.slice('thtrack_'.length);
-    this.axiosTH
+    axiosTH
       .get('/song/tracklink', {
         params: {
           TSID: song_id,
@@ -223,7 +218,7 @@ class taihe {
           );
         } else {
           const track_id = getParameterByName('track_id', url).split('_').pop();
-          this.axiosTH
+          axiosTH
             .get('/song/tracklink', {
               params: {
                 TSID: track_id,
@@ -246,7 +241,7 @@ class taihe {
       success: (fn) => {
         const album_id = getParameterByName('list_id', url).split('_').pop();
 
-        this.axiosTH
+        axiosTH
           .get('/album/info', {
             params: {
               albumAssetCode: album_id,
@@ -289,7 +284,7 @@ class taihe {
     const subCate = getParameterByName('filter_id', url);
     return {
       success: (fn) => {
-        this.axiosTH
+        axiosTH
           .get('/tracklist/list', {
             params: {
               pageNo: offset / 25 + 1,
@@ -360,7 +355,7 @@ class taihe {
   static get_playlist_filters() {
     return {
       success: (fn) => {
-        this.axiosTH.get('/tracklist/category').then((res) =>
+        axiosTH.get('/tracklist/category').then((res) =>
           fn({
             recommend: [{ id: '', name: '推荐歌单' }],
             all: res.data.data.map((sub) => ({
