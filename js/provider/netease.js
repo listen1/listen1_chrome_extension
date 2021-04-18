@@ -2,8 +2,8 @@
 /* eslint-disable no-unused-vars */
 /* global getParameterByName forge */
 /* global isElectron cookieSet cookieGet cookieRemove async */
-function build_netease() {
-  function _create_secret_key(size) {
+class netease {
+  static _create_secret_key(size) {
     const result = [];
     const choice = '012345679abcdef'.split('');
     for (let i = 0; i < size; i += 1) {
@@ -13,7 +13,7 @@ function build_netease() {
     return result.join('');
   }
 
-  function _aes_encrypt(text, sec_key, algo) {
+  static _aes_encrypt(text, sec_key, algo) {
     const cipher = forge.cipher.createCipher(algo, sec_key);
     cipher.start({ iv: '0102030405060708' });
     cipher.update(forge.util.createBuffer(text));
@@ -22,7 +22,7 @@ function build_netease() {
     return cipher.output;
   }
 
-  function _rsa_encrypt(text, pubKey, modulus) {
+  static _rsa_encrypt(text, pubKey, modulus) {
     text = text.split('').reverse().join(''); // eslint-disable-line no-param-reassign
     const n = new forge.jsbn.BigInteger(modulus, 16);
     const e = new forge.jsbn.BigInteger(pubKey, 16);
@@ -31,8 +31,7 @@ function build_netease() {
     return enc;
   }
 
-  function weapi(text) {
-    // eslint-disable-line no-underscore-dangle
+  static weapi(text) {
     const modulus =
       '00e0b509f6259df8642dbc35662901477df22677ec152b5ff68ace615bb7b72' +
       '5152b3ab17a876aea8a5aa76d2e417629ec4ee341f56135fccf695280104e0312ecbd' +
@@ -41,15 +40,15 @@ function build_netease() {
     const nonce = '0CoJUm6Qyw8W8jud';
     const pubKey = '010001';
     text = JSON.stringify(text); // eslint-disable-line no-param-reassign
-    const sec_key = _create_secret_key(16);
+    const sec_key = this._create_secret_key(16);
     const enc_text = btoa(
-      _aes_encrypt(
-        btoa(_aes_encrypt(text, nonce, 'AES-CBC').data),
+      this._aes_encrypt(
+        btoa(this._aes_encrypt(text, nonce, 'AES-CBC').data),
         sec_key,
         'AES-CBC'
       ).data
     );
-    const enc_sec_key = _rsa_encrypt(sec_key, pubKey, modulus);
+    const enc_sec_key = this._rsa_encrypt(sec_key, pubKey, modulus);
     const data = {
       params: enc_text,
       encSecKey: enc_sec_key,
@@ -59,7 +58,7 @@ function build_netease() {
   }
 
   // refer to https://github.com/Binaryify/NeteaseCloudMusicApi/blob/master/util/crypto.js
-  const eapi = (url, object) => {
+  static eapi(url, object) {
     const eapiKey = 'e82ckenh8dichen8';
 
     const text = typeof object === 'object' ? JSON.stringify(object) : object;
@@ -72,22 +71,20 @@ function build_netease() {
     const data = `${url}-36cd479b6b5-${text}-36cd479b6b5-${digest}`;
 
     return {
-      params: _aes_encrypt(data, eapiKey, 'AES-ECB').toHex().toUpperCase(),
+      params: this._aes_encrypt(data, eapiKey, 'AES-ECB').toHex().toUpperCase(),
     };
-  };
+  }
 
-  function ne_show_toplist(offset) {
+  static ne_show_toplist(offset) {
     if (offset !== undefined && offset > 0) {
       return {
-        success(fn) {
-          return fn({ result: [] });
-        },
+        success:(fn)=> fn({ result: [] }),
       };
     }
     const url = 'https://music.163.com/weapi/toplist/detail';
-    const data = weapi({});
+    const data = this.weapi({});
     return {
-      success(fn) {
+      success:(fn)=> {
         axios.post(url, new URLSearchParams(data)).then((response) => {
           const result = [];
           response.data.list.forEach((item) => {
@@ -105,13 +102,13 @@ function build_netease() {
     };
   }
 
-  function ne_show_playlist(url) {
+  static show_playlist(url) {
     const order = 'hot';
     const offset = getParameterByName('offset', url);
     const filterId = getParameterByName('filter_id', url);
 
     if (filterId === 'toplist') {
-      return ne_show_toplist(offset);
+      return this.ne_show_toplist(offset);
     }
 
     let filter = '';
@@ -126,7 +123,7 @@ function build_netease() {
     }
 
     return {
-      success(fn) {
+      success:(fn)=> {
         axios.get(target_url).then((response) => {
           const { data } = response;
           const list_elements = Array.from(
@@ -158,7 +155,7 @@ function build_netease() {
     };
   }
 
-  function ne_ensure_cookie(callback) {
+  static ne_ensure_cookie(callback) {
     const domain = 'https://music.163.com';
     const nuidName = '_ntes_nuid';
     const nnidName = '_ntes_nnid';
@@ -179,7 +176,7 @@ function build_netease() {
           (env === 'chrome' && arg1 == null) ||
           (env === 'electron' && arg2.length === 0)
         ) {
-          const nuidValue = _create_secret_key(32);
+          const nuidValue = this._create_secret_key(32);
           const nnidValue = `${nuidValue},${new Date().getTime()}`;
           // netease default cookie expire time: 100 years
           const expire =
@@ -193,7 +190,6 @@ function build_netease() {
               expirationDate: expire,
             },
             (cookie) => {
-              // eslint-disable-line no-unused-vars
               cookieSet(
                 {
                   url: domain,
@@ -202,7 +198,6 @@ function build_netease() {
                   expirationDate: expire,
                 },
                 (cookie2) => {
-                  // eslint-disable-line no-unused-vars
                   callback(null);
                 }
               );
@@ -215,7 +210,7 @@ function build_netease() {
     );
   }
 
-  function async_process_list(
+  static async_process_list(
     data_list,
     handler,
     handler_extra_param_list,
@@ -234,14 +229,14 @@ function build_netease() {
     );
   }
 
-  function ng_render_playlist_result_item(index, item, callback) {
+  static ng_render_playlist_result_item(index, item, callback) {
     const target_url = 'https://music.163.com/weapi/v3/song/detail';
     const queryIds = [item.id];
     const d = {
       c: `[${queryIds.map((id) => `{"id":${id}}`).join(',')}]`,
       ids: `[${queryIds.join(',')}]`,
     };
-    const data = weapi(d);
+    const data = this.weapi(d);
     axios
       .post(target_url, new URLSearchParams(data).toString())
       .then((response) => {
@@ -262,14 +257,14 @@ function build_netease() {
       });
   }
 
-  function ng_parse_playlist_tracks(playlist_tracks, callback) {
+  static ng_parse_playlist_tracks(playlist_tracks, callback) {
     const target_url = 'https://music.163.com/weapi/v3/song/detail';
     const track_ids = playlist_tracks.map((i) => i.id);
     const d = {
       c: `[${track_ids.map((id) => `{"id":${id}}`).join(',')}]`,
       ids: `[${track_ids.join(',')}]`,
     };
-    const data = weapi(d);
+    const data = this.weapi(d);
     axios.post(target_url, new URLSearchParams(data)).then((response) => {
       const tracks = response.data.songs.map((track_json) => ({
         id: `netrack_${track_json.id}`,
@@ -287,7 +282,8 @@ function build_netease() {
       return callback(null, tracks);
     });
   }
-  function split_array(myarray, size) {
+
+  static split_array(myarray, size) {
     const count = Math.ceil(myarray.length / size);
     const result = [];
     for (let i = 0; i < count; i += 1) {
@@ -296,11 +292,11 @@ function build_netease() {
     return result;
   }
 
-  function ne_get_playlist(url) {
+  static ne_get_playlist(url) {
     // special thanks for @Binaryify
     // https://github.com/Binaryify/NeteaseCloudMusicApi
     return {
-      success(fn) {
+      success: (fn) => {
         const list_id = getParameterByName('list_id', url).split('_').pop();
         const target_url = 'https://music.163.com/weapi/v3/playlist/detail';
         const d = {
@@ -311,8 +307,8 @@ function build_netease() {
           n: 1000,
           csrf_token: '',
         };
-        const data = weapi(d);
-        ne_ensure_cookie(() => {
+        const data = this.weapi(d);
+        this.ne_ensure_cookie(() => {
           axios.post(target_url, new URLSearchParams(data)).then((response) => {
             const { data: res_data } = response;
             const info = {
@@ -322,13 +318,13 @@ function build_netease() {
               source_url: `https://music.163.com/#/playlist?id=${list_id}`,
             };
             const max_allow_size = 1000;
-            const trackIdsArray = split_array(
+            const trackIdsArray = this.split_array(
               res_data.playlist.trackIds,
               max_allow_size
             );
 
             function ng_parse_playlist_tracks_wrapper(trackIds, callback) {
-              return ng_parse_playlist_tracks(trackIds, callback);
+              return netease.ng_parse_playlist_tracks(trackIds, callback);
             }
 
             async.concat(
@@ -351,7 +347,7 @@ function build_netease() {
     };
   }
 
-  function ne_bootstrap_track(track, success, failure) {
+  static bootstrap_track(track, success, failure) {
     const sound = {};
     const target_url = `https://interface3.music.163.com/eapi/song/enhance/player/url`;
     let song_id = track.id;
@@ -363,7 +359,7 @@ function build_netease() {
       ids: `[${song_id}]`,
       br: 999000,
     };
-    const data = eapi(eapiUrl, d);
+    const data = this.eapi(eapiUrl, d);
     const expire =
       (new Date().getTime() + 1e3 * 60 * 60 * 24 * 365 * 100) / 1000;
 
@@ -393,11 +389,11 @@ function build_netease() {
     );
   }
 
-  function is_playable(song) {
+  static is_playable(song) {
     return song.fee !== 4 && song.fee !== 1;
   }
 
-  function ne_search(url) {
+  static search(url) {
     // use chrome extension to modify referer.
     const target_url = 'https://music.163.com/api/search/pc';
     const keyword = getParameterByName('keywords', url);
@@ -414,7 +410,7 @@ function build_netease() {
       type: ne_search_type,
     };
     return {
-      success(fn) {
+      success: (fn) => {
         axios
           .post(target_url, new URLSearchParams(req_data))
           .then((response) => {
@@ -433,7 +429,7 @@ function build_netease() {
                 source_url: `https://music.163.com/#/song?id=${song_info.id}`,
                 img_url: song_info.album.picUrl,
                 // url: `netrack_${song_info.id}`,
-                url: !is_playable(song_info) ? '' : undefined,
+                url: !this.is_playable(song_info) ? '' : undefined,
               }));
               total = data.result.songCount;
             } else if (searchType === '1') {
@@ -467,14 +463,13 @@ function build_netease() {
     };
   }
 
-  function ne_album(url) {
-    // eslint-disable-line no-unused-vars
+  static ne_album(url) {
     const album_id = getParameterByName('list_id', url).split('_').pop();
     // use chrome extension to modify referer.
     const target_url = `https://music.163.com/api/album/${album_id}`;
 
     return {
-      success(fn) {
+      success: (fn) => {
         axios.get(target_url).then((response) => {
           const { data } = response;
           const info = {
@@ -494,7 +489,7 @@ function build_netease() {
             source: 'netease',
             source_url: `https://music.163.com/#/song?id=${song_info.id}`,
             img_url: song_info.album.picUrl,
-            url: !is_playable(song_info) ? '' : undefined,
+            url: !this.is_playable(song_info) ? '' : undefined,
           }));
           return fn({
             tracks,
@@ -505,14 +500,13 @@ function build_netease() {
     };
   }
 
-  function ne_artist(url) {
-    // eslint-disable-line no-unused-vars
+  static ne_artist(url) {
     const artist_id = getParameterByName('list_id', url).split('_').pop();
     // use chrome extension to modify referer.
     const target_url = `https://music.163.com/api/artist/${artist_id}`;
 
     return {
-      success(fn) {
+      success: (fn) => {
         axios.get(target_url).then((response) => {
           const { data } = response;
           const info = {
@@ -533,7 +527,7 @@ function build_netease() {
             source_url: `https://music.163.com/#/song?id=${song_info.id}`,
             img_url: song_info.album.picUrl,
             // url: `netrack_${song_info.id}`,
-            url: !is_playable(song_info) ? '' : undefined,
+            url: !this.is_playable(song_info) ? '' : undefined,
           }));
           return fn({
             tracks,
@@ -544,7 +538,7 @@ function build_netease() {
     };
   }
 
-  function ne_lyric(url) {
+  static lyric(url) {
     const track_id = getParameterByName('track_id', url).split('_').pop();
     // use chrome extension to modify referer.
     const target_url = 'https://music.163.com/weapi/song/lyric?csrf_token=';
@@ -555,9 +549,9 @@ function build_netease() {
       tv: -1,
       csrf_token: csrf,
     };
-    const data = weapi(d);
+    const data = this.weapi(d);
     return {
-      success(fn) {
+      success:(fn)=> {
         axios.post(target_url, new URLSearchParams(data)).then((response) => {
           const { data: res_data } = response;
           let lrc = '';
@@ -579,7 +573,7 @@ function build_netease() {
     };
   }
 
-  function ne_parse_url(url) {
+  static parse_url(url) {
     let result;
     let id = '';
     // eslint-disable-next-line no-param-reassign
@@ -613,21 +607,21 @@ function build_netease() {
     return result;
   }
 
-  function get_playlist(url) {
+  static get_playlist(url) {
     const list_id = getParameterByName('list_id', url).split('_')[0];
     switch (list_id) {
       case 'neplaylist':
-        return ne_get_playlist(url);
+        return this.ne_get_playlist(url);
       case 'nealbum':
-        return ne_album(url);
+        return this.ne_album(url);
       case 'neartist':
-        return ne_artist(url);
+        return this.ne_artist(url);
       default:
         return null;
     }
   }
 
-  function get_playlist_filters() {
+  static get_playlist_filters() {
     const recommend = [
       { id: '', name: '全部' },
       { id: 'toplist', name: '排行榜' },
@@ -738,13 +732,11 @@ function build_netease() {
       },
     ];
     return {
-      success(fn) {
-        return fn({ recommend, all });
-      },
+      success:(fn)=> fn({ recommend, all }),
     };
   }
 
-  function ne_login(url) {
+  static login(url) {
     // use chrome extension to modify referer.
     let target_url = 'https://music.163.com/weapi/login';
     const loginType = getParameterByName('type', url);
@@ -780,7 +772,7 @@ function build_netease() {
       };
     }
 
-    const encrypt_req_data = weapi(req_data);
+    const encrypt_req_data = this.weapi(req_data);
     const expire =
       (new Date().getTime() + 1e3 * 60 * 60 * 24 * 365 * 100) / 1000;
 
@@ -794,7 +786,7 @@ function build_netease() {
       (cookie) => {}
     );
     return {
-      success(fn) {
+      success:(fn)=> {
         axios
           .post(target_url, new URLSearchParams(encrypt_req_data))
           .then((response) => {
@@ -823,7 +815,7 @@ function build_netease() {
     };
   }
 
-  function ne_get_user_playlist(url) {
+  static get_user_playlist(url) {
     const user_id = getParameterByName('user_id', url);
     const target_url = 'https://music.163.com/api/user/playlist';
 
@@ -835,7 +827,7 @@ function build_netease() {
     };
 
     return {
-      success(fn) {
+      success:(fn)=> {
         axios
           .post(target_url, new URLSearchParams(req_data))
           .then((response) => {
@@ -860,7 +852,7 @@ function build_netease() {
     };
   }
 
-  function ne_get_recommend_playlist() {
+  static get_recommend_playlist() {
     const target_url = 'https://music.163.com/weapi/personalized/playlist';
 
     const req_data = {
@@ -869,10 +861,10 @@ function build_netease() {
       n: 1000,
     };
 
-    const encrypt_req_data = weapi(req_data);
+    const encrypt_req_data = this.weapi(req_data);
 
     return {
-      success(fn) {
+      success:(fn)=> {
         axios
           .post(target_url, new URLSearchParams(encrypt_req_data))
           .then((response) => {
@@ -897,12 +889,12 @@ function build_netease() {
     };
   }
 
-  function ne_get_user() {
+  static get_user() {
     const url = `https://music.163.com/api/nuser/account/get`;
 
-    const encrypt_req_data = weapi({});
+    const encrypt_req_data = this.weapi({});
     return {
-      success(fn) {
+      success:(fn)=> {
         axios.post(url, new URLSearchParams(encrypt_req_data)).then((res) => {
           let result = { is_login: false };
           let status = 'fail';
@@ -929,11 +921,11 @@ function build_netease() {
     };
   }
 
-  function ne_get_login_url() {
+  static get_login_url() {
     return `https://music.163.com/#/login`;
   }
 
-  function ne_logout() {
+  static logout() {
     cookieRemove(
       {
         url: 'https://music.163.com',
@@ -942,22 +934,4 @@ function build_netease() {
       (cookie) => {}
     );
   }
-
-  return {
-    show_playlist: ne_show_playlist,
-    get_playlist_filters,
-    get_playlist,
-    parse_url: ne_parse_url,
-    bootstrap_track: ne_bootstrap_track,
-    search: ne_search,
-    lyric: ne_lyric,
-    login: ne_login,
-    get_user_playlist: ne_get_user_playlist,
-    get_recommend_playlist: ne_get_recommend_playlist,
-    get_user: ne_get_user,
-    get_login_url: ne_get_login_url,
-    logout: ne_logout,
-  };
 }
-
-const netease = build_netease(); // eslint-disable-line no-unused-vars

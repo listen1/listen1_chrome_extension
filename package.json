@@ -17,9 +17,9 @@
   },
   "homepage": "https://github.com/listen1/listen1_chrome_extension#readme",
   "devDependencies": {
-    "eslint": "^7.22.0",
+    "eslint": "^7.24.0",
     "eslint-config-airbnb-base": "^14.2.1",
-    "eslint-config-prettier": "^8.1.0",
+    "eslint-config-prettier": "^8.2.0",
     "eslint-plugin-import": "^2.22.1",
     "husky": "^4.3.8",
     "lint-staged": "^10.5.4",

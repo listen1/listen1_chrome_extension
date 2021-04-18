@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 /* global async getParameterByName */
-function build_kugou() {
-  function kg_convert_song(song) {
+class kugou {
+  static kg_convert_song(song) {
     const track = {
       id: `kgtrack_${song.FileHash}`,
       title: song.SongName,
@@ -26,7 +26,7 @@ function build_kugou() {
     return track;
   }
 
-  function async_process_list(
+  static async_process_list(
     data_list,
     handler,
     handler_extra_param_list,
@@ -45,8 +45,8 @@ function build_kugou() {
     );
   }
 
-  function kg_render_search_result_item(index, item, params, callback) {
-    const track = kg_convert_song(item);
+  static kg_render_search_result_item(index, item, params, callback) {
+    const track = this.kg_convert_song(item);
     // Add singer img
     const url = `${'https://www.kugou.com/yy/index.php?r=play/getdata&hash='}${
       track.lyric_url
@@ -58,32 +58,30 @@ function build_kugou() {
     });
   }
 
-  function kg_search(url) {
+  static search(url) {
     // eslint-disable-line no-unused-vars
     const keyword = getParameterByName('keywords', url);
     const curpage = getParameterByName('curpage', url);
     const searchType = getParameterByName('type', url);
     if (searchType === '1') {
       return {
-        success(fn) {
-          return fn({
+        success:(fn)=> fn({
             result: [],
             total: 0,
             type: searchType,
-          });
-        },
+          }),
       };
     }
     return {
-      success(fn) {
+      success: (fn) => {
         const target_url = `${'https://songsearch.kugou.com/song_search_v2?keyword='}${keyword}&page=${curpage}`;
         axios
           .get(target_url)
           .then((response) => {
             const { data } = response;
-            async_process_list(
+            this.async_process_list(
               data.data.lists,
-              kg_render_search_result_item,
+              this.kg_render_search_result_item,
               [],
               (err, tracks) =>
                 fn({
@@ -104,7 +102,7 @@ function build_kugou() {
     };
   }
 
-  function kg_render_playlist_result_item(index, item, params, callback) {
+  static kg_render_playlist_result_item(index, item, params, callback) {
     const { hash } = item;
 
     let target_url = `${'http://m.kugou.com/app/i/getSongInfo.php?cmd=playInfo&hash='}${hash}`;
@@ -149,10 +147,10 @@ function build_kugou() {
     });
   }
 
-  function kg_get_playlist(url) {
+  static kg_get_playlist(url) {
     // eslint-disable-line no-unused-vars
     return {
-      success(fn) {
+      success: (fn) => {
         const list_id = getParameterByName('list_id', url).split('_').pop();
         const target_url = `http://m.kugou.com/plist/list/${list_id}?json=true`;
 
@@ -171,9 +169,9 @@ function build_kugou() {
             ),
           };
 
-          async_process_list(
+          this.async_process_list(
             data.list.list.info,
-            kg_render_playlist_result_item,
+            this.kg_render_playlist_result_item,
             [],
             (err, tracks) =>
               fn({
@@ -186,7 +184,7 @@ function build_kugou() {
     };
   }
 
-  function kg_render_artist_result_item(index, item, params, callback) {
+  static kg_render_artist_result_item(index, item, params, callback) {
     const info = params[0];
     const track = {
       id: `kgtrack_${item.hash}`,
@@ -226,10 +224,10 @@ function build_kugou() {
       });
   }
 
-  function kg_artist(url) {
+  static kg_artist(url) {
     // eslint-disable-line no-unused-vars
     return {
-      success(fn) {
+      success: (fn) => {
         const artist_id = getParameterByName('list_id', url).split('_').pop();
         let target_url = `http://mobilecdnbj.kugou.com/api/v3/singer/info?singerid=${artist_id}`;
         axios.get(target_url).then((response) => {
@@ -245,9 +243,9 @@ function build_kugou() {
           };
           target_url = `http://mobilecdnbj.kugou.com/api/v3/singer/song?singerid=${artist_id}&page=1&pagesize=30`;
           axios.get(target_url).then((res) => {
-            async_process_list(
+            this.async_process_list(
               res.data.data.info,
-              kg_render_artist_result_item,
+              this.kg_render_artist_result_item,
               [info],
               (err, tracks) =>
                 fn({
@@ -261,15 +259,15 @@ function build_kugou() {
     };
   }
 
-  function getTimestampString() {
+  static getTimestampString() {
     return new Date().getTime().toString();
   }
 
-  function getRandomIntString() {
+  static getRandomIntString() {
     return (Math.random() * 100).toString().replace(/\D/g, '');
   }
 
-  function getRandomHexString() {
+  static getRandomHexString() {
     let result = '';
     const letters = '0123456789abcdef';
     for (let i = 0; i < 16; i += 1) {
@@ -278,7 +276,7 @@ function build_kugou() {
     return result;
   }
 
-  function kg_bootstrap_track(track, success, failure) {
+  static bootstrap_track(track, success, failure) {
     const track_id = track.id.slice('kgtrack_'.length);
     const album_id = track.album_id.slice('kgalbum_'.length);
     const target_url = `https://wwwapi.kugou.com/yy/index.php?r=play/getdata&callback=jQuery&hash=${track_id}&dfid=dfid&mid=mid&platid=4&album_id=${album_id}`;
@@ -301,14 +299,14 @@ function build_kugou() {
     });
   }
 
-  function kg_lyric(url) {
+  static lyric(url) {
     // eslint-disable-line no-unused-vars
     const track_id = getParameterByName('track_id', url).split('_').pop();
     const album_id = getParameterByName('album_id', url).split('_').pop();
     const lyric_url = `https://wwwapi.kugou.com/yy/index.php?r=play/getdata&callback=jQuery&hash=${track_id}&dfid=dfid&mid=mid&platid=4&album_id=${album_id}`;
 
     return {
-      success(fn) {
+      success: (fn) => {
         axios.get(lyric_url).then((response) => {
           const { data } = response;
           const jsonString = data.slice('jQuery('.length, data.length - 1 - 1);
@@ -321,7 +319,7 @@ function build_kugou() {
     };
   }
 
-  function kg_render_album_result_item(index, item, params, callback) {
+  static kg_render_album_result_item(index, item, params, callback) {
     const info = params[0];
     const album_id = params[1];
     const track = {
@@ -351,10 +349,10 @@ function build_kugou() {
     });
   }
 
-  function kg_album(url) {
+  static kg_album(url) {
     // eslint-disable-line no-unused-vars
     return {
-      success(fn) {
+      success: (fn) => {
         const album_id = getParameterByName('list_id', url).split('_').pop();
         let target_url = `${'http://mobilecdnbj.kugou.com/api/v3/album/info?albumid='}${album_id}`;
 
@@ -375,9 +373,9 @@ function build_kugou() {
 
           target_url = `${'http://mobilecdnbj.kugou.com/api/v3/album/song?albumid='}${album_id}&page=1&pagesize=-1`;
           axios.get(target_url).then((res) => {
-            async_process_list(
+            this.async_process_list(
               res.data.data.info,
-              kg_render_album_result_item,
+              this.kg_render_album_result_item,
               [info, album_id],
               (err, tracks) =>
                 fn({
@@ -391,7 +389,7 @@ function build_kugou() {
     };
   }
 
-  function kg_show_playlist(url) {
+  static show_playlist(url) {
     let offset = getParameterByName('offset', url);
     if (offset === undefined) {
       offset = 0;
@@ -399,7 +397,7 @@ function build_kugou() {
     // const page = offset / 30 + 1;
     const target_url = `${'http://m.kugou.com/plist/index&json=true&page='}${offset}`;
     return {
-      success(fn) {
+      success: (fn) => {
         axios.get(target_url).then((response) => {
           const { data } = response;
           // const total = data.plist.total;
@@ -422,7 +420,7 @@ function build_kugou() {
     };
   }
 
-  function kg_parse_url(url) {
+  static parse_url(url) {
     let result;
     const match = /\/\/www.kugou.com\/yy\/special\/single\/([0-9]+).html/.exec(
       url
@@ -437,52 +435,49 @@ function build_kugou() {
     return result;
   }
 
-  function get_playlist(url) {
+  static get_playlist(url) {
     // eslint-disable-line no-unused-vars
     const list_id = getParameterByName('list_id', url).split('_')[0];
     switch (list_id) {
       case 'kgplaylist':
-        return kg_get_playlist(url);
+        return this.kg_get_playlist(url);
       case 'kgalbum':
-        return kg_album(url);
+        return this.kg_album(url);
       case 'kgartist':
-        return kg_artist(url);
+        return this.kg_artist(url);
       default:
         return null;
     }
   }
 
-  function get_playlist_filters() {
+  static get_playlist_filters() {
     return {
-      success(fn) {
-        return fn({ recommend: [], all: [] });
-      },
+      success: (fn) => fn({ recommend: [], all: [] }),
     };
   }
-  function kg_get_user() {
+
+  static get_user() {
     return {
-      success: (fn) => {
-        fn({ status: 'fail', data: {} });
-      },
+      success: (fn) => fn({ status: 'fail', data: {} }),
     };
   }
-  function kg_get_login_url() {
+
+  static get_login_url() {
     return `https://www.kugou.com`;
   }
-  function kg_logout() {}
 
-  return {
-    show_playlist: kg_show_playlist,
-    get_playlist_filters,
-    get_playlist,
-    parse_url: kg_parse_url,
-    bootstrap_track: kg_bootstrap_track,
-    search: kg_search,
-    lyric: kg_lyric,
-    get_user: kg_get_user,
-    get_login_url: kg_get_login_url,
-    logout: kg_logout,
-  };
+  static logout() {}
+
+  // return {
+  //   show_playlist: kg_show_playlist,
+  //   get_playlist_filters,
+  //   get_playlist,
+  //   parse_url: kg_parse_url,
+  //   bootstrap_track: kg_bootstrap_track,
+  //   search: kg_search,
+  //   lyric: kg_lyric,
+  //   get_user: kg_get_user,
+  //   get_login_url: kg_get_login_url,
+  //   logout: kg_logout,
+  // };
 }
-
-const kugou = build_kugou(); // eslint-disable-line no-unused-vars
