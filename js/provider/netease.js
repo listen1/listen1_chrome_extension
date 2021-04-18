@@ -78,15 +78,13 @@ class netease {
   static ne_show_toplist(offset) {
     if (offset !== undefined && offset > 0) {
       return {
-        success(fn) {
-          return fn({ result: [] });
-        },
+        success:(fn)=> fn({ result: [] }),
       };
     }
     const url = 'https://music.163.com/weapi/toplist/detail';
     const data = this.weapi({});
     return {
-      success(fn) {
+      success:(fn)=> {
         axios.post(url, new URLSearchParams(data)).then((response) => {
           const result = [];
           response.data.list.forEach((item) => {
@@ -125,7 +123,7 @@ class netease {
     }
 
     return {
-      success(fn) {
+      success:(fn)=> {
         axios.get(target_url).then((response) => {
           const { data } = response;
           const list_elements = Array.from(
@@ -298,7 +296,7 @@ class netease {
     // special thanks for @Binaryify
     // https://github.com/Binaryify/NeteaseCloudMusicApi
     return {
-      success(fn) {
+      success: (fn) => {
         const list_id = getParameterByName('list_id', url).split('_').pop();
         const target_url = 'https://music.163.com/weapi/v3/playlist/detail';
         const d = {
@@ -309,8 +307,8 @@ class netease {
           n: 1000,
           csrf_token: '',
         };
-        const data = netease.weapi(d);
-        netease.ne_ensure_cookie(() => {
+        const data = this.weapi(d);
+        this.ne_ensure_cookie(() => {
           axios.post(target_url, new URLSearchParams(data)).then((response) => {
             const { data: res_data } = response;
             const info = {
@@ -320,7 +318,7 @@ class netease {
               source_url: `https://music.163.com/#/playlist?id=${list_id}`,
             };
             const max_allow_size = 1000;
-            const trackIdsArray = netease.split_array(
+            const trackIdsArray = this.split_array(
               res_data.playlist.trackIds,
               max_allow_size
             );
@@ -412,7 +410,7 @@ class netease {
       type: ne_search_type,
     };
     return {
-      success(fn) {
+      success: (fn) => {
         axios
           .post(target_url, new URLSearchParams(req_data))
           .then((response) => {
@@ -431,7 +429,7 @@ class netease {
                 source_url: `https://music.163.com/#/song?id=${song_info.id}`,
                 img_url: song_info.album.picUrl,
                 // url: `netrack_${song_info.id}`,
-                url: !netease.is_playable(song_info) ? '' : undefined,
+                url: !this.is_playable(song_info) ? '' : undefined,
               }));
               total = data.result.songCount;
             } else if (searchType === '1') {
@@ -471,7 +469,7 @@ class netease {
     const target_url = `https://music.163.com/api/album/${album_id}`;
 
     return {
-      success(fn) {
+      success: (fn) => {
         axios.get(target_url).then((response) => {
           const { data } = response;
           const info = {
@@ -491,7 +489,7 @@ class netease {
             source: 'netease',
             source_url: `https://music.163.com/#/song?id=${song_info.id}`,
             img_url: song_info.album.picUrl,
-            url: !netease.is_playable(song_info) ? '' : undefined,
+            url: !this.is_playable(song_info) ? '' : undefined,
           }));
           return fn({
             tracks,
@@ -508,7 +506,7 @@ class netease {
     const target_url = `https://music.163.com/api/artist/${artist_id}`;
 
     return {
-      success(fn) {
+      success: (fn) => {
         axios.get(target_url).then((response) => {
           const { data } = response;
           const info = {
@@ -529,7 +527,7 @@ class netease {
             source_url: `https://music.163.com/#/song?id=${song_info.id}`,
             img_url: song_info.album.picUrl,
             // url: `netrack_${song_info.id}`,
-            url: !netease.is_playable(song_info) ? '' : undefined,
+            url: !this.is_playable(song_info) ? '' : undefined,
           }));
           return fn({
             tracks,
@@ -553,7 +551,7 @@ class netease {
     };
     const data = this.weapi(d);
     return {
-      success(fn) {
+      success:(fn)=> {
         axios.post(target_url, new URLSearchParams(data)).then((response) => {
           const { data: res_data } = response;
           let lrc = '';
@@ -734,9 +732,7 @@ class netease {
       },
     ];
     return {
-      success(fn) {
-        return fn({ recommend, all });
-      },
+      success:(fn)=> fn({ recommend, all }),
     };
   }
 
@@ -790,7 +786,7 @@ class netease {
       (cookie) => {}
     );
     return {
-      success(fn) {
+      success:(fn)=> {
         axios
           .post(target_url, new URLSearchParams(encrypt_req_data))
           .then((response) => {
@@ -831,7 +827,7 @@ class netease {
     };
 
     return {
-      success(fn) {
+      success:(fn)=> {
         axios
           .post(target_url, new URLSearchParams(req_data))
           .then((response) => {
@@ -868,7 +864,7 @@ class netease {
     const encrypt_req_data = this.weapi(req_data);
 
     return {
-      success(fn) {
+      success:(fn)=> {
         axios
           .post(target_url, new URLSearchParams(encrypt_req_data))
           .then((response) => {
@@ -898,7 +894,7 @@ class netease {
 
     const encrypt_req_data = this.weapi({});
     return {
-      success(fn) {
+      success:(fn)=> {
         axios.post(url, new URLSearchParams(encrypt_req_data)).then((res) => {
           let result = { is_login: false };
           let status = 'fail';

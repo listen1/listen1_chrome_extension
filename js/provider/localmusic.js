@@ -13,18 +13,17 @@ class localmusic {
   };
   static lm_show_playlist(url, hm) {
     return {
-      success(fn) {
-        return fn({
+      success: (fn) =>
+        fn({
           result: [],
-        });
-      },
+        }),
     };
   }
 
   static lm_get_playlist(url) {
     const list_id = getParameterByName('list_id', url);
     return {
-      success(fn) {
+      success: (fn) => {
         let playlist = localStorage.getObject(list_id);
 
         if (playlist === null || playlist === undefined) {
@@ -38,7 +37,7 @@ class localmusic {
   static lm_album(url) {
     const album = getParameterByName('list_id', url).split('_').pop();
     return {
-      success(fn) {
+      success: (fn) => {
         const list_id = 'lmplaylist_reserve';
         let playlist = localStorage.getObject(list_id);
 
@@ -57,7 +56,7 @@ class localmusic {
   static lm_artist(url) {
     const artist = getParameterByName('list_id', url).split('_').pop();
     return {
-      success(fn) {
+      success: (fn) => {
         const list_id = 'lmplaylist_reserve';
         let playlist = localStorage.getObject(list_id);
 
@@ -86,24 +85,22 @@ class localmusic {
   static lm_search(url) {
     const searchType = getParameterByName('type', url);
     return {
-      success(fn) {
-        return fn({
+      success: (fn) =>
+        fn({
           result: [],
           total: 0,
           type: searchType,
-        });
-      },
+        }),
     };
   }
 
   static lm_lyric(url) {
     return {
-      success(fn) {
-        return fn({
+      success: (fn) =>
+        fn({
           lyric: '',
           tlyric: '',
-        });
-      },
+        }),
     };
   }
 
@@ -125,9 +122,7 @@ class localmusic {
     localStorage.setObject(list_id, playlist);
 
     return {
-      success(fn) {
-        return fn({ list_id, playlist });
-      },
+      success: (fn) => fn({ list_id, playlist }),
     };
   }
 
@@ -160,17 +155,13 @@ class localmusic {
     localStorage.setObject(list_id, playlist);
 
     return {
-      success(fn) {
-        return fn();
-      },
+      success: (fn) => fn(),
     };
   }
 
   static get_playlist_filters() {
     return {
-      success(fn) {
-        return fn({ recommend: [], all: [] });
-      },
+      success: (fn) => fn({ recommend: [], all: [] }),
     };
   }
 

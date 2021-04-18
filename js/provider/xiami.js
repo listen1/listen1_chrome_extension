@@ -3,14 +3,12 @@
 /* global getParameterByName */
 /* eslint-disable no-param-reassign */
 // eslint-disable-next-line no-unused-vars
-class xiami{
+class xiami {
   static show_playlist() {
     return {
-      success(fn) {
-        return fn({
+      success: (fn) => fn({
           result: [],
-        });
-      },
+        }),
     };
   }
 
@@ -23,8 +21,7 @@ class xiami{
   static xm_get_playlist(url) {
     const list_id = getParameterByName('list_id', url).split('_').pop();
     return {
-      success(fn) {
-        return fn({
+      success: (fn) => fn({
           tracks: [],
           info: {
             cover_img_url: '',
@@ -32,8 +29,7 @@ class xiami{
             id: `xmplaylist_${list_id}`,
             source_url: `https://www.xiami.com/collect/${list_id}`,
           },
-        });
-      },
+        }),
     };
   }
 
@@ -41,19 +37,17 @@ class xiami{
     const searchType = getParameterByName('type', url);
 
     return {
-      success(fn) {
-        return fn({
+      success: (fn) => fn({
           result: [],
           total: 0,
           type: searchType,
-        });
-      },
+        }),
     };
   }
 
   static xm_album(url) {
     return {
-      success(fn) {
+      success: (fn) => {
         const album_id = getParameterByName('list_id', url).split('_').pop();
 
         return fn({
@@ -71,7 +65,7 @@ class xiami{
 
   static xm_artist(url) {
     return {
-      success(fn) {
+      success: (fn) => {
         const artist_id = getParameterByName('list_id', url).split('_').pop();
 
         return fn({
@@ -89,12 +83,10 @@ class xiami{
 
   static lyric() {
     return {
-      success(fn) {
-        return fn({
+      success: (fn) => fn({
           lyric: '',
           tlyric: '',
-        });
-      },
+        }),
     };
   }
 
@@ -119,9 +111,7 @@ class xiami{
 
   static get_playlist_filters() {
     return {
-      success(fn) {
-        return fn({ recommend: [], all: [] });
-      },
+      success: (fn) => fn({ recommend: [], all: [] }),
     };
   }
 

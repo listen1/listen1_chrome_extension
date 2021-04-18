@@ -71,7 +71,7 @@ class taihe {
     const searchType = getParameterByName('type', url);
     if (searchType === '1') {
       return {
-        success(fn) {
+        success: (fn) => {
           return fn({
             result: [],
             total: 0,
@@ -81,7 +81,7 @@ class taihe {
       };
     }
     return {
-      success(fn) {
+      success: (fn) => {
         this.axiosTH
           .get('/search', {
             params: {
@@ -92,7 +92,7 @@ class taihe {
           })
           .then((res) => {
             const { data } = res;
-            const tracks = data.data.typeTrack.map(taihe.th_convert_song);
+            const tracks = data.data.typeTrack.map(this.th_convert_song);
             return fn({
               result: tracks,
               total: data.data.total,
@@ -136,7 +136,7 @@ class taihe {
             const page_array = Array.from({ length: page }, (v, k) => k + 1);
             async.concat(
               page_array,
-              (item, callback) => taihe.th_render_tracks(url, item, callback),
+              (item, callback) => this.th_render_tracks(url, item, callback),
               (err, tracks) => {
                 fn({
                   tracks,
@@ -151,7 +151,7 @@ class taihe {
 
   static th_artist(url) {
     return {
-      success(fn) {
+      success: (fn) => {
         const artist_id = getParameterByName('list_id', url).split('_').pop();
         this.axiosTH
           .get('/artist/info', {
@@ -175,7 +175,7 @@ class taihe {
                 },
               })
               .then((res) => {
-                const tracks = res.data.data.result.map(taihe.th_convert_song);
+                const tracks = res.data.data.result.map(this.th_convert_song);
                 return fn({
                   tracks,
                   info,
@@ -214,7 +214,7 @@ class taihe {
     const lyric_url = getParameterByName('lyric_url', url);
 
     return {
-      success(fn) {
+      success: (fn) => {
         if (lyric_url) {
           axios.get(lyric_url).then((response) =>
             fn({
@@ -243,7 +243,7 @@ class taihe {
 
   static th_album(url) {
     return {
-      success(fn) {
+      success: (fn) => {
         const album_id = getParameterByName('list_id', url).split('_').pop();
 
         this.axiosTH
@@ -347,11 +347,11 @@ class taihe {
     const list_id = getParameterByName('list_id', url).split('_')[0];
     switch (list_id) {
       case 'thplaylist':
-        return taihe.th_get_playlist(url);
+        return this.th_get_playlist(url);
       case 'thalbum':
-        return taihe.th_album(url);
+        return this.th_album(url);
       case 'thartist':
-        return taihe.th_artist(url);
+        return this.th_artist(url);
       default:
         return null;
     }
@@ -359,8 +359,8 @@ class taihe {
 
   static get_playlist_filters() {
     return {
-      success(fn) {
-        taihe.axiosTH.get('/tracklist/category').then((res) =>
+      success: (fn) => {
+        this.axiosTH.get('/tracklist/category').then((res) =>
           fn({
             recommend: [{ id: '', name: '推荐歌单' }],
             all: res.data.data.map((sub) => ({

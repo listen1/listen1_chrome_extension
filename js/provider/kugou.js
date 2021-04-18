@@ -65,25 +65,23 @@ class kugou {
     const searchType = getParameterByName('type', url);
     if (searchType === '1') {
       return {
-        success(fn) {
-          return fn({
+        success:(fn)=> fn({
             result: [],
             total: 0,
             type: searchType,
-          });
-        },
+          }),
       };
     }
     return {
-      success(fn) {
+      success: (fn) => {
         const target_url = `${'https://songsearch.kugou.com/song_search_v2?keyword='}${keyword}&page=${curpage}`;
         axios
           .get(target_url)
           .then((response) => {
             const { data } = response;
-            kugou.async_process_list(
+            this.async_process_list(
               data.data.lists,
-              kugou.kg_render_search_result_item,
+              this.kg_render_search_result_item,
               [],
               (err, tracks) =>
                 fn({
@@ -152,7 +150,7 @@ class kugou {
   static kg_get_playlist(url) {
     // eslint-disable-line no-unused-vars
     return {
-      success(fn) {
+      success: (fn) => {
         const list_id = getParameterByName('list_id', url).split('_').pop();
         const target_url = `http://m.kugou.com/plist/list/${list_id}?json=true`;
 
@@ -171,9 +169,9 @@ class kugou {
             ),
           };
 
-          kugou.async_process_list(
+          this.async_process_list(
             data.list.list.info,
-            kugou.kg_render_playlist_result_item,
+            this.kg_render_playlist_result_item,
             [],
             (err, tracks) =>
               fn({
@@ -229,7 +227,7 @@ class kugou {
   static kg_artist(url) {
     // eslint-disable-line no-unused-vars
     return {
-      success(fn) {
+      success: (fn) => {
         const artist_id = getParameterByName('list_id', url).split('_').pop();
         let target_url = `http://mobilecdnbj.kugou.com/api/v3/singer/info?singerid=${artist_id}`;
         axios.get(target_url).then((response) => {
@@ -245,9 +243,9 @@ class kugou {
           };
           target_url = `http://mobilecdnbj.kugou.com/api/v3/singer/song?singerid=${artist_id}&page=1&pagesize=30`;
           axios.get(target_url).then((res) => {
-            kugou.async_process_list(
+            this.async_process_list(
               res.data.data.info,
-              kugou.kg_render_artist_result_item,
+              this.kg_render_artist_result_item,
               [info],
               (err, tracks) =>
                 fn({
@@ -308,7 +306,7 @@ class kugou {
     const lyric_url = `https://wwwapi.kugou.com/yy/index.php?r=play/getdata&callback=jQuery&hash=${track_id}&dfid=dfid&mid=mid&platid=4&album_id=${album_id}`;
 
     return {
-      success(fn) {
+      success: (fn) => {
         axios.get(lyric_url).then((response) => {
           const { data } = response;
           const jsonString = data.slice('jQuery('.length, data.length - 1 - 1);
@@ -354,7 +352,7 @@ class kugou {
   static kg_album(url) {
     // eslint-disable-line no-unused-vars
     return {
-      success(fn) {
+      success: (fn) => {
         const album_id = getParameterByName('list_id', url).split('_').pop();
         let target_url = `${'http://mobilecdnbj.kugou.com/api/v3/album/info?albumid='}${album_id}`;
 
@@ -375,9 +373,9 @@ class kugou {
 
           target_url = `${'http://mobilecdnbj.kugou.com/api/v3/album/song?albumid='}${album_id}&page=1&pagesize=-1`;
           axios.get(target_url).then((res) => {
-            kugou.async_process_list(
+            this.async_process_list(
               res.data.data.info,
-              kugou.kg_render_album_result_item,
+              this.kg_render_album_result_item,
               [info, album_id],
               (err, tracks) =>
                 fn({
@@ -399,7 +397,7 @@ class kugou {
     // const page = offset / 30 + 1;
     const target_url = `${'http://m.kugou.com/plist/index&json=true&page='}${offset}`;
     return {
-      success(fn) {
+      success: (fn) => {
         axios.get(target_url).then((response) => {
           const { data } = response;
           // const total = data.plist.total;
@@ -454,17 +452,13 @@ class kugou {
 
   static get_playlist_filters() {
     return {
-      success(fn) {
-        return fn({ recommend: [], all: [] });
-      },
+      success: (fn) => fn({ recommend: [], all: [] }),
     };
   }
 
   static get_user() {
     return {
-      success: (fn) => {
-        fn({ status: 'fail', data: {} });
-      },
+      success: (fn) => fn({ status: 'fail', data: {} }),
     };
   }
 

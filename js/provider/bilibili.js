@@ -24,7 +24,7 @@ class bilibili {
     const page = offset / 20 + 1;
     const target_url = `https://www.bilibili.com/audio/music-service-c/web/menu/hit?ps=20&pn=${page}`;
     return {
-      success(fn) {
+      success: (fn) => {
         axios.get(target_url).then((response) => {
           const { data } = response.data.data;
           const result = data.map((item) => ({
@@ -57,7 +57,7 @@ class bilibili {
           const target = `https://www.bilibili.com/audio/music-service-c/web/song/of-menu?pn=1&ps=100&sid=${list_id}`;
           axios.get(target).then((res) => {
             const tracks = res.data.data.data.map((item) =>
-              bilibili.bi_convert_song(item)
+              this.bi_convert_song(item)
             );
             return fn({
               info,
@@ -107,7 +107,7 @@ class bilibili {
           target_url = `https://api.bilibili.com/audio/music-service-c/web/song/upper?pn=1&ps=0&order=2&uid=${artist_id}`;
           axios.get(target_url).then((res) => {
             const tracks = res.data.data.data.map((item) =>
-              bilibili.bi_convert_song(item)
+              this.bi_convert_song(item)
             );
             return fn({
               tracks,
@@ -190,7 +190,7 @@ class bilibili {
     // const track_id = getParameterByName('track_id', url).split('_').pop();
     const lyric_url = getParameterByName('lyric_url', url);
     return {
-      success(fn) {
+      success: (fn) => {
         axios.get(lyric_url).then((response) => {
           const { data } = response;
           return fn({
@@ -217,17 +217,13 @@ class bilibili {
 
   static get_playlist_filters() {
     return {
-      success(fn) {
-        return fn({ recommend: [], all: [] });
-      },
+      success: (fn) => fn({ recommend: [], all: [] }),
     };
   }
 
   static get_user() {
     return {
-      success: (fn) => {
-        fn({ status: 'fail', data: {} });
-      },
+      success: (fn) => fn({ status: 'fail', data: {} }),
     };
   }
 
