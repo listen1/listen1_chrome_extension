@@ -17,6 +17,7 @@ angular.module('listenone').controller('NavigationController', [
     $scope.current_tag = 2;
     $scope.is_window_hidden = 1;
     $scope.is_dialog_hidden = 1;
+    $scope.tag_params = {};
 
     $scope.songs = [];
     $scope.current_list_id = -1;
@@ -34,11 +35,12 @@ angular.module('listenone').controller('NavigationController', [
     });
 
     // tag
-    $scope.showTag = (tag_id) => {
+    $scope.showTag = (tag_id, tag_params) => {
       $scope.current_tag = tag_id;
       $scope.is_window_hidden = 1;
       $scope.window_url_stack = [];
       $scope.window_poped_url_stack = [];
+      $scope.tag_params = tag_params;
       $scope.closeWindow();
     };
 

@@ -611,6 +611,80 @@ function build_qq() {
     });
   }
 
+  function qq_get_user_playlist(url) {
+    const user_id = getParameterByName('user_id', url);
+    // TODO: load more than size
+    const size = 100;
+    const target_url = `https://c.y.qq.com/rsc/fcgi-bin/fcg_user_created_diss?cv=4747474&ct=24&format=json&inCharset=utf-8&outCharset=utf-8&notice=0&platform=yqq.json&needNewCode=1&uin=${user_id}&hostuin=${user_id}&sin=0&size=${size}`;
+
+    return {
+      success(fn) {
+        axios.get(target_url).then((response) => {
+          const playlists = [];
+          response.data.data.disslist.forEach((item) => {
+            if (item.dir_show === 0) {
+              return;
+            }
+            const playlist = {
+              cover_img_url: item.diss_cover,
+              id: `qqplaylist_${item.tid}`,
+              source_url: `https://y.qq.com/n/ryqq/playlist/${item.tid}`,
+              title: item.diss_name,
+            };
+            playlists.push(playlist);
+          });
+          return fn({
+            status: 'success',
+            data: {
+              playlists,
+            },
+          });
+        });
+      },
+    };
+  }
+
+  function qq_get_recommend_playlist() {
+    const target_url = `https://u.y.qq.com/cgi-bin/musicu.fcg?format=json&&loginUin=0&hostUin=0inCharset=utf8&outCharset=utf-8&platform=yqq.json&needNewCode=0&data=${encodeURIComponent(
+      JSON.stringify({
+        comm: {
+          ct: 24,
+        },
+        recomPlaylist: {
+          method: 'get_hot_recommend',
+          param: {
+            async: 1,
+            cmd: 2,
+          },
+          module: 'playlist.HotRecommendServer',
+        },
+      })
+    )}`;
+
+    return {
+      success(fn) {
+        axios.get(target_url).then((response) => {
+          const playlists = [];
+          response.data.recomPlaylist.data.v_hot.forEach((item) => {
+            const playlist = {
+              cover_img_url: item.cover,
+              id: `qqplaylist_${item.content_id}`,
+              source_url: `https://y.qq.com/n/ryqq/playlist/${item.content_id}`,
+              title: item.title,
+            };
+            playlists.push(playlist);
+          });
+          return fn({
+            status: 'success',
+            data: {
+              playlists,
+            },
+          });
+        });
+      },
+    };
+  }
+
   function qq_get_user() {
     return {
       success: (fn) => {
@@ -673,6 +747,8 @@ function build_qq() {
     bootstrap_track: qq_bootstrap_track,
     search: qq_search,
     lyric: qq_lyric,
+    get_user_playlist: qq_get_user_playlist,
+    get_recommend_playlist: qq_get_recommend_playlist,
     get_user: qq_get_user,
     get_login_url: qq_get_login_url,
     logout: qq_logout,
