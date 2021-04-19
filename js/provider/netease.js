@@ -162,23 +162,14 @@ function build_netease() {
     const domain = 'https://music.163.com';
     const nuidName = '_ntes_nuid';
     const nnidName = '_ntes_nnid';
-    let env = null;
-    if (!isElectron()) {
-      env = 'chrome';
-    } else {
-      const remote = require('electron').remote; // eslint-disable-line
-      env = 'electron';
-    }
+
     cookieGet(
       {
         url: domain,
         name: nuidName,
       },
-      (arg1, arg2) => {
-        if (
-          (env === 'chrome' && arg1 == null) ||
-          (env === 'electron' && arg2.length === 0)
-        ) {
+      (cookie) => {
+        if (cookie == null) {
           const nuidValue = _create_secret_key(32);
           const nnidValue = `${nuidValue},${new Date().getTime()}`;
           // netease default cookie expire time: 100 years
@@ -192,7 +183,7 @@ function build_netease() {
               value: nuidValue,
               expirationDate: expire,
             },
-            (cookie) => {
+            () => {
               // eslint-disable-line no-unused-vars
               cookieSet(
                 {
@@ -201,7 +192,7 @@ function build_netease() {
                   value: nnidValue,
                   expirationDate: expire,
                 },
-                (cookie2) => {
+                () => {
                   // eslint-disable-line no-unused-vars
                   callback(null);
                 }
