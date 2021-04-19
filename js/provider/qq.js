@@ -622,16 +622,30 @@ function build_qq() {
         axios.get(target_url).then((response) => {
           const playlists = [];
           response.data.data.disslist.forEach((item) => {
+            let playlist = {};
             if (item.dir_show === 0) {
-              return;
+              if (item.tid === 0) {
+                return;
+              }
+              if (item.diss_name === '我喜欢') {
+                playlist = {
+                  cover_img_url:
+                    'https://y.gtimg.cn/mediastyle/y/img/cover_love_300.jpg',
+                  id: `qqplaylist_${item.tid}`,
+                  source_url: `https://y.qq.com/n/ryqq/playlist/${item.tid}`,
+                  title: item.diss_name,
+                };
+                playlists.push(playlist);
+              }
+            } else {
+              playlist = {
+                cover_img_url: item.diss_cover,
+                id: `qqplaylist_${item.tid}`,
+                source_url: `https://y.qq.com/n/ryqq/playlist/${item.tid}`,
+                title: item.diss_name,
+              };
+              playlists.push(playlist);
             }
-            const playlist = {
-              cover_img_url: item.diss_cover,
-              id: `qqplaylist_${item.tid}`,
-              source_url: `https://y.qq.com/n/ryqq/playlist/${item.tid}`,
-              title: item.diss_name,
-            };
-            playlists.push(playlist);
           });
           return fn({
             status: 'success',
