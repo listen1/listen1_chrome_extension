@@ -814,7 +814,7 @@ function build_netease() {
     };
   }
 
-  function ne_get_user_playlist(url) {
+  function ne_get_user_playlist(url, playlistType) {
     const user_id = getParameterByName('user_id', url);
     const target_url = 'https://music.163.com/api/user/playlist';
 
@@ -832,6 +832,12 @@ function build_netease() {
           .then((response) => {
             const playlists = [];
             response.data.playlist.forEach((item) => {
+              if (playlistType === 'created' && item.subscribed !== false) {
+                return;
+              }
+              if (playlistType === 'favorite' && item.subscribed !== true) {
+                return;
+              }
               const playlist = {
                 cover_img_url: item.coverImgUrl,
                 id: `neplaylist_${item.id}`,
@@ -849,6 +855,14 @@ function build_netease() {
           });
       },
     };
+  }
+
+  function ne_get_user_create_playlist(url) {
+    return ne_get_user_playlist(url, 'created');
+  }
+
+  function ne_get_user_favorite_playlist(url) {
+    return ne_get_user_playlist(url, 'favorite');
   }
 
   function ne_get_recommend_playlist() {
@@ -943,7 +957,8 @@ function build_netease() {
     search: ne_search,
     lyric: ne_lyric,
     login: ne_login,
-    get_user_playlist: ne_get_user_playlist,
+    get_user_created_playlist: ne_get_user_create_playlist,
+    get_user_favorite_playlist: ne_get_user_favorite_playlist,
     get_recommend_playlist: ne_get_recommend_playlist,
     get_user: ne_get_user,
     get_login_url: ne_get_login_url,

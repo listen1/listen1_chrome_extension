@@ -611,10 +611,11 @@ function build_qq() {
     });
   }
 
-  function qq_get_user_playlist(url) {
+  function qq_get_user_created_playlist(url) {
     const user_id = getParameterByName('user_id', url);
     // TODO: load more than size
     const size = 100;
+
     const target_url = `https://c.y.qq.com/rsc/fcgi-bin/fcg_user_created_diss?cv=4747474&ct=24&format=json&inCharset=utf-8&outCharset=utf-8&notice=0&platform=yqq.json&needNewCode=1&uin=${user_id}&hostuin=${user_id}&sin=0&size=${size}`;
 
     return {
@@ -646,6 +647,48 @@ function build_qq() {
               };
               playlists.push(playlist);
             }
+          });
+          return fn({
+            status: 'success',
+            data: {
+              playlists,
+            },
+          });
+        });
+      },
+    };
+  }
+
+  function qq_get_user_favorite_playlist(url) {
+    const user_id = getParameterByName('user_id', url);
+    // TODO: load more than size
+    const size = 100;
+    // https://github.com/jsososo/QQMusicApi/blob/master/routes/user.js
+    const target_url = `https://c.y.qq.com/fav/fcgi-bin/fcg_get_profile_order_asset.fcg`;
+    const data = {
+      ct: 20,
+      cid: 205360956,
+      userid: user_id,
+      reqtype: 3,
+      sin: 0,
+      ein: size,
+    };
+    return {
+      success(fn) {
+        axios.get(target_url, { params: data }).then((response) => {
+          const playlists = [];
+          response.data.data.cdlist.forEach((item) => {
+            let playlist = {};
+            if (item.dir_show === 0) {
+              return;
+            }
+            playlist = {
+              cover_img_url: item.logo,
+              id: `qqplaylist_${item.dissid}`,
+              source_url: `https://y.qq.com/n/ryqq/playlist/${item.dissid}`,
+              title: item.dissname,
+            };
+            playlists.push(playlist);
           });
           return fn({
             status: 'success',
@@ -761,7 +804,8 @@ function build_qq() {
     bootstrap_track: qq_bootstrap_track,
     search: qq_search,
     lyric: qq_lyric,
-    get_user_playlist: qq_get_user_playlist,
+    get_user_created_playlist: qq_get_user_created_playlist,
+    get_user_favorite_playlist: qq_get_user_favorite_playlist,
     get_recommend_playlist: qq_get_recommend_playlist,
     get_user: qq_get_user,
     get_login_url: qq_get_login_url,
