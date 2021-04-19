@@ -142,43 +142,24 @@ function build_kuwo() {
     }
     const domain = 'https://www.kuwo.cn';
     const name = 'kw_token';
-    if (!isElectron()) {
-      cookieGet(
-        {
-          url: domain,
-          name,
-        },
-        (cookie) => {
-          if (cookie == null) {
-            if (isRetryValue) {
-              return callback('');
-            }
-            return axios.get('https://www.kuwo.cn/').then(() => {
-              kw_get_token(callback, true);
-            });
+
+    cookieGet(
+      {
+        url: domain,
+        name,
+      },
+      (cookie) => {
+        if (cookie == null) {
+          if (isRetryValue) {
+            return callback('');
           }
-          return callback(cookie.value);
+          return axios.get('https://www.kuwo.cn/').then(() => {
+            kw_get_token(callback, true);
+          });
         }
-      );
-    } else {
-      cookieGet(
-        {
-          domain: '.kuwo.cn',
-          name,
-        },
-        (err, cookie) => {
-          if (cookie.length === 0) {
-            if (isRetryValue) {
-              return callback('');
-            }
-            return axios.get('https://www.kuwo.cn/').then(() => {
-              kw_get_token(callback, true);
-            });
-          }
-          return callback(cookie[0].value);
-        }
-      );
-    }
+        return callback(cookie.value);
+      }
+    );
   }
 
   function kw_cookie_get(url, callback) {
