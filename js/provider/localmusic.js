@@ -1,30 +1,30 @@
 /* eslint-disable no-param-reassign */
 /* eslint-disable no-unused-vars */
 /* global getParameterByName */
-function build_localmusic() {
-  const defaultLocalMusicPlaylist = {
-    tracks: [],
-    info: {
-      id: 'lmplaylist_reserve',
-      cover_img_url: 'images/mycover.jpg',
-      title: '本地音乐',
-      source_url: '',
-    },
-  };
-  function lm_show_playlist(url, hm) {
+const defaultLocalMusicPlaylist = {
+  tracks: [],
+  info: {
+    id: 'lmplaylist_reserve',
+    cover_img_url: 'images/mycover.jpg',
+    title: '本地音乐',
+    source_url: '',
+  },
+};
+
+class localmusic {
+  static show_playlist(url, hm) {
     return {
-      success(fn) {
-        return fn({
+      success: (fn) =>
+        fn({
           result: [],
-        });
-      },
+        }),
     };
   }
 
-  function lm_get_playlist(url) {
+  static lm_get_playlist(url) {
     const list_id = getParameterByName('list_id', url);
     return {
-      success(fn) {
+      success: (fn) => {
         let playlist = localStorage.getObject(list_id);
 
         if (playlist === null || playlist === undefined) {
@@ -35,10 +35,10 @@ function build_localmusic() {
     };
   }
 
-  function lm_album(url) {
+  static lm_album(url) {
     const album = getParameterByName('list_id', url).split('_').pop();
     return {
-      success(fn) {
+      success: (fn) => {
         const list_id = 'lmplaylist_reserve';
         let playlist = localStorage.getObject(list_id);
 
@@ -53,10 +53,11 @@ function build_localmusic() {
       },
     };
   }
-  function lm_artist(url) {
+
+  static lm_artist(url) {
     const artist = getParameterByName('list_id', url).split('_').pop();
     return {
-      success(fn) {
+      success: (fn) => {
         const list_id = 'lmplaylist_reserve';
         let playlist = localStorage.getObject(list_id);
 
@@ -73,7 +74,8 @@ function build_localmusic() {
       },
     };
   }
-  function lm_bootstrap_track(track, success, failure) {
+
+  static bootstrap_track(track, success, failure) {
     const sound = {};
     sound.url = track.sound_url;
     sound.platform = 'localmusic';
@@ -81,31 +83,29 @@ function build_localmusic() {
     success(sound);
   }
 
-  function lm_search(url) {
+  static search(url) {
     const searchType = getParameterByName('type', url);
     return {
-      success(fn) {
-        return fn({
+      success: (fn) =>
+        fn({
           result: [],
           total: 0,
           type: searchType,
-        });
-      },
+        }),
     };
   }
 
-  function lm_lyric(url) {
+  static lyric(url) {
     return {
-      success(fn) {
-        return fn({
+      success: (fn) =>
+        fn({
           lyric: '',
           tlyric: '',
-        });
-      },
+        }),
     };
   }
 
-  function lm_add_playlist(list_id, tracks) {
+  static add_playlist(list_id, tracks) {
     if (typeof tracks === 'string') {
       tracks = JSON.parse(tracks);
     }
@@ -123,32 +123,30 @@ function build_localmusic() {
     localStorage.setObject(list_id, playlist);
 
     return {
-      success(fn) {
-        return fn({ list_id, playlist });
-      },
+      success: (fn) => fn({ list_id, playlist }),
     };
   }
 
-  function lm_parse_url(url) {
+  static parse_url(url) {
     let result;
     return result;
   }
 
-  function get_playlist(url) {
+  static get_playlist(url) {
     const list_id = getParameterByName('list_id', url).split('_')[0];
     switch (list_id) {
       case 'lmplaylist':
-        return lm_get_playlist(url);
+        return this.lm_get_playlist(url);
       case 'lmartist':
-        return lm_artist(url);
+        return this.lm_artist(url);
       case 'lmalbum':
-        return lm_album(url);
+        return this.lm_album(url);
       default:
         return null;
     }
   }
 
-  function lm_remove_from_playlist(list_id, track_id) {
+  static remove_from_playlist(list_id, track_id) {
     const playlist = localStorage.getObject(list_id);
     if (playlist == null) {
       return;
@@ -159,31 +157,25 @@ function build_localmusic() {
 
     // eslint-disable-next-line consistent-return
     return {
-      success(fn) {
-        return fn();
-      },
+      success: (fn) => fn(),
     };
   }
 
-  function get_playlist_filters() {
+  static get_playlist_filters() {
     return {
-      success(fn) {
-        return fn({ recommend: [], all: [] });
-      },
+      success: (fn) => fn({ recommend: [], all: [] }),
     };
   }
 
-  return {
-    show_playlist: lm_show_playlist,
-    get_playlist_filters,
-    get_playlist,
-    parse_url: lm_parse_url,
-    bootstrap_track: lm_bootstrap_track,
-    search: lm_search,
-    lyric: lm_lyric,
-    add_playlist: lm_add_playlist,
-    remove_from_playlist: lm_remove_from_playlist,
-  };
+  // return {
+  //   show_playlist: lm_show_playlist,
+  //   get_playlist_filters,
+  //   get_playlist,
+  //   parse_url: lm_parse_url,
+  //   bootstrap_track: lm_bootstrap_track,
+  //   search: lm_search,
+  //   lyric: lm_lyric,
+  //   add_playlist: lm_add_playlist,
+  //   remove_from_playlist: lm_remove_from_playlist,
+  // };
 }
-
-const localmusic = build_localmusic(); // eslint-disable-line no-unused-vars

@@ -43,7 +43,8 @@ angular.module('listenone').controller('PlayController', [
     $scope.currentPosition = '0:00';
 
     if (!$scope.isChrome) {
-      $scope.isMac = require('electron').remote.process.platform === 'darwin';
+      // eslint-disable-next-line no-undef
+      $scope.isMac = process.platform === 'darwin';
     }
 
     function switchMode(mode) {

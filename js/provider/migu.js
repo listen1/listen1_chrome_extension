@@ -2,8 +2,8 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-use-before-define */
 /* global getParameterByName cookieRemove async forge */
-function build_migu() {
-  function mg_convert_song(song) {
+class migu {
+  static mg_convert_song(song) {
     return {
       id: `mgtrack_${song.copyrightId}`,
       title: song.songName,
@@ -25,7 +25,7 @@ function build_migu() {
     };
   }
 
-  function mg_render_tracks(url, page, callback) {
+  static mg_render_tracks(url, page, callback) {
     const list_id = getParameterByName('list_id', url).split('_').pop();
     const playlist_type = getParameterByName('list_id', url).split('_')[0];
     let tracks_url = '';
@@ -44,24 +44,22 @@ function build_migu() {
         playlist_type === 'mgplaylist'
           ? response.data.list
           : response.data.songList;
-      const tracks = data.map((item) => mg_convert_song(item));
+      const tracks = data.map((item) => this.mg_convert_song(item));
       return callback(null, tracks);
     });
   }
 
-  function mg_show_toplist(offset) {
+  static mg_show_toplist(offset) {
     if (offset !== undefined && offset > 0) {
       return {
-        success(fn) {
-          return fn({ result: [] });
-        },
+        success: (fn) => fn({ result: [] }),
       };
     }
 
     const url =
       'https://app.c.nf.migu.cn/MIGUM3.0/v1.0/template/rank-list/release?dataVersion=1616469593718&templateVersion=9';
     return {
-      success(fn) {
+      success: (fn) => {
         axios.get(url).then((response) => {
           const migu_board = response.data.data.contentItemList[4].itemList.map(
             (item) => ({
@@ -124,11 +122,11 @@ function build_migu() {
     };
   }
 
-  function mg_show_playlist(url) {
+  static show_playlist(url) {
     const offset = Number(getParameterByName('offset', url));
     const filterId = getParameterByName('filter_id', url);
     if (filterId === 'toplist') {
-      return mg_show_toplist(offset);
+      return this.mg_show_toplist(offset);
     }
     const pageSize = 30;
     let target_url = '';
@@ -144,7 +142,7 @@ function build_migu() {
       // columnId=15127315为推荐，15127272为最新
     }
     return {
-      success(fn) {
+      success: (fn) => {
         axios.get(target_url).then((response) => {
           const data = !filterId
             ? response.data.data.contentItemList[0].itemList
@@ -165,10 +163,10 @@ function build_migu() {
     };
   }
 
-  function mg_toplist(url) {
+  static mg_toplist(url) {
     const list_id = Number(getParameterByName('list_id', url).split('_').pop());
     return {
-      success(fn) {
+      success: (fn) => {
         const board_list = {
           27553319: {
             name: '尖叫新歌榜',
@@ -369,7 +367,7 @@ function build_migu() {
             }));
           } else {
             tracks = data.data.columnInfo.dataList.map((item) =>
-              mg_convert_song(item)
+              this.mg_convert_song(item)
             );
           }
           return fn({
@@ -381,10 +379,10 @@ function build_migu() {
     };
   }
 
-  function mg_get_playlist(url) {
+  static mg_get_playlist(url) {
     const list_id = getParameterByName('list_id', url).split('_').pop();
     return {
-      success(fn) {
+      success: (fn) => {
         const info_url = `https://app.c.nf.migu.cn/MIGUM2.0/v1.0/content/resourceinfo.do?needSimple=00&resourceType=2021&resourceId=${list_id}`;
         axios.get(info_url).then((response) => {
           const info = {
@@ -398,7 +396,7 @@ function build_migu() {
           const page_array = Array.from({ length: page }, (v, k) => k + 1);
           async.concat(
             page_array,
-            (item, callback) => mg_render_tracks(url, item, callback),
+            (item, callback) => this.mg_render_tracks(url, item, callback),
             (err, tracks) => {
               fn({
                 tracks,
@@ -411,10 +409,10 @@ function build_migu() {
     };
   }
 
-  function mg_album(url) {
+  static mg_album(url) {
     const album_id = getParameterByName('list_id', url).split('_').pop();
     return {
-      success(fn) {
+      success: (fn) => {
         const info_url = `https://app.c.nf.migu.cn/MIGUM2.0/v1.0/content/resourceinfo.do?needSimple=00&resourceType=2003&resourceId=${album_id}`;
         axios.get(info_url).then((response) => {
           const { data } = response;
@@ -429,7 +427,7 @@ function build_migu() {
           const page_array = Array.from({ length: page }, (v, k) => k + 1);
           async.concat(
             page_array,
-            (item, callback) => mg_render_tracks(url, item, callback),
+            (item, callback) => this.mg_render_tracks(url, item, callback),
             (err, tracks) => {
               fn({
                 tracks,
@@ -442,7 +440,7 @@ function build_migu() {
     };
   }
 
-  function mg_artist(url) {
+  static mg_artist(url) {
     const artist_id = getParameterByName('list_id', url).split('_').pop();
     const offset = Number(getParameterByName('offset', url));
     const pageSize = 50;
@@ -450,7 +448,7 @@ function build_migu() {
     const target_url = `https://app.c.nf.migu.cn/MIGUM2.0/v1.0/content/singer_songs.do?pageNo=${page}&pageSize=${pageSize}&resourceType=2&singerId=${artist_id}`;
 
     return {
-      success(fn) {
+      success: (fn) => {
         axios.get(target_url).then((response) => {
           const { data } = response;
           const info = {
@@ -460,7 +458,9 @@ function build_migu() {
             source_url: `https://music.migu.cn/v3/music/artist/${artist_id}/song`,
           };
 
-          const tracks = data.songlist.map((item) => mg_convert_song(item));
+          const tracks = data.songlist.map((item) =>
+            this.mg_convert_song(item)
+          );
           return fn({
             tracks,
             info,
@@ -470,9 +470,9 @@ function build_migu() {
     };
   }
 
-  function mg_bootstrap_track(track, success, failure) {
+  static bootstrap_track(track, success, failure) {
     const sound = {};
-    const songId =  track.song_id;
+    const songId = track.song_id;
     /*
     const copyrightId = track.id.slice('mgtrack_'.length);
     const type = 1;
@@ -540,46 +540,48 @@ function build_migu() {
         toneFlag = 'PQ';
     }
     const target_url = `https://app.c.nf.migu.cn/MIGUM2.0/strategy/listen-url/v2.2?netType=01&resourceType=E&songId=${songId}&toneFlag=${toneFlag}`;
-    axios.get(target_url, {
-      headers : {
-        channel: '0146951',
-        uid: 1234,
-      },
-    }).then((response) => {
-      // const { data } = response.data;
-      // let playUrl = response.data.data ? response.data.data.playUrl : null;
-      let playUrl = response.data.data ? response.data.data.url : null;
-      if (playUrl) {
-        if (playUrl.startsWith('//')) {
-          playUrl = `https:${playUrl}`;
+    axios
+      .get(target_url, {
+        headers: {
+          channel: '0146951',
+          uid: 1234,
+        },
+      })
+      .then((response) => {
+        // const { data } = response.data;
+        // let playUrl = response.data.data ? response.data.data.playUrl : null;
+        let playUrl = response.data.data ? response.data.data.url : null;
+        if (playUrl) {
+          if (playUrl.startsWith('//')) {
+            playUrl = `https:${playUrl}`;
+          }
+          sound.url = playUrl.replace(/\+/g, '%2B'); // eslint-disable-line no-param-reassign
+          sound.platform = 'migu';
+          switch (toneFlag) {
+            case 'HQ':
+              sound.bitrate = '320kbps';
+              break;
+            case 'SQ':
+              sound.bitrate = '999kbps';
+              break;
+            case 'ZQ':
+              sound.bitrate = '999kbps';
+              break;
+            default:
+              sound.bitrate = '128kbps';
+          }
+          success(sound);
+        } else {
+          failure(sound);
         }
-        sound.url = playUrl.replace(/\+/g, '%2B'); // eslint-disable-line no-param-reassign
-        sound.platform = 'migu';
-        switch (toneFlag) {
-          case 'HQ':
-            sound.bitrate = '320kbps';
-            break;
-          case 'SQ':
-            sound.bitrate = '999kbps';
-            break;
-          case 'ZQ':
-            sound.bitrate = '999kbps';
-            break;
-          default:
-            sound.bitrate = '128kbps';
-        }
-        success(sound);
-      } else {
-        failure(sound);
-      }
-    });
+      });
   }
 
-  function mg_search(url) {
+  static search(url) {
     const keyword = getParameterByName('keywords', url);
     const curpage = getParameterByName('curpage', url);
     const searchType = getParameterByName('type', url);
-    const sid = (uuid() + uuid()).replace(/-/g, '');
+    const sid = (this.uuid() + this.uuid()).replace(/-/g, '');
     // let type ='';
     let searchSwitch = '';
     let target_url =
@@ -613,7 +615,7 @@ function build_migu() {
 
     const deviceId = forge.md5
       .create()
-      .update(uuid().replace(/-/g, ''))
+      .update(this.uuid().replace(/-/g, ''))
       .digest()
       .toHex()
       .toLocaleUpperCase(); // 设备的UUID
@@ -654,7 +656,7 @@ function build_migu() {
       version: '7.0.4',
     };
     return {
-      success(fn) {
+      success: (fn) => {
         axios
           .get(target_url, {
             headers,
@@ -666,7 +668,7 @@ function build_migu() {
             if (searchType === '0') {
               if (data.songResultData.result) {
                 result = data.songResultData.result.map((item) =>
-                  mg_convert_song(item)
+                  this.mg_convert_song(item)
                 );
                 total = data.songResultData.totalCount;
               }
@@ -698,18 +700,18 @@ function build_migu() {
   }
 
   // https://abhishekdutta.org/blog/standalone_uuid_generator_in_javascript.html
-  function uuid() {
+  static uuid() {
     const temp_url = URL.createObjectURL(new Blob());
     const strTemp = temp_url.toString();
     URL.revokeObjectURL(temp_url);
     return strTemp.substr(strTemp.lastIndexOf('/') + 1); // remove prefix (e.g. blob:null/, blob:www.test.com/, ...)
   }
 
-  function mg_lyric(url) {
+  static lyric(url) {
     const lyric_url = getParameterByName('lyric_url', url);
     const tlyric_url = getParameterByName('tlyric_url', url);
     return {
-      success(fn) {
+      success: (fn) => {
         if (lyric_url !== 'null') {
           async.parallel(
             [
@@ -733,7 +735,7 @@ function build_migu() {
               },
             ],
             (err, results) => {
-              const data = mg_generate_translation(results[0], results[1]);
+              const data = this.mg_generate_translation(results[0], results[1]);
               return fn({
                 lyric: data.lrc,
                 tlyric: data.tlrc,
@@ -744,7 +746,7 @@ function build_migu() {
           const song_id = getParameterByName('track_id', url).split('_').pop();
           const target_url = `https://music.migu.cn/v3/api/music/audioPlayer/getLyric?copyrightId=${song_id}`;
           axios.get(target_url).then((response) => {
-            const data = mg_generate_translation(
+            const data = this.mg_generate_translation(
               response.data.lyric,
               response.data.translatedLyric
             );
@@ -758,7 +760,7 @@ function build_migu() {
     };
   }
 
-  function mg_generate_translation(plain, translation) {
+  static mg_generate_translation(plain, translation) {
     if (!translation) {
       return {
         lrc: plain,
@@ -797,7 +799,7 @@ function build_migu() {
     };
   }
 
-  function mg_parse_url(url) {
+  static parse_url(url) {
     let result;
     // eslint-disable-next-line no-param-reassign
     url = url.replace(
@@ -815,25 +817,25 @@ function build_migu() {
     return result;
   }
 
-  function get_playlist(url) {
+  static get_playlist(url) {
     const list_id = getParameterByName('list_id', url).split('_')[0];
     switch (list_id) {
       case 'mgplaylist':
-        return mg_get_playlist(url);
+        return this.mg_get_playlist(url);
       case 'mgalbum':
-        return mg_album(url);
+        return this.mg_album(url);
       case 'mgartist':
-        return mg_artist(url);
+        return this.mg_artist(url);
       case 'mgtoplist':
-        return mg_toplist(url);
+        return this.mg_toplist(url);
       default:
         return null;
     }
   }
 
-  function get_playlist_filters() {
+  static get_playlist_filters() {
     return {
-      success(fn) {
+      success: (fn) => {
         let target_url =
           'https://app.c.nf.migu.cn/MIGUM3.0/v1.0/template/musiclistplaza-hottaglist/release';
         axios.get(target_url).then((response) => {
@@ -865,11 +867,12 @@ function build_migu() {
       },
     };
   }
-  function migu_get_user() {
+
+  static get_user() {
     const ts = +new Date();
     const url = `https://music.migu.cn/v3/api/user/getUserInfo?_=${ts}`;
     return {
-      success(fn) {
+      success: (fn) => {
         axios.get(url).then((res) => {
           let result = { is_login: false };
           let status = 'fail';
@@ -897,11 +900,11 @@ function build_migu() {
     };
   }
 
-  function migu_get_login_url() {
+  static get_login_url() {
     return `https://music.migu.cn`;
   }
 
-  function mg_logout() {
+  static logout() {
     const removeFn = (url, name) =>
       cookieRemove(
         {
@@ -930,18 +933,16 @@ function build_migu() {
     );
   }
 
-  return {
-    show_playlist: mg_show_playlist,
-    get_playlist_filters,
-    get_playlist,
-    parse_url: mg_parse_url,
-    bootstrap_track: mg_bootstrap_track,
-    search: mg_search,
-    lyric: mg_lyric,
-    get_user: migu_get_user,
-    get_login_url: migu_get_login_url,
-    logout: mg_logout,
-  };
+  // return {
+  //   show_playlist: mg_show_playlist,
+  //   get_playlist_filters,
+  //   get_playlist,
+  //   parse_url: mg_parse_url,
+  //   bootstrap_track: mg_bootstrap_track,
+  //   search: mg_search,
+  //   lyric: mg_lyric,
+  //   get_user: migu_get_user,
+  //   get_login_url: migu_get_login_url,
+  //   logout: mg_logout,
+  // };
 }
-
-const migu = build_migu(); // eslint-disable-line no-unused-vars
