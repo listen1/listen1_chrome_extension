@@ -268,7 +268,7 @@ const main = () => {
           }
           const offsetToload = 10;
           if (remain <= offsetToload) {
-            $rootScope.$broadcast('infinite_scroll:hit_bottom', '');
+            emitter.emit('infinite_scroll:hit_bottom');
           }
         });
       },

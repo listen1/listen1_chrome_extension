@@ -52,6 +52,7 @@
   ],
   "version": "2.20.1",
   "web_accessible_resources": ["images/*"],
+  "content_security_policy": "script-src 'self' 'unsafe-eval' blob: filesystem:",
   "content_scripts": [
     {
       "matches": ["https://listen1.github.io/listen1/*"],
