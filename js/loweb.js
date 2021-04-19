@@ -21,7 +21,7 @@ const PROVIDERS = [
     name: 'qq',
     instance: qq,
     searchable: true,
-    support_login: false,
+    support_login: true,
     id: 'qq',
   },
   {
@@ -369,11 +369,17 @@ const MediaService = {
     const provider = getProviderByName(source);
     return provider.get_login_url();
   },
-  getUserPlaylist(source, options) {
+  getUserCreatedPlaylist(source, options) {
     const provider = getProviderByName(source);
-    const url = `/get_user_playlist?${queryStringify(options)}`;
+    const url = `/get_user_create_playlist?${queryStringify(options)}`;
 
-    return provider.get_user_playlist(url);
+    return provider.get_user_created_playlist(url);
+  },
+  getUserFavoritePlaylist(source, options) {
+    const provider = getProviderByName(source);
+    const url = `/get_user_favorite_playlist?${queryStringify(options)}`;
+
+    return provider.get_user_favorite_playlist(url);
   },
   getRecommendPlaylist(source) {
     const provider = getProviderByName(source);

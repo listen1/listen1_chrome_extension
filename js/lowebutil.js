@@ -17,16 +17,22 @@ function isElectron() {
   return window && window.process && window.process.type;
 }
 
-function cookieGet(cookie, callback) {
+function cookieGet(cookieRequest, callback) {
   if (!isElectron()) {
-    return chrome.cookies.get(cookie, (arg1, arg2) => {
-      callback(arg1, arg2);
+    return chrome.cookies.get(cookieRequest, (cookie) => {
+      callback(cookie);
     });
   }
   const remote = require('electron').remote; // eslint-disable-line
-  remote.session.defaultSession.cookies.get(cookie).then((arg1, arg2) => {
-    callback(null, arg1, arg2);
-  });
+  remote.session.defaultSession.cookies
+    .get(cookieRequest)
+    .then((cookieArray) => {
+      let cookie = null;
+      if (cookieArray.length > 0) {
+        [cookie] = cookieArray;
+      }
+      callback(cookie);
+    });
 }
 
 function cookieSet(cookie, callback) {

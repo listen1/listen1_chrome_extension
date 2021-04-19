@@ -332,7 +332,7 @@
                       </li>
                     </ul>
                     <div
-                      ng-if="!isChrome || is_login('netease')"
+                      ng-if="!isChrome || is_login('netease') || is_login('qq')"
                       class="menu-title"
                     >
                       <div class="title">{{_MY_MUSIC}}</div>
@@ -348,13 +348,23 @@
                       </li>
                       <li
                         ng-if="is_login('netease')"
-                        ng-click="showTag(6)"
-                        ng-class="{ 'active':(current_tag==6) && (window_url_stack.length ==0) }"
+                        ng-click="showTag(6, {platform:'netease', user: musicAuth.netease});"
+                        ng-class="{ 'active':(current_tag==6 && tag_params.platform=='netease') && (window_url_stack.length ==0) }"
                       >
                         <svg class="feather">
                           <use href="#globe"></use>
                         </svg>
                         <a>{{_MY_NETEASE}}</a>
+                      </li>
+                      <li
+                        ng-if="is_login('qq')"
+                        ng-click="showTag(6, {platform:'qq', user: musicAuth.qq});"
+                        ng-class="{ 'active':(current_tag==6 && tag_params.platform=='qq') && (window_url_stack.length ==0) }"
+                      >
+                        <svg class="feather">
+                          <use href="#globe"></use>
+                        </svg>
+                        <a>{{_MY_QQ}}</a>
                       </li>
                     </ul>
                     <div class="menu-title" ng-init="loadMyPlaylist();">
@@ -540,19 +550,18 @@
                         </div>
                       </div>
                     </div>
-                    <!-- my netease window-->
+                    <!-- my platform window-->
                     <div
                       class="page page-hot-playlist"
-                      ng-if="current_tag==6 && is_window_hidden==1"
+                      ng-show="current_tag==6 && is_window_hidden==1"
                       ng-controller="PlatformController"
-                      ng-init="initPlatformController(musicAuth.netease);"
                     >
                       <div class="source-list" ng-show="is_window_hidden==1">
                         <div
                           ng-repeat-start="source in ::platformSourceList"
                           class="source-button"
                           ng-class="{'active':tab === source.name}"
-                          ng-click="changePlatformTab(source.name)"
+                          ng-click="changeTab(source.name)"
                         >
                           {{source.displayText}}
                         </div>
@@ -588,9 +597,6 @@
                                 >
                               </div>
                             </li>
-                            <!-- <div class="loading_bottom">
-                            <img src="images/loading-1.gif" height="40px" />
-                          </div> -->
                           </ul>
                         </div>
                       </div>
