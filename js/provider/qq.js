@@ -62,7 +62,7 @@ function build_qq() {
             cover_img_url: item.imgurl,
             title: htmlDecode(item.dissname),
             id: `qqplaylist_${item.dissid}`,
-            source_url: `https://y.qq.com/#type=taoge&id=${item.dissid}`,
+            source_url: `https://y.qq.com/n/ryqq/playlist/${item.dissid}`,
           }));
 
           return fn({
@@ -227,7 +227,7 @@ function build_qq() {
             cover_img_url: data.cdlist[0].logo,
             title: data.cdlist[0].dissname,
             id: `qqplaylist_${list_id}`,
-            source_url: `https://y.qq.com/#type=taoge&id=${list_id}`,
+            source_url: `https://y.qq.com/n/ryqq/playlist/${list_id}`,
           };
 
           const tracks = data.cdlist[0].songlist.map((item) =>
@@ -343,7 +343,7 @@ function build_qq() {
               id: `qqplaylist_${info.dissid}`,
               title: htmlDecode(info.dissname),
               source: 'qq',
-              source_url: `https://y.qq.com/#type=taoge&id=${info.dissid}`,
+              source_url: `https://y.qq.com/n/ryqq/playlist/${info.dissid}`,
               img_url: info.imgurl,
               url: `qqplaylist_${info.dissid}`,
               author: UnicodeToAscii(info.creator.name),
