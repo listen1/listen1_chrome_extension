@@ -849,7 +849,7 @@ class netease {
     };
   }
 
-  static get_user_create_playlist(url) {
+  static get_user_created_playlist(url) {
     return this.get_user_playlist(url, 'created');
   }
 

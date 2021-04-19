@@ -19,16 +19,16 @@ angular.module('listenone').controller('PlatformController', [
     $scope.myPlatformPlaylists = [];
     $scope.myPlatformUser = {};
     $scope.platformSourceList = platformSourceList;
-    $scope.platformTab = platformSourceList[0].name;
+    $scope.tab = platformSourceList[0].name;
 
     $scope.loadPlatformPlaylists = () => {
       if ($scope.myPlatformUser.platform === undefined) {
         return;
       }
       let getPlaylistFn = MediaService.getUserCreatedPlaylist;
-      if ($scope.platformTab === 'recommend_playlist') {
+      if ($scope.tab === 'recommend_playlist') {
         getPlaylistFn = MediaService.getRecommendPlaylist;
-      } else if ($scope.platformTab === 'my_favorite_playlist') {
+      } else if ($scope.tab === 'my_favorite_playlist') {
         getPlaylistFn = MediaService.getUserFavoritePlaylist;
       }
       const user = $scope.myPlatformUser;
@@ -41,13 +41,17 @@ angular.module('listenone').controller('PlatformController', [
     };
 
     $scope.initPlatformController = (user) => {
-      $scope.platformTab = platformSourceList[0].name;
+      $scope.tab = platformSourceList[0].name;
       $scope.myPlatformUser = user;
       $scope.loadPlatformPlaylists();
     };
 
-    $scope.changePlatformTab = (name) => {
-      $scope.platformTab = name;
+    $scope.$on('myplatform:update', (event, user) => {
+      $scope.initPlatformController(user);
+    });
+
+    $scope.changeTab = (name) => {
+      $scope.tab = name;
       $scope.loadPlatformPlaylists();
     };
   },

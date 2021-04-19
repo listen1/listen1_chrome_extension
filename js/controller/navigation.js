@@ -41,6 +41,9 @@ angular.module('listenone').controller('NavigationController', [
       $scope.window_url_stack = [];
       $scope.window_poped_url_stack = [];
       $scope.tag_params = tag_params;
+      if (tag_id === 6) {
+        $rootScope.$broadcast('myplatform:update', tag_params.user);
+      }
       $scope.closeWindow();
     };
 
