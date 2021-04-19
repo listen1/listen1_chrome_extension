@@ -78,13 +78,13 @@ class netease {
   static ne_show_toplist(offset) {
     if (offset !== undefined && offset > 0) {
       return {
-        success:(fn)=> fn({ result: [] }),
+        success: (fn) => fn({ result: [] }),
       };
     }
     const url = 'https://music.163.com/weapi/toplist/detail';
     const data = this.weapi({});
     return {
-      success:(fn)=> {
+      success: (fn) => {
         axios.post(url, new URLSearchParams(data)).then((response) => {
           const result = [];
           response.data.list.forEach((item) => {
@@ -123,7 +123,7 @@ class netease {
     }
 
     return {
-      success:(fn)=> {
+      success: (fn) => {
         axios.get(target_url).then((response) => {
           const { data } = response;
           const list_elements = Array.from(
@@ -167,7 +167,7 @@ class netease {
       },
       (cookie) => {
         if (cookie == null) {
-          const nuidValue = _create_secret_key(32);
+          const nuidValue = this._create_secret_key(32);
           const nnidValue = `${nuidValue},${new Date().getTime()}`;
           // netease default cookie expire time: 100 years
           const expire =
@@ -542,7 +542,7 @@ class netease {
     };
     const data = this.weapi(d);
     return {
-      success:(fn)=> {
+      success: (fn) => {
         axios.post(target_url, new URLSearchParams(data)).then((response) => {
           const { data: res_data } = response;
           let lrc = '';
@@ -723,7 +723,7 @@ class netease {
       },
     ];
     return {
-      success:(fn)=> fn({ recommend, all }),
+      success: (fn) => fn({ recommend, all }),
     };
   }
 
@@ -777,7 +777,7 @@ class netease {
       (cookie) => {}
     );
     return {
-      success:(fn)=> {
+      success: (fn) => {
         axios
           .post(target_url, new URLSearchParams(encrypt_req_data))
           .then((response) => {
@@ -818,7 +818,7 @@ class netease {
     };
 
     return {
-      success:(fn)=> {
+      success: (fn) => {
         axios
           .post(target_url, new URLSearchParams(req_data))
           .then((response) => {
@@ -869,7 +869,7 @@ class netease {
     const encrypt_req_data = this.weapi(req_data);
 
     return {
-      success:(fn)=> {
+      success: (fn) => {
         axios
           .post(target_url, new URLSearchParams(encrypt_req_data))
           .then((response) => {
@@ -899,7 +899,7 @@ class netease {
 
     const encrypt_req_data = this.weapi({});
     return {
-      success:(fn)=> {
+      success: (fn) => {
         axios.post(url, new URLSearchParams(encrypt_req_data)).then((res) => {
           let result = { is_login: false };
           let status = 'fail';
