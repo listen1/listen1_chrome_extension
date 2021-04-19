@@ -12,7 +12,7 @@ const defaultLocalMusicPlaylist = {
 };
 
 class localmusic {
-  static lm_show_playlist(url, hm) {
+  static show_playlist(url, hm) {
     return {
       success: (fn) =>
         fn({
@@ -75,7 +75,7 @@ class localmusic {
     };
   }
 
-  static lm_bootstrap_track(track, success, failure) {
+  static bootstrap_track(track, success, failure) {
     const sound = {};
     sound.url = track.sound_url;
     sound.platform = 'localmusic';
@@ -83,7 +83,7 @@ class localmusic {
     success(sound);
   }
 
-  static lm_search(url) {
+  static search(url) {
     const searchType = getParameterByName('type', url);
     return {
       success: (fn) =>
@@ -95,7 +95,7 @@ class localmusic {
     };
   }
 
-  static lm_lyric(url) {
+  static lyric(url) {
     return {
       success: (fn) =>
         fn({
@@ -105,7 +105,7 @@ class localmusic {
     };
   }
 
-  static lm_add_playlist(list_id, tracks) {
+  static add_playlist(list_id, tracks) {
     if (typeof tracks === 'string') {
       tracks = JSON.parse(tracks);
     }
@@ -127,7 +127,7 @@ class localmusic {
     };
   }
 
-  static lm_parse_url(url) {
+  static parse_url(url) {
     let result;
     return result;
   }
@@ -146,7 +146,7 @@ class localmusic {
     }
   }
 
-  static lm_remove_from_playlist(list_id, track_id) {
+  static remove_from_playlist(list_id, track_id) {
     const playlist = localStorage.getObject(list_id);
     if (playlist == null) {
       return;
