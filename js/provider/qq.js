@@ -1,12 +1,13 @@
 /* eslint-disable no-use-before-define */
 /* global getParameterByName cookieGet cookieRemove */
-function build_qq() {
-  function htmlDecode(value) {
+// eslint-disable-next-line no-unused-vars
+class qq {
+  static htmlDecode(value) {
     const parser = new DOMParser();
     return parser.parseFromString(value, 'text/html').body.textContent;
   }
 
-  function qq_show_toplist(offset) {
+  static qq_show_toplist(offset) {
     if (offset !== undefined && offset > 0) {
       return {
         success(fn) {
@@ -36,11 +37,11 @@ function build_qq() {
     };
   }
 
-  function qq_show_playlist(url) {
+  static show_playlist(url) {
     const offset = Number(getParameterByName('offset', url)) || 0;
     let filterId = getParameterByName('filter_id', url) || '';
     if (filterId === 'toplist') {
-      return qq_show_toplist(offset);
+      return qq.qq_show_toplist(offset);
     }
     if (filterId === '') {
       filterId = '10000000';
@@ -60,7 +61,7 @@ function build_qq() {
 
           const playlists = data.data.list.map((item) => ({
             cover_img_url: item.imgurl,
-            title: htmlDecode(item.dissname),
+            title: qq.htmlDecode(item.dissname),
             id: `qqplaylist_${item.dissid}`,
             source_url: `https://y.qq.com/n/ryqq/playlist/${item.dissid}`,
           }));
@@ -73,7 +74,7 @@ function build_qq() {
     };
   }
 
-  function qq_get_image_url(qqimgid, img_type) {
+  static qq_get_image_url(qqimgid, img_type) {
     if (qqimgid == null) {
       return '';
     }
@@ -89,7 +90,7 @@ function build_qq() {
     return url;
   }
 
-  function qq_is_playable(song) {
+  static qq_is_playable(song) {
     const switch_flag = song.switch.toString(2).split('');
     switch_flag.pop();
     switch_flag.reverse();
@@ -101,24 +102,24 @@ function build_qq() {
     return play_flag === '1' || (play_flag === '1' && try_flag === '1');
   }
 
-  function qq_convert_song(song) {
+  static qq_convert_song(song) {
     const d = {
       id: `qqtrack_${song.songmid}`,
-      title: htmlDecode(song.songname),
-      artist: htmlDecode(song.singer[0].name),
+      title: qq.htmlDecode(song.songname),
+      artist: qq.htmlDecode(song.singer[0].name),
       artist_id: `qqartist_${song.singer[0].mid}`,
-      album: htmlDecode(song.albumname),
+      album: qq.htmlDecode(song.albumname),
       album_id: `qqalbum_${song.albummid}`,
-      img_url: qq_get_image_url(song.albummid, 'album'),
+      img_url: qq.qq_get_image_url(song.albummid, 'album'),
       source: 'qq',
       source_url: `https://y.qq.com/#type=song&mid=${song.songmid}&tpl=yqq_song_detail`,
       // url: `qqtrack_${song.songmid}`,
-      url: !qq_is_playable(song) ? '' : undefined,
+      url: !qq.qq_is_playable(song) ? '' : undefined,
     };
     return d;
   }
 
-  function get_toplist_url(id, period, limit) {
+  static get_toplist_url(id, period, limit) {
     return `https://u.y.qq.com/cgi-bin/musicu.fcg?format=json&inCharset=utf8&outCharset=utf-8&platform=yqq.json&needNewCode=0&data=${encodeURIComponent(
       JSON.stringify({
         comm: {
@@ -138,7 +139,7 @@ function build_qq() {
     )}`;
   }
 
-  function get_periods(topid) {
+  static get_periods(topid) {
     const periodUrl = 'https://c.y.qq.com/node/pc/wk_v15/top.html';
     const regExps = {
       periodList: /<i class="play_cover__btn c_tx_link js_icon_play" data-listkey=".+?" data-listname=".+?" data-tid=".+?" data-date=".+?" .+?<\/i>/g,
@@ -163,7 +164,7 @@ function build_qq() {
     });
   }
 
-  function qq_toplist(url) {
+  static qq_toplist(url) {
     // special thanks to lx-music-desktop solution
     // https://github.com/lyswhut/lx-music-desktop/blob/24521bf50d80512a44048596639052e3194b2bf1/src/renderer/utils/music/tx/leaderboard.js
 
@@ -171,22 +172,22 @@ function build_qq() {
 
     return {
       success(fn) {
-        get_periods(list_id).then((listPeriod) => {
+        qq.get_periods(list_id).then((listPeriod) => {
           const limit = 100;
           // TODO: visit all pages of toplist
-          const target_url = get_toplist_url(list_id, listPeriod, limit);
+          const target_url = qq.get_toplist_url(list_id, listPeriod, limit);
 
           axios.get(target_url).then((response) => {
             const { data } = response;
             const tracks = data.toplist.data.songInfoList.map((song) => {
               const d = {
                 id: `qqtrack_${song.mid}`,
-                title: htmlDecode(song.name),
-                artist: htmlDecode(song.singer[0].name),
+                title: qq.htmlDecode(song.name),
+                artist: qq.htmlDecode(song.singer[0].name),
                 artist_id: `qqartist_${song.singer[0].mid}`,
-                album: htmlDecode(song.album.name),
+                album: qq.htmlDecode(song.album.name),
                 album_id: `qqalbum_${song.album.mid}`,
-                img_url: qq_get_image_url(song.album.mid, 'album'),
+                img_url: qq.qq_get_image_url(song.album.mid, 'album'),
                 source: 'qq',
                 source_url: `https://y.qq.com/#type=song&mid=${song.mid}&tpl=yqq_song_detail`,
               };
@@ -208,7 +209,7 @@ function build_qq() {
     };
   }
 
-  function qq_get_playlist(url) {
+  static qq_get_playlist(url) {
     // eslint-disable-line no-unused-vars
     const list_id = getParameterByName('list_id', url).split('_').pop();
 
@@ -231,7 +232,7 @@ function build_qq() {
           };
 
           const tracks = data.cdlist[0].songlist.map((item) =>
-            qq_convert_song(item)
+            qq.qq_convert_song(item)
           );
           return fn({
             tracks,
@@ -242,7 +243,7 @@ function build_qq() {
     };
   }
 
-  function qq_album(url) {
+  static qq_album(url) {
     const album_id = getParameterByName('list_id', url).split('_').pop();
 
     return {
@@ -256,13 +257,13 @@ function build_qq() {
           const { data } = response;
 
           const info = {
-            cover_img_url: qq_get_image_url(album_id, 'album'),
+            cover_img_url: qq.qq_get_image_url(album_id, 'album'),
             title: data.data.name,
             id: `qqalbum_${album_id}`,
             source_url: `https://y.qq.com/#type=album&mid=${album_id}`,
           };
 
-          const tracks = data.data.list.map((item) => qq_convert_song(item));
+          const tracks = data.data.list.map((item) => qq.qq_convert_song(item));
           return fn({
             tracks,
             info,
@@ -272,7 +273,7 @@ function build_qq() {
     };
   }
 
-  function qq_artist(url) {
+  static qq_artist(url) {
     const artist_id = getParameterByName('list_id', url).split('_').pop();
 
     return {
@@ -287,14 +288,14 @@ function build_qq() {
           const { data } = response;
 
           const info = {
-            cover_img_url: qq_get_image_url(artist_id, 'artist'),
+            cover_img_url: qq.qq_get_image_url(artist_id, 'artist'),
             title: data.data.singer_name,
             id: `qqartist_${artist_id}`,
             source_url: `https://y.qq.com/#type=singer&mid=${artist_id}`,
           };
 
           const tracks = data.data.list.map((item) =>
-            qq_convert_song(item.musicData)
+            qq.qq_convert_song(item.musicData)
           );
           return fn({
             tracks,
@@ -305,7 +306,7 @@ function build_qq() {
     };
   }
 
-  function qq_search(url) {
+  static search(url) {
     // eslint-disable-line no-unused-vars
     const keyword = getParameterByName('keywords', url);
     const curpage = getParameterByName('curpage', url);
@@ -336,17 +337,19 @@ function build_qq() {
           let result = [];
           let total = 0;
           if (searchType === '0') {
-            result = data.data.song.list.map((item) => qq_convert_song(item));
+            result = data.data.song.list.map((item) =>
+              qq.qq_convert_song(item)
+            );
             total = data.data.song.totalnum;
           } else if (searchType === '1') {
             result = data.data.list.map((info) => ({
               id: `qqplaylist_${info.dissid}`,
-              title: htmlDecode(info.dissname),
+              title: qq.htmlDecode(info.dissname),
               source: 'qq',
               source_url: `https://y.qq.com/n/ryqq/playlist/${info.dissid}`,
               img_url: info.imgurl,
               url: `qqplaylist_${info.dissid}`,
-              author: UnicodeToAscii(info.creator.name),
+              author: qq.UnicodeToAscii(info.creator.name),
               count: info.song_count,
             }));
             total = data.data.sum;
@@ -361,7 +364,7 @@ function build_qq() {
     };
   }
 
-  function UnicodeToAscii(str) {
+  static UnicodeToAscii(str) {
     const result = str.replace(/&#(\d+);/g, () =>
       // eslint-disable-next-line prefer-rest-params
       String.fromCharCode(arguments[1])
@@ -370,7 +373,7 @@ function build_qq() {
   }
 
   // eslint-disable-next-line no-unused-vars
-  function qq_bootstrap_track(track, success, failure) {
+  static bootstrap_track(track, success, failure) {
     const sound = {};
     const songId = track.id.slice('qqtrack_'.length);
     const target_url = 'https://u.y.qq.com/cgi-bin/musicu.fcg';
@@ -459,7 +462,7 @@ function build_qq() {
   }
 
   // eslint-disable-next-line no-unused-vars
-  function str2ab(str) {
+  static str2ab(str) {
     // string to array buffer.
     const buf = new ArrayBuffer(str.length);
     const bufView = new Uint8Array(buf);
@@ -469,7 +472,7 @@ function build_qq() {
     return buf;
   }
 
-  function qq_lyric(url) {
+  static lyric(url) {
     // eslint-disable-line no-unused-vars
     const track_id = getParameterByName('track_id', url).split('_').pop();
     // use chrome extension to modify referer.
@@ -491,7 +494,7 @@ function build_qq() {
     };
   }
 
-  function qq_parse_url(url) {
+  static parse_url(url) {
     let result;
     let match = /\/\/y.qq.com\/n\/yqq\/playlist\/([0-9]+)/.exec(url);
     if (match != null) {
@@ -522,23 +525,23 @@ function build_qq() {
     return result;
   }
 
-  function get_playlist(url) {
+  static get_playlist(url) {
     const list_id = getParameterByName('list_id', url).split('_')[0];
     switch (list_id) {
       case 'qqplaylist':
-        return qq_get_playlist(url);
+        return qq.qq_get_playlist(url);
       case 'qqalbum':
-        return qq_album(url);
+        return qq.qq_album(url);
       case 'qqartist':
-        return qq_artist(url);
+        return qq.qq_artist(url);
       case 'qqtoplist':
-        return qq_toplist(url);
+        return qq.qq_toplist(url);
       default:
         return null;
     }
   }
 
-  function get_playlist_filters() {
+  static get_playlist_filters() {
     const target_url =
       'https://c.y.qq.com/splcloud/fcgi-bin/fcg_get_diss_tag_conf.fcg' +
       `?picmid=1&rnd=${Math.random()}&g_tk=732560869` +
@@ -556,7 +559,7 @@ function build_qq() {
               cate.items.forEach((item) => {
                 result.filters.push({
                   id: item.categoryId,
-                  name: htmlDecode(item.categoryName),
+                  name: qq.htmlDecode(item.categoryName),
                 });
               });
               all.push(result);
@@ -578,7 +581,7 @@ function build_qq() {
     };
   }
 
-  function qq_get_user_by_uin(uin, callback) {
+  static get_user_by_uin(uin, callback) {
     const infoUrl = `https://u.y.qq.com/cgi-bin/musicu.fcg?format=json&&loginUin=${uin}&hostUin=0inCharset=utf8&outCharset=utf-8&platform=yqq.json&needNewCode=0&data=${encodeURIComponent(
       JSON.stringify({
         comm: { ct: 24, cv: 0 },
@@ -611,7 +614,7 @@ function build_qq() {
     });
   }
 
-  function qq_get_user_created_playlist(url) {
+  static get_user_created_playlist(url) {
     const user_id = getParameterByName('user_id', url);
     // TODO: load more than size
     const size = 100;
@@ -659,7 +662,7 @@ function build_qq() {
     };
   }
 
-  function qq_get_user_favorite_playlist(url) {
+  static get_user_favorite_playlist(url) {
     const user_id = getParameterByName('user_id', url);
     // TODO: load more than size
     const size = 100;
@@ -701,7 +704,7 @@ function build_qq() {
     };
   }
 
-  function qq_get_recommend_playlist() {
+  static get_recommend_playlist() {
     const target_url = `https://u.y.qq.com/cgi-bin/musicu.fcg?format=json&&loginUin=0&hostUin=0inCharset=utf8&outCharset=utf-8&platform=yqq.json&needNewCode=0&data=${encodeURIComponent(
       JSON.stringify({
         comm: {
@@ -742,7 +745,7 @@ function build_qq() {
     };
   }
 
-  function qq_get_user() {
+  static get_user() {
     return {
       success: (fn) => {
         const domain = 'https://y.qq.com';
@@ -764,22 +767,23 @@ function build_qq() {
                   }
                   let { value: uin } = wxCookie;
                   uin = uin.slice('o'.length); // remove prefix o
-                  return qq_get_user_by_uin(uin, fn);
+                  return qq.get_user_by_uin(uin, fn);
                 }
               );
             }
             const { value: uin } = qqCookie;
-            return qq_get_user_by_uin(uin, fn);
+            return qq.get_user_by_uin(uin, fn);
           }
         );
       },
     };
   }
 
-  function qq_get_login_url() {
+  static get_login_url() {
     return `https://y.qq.com/portal/profile.html`;
   }
-  function qq_logout() {
+
+  static logout() {
     cookieRemove(
       {
         url: 'https://y.qq.com',
@@ -796,21 +800,4 @@ function build_qq() {
       }
     );
   }
-  return {
-    show_playlist: qq_show_playlist,
-    get_playlist_filters,
-    get_playlist,
-    parse_url: qq_parse_url,
-    bootstrap_track: qq_bootstrap_track,
-    search: qq_search,
-    lyric: qq_lyric,
-    get_user_created_playlist: qq_get_user_created_playlist,
-    get_user_favorite_playlist: qq_get_user_favorite_playlist,
-    get_recommend_playlist: qq_get_recommend_playlist,
-    get_user: qq_get_user,
-    get_login_url: qq_get_login_url,
-    logout: qq_logout,
-  };
 }
-
-const qq = build_qq(); // eslint-disable-line no-unused-vars
