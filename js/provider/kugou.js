@@ -46,7 +46,7 @@ class kugou {
   }
 
   static kg_render_search_result_item(index, item, params, callback) {
-    const track = this.kg_convert_song(item);
+    const track = kugou.kg_convert_song(item);
     // Add singer img
     const url = `${'https://www.kugou.com/yy/index.php?r=play/getdata&hash='}${
       track.lyric_url
@@ -59,13 +59,13 @@ class kugou {
   }
 
   static search(url) {
-    // eslint-disable-line no-unused-vars
     const keyword = getParameterByName('keywords', url);
     const curpage = getParameterByName('curpage', url);
     const searchType = getParameterByName('type', url);
     if (searchType === '1') {
       return {
-        success:(fn)=> fn({
+        success: (fn) =>
+          fn({
             result: [],
             total: 0,
             type: searchType,
@@ -148,7 +148,6 @@ class kugou {
   }
 
   static kg_get_playlist(url) {
-    // eslint-disable-line no-unused-vars
     return {
       success: (fn) => {
         const list_id = getParameterByName('list_id', url).split('_').pop();
@@ -225,7 +224,6 @@ class kugou {
   }
 
   static kg_artist(url) {
-    // eslint-disable-line no-unused-vars
     return {
       success: (fn) => {
         const artist_id = getParameterByName('list_id', url).split('_').pop();
@@ -300,7 +298,6 @@ class kugou {
   }
 
   static lyric(url) {
-    // eslint-disable-line no-unused-vars
     const track_id = getParameterByName('track_id', url).split('_').pop();
     const album_id = getParameterByName('album_id', url).split('_').pop();
     const lyric_url = `https://wwwapi.kugou.com/yy/index.php?r=play/getdata&callback=jQuery&hash=${track_id}&dfid=dfid&mid=mid&platid=4&album_id=${album_id}`;
@@ -350,7 +347,6 @@ class kugou {
   }
 
   static kg_album(url) {
-    // eslint-disable-line no-unused-vars
     return {
       success: (fn) => {
         const album_id = getParameterByName('list_id', url).split('_').pop();
