@@ -797,6 +797,11 @@ ul.detail-songlist li a span.source.playlist {
 ul.detail-songlist li.head {
   height: 28px;
   color: var(--text-disable-color);
+  border-top: none;
+  padding-bottom: 2px;
+}
+ul.detail-songlist li.head:hover {
+  background-color: transparent;
 }
 
 ul.detail-songlist li .title {
