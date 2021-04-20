@@ -315,6 +315,12 @@ angular.module('listenone').controller('NavigationController', [
       }
     };
 
+    $scope.onCurrentPlayingSongDrop = (song, data, dataType, direction) => {
+      if (dataType === 'application/listen1-song') {
+        l1Player.insertTrack(data, song, direction);
+      }
+    };
+
     $scope.addMyPlaylist = (option_id, song) => {
       MediaService.addMyPlaylist(option_id, song).success((playlist) => {
         notyf.success(i18next.t('_ADD_TO_PLAYLIST_SUCCESS'));

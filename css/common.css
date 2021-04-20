@@ -1335,6 +1335,10 @@ svg.searchspinner {
   align-items: center;
   height: 30px;
   padding-right: 20px;
+  position: relative;
+  margin-bottom: -2px;
+  border-top: solid 2px var(--songlist-border-color);
+  border-bottom: solid 2px var(--songlist-border-color);
 }
 
 .footer .menu ul.menu-list li.even {

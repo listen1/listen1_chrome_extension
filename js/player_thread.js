@@ -66,6 +66,46 @@
       this.sendLoadEvent();
     }
 
+    static array_move(arr, old_index, new_index) {
+      // https://stackoverflow.com/questions/5306680/move-an-array-element-from-one-array-position-to-another
+      if (new_index >= arr.length) {
+        let k = new_index - arr.length + 1;
+        while (k > 0) {
+          k -= 1;
+          arr.push(undefined);
+        }
+      }
+      arr.splice(new_index, 0, arr.splice(old_index, 1)[0]);
+      return arr; // for testing
+    }
+
+    insertAudioByDirection(audio, to_audio, direction) {
+      const originTrack = this.playlist[this.index];
+      const index = this.playlist.findIndex((i) => i.id === audio.id);
+      let insertIndex = this.playlist.findIndex((i) => i.id === to_audio.id);
+      if (index === insertIndex) {
+        return;
+      }
+      if (insertIndex > index) {
+        insertIndex -= 1;
+      }
+      const offset = direction === 'top' ? 0 : 1;
+      this.playlist = Player.array_move(
+        this.playlist,
+        index,
+        insertIndex + offset
+      );
+      const foundOriginTrackIndex = this.playlist.findIndex(
+        (i) => i.id === originTrack.id
+      );
+      if (foundOriginTrackIndex >= 0) {
+        this.index = foundOriginTrackIndex;
+      }
+
+      this.sendPlaylistEvent();
+      this.sendLoadEvent();
+    }
+
     removeAudio(idx) {
       if (!this.playlist[idx]) {
         return;

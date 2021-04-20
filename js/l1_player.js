@@ -100,6 +100,11 @@
         player.insertAudio(track);
       });
     },
+    insertTrack(track, to_track, direction) {
+      getPlayerAsync(mode, (player) => {
+        player.insertAudioByDirection(track, to_track, direction);
+      });
+    },
     removeTrack(index) {
       getPlayerAsync(mode, (player) => {
         player.removeAudio(index);

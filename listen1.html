@@ -1853,6 +1853,13 @@
                       ng-mouseleave="playlist_highlight=false"
                       ng-class-odd="'odd'"
                       ng-class-even="'even'"
+                      draggable="true"
+                      drag-drop-zone
+                      drag-zone-object="song"
+                      drag-zone-title="song.title"
+                      sortable="true"
+                      drag-zone-type="'application/listen1-song'"
+                      drop-zone-ondrop="onCurrentPlayingSongDrop(song, arg1, arg2, arg3)"
                     >
                       <div class="song-status-icon">
                         <svg
