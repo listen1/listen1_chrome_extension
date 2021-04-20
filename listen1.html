@@ -367,10 +367,12 @@
                         ng-click="showTag(6, {platform:'qq', user: musicAuth.qq});"
                         ng-class="{ 'active':(current_tag==6 && tag_params.platform=='qq') && (window_url_stack.length ==0) }"
                       >
-                        <svg class="feather">
-                          <use href="#globe"></use>
-                        </svg>
-                        <a>{{_MY_QQ}}</a>
+                        <div class="sidebar-block">
+                          <svg class="feather">
+                            <use href="#globe"></use>
+                          </svg>
+                          <a>{{_MY_QQ}}</a>
+                        </div>
                       </li>
                     </ul>
                     <div class="menu-title" ng-init="loadMyPlaylist();">
