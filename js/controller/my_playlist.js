@@ -10,13 +10,17 @@ angular.module('listenone').controller('MyPlayListController', [
 
     $scope.loadMyPlaylist = () => {
       MediaService.showMyPlaylist().success((data) => {
-        $scope.myplaylists = data.result;
+        $scope.$evalAsync(() => {
+          $scope.myplaylists = data.result;
+        });
       });
     };
 
     $scope.loadFavoritePlaylist = () => {
       MediaService.showFavPlaylist().success((data) => {
-        $scope.favoriteplaylists = data.result;
+        $scope.$evalAsync(() => {
+          $scope.favoriteplaylists = data.result;
+        });
       });
     };
 

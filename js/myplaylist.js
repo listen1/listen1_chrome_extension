@@ -1,6 +1,18 @@
 /* eslint-disable no-unused-vars */
 /* global getParameterByName */
 const myplaylistFactory = () => {
+  function array_move(arr, old_index, new_index) {
+    // https://stackoverflow.com/questions/5306680/move-an-array-element-from-one-array-position-to-another
+    if (new_index >= arr.length) {
+      let k = new_index - arr.length + 1;
+      while (k > 0) {
+        k -= 1;
+        arr.push(undefined);
+      }
+    }
+    arr.splice(new_index, 0, arr.splice(old_index, 1)[0]);
+    return arr; // for testing
+  }
   function getPlaylistObjectKey(playlist_type) {
     let key = '';
     if (playlist_type === 'my') {
@@ -63,6 +75,34 @@ const myplaylistFactory = () => {
     return `${s4() + s4()}-${s4()}-${s4()}-${s4()}-${s4()}${s4()}${s4()}`;
   }
 
+  function insert_myplaylist_to_myplaylists(
+    playlist_type,
+    playlist_id,
+    to_playlist_id,
+    direction
+  ) {
+    const key = getPlaylistObjectKey(playlist_type);
+    if (key === '') {
+      return [];
+    }
+    const playlists = localStorage.getObject(key);
+
+    const index = playlists.findIndex((i) => i === playlist_id);
+    let insertIndex = playlists.findIndex((i) => i === to_playlist_id);
+    if (index === insertIndex) {
+      return playlists;
+    }
+    if (insertIndex > index) {
+      insertIndex -= 1;
+    }
+    const offset = direction === 'top' ? 0 : 1;
+
+    array_move(playlists, index, insertIndex + offset);
+
+    localStorage.setObject(key, playlists);
+    return playlists;
+  }
+
   const save_myplaylist = (playlist_type, playlistObj) => {
     const playlist = playlistObj;
     const key = getPlaylistObjectKey(playlist_type);
@@ -105,7 +145,7 @@ const myplaylistFactory = () => {
     localStorage.setObject(key, newplaylists);
   };
 
-  function add_myplaylist(playlist_id, track) {
+  function add_track_to_myplaylist(playlist_id, track) {
     const playlist = localStorage.getObject(playlist_id);
     if (playlist == null) {
       return null;
@@ -133,7 +173,26 @@ const myplaylistFactory = () => {
     return playlist;
   }
 
-  function remove_from_myplaylist(playlist_id, track_id) {
+  function insert_track_to_myplaylist(playlist_id, track, to_track, direction) {
+    const playlist = localStorage.getObject(playlist_id);
+    if (playlist == null) {
+      return null;
+    }
+    const index = playlist.tracks.findIndex((i) => i.id === track.id);
+    let insertIndex = playlist.tracks.findIndex((i) => i.id === to_track.id);
+    if (index === insertIndex) {
+      return playlist;
+    }
+    if (insertIndex > index) {
+      insertIndex -= 1;
+    }
+    const offset = direction === 'top' ? 0 : 1;
+    array_move(playlist.tracks, index, insertIndex + offset);
+    localStorage.setObject(playlist_id, playlist);
+    return playlist;
+  }
+
+  function remove_track_from_myplaylist(playlist_id, track_id) {
     const playlist = localStorage.getObject(playlist_id);
     if (playlist == null) {
       return;
@@ -190,11 +249,13 @@ const myplaylistFactory = () => {
     save_myplaylist,
     get_playlist: get_myplaylist,
     remove_myplaylist,
-    add_myplaylist,
-    remove_from_myplaylist,
+    add_track_to_myplaylist,
+    remove_track_from_myplaylist,
     create_myplaylist,
     edit_myplaylist,
     myplaylist_containers,
+    insert_track_to_myplaylist,
+    insert_myplaylist_to_myplaylists,
   };
 };
 

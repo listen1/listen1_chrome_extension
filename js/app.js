@@ -275,7 +275,134 @@ const main = () => {
     }),
   ]);
 
-  app.directive('draggable', [
+  /* drag drop support */
+  app.directive('dragDropZone', [
+    '$window',
+    ($window) => ({
+      restrict: 'A',
+      scope: {
+        dragobject: '=dragZoneObject',
+        dragtitle: '=dragZoneTitle',
+        dragtype: '=dragZoneType',
+        ondrop: '&dropZoneOndrop',
+        ondragleave: '&dropZoneOndragleave',
+        sortable: '=',
+      },
+      link(scope, element, attrs) {
+        // https://stackoverflow.com/questions/34200023/drag-drop-set-custom-html-as-drag-image
+        element.on('dragstart', (ev) => {
+          if (scope.dragobject === undefined) {
+            return;
+          }
+          if (scope.dragtype === undefined) {
+            return;
+          }
+          ev.dataTransfer.setData(
+            scope.dragtype,
+            JSON.stringify(scope.dragobject)
+          );
+          const elem = document.createElement('div');
+          elem.id = 'drag-ghost';
+          elem.innerHTML = scope.dragtitle;
+          elem.style.position = 'absolute';
+          elem.style.top = '-1000px';
+          elem.style.padding = '3px';
+          elem.style.background = '#eeeeee';
+          elem.style.color = '#333';
+          elem.style['border-radius'] = '3px';
+
+          document.body.appendChild(elem);
+          ev.dataTransfer.setDragImage(elem, 0, 40);
+        });
+        element.on('dragend', () => {
+          const ghost = document.getElementById('drag-ghost');
+          if (ghost.parentNode) {
+            ghost.parentNode.removeChild(ghost);
+          }
+        });
+        element.on('dragenter', (event) => {
+          let dragType = '';
+          if (event.dataTransfer.types.length > 0) {
+            [dragType] = event.dataTransfer.types;
+          }
+          if (
+            scope.dragtype === 'application/listen1-myplaylist' &&
+            dragType === 'application/listen1-song'
+          ) {
+            element[0].classList.add('dragover');
+          }
+        });
+        element.on('dragleave', (event) => {
+          element[0].classList.remove('dragover');
+          if (scope.ondragleave !== undefined) {
+            scope.ondragleave();
+          }
+          if (scope.sortable) {
+            const target = element[0];
+            target.style['z-index'] = '0';
+            target.style['border-bottom'] = 'solid 2px transparent';
+            target.style['border-top'] = 'solid 2px transparent';
+          }
+        });
+
+        element.on('dragover', (event) => {
+          event.preventDefault();
+          const dragLineColor = '#FF4444';
+          let dragType = '';
+          if (event.dataTransfer.types.length > 0) {
+            [dragType] = event.dataTransfer.types;
+          }
+
+          if (scope.dragtype === dragType && scope.sortable) {
+            event.dataTransfer.dropEffect = 'move';
+            const bounding = event.target.getBoundingClientRect();
+            const offset = bounding.y + bounding.height / 2;
+
+            const direction = event.clientY - offset > 0 ? 'bottom' : 'top';
+            const target = element[0];
+            if (direction === 'bottom') {
+              target.style['border-bottom'] = `solid 2px ${dragLineColor}`;
+              target.style['border-top'] = 'solid 2px transparent';
+              target.style['z-index'] = '9';
+            } else if (direction === 'top') {
+              target.style['border-top'] = `solid 2px ${dragLineColor}`;
+              target.style['border-bottom'] = 'solid 2px transparent';
+              target.style['z-index'] = '9';
+            }
+          } else if (
+            scope.dragtype === 'application/listen1-myplaylist' &&
+            dragType === 'application/listen1-song'
+          ) {
+            event.dataTransfer.dropEffect = 'copy';
+          }
+        });
+
+        element.on('drop', (event) => {
+          if (scope.ondrop === undefined) {
+            return;
+          }
+          const [dragType] = event.dataTransfer.types;
+          const jsonString = event.dataTransfer.getData(dragType);
+          const data = JSON.parse(jsonString);
+          let direction = '';
+          const bounding = event.target.getBoundingClientRect();
+          const offset = bounding.y + bounding.height / 2;
+          direction = event.clientY - offset > 0 ? 'bottom' : 'top';
+          // https://stackoverflow.com/questions/19889615/can-an-angular-directive-pass-arguments-to-functions-in-expressions-specified-in
+          scope.ondrop({ arg1: data, arg2: dragType, arg3: direction });
+
+          element[0].classList.remove('dragover');
+          if (scope.sortable) {
+            const target = element[0];
+            target.style['border-top'] = 'solid 2px transparent';
+            target.style['border-bottom'] = 'solid 2px transparent';
+          }
+        });
+      },
+    }),
+  ]);
+
+  app.directive('draggableBar', [
     '$document',
     '$rootScope',
     ($document, $rootScope) => (scope, element, attrs) => {

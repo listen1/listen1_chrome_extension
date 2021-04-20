@@ -230,19 +230,29 @@ const MediaService = {
   },
 
   addMyPlaylist(id, track) {
-    const newPlaylist = myplaylist.add_myplaylist(id, track);
+    const newPlaylist = myplaylist.add_track_to_myplaylist(id, track);
     return {
       success: (fn) => fn(newPlaylist),
     };
   },
-
+  insertTrackToMyPlaylist(id, track, to_track, direction) {
+    const newPlaylist = myplaylist.insert_track_to_myplaylist(
+      id,
+      track,
+      to_track,
+      direction
+    );
+    return {
+      success: (fn) => fn(newPlaylist),
+    };
+  },
   addPlaylist(id, tracks) {
     const provider = getProviderByItemId(id);
     return provider.add_playlist(id, tracks);
   },
 
   removeTrackFromMyPlaylist(id, track) {
-    myplaylist.remove_from_myplaylist(id, track);
+    myplaylist.remove_track_from_myplaylist(id, track);
     return {
       success: (fn) => fn(),
     };
@@ -261,7 +271,22 @@ const MediaService = {
       },
     };
   },
-
+  insertMyplaylistToMyplaylists(
+    playlistType,
+    playlistId,
+    toPlaylistId,
+    direction
+  ) {
+    const newPlaylists = myplaylist.insert_myplaylist_to_myplaylists(
+      playlistType,
+      playlistId,
+      toPlaylistId,
+      direction
+    );
+    return {
+      success: (fn) => fn(newPlaylists),
+    };
+  },
   editMyPlaylist(id, title, coverImgUrl) {
     myplaylist.edit_myplaylist(id, title, coverImgUrl);
     return {
@@ -284,7 +309,7 @@ const MediaService = {
     const srcData = localStorage.getObject(source).tracks;
     tarData.forEach((tarTrack) => {
       if (!srcData.find((srcTrack) => srcTrack.id === tarTrack.id)) {
-        myplaylist.add_myplaylist(source, tarTrack);
+        myplaylist.add_track_to_myplaylist(source, tarTrack);
       }
     });
     return {

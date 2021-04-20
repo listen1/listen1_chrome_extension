@@ -270,20 +270,78 @@ angular.module('listenone').controller('NavigationController', [
       }
     };
 
-    $scope.chooseDialogOption = (option_id) => {
-      MediaService.addMyPlaylist(option_id, $scope.dialog_song).success(
-        (playlist) => {
-          notyf.success(i18next.t('_ADD_TO_PLAYLIST_SUCCESS'));
+    $scope.onSidebarPlaylistDrop = (
+      playlistType,
+      list_id,
+      data,
+      dataType,
+      direction
+    ) => {
+      if (playlistType === 'my' && dataType === 'application/listen1-song') {
+        $scope.addMyPlaylist(list_id, data);
+      } else if (
+        (playlistType === 'my' &&
+          dataType === 'application/listen1-myplaylist') ||
+        (playlistType === 'favorite' &&
+          dataType === 'application/listen1-favoriteplaylist')
+      ) {
+        MediaService.insertMyplaylistToMyplaylists(
+          playlistType,
+          data.info.id,
+          list_id,
+          direction
+        ).success(() => {
+          if (playlistType === 'my') {
+            $rootScope.$broadcast('myplaylist:update');
+          }
+          if (playlistType === 'favorite') {
+            $rootScope.$broadcast('favoriteplaylist:update');
+          }
+        });
+      }
+    };
+
+    $scope.onPlaylistSongDrop = (list_id, song, data, dataType, direction) => {
+      if (dataType === 'application/listen1-song') {
+        // insert song
+        MediaService.insertTrackToMyPlaylist(
+          list_id,
+          data,
+          song,
+          direction
+        ).success((playlist) => {
           $scope.closeDialog();
-          // add to current playing list
-          if (option_id === $scope.current_list_id) {
-            l1Player.addTrack($scope.dialog_song);
+          if (list_id === $scope.list_id) {
+            $scope.$evalAsync(() => {
+              $scope.songs = playlist.tracks;
+            });
           }
-          if (option_id === $scope.list_id) {
-            $scope.songs = playlist.tracks;
-          }
+        });
+      }
+    };
+
+    $scope.onCurrentPlayingSongDrop = (song, data, dataType, direction) => {
+      if (dataType === 'application/listen1-song') {
+        l1Player.insertTrack(data, song, direction);
+      }
+    };
+
+    $scope.addMyPlaylist = (option_id, song) => {
+      MediaService.addMyPlaylist(option_id, song).success((playlist) => {
+        notyf.success(i18next.t('_ADD_TO_PLAYLIST_SUCCESS'));
+        $scope.closeDialog();
+        // add to current playing list
+        if (option_id === $scope.current_list_id) {
+          l1Player.addTrack($scope.dialog_song);
         }
-      );
+        if (option_id === $scope.list_id) {
+          $scope.songs = playlist.tracks;
+        }
+      });
+    };
+
+    $scope.chooseDialogOption = (option_id) => {
+      $scope.addMyPlaylist(option_id, $scope.dialog_song);
     };
 
     $scope.newDialogOption = (option) => {

@@ -327,8 +327,10 @@
                         ng-class="{ 'active':(current_tag==2) && (window_url_stack.length ==0) }"
                         ng-click="showTag(2)"
                       >
-                        <span class="icon li-featured-list"></span
-                        ><a>{{_PLAYLISTS}}</a>
+                        <div class="sidebar-block">
+                          <span class="icon li-featured-list"></span
+                          ><a>{{_PLAYLISTS}}</a>
+                        </div>
                       </li>
                     </ul>
                     <div
@@ -343,18 +345,22 @@
                         ng-click="showPlaylist('lmplaylist_reserve')"
                         ng-class="{ 'active':window_type=='list' && ( '/playlist?list_id=lmplaylist_reserve' === getCurrentUrl() ) }"
                       >
-                        <span class="icon li-featured-list"></span
-                        ><a>{{_LOCAL_MUSIC}}</a>
+                        <div class="sidebar-block">
+                          <span class="icon li-featured-list"></span
+                          ><a>{{_LOCAL_MUSIC}}</a>
+                        </div>
                       </li>
                       <li
                         ng-if="is_login('netease')"
                         ng-click="showTag(6, {platform:'netease', user: musicAuth.netease});"
                         ng-class="{ 'active':(current_tag==6 && tag_params.platform=='netease') && (window_url_stack.length ==0) }"
                       >
-                        <svg class="feather">
-                          <use href="#globe"></use>
-                        </svg>
-                        <a>{{_MY_NETEASE}}</a>
+                        <div class="sidebar-block">
+                          <svg class="feather">
+                            <use href="#globe"></use>
+                          </svg>
+                          <a>{{_MY_NETEASE}}</a>
+                        </div>
                       </li>
                       <li
                         ng-if="is_login('qq')"
@@ -378,11 +384,20 @@
                         ng-repeat="i in myplaylists track by $index"
                         ng-class="{ 'active':window_type=='list' && ( ('/playlist?list_id='+i.info.id) === getCurrentUrl() ) }"
                         ng-click="showPlaylist(i.info.id)"
+                        drag-drop-zone
+                        drag-zone-type="'application/listen1-myplaylist'"
+                        drop-zone-ondrop="onSidebarPlaylistDrop('my', i.info.id, arg1, arg2, arg3)"
+                        draggable="true"
+                        sortable="true"
+                        drag-zone-object="i"
+                        drag-zone-title="i.info.title"
                       >
-                        <svg class="feather">
-                          <use href="#disc"></use>
-                        </svg>
-                        <a>{{i.info.title}}</a>
+                        <div class="sidebar-block">
+                          <svg class="feather">
+                            <use href="#disc"></use>
+                          </svg>
+                          <a>{{i.info.title}}</a>
+                        </div>
                       </li>
                     </ul>
                     <div class="menu-title" ng-init="loadFavoritePlaylist();">
@@ -393,11 +408,20 @@
                         ng-repeat="i in favoriteplaylists track by $index"
                         ng-class="{ 'active':window_type=='list' && ( ('/playlist?list_id='+i.info.id) === getCurrentUrl() ) }"
                         ng-click="showPlaylist(i.info.id, {useCache: false})"
+                        drag-drop-zone
+                        drag-zone-type="'application/listen1-favoriteplaylist'"
+                        drop-zone-ondrop="onSidebarPlaylistDrop('favorite', i.info.id, arg1, arg2, arg3)"
+                        draggable="true"
+                        sortable="true"
+                        drag-zone-object="i"
+                        drag-zone-title="i.info.title"
                       >
-                        <svg class="feather">
-                          <use href="#disc"></use>
-                        </svg>
-                        <a>{{i.info.title}}</a>
+                        <div class="sidebar-block">
+                          <svg class="feather">
+                            <use href="#disc"></use>
+                          </svg>
+                          <a>{{i.info.title}}</a>
+                        </div>
                       </li>
                     </ul>
                   </div>
@@ -1494,6 +1518,13 @@
                             ng-class-even="'even'"
                             ng-mouseenter="options=true"
                             ng-mouseleave="options=false"
+                            draggable="true"
+                            drag-drop-zone
+                            drag-zone-object="song"
+                            drag-zone-title="song.title"
+                            sortable="is_mine || is_local"
+                            drag-zone-type="'application/listen1-song'"
+                            drop-zone-ondrop="onPlaylistSongDrop(list_id, song, arg1, arg2, arg3)"
                           >
                             <div class="title">
                               <!-- <a class="disabled" ng-if="song.disabled" ng-click="copyrightNotice()">{{ song.title }}</a> -->
@@ -1743,7 +1774,7 @@
                         class="barbg"
                         id="progressbar"
                         mode="play"
-                        draggable=""
+                        draggable-bar=""
                       >
                         <div class="cur" ng-style="{width : myProgress + '%' }">
                           <span class="btn"><i></i></span>
@@ -1770,7 +1801,7 @@
                         class="barbg"
                         id="volumebar"
                         mode="volume"
-                        draggable=""
+                        draggable-bar=""
                       >
                         <div class="cur" ng-style="{width : volume + '%' }">
                           <span class="btn"><i></i></span>
@@ -1828,6 +1859,13 @@
                       ng-mouseleave="playlist_highlight=false"
                       ng-class-odd="'odd'"
                       ng-class-even="'even'"
+                      draggable="true"
+                      drag-drop-zone
+                      drag-zone-object="song"
+                      drag-zone-title="song.title"
+                      sortable="true"
+                      drag-zone-type="'application/listen1-song'"
+                      drop-zone-ondrop="onCurrentPlayingSongDrop(song, arg1, arg2, arg3)"
                     >
                       <div class="song-status-icon">
                         <svg
