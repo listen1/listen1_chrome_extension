@@ -11,7 +11,13 @@ angular.module('listenone').controller('ProfileController', [
     if (supportLangs.indexOf(localStorage.getObject('language')) !== -1) {
       defaultLang = localStorage.getObject('language');
     }
-
+    $scope.lastestVersion = '';
+    $scope.initProfile = () => {
+      const url = `https://api.github.com/repos/listen1/listen1_chrome_extension/releases/latest`;
+      axios.get(url).then((response) => {
+        $scope.lastestVersion = response.data.tag_name;
+      });
+    };
     $scope.setLang = (langKey) => {
       // You can change the language during runtime
       i18next.changeLanguage(langKey).then((t) => {

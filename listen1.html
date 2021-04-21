@@ -81,7 +81,7 @@
       ng-init="loadLocalSettings()"
     >
       <div ng-controller="AuthController" ng-init="refreshAuthStatus()">
-        <div ng-controller="ProfileController">
+        <div ng-controller="ProfileController" ng-init="initProfile()">
           <div ng-controller="NavigationController">
             <div class="wrap">
               <!-- dialog-->
@@ -1342,7 +1342,10 @@
                               >
                             </p>
                             <p>{{_DESIGNER}}: iparanoid</p>
-                            <p>{{_VERSION}}: 2.20.1 {{_LICENSE_NOTICE}}</p>
+                            <p>{{_VERSION}}: v2.20.1 {{_LICENSE_NOTICE}}</p>
+                            <p ng-show='lastestVersion!=""'>
+                              {{_LATEST_VERSION}}: {{lastestVersion}}
+                            </p>
                           </div>
                         </div>
                       </div>

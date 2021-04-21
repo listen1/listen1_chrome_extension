@@ -79,6 +79,7 @@
  "_FEEDBACK": "Feedback",
  "_DESIGNER": "Designer",
  "_VERSION": "Version",
+ "_LATEST_VERSION": "Latest Version",
  "_LICENSE_NOTICE": "(This software is free and open source under MIT license)",
  "_TOTAL_SONG_PREFIX": "Total ",
  "_TOTAL_SONG_POSTFIX": " Songs",
