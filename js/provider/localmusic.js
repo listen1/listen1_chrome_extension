@@ -129,7 +129,11 @@ class localmusic {
 
   static parse_url(url) {
     let result;
-    return result;
+    return {
+      success: (fn) => {
+        fn(result);
+      },
+    };
   }
 
   static get_playlist(url) {

@@ -6,7 +6,8 @@
 class xiami {
   static show_playlist() {
     return {
-      success: (fn) => fn({
+      success: (fn) =>
+        fn({
           result: [],
         }),
     };
@@ -21,7 +22,8 @@ class xiami {
   static xm_get_playlist(url) {
     const list_id = getParameterByName('list_id', url).split('_').pop();
     return {
-      success: (fn) => fn({
+      success: (fn) =>
+        fn({
           tracks: [],
           info: {
             cover_img_url: '',
@@ -37,7 +39,8 @@ class xiami {
     const searchType = getParameterByName('type', url);
 
     return {
-      success: (fn) => fn({
+      success: (fn) =>
+        fn({
           result: [],
           total: 0,
           type: searchType,
@@ -83,7 +86,8 @@ class xiami {
 
   static lyric() {
     return {
-      success: (fn) => fn({
+      success: (fn) =>
+        fn({
           lyric: '',
           tlyric: '',
         }),
@@ -92,7 +96,11 @@ class xiami {
 
   static parse_url() {
     let result;
-    return result;
+    return {
+      success: (fn) => {
+        fn(result);
+      },
+    };
   }
 
   static get_playlist(url) {

@@ -640,7 +640,11 @@ class kuwo {
         };
       }
     }
-    return result;
+    return {
+      success: (fn) => {
+        fn(result);
+      },
+    };
   }
 
   static get_playlist(url) {

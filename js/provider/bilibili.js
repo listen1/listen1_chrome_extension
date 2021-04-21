@@ -129,7 +129,11 @@ class bilibili {
         id: `biplaylist_${playlist_id}`,
       };
     }
-    return result;
+    return {
+      success: (fn) => {
+        fn(result);
+      },
+    };
   }
 
   static bootstrap_track(track, success, failure) {

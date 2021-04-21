@@ -495,34 +495,58 @@ class qq {
   }
 
   static parse_url(url) {
-    let result;
-    let match = /\/\/y.qq.com\/n\/yqq\/playlist\/([0-9]+)/.exec(url);
-    if (match != null) {
-      const playlist_id = match[1];
-      result = {
-        type: 'playlist',
-        id: `qqplaylist_${playlist_id}`,
-      };
-    }
-    match = /\/\/y.qq.com\/n\/yqq\/playsquare\/([0-9]+)/.exec(url);
-    if (match != null) {
-      const playlist_id = match[1];
-      result = {
-        type: 'playlist',
-        id: `qqplaylist_${playlist_id}`,
-      };
-    }
-    match = /\/\/y.qq.com\/n\/m\/detail\/taoge\/index.html\?id=([0-9]+)/.exec(
-      url
-    );
-    if (match != null) {
-      const playlist_id = match[1];
-      result = {
-        type: 'playlist',
-        id: `qqplaylist_${playlist_id}`,
-      };
-    }
-    return result;
+    return {
+      success: (fn) => {
+        let result;
+
+        let match = /\/\/y.qq.com\/n\/yqq\/playlist\/([0-9]+)/.exec(url);
+        if (match != null) {
+          const playlist_id = match[1];
+          result = {
+            type: 'playlist',
+            id: `qqplaylist_${playlist_id}`,
+          };
+        }
+        match = /\/\/y.qq.com\/n\/yqq\/playsquare\/([0-9]+)/.exec(url);
+        if (match != null) {
+          const playlist_id = match[1];
+          result = {
+            type: 'playlist',
+            id: `qqplaylist_${playlist_id}`,
+          };
+        }
+        match = /\/\/y.qq.com\/n\/m\/detail\/taoge\/index.html\?id=([0-9]+)/.exec(
+          url
+        );
+        if (match != null) {
+          const playlist_id = match[1];
+          result = {
+            type: 'playlist',
+            id: `qqplaylist_${playlist_id}`,
+          };
+        }
+
+        // c.y.qq.com/base/fcgi-bin/u?__=1MsbSLu
+        match = /\/\/c.y.qq.com\/base\/fcgi-bin\/u\?__=([0-9a-zA-Z]+)/.exec(
+          url
+        );
+        if (match != null) {
+          return axios
+            .get(url)
+            .then((response) => {
+              const { responseURL } = response.request;
+              const playlist_id = getParameterByName('id', responseURL);
+              result = {
+                type: 'playlist',
+                id: `qqplaylist_${playlist_id}`,
+              };
+              return fn(result);
+            })
+            .catch(() => fn(undefined));
+        }
+        return fn(result);
+      },
+    };
   }
 
   static get_playlist(url) {

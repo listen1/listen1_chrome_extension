@@ -295,12 +295,25 @@ const MediaService = {
   },
 
   parseURL(url) {
-    const providers = getAllProviders();
-    const result = providers
-      .find((provider) => provider.parse_url(url))
-      .parse_url(url);
     return {
-      success: (fn) => fn({ result }),
+      success: (fn) => {
+        const providers = getAllProviders();
+        Promise.all(
+          providers.map(
+            (provider) =>
+              new Promise((res, rej) =>
+                provider.parse_url(url).success((r) => {
+                  if (r !== undefined) {
+                    return rej(r);
+                  }
+                  return res(r);
+                })
+              )
+          )
+        )
+          .then(() => fn({}))
+          .catch((result) => fn({ result }));
+      },
     };
   },
 

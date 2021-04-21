@@ -814,7 +814,11 @@ class migu {
         id: `mgplaylist_${regex_result[1]}`,
       };
     }
-    return result;
+    return {
+      success: (fn) => {
+        fn(result);
+      },
+    };
   }
 
   static get_playlist(url) {
