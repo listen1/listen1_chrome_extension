@@ -99,7 +99,7 @@
  "_INPUT_NEW_PLAYLIST_TITLE": "鍵入新歌單名稱",
  "_FAIL_OPEN_PLAYLIST_URL": "未能打開鍵入的歌單位址",
  "_EXAMPLE": "例如 ",
- "_COMFIRM": "確認",
+ "_CONFIRM": "確認",
  "_THEME": "樣式",
  "_THEME_WHITE": "簡約白",
  "_THEME_BLACK": "深空灰",
@@ -156,5 +156,10 @@
  "_NOT_LOGIN_NICKNAME": "未登錄",
  "_LOGIN_DIALOG_NOTICE": "正在打開音樂平臺的登錄頁，請在打開網頁中完成登錄流程，然後點擊登錄完成",
  "_LOGIN_SUCCESS": "登錄完成",
- "_LOGIN_FAIL_RETRY": "登錄遇到問題，再打開登錄頁面"
+ "_LOGIN_FAIL_RETRY": "登錄遇到問題，再打開登錄頁面",
+ "_PROXY_SYSTEM": "使用系統代理",
+ "_PROXY_DIRECT": "不使用代理",
+ "_PROXY_CUSTOM": "自定義代理",
+ "_PROXY_CONFIG": "代理設置",
+ "_PROXY_NOT_SET": "未設置"
 }

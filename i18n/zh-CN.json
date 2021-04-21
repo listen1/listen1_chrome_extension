@@ -99,7 +99,7 @@
  "_INPUT_NEW_PLAYLIST_TITLE": "输入新歌单名称",
  "_FAIL_OPEN_PLAYLIST_URL": "未能打开输入的歌单地址",
  "_EXAMPLE": "例如",
- "_COMFIRM": "确认",
+ "_CONFIRM": "确认",
  "_THEME": "主题",
  "_THEME_WHITE": "简约白",
  "_THEME_BLACK": "深空灰",
@@ -156,5 +156,10 @@
  "_NOT_LOGIN_NICKNAME": "未登录",
  "_LOGIN_DIALOG_NOTICE": "正在打开音乐平台的登录页，请在打开网页中完成登录流程，然后点击登录完成",
  "_LOGIN_SUCCESS": "登录完成",
- "_LOGIN_FAIL_RETRY": "登录遇到问题，再打开登录页面"
+ "_LOGIN_FAIL_RETRY": "登录遇到问题，再打开登录页面",
+ "_PROXY_SYSTEM": "使用系统代理",
+ "_PROXY_DIRECT": "不使用代理",
+ "_PROXY_CUSTOM": "自定义代理",
+ "_PROXY_CONFIG": "代理设置",
+ "_PROXY_NOT_SET": "未设置"
 }

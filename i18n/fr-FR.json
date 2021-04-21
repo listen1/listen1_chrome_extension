@@ -99,7 +99,7 @@
  "_INPUT_NEW_PLAYLIST_TITLE": "Entrez un nouveau titre de Playlist",
  "_FAIL_OPEN_PLAYLIST_URL": "Erreur ouverture de l'url",
  "_EXAMPLE": "Exemple:",
- "_COMFIRM": "Confirmer",
+ "_CONFIRM": "Confirmer",
  "_THEME": "Thème",
  "_THEME_WHITE": "Thème blanc",
  "_THEME_BLACK": "Thème foncé",
@@ -156,5 +156,10 @@
  "_NOT_LOGIN_NICKNAME": "Anonymous",
  "_LOGIN_DIALOG_NOTICE": "Opening Login page, please login in that page and click finish login",
  "_LOGIN_SUCCESS": "Finish Login",
- "_LOGIN_FAIL_RETRY": "Something wrong. Reopen Login page"
+ "_LOGIN_FAIL_RETRY": "Something wrong. Reopen Login page",
+ "_PROXY_SYSTEM": "Use System Proxy",
+ "_PROXY_DIRECT": "No Proxy",
+ "_PROXY_CUSTOM": "Custom Proxy",
+ "_PROXY_CONFIG": "Proxy Config",
+ "_PROXY_NOT_SET": "Proxy Not Set"
 }

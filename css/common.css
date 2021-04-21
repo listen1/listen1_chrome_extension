@@ -1057,6 +1057,18 @@ ul.detail-songlist li .tools .icon {
   align-items: center;
   box-sizing: border-box;
 }
+
+.page .settings-content .custom-proxy {
+  margin-top: 10px;
+}
+.page .settings-content .custom-proxy .rule-input {
+  margin-top: 8px;
+}
+.page .settings-content .custom-proxy input {
+  margin-right: 15px;
+  height: 24px;
+  width: 200px;
+}
 /* page setting end */
 
 .loading_bottom {

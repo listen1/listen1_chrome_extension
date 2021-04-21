@@ -125,7 +125,7 @@
                         class="btn btn-primary confirm-button"
                         ng-click="createAndAddPlaylist()"
                       >
-                        {{_COMFIRM}}
+                        {{_CONFIRM}}
                       </button>
                       <button
                         class="btn btn-default"
@@ -160,7 +160,7 @@
                         class="btn btn-primary confirm-button"
                         ng-click="editMyPlaylist(list_id)"
                       >
-                        {{_COMFIRM}}
+                        {{_CONFIRM}}
                       </button>
                       <button class="btn btn-default" ng-click="closeDialog()">
                         {{_CANCEL}}
@@ -209,7 +209,7 @@
                         class="btn btn-primary confirm-button"
                         ng-click="openUrl(dialog_url);closeDialog();dialog_url='';"
                       >
-                        {{_COMFIRM}}
+                        {{_CONFIRM}}
                       </button>
                       <button class="btn btn-default" ng-click="closeDialog()">
                         {{_CANCEL}}
@@ -1313,6 +1313,32 @@
                                 <use href="#check-square"></use>
                               </svg>
                               {{_GLOBAL_SHORTCUTS_NOTICE}}
+                            </div>
+                          </div>
+                          <div class="settings-title" ng-if="!isChrome">
+                            <span>{{_PROXY_CONFIG}}</span>
+                          </div>
+                          <div class="settings-content" ng-if="!isChrome">
+                            <select
+                              ng-options="mode.displayText for mode in proxyModes"
+                              ng-model="proxyMode"
+                              ng-change="changeProxyMode(proxyMode)"
+                            ></select>
+                            <div
+                              ng-show="proxyMode.name=='custom'"
+                              class="custom-proxy"
+                            >
+                              <span
+                                >{{_PROXY_CONFIG}}: {{proxyRules ||
+                                _PROXY_NOT_SET }}</span
+                              >
+                              <div class="rule-input">
+                                <input type="text" id="proxy-rules" /><button
+                                  ng-click="modifyProxyRules()"
+                                >
+                                  {{_CONFIRM}}
+                                </button>
+                              </div>
                             </div>
                           </div>
                           <div class="settings-title">
