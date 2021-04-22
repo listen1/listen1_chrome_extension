@@ -105,6 +105,7 @@
  "_THEME_BLACK": "Thème foncé",
  "_AUTO_CHOOSE_SOURCE": "Auto Choose Source",
  "_AUTO_CHOOSE_SOURCE_NOTICE": "If play fail, auto choose source from other music platform.",
+ "_AUTO_CHOOSE_SOURCE_LIST": "Music Platform to try after fail",
  "_NOWPLAYING_DISPLAY": "Now Playing Display",
  "_NOWPLAYING_COVER_BACKGROUND_NOTICE": "Show Cover Image for Now Playing",
  "_NOWPLAYING_BITRATE_NOTICE": "Show Bitrate",

@@ -102,6 +102,10 @@ angular.module('listenone').controller('PlayController', [
         'enable_auto_choose_source',
         true
       );
+      $scope.autoChooseSourceList = getLocalStorageValue(
+        'auto_choose_source_list',
+        ['kuwo', 'qq', 'migu']
+      );
       $scope.enableStopWhenClose = getLocalStorageValue(
         'enable_stop_when_close',
         true
@@ -750,6 +754,30 @@ angular.module('listenone').controller('PlayController', [
       localStorage.setObject(
         'enable_auto_choose_source',
         $scope.enableAutoChooseSource
+      );
+    };
+
+    $scope.enableSource = (source) => {
+      if ($scope.autoChooseSourceList.indexOf(source) > -1) {
+        return;
+      }
+      $scope.autoChooseSourceList = [...$scope.autoChooseSourceList, source];
+      localStorage.setObject(
+        'auto_choose_source_list',
+        $scope.autoChooseSourceList
+      );
+    };
+
+    $scope.disableSource = (source) => {
+      if ($scope.autoChooseSourceList.indexOf(source) === -1) {
+        return;
+      }
+      $scope.autoChooseSourceList = $scope.autoChooseSourceList.filter(
+        (i) => i !== source
+      );
+      localStorage.setObject(
+        'auto_choose_source_list',
+        $scope.autoChooseSourceList
       );
     };
 

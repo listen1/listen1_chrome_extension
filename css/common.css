@@ -1105,6 +1105,25 @@ ul.detail-songlist li .tools .icon {
   height: 24px;
   width: 200px;
 }
+.page .settings-content .search-description {
+  margin: 10px 0 5px 0;
+}
+.page .settings-content .search-source-list {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  line-height: 30px;
+}
+.page .settings-content .search-source-list .search-source {
+  display: flex;
+  align-items: center;
+  width: 130px;
+}
+.page .settings-content .search-source-list .search-source svg {
+  width: 18px;
+  height: 18px;
+  margin-right: 4px;
+}
 /* page setting end */
 
 .loading_bottom {

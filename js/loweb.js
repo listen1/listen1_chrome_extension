@@ -338,7 +338,9 @@ const MediaService = {
         playerFailCallback();
         return;
       }
-      const failover_source_list = ['kuwo', 'qq', 'migu'];
+      const failover_source_list = localStorage.getObject(
+        'auto_choose_source_list'
+      ); // ['kuwo', 'qq', 'migu'];
 
       const getUrlPromises = failover_source_list.map(
         (source) =>

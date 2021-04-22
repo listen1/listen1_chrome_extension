@@ -927,7 +927,7 @@
                             </div>
                           </div>
                           <div class="settings-title">
-                            <span>{{_AUTO_CHOOSE_SOURCE}} (Beta)</span>
+                            <span>{{_AUTO_CHOOSE_SOURCE}}</span>
                           </div>
                           <div class="settings-content">
                             <div
@@ -949,6 +949,37 @@
                                 <use href="#check-square"></use>
                               </svg>
                               {{_AUTO_CHOOSE_SOURCE_NOTICE}}
+                            </div>
+                            <div
+                              class="search-description"
+                              ng-show="enableAutoChooseSource"
+                            >
+                              {{_AUTO_CHOOSE_SOURCE_LIST}}
+                            </div>
+                            <div
+                              class="search-source-list"
+                              ng-show="enableAutoChooseSource"
+                            >
+                              <div
+                                ng-repeat="item in sourceList"
+                                class="search-source"
+                              >
+                                <svg
+                                  class="feather"
+                                  ng-show="autoChooseSourceList.indexOf(item.name) === -1"
+                                  ng-click="enableSource(item.name)"
+                                >
+                                  <use href="#square"></use>
+                                </svg>
+                                <svg
+                                  class="feather"
+                                  ng-show="autoChooseSourceList.indexOf(item.name) > -1"
+                                  ng-click="disableSource(item.name)"
+                                >
+                                  <use href="#check-square"></use>
+                                </svg>
+                                {{item.displayText}}
+                              </div>
                             </div>
                           </div>
                           <div ng-if="isChrome" class="settings-title">
