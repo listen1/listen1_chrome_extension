@@ -149,6 +149,7 @@ angular.module('listenone').controller('NavigationController', [
       ($scope.window_url_stack.slice(-1)[0] || {}).url;
 
     $scope.showPlaylist = (list_id, useCache) => {
+      $scope.clearFilter();
       const url = `/playlist?list_id=${list_id}`;
       // save current scrolltop
       const offset = document.getElementsByClassName('browser')[0].scrollTop;
