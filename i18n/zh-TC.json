@@ -161,5 +161,9 @@
  "_PROXY_DIRECT": "不使用代理",
  "_PROXY_CUSTOM": "自定義代理",
  "_PROXY_CONFIG": "代理設置",
- "_PROXY_NOT_SET": "未設置"
+ "_PROXY_NOT_SET": "未設置",
+ "_MODIFY": "修改",
+ "_PROTOCOL": "代理協議",
+ "_HOST": "主機地址",
+ "_PORT": "端口"
 }

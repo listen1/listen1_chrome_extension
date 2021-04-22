@@ -21,29 +21,47 @@ angular.module('listenone').controller('ProfileController', [
       { name: 'direct', displayId: '_PROXY_DIRECT' },
       { name: 'custom', displayId: '_PROXY_CUSTOM' },
     ];
+
+    [$scope.proxyModeInput] = $scope.proxyModes;
     [$scope.proxyMode] = $scope.proxyModes;
+    $scope.proxyProtocols = ['http', 'https', 'quic', 'socks4', 'socks5'];
+
+    $scope.proxyProtocol = 'http';
     $scope.proxyRules = '';
 
-    $scope.modifyProxyRules = () => {
+    $scope.changeProxyProtocol = (newProtocol) => {
+      $scope.proxyProtocol = newProtocol;
+    };
+
+    $scope.changeProxyMode = (newMode) => {
+      $scope.proxyModeInput = newMode;
+    };
+
+    $scope.setProxyConfig = () => {
+      const mode = $scope.proxyModeInput.name;
+      $scope.proxyMode = $scope.proxyModeInput;
+      const host = document.getElementById('proxy-rules-host').value;
+      const port = document.getElementById('proxy-rules-port').value;
+      $scope.proxyRules = `${$scope.proxyProtocol}://${host}:${port}`;
       if (isElectron()) {
         const message = 'update_proxy_config';
-        $scope.proxyRules = document.getElementById('proxy-rules').value;
         const { ipcRenderer } = require('electron');
-        ipcRenderer.send('control', message, {
-          proxyRules: $scope.proxyRules,
-        });
-      }
-    };
-    $scope.changeProxyMode = (option) => {
-      const mode = option.name;
-      if (isElectron()) {
         if (mode === 'system' || mode === 'direct') {
-          const message = 'update_proxy_config';
-          const { ipcRenderer } = require('electron');
           ipcRenderer.send('control', message, { mode });
         } else {
-          $scope.proxyRules = '';
+          ipcRenderer.send('control', message, {
+            proxyRules: $scope.proxyRules,
+          });
         }
+      }
+    };
+
+    $scope.getProxyConfig = () => {
+      if (isElectron()) {
+        // get proxy config from main process
+        const message = 'get_proxy_config';
+        const { ipcRenderer } = require('electron');
+        ipcRenderer.send('control', message);
       }
     };
 
@@ -52,12 +70,8 @@ angular.module('listenone').controller('ProfileController', [
       axios.get(url).then((response) => {
         $scope.lastestVersion = response.data.tag_name;
       });
-      if (isElectron()) {
-        // proxy config
-        const message = 'get_proxy_config';
-        const { ipcRenderer } = require('electron');
-        ipcRenderer.send('control', message);
-      }
+
+      $scope.getProxyConfig();
     };
 
     if (isElectron()) {
@@ -69,12 +83,21 @@ angular.module('listenone').controller('ProfileController', [
           [$scope.proxyMode] = $scope.proxyModes.filter(
             (i) => i.name === config.mode
           );
+          $scope.proxyModeInput = $scope.proxyMode;
           $scope.proxyRules = '';
         } else {
           [$scope.proxyMode] = $scope.proxyModes.filter(
             (i) => i.name === 'custom'
           );
+          $scope.proxyModeInput = $scope.proxyMode;
           $scope.proxyRules = config.proxyRules;
+          // rules = 'socks5://127.0.0.1:1080'
+          const match = /(\w+):\/\/([\d.]+):(\d+)/.exec(config.proxyRules);
+          const [, protocol, host, port] = match;
+
+          $scope.proxyProtocol = protocol;
+          document.getElementById('proxy-rules-host').value = host;
+          document.getElementById('proxy-rules-port').value = port;
         }
       });
     }

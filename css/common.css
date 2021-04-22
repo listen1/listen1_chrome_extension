@@ -1644,6 +1644,9 @@ svg.searchspinner {
   position: absolute;
   bottom: 20px;
 }
+.dialog-body .field-name {
+  margin: 10px 0 5px 0;
+}
 
 /* dialog end */
 

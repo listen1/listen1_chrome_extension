@@ -161,5 +161,9 @@
  "_PROXY_DIRECT": "No Proxy",
  "_PROXY_CUSTOM": "Custom Proxy",
  "_PROXY_CONFIG": "Proxy Config",
- "_PROXY_NOT_SET": "Proxy Not Set"
+ "_PROXY_NOT_SET": "Proxy Not Set",
+ "_MODIFY": "Modify",
+ "_PROTOCOL": "Protocol",
+ "_HOST": "Host",
+ "_PORT": "Port"
 }
