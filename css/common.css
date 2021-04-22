@@ -745,6 +745,41 @@ https://stackoverflow.com/questions/19889615/can-an-angular-directive-pass-argum
 
 ul.detail-songlist {
   padding: 0 25px;
+  position: relative;
+}
+
+ul.detail-songlist .playlist-search {
+  position: absolute;
+  right: 0;
+  top: -30px;
+}
+ul.detail-songlist .playlist-search .playlist-search-icon {
+  width: 14px;
+  position: absolute;
+  left: 7px;
+  top: 1px;
+}
+ul.detail-songlist .playlist-search .playlist-clear-icon {
+  width: 14px;
+  position: absolute;
+  left: 158px;
+}
+ul.detail-songlist .playlist-search .playlist-search-input {
+  margin-right: 28px;
+  margin-bottom: 10px;
+  border: none;
+  height: 24px;
+  border-radius: 12px;
+  padding: 0 30px;
+  background: var(--content-background-color);
+  color: #bbbbbb;
+  width: 120px;
+}
+ul.detail-songlist .playlist-search .playlist-search-input:hover {
+  background-color: var(--songlist-odd-background-color);
+}
+ul.detail-songlist .playlist-search .playlist-search-input::placeholder {
+  color: #bbbbbb;
 }
 
 ul.detail-songlist li {
@@ -764,12 +799,12 @@ ul.detail-songlist li.playlist-result {
   height: 80px;
   padding: 0 10px;
 }
-ul.detail-songlist li.even {
-  background-color: var(--songlist-even-background-color);
+ul.detail-songlist li.odd {
+  background-color: var(--songlist-odd-background-color);
 }
 
 ul.detail-songlist li:hover,
-ul.detail-songlist li.even:hover {
+ul.detail-songlist li.odd:hover {
   background-color: var(--songlist-hover-background-color);
 }
 

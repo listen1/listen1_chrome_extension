@@ -303,7 +303,21 @@ angular.module('listenone').controller('NavigationController', [
         });
       }
     };
+    $scope.playlistFilter = { key: '' };
 
+    $scope.clearFilter = () => {
+      $scope.playlistFilter.key = '';
+    };
+    $scope.fieldFilter = (song) => {
+      if ($scope.playlistFilter.key === '') {
+        return true;
+      }
+      return (
+        song.title.indexOf($scope.playlistFilter.key) > -1 ||
+        song.artist.indexOf($scope.playlistFilter.key) > -1 ||
+        song.album.indexOf($scope.playlistFilter.key) > -1
+      );
+    };
     $scope.onPlaylistSongDrop = (list_id, song, data, dataType, direction) => {
       if (dataType === 'application/listen1-song') {
         // insert song

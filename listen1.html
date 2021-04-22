@@ -1559,7 +1559,26 @@
                             </div>
                           </div>
                         </div>
+
                         <ul class="detail-songlist">
+                          <div class="playlist-search">
+                            <svg class="feather playlist-search-icon">
+                              <use href="#search"></use>
+                            </svg>
+                            <svg
+                              class="feather playlist-clear-icon"
+                              ng-show="playlistFilter.key!=''"
+                              ng-click="clearFilter()"
+                            >
+                              <use href="#x"></use>
+                            </svg>
+                            <input
+                              class="playlist-search-input"
+                              type="text"
+                              ng-model="playlistFilter.key"
+                              placeholder="{{_SEARCH_PLAYLIST}}"
+                            />
+                          </div>
                           <li class="head">
                             <div class="title">
                               <a>{{_SONGS + '(' + songs.length + ')'}}</a>
@@ -1569,7 +1588,7 @@
                             <div class="tools">{{_OPERATION}}</div>
                           </li>
                           <li
-                            ng-repeat="song in songs track by $index"
+                            ng-repeat="song in songs | filter: fieldFilter "
                             ng-class-odd="'odd'"
                             ng-class-even="'even'"
                             ng-mouseenter="options=true"
