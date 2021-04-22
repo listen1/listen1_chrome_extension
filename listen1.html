@@ -125,7 +125,7 @@
                         class="btn btn-primary confirm-button"
                         ng-click="createAndAddPlaylist()"
                       >
-                        {{_COMFIRM}}
+                        {{_CONFIRM}}
                       </button>
                       <button
                         class="btn btn-default"
@@ -160,7 +160,7 @@
                         class="btn btn-primary confirm-button"
                         ng-click="editMyPlaylist(list_id)"
                       >
-                        {{_COMFIRM}}
+                        {{_CONFIRM}}
                       </button>
                       <button class="btn btn-default" ng-click="closeDialog()">
                         {{_CANCEL}}
@@ -209,7 +209,7 @@
                         class="btn btn-primary confirm-button"
                         ng-click="openUrl(dialog_url);closeDialog();dialog_url='';"
                       >
-                        {{_COMFIRM}}
+                        {{_CONFIRM}}
                       </button>
                       <button class="btn btn-default" ng-click="closeDialog()">
                         {{_CANCEL}}
@@ -309,6 +309,44 @@
                         ng-click="openLogin(dialog_data);"
                       >
                         {{_LOGIN_FAIL_RETRY}}
+                      </button>
+                    </div>
+                  </div>
+                  <div class="dialog-proxy" ng-show="dialog_type==12">
+                    <select
+                      ng-options="mode.displayText for mode in proxyModes"
+                      ng-model="proxyModeInput"
+                      ng-change="changeProxyMode(proxyModeInput)"
+                    ></select>
+                    <div
+                      ng-show="proxyModeInput.name=='custom'"
+                      class="custom-proxy"
+                    >
+                      <div class="rule-input">
+                        <div class="field-name">{{_PROTOCOL}}</div>
+                        <select
+                          ng-options="protocol for protocol in proxyProtocols"
+                          ng-model="proxyProtocol"
+                          ng-change="changeProxyProtocol(proxyProtocol)"
+                        ></select>
+                        <div class="field-name">{{_HOST}}</div>
+                        <input type="text" id="proxy-rules-host" />
+                        <div class="field-name">{{_PORT}}</div>
+                        <input type="text" id="proxy-rules-port" />
+                      </div>
+                    </div>
+                    <div class="buttons">
+                      <button
+                        class="btn btn-primary confirm-button"
+                        ng-click="setProxyConfig();closeDialog();"
+                      >
+                        {{_CONFIRM}}
+                      </button>
+                      <button
+                        class="btn btn-warning warning-button"
+                        ng-click="closeDialog();"
+                      >
+                        {{_CANCEL}}
                       </button>
                     </div>
                   </div>
@@ -1314,6 +1352,19 @@
                               </svg>
                               {{_GLOBAL_SHORTCUTS_NOTICE}}
                             </div>
+                          </div>
+                          <div class="settings-title" ng-if="!isChrome">
+                            <span>{{_PROXY_CONFIG}}</span>
+                          </div>
+                          <div class="settings-content" ng-if="!isChrome">
+                            <span>{{_PROXY_CONFIG}}:</span>
+                            {{proxyMode.displayText}}
+                            <span ng-show="proxyMode.name=='custom'"
+                              >{{proxyRules}}</span
+                            >
+                            <button ng-click="showDialog(12)">
+                              {{_MODIFY}}
+                            </button>
                           </div>
                           <div class="settings-title">
                             <span>{{_ABOUT}}</span>

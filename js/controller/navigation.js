@@ -268,6 +268,9 @@ angular.module('listenone').controller('NavigationController', [
       if (dialog_type === 11) {
         $scope.dialog_title = i18next.t('_LOGIN');
       }
+      if (dialog_type === 12) {
+        $scope.dialog_title = i18next.t('_PROXY_CONFIG');
+      }
     };
 
     $scope.onSidebarPlaylistDrop = (
