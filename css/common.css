@@ -42,6 +42,7 @@ button {
   color: var(--text-default-color);
   cursor: pointer;
   border: solid 1px var(--button-background-color);
+  border-radius: var(--default-border-radius);
   padding: 5px;
   min-width: 80px;
   min-height: 32px;
