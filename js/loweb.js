@@ -1,4 +1,4 @@
-/* global async LRUCache setPrototypeOfLocalStorage */
+/* global async LRUCache setPrototypeOfLocalStorage getLocalStorageValue */
 /* global netease xiami qq kugou kuwo bilibili migu taihe localmusic myplaylist */
 
 const PROVIDERS = [
@@ -338,9 +338,10 @@ const MediaService = {
         playerFailCallback();
         return;
       }
-      const failover_source_list = localStorage.getObject(
-        'auto_choose_source_list'
-      ); // ['kuwo', 'qq', 'migu'];
+      const failover_source_list = getLocalStorageValue(
+        'auto_choose_source_list',
+        ['kuwo', 'qq', 'migu']
+      );
 
       const getUrlPromises = failover_source_list.map(
         (source) =>
