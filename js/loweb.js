@@ -89,6 +89,11 @@ function getAllSearchProviders() {
   return PROVIDERS.filter((i) => i.searchable).map((i) => i.instance);
 }
 
+function getProviderNameByItemId(itemId) {
+  const prefix = itemId.slice(0, 2);
+  return (PROVIDERS.find((i) => i.id === prefix) || {}).name;
+}
+
 function getProviderByItemId(itemId) {
   const prefix = itemId.slice(0, 2);
   return (PROVIDERS.find((i) => i.id === prefix) || {}).instance;
@@ -338,10 +343,11 @@ const MediaService = {
         playerFailCallback();
         return;
       }
+      const trackPlatform = getProviderNameByItemId(track.id);
       const failover_source_list = getLocalStorageValue(
         'auto_choose_source_list',
         ['kuwo', 'qq', 'migu']
-      );
+      ).filter((i) => i !== trackPlatform);
 
       const getUrlPromises = failover_source_list.map(
         (source) =>
