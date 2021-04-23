@@ -47,6 +47,34 @@ Making your own playlist is also supported.
 
 ## Changelog
 
+`2021-04`
+
+Features:
+
+- QQ Login
+- Drag and drop to reorder songs in playlist, reorder playlist and quick add song to playlist
+- Search in playlist
+- Proxy setting (desktop version only)
+- Configure auto detect playable source list
+- Display latest version in setting page
+- Highest bitrate for netease music
+
+Refactor：
+
+- Change music platform resource API to class #553
+- remove angular dependency for github module #532 (thanks @Dumeng)
+- emove angular dependency for lastfm module #532 (thanks @Dumeng)
+- UX optimaze #537
+
+Fix Bugs：
+
+- Fix migu resource api to use without login, add bitrate info #536 (thanks @RecluseWind)
+- Fix display error in firefox for migu hot rank #536 (thanks @RecluseWind)
+- Fix qq short link parse error
+- Fix toggle mute error
+- Fix GitHub logout error
+- Fix some kugou music without album play error
+
 `2021-03`
 
 Features:
