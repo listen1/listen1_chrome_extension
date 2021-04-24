@@ -145,6 +145,7 @@ svg {
   border-top: solid 1px var(--line-default-color);
   display: flex;
   position: relative;
+  z-index: 99;
 }
 
 /* split main to left/right 2 parts */
