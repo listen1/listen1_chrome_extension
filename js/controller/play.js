@@ -5,10 +5,18 @@
 /* global angular notyf i18next MediaService l1Player hotkeys GithubClient isElectron require getLocalStorageValue getPlayer getPlayerAsync addPlayerListener smoothScrollTo lastfm */
 
 function getCSSStringFromSetting(setting) {
+  let { backgroundAlpha } = setting;
+  if (backgroundAlpha === 0){
+    // NOTE: background alpha 0 results total transparent
+    // which will cause mouse leave event not trigger 
+    // correct in windows platform for lyic window if disable
+    // hardware accelerate
+    backgroundAlpha = 0.01;
+  }
   return `div.content.lyric-content{
       font-size: ${setting.fontSize}px;
       color: ${setting.color};
-      background: rgba(36, 36, 36, ${setting.backgroundAlpha});
+      background: rgba(36, 36, 36, ${backgroundAlpha});
     }
     div.content.lyric-content span.contentTrans {
       font-size: ${setting.fontSize - 4}px;
