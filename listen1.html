@@ -1619,7 +1619,7 @@
                             <div class="tools">{{_OPERATION}}</div>
                           </li>
                           <li
-                            ng-repeat="song in songs | filter: fieldFilter "
+                            ng-repeat="song in songs | filter: fieldFilter track by $index"
                             ng-class-odd="'odd'"
                             ng-class-even="'even'"
                             ng-mouseenter="options=true"
