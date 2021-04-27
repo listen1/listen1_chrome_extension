@@ -149,14 +149,14 @@
 
     clearPlaylist() {
       this.playlist = [];
-      Howler.stop();
+      Howler.unload();
       this.sendPlaylistEvent();
       this.sendLoadEvent();
     }
 
     setNewPlaylist(list) {
       if (list.length) {
-        Howler.stop();
+        Howler.unload();
 
         this.playlist = list.map((audio) => ({
           ...audio,
@@ -244,7 +244,7 @@
       }
       // stop when load new track to avoid multiple songs play in same time
       if (index !== this.index) {
-        Howler.stop();
+        Howler.unload();
       }
       this.index = index;
 
@@ -356,7 +356,7 @@
      * @param  {String} direction 'next' or 'prev'.
      */
     skip(direction) {
-      Howler.stop();
+      Howler.unload();
       // Get the next track based on the direction of the track.
       let nextIndexFn = null;
       if (this._loop_mode === 2 || direction === 'random') {
