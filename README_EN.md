@@ -1,6 +1,6 @@
-# Listen 1 (Chrome Extension) V2.21.0
+# Listen 1 (Chrome Extension) V2.21.1
 
-（Last Update April 24th, 2021)
+（Last Update April 27th, 2021)
 
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE)
 
@@ -70,6 +70,7 @@ Fix Bugs：
 
 - Fix migu resource api to use without login, add bitrate info #536 (thanks @RecluseWind)
 - Fix display error in firefox for migu hot rank #536 (thanks @RecluseWind)
+- Fix sometimes song keep waiting for 15 seconds before playing bug
 - Fix qq short link parse error
 - Fix toggle mute error
 - Fix GitHub logout error

@@ -1,6 +1,6 @@
-# Listen 1 (Chrome Extension) V2.21.0
+# Listen 1 (Chrome Extension) V2.21.1
 
-（最后更新于 2021 年 04 月 24 日）
+（最后更新于 2021 年 04 月 27 日）
 
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE)
 
@@ -95,6 +95,7 @@ Listen1 诞生的初衷从不是和大公司的争夺版权利益，而是为了
 
 - 修复需要登录才能获取咪咕播放链接，并增加码率数据 #536 (感谢 @RecluseWind 的提交)
 - 修复音乐榜和影视榜在 Firefox 上的不能正确获取的 bug #536 (感谢 @RecluseWind 的提交)
+- 修复某些情况下歌曲在播放前总是等待 15 秒的 bug
 - 修复 QQ 音乐短链接歌单分享地址不被识别的问题
 - 修复开启关闭静音功能失效的问题
 - 修复 GitHub 账户无法退出的问题
