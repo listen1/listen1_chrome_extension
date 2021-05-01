@@ -336,8 +336,12 @@
         });
       }
 
-      if (playNow && !this.currentHowl.playing()) {
-        Howler.stop(); // avoid other songs playing
+      if (playNow) {
+        this.playlist.forEach((song) => {
+          if (song.howl) {
+            song.howl.stop();
+          }
+        });
         this.currentHowl.play();
       }
     }
