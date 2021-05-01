@@ -337,6 +337,7 @@
       }
 
       if (playNow && !this.currentHowl.playing()) {
+        Howler.stop(); // avoid other songs playing
         this.currentHowl.play();
       }
     }
