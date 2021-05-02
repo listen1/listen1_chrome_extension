@@ -1,6 +1,6 @@
-# Listen 1 (Chrome Extension) V2.21.1
+# Listen 1 (Chrome Extension) V2.21.2
 
-（Last Update April 27th, 2021)
+（Last Update May 2nd, 2021)
 
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE)
 
@@ -75,6 +75,7 @@ Fix Bugs：
 - Fix toggle mute error
 - Fix GitHub logout error
 - Fix some kugou music without album play error
+- Fix two songs play in same time
 
 `2021-03`
 
