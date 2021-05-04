@@ -349,7 +349,11 @@
       }
 
       if (playNow) {
-        this.stopAll();
+        this.playlist.forEach((i) => {
+          if (i.howl && i.howl !== this.currentHowl) {
+            i.howl.stop();
+          }
+        });
         this.currentHowl.play();
       }
     }
