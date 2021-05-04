@@ -149,13 +149,24 @@
 
     clearPlaylist() {
       this.playlist = [];
+      this.stopAll();
       Howler.unload();
       this.sendPlaylistEvent();
       this.sendLoadEvent();
     }
 
+    stopAll() {
+      this.playlist.forEach((i) => {
+        if (i.howl) {
+          i.howl.stop();
+        }
+      });
+    }
+
     setNewPlaylist(list) {
       if (list.length) {
+        // stop current
+        this.stopAll();
         Howler.unload();
 
         this.playlist = list.map((audio) => ({
@@ -205,6 +216,7 @@
           playNow,
         },
       };
+
       MediaService.bootstrapTrack(
         msg.data,
         (bootinfo) => {
@@ -337,11 +349,7 @@
       }
 
       if (playNow) {
-        this.playlist.forEach((song) => {
-          if (song.howl) {
-            song.howl.stop();
-          }
-        });
+        this.stopAll();
         this.currentHowl.play();
       }
     }
