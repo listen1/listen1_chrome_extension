@@ -790,7 +790,7 @@ class qq {
                     return fn({ status: 'fail', data: {} });
                   }
                   let { value: uin } = wxCookie;
-                  uin = uin.slice('o'.length); // remove prefix o
+                  uin = `1${uin.slice('o'.length)}`; // replace prefix o with 1
                   return this.get_user_by_uin(uin, fn);
                 }
               );
