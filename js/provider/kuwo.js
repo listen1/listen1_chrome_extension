@@ -4,7 +4,28 @@
 class kuwo {
   // Convert html code
   static html_decode(str) {
-    return str.replace(/(&nbsp;)/g, ' ');
+    let text = str;
+    const entities = [
+      ['amp', '&'],
+      ['apos', "'"],
+      ['#x27', "'"],
+      ['#x2F', '/'],
+      ['#39', "'"],
+      ['#47', '/'],
+      ['lt', '<'],
+      ['gt', '>'],
+      ['nbsp', ' '],
+      ['quot', '"'],
+    ];
+
+    for (let i = 0, max = entities.length; i < max; i += 1) {
+      text = text.replace(
+        new RegExp(`&${entities[i][0]};`, 'g'),
+        entities[i][1]
+      );
+    }
+
+    return text;
   }
 
   // Fix single quote in json
@@ -40,7 +61,7 @@ class kuwo {
     return {
       id: `kwtrack_${item.rid}`,
       title: this.html_decode(item.name),
-      artist: item.artist,
+      artist: this.html_decode(item.artist),
       artist_id: `kwartist_${item.artistid}`,
       album: this.html_decode(item.album),
       album_id: `kwalbum_${item.albumid}`,
