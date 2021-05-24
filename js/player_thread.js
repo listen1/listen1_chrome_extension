@@ -349,6 +349,9 @@
       }
 
       if (playNow) {
+        if (this.playing && index === this.index) {
+          return;
+        }
         this.playlist.forEach((i) => {
           if (i.howl && i.howl !== this.currentHowl) {
             i.howl.stop();
