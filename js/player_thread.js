@@ -1,7 +1,16 @@
 /* eslint-disable no-underscore-dangle */
 /* global MediaMetadata playerSendMessage MediaService */
 /* global Howl Howler */
-
+function updatePosition() {
+  if ('setPositionState' in navigator.mediaSession) {
+    const { currentHowl } = window.threadPlayer;
+    navigator.mediaSession.setPositionState({
+      duration: currentHowl.duration(),
+      rate: currentHowl.rate(),
+      position: currentHowl.seek(),
+    });
+  }
+}
 {
   /**
    * Player class containing the state of our playlist and where we are in it.
@@ -358,6 +367,7 @@
           }
         });
         this.currentHowl.play();
+        updatePosition();
       }
     }
 
@@ -369,6 +379,7 @@
 
       // Puase the sound.
       this.currentHowl.pause();
+      updatePosition();
     }
 
     /**
@@ -402,6 +413,7 @@
         type: 'BG_PLAYER:RETRIEVE_URL_FAIL_ALL',
       });
       this.sendLoadEvent();
+      updatePosition();
     }
 
     set loop_mode(input) {
@@ -575,24 +587,36 @@
     const { mediaSession } = navigator;
     mediaSession.setActionHandler('play', () => {
       threadPlayer.play();
+      updatePosition();
     });
     mediaSession.setActionHandler('pause', () => {
       threadPlayer.pause();
+      updatePosition();
     });
-    mediaSession.setActionHandler('seekforward', () => {
+    mediaSession.setActionHandler('seekforward', (details) => {
       // User clicked "Seek Forward" media notification icon.
       const { currentHowl } = threadPlayer;
+      const skipTime = details.seekOffset || threadPlayer.skipTime;
       const newTime = Math.min(
-        currentHowl.seek() + threadPlayer.skipTime,
+        currentHowl.seek() + skipTime,
         currentHowl.duration()
       );
       currentHowl.seek(newTime);
+      updatePosition();
     });
-    mediaSession.setActionHandler('seekbackward', () => {
+    mediaSession.setActionHandler('seekbackward', (details) => {
       // User clicked "Seek Backward" media notification icon.
       const { currentHowl } = threadPlayer;
-      const newTime = Math.max(currentHowl.seek() - threadPlayer.skipTime, 0);
+      const skipTime = details.seekOffset || threadPlayer.skipTime;
+      const newTime = Math.max(currentHowl.seek() - skipTime, 0);
       currentHowl.seek(newTime);
+      updatePosition();
+    });
+    mediaSession.setActionHandler('seekto', (details) => {
+      const { seekTime } = details;
+      const { currentHowl } = threadPlayer;
+      currentHowl.seek(seekTime);
+      updatePosition();
     });
     mediaSession.setActionHandler('nexttrack', () => {
       threadPlayer.skip('next');
