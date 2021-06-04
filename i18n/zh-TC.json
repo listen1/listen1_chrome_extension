@@ -167,5 +167,6 @@
  "_MODIFY": "修改",
  "_PROTOCOL": "代理協議",
  "_HOST": "主機地址",
- "_PORT": "端口"
+ "_PORT": "端口",
+ "ZOOM_IN_OUT": "放大/縮小"
 }

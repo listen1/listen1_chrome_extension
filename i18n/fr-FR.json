@@ -167,5 +167,6 @@
  "_MODIFY": "Modify",
  "_PROTOCOL": "Protocol",
  "_HOST": "Host",
- "_PORT": "Port"
+ "_PORT": "Port",
+ "ZOOM_IN_OUT": "Zoom In/Out"
 }
