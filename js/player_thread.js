@@ -602,9 +602,11 @@
     });
     mediaSession.setActionHandler('nexttrack', () => {
       threadPlayer.skip('next');
+      threadPlayer.sendFrameUpdate();
     });
     mediaSession.setActionHandler('previoustrack', () => {
       threadPlayer.skip('prev');
+      threadPlayer.sendFrameUpdate();
     });
   }
   playerSendMessage(this.mode, {
