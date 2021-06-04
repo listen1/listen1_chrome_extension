@@ -50,6 +50,9 @@ button {
 button:hover {
   background-color: var(--button-hover-background-color);
 }
+img {
+  -webkit-user-drag: none;
+}
 .l1-button {
   background-color: var(--button-background-color);
   color: var(--text-default-color);
