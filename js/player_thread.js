@@ -598,7 +598,7 @@
     mediaSession.setActionHandler('seekto', (details) => {
       const { seekTime } = details;
       const { currentHowl } = threadPlayer;
-      currentHowl.seek(seekTime);
+      currentHowl.seek(seekTime / currentHowl.duration());
     });
     mediaSession.setActionHandler('nexttrack', () => {
       threadPlayer.skip('next');
