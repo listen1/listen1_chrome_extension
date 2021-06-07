@@ -482,6 +482,16 @@
       // }
       audio.seek(audio.duration() * per);
     }
+    /**
+     * Seek to a new position in the currently playing track.
+     * @param {Number} seconds Seconds through the song to skip.
+     */
+
+    seekTime(seconds) {
+      if (!this.currentHowl) return;
+      const audio = this.currentHowl;
+      audio.seek(seconds);
+    }
 
     /**
      * Format the time from seconds to M:SS.
@@ -566,10 +576,10 @@
 
   // Setup our new audio player class and pass it the playlist.
 
-  window.threadPlayer = new Player();
-  window.threadPlayer.setRefreshRate();
-
-  const { threadPlayer } = window;
+  const threadPlayer = new Player();
+  threadPlayer.setRefreshRate();
+  window.threadPlayer = threadPlayer;
+  
   if ('mediaSession' in navigator) {
     const { mediaSession } = navigator;
     mediaSession.setActionHandler('play', () => {
@@ -586,19 +596,21 @@
         currentHowl.seek() + skipTime,
         currentHowl.duration()
       );
-      currentHowl.seek(newTime);
+      threadPlayer.seekTime(newTime);
+      threadPlayer.sendFrameUpdate();
     });
     mediaSession.setActionHandler('seekbackward', (details) => {
       // User clicked "Seek Backward" media notification icon.
       const { currentHowl } = threadPlayer;
       const skipTime = details.seekOffset || threadPlayer.skipTime;
       const newTime = Math.max(currentHowl.seek() - skipTime, 0);
-      currentHowl.seek(newTime);
+      threadPlayer.seekTime(newTime);
+      threadPlayer.sendFrameUpdate();
     });
     mediaSession.setActionHandler('seekto', (details) => {
       const { seekTime } = details;
-      const { currentHowl } = threadPlayer;
-      currentHowl.seek(seekTime / currentHowl.duration());
+      threadPlayer.seekTime(seekTime);
+      threadPlayer.sendFrameUpdate();
     });
     mediaSession.setActionHandler('nexttrack', () => {
       threadPlayer.skip('next');
