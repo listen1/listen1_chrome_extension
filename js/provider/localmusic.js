@@ -83,23 +83,15 @@ class localmusic {
     success(sound);
   }
 
-  static search(url) {
-    const searchType = getParameterByName('type', url);
-    return {
-      success: (fn) =>
-        fn({
-          result: [],
-          total: 0,
-          type: searchType,
-        }),
-    };
-  }
-
   static lyric(url) {
+    const track_id = getParameterByName('track_id', url);
+    const playlist = localStorage.getObject('lmplaylist_reserve');
+    const track = playlist.tracks.find((item) => item.id === track_id);
+    const lyric = track.lyrics[0];
     return {
       success: (fn) =>
         fn({
-          lyric: '',
+          lyric,
           tlyric: '',
         }),
     };
