@@ -651,6 +651,7 @@ angular.module('listenone').controller('NavigationController', [
                   source: 'localmusic',
                   source_url: '',
                   img_url: '',
+                  lyrics: md.common.lyrics,
                   // url: "lmtrack_"+fp,
                   sound_url: `file://${fp}`,
                 };
