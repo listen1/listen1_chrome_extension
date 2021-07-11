@@ -87,7 +87,7 @@ class localmusic {
     const track_id = getParameterByName('track_id', url);
     const playlist = localStorage.getObject('lmplaylist_reserve');
     const track = playlist.tracks.find((item) => item.id === track_id);
-    const lyric = track.lyrics[0];
+    const lyric = track.lyrics?.[0];
     return {
       success: (fn) =>
         fn({
