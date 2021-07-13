@@ -1,10 +1,14 @@
-# Listen 1 (Chrome Extension) V2.21.5
+# Listen 1 (Chrome Extension) V3.0.0
 
-（最后更新于 2021 年 05 月 02 日）
+（最后更新于 2021 年 07 月 13 日）
 
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE)
 
 [English Version](https://github.com/listen1/listen1_chrome_extension/blob/master/README_EN.md)
+
+## 注意！！！
+
+本分支是 V3 的实验性版本，和正式版相比仍然有较多功能未能实现，仅提供开发者使用。
 
 ## 缘起
 
@@ -64,11 +68,16 @@ V2.9.0 新特性：自动切换播放源(Beta)
 
 ## QQ 音乐举报 Listen1 导致代码库临时关闭事件 （2017 年 11 月）
 
-Listen1 的用户，有个坏消息希望和大家分享。Listen1 最近收到了[QQ 音乐的 DMCA Takedown Notice](https://github.com/github/dmca/blob/master/2017/2017-11-17-Listen1.md), 主要代码库已经因为此原因而临时关闭。悲观一点看，Listen1 项目可能会在今年内彻底消失。
+Listen1 的用户，有个坏消息希望和大家分享。Listen1 最近收到
+了[QQ 音乐的 DMCA Takedown Notice](https://github.com/github/dmca/blob/master/2017/2017-11-17-Listen1.md), 主要代码库已经因为此原因而临时关闭。悲观一点看
+，Listen1 项目可能会在今年内彻底消失。
 
-Listen1 诞生的初衷从不是和大公司的争夺版权利益，而是为了给予热爱音乐的人更好的收听体验，所以，Listen1 是开源，免费的，并且不接受任何形式的捐助。正是因为有热爱音乐的 Listen1 的你们，Listen1 才发展到今天这一步。不管结果如何，Listen1 团队感谢所有支持过这个项目的人们。
+Listen1 诞生的初衷从不是和大公司的争夺版权利益，而是为了给予热爱音乐的人更好的收听体验，所以，Listen1 是开源，免费的，并且不接受任何形式的捐助。正是因为有热爱音
+乐的 Listen1 的你们，Listen1 才发展到今天这一步。不管结果如何，Listen1 团队感谢所有支持过这个项目的人们。
 
-在这个关系项目生死存亡的时刻，我寻求项目因为 DMCA 被 github 关闭的援助。如果有对这个比较了解如何解决的人，或者你想对这个事情发表看法和建议，可以在[issue](https://github.com/listen1/listen1_chrome_extension/issues/113)留言，或者发送邮件到 githublisten1@gmail.com。我们会尽最大努力，来守护 Listen1，即使可能它即将成为历史。
+在这个关系项目生死存亡的时刻，我寻求项目因为 DMCA 被 github 关闭的援助。如果有对这个比较了解如何解决的人，或者你想对这个事情发表看法和建议，可以
+在[issue](https://github.com/listen1/listen1_chrome_extension/issues/113)留言，或者发送邮件到 githublisten1@gmail.com。我们会尽最大努力，来守护 Listen1，即使可
+能它即将成为历史。
 
 ## 更新日志
 

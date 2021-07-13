@@ -1,37 +1,52 @@
 {
   "name": "listen1_chrome_extension",
-  "version": "2.21.5",
-  "description": "one for all free music in china",
-  "main": "index.js",
+  "version": "3.0.0",
+  "private": false,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "serve": "vue-cli-service build --mode development --watch",
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/listen1/listen1_chrome_extension.git"
+  "dependencies": {
+    "async": "^3.2.0",
+    "axios": "^0.21.1",
+    "core-js": "^3.6.5",
+    "feather-icons": "^4.28.0",
+    "vue": "^3.0.0",
+    "vue-feather": "^2.0.0-rc",
+    "vue-i18n": "^9.1.6",
+    "vue-router": "^4.0.0-0",
+    "vuex": "^4.0.2"
   },
-  "author": "",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/listen1/listen1_chrome_extension/issues"
-  },
-  "homepage": "https://github.com/listen1/listen1_chrome_extension#readme",
   "devDependencies": {
-    "eslint": "^7.30.0",
-    "eslint-config-airbnb-base": "^14.2.1",
-    "eslint-config-prettier": "^8.3.0",
-    "eslint-plugin-import": "^2.23.4",
-    "husky": "^4.3.8",
-    "lint-staged": "^10.5.4",
-    "prettier": "^2.3.2"
+    "@vue/cli-plugin-babel": "~4.5.0",
+    "@vue/cli-plugin-eslint": "~4.5.0",
+    "@vue/cli-plugin-router": "~4.5.0",
+    "@vue/cli-service": "~4.5.0",
+    "@vue/compiler-sfc": "^3.0.0",
+    "babel-eslint": "^10.1.0",
+    "eslint": "^6.7.2",
+    "eslint-plugin-vue": "^7.11.1",
+    "vue-cli-plugin-browser-extension": "^0.25.2"
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
+  "eslintConfig": {
+    "root": true,
+    "env": {
+      "node": true,
+      "webextensions": true
+    },
+    "extends": [
+      "plugin:vue/vue3-essential",
+      "eslint:recommended"
+    ],
+    "parserOptions": {
+      "parser": "babel-eslint"
+    },
+    "rules": {}
   },
-  "lint-staged": {
-    "*.js": "eslint --cache --fix",
-    "*.{js,css,md}": "prettier --write"
-  }
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ]
 }

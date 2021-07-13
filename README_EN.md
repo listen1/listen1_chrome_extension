@@ -6,8 +6,8 @@
 
 ## One for all free music in China
 
-When I found many songs are unavailable because copyright issue, I realized there's something I should do.
-Mom never need to worry about I can't listen my favorite songs.
+When I found many songs are unavailable because copyright issue, I realized there's something I should do. Mom never need to worry about I can't listen my
+favorite songs.
 
 Supported music platform:
 
