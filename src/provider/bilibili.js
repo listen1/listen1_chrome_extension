@@ -1,9 +1,8 @@
-/* global getParameterByName */
-// eslint-disable-next-line no-unused-vars
 import axios from 'axios';
 import { getParameterByName } from './lowebutil';
+import provider from './provider';
 
-export default class bilibili {
+export default class bilibili extends provider {
   static bi_convert_song(song_info) {
     const track = {
       id: `bitrack_${song_info.id}`,
@@ -45,9 +44,7 @@ export default class bilibili {
   }
 
   static bi_get_playlist(url) {
-    const list_id = getParameterByName('list_id', url)
-      .split('_')
-      .pop();
+    const list_id = getParameterByName('list_id', url).split('_').pop();
     const target_url = `https://www.bilibili.com/audio/music-service-c/web/menu/info?sid=${list_id}`;
     return {
       success: (fn) => {
@@ -98,9 +95,7 @@ export default class bilibili {
   static bi_artist(url) {
     return {
       success: (fn) => {
-        const artist_id = getParameterByName('list_id', url)
-          .split('_')
-          .pop();
+        const artist_id = getParameterByName('list_id', url).split('_').pop();
         let target_url = `https://api.bilibili.com/x/space/acc/info?mid=${artist_id}&jsonp=jsonp`;
         axios.get(target_url).then((response) => {
           const info = {
@@ -156,41 +151,36 @@ export default class bilibili {
     });
   }
 
-  static search(url) {
-    return {
-      success: (fn) => {
-        const keyword = getParameterByName('keywords', url);
-        const curpage = getParameterByName('curpage', url);
-        const au = /\d+$/.exec(keyword);
-        if (au != null) {
-          const target_url = `https://www.bilibili.com/audio/music-service-c/web/song/info?sid=${au}`;
-          axios.get(target_url).then((response) => {
-            const { data } = response.data;
-            const tracks = [this.bi_convert_song(data)];
-            return fn({
-              result: tracks,
-              total: 1
-            });
-          });
-        } else {
-          return fn({
-            result: [],
-            total: 0
-          });
-        }
-        // inferred, not implemented yet
-        const target_url = `https://api.bilibili.com/x/web-interface/search/type?search_type=audio&keyword=${keyword}&page=${curpage}`;
-        axios.get(target_url).then((response) => {
-          const { data } = response.data;
-          const tracks = data.result.map((item) => this.bi_convert_song(item));
-          return fn({
-            result: tracks,
-            total: data.numResults
-          });
-        });
-        return null;
-      }
-    };
+  static async search(url) {
+    const keyword = getParameterByName('keywords', url);
+    const curpage = getParameterByName('curpage', url);
+    const au = /\d+$/.exec(keyword);
+    if (au != null) {
+      const target_url = `https://www.bilibili.com/audio/music-service-c/web/song/info?sid=${au}`;
+      const response = await axios.get(target_url);
+      const { data } = response.data;
+      const tracks = [this.bi_convert_song(data)];
+      return {
+        result: tracks,
+        total: 1
+      };
+    } else {
+      return {
+        result: [],
+        total: 0
+      };
+    }
+    // inferred, not implemented yet
+    const target_url = `https://api.bilibili.com/x/web-interface/search/type?search_type=audio&keyword=${keyword}&page=${curpage}`;
+    axios.get(target_url).then((response) => {
+      const { data } = response.data;
+      const tracks = data.result.map((item) => this.bi_convert_song(item));
+      return fn({
+        result: tracks,
+        total: data.numResults
+      });
+    });
+    return null;
   }
 
   static lyric(url) {

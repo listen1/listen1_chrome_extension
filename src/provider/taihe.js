@@ -1,7 +1,6 @@
-/* eslint-disable no-unused-vars */
-/* global async getParameterByName forge */
 import axios from 'axios';
 import { getParameterByName } from './lowebutil';
+import provider from './provider';
 
 const axiosTH = axios.create({
   baseURL: 'https://music.taihe.com/v1'
@@ -14,11 +13,7 @@ axiosTH.interceptors.request.use(
     const q = new URLSearchParams(params);
     q.sort();
     const signStr = decodeURIComponent(`${q.toString()}0b50b02fd0d73a9c4c8c3a781c30845f`);
-    params.sign = forge.md5
-      .create()
-      .update(forge.util.encodeUtf8(signStr))
-      .digest()
-      .toHex();
+    params.sign = forge.md5.create().update(forge.util.encodeUtf8(signStr)).digest().toHex();
 
     return { ...config, params };
   },
@@ -26,7 +21,7 @@ axiosTH.interceptors.request.use(
   { synchronous: true }
 );
 
-export default class taihe {
+export default class taihe extends provider {
   static th_convert_song(song) {
     const track = {
       id: `thtrack_${song.id}`,
@@ -46,9 +41,7 @@ export default class taihe {
   }
 
   static th_render_tracks(url, page, callback) {
-    const list_id = getParameterByName('list_id', url)
-      .split('_')
-      .pop();
+    const list_id = getParameterByName('list_id', url).split('_').pop();
     axiosTH
       .get('/tracklist/info', {
         params: {
@@ -64,54 +57,43 @@ export default class taihe {
       });
   }
 
-  static search(url) {
+  static async search(url) {
     const keyword = getParameterByName('keywords', url);
     const curpage = getParameterByName('curpage', url);
     const searchType = getParameterByName('type', url);
     if (searchType === '1') {
       return {
-        success: (fn) =>
-          fn({
-            result: [],
-            total: 0,
-            type: searchType
-          })
+        result: [],
+        total: 0,
+        type: searchType
       };
     }
-    return {
-      success: (fn) => {
-        axiosTH
-          .get('/search', {
-            params: {
-              word: keyword,
-              pageNo: curpage || 1,
-              type: 1
-            }
-          })
-          .then((res) => {
-            const { data } = res;
-            const tracks = data.data.typeTrack.map(this.th_convert_song);
-            return fn({
-              result: tracks,
-              total: data.data.total,
-              type: searchType
-            });
-          })
-          .catch(() =>
-            fn({
-              result: [],
-              total: 0,
-              type: searchType
-            })
-          );
-      }
-    };
+    try {
+      const res = await axiosTH.get('/search', {
+        params: {
+          word: keyword,
+          pageNo: curpage || 1,
+          type: 1
+        }
+      });
+      const { data } = res;
+      const tracks = data.data.typeTrack.map(this.th_convert_song);
+      return {
+        result: tracks,
+        total: data.data.total,
+        type: searchType
+      };
+    } catch (err) {
+      return {
+        result: [],
+        total: 0,
+        type: searchType
+      };
+    }
   }
 
   static th_get_playlist(url) {
-    const list_id = getParameterByName('list_id', url)
-      .split('_')
-      .pop();
+    const list_id = getParameterByName('list_id', url).split('_').pop();
 
     return {
       success: (fn) => {
@@ -152,9 +134,7 @@ export default class taihe {
   static th_artist(url) {
     return {
       success: (fn) => {
-        const artist_id = getParameterByName('list_id', url)
-          .split('_')
-          .pop();
+        const artist_id = getParameterByName('list_id', url).split('_').pop();
         axiosTH
           .get('/artist/info', {
             params: {
@@ -224,9 +204,7 @@ export default class taihe {
             })
           );
         } else {
-          const track_id = getParameterByName('track_id', url)
-            .split('_')
-            .pop();
+          const track_id = getParameterByName('track_id', url).split('_').pop();
           axiosTH
             .get('/song/tracklink', {
               params: {
@@ -248,9 +226,7 @@ export default class taihe {
   static th_album(url) {
     return {
       success: (fn) => {
-        const album_id = getParameterByName('list_id', url)
-          .split('_')
-          .pop();
+        const album_id = getParameterByName('list_id', url).split('_').pop();
 
         axiosTH
           .get('/album/info', {

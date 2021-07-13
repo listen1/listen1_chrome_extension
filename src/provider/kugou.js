@@ -1,7 +1,6 @@
-/* eslint-disable no-unused-vars */
-/* global async getParameterByName */
 import axios from 'axios';
-import { getParameterByName } from './lowebutil';
+import { parallel } from 'async';
+import { getParameterByName, async_process } from './lowebutil';
 
 export default class kugou {
   static kg_convert_song(song) {
@@ -34,7 +33,7 @@ export default class kugou {
     data_list.forEach((item, index) => {
       fnDict[index] = (cb) => handler(index, item, handler_extra_param_list, cb);
     });
-    async.parallel(fnDict, (err, results) =>
+    parallel(fnDict, (err, results) =>
       callback(
         null,
         data_list.map((item, index) => results[index])
@@ -53,44 +52,34 @@ export default class kugou {
     });
   }
 
-  static search(url) {
+  static async search(url) {
     const keyword = getParameterByName('keywords', url);
     const curpage = getParameterByName('curpage', url);
     const searchType = getParameterByName('type', url);
     if (searchType === '1') {
       return {
-        success: (fn) =>
-          fn({
-            result: [],
-            total: 0,
-            type: searchType
-          })
+        result: [],
+        total: 0,
+        type: searchType
       };
     }
-    return {
-      success: (fn) => {
-        const target_url = `${'https://songsearch.kugou.com/song_search_v2?keyword='}${keyword}&page=${curpage}`;
-        axios
-          .get(target_url)
-          .then((response) => {
-            const { data } = response;
-            this.async_process_list(data.data.lists, this.kg_render_search_result_item, [], (err, tracks) =>
-              fn({
-                result: tracks,
-                total: data.data.total,
-                type: searchType
-              })
-            );
-          })
-          .catch(() =>
-            fn({
-              result: [],
-              total: 0,
-              type: searchType
-            })
-          );
-      }
-    };
+    const target_url = `${'https://songsearch.kugou.com/song_search_v2?keyword='}${keyword}&page=${curpage}`;
+    try {
+      const response = await axios.get(target_url);
+      const { data } = response;
+      const tracks = await async_process(data.data.lists, kugou.kg_render_search_result_item, []);
+      return {
+        result: tracks,
+        total: data.data.total,
+        type: searchType
+      };
+    } catch (err) {
+      return {
+        result: [],
+        total: 0,
+        type: searchType
+      };
+    }
   }
 
   static kg_render_playlist_result_item(index, item, params, callback) {
@@ -137,9 +126,7 @@ export default class kugou {
   static kg_get_playlist(url) {
     return {
       success: (fn) => {
-        const list_id = getParameterByName('list_id', url)
-          .split('_')
-          .pop();
+        const list_id = getParameterByName('list_id', url).split('_').pop();
         const target_url = `http://m.kugou.com/plist/list/${list_id}?json=true`;
 
         axios.get(target_url).then((response) => {
@@ -200,9 +187,7 @@ export default class kugou {
   static kg_artist(url) {
     return {
       success: (fn) => {
-        const artist_id = getParameterByName('list_id', url)
-          .split('_')
-          .pop();
+        const artist_id = getParameterByName('list_id', url).split('_').pop();
         let target_url = `http://mobilecdnbj.kugou.com/api/v3/singer/info?singerid=${artist_id}`;
         axios.get(target_url).then((response) => {
           const { data } = response;
@@ -269,12 +254,8 @@ export default class kugou {
   }
 
   static lyric(url) {
-    const track_id = getParameterByName('track_id', url)
-      .split('_')
-      .pop();
-    const album_id = getParameterByName('album_id', url)
-      .split('_')
-      .pop();
+    const track_id = getParameterByName('track_id', url).split('_').pop();
+    const album_id = getParameterByName('album_id', url).split('_').pop();
     const lyric_url = `https://wwwapi.kugou.com/yy/index.php?r=play/getdata&callback=jQuery&hash=${track_id}&dfid=dfid&mid=mid&platid=4&album_id=${album_id}`;
 
     return {
@@ -322,9 +303,7 @@ export default class kugou {
   static kg_album(url) {
     return {
       success: (fn) => {
-        const album_id = getParameterByName('list_id', url)
-          .split('_')
-          .pop();
+        const album_id = getParameterByName('list_id', url).split('_').pop();
         let target_url = `${'http://mobilecdnbj.kugou.com/api/v3/album/info?albumid='}${album_id}`;
 
         let info;

@@ -1,16 +1,12 @@
-/* eslint-disable no-underscore-dangle */
-/* global MediaMetadata playerSendMessage MediaService */
-/* global Howl Howler */
-
+import { playerSendMessage } from './bridge';
+import MediaService from './MediaService';
+import { Howl, Howler } from 'howler';
 /**
  * Player class containing the state of our playlist and where we are in it.
  * Includes all methods for playing, skipping, updating the display, etc.
  * @param {Array} playlist Array of objects with playlist song details ({title, file, howl}).
  */
-import { playerSendMessage } from '@/services/bridge';
-import MediaService from '@/services/MediaService';
-
-class Player {
+export class Player {
   constructor() {
     this.playlist = [];
     this.index = -1;
