@@ -170,17 +170,17 @@ export default class bilibili extends provider {
         total: 0
       };
     }
-    // inferred, not implemented yet
-    const target_url = `https://api.bilibili.com/x/web-interface/search/type?search_type=audio&keyword=${keyword}&page=${curpage}`;
-    axios.get(target_url).then((response) => {
-      const { data } = response.data;
-      const tracks = data.result.map((item) => this.bi_convert_song(item));
-      return fn({
-        result: tracks,
-        total: data.numResults
-      });
-    });
-    return null;
+    // eslint-disable-next-line no-unreachable
+    // const target_url = `https://api.bilibili.com/x/web-interface/search/type?search_type=audio&keyword=${keyword}&page=${curpage}`;
+    // axios.get(target_url).then((response) => {
+    //   const { data } = response.data;
+    //   const tracks = data.result.map((item) => this.bi_convert_song(item));
+    //   return fn({
+    //     result: tracks,
+    //     total: data.numResults
+    //   });
+    // });
+    // return null;
   }
 
   static lyric(url) {
