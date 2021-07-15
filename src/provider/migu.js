@@ -1,8 +1,7 @@
 import axios from 'axios';
 import { getParameterByName, cookieGet } from './lowebutil';
-import provider from './provider';
 
-export default class migu extends provider {
+export default class migu {
   static mg_convert_song(song) {
     return {
       id: `mgtrack_${song.copyrightId}`,

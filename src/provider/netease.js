@@ -1,9 +1,8 @@
 import axios from 'axios';
-import { parallel, concat } from 'async';
+import { concat } from 'async';
 import { getParameterByName, cookieGet, cookieSet, cookieRemove } from './lowebutil';
-import provider from './provider';
 
-export default class netease extends provider {
+export default class netease {
   static _create_secret_key(size) {
     const result = [];
     const choice = '012345679abcdef'.split('');
@@ -48,7 +47,6 @@ export default class netease extends provider {
       params: enc_text,
       encSecKey: enc_sec_key
     };
-
     return data;
   }
 
@@ -176,7 +174,6 @@ export default class netease extends provider {
       }
     );
   }
-
 
   static ng_render_playlist_result_item(index, item, callback) {
     const target_url = 'https://music.163.com/weapi/v3/song/detail';
@@ -318,7 +315,6 @@ export default class netease extends provider {
             const bitrate = `${(br / 1000).toFixed(0)}kbps`;
             sound.bitrate = bitrate;
             sound.platform = 'netease';
-
             success(sound);
           } else {
             failure(sound);

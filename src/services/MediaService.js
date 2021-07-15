@@ -1,4 +1,3 @@
-import provider from '../provider/provider';
 import netease from '../provider/netease';
 // import xiami from "@/provider/xiami";
 import qq from '../provider/qq';

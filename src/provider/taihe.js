@@ -1,6 +1,5 @@
 import axios from 'axios';
 import { getParameterByName } from './lowebutil';
-import provider from './provider';
 
 const axiosTH = axios.create({
   baseURL: 'https://music.taihe.com/v1'
@@ -21,7 +20,7 @@ axiosTH.interceptors.request.use(
   { synchronous: true }
 );
 
-export default class taihe extends provider {
+export default class taihe {
   static th_convert_song(song) {
     const track = {
       id: `thtrack_${song.id}`,

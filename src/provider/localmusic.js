@@ -1,5 +1,4 @@
 import { getParameterByName } from './lowebutil';
-import provider from './provider';
 
 /* global getParameterByName */
 
@@ -13,7 +12,7 @@ const defaultLocalMusicPlaylist = {
   }
 };
 
-class localmusic extends provider {
+export default class localmusic{
   static show_playlist(url, hm) {
     return {
       success: (fn) =>

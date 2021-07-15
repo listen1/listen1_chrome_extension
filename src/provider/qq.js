@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { getParameterByName, cookieRemove, cookieGet } from './lowebutil';
-import provider from './provider';
-export default class qq extends provider {
+
+export default class qq {
   static htmlDecode(value) {
     const parser = new DOMParser();
     return parser.parseFromString(value, 'text/html').body.textContent;

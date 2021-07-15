@@ -3,9 +3,8 @@
 /* global getParameterByName */
 /* eslint-disable no-param-reassign */
 // eslint-disable-next-line no-unused-vars
-import provider from './provider';
 
-class xiami extends provider {
+export default class xiami {
   static show_playlist() {
     return {
       success: (fn) =>

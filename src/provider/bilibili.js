@@ -1,8 +1,7 @@
 import axios from 'axios';
 import { getParameterByName } from './lowebutil';
-import provider from './provider';
 
-export default class bilibili extends provider {
+export default class bilibili {
   static bi_convert_song(song_info) {
     const track = {
       id: `bitrack_${song_info.id}`,
