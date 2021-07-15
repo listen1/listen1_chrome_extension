@@ -1,33 +1,27 @@
-/* eslint-disable no-undef */
-/* eslint-disable no-unused-vars */
-/* global async getParameterByName isElectron */
 import axios from 'axios';
+import async from 'async';
 import { getParameterByName, cookieGet } from './lowebutil';
 
-export default class kuwo {
-  // Convert html code
-  static html_decode(str) {
-    let text = str;
-    const entities = [
-      ['amp', '&'],
-      ['apos', "'"],
-      ['#x27', "'"],
-      ['#x2F', '/'],
-      ['#39', "'"],
-      ['#47', '/'],
-      ['lt', '<'],
-      ['gt', '>'],
-      ['nbsp', ' '],
-      ['quot', '"']
-    ];
-
-    for (let i = 0, max = entities.length; i < max; i += 1) {
-      text = text.replace(new RegExp(`&${entities[i][0]};`, 'g'), entities[i][1]);
-    }
-
-    return text;
+function html_decode(str) {
+  let text = str;
+  const entities = [
+    ['amp', '&'],
+    ['apos', "'"],
+    ['#x27', "'"],
+    ['#x2F', '/'],
+    ['#39', "'"],
+    ['#47', '/'],
+    ['lt', '<'],
+    ['gt', '>'],
+    ['nbsp', ' '],
+    ['quot', '"']
+  ];
+  for (let i = 0, max = entities.length; i < max; i += 1) {
+    text = text.replace(new RegExp(`&${entities[i][0]};`, 'g'), entities[i][1]);
   }
-
+  return text;
+}
+export default class kuwo {
   // Fix single quote in json
   static fix_json(data) {
     return data.replace(/(')/g, '"');
@@ -60,10 +54,10 @@ export default class kuwo {
   static kw_convert_song2(item) {
     return {
       id: `kwtrack_${item.rid}`,
-      title: this.html_decode(item.name),
-      artist: this.html_decode(item.artist),
+      title: html_decode(item.name),
+      artist: html_decode(item.artist),
       artist_id: `kwartist_${item.artistid}`,
-      album: this.html_decode(item.album),
+      album: html_decode(item.album),
       album_id: `kwalbum_${item.albumid}`,
       source: 'kuwo',
       source_url: `https://www.kuwo.cn/play_detail/${item.rid}`,
@@ -157,6 +151,35 @@ export default class kuwo {
     kw_add_song_pic_in_track(track, params, callback);
   }
   */
+  static getToken(isRetry) {
+    let isRetryValue = true;
+    if (isRetry === undefined) {
+      isRetryValue = false;
+    } else {
+      isRetryValue = isRetry;
+    }
+    const domain = 'https://www.kuwo.cn';
+    const name = 'kw_token';
+    return new Promise((res, rej) => {
+      cookieGet(
+        {
+          url: domain,
+          name
+        },
+        async (cookie) => {
+          if (cookie == null) {
+            if (isRetryValue) {
+              res('');
+            }
+            await axios.get('https://www.kuwo.cn/');
+            res(this.getToken(true));
+          }
+          res(cookie.value);
+        }
+      );
+    });
+  }
+
   static kw_get_token(callback, isRetry) {
     let isRetryValue = true;
     if (isRetry === undefined) {
@@ -185,7 +208,26 @@ export default class kuwo {
       }
     );
   }
-
+  static async getCookie(url) {
+    const token = await this.getToken();
+    const response = await axios.get(url, {
+      headers: {
+        csrf: token
+      }
+    });
+    if (response.data.success === false) {
+      // token expire, refetch token and start get url
+      const token2 = await this.getToken();
+      const res = await axios.get(url, {
+        headers: {
+          csrf: token2
+        }
+      });
+      return res;
+    } else {
+      return response;
+    }
+  }
   static kw_cookie_get(url, callback) {
     this.kw_get_token((token) => {
       axios
@@ -219,9 +261,7 @@ export default class kuwo {
   }
 
   static kw_render_tracks(url, page, callback) {
-    const list_id = getParameterByName('list_id', url)
-      .split('_')
-      .pop();
+    const list_id = getParameterByName('list_id', url).split('_').pop();
     const playlist_type = getParameterByName('list_id', url).split('_')[0];
     let tracks_url = '';
     switch (playlist_type) {
@@ -243,7 +283,7 @@ export default class kuwo {
     });
   }
 
-  static search(url) {
+  static async search(url) {
     // eslint-disable-line no-unused-vars
     const keyword = getParameterByName('keywords', url);
     const curpage = getParameterByName('curpage', url);
@@ -260,41 +300,36 @@ export default class kuwo {
         break;
     }
     const target_url = `https://www.kuwo.cn/api/www/search/${api}?key=${keyword}&pn=${curpage}&rn=20`;
+    const response = await this.getCookie(target_url);
+    let result = [];
+    let total = 0;
+    if (response === undefined) {
+      return {
+        result,
+        total,
+        type: searchType
+      };
+    }
+    if (searchType === '0' && response.data.data !== undefined) {
+      result = response.data.data.list.map((item) => this.kw_convert_song2(item));
+      total = response.data.data.total;
+    } else if (searchType === '1' && response.data.data !== undefined) {
+      result = response.data.data.list.map((item) => ({
+        id: `kwplaylist_${item.id}`,
+        title: html_decode(item.name),
+        source: 'kuwo',
+        source_url: `https://www.kuwo.cn/playlist_detail/${item.id}`,
+        img_url: item.img,
+        url: `kwplaylist_${item.id}`,
+        author: html_decode(item.uname),
+        count: item.total
+      }));
+      total = response.data.data.total;
+    }
     return {
-      success: (fn) => {
-        this.kw_cookie_get(target_url, (response) => {
-          let result = [];
-          let total = 0;
-          if (response === undefined) {
-            return fn({
-              result,
-              total,
-              type: searchType
-            });
-          }
-          if (searchType === '0' && response.data.data !== undefined) {
-            result = response.data.data.list.map((item) => this.kw_convert_song2(item));
-            total = response.data.data.total;
-          } else if (searchType === '1' && response.data.data !== undefined) {
-            result = response.data.data.list.map((item) => ({
-              id: `kwplaylist_${item.id}`,
-              title: this.html_decode(item.name),
-              source: 'kuwo',
-              source_url: `https://www.kuwo.cn/playlist_detail/${item.id}`,
-              img_url: item.img,
-              url: `kwplaylist_${item.id}`,
-              author: this.html_decode(item.uname),
-              count: item.total
-            }));
-            total = response.data.data.total;
-          }
-          return fn({
-            result,
-            total,
-            type: searchType
-          });
-        });
-      }
+      result,
+      total,
+      type: searchType
     };
   }
 
@@ -401,9 +436,7 @@ export default class kuwo {
 
   static kw_artist(url) {
     // eslint-disable-line no-unused-vars
-    const artist_id = getParameterByName('list_id', url)
-      .split('_')
-      .pop();
+    const artist_id = getParameterByName('list_id', url).split('_').pop();
     return {
       success: (fn) => {
         let target_url = `https://www.kuwo.cn/api/www/artist/artist?artistid=${artist_id}`;
@@ -412,7 +445,7 @@ export default class kuwo {
           // data = JSON.parse(fix_json(data));
           const info = {
             cover_img_url: data.pic300,
-            title: this.html_decode(data.name),
+            title: html_decode(data.name),
             id: `kwartist_${data.id}`,
             source_url: `https://www.kuwo.cn/singer_detail/${data.id}`
           };
@@ -447,9 +480,7 @@ export default class kuwo {
 
   static kw_album(url) {
     // eslint-disable-line no-unused-vars
-    const album_id = getParameterByName('list_id', url)
-      .split('_')
-      .pop();
+    const album_id = getParameterByName('list_id', url).split('_').pop();
     return {
       success: (fn) => {
         const target_url =
@@ -460,7 +491,7 @@ export default class kuwo {
 
           const info = {
             cover_img_url: data.hts_img.replace('/120/', '/400/'),
-            title: this.html_decode(data.name),
+            title: html_decode(data.name),
             id: `kwalbum_${data.albumid}`,
             source_url: `https://www.kuwo.cn/album_detail/${data.albumid}`
           };
@@ -575,9 +606,7 @@ export default class kuwo {
 
   static kw_get_playlist(url) {
     // eslint-disable-line no-unused-vars
-    const list_id = getParameterByName('list_id', url)
-      .split('_')
-      .pop();
+    const list_id = getParameterByName('list_id', url).split('_').pop();
     const target_url =
       'https://nplserver.kuwo.cn/pl.svc?' + 'op=getlistinfo&pn=0&rn=0&encode=utf-8&keyset=pl2012&pcmp4=1' + `&pid=${list_id}&vipver=MUSIC_9.0.2.0_W1&newver=1`;
     // https://www.kuwo.cn/api/www/playlist/playListInfo?pid=3134372426&pn=1&rn=30

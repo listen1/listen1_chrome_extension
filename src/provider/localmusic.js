@@ -1,23 +1,24 @@
-/* eslint-disable no-param-reassign */
-/* eslint-disable no-unused-vars */
+import { getParameterByName } from './lowebutil';
+
 /* global getParameterByName */
+
 const defaultLocalMusicPlaylist = {
   tracks: [],
   info: {
     id: 'lmplaylist_reserve',
     cover_img_url: 'images/mycover.jpg',
     title: '本地音乐',
-    source_url: '',
-  },
+    source_url: ''
+  }
 };
 
-class localmusic {
+export default class localmusic{
   static show_playlist(url, hm) {
     return {
       success: (fn) =>
         fn({
-          result: [],
-        }),
+          result: []
+        })
     };
   }
 
@@ -31,7 +32,7 @@ class localmusic {
           playlist = defaultLocalMusicPlaylist;
         }
         fn(playlist);
-      },
+      }
     };
   }
 
@@ -50,7 +51,7 @@ class localmusic {
           playlist.tracks = playlist.tracks.filter((tr) => tr.album === album);
         }
         fn(playlist);
-      },
+      }
     };
   }
 
@@ -66,12 +67,10 @@ class localmusic {
           playlist.info.title = artist;
         } else {
           playlist.info.title = artist;
-          playlist.tracks = playlist.tracks.filter(
-            (tr) => tr.artist === artist
-          );
+          playlist.tracks = playlist.tracks.filter((tr) => tr.artist === artist);
         }
         fn(playlist);
-      },
+      }
     };
   }
 
@@ -83,15 +82,12 @@ class localmusic {
     success(sound);
   }
 
-  static search(url) {
+  static async search(url) {
     const searchType = getParameterByName('type', url);
     return {
-      success: (fn) =>
-        fn({
-          result: [],
-          total: 0,
-          type: searchType,
-        }),
+      result: [],
+      total: 0,
+      type: searchType
     };
   }
 
@@ -100,8 +96,8 @@ class localmusic {
       success: (fn) =>
         fn({
           lyric: '',
-          tlyric: '',
-        }),
+          tlyric: ''
+        })
     };
   }
 
@@ -117,13 +113,11 @@ class localmusic {
     tracks.forEach((tr) => {
       tracksIdSet[tr.id] = true;
     });
-    playlist.tracks = tracks.concat(
-      playlist.tracks.filter((tr) => tracksIdSet[tr.id] !== true)
-    );
+    playlist.tracks = tracks.concat(playlist.tracks.filter((tr) => tracksIdSet[tr.id] !== true));
     localStorage.setObject(list_id, playlist);
 
     return {
-      success: (fn) => fn({ list_id, playlist }),
+      success: (fn) => fn({ list_id, playlist })
     };
   }
 
@@ -132,7 +126,7 @@ class localmusic {
     return {
       success: (fn) => {
         fn(result);
-      },
+      }
     };
   }
 
@@ -161,13 +155,13 @@ class localmusic {
 
     // eslint-disable-next-line consistent-return
     return {
-      success: (fn) => fn(),
+      success: (fn) => fn()
     };
   }
 
   static get_playlist_filters() {
     return {
-      success: (fn) => fn({ recommend: [], all: [] }),
+      success: (fn) => fn({ recommend: [], all: [] })
     };
   }
 

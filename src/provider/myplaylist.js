@@ -1,5 +1,4 @@
-/* eslint-disable no-unused-vars */
-/* global getParameterByName */
+import { getParameterByName } from './lowebutil';
 const myplaylistFactory = () => {
   function array_move(arr, old_index, new_index) {
     // https://stackoverflow.com/questions/5306680/move-an-array-element-from-one-array-position-to-another
@@ -14,11 +13,11 @@ const myplaylistFactory = () => {
     return arr; // for testing
   }
   function getPlaylistObjectKey(playlist_type) {
-    let key = "";
-    if (playlist_type === "my") {
-      key = "playerlists";
-    } else if (playlist_type === "favorite") {
-      key = "favoriteplayerlists";
+    let key = '';
+    if (playlist_type === 'my') {
+      key = 'playerlists';
+    } else if (playlist_type === 'favorite') {
+      key = 'favoriteplayerlists';
     }
     return key;
   }
@@ -26,7 +25,7 @@ const myplaylistFactory = () => {
     return {
       success(fn) {
         const key = getPlaylistObjectKey(playlist_type);
-        if (key === "") {
+        if (key === '') {
           return fn({ result: [] });
         }
         let playlists = localStorage.getObject(key);
@@ -45,12 +44,12 @@ const myplaylistFactory = () => {
           return res;
         }, []);
         return fn({ result });
-      },
+      }
     };
   }
 
   function get_myplaylist(url) {
-    const list_id = getParameterByName("list_id", url);
+    const list_id = getParameterByName('list_id', url);
     return {
       success(fn) {
         const playlist = localStorage.getObject(list_id);
@@ -62,7 +61,7 @@ const myplaylistFactory = () => {
           });
         }
         fn(playlist);
-      },
+      }
     };
   }
 
@@ -75,14 +74,9 @@ const myplaylistFactory = () => {
     return `${s4() + s4()}-${s4()}-${s4()}-${s4()}-${s4()}${s4()}${s4()}`;
   }
 
-  function insert_myplaylist_to_myplaylists(
-    playlist_type,
-    playlist_id,
-    to_playlist_id,
-    direction
-  ) {
+  function insert_myplaylist_to_myplaylists(playlist_type, playlist_id, to_playlist_id, direction) {
     const key = getPlaylistObjectKey(playlist_type);
-    if (key === "") {
+    if (key === '') {
       return [];
     }
     const playlists = localStorage.getObject(key);
@@ -95,7 +89,7 @@ const myplaylistFactory = () => {
     if (insertIndex > index) {
       insertIndex -= 1;
     }
-    const offset = direction === "top" ? 0 : 1;
+    const offset = direction === 'top' ? 0 : 1;
 
     array_move(playlists, index, insertIndex + offset);
 
@@ -106,7 +100,7 @@ const myplaylistFactory = () => {
   const save_myplaylist = (playlist_type, playlistObj) => {
     const playlist = playlistObj;
     const key = getPlaylistObjectKey(playlist_type);
-    if (key === "") {
+    if (key === '') {
       return;
     }
     let playlists = localStorage.getObject(key);
@@ -114,12 +108,12 @@ const myplaylistFactory = () => {
       playlists = [];
     }
     // update listid
-    let playlist_id = "";
-    if (playlist_type === "my") {
+    let playlist_id = '';
+    if (playlist_type === 'my') {
       playlist_id = `myplaylist_${guid()}`;
       playlist.info.id = playlist_id;
       playlist.is_mine = 1; // eslint-disable-line no-param-reassign
-    } else if (playlist_type === "favorite") {
+    } else if (playlist_type === 'favorite') {
       playlist_id = playlist.info.id;
       playlist.is_fav = 1;
       // remove all tracks info, cause favorite playlist always load latest
@@ -133,7 +127,7 @@ const myplaylistFactory = () => {
 
   const remove_myplaylist = (playlist_type, playlist_id) => {
     const key = getPlaylistObjectKey(playlist_type);
-    if (key === "") {
+    if (key === '') {
       return;
     }
     const playlists = localStorage.getObject(key);
@@ -186,7 +180,7 @@ const myplaylistFactory = () => {
     if (insertIndex > index) {
       insertIndex -= 1;
     }
-    const offset = direction === "top" ? 0 : 1;
+    const offset = direction === 'top' ? 0 : 1;
     array_move(playlist.tracks, index, insertIndex + offset);
     localStorage.setObject(playlist_id, playlist);
     return playlist;
@@ -206,10 +200,10 @@ const myplaylistFactory = () => {
     const playlist = {};
 
     const info = {
-      cover_img_url: "images/mycover.jpg",
+      cover_img_url: 'images/mycover.jpg',
       title: playlist_title,
-      id: "",
-      source_url: "",
+      id: '',
+      source_url: ''
     };
 
     playlist.is_mine = 1;
@@ -222,7 +216,7 @@ const myplaylistFactory = () => {
     }
 
     // notice: create only used by my playlist, favorite created by clone interface
-    save_myplaylist("my", playlist);
+    save_myplaylist('my', playlist);
   }
 
   function edit_myplaylist(playlist_id, title, cover_img_url) {
@@ -237,7 +231,7 @@ const myplaylistFactory = () => {
 
   function myplaylist_containers(playlist_type, list_id) {
     const key = getPlaylistObjectKey(playlist_type);
-    if (key === "") {
+    if (key === '') {
       return false;
     }
     const playlist = localStorage.getObject(list_id);
@@ -255,7 +249,7 @@ const myplaylistFactory = () => {
     edit_myplaylist,
     myplaylist_containers,
     insert_track_to_myplaylist,
-    insert_myplaylist_to_myplaylists,
+    insert_myplaylist_to_myplaylists
   };
 };
 
