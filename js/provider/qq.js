@@ -140,8 +140,10 @@ class qq {
   static get_periods(topid) {
     const periodUrl = 'https://c.y.qq.com/node/pc/wk_v15/top.html';
     const regExps = {
-      periodList: /<i class="play_cover__btn c_tx_link js_icon_play" data-listkey=".+?" data-listname=".+?" data-tid=".+?" data-date=".+?" .+?<\/i>/g,
-      period: /data-listname="(.+?)" data-tid=".*?\/(.+?)" data-date="(.+?)" .+?<\/i>/,
+      periodList:
+        /<i class="play_cover__btn c_tx_link js_icon_play" data-listkey=".+?" data-listname=".+?" data-tid=".+?" data-date=".+?" .+?<\/i>/g,
+      period:
+        /data-listname="(.+?)" data-tid=".*?\/(.+?)" data-date="(.+?)" .+?<\/i>/,
     };
     const periods = {};
     return axios.get(periodUrl).then((response) => {
@@ -315,7 +317,7 @@ class qq {
     switch (searchType) {
       case '0':
         target_url =
-          'https://i.y.qq.com/s.music/fcgi-bin/search_for_qq_cp?' +
+          'https://c.y.qq.com/soso/fcgi-bin/client_search_cp?' +
           'g_tk=938407465&uin=0&format=json&inCharset=utf-8' +
           '&outCharset=utf-8&notice=0&platform=h5&needNewCode=1' +
           `&w=${keyword}&zhidaqu=1&catZhida=1` +
@@ -515,9 +517,10 @@ class qq {
             id: `qqplaylist_${playlist_id}`,
           };
         }
-        match = /\/\/y.qq.com\/n\/m\/detail\/taoge\/index.html\?id=([0-9]+)/.exec(
-          url
-        );
+        match =
+          /\/\/y.qq.com\/n\/m\/detail\/taoge\/index.html\?id=([0-9]+)/.exec(
+            url
+          );
         if (match != null) {
           const playlist_id = match[1];
           result = {
