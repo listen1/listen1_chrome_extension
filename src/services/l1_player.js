@@ -1,6 +1,5 @@
-/* eslint-disable no-param-reassign */
-import { getPlayer, addPlayerListener, getPlayerAsync } from '@/services/bridge';
-import { getLocalStorageValue } from '@/provider/lowebutil';
+import { getPlayer, addPlayerListener, getPlayerAsync } from './bridge';
+import { getLocalStorageValue } from '../provider/lowebutil';
 
 const mode = getLocalStorageValue('enable_stop_when_close', true) ? 'front' : 'background';
 

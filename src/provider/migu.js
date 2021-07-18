@@ -1,7 +1,3 @@
-/* eslint-disable consistent-return */
-/* eslint-disable no-unused-vars */
-/* eslint-disable no-use-before-define */
-/* global getParameterByName cookieRemove async forge */
 import axios from 'axios';
 import { getParameterByName, cookieGet } from './lowebutil';
 
@@ -27,9 +23,7 @@ export default class migu {
   }
 
   static mg_render_tracks(url, page, callback) {
-    const list_id = getParameterByName('list_id', url)
-      .split('_')
-      .pop();
+    const list_id = getParameterByName('list_id', url).split('_').pop();
     const playlist_type = getParameterByName('list_id', url).split('_')[0];
     let tracks_url = '';
     switch (playlist_type) {
@@ -123,8 +117,9 @@ export default class migu {
     if (!filterId) {
       target_url = `https://app.c.nf.migu.cn/MIGUM2.0/v2.0/content/getMusicData.do?count=${pageSize}&start=${offset / pageSize + 1}&templateVersion=5&type=1`;
     } else {
-      target_url = `https://app.c.nf.migu.cn/MIGUM3.0/v1.0/template/musiclistplaza-listbytag?pageNumber=${offset / pageSize +
-        1}&tagId=${filterId}&templateVersion=1`;
+      target_url = `https://app.c.nf.migu.cn/MIGUM3.0/v1.0/template/musiclistplaza-listbytag?pageNumber=${
+        offset / pageSize + 1
+      }&tagId=${filterId}&templateVersion=1`;
       // const target_url = `https://m.music.migu.cn/migu/remoting/playlist_bycolumnid_tag?playListType=2&type=1&columnId=15127315&tagId=&startIndex=${offset}`;
       // columnId=15127315为推荐，15127272为最新
     }
@@ -149,11 +144,7 @@ export default class migu {
   }
 
   static mg_toplist(url) {
-    const list_id = Number(
-      getParameterByName('list_id', url)
-        .split('_')
-        .pop()
-    );
+    const list_id = Number(getParameterByName('list_id', url).split('_').pop());
     return {
       success: (fn) => {
         const board_list = {
@@ -225,8 +216,7 @@ export default class migu {
           33683712: {
             name: '数字专辑畅销榜',
             url: '',
-            img:
-              'https://d.musicapp.migu.cn/prod/file-service/file-down/bcb5ddaf77828caee4eddc172edaa105/2297b53efa678bbc8a5b83064622c4c8/ebfe5bff9fd9981b5ae1c043f743bfb3'
+            img: 'https://d.musicapp.migu.cn/prod/file-service/file-down/bcb5ddaf77828caee4eddc172edaa105/2297b53efa678bbc8a5b83064622c4c8/ebfe5bff9fd9981b5ae1c043f743bfb3'
           },
           23217754: {
             name: 'MV榜',
@@ -353,9 +343,7 @@ export default class migu {
   }
 
   static mg_get_playlist(url) {
-    const list_id = getParameterByName('list_id', url)
-      .split('_')
-      .pop();
+    const list_id = getParameterByName('list_id', url).split('_').pop();
     return {
       success: (fn) => {
         const info_url = `https://app.c.nf.migu.cn/MIGUM2.0/v1.0/content/resourceinfo.do?needSimple=00&resourceType=2021&resourceId=${list_id}`;
@@ -385,9 +373,7 @@ export default class migu {
   }
 
   static mg_album(url) {
-    const album_id = getParameterByName('list_id', url)
-      .split('_')
-      .pop();
+    const album_id = getParameterByName('list_id', url).split('_').pop();
     return {
       success: (fn) => {
         const info_url = `https://app.c.nf.migu.cn/MIGUM2.0/v1.0/content/resourceinfo.do?needSimple=00&resourceType=2003&resourceId=${album_id}`;
@@ -418,9 +404,7 @@ export default class migu {
   }
 
   static mg_artist(url) {
-    const artist_id = getParameterByName('list_id', url)
-      .split('_')
-      .pop();
+    const artist_id = getParameterByName('list_id', url).split('_').pop();
     const offset = Number(getParameterByName('offset', url));
     const pageSize = 50;
     const page = offset / pageSize + 1;
@@ -554,7 +538,7 @@ export default class migu {
       });
   }
 
-  static search(url) {
+  static async search(url) {
     const keyword = getParameterByName('keywords', url);
     const curpage = getParameterByName('curpage', url);
     const searchType = getParameterByName('type', url);
@@ -589,20 +573,11 @@ export default class migu {
     // const target_url = `https://pd.musicapp.migu.cn/MIGUM3.0/v1.0/content/search_all.do?&isCopyright=0&isCorrect=0&text=${keyword}&pageNo=${curpage}&searchSwitch=${searchSwitch}`;
     // const target_url = `https://m.music.migu.cn/migu/remoting/scr_search_tag?rows=20&type=${type}&keyword=${keyword}'&pgc=${curpage}`;
 
-    const deviceId = forge.md5
-      .create()
-      .update(this.uuid().replace(/-/g, ''))
-      .digest()
-      .toHex()
-      .toLocaleUpperCase(); // 设备的UUID
+    const deviceId = forge.md5.create().update(this.uuid().replace(/-/g, '')).digest().toHex().toLocaleUpperCase(); // 设备的UUID
     const timestamp = new Date().getTime();
     const signature_md5 = '6cdc72a439cef99a3418d2a78aa28c73'; // app签名证书的md5
     const text = `${keyword + signature_md5}yyapp2d16148780a1dcc7408e06336b98cfd50${deviceId}${timestamp}`;
-    const sign = forge.md5
-      .create(text)
-      .update(forge.util.encodeUtf8(text))
-      .digest()
-      .toHex();
+    const sign = forge.md5.create(text).update(forge.util.encodeUtf8(text)).digest().toHex();
     const headers = {
       // android_id: 'db2cd8c4cdc1345f',
       appId: 'yyapp2',
@@ -629,45 +604,38 @@ export default class migu {
       uiVersion: 'A_music_3.3.0',
       version: '7.0.4'
     };
-    return {
-      success: (fn) => {
-        axios
-          .get(target_url, {
-            headers
-          })
-          .then((response) => {
-            const { data } = response;
-            let result = [];
-            let total = 0;
-            if (searchType === '0') {
-              if (data.songResultData.result) {
-                result = data.songResultData.result.map((item) => this.mg_convert_song(item));
-                total = data.songResultData.totalCount;
-              }
-            } else if (searchType === '1') {
-              if (data.songListResultData.result) {
-                result = data.songListResultData.result.map((item) => ({
-                  // result = data.songLists.map(item => ({
-                  id: `mgplaylist_${item.id}`,
-                  title: item.name,
-                  source: 'migu',
-                  source_url: `https://music.migu.cn/v3/music/playlist/${item.id}`,
-                  // img_url: item.img,
-                  img_url: item.musicListPicUrl,
-                  url: `mgplaylist_${item.id}`,
-                  author: item.userName,
-                  count: item.musicNum
-                }));
-                total = data.songListResultData.totalCount;
-              }
-            }
-            return fn({
-              result,
-              total,
-              type: searchType
-            });
-          });
+    const response = await axios.get(target_url, {
+      headers
+    });
+    const { data } = response;
+    let result = [];
+    let total = 0;
+    if (searchType === '0') {
+      if (data.songResultData.result) {
+        result = data.songResultData.result.map((item) => this.mg_convert_song(item));
+        total = data.songResultData.totalCount;
       }
+    } else if (searchType === '1') {
+      if (data.songListResultData.result) {
+        result = data.songListResultData.result.map((item) => ({
+          // result = data.songLists.map(item => ({
+          id: `mgplaylist_${item.id}`,
+          title: item.name,
+          source: 'migu',
+          source_url: `https://music.migu.cn/v3/music/playlist/${item.id}`,
+          // img_url: item.img,
+          img_url: item.musicListPicUrl,
+          url: `mgplaylist_${item.id}`,
+          author: item.userName,
+          count: item.musicNum
+        }));
+        total = data.songListResultData.totalCount;
+      }
+    }
+    return {
+      result,
+      total,
+      type: searchType
     };
   }
 
@@ -711,9 +679,7 @@ export default class migu {
             }
           );
         } else {
-          const song_id = getParameterByName('track_id', url)
-            .split('_')
-            .pop();
+          const song_id = getParameterByName('track_id', url).split('_').pop();
           const target_url = `https://music.migu.cn/v3/api/music/audioPlayer/getLyric?copyrightId=${song_id}`;
           axios.get(target_url).then((response) => {
             const data = this.mg_generate_translation(response.data.lyric, response.data.translatedLyric);

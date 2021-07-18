@@ -3,15 +3,14 @@
 /* global getParameterByName */
 /* eslint-disable no-param-reassign */
 // eslint-disable-next-line no-unused-vars
-import axios from "axios";
 
-class xiami {
+export default class xiami {
   static show_playlist() {
     return {
       success: (fn) =>
         fn({
-          result: [],
-        }),
+          result: []
+        })
     };
   }
 
@@ -22,73 +21,63 @@ class xiami {
   }
 
   static xm_get_playlist(url) {
-    const list_id = getParameterByName("list_id", url)
-      .split("_")
-      .pop();
+    const list_id = getParameterByName('list_id', url).split('_').pop();
     return {
       success: (fn) =>
         fn({
           tracks: [],
           info: {
-            cover_img_url: "",
-            title: "",
+            cover_img_url: '',
+            title: '',
             id: `xmplaylist_${list_id}`,
-            source_url: `https://www.xiami.com/collect/${list_id}`,
-          },
-        }),
+            source_url: `https://www.xiami.com/collect/${list_id}`
+          }
+        })
     };
   }
 
-  static xm_search(url) {
-    const searchType = getParameterByName("type", url);
-
+  static async search(url) {
+    const searchType = getParameterByName('type', url);
     return {
-      success: (fn) =>
-        fn({
-          result: [],
-          total: 0,
-          type: searchType,
-        }),
+      result: [],
+      total: 0,
+      type: searchType
     };
   }
 
   static xm_album(url) {
     return {
       success: (fn) => {
-        const album_id = getParameterByName("list_id", url)
-          .split("_")
-          .pop();
+        const album_id = getParameterByName('list_id', url).split('_').pop();
 
         return fn({
           tracks: [],
           info: {
-            cover_img_url: "",
+            cover_img_url: '',
             title: album_id,
             id: `xmalbum_${album_id}`,
-            source_url: `https://www.xiami.com/album/${album_id}`,
-          },
+            source_url: `https://www.xiami.com/album/${album_id}`
+          }
         });
-      },
+      }
     };
   }
 
   static xm_artist(url) {
     return {
       success: (fn) => {
-        const artist_id = getParameterByName("list_id", url)
-          .split("_")
-          .pop();
+        const artist_id = getParameterByName('list_id', url).split('_').pop();
 
         return fn({
           tracks: [],
           info: {
-            cover_img_url: "",
+            cover_img_url: '',
             title: artist_id,
             id: `xmartist_${artist_id}`,
-            source_url: `https://www.xiami.com/artist/${artist_id}`,
-          },
+            source_url: `https://www.xiami.com/artist/${artist_id}`
+          }
         });
-      },
+      }
     };
   }
 
@@ -96,9 +85,9 @@ class xiami {
     return {
       success: (fn) =>
         fn({
-          lyric: "",
-          tlyric: "",
-        }),
+          lyric: '',
+          tlyric: ''
+        })
     };
   }
 
@@ -107,18 +96,18 @@ class xiami {
     return {
       success: (fn) => {
         fn(result);
-      },
+      }
     };
   }
 
   static get_playlist(url) {
-    const list_id = getParameterByName("list_id", url).split("_")[0];
+    const list_id = getParameterByName('list_id', url).split('_')[0];
     switch (list_id) {
-      case "xmplaylist":
+      case 'xmplaylist':
         return this.xm_get_playlist(url);
-      case "xmalbum":
+      case 'xmalbum':
         return this.xm_album(url);
-      case "xmartist":
+      case 'xmartist':
         return this.xm_artist(url);
       default:
         return null;
@@ -127,15 +116,15 @@ class xiami {
 
   static get_playlist_filters() {
     return {
-      success: (fn) => fn({ recommend: [], all: [] }),
+      success: (fn) => fn({ recommend: [], all: [] })
     };
   }
 
   static get_user() {
     return {
       success: (fn) => {
-        fn({ status: "fail", data: {} });
-      },
+        fn({ status: 'fail', data: {} });
+      }
     };
   }
 
