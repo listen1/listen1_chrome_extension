@@ -11,7 +11,7 @@ export function getParameterByName(name, url) {
 }
 
 export function isElectron() {
-  return window && window.process && window.process.type;
+  return window && window.process && window.process.platform;
 }
 
 export function cookieGet(cookieRequest, callback) {

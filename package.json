@@ -10,9 +10,11 @@
   "dependencies": {
     "async": "^3.2.0",
     "axios": "^0.21.1",
-    "core-js": "^3.6.5",
+    "core-js": "^3.15.2",
     "feather-icons": "^4.28.0",
     "howler": "^2.2.3",
+    "node-forge": "^0.10.0",
+    "notyf": "^3.10.0",
     "prettier": "^2.3.2",
     "vue": "^3.1.4",
     "vue-feather": "^2.0.0-rc",
@@ -31,7 +33,7 @@
     "eslint": "^7.30.0",
     "eslint-plugin-vue": "7.12.1",
     "vue-cli-plugin-browser-extension": "^0.25.2",
-    "vue-eslint-parser": "^7.8.0"
+    "vue-eslint-parser": "^7.9.0"
   },
   "eslintConfig": {
     "parser": "vue-eslint-parser",
@@ -49,12 +51,11 @@
     },
     "rules": {
       "no-unused-vars": "off",
-      "no-undef":"off"
+      "no-undef": "off"
     }
   },
   "browserslist": [
-    "> 1%",
-    "last 2 versions",
-    "not dead"
+    "last 8 chrome versions",
+    "last 5 firefox versions"
   ]
 }

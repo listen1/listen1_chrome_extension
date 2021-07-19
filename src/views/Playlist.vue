@@ -140,7 +140,8 @@
 </template>
 
 <script>
-import MediaService from '@/services/MediaService';
+import notyf from "../services/notyf"
+import MediaService from '../services/MediaService';
 import { l1Player } from '@/services/l1_player';
 export default {
   data() {
@@ -158,7 +159,7 @@ export default {
   },
   mounted() {
     const { listId } = this.$route.params;
-    MediaService.getPlaylist(listId).success((data) => {
+    MediaService.getPlaylist(listId).then((data) => {
       if (data.status === '0') {
         notyf.info(data.reason);
         // this.popWindow();

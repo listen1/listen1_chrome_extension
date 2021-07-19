@@ -1,4 +1,4 @@
-import MediaService from '@/services/MediaService';
+import MediaService from '../../services/MediaService';
 import { isElectron, smoothScrollTo } from '@/provider/lowebutil';
 import { l1Player } from '@/services/l1_player';
 
@@ -193,12 +193,7 @@ export default {
     },
     playerListener({ commit, state, dispatch }, { mode, msg, sender, sendResponse }) {
       if (typeof msg.type === 'string' && msg.type.split(':')[0] === 'BG_PLAYER') {
-        switch (
-          msg.type
-            .split(':')
-            .slice(1)
-            .join('')
-        ) {
+        switch (msg.type.split(':').slice(1).join('')) {
           case 'READY': {
             break;
           }
@@ -318,8 +313,7 @@ export default {
             //   lastfm.sendNowPlaying(track.title, track.artist, () => {});
             // }
 
-            MediaService.getLyric(msg.data.id, msg.data.album_id, track.lyric_url, track.tlyric_url).success((res) => {
-              const { lyric, tlyric } = res;
+            MediaService.getLyric(msg.data.id, msg.data.album_id, track.lyric_url, track.tlyric_url).then(({ lyric, tlyric }) => {
               if (!lyric) {
                 return;
               }
