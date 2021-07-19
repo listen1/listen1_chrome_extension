@@ -29,13 +29,12 @@
     "48": "images/logo_48.png"
   },
   "background": {
-    "scripts": [
-      "js/background.js"
-    ],
+    "scripts": ["js/background.js"],
     "persistent": true
   },
   "browser_action": {
     "default_icon": "images/logo.png",
     "default_title": "__MSG_extName__"
-  }
+  },
+  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'"
 }
