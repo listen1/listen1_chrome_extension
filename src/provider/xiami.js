@@ -20,19 +20,16 @@ export default class xiami {
     failure(sound);
   }
 
-  static xm_get_playlist(url) {
+  static async xm_get_playlist(url) {
     const list_id = getParameterByName('list_id', url).split('_').pop();
     return {
-      success: (fn) =>
-        fn({
-          tracks: [],
-          info: {
-            cover_img_url: '',
-            title: '',
-            id: `xmplaylist_${list_id}`,
-            source_url: `https://www.xiami.com/collect/${list_id}`
-          }
-        })
+      tracks: [],
+      info: {
+        cover_img_url: '',
+        title: '',
+        id: `xmplaylist_${list_id}`,
+        source_url: `https://www.xiami.com/collect/${list_id}`
+      }
     };
   }
 
@@ -45,49 +42,37 @@ export default class xiami {
     };
   }
 
-  static xm_album(url) {
+  static async xm_album(url) {
+    const album_id = getParameterByName('list_id', url).split('_').pop();
     return {
-      success: (fn) => {
-        const album_id = getParameterByName('list_id', url).split('_').pop();
-
-        return fn({
-          tracks: [],
-          info: {
-            cover_img_url: '',
-            title: album_id,
-            id: `xmalbum_${album_id}`,
-            source_url: `https://www.xiami.com/album/${album_id}`
-          }
-        });
+      tracks: [],
+      info: {
+        cover_img_url: '',
+        title: album_id,
+        id: `xmalbum_${album_id}`,
+        source_url: `https://www.xiami.com/album/${album_id}`
       }
     };
   }
 
-  static xm_artist(url) {
-    return {
-      success: (fn) => {
-        const artist_id = getParameterByName('list_id', url).split('_').pop();
+  static async xm_artist(url) {
+    const artist_id = getParameterByName('list_id', url).split('_').pop();
 
-        return fn({
-          tracks: [],
-          info: {
-            cover_img_url: '',
-            title: artist_id,
-            id: `xmartist_${artist_id}`,
-            source_url: `https://www.xiami.com/artist/${artist_id}`
-          }
-        });
+    return {
+      tracks: [],
+      info: {
+        cover_img_url: '',
+        title: artist_id,
+        id: `xmartist_${artist_id}`,
+        source_url: `https://www.xiami.com/artist/${artist_id}`
       }
     };
   }
 
-  static lyric() {
+  static async lyric() {
     return {
-      success: (fn) =>
-        fn({
-          lyric: '',
-          tlyric: ''
-        })
+      lyric: '',
+      tlyric: ''
     };
   }
 

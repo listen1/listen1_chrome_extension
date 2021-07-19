@@ -8,7 +8,7 @@ audio player has 2 modes, but share same protocol: front and background.
 * background: audio player is in background page.
 
 */
-import { threadPlayer ,Player} from './player_thread';
+import { threadPlayer, Player } from './player_thread';
 
 function getFrontPlayer() {
   return threadPlayer;
@@ -44,7 +44,7 @@ export function getPlayerAsync(mode, callback) {
   }
   return undefined;
 }
-const frontPlayerListener = [];
+var frontPlayerListener = [];
 function addFrontPlayerListener(listener) {
   frontPlayerListener.push(listener);
 }

@@ -31,7 +31,7 @@
     "eslint": "^7.30.0",
     "eslint-plugin-vue": "7.12.1",
     "vue-cli-plugin-browser-extension": "^0.25.2",
-    "vue-eslint-parser": "^7.8.0"
+    "vue-eslint-parser": "^7.9.0"
   },
   "eslintConfig": {
     "parser": "vue-eslint-parser",
@@ -49,12 +49,11 @@
     },
     "rules": {
       "no-unused-vars": "off",
-      "no-undef":"off"
+      "no-undef": "off"
     }
   },
   "browserslist": [
-    "> 1%",
-    "last 2 versions",
-    "not dead"
+    "last 8 chrome versions",
+    "last 5 firefox versions"
   ]
 }

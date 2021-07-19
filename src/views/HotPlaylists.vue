@@ -54,7 +54,7 @@
 </template>
 
 <script>
-import MediaService from '@/services/MediaService';
+import MediaService from '../services/MediaService';
 import { l1Player } from '@/services/l1_player';
 
 export default {
@@ -112,7 +112,7 @@ export default {
       this.$router.push('/playlist/' + playlistId);
     },
     directplaylist(list_id) {
-      MediaService.getPlaylist(list_id).success((data) => {
+      MediaService.getPlaylist(list_id).then((data) => {
         this.songs = data.tracks;
         this.current_list_id = list_id;
         l1Player.setNewPlaylist(this.songs);

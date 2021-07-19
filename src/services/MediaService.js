@@ -151,7 +151,6 @@ function queryStringify(options) {
   return new URLSearchParams(query).toString();
 }
 
-// eslint-disable-next-line no-unused-vars
 const MediaService = {
   getSourceList() {
     return sourceList;
@@ -159,38 +158,29 @@ const MediaService = {
   //   getLoginProviders() {
   //     return PROVIDERS.filter((i) => !i.hidden && i.support_login);
   //   },
-  search(source, options) {
-    return new Promise((res, rej) => {
-      const url = `/search?${queryStringify(options)}`;
-      if (source === 'allmusic') {
-        // search all platform and merge result
-        const callbackArray = getAllSearchProviders().map((p) => (fn) => {
-          p.search(url).then((r) => {
-            fn(null, r);
-          });
-        });
-        async.parallel(callbackArray, (err, platformResultArray) => {
-          // TODO: nicer pager, playlist support
-          const result = {
-            result: [],
-            total: 1000,
-            type: platformResultArray[0].type
-          };
-          const maxLength = Math.max(...platformResultArray.map((elem) => elem.result.length));
-          for (let i = 0; i < maxLength; i += 1) {
-            platformResultArray.forEach((elem) => {
-              if (i < elem.result.length) {
-                result.result.push(elem.result[i]);
-              }
-            });
+  async search(source, options) {
+    const url = `/search?${queryStringify(options)}`;
+    if (source === 'allmusic') {
+      // search all platform and merge result
+      const platformResultArray = await Promise.all(getAllSearchProviders().map((p) => p.search(url)));
+      const result = {
+        result: [],
+        total: 1000,
+        type: platformResultArray[0].type
+      };
+      const maxLength = Math.max(...platformResultArray.map((elem) => elem.result.length));
+      for (let i = 0; i < maxLength; i += 1) {
+        platformResultArray.forEach((elem) => {
+          if (i < elem.result.length) {
+            result.result.push(elem.result[i]);
           }
-          res(result);
         });
-      } else {
-        const provider = getProviderByName(source);
-        res(provider.search(url));
       }
-    });
+      return result;
+    } else {
+      const provider = getProviderByName(source);
+      return provider.search(url);
+    }
   },
 
   //   showMyPlaylist() {
@@ -243,15 +233,7 @@ const MediaService = {
     //     success: (fn) => fn(hit),
     //   };
     // }
-    return {
-      success: (fn) =>
-        provider.get_playlist(url).success((playlist) => {
-          // if (provider !== myplaylist && provider !== localmusic) {
-          //   playlistCache.set(listId, playlist);
-          // }
-          fn(playlist);
-        })
-    };
+    return provider.get_playlist(url);
   },
 
   //   clonePlaylist(id, type) {
