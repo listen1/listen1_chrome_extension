@@ -88,8 +88,8 @@ class localmusic {
     const playlist = localStorage.getObject('lmplaylist_reserve');
     const track = playlist.tracks.find((item) => item.id === track_id);
     let lyric = '';
-    if (track.lyrics !== undefined && track.lyrics.length > 0) {
-      lyric = track.lyrics[0];
+    if (track.lyrics !== undefined) {
+      [lyric] = track.lyrics;
     }
     return {
       success: (fn) =>
