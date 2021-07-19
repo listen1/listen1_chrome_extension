@@ -1,6 +1,7 @@
 import axios from 'axios';
 import async from 'async';
-import { getParameterByName, cookieGet, async_process } from './lowebutil';
+import forge from 'node-forge';
+import { getParameterByName } from './lowebutil';
 
 export default class migu {
   static mg_convert_song(song) {
@@ -543,11 +544,11 @@ export default class migu {
     // const target_url = `https://pd.musicapp.migu.cn/MIGUM3.0/v1.0/content/search_all.do?&isCopyright=0&isCorrect=0&text=${keyword}&pageNo=${curpage}&searchSwitch=${searchSwitch}`;
     // const target_url = `https://m.music.migu.cn/migu/remoting/scr_search_tag?rows=20&type=${type}&keyword=${keyword}'&pgc=${curpage}`;
 
-    const deviceId = forge.md5.create().update(this.uuid().replace(/-/g, '')).digest().toHex().toLocaleUpperCase(); // 设备的UUID
+    const deviceId = forge.md.md5.create().update(this.uuid().replace(/-/g, '')).digest().toHex().toLocaleUpperCase(); // 设备的UUID
     const timestamp = new Date().getTime();
     const signature_md5 = '6cdc72a439cef99a3418d2a78aa28c73'; // app签名证书的md5
     const text = `${keyword + signature_md5}yyapp2d16148780a1dcc7408e06336b98cfd50${deviceId}${timestamp}`;
-    const sign = forge.md5.create(text).update(forge.util.encodeUtf8(text)).digest().toHex();
+    const sign = forge.md.md5.create(text).update(forge.util.encodeUtf8(text)).digest().toHex();
     const headers = {
       // android_id: 'db2cd8c4cdc1345f',
       appId: 'yyapp2',

@@ -140,6 +140,7 @@
 </template>
 
 <script>
+import notyf from "../services/notyf"
 import MediaService from '../services/MediaService';
 import { l1Player } from '@/services/l1_player';
 export default {

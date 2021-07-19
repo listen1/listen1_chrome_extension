@@ -10,6 +10,7 @@ module.exports = {
     }
   },
   chainWebpack: (config) => {
+    config.devtool("cheap-module-source-map")
     config.externals({
       ...config.get('externals'),
       forge: 'forge',

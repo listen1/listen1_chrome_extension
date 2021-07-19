@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { concat } from 'async';
+import forge from "node-forge"
 import { getParameterByName, cookieGet, cookieSet, cookieRemove } from './lowebutil';
 
 export default class netease {
@@ -56,7 +57,7 @@ export default class netease {
 
     const text = typeof object === 'object' ? JSON.stringify(object) : object;
     const message = `nobody${url}use${text}md5forencrypt`;
-    const digest = forge.md5.create().update(forge.util.encodeUtf8(message)).digest().toHex();
+    const digest = forge.md.md5.create().update(forge.util.encodeUtf8(message)).digest().toHex();
     const data = `${url}-36cd479b6b5-${text}-36cd479b6b5-${digest}`;
 
     return {
@@ -659,7 +660,7 @@ export default class netease {
 
       req_data = {
         username: email,
-        password: forge.md5.create().update(forge.util.encodeUtf8(password)).digest().toHex(),
+        password: forge.md.md5.create().update(forge.util.encodeUtf8(password)).digest().toHex(),
         rememberLogin: 'true'
       };
     } else if (loginType === 'phone') {
@@ -669,7 +670,7 @@ export default class netease {
       req_data = {
         phone,
         countrycode,
-        password: forge.md5.create().update(forge.util.encodeUtf8(password)).digest().toHex(),
+        password: forge.md.md5.create().update(forge.util.encodeUtf8(password)).digest().toHex(),
         rememberLogin: 'true'
       };
     }

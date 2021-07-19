@@ -13,7 +13,7 @@ axiosTH.interceptors.request.use(
     const q = new URLSearchParams(params);
     q.sort();
     const signStr = decodeURIComponent(`${q.toString()}0b50b02fd0d73a9c4c8c3a781c30845f`);
-    params.sign = forge.md5.create().update(forge.util.encodeUtf8(signStr)).digest().toHex();
+    params.sign = forge.md.md5.create().update(forge.util.encodeUtf8(signStr)).digest().toHex();
 
     return { ...config, params };
   },

@@ -687,7 +687,7 @@
 </template>
 
 <script>
-import '@/assets/css/notyf.min.css';
+import 'notyf/notyf.min.css';
 import '@/assets/css/hotkeys.css';
 import '@/assets/css/icon.css';
 import '@/assets/css/origin.css';
