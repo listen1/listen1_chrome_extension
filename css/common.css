@@ -1298,9 +1298,10 @@ svg.searchspinner {
 .footer .main-info .detail .playbar {
   width: 100%;
 }
-
+.footer .main-info .detail .playbar .playbar-clickable {
+  padding: 8px 10px;
+}
 .footer .main-info .detail .playbar .barbg {
-  margin: 8px 10px 0 10px;
   height: 3px;
   background: var(--footer-player-bar-background-color);
 }
@@ -1312,12 +1313,19 @@ svg.searchspinner {
 }
 
 .footer .main-info .detail .playbar .barbg .cur .btn {
-  background: #111111;
+  background: var(--footer-player-bar-cur-button-color);
   height: 8px;
   width: 2px;
   position: absolute;
   right: -2px;
   top: -5px;
+}
+
+.footer .main-info .detail .playbar .playbar-clickable:hover .barbg .cur .btn {
+  width: 10px;
+  height: 10px;
+  border-radius: 5px;
+  top: -3px;
 }
 
 .footer .menu-modal {

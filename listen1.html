@@ -1893,14 +1893,19 @@
                       <div class="total">{{ currentDuration }}</div>
                     </div>
                     <div class="playbar">
-                      <div
-                        class="barbg"
-                        id="progressbar"
-                        mode="play"
-                        draggable-bar=""
-                      >
-                        <div class="cur" ng-style="{width : myProgress + '%' }">
-                          <span class="btn"><i></i></span>
+                      <div class="playbar-clickable">
+                        <div
+                          class="barbg"
+                          id="progressbar"
+                          mode="play"
+                          draggable-bar=""
+                        >
+                          <div
+                            class="cur"
+                            ng-style="{width : myProgress + '%' }"
+                          >
+                            <span class="btn"><i></i></span>
+                          </div>
                         </div>
                       </div>
                     </div>
