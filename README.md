@@ -1,6 +1,6 @@
-# Listen 1 (Chrome Extension) V2.21.5
+# Listen 1 (Chrome Extension) V2.21.6
 
-（最后更新于 2021 年 05 月 02 日）
+（最后更新于 2021 年 07 月 21 日）
 
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE)
 
@@ -71,6 +71,18 @@ Listen1 诞生的初衷从不是和大公司的争夺版权利益，而是为了
 在这个关系项目生死存亡的时刻，我寻求项目因为 DMCA 被 github 关闭的援助。如果有对这个比较了解如何解决的人，或者你想对这个事情发表看法和建议，可以在[issue](https://github.com/listen1/listen1_chrome_extension/issues/113)留言，或者发送邮件到 githublisten1@gmail.com。我们会尽最大努力，来守护 Listen1，即使可能它即将成为历史。
 
 ## 更新日志
+
+`2021-07`
+
+修复：
+
+- 禁止图片拖动
+- 增加快捷键中放大缩小功能的描述
+- 修改 windows 用户的窗口控制按钮位置到右上角 (感谢 @mikelxk 的提交)
+- 升级 howler 库 (感谢 @mikelxk 的提交)
+- 修复 QQ 音乐无法搜索的问题
+- 修复 chrome 浏览器媒体控制中进度条拖动的问题 (感谢 @mikelxk 的提交)
+- 增加本地音乐的本地 lrc 歌词文件支持 (感谢 @mikelxk 的提交)
 
 `2021-04`
 

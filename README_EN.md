@@ -1,6 +1,6 @@
-# Listen 1 (Chrome Extension) V2.21.5
+# Listen 1 (Chrome Extension) V2.21.6
 
-（Last Update May 2nd, 2021)
+（Last Update July 21st, 2021)
 
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE)
 
@@ -47,7 +47,19 @@ Making your own playlist is also supported.
 
 ## Changelog
 
-`2021-04`
+`2021-07`
+
+Fix Bugs：
+
+- disable image drag
+- add shortcuts description for zoom in/out
+- move window control panel to top right for windows users (thanks @mikelxk)
+- upgrade howler lib (thanks @mikelxk)
+- fix QQ search problem
+- fix media center progress bar control for chrome users
+- add local lrc file support when import local music (thanks @mikelxk)
+
+  `2021-04`
 
 Features:
 
