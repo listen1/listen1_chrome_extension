@@ -29,6 +29,25 @@ export function cookieGet(cookieRequest, callback) {
     callback(cookie);
   });
 }
+export async function cookieGetPromise(cookieRequest) {
+  return new Promise((res, rej) => {
+    if (!isElectron()) {
+
+      chrome.cookies.get(cookieRequest, (cookie) => {
+        res(cookie);
+      });
+    } else {
+      const remote = require('electron').remote; // eslint-disable-line
+      remote.session.defaultSession.cookies.get(cookieRequest).then((cookieArray) => {
+        let cookie = null;
+        if (cookieArray.length > 0) {
+          [cookie] = cookieArray;
+        }
+        res(cookie);
+      });
+    }
+  });
+}
 
 export function cookieSet(cookie, callback) {
   if (!isElectron()) {

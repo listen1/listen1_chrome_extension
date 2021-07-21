@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { concat } from 'async';
-import forge from "node-forge"
-import { getParameterByName, cookieGet, cookieSet, cookieRemove } from './lowebutil';
+import forge from 'node-forge';
+import { getParameterByName, cookieSet, cookieRemove, cookieGetPromise } from './lowebutil';
 
 export default class netease {
   static _create_secret_key(size) {
@@ -65,34 +65,30 @@ export default class netease {
     };
   }
 
-  static ne_show_toplist(offset) {
+  static async ne_show_toplist(offset) {
     if (offset !== undefined && offset > 0) {
       return {
-        success: (fn) => fn({ result: [] })
+        result: []
       };
     }
     const url = 'https://music.163.com/weapi/toplist/detail';
     const data = this.weapi({});
-    return {
-      success: (fn) => {
-        axios.post(url, new URLSearchParams(data)).then((response) => {
-          const result = [];
-          response.data.list.forEach((item) => {
-            const playlist = {
-              cover_img_url: item.coverImgUrl,
-              id: `neplaylist_${item.id}`,
-              source_url: `https://music.163.com/#/playlist?id=${item.id}`,
-              title: item.name
-            };
-            result.push(playlist);
-          });
-          return fn({ result });
-        });
-      }
-    };
+
+    const response = await axios.post(url, new URLSearchParams(data));
+    const result = [];
+    response.data.list.forEach((item) => {
+      const playlist = {
+        cover_img_url: item.coverImgUrl,
+        id: `neplaylist_${item.id}`,
+        source_url: `https://music.163.com/#/playlist?id=${item.id}`,
+        title: item.name
+      };
+      result.push(playlist);
+    });
+    return { result };
   }
 
-  static show_playlist(url) {
+  static async show_playlist(url) {
     const order = 'hot';
     const offset = getParameterByName('offset', url);
     const filterId = getParameterByName('filter_id', url);
@@ -111,23 +107,17 @@ export default class netease {
     } else {
       target_url = `https://music.163.com/discover/playlist/?order=${order}${filter}`;
     }
+    const { data } = await axios.get(target_url);
 
+    const list_elements = Array.from(new DOMParser().parseFromString(data, 'text/html').getElementsByClassName('m-cvrlst')[0].children);
+    const result = list_elements.map((item) => ({
+      cover_img_url: item.getElementsByTagName('img')[0].src,
+      title: item.getElementsByTagName('div')[0].getElementsByTagName('a')[0].title,
+      id: `neplaylist_${getParameterByName('id', item.getElementsByTagName('div')[0].getElementsByTagName('a')[0].href)}`,
+      source_url: `https://music.163.com/#/playlist?id=${getParameterByName('id', item.getElementsByTagName('div')[0].getElementsByTagName('a')[0].href)}`
+    }));
     return {
-      success: (fn) => {
-        axios.get(target_url).then((response) => {
-          const { data } = response;
-          const list_elements = Array.from(new DOMParser().parseFromString(data, 'text/html').getElementsByClassName('m-cvrlst')[0].children);
-          const result = list_elements.map((item) => ({
-            cover_img_url: item.getElementsByTagName('img')[0].src,
-            title: item.getElementsByTagName('div')[0].getElementsByTagName('a')[0].title,
-            id: `neplaylist_${getParameterByName('id', item.getElementsByTagName('div')[0].getElementsByTagName('a')[0].href)}`,
-            source_url: `https://music.163.com/#/playlist?id=${getParameterByName('id', item.getElementsByTagName('div')[0].getElementsByTagName('a')[0].href)}`
-          }));
-          return fn({
-            result
-          });
-        });
-      }
+      result
     };
   }
 
@@ -135,45 +125,41 @@ export default class netease {
     const domain = 'https://music.163.com';
     const nuidName = '_ntes_nuid';
     const nnidName = '_ntes_nnid';
+    cookieGetPromise({
+      url: domain,
+      name: nuidName
+    }).then((cookie) => {
+      if (cookie == null) {
+        const nuidValue = this._create_secret_key(32);
+        const nnidValue = `${nuidValue},${new Date().getTime()}`;
+        // netease default cookie expire time: 100 years
+        const expire = (new Date().getTime() + 1e3 * 60 * 60 * 24 * 365 * 100) / 1000;
 
-    cookieGet(
-      {
-        url: domain,
-        name: nuidName
-      },
-      (cookie) => {
-        if (cookie == null) {
-          const nuidValue = this._create_secret_key(32);
-          const nnidValue = `${nuidValue},${new Date().getTime()}`;
-          // netease default cookie expire time: 100 years
-          const expire = (new Date().getTime() + 1e3 * 60 * 60 * 24 * 365 * 100) / 1000;
-
-          cookieSet(
-            {
-              url: domain,
-              name: nuidName,
-              value: nuidValue,
-              expirationDate: expire
-            },
-            () => {
-              cookieSet(
-                {
-                  url: domain,
-                  name: nnidName,
-                  value: nnidValue,
-                  expirationDate: expire
-                },
-                () => {
-                  callback(null);
-                }
-              );
-            }
-          );
-        } else {
-          callback(null);
-        }
+        cookieSet(
+          {
+            url: domain,
+            name: nuidName,
+            value: nuidValue,
+            expirationDate: expire
+          },
+          () => {
+            cookieSet(
+              {
+                url: domain,
+                name: nnidName,
+                value: nnidValue,
+                expirationDate: expire
+              },
+              () => {
+                callback(null);
+              }
+            );
+          }
+        );
+      } else {
+        callback(null);
       }
-    );
+    });
   }
 
   static ng_render_playlist_result_item(index, item, callback) {
@@ -451,7 +437,7 @@ export default class netease {
     return {
       tracks,
       info
-    }
+    };
   }
 
   static async lyric(url) {
@@ -532,7 +518,7 @@ export default class netease {
     }
   }
 
-  static get_playlist_filters() {
+  static async get_playlist_filters() {
     const recommend = [
       { id: '', name: '全部' },
       { id: 'toplist', name: '排行榜' },
@@ -643,11 +629,12 @@ export default class netease {
       }
     ];
     return {
-      success: (fn) => fn({ recommend, all })
+      recommend,
+      all
     };
   }
 
-  static login(url) {
+  static async login(url) {
     // use chrome extension to modify referer.
     let target_url = 'https://music.163.com/weapi/login';
     const loginType = getParameterByName('type', url);
@@ -687,37 +674,30 @@ export default class netease {
       },
       (cookie) => {}
     );
-    return {
-      success: (fn) => {
-        axios
-          .post(target_url, new URLSearchParams(encrypt_req_data))
-          .then((response) => {
-            const { data } = response;
-            const result = {
-              is_login: true,
-              user_id: data.account.id,
-              user_name: data.account.userName,
-              nickname: data.profile.nickname,
-              avatar: data.profile.avatarUrl,
-              platform: 'netease',
-              data
-            };
-            return fn({
-              status: 'success',
-              data: result
-            });
-          })
-          .catch(() =>
-            fn({
-              status: 'fail',
-              data: {}
-            })
-          );
-      }
-    };
+    try {
+      const { data } = await axios.post(target_url, new URLSearchParams(encrypt_req_data));
+      const result = {
+        is_login: true,
+        user_id: data.account.id,
+        user_name: data.account.userName,
+        nickname: data.profile.nickname,
+        avatar: data.profile.avatarUrl,
+        platform: 'netease',
+        data
+      };
+      return {
+        status: 'success',
+        data: result
+      };
+    } catch (e) {
+      return {
+        status: 'fail',
+        data: {}
+      };
+    }
   }
 
-  static get_user_playlist(url, playlistType) {
+  static async get_user_playlist(url, playlistType) {
     const user_id = getParameterByName('user_id', url);
     const target_url = 'https://music.163.com/api/user/playlist';
 
@@ -727,33 +707,27 @@ export default class netease {
       offset: 0,
       includeVideo: true
     };
-
+    const response = await axios.post(target_url, new URLSearchParams(req_data));
+    const playlists = [];
+    response.data.playlist.forEach((item) => {
+      if (playlistType === 'created' && item.subscribed !== false) {
+        return;
+      }
+      if (playlistType === 'favorite' && item.subscribed !== true) {
+        return;
+      }
+      const playlist = {
+        cover_img_url: item.coverImgUrl,
+        id: `neplaylist_${item.id}`,
+        source_url: `https://music.163.com/#/playlist?id=${item.id}`,
+        title: item.name
+      };
+      playlists.push(playlist);
+    });
     return {
-      success: (fn) => {
-        axios.post(target_url, new URLSearchParams(req_data)).then((response) => {
-          const playlists = [];
-          response.data.playlist.forEach((item) => {
-            if (playlistType === 'created' && item.subscribed !== false) {
-              return;
-            }
-            if (playlistType === 'favorite' && item.subscribed !== true) {
-              return;
-            }
-            const playlist = {
-              cover_img_url: item.coverImgUrl,
-              id: `neplaylist_${item.id}`,
-              source_url: `https://music.163.com/#/playlist?id=${item.id}`,
-              title: item.name
-            };
-            playlists.push(playlist);
-          });
-          return fn({
-            status: 'success',
-            data: {
-              playlists
-            }
-          });
-        });
+      status: 'success',
+      data: {
+        playlists
       }
     };
   }
@@ -766,7 +740,7 @@ export default class netease {
     return this.get_user_playlist(url, 'favorite');
   }
 
-  static get_recommend_playlist() {
+  static async get_recommend_playlist() {
     const target_url = 'https://music.163.com/weapi/personalized/playlist';
 
     const req_data = {
@@ -776,60 +750,48 @@ export default class netease {
     };
 
     const encrypt_req_data = this.weapi(req_data);
-
+    const response = await axios.post(target_url, new URLSearchParams(encrypt_req_data));
+    const playlists = [];
+    response.data.result.forEach((item) => {
+      const playlist = {
+        cover_img_url: item.picUrl,
+        id: `neplaylist_${item.id}`,
+        source_url: `https://music.163.com/#/playlist?id=${item.id}`,
+        title: item.name
+      };
+      playlists.push(playlist);
+    });
     return {
-      success: (fn) => {
-        axios.post(target_url, new URLSearchParams(encrypt_req_data)).then((response) => {
-          const playlists = [];
-          response.data.result.forEach((item) => {
-            const playlist = {
-              cover_img_url: item.picUrl,
-              id: `neplaylist_${item.id}`,
-              source_url: `https://music.163.com/#/playlist?id=${item.id}`,
-              title: item.name
-            };
-            playlists.push(playlist);
-          });
-          return fn({
-            status: 'success',
-            data: {
-              playlists
-            }
-          });
-        });
+      status: 'success',
+      data: {
+        playlists
       }
     };
   }
 
-  static get_user() {
+  static async get_user() {
     const url = `https://music.163.com/api/nuser/account/get`;
 
     const encrypt_req_data = this.weapi({});
+    const res = await axios.post(url, new URLSearchParams(encrypt_req_data));
+    let result = { is_login: false };
+    let status = 'fail';
+    if (res.data.account !== null) {
+      status = 'success';
+      const { data } = res;
+      result = {
+        is_login: true,
+        user_id: data.account.id,
+        user_name: data.account.userName,
+        nickname: data.profile.nickname,
+        avatar: data.profile.avatarUrl,
+        platform: 'netease',
+        data
+      };
+    }
     return {
-      success: (fn) => {
-        axios.post(url, new URLSearchParams(encrypt_req_data)).then((res) => {
-          let result = { is_login: false };
-          let status = 'fail';
-          if (res.data.account !== null) {
-            status = 'success';
-            const { data } = res;
-            result = {
-              is_login: true,
-              user_id: data.account.id,
-              user_name: data.account.userName,
-              nickname: data.profile.nickname,
-              avatar: data.profile.avatarUrl,
-              platform: 'netease',
-              data
-            };
-          }
-
-          return fn({
-            status,
-            data: result
-          });
-        });
-      }
+      status,
+      data: result
     };
   }
 

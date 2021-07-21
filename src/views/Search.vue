@@ -153,8 +153,8 @@
 
 <script>
 import { mapState } from 'vuex';
-import MediaService from '@/services/MediaService';
-import { l1Player } from '@/services/l1_player';
+import MediaService from '../services/MediaService';
+import { l1Player } from '../services/l1_player';
 
 export default {
   data() {

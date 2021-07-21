@@ -501,7 +501,7 @@ export default class kuwo {
           */
   }
 
-  static show_playlist(url) {
+  static async show_playlist(url) {
     const offset = Number(getParameterByName('offset', url));
 
     /* const id_available = {
@@ -563,24 +563,19 @@ export default class kuwo {
     tag歌单地址 https://www.kuwo.cn/api/pc/classify/playlist/getTagPlayList?pn=${offset / 25 + 1}&rn=25&id=37&httpsStatus=1
     id =华语:37,
     */
+    const { data } = (await axios.get(target_url)).data;
+
+    if (!data) {
+      return [];
+    }
+    const result = data.data.map((item) => ({
+      cover_img_url: item.img,
+      title: item.name,
+      id: `kwplaylist_${item.id}`,
+      source_url: `https://www.kuwo.cn/playlist_detail/${item.id}`
+    }));
     return {
-      success: (fn) => {
-        axios.get(target_url).then((response) => {
-          const { data } = response.data;
-          if (!data) {
-            return fn([]);
-          }
-          const result = data.data.map((item) => ({
-            cover_img_url: item.img,
-            title: item.name,
-            id: `kwplaylist_${item.id}`,
-            source_url: `https://www.kuwo.cn/playlist_detail/${item.id}`
-          }));
-          return fn({
-            result
-          });
-        });
-      }
+      result
     };
   }
 
@@ -667,18 +662,15 @@ export default class kuwo {
     }
   }
 
-  static get_playlist_filters() {
+  static async get_playlist_filters() {
     return {
-      success: (fn) => fn({ recommend: [], all: [] })
+      recommend: [],
+      all: []
     };
   }
 
-  static get_user() {
-    return {
-      success: (fn) => {
-        fn({ status: 'fail', data: {} });
-      }
-    };
+  static async get_user() {
+    return { status: 'fail', data: {} };
   }
 
   static get_login_url() {

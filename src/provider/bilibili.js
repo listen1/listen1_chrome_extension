@@ -17,28 +17,24 @@ export default class bilibili {
     return track;
   }
 
-  static show_playlist(url) {
+  static async show_playlist(url) {
     let offset = getParameterByName('offset', url);
     if (offset === undefined) {
       offset = 0;
     }
     const page = offset / 20 + 1;
     const target_url = `https://www.bilibili.com/audio/music-service-c/web/menu/hit?ps=20&pn=${page}`;
+
+    const response = await axios.get(target_url);
+    const { data } = response.data.data;
+    const result = data.map((item) => ({
+      cover_img_url: item.cover,
+      title: item.title,
+      id: `biplaylist_${item.menuId}`,
+      source_url: `https://www.bilibili.com/audio/am${item.menuId}`
+    }));
     return {
-      success: (fn) => {
-        axios.get(target_url).then((response) => {
-          const { data } = response.data.data;
-          const result = data.map((item) => ({
-            cover_img_url: item.cover,
-            title: item.title,
-            id: `biplaylist_${item.menuId}`,
-            source_url: `https://www.bilibili.com/audio/am${item.menuId}`
-          }));
-          return fn({
-            result
-          });
-        });
-      }
+      result
     };
   }
 
@@ -189,16 +185,15 @@ export default class bilibili {
     }
   }
 
-  static get_playlist_filters() {
+  static async get_playlist_filters() {
     return {
-      success: (fn) => fn({ recommend: [], all: [] })
+      recommend: [],
+      all: []
     };
   }
 
-  static get_user() {
-    return {
-      success: (fn) => fn({ status: 'fail', data: {} })
-    };
+  static async get_user() {
+    return { status: 'fail', data: {} };
   }
 
   static get_login_url() {

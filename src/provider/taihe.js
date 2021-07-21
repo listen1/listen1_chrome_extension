@@ -1,5 +1,6 @@
 import axios from 'axios';
 import async from 'async';
+import forge from 'node-forge';
 import { getParameterByName } from './lowebutil';
 
 const axiosTH = axios.create({
@@ -217,34 +218,24 @@ export default class taihe {
     };
   }
 
-  static show_playlist(url) {
+  static async show_playlist(url) {
     const offset = Number(getParameterByName('offset', url));
     const subCate = getParameterByName('filter_id', url);
-    return {
-      success: (fn) => {
-        axiosTH
-          .get('/tracklist/list', {
-            params: {
-              pageNo: offset / 25 + 1,
-              pageSize: 25,
-              subCateId: subCate
-            }
-          })
-          .then((response) => {
-            const { data } = response.data;
-            const result = data.result.map((item) => ({
-              cover_img_url: item.pic,
-              title: item.title,
-              id: `thplaylist_${item.id}`,
-              source_url: `https://music.taihe.com/songlist/${item.id}`
-            }));
-
-            return fn({
-              result
-            });
-          });
+    const { data } = await axiosTH.get('/tracklist/list', {
+      params: {
+        pageNo: offset / 25 + 1,
+        pageSize: 25,
+        subCateId: subCate
       }
-    };
+    });
+
+    const result = data.data.result.map((item) => ({
+      cover_img_url: item.pic,
+      title: item.title,
+      id: `thplaylist_${item.id}`,
+      source_url: `https://music.taihe.com/songlist/${item.id}`
+    }));
+    return { result };
   }
 
   static parse_url(url) {
@@ -294,31 +285,22 @@ export default class taihe {
     }
   }
 
-  static get_playlist_filters() {
+  static async get_playlist_filters() {
+    const res = await axiosTH.get('/tracklist/category');
     return {
-      success: (fn) => {
-        axiosTH.get('/tracklist/category').then((res) =>
-          fn({
-            recommend: [{ id: '', name: '推荐歌单' }],
-            all: res.data.data.map((sub) => ({
-              category: sub.categoryName,
-              filters: sub.subCate.map((i) => ({
-                id: i.id,
-                name: i.categoryName
-              }))
-            }))
-          })
-        );
-      }
+      recommend: [{ id: '', name: '推荐歌单' }],
+      all: res.data.data.map((sub) => ({
+        category: sub.categoryName,
+        filters: sub.subCate.map((i) => ({
+          id: i.id,
+          name: i.categoryName
+        }))
+      }))
     };
   }
 
   static get_user() {
-    return {
-      success: (fn) => {
-        fn({ status: 'fail', data: {} });
-      }
-    };
+    return { status: 'fail', data: {} };
   }
 
   static get_login_url() {
