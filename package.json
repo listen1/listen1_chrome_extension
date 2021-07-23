@@ -4,7 +4,7 @@
   "private": false,
   "scripts": {
     "dev": "vue-cli-service build --mode development --watch --no-clean",
-    "build": "vue-cli-service build",
+    "build": "vue-cli-service build --modern",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
@@ -16,21 +16,22 @@
     "node-forge": "^0.10.0",
     "notyf": "^3.10.0",
     "prettier": "^2.3.2",
-    "vue": "^3.1.4",
+    "vue": "^3.1.5",
     "vue-feather": "^2.0.0-rc",
     "vue-i18n": "^9.1.7",
     "vue-router": "^4.0.10",
     "vuex": "^4.0.2"
   },
   "devDependencies": {
-    "@types/chrome": "^0.0.146",
+    "@intlify/vue-i18n-loader": "^2.1.2",
+    "@types/chrome": "^0.0.148",
     "@types/wicg-mediasession": "^1.1.2",
     "@vue/cli-plugin-babel": "~4.5.0",
     "@vue/cli-plugin-eslint": "~4.5.0",
     "@vue/cli-plugin-router": "~4.5.0",
     "@vue/cli-service": "~4.5.0",
     "@vue/compiler-sfc": "^3.1.4",
-    "eslint": "^7.30.0",
+    "eslint": "^7.31.0",
     "eslint-plugin-vue": "7.12.1",
     "vue-cli-plugin-browser-extension": "^0.25.2",
     "vue-eslint-parser": "^7.9.0"
