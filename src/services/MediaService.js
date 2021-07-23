@@ -6,7 +6,6 @@ import kuwo from '../provider/kuwo';
 import bilibili from '../provider/bilibili';
 import migu from '../provider/migu';
 import taihe from '../provider/taihe';
-import async from 'async';
 import { getLocalStorageValue } from '../provider/lowebutil';
 // import localmusic from "@/provider/localmusic";
 // import myplaylist from '@/provider/myplaylist';

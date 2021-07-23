@@ -45,70 +45,66 @@ export default class migu {
     });
   }
 
-  static mg_show_toplist(offset) {
+  static async mg_show_toplist(offset) {
     if (offset !== undefined && offset > 0) {
       return {
-        success: (fn) => fn({ result: [] })
+        result: []
       };
     }
 
     const url = 'https://app.c.nf.migu.cn/MIGUM3.0/v1.0/template/rank-list/release?dataVersion=1616469593718&templateVersion=9';
-    return {
-      success: (fn) => {
-        axios.get(url).then((response) => {
-          const migu_board = response.data.data.contentItemList[4].itemList.map((item) => ({
-            cover_img_url: item.imageUrl,
-            title: item.displayLogId.param.rankName,
-            id: `mgtoplist_${item.displayLogId.param.rankId}`,
-            source_url: ''
-          }));
-          migu_board.splice(0, 2);
-          const global_board = response.data.data.contentItemList[7].itemList.map((item) => ({
-            cover_img_url: item.imageUrl,
-            title: item.displayLogId.param.rankName,
-            id: `mgtoplist_${item.displayLogId.param.rankId}`,
-            source_url: ''
-          }));
-          const chart_board = [
-            {
-              cover_img_url: 'https://cdnmusic.migu.cn/tycms_picture/20/02/36/20020512065402_360x360_2997.png',
-              title: '尖叫新歌榜',
-              id: 'mgtoplist_27553319',
-              source: ''
-            },
-            {
-              cover_img_url: 'https://cdnmusic.migu.cn/tycms_picture/20/04/99/200408163640868_360x360_6587.png',
-              title: '尖叫热歌榜',
-              id: 'mgtoplist_27186466',
-              source: ''
-            },
-            {
-              cover_img_url: 'https://cdnmusic.migu.cn/tycms_picture/20/04/99/200408163702795_360x360_1614.png',
-              title: '尖叫原创榜',
-              id: 'mgtoplist_27553408',
-              source: ''
-            },
-            {
-              cover_img_url: 'https://cdnmusic.migu.cn/tycms_picture/20/05/136/200515161733982_360x360_1523.png',
-              title: '音乐榜',
-              id: 'mgtoplist_1',
-              source: ''
-            },
-            {
-              cover_img_url: 'https://cdnmusic.migu.cn/tycms_picture/20/05/136/200515161848938_360x360_673.png',
-              title: '影视榜',
-              id: 'mgtoplist_2',
-              source: ''
-            }
-          ];
-          const result = chart_board.concat(migu_board, global_board);
-          return fn({ result });
-        });
+
+    const response = await axios.get(url);
+    const migu_board = response.data.data.contentItemList[4].itemList.map((item) => ({
+      cover_img_url: item.imageUrl,
+      title: item.displayLogId.param.rankName,
+      id: `mgtoplist_${item.displayLogId.param.rankId}`,
+      source_url: ''
+    }));
+    migu_board.splice(0, 2);
+    const global_board = response.data.data.contentItemList[7].itemList.map((item) => ({
+      cover_img_url: item.imageUrl,
+      title: item.displayLogId.param.rankName,
+      id: `mgtoplist_${item.displayLogId.param.rankId}`,
+      source_url: ''
+    }));
+    const chart_board = [
+      {
+        cover_img_url: 'https://cdnmusic.migu.cn/tycms_picture/20/02/36/20020512065402_360x360_2997.png',
+        title: '尖叫新歌榜',
+        id: 'mgtoplist_27553319',
+        source: ''
+      },
+      {
+        cover_img_url: 'https://cdnmusic.migu.cn/tycms_picture/20/04/99/200408163640868_360x360_6587.png',
+        title: '尖叫热歌榜',
+        id: 'mgtoplist_27186466',
+        source: ''
+      },
+      {
+        cover_img_url: 'https://cdnmusic.migu.cn/tycms_picture/20/04/99/200408163702795_360x360_1614.png',
+        title: '尖叫原创榜',
+        id: 'mgtoplist_27553408',
+        source: ''
+      },
+      {
+        cover_img_url: 'https://cdnmusic.migu.cn/tycms_picture/20/05/136/200515161733982_360x360_1523.png',
+        title: '音乐榜',
+        id: 'mgtoplist_1',
+        source: ''
+      },
+      {
+        cover_img_url: 'https://cdnmusic.migu.cn/tycms_picture/20/05/136/200515161848938_360x360_673.png',
+        title: '影视榜',
+        id: 'mgtoplist_2',
+        source: ''
       }
-    };
+    ];
+    const result = chart_board.concat(migu_board, global_board);
+    return { result };
   }
 
-  static show_playlist(url) {
+  static async show_playlist(url) {
     const offset = Number(getParameterByName('offset', url));
     const filterId = getParameterByName('filter_id', url);
     if (filterId === 'toplist') {
@@ -125,24 +121,20 @@ export default class migu {
       // const target_url = `https://m.music.migu.cn/migu/remoting/playlist_bycolumnid_tag?playListType=2&type=1&columnId=15127315&tagId=&startIndex=${offset}`;
       // columnId=15127315为推荐，15127272为最新
     }
-    return {
-      success: (fn) => {
-        axios.get(target_url).then((response) => {
-          const data = !filterId ? response.data.data.contentItemList[0].itemList : response.data.data.contentItemList.itemList;
-          const result = data.map((item) => {
-            const match = /id=([0-9]+)&/.exec(item.actionUrl);
-            const id = match ? match[1] : '';
-            return {
-              cover_img_url: item.imageUrl,
-              title: item.title,
-              id: `mgplaylist_${id}`,
-              source_url: `https://music.migu.cn/v3/music/playlist/${id}`
-            };
-          });
-          fn({ result });
-        });
-      }
-    };
+
+    const response = await axios.get(target_url);
+    const data = !filterId ? response.data.data.contentItemList[0].itemList : response.data.data.contentItemList.itemList;
+    const result = data.map((item) => {
+      const match = /id=([0-9]+)&/.exec(item.actionUrl);
+      const id = match ? match[1] : '';
+      return {
+        cover_img_url: item.imageUrl,
+        title: item.title,
+        id: `mgplaylist_${id}`,
+        source_url: `https://music.migu.cn/v3/music/playlist/${id}`
+      };
+    });
+    return { result };
   }
 
   static async mg_toplist(url) {
@@ -722,65 +714,54 @@ export default class migu {
     }
   }
 
-  static get_playlist_filters() {
+  static async get_playlist_filters() {
+    let target_url = 'https://app.c.nf.migu.cn/MIGUM3.0/v1.0/template/musiclistplaza-hottaglist/release';
+    const response = await axios.get(target_url);
+    const recommend = response.data.data.contentItemList.map((item) => ({
+      id: item.tagId,
+      name: item.tagName
+    }));
+    recommend.unshift({ id: '', name: '推荐' }, { id: 'toplist', name: '排行榜' });
+    target_url = 'https://app.c.nf.migu.cn/MIGUM3.0/v1.0/template/musiclistplaza-taglist/release?templateVersion=1';
+    const res = await axios.get(target_url);
+    const all = res.data.data.map((cate) => {
+      const result = { category: cate.header.title };
+      result.filters = cate.content.map((item) => ({
+        id: item.texts[1],
+        name: item.texts[0]
+      }));
+      return result;
+    });
     return {
-      success: (fn) => {
-        let target_url = 'https://app.c.nf.migu.cn/MIGUM3.0/v1.0/template/musiclistplaza-hottaglist/release';
-        axios.get(target_url).then((response) => {
-          const recommend = response.data.data.contentItemList.map((item) => ({
-            id: item.tagId,
-            name: item.tagName
-          }));
-          recommend.unshift({ id: '', name: '推荐' }, { id: 'toplist', name: '排行榜' });
-          target_url = 'https://app.c.nf.migu.cn/MIGUM3.0/v1.0/template/musiclistplaza-taglist/release?templateVersion=1';
-          axios.get(target_url).then((res) => {
-            const all = res.data.data.map((cate) => {
-              const result = { category: cate.header.title };
-              result.filters = cate.content.map((item) => ({
-                id: item.texts[1],
-                name: item.texts[0]
-              }));
-              return result;
-            });
-            return fn({
-              recommend,
-              all
-            });
-          });
-        });
-      }
+      recommend,
+      all
     };
   }
 
-  static get_user() {
+  static async get_user() {
     const ts = +new Date();
     const url = `https://music.migu.cn/v3/api/user/getUserInfo?_=${ts}`;
+    const res = await axios.get(url);
+    let result = { is_login: false };
+    let status = 'fail';
+
+    if (res.data.success) {
+      status = 'success';
+      const { data } = res;
+      result = {
+        is_login: true,
+        user_id: data.user.uid,
+        user_name: data.user.mobile,
+        nickname: data.user.nickname,
+        avatar: data.user.avatar.midAvatar,
+        platform: 'migu',
+        data
+      };
+    }
+
     return {
-      success: (fn) => {
-        axios.get(url).then((res) => {
-          let result = { is_login: false };
-          let status = 'fail';
-
-          if (res.data.success) {
-            status = 'success';
-            const { data } = res;
-            result = {
-              is_login: true,
-              user_id: data.user.uid,
-              user_name: data.user.mobile,
-              nickname: data.user.nickname,
-              avatar: data.user.avatar.midAvatar,
-              platform: 'migu',
-              data
-            };
-          }
-
-          return fn({
-            status,
-            data: result
-          });
-        });
-      }
+      status,
+      data: result
     };
   }
 

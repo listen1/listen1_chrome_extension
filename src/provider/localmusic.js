@@ -147,9 +147,10 @@ export default class localmusic {
     };
   }
 
-  static get_playlist_filters() {
+  static async get_playlist_filters() {
     return {
-      success: (fn) => fn({ recommend: [], all: [] })
+      recommend: [],
+      all: []
     };
   }
 

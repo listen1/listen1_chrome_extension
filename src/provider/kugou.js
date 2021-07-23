@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { parallel } from 'async';
 import { getParameterByName, async_process } from './lowebutil';
 
 export default class kugou {
@@ -26,19 +25,6 @@ export default class kugou {
     track.artist = singer_name;
     track.artist_id = `kgartist_${singer_id}`;
     return track;
-  }
-
-  static async_process_list(data_list, handler, handler_extra_param_list, callback) {
-    const fnDict = {};
-    data_list.forEach((item, index) => {
-      fnDict[index] = (cb) => handler(index, item, handler_extra_param_list, cb);
-    });
-    parallel(fnDict, (err, results) =>
-      callback(
-        null,
-        data_list.map((item, index) => results[index])
-      )
-    );
   }
 
   static kg_render_search_result_item(index, item, params, callback) {
@@ -293,29 +279,24 @@ export default class kugou {
     return { tracks, info };
   }
 
-  static show_playlist(url) {
+  static async show_playlist(url) {
     let offset = getParameterByName('offset', url);
     if (offset === undefined) {
       offset = 0;
     }
     // const page = offset / 30 + 1;
     const target_url = `${'http://m.kugou.com/plist/index&json=true&page='}${offset}`;
+
+    const { data } = await axios.get(target_url);
+    // const total = data.plist.total;
+    const result = data.plist.list.info.map((item) => ({
+      cover_img_url: item.imgurl ? item.imgurl.replace('{size}', '400') : '',
+      title: item.specialname,
+      id: `kgplaylist_${item.specialid}`,
+      source_url: 'https://www.kugou.com/yy/special/single/{size}.html'.replace('{size}', item.specialid)
+    }));
     return {
-      success: (fn) => {
-        axios.get(target_url).then((response) => {
-          const { data } = response;
-          // const total = data.plist.total;
-          const result = data.plist.list.info.map((item) => ({
-            cover_img_url: item.imgurl ? item.imgurl.replace('{size}', '400') : '',
-            title: item.specialname,
-            id: `kgplaylist_${item.specialid}`,
-            source_url: 'https://www.kugou.com/yy/special/single/{size}.html'.replace('{size}', item.specialid)
-          }));
-          return fn({
-            result
-          });
-        });
-      }
+      result
     };
   }
 
@@ -351,16 +332,15 @@ export default class kugou {
     }
   }
 
-  static get_playlist_filters() {
+  static async get_playlist_filters() {
     return {
-      success: (fn) => fn({ recommend: [], all: [] })
+      recommend: [],
+      all: []
     };
   }
 
-  static get_user() {
-    return {
-      success: (fn) => fn({ status: 'fail', data: {} })
-    };
+  static async get_user() {
+    return { status: 'fail', data: {} };
   }
 
   static get_login_url() {

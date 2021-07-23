@@ -96,13 +96,13 @@ export default {
     loadPlaylist: function () {
       const offset = 0;
       this.showMore = false;
-      MediaService.showPlaylistArray(this.tab, offset, this.currentFilterId).success((res) => {
+      MediaService.showPlaylistArray(this.tab, offset, this.currentFilterId).then((res) => {
         this.result = res.result;
         this.loading = false;
       });
 
       if (this.playlistFilters[this.tab] === undefined && this.allPlaylistFilters[this.tab] === undefined) {
-        MediaService.getPlaylistFilters(this.tab).success((res) => {
+        MediaService.getPlaylistFilters(this.tab).then((res) => {
           this.playlistFilters[this.tab] = res.recommend;
           this.allPlaylistFilters[this.tab] = res.all;
         });

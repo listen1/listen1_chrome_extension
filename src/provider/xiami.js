@@ -1,9 +1,3 @@
-/* eslint-disable radix */
-/* eslint-disable no-use-before-define */
-/* global getParameterByName */
-/* eslint-disable no-param-reassign */
-// eslint-disable-next-line no-unused-vars
-
 export default class xiami {
   static show_playlist() {
     return {
@@ -105,12 +99,8 @@ export default class xiami {
     };
   }
 
-  static get_user() {
-    return {
-      success: (fn) => {
-        fn({ status: 'fail', data: {} });
-      }
-    };
+  static async get_user() {
+    return { status: 'fail', data: {} };
   }
 
   static get_login_url() {

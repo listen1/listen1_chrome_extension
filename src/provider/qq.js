@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { getParameterByName, cookieRemove, cookieGet } from './lowebutil';
+import { getParameterByName, cookieRemove, cookieGetPromise } from './lowebutil';
 
 export default class qq {
   static htmlDecode(value) {
@@ -7,35 +7,30 @@ export default class qq {
     return parser.parseFromString(value, 'text/html').body.textContent;
   }
 
-  static qq_show_toplist(offset) {
+  static async qq_show_toplist(offset) {
     if (offset !== undefined && offset > 0) {
       return {
-        success: (fn) => fn({ result: [] })
+        result: []
       };
     }
     const url =
       'https://c.y.qq.com/v8/fcg-bin/fcg_myqq_toplist.fcg?g_tk=5381&inCharset=utf-8&outCharset=utf-8&notice=0&format=json&uin=0&needNewCode=1&platform=h5';
 
-    return {
-      success: (fn) => {
-        axios.get(url).then((response) => {
-          const result = [];
-          response.data.data.topList.forEach((item) => {
-            const playlist = {
-              cover_img_url: item.picUrl,
-              id: `qqtoplist_${item.id}`,
-              source_url: `https://y.qq.com/n/yqq/toplist/${item.id}.html`,
-              title: item.topTitle
-            };
-            result.push(playlist);
-          });
-          return fn({ result });
-        });
-      }
-    };
+    const response = await axios.get(url);
+    const result = [];
+    response.data.data.topList.forEach((item) => {
+      const playlist = {
+        cover_img_url: item.picUrl,
+        id: `qqtoplist_${item.id}`,
+        source_url: `https://y.qq.com/n/yqq/toplist/${item.id}.html`,
+        title: item.topTitle
+      };
+      result.push(playlist);
+    });
+    return { result };
   }
 
-  static show_playlist(url) {
+  static async show_playlist(url) {
     const offset = Number(getParameterByName('offset', url)) || 0;
     let filterId = getParameterByName('filter_id', url) || '';
     if (filterId === 'toplist') {
@@ -44,31 +39,22 @@ export default class qq {
     if (filterId === '') {
       filterId = '10000000';
     }
-
     const target_url =
       'https://c.y.qq.com/splcloud/fcgi-bin/fcg_get_diss_by_tag.fcg' +
       `?picmid=1&rnd=${Math.random()}&g_tk=732560869` +
       '&loginUin=0&hostUin=0&format=json&inCharset=utf8&outCharset=utf-8' +
       '&notice=0&platform=yqq.json&needNewCode=0' +
       `&categoryId=${filterId}&sortId=5&sin=${offset}&ein=${29 + offset}`;
+    const { data } = await axios.get(target_url);
+    const playlists = data.data.list.map((item) => ({
+      cover_img_url: item.imgurl,
+      title: this.htmlDecode(item.dissname),
+      id: `qqplaylist_${item.dissid}`,
+      source_url: `https://y.qq.com/n/ryqq/playlist/${item.dissid}`
+    }));
 
     return {
-      success: (fn) => {
-        axios.get(target_url).then((response) => {
-          const { data } = response;
-
-          const playlists = data.data.list.map((item) => ({
-            cover_img_url: item.imgurl,
-            title: this.htmlDecode(item.dissname),
-            id: `qqplaylist_${item.dissid}`,
-            source_url: `https://y.qq.com/n/ryqq/playlist/${item.dissid}`
-          }));
-
-          return fn({
-            result: playlists
-          });
-        });
-      }
+      result: playlists
     };
   }
 
@@ -137,29 +123,28 @@ export default class qq {
     )}`;
   }
 
-  static get_periods(topid) {
+  static async get_periods(topid) {
     const periodUrl = 'https://c.y.qq.com/node/pc/wk_v15/top.html';
     const regExps = {
       periodList: /<i class="play_cover__btn c_tx_link js_icon_play" data-listkey=".+?" data-listname=".+?" data-tid=".+?" data-date=".+?" .+?<\/i>/g,
       period: /data-listname="(.+?)" data-tid=".*?\/(.+?)" data-date="(.+?)" .+?<\/i>/
     };
     const periods = {};
-    return axios.get(periodUrl).then((response) => {
-      const html = response.data;
-      const pl = html.match(regExps.periodList);
-      if (!pl) return Promise.reject();
-      pl.forEach((p) => {
-        const pr = p.match(regExps.period);
-        if (!pr) return;
-        periods[pr[2]] = {
-          name: pr[1],
-          id: pr[2],
-          period: pr[3]
-        };
-      });
-      const info = periods[topid];
-      return info && info.period;
+    const response = await axios.get(periodUrl);
+    const html = response.data;
+    const pl = html.match(regExps.periodList);
+    if (!pl) return Promise.reject();
+    pl.forEach((p) => {
+      const pr = p.match(regExps.period);
+      if (!pr) return;
+      periods[pr[2]] = {
+        name: pr[1],
+        id: pr[2],
+        period: pr[3]
+      };
     });
+    const info = periods[topid];
+    return info && info.period;
   }
 
   static async qq_toplist(url) {
@@ -505,43 +490,36 @@ export default class qq {
     }
   }
 
-  static get_playlist_filters() {
+  static async get_playlist_filters() {
     const target_url =
       'https://c.y.qq.com/splcloud/fcgi-bin/fcg_get_diss_tag_conf.fcg' +
       `?picmid=1&rnd=${Math.random()}&g_tk=732560869` +
       '&loginUin=0&hostUin=0&format=json&inCharset=utf8&outCharset=utf-8' +
       '&notice=0&platform=yqq.json&needNewCode=0';
-
-    return {
-      success: (fn) => {
-        axios.get(target_url).then((response) => {
-          const { data } = response;
-          const all = [];
-          data.data.categories.forEach((cate) => {
-            const result = { category: cate.categoryGroupName, filters: [] };
-            if (cate.usable === 1) {
-              cate.items.forEach((item) => {
-                result.filters.push({
-                  id: item.categoryId,
-                  name: this.htmlDecode(item.categoryName)
-                });
-              });
-              all.push(result);
-            }
-          });
-          const recommendLimit = 8;
-          const recommend = [{ id: '', name: '全部' }, { id: 'toplist', name: '排行榜' }, ...all[1].filters.slice(0, recommendLimit)];
-
-          return fn({
-            recommend,
-            all
+    const { data } = await axios.get(target_url);
+    const all = [];
+    data.data.categories.forEach((cate) => {
+      const result = { category: cate.categoryGroupName, filters: [] };
+      if (cate.usable === 1) {
+        cate.items.forEach((item) => {
+          result.filters.push({
+            id: item.categoryId,
+            name: this.htmlDecode(item.categoryName)
           });
         });
+        all.push(result);
       }
+    });
+    const recommendLimit = 8;
+    const recommend = [{ id: '', name: '全部' }, { id: 'toplist', name: '排行榜' }, ...all[1].filters.slice(0, recommendLimit)];
+
+    return {
+      recommend,
+      all
     };
   }
 
-  static get_user_by_uin(uin, callback) {
+  static async get_user_by_uin(uin) {
     const infoUrl = `https://u.y.qq.com/cgi-bin/musicu.fcg?format=json&&loginUin=${uin}&hostUin=0inCharset=utf8&outCharset=utf-8&platform=yqq.json&needNewCode=0&data=${encodeURIComponent(
       JSON.stringify({
         comm: { ct: 24, cv: 0 },
@@ -558,70 +536,63 @@ export default class qq {
       })
     )}`;
 
-    return axios.get(infoUrl).then((response) => {
-      const { data } = response;
-      const info = data.base.data.map_userinfo[uin];
-      const result = {
-        is_login: true,
-        user_id: uin,
-        user_name: uin,
-        nickname: info.nick,
-        avatar: info.headurl,
-        platform: 'qq',
-        data
-      };
-      return callback({ status: 'success', data: result });
-    });
+    const response = await axios.get(infoUrl);
+    const { data } = response;
+    const info = data.base.data.map_userinfo[uin];
+    const result = {
+      is_login: true,
+      user_id: uin,
+      user_name: uin,
+      nickname: info.nick,
+      avatar: info.headurl,
+      platform: 'qq',
+      data
+    };
+    return { status: 'success', data: result };
   }
 
-  static get_user_created_playlist(url) {
+  static async get_user_created_playlist(url) {
     const user_id = getParameterByName('user_id', url);
     // TODO: load more than size
     const size = 100;
 
     const target_url = `https://c.y.qq.com/rsc/fcgi-bin/fcg_user_created_diss?cv=4747474&ct=24&format=json&inCharset=utf-8&outCharset=utf-8&notice=0&platform=yqq.json&needNewCode=1&uin=${user_id}&hostuin=${user_id}&sin=0&size=${size}`;
-
+    const response = await axios.get(target_url);
+    const playlists = [];
+    response.data.data.disslist.forEach((item) => {
+      let playlist = {};
+      if (item.dir_show === 0) {
+        if (item.tid === 0) {
+          return;
+        }
+        if (item.diss_name === '我喜欢') {
+          playlist = {
+            cover_img_url: 'https://y.gtimg.cn/mediastyle/y/img/cover_love_300.jpg',
+            id: `qqplaylist_${item.tid}`,
+            source_url: `https://y.qq.com/n/ryqq/playlist/${item.tid}`,
+            title: item.diss_name
+          };
+          playlists.push(playlist);
+        }
+      } else {
+        playlist = {
+          cover_img_url: item.diss_cover,
+          id: `qqplaylist_${item.tid}`,
+          source_url: `https://y.qq.com/n/ryqq/playlist/${item.tid}`,
+          title: item.diss_name
+        };
+        playlists.push(playlist);
+      }
+    });
     return {
-      success: (fn) => {
-        axios.get(target_url).then((response) => {
-          const playlists = [];
-          response.data.data.disslist.forEach((item) => {
-            let playlist = {};
-            if (item.dir_show === 0) {
-              if (item.tid === 0) {
-                return;
-              }
-              if (item.diss_name === '我喜欢') {
-                playlist = {
-                  cover_img_url: 'https://y.gtimg.cn/mediastyle/y/img/cover_love_300.jpg',
-                  id: `qqplaylist_${item.tid}`,
-                  source_url: `https://y.qq.com/n/ryqq/playlist/${item.tid}`,
-                  title: item.diss_name
-                };
-                playlists.push(playlist);
-              }
-            } else {
-              playlist = {
-                cover_img_url: item.diss_cover,
-                id: `qqplaylist_${item.tid}`,
-                source_url: `https://y.qq.com/n/ryqq/playlist/${item.tid}`,
-                title: item.diss_name
-              };
-              playlists.push(playlist);
-            }
-          });
-          return fn({
-            status: 'success',
-            data: {
-              playlists
-            }
-          });
-        });
+      status: 'success',
+      data: {
+        playlists
       }
     };
   }
 
-  static get_user_favorite_playlist(url) {
+  static async get_user_favorite_playlist(url) {
     const user_id = getParameterByName('user_id', url);
     // TODO: load more than size
     const size = 100;
@@ -635,35 +606,31 @@ export default class qq {
       sin: 0,
       ein: size
     };
+    const response = await axios.get(target_url, { params: data });
+
+    const playlists = [];
+    response.data.data.cdlist.forEach((item) => {
+      let playlist = {};
+      if (item.dir_show === 0) {
+        return;
+      }
+      playlist = {
+        cover_img_url: item.logo,
+        id: `qqplaylist_${item.dissid}`,
+        source_url: `https://y.qq.com/n/ryqq/playlist/${item.dissid}`,
+        title: item.dissname
+      };
+      playlists.push(playlist);
+    });
     return {
-      success: (fn) => {
-        axios.get(target_url, { params: data }).then((response) => {
-          const playlists = [];
-          response.data.data.cdlist.forEach((item) => {
-            let playlist = {};
-            if (item.dir_show === 0) {
-              return;
-            }
-            playlist = {
-              cover_img_url: item.logo,
-              id: `qqplaylist_${item.dissid}`,
-              source_url: `https://y.qq.com/n/ryqq/playlist/${item.dissid}`,
-              title: item.dissname
-            };
-            playlists.push(playlist);
-          });
-          return fn({
-            status: 'success',
-            data: {
-              playlists
-            }
-          });
-        });
+      status: 'success',
+      data: {
+        playlists
       }
     };
   }
 
-  static get_recommend_playlist() {
+  static async get_recommend_playlist() {
     const target_url = `https://u.y.qq.com/cgi-bin/musicu.fcg?format=json&&loginUin=0&hostUin=0inCharset=utf8&outCharset=utf-8&platform=yqq.json&needNewCode=0&data=${encodeURIComponent(
       JSON.stringify({
         comm: {
@@ -679,63 +646,42 @@ export default class qq {
         }
       })
     )}`;
-
+    const response = await axios.get(target_url);
+    const playlists = [];
+    response.data.recomPlaylist.data.v_hot.forEach((item) => {
+      const playlist = {
+        cover_img_url: item.cover,
+        id: `qqplaylist_${item.content_id}`,
+        source_url: `https://y.qq.com/n/ryqq/playlist/${item.content_id}`,
+        title: item.title
+      };
+      playlists.push(playlist);
+    });
     return {
-      success: (fn) => {
-        axios.get(target_url).then((response) => {
-          const playlists = [];
-          response.data.recomPlaylist.data.v_hot.forEach((item) => {
-            const playlist = {
-              cover_img_url: item.cover,
-              id: `qqplaylist_${item.content_id}`,
-              source_url: `https://y.qq.com/n/ryqq/playlist/${item.content_id}`,
-              title: item.title
-            };
-            playlists.push(playlist);
-          });
-          return fn({
-            status: 'success',
-            data: {
-              playlists
-            }
-          });
-        });
+      status: 'success',
+      data: {
+        playlists
       }
     };
   }
-
-  static get_user() {
-    return {
-      success: (fn) => {
-        const domain = 'https://y.qq.com';
-        cookieGet(
-          {
-            url: domain,
-            name: 'uin'
-          },
-          (qqCookie) => {
-            if (qqCookie === null) {
-              return cookieGet(
-                {
-                  url: domain,
-                  name: 'wxuin'
-                },
-                (wxCookie) => {
-                  if (wxCookie == null) {
-                    return fn({ status: 'fail', data: {} });
-                  }
-                  let { value: uin } = wxCookie;
-                  uin = `1${uin.slice('o'.length)}`; // replace prefix o with 1
-                  return this.get_user_by_uin(uin, fn);
-                }
-              );
-            }
-            const { value: uin } = qqCookie;
-            return this.get_user_by_uin(uin, fn);
-          }
-        );
+  static async get_user() {
+    const domain = 'https://y.qq.com';
+    const qqCookie = await cookieGetPromise({
+      url: domain,
+      name: 'uin'
+    });
+    if (qqCookie === null) {
+      const wxCookie = await cookieGetPromise({
+        url: domain,
+        name: 'wxuin'
+      });
+      if (wxCookie === null) {
+        return { status: 'fail', data: {} };
       }
-    };
+      let { value: uin } = wxCookie;
+      uin = `1${uin.slice('o'.length)}`; // replace prefix o with 1
+      return this.get_user_by_uin(uin, fn);
+    }
   }
 
   static get_login_url() {
