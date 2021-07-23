@@ -131,6 +131,10 @@ angular.module('listenone').controller('ProfileController', [
       const themeFiles = {
         white: 'css/iparanoid.css',
         black: 'css/origin.css',
+        blue: 'css/seablue.css',
+        green: 'css/beangreen.css',
+        pink: 'css/cherrypink.css',
+        yellow: 'css/mustardyellow.css',
       };
       // You can change the language during runtime
       if (themeFiles[theme] !== undefined) {
