@@ -688,7 +688,6 @@
 
 <script>
 import 'notyf/notyf.min.css';
-import '@/assets/css/hotkeys.css';
 import '@/assets/css/icon.css';
 import '@/assets/css/origin.css';
 import '@/assets/css/common.css';
