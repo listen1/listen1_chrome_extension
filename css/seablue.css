@@ -4,7 +4,7 @@
 	--text-default-color: #ffffff;
 	--text-subtitle-color: #fff;
 	--text-disable-color: #fff;
-	--lyric-default-color: #666666;
+	--lyric-default-color: #e0e0e0;
 	--lyric-on-cover-color: #bbbbbb;
 	--lyric-important-color: #ffffff;
 	--lyric-important-on-cover-color: #ffffff;
@@ -34,7 +34,7 @@
 	--button-background-color: #0169d1;
 	--button-border-color: #0358ad;
 	--button-hover-background-color: #2C9AFF;
-	--now-playing-page-background-color: #333333;
+	--now-playing-page-background-color: #2187EC;
 	--now-playing-close-icon-color: #b3b3b3;
 	--disable-song-title-color: #b7b7b7;
 	--windows-border-color: #333333;
