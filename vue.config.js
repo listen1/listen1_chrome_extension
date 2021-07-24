@@ -10,10 +10,15 @@ module.exports = {
     }
   },
   chainWebpack: (config) => {
-    config.devtool("cheap-module-source-map")
+    config.devtool('cheap-module-source-map');
+    config.module
+      .rule('i18n')
+      .test(/\.(json5?|ya?ml)$/)
+      .type('javascript/auto')
+      .use('i18n')
+      .loader('@intlify/vue-i18n-loader');
     config.externals({
       ...config.get('externals'),
-      forge: 'forge',
       electron: 'electron'
     });
   },
