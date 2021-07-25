@@ -7,13 +7,13 @@
         <div class="searchbox">
           <ul class="source-list">
             <li class="source-button" :class="{ active: searchtab === 'allmusic' }" @click="changeSourceTab('allmusic')">
-              <a>{{ $t('_ALL_MUSIC') }}(Beta)</a>
+              <a>{{ t('_ALL_MUSIC') }}(Beta)</a>
             </li>
             <div class="splitter" />
 
             <template v-for="(source, index) in sourceList" :key="source.name">
               <div class="source-button" :class="{ active: tab === source.name }" @click="changeSourceTab(source.name)">
-                {{ $t(source.name) }}
+                {{ t(source.name) }}
               </div>
               <div v-if="index != sourceList.length - 1" class="splitter" />
             </template>
@@ -63,25 +63,25 @@
           <ul class="detail-songlist">
             <li v-if="searchType === 0" class="head">
               <div class="title">
-                <a>{{ $t('_SONGS') }}</a>
+                <a>{{ t('_SONGS') }}</a>
               </div>
               <div class="artist">
-                <a>{{ $t('_ARTISTS') }}</a>
+                <a>{{ t('_ARTISTS') }}</a>
               </div>
               <div class="album">
-                <a>{{ $t('_ALBUMS') }}</a>
+                <a>{{ t('_ALBUMS') }}</a>
               </div>
-              <div class="tools">{{ $t('_OPERATION') }}</div>
+              <div class="tools">{{ t('_OPERATION') }}</div>
             </li>
             <li v-if="searchType === 1" class="head">
               <div class="title">
-                <a>{{ $t('_PLAYLIST_TITLE') }}</a>
+                <a>{{ t('_PLAYLIST_TITLE') }}</a>
               </div>
               <div class="artist">
-                <a>{{ $t('_PLAYLIST_AUTHOR') }}</a>
+                <a>{{ t('_PLAYLIST_AUTHOR') }}</a>
               </div>
               <div class="album">
-                <a>{{ $t('_PLAYLIST_SONG_COUNT') }}</a>
+                <a>{{ t('_PLAYLIST_SONG_COUNT') }}</a>
               </div>
             </li>
             <template v-if="searchType === 0">
@@ -152,11 +152,16 @@
 </template>
 
 <script>
+import { useI18n } from 'vue-i18n';
 import { mapState } from 'vuex';
 import MediaService from '../services/MediaService';
 import { l1Player } from '../services/l1_player';
 
 export default {
+  setup() {
+    const { t } = useI18n();
+    return { t };
+  },
   data() {
     return {};
   },

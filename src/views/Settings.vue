@@ -3,18 +3,16 @@
   <div class="page" ng-init="lastfm.updateStatus(); updateGithubStatus();">
     <div class="site-wrapper-innerd">
       <div class="cover-container">
-        <!-- <div class="settings-title">
-          <span>{{ $t('_LANGUAGE') }}</span>
+        <div class="settings-title">
+          <span>{{ t('_LANGUAGE') }}</span>
         </div>
         <div class="settings-content">
-          <div>
-            <button class="language-button" ng-click="setLang('zh-CN')">简体中文</button>
-            <button class="language-button" ng-click="setLang('zh-TC')">繁体中文</button>
-            <button class="language-button" ng-click="setLang('en-US')">English</button>
-            <button class="language-button" ng-click="setLang('fr-FR')">French</button>
-          </div>
+          <button class="language-button" @click="locale = 'zh-CN'">简体中文</button>
+          <button class="language-button" @click="locale = 'zh-TC'">繁体中文</button>
+          <button class="language-button" @click="locale = 'en-US'">English</button>
+          <button class="language-button" @click="locale = 'fr-FR'">French</button>
         </div>
-        <div class="settings-title">
+        <!-- <div class="settings-title">
           <span>{{ $t('_THEME') }}</span>
         </div>
         <div class="settings-content">
@@ -243,24 +241,24 @@
           <button ng-click="showDialog(12)">{{ $t('_MODIFY') }}</button>
         </div> -->
         <div class="settings-title">
-          <span>{{ $t('_ABOUT') }}</span>
+          <span>{{ t('_ABOUT') }}</span>
         </div>
         <div class="settings-content">
           <p>
-            Listen 1 {{ $t('_HOMEPAGE') }}:
+            Listen 1 {{ t('_HOMEPAGE') }}:
             <a open-url="'https://listen1.github.io/listen1/'">https://listen1.github.io/listen1/</a>
           </p>
-          <p>Listen 1 {{ $t('_EMAIL') }}: githublisten1@gmail.com</p>
+          <p>Listen 1 {{ t('_EMAIL') }}: githublisten1@gmail.com</p>
           <p>
-            {{ $t('_FEEDBACK') }}:
+            {{ t('_FEEDBACK') }}:
             <a v-if="isChrome" open-url="'https://github.com/listen1/listen1_chrome_extension/issues'">
               https://github.com/listen1/listen1_chrome_extension/issues
             </a>
             <a v-if="!isChrome" open-url="'https://github.com/listen1/listen1_desktop/issues'">https://github.com/listen1/listen1_desktop/issues</a>
           </p>
-          <p>{{ $t('_DESIGNER') }}: iparanoid</p>
-          <p>{{ $t('_VERSION') }}: v3.0.0 (DEVELOPER VERSION)</p>
-          <p>LICENSE: {{ $t('_LICENSE_NOTICE') }}</p>
+          <p>{{ t('_DESIGNER') }}: iparanoid</p>
+          <p>{{ t('_VERSION') }}: v3.0.0 (DEVELOPER VERSION)</p>
+          <p>LICENSE: {{ t('_LICENSE_NOTICE') }}</p>
           <!-- <p v-show="lastestVersion != ''">{{ $t('_LATEST_VERSION') }}: lastestVersion</p> -->
         </div>
       </div>
@@ -269,7 +267,12 @@
 </template>
 
 <script>
+import { useI18n } from 'vue-i18n';
 export default {
+  setup() {
+    const { t, locale } = useI18n();
+    return { t, locale };
+  },
   data() {
     return {
       isChrome: true

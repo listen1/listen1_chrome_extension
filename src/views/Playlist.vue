@@ -11,7 +11,7 @@
             <div class="playlist-button playadd-button">
               <div class="play-list" @click="playMylist(list_id)">
                 <span class="icon li-play-s" />
-                {{ $t('_PLAY_ALL') }}
+                {{ t('_PLAY_ALL') }}
               </div>
               <!-- <div class="add-list" ng-click="addMylist(list_id)">
                 <span class="icon li-add" />
@@ -52,13 +52,13 @@
             <div v-show="isChrome && is_favorite && !is_local" class="playlist-button edit-button" ng-click="closeWindow();showPlaylist(list_id)">
               <div class="play-list">
                 <span class="icon li-loop" />
-                <span>{{ $t('_REFRESH_PLAYLIST') }}</span>
+                <span>{{ t('_REFRESH_PLAYLIST') }}</span>
               </div>
             </div>
             <div v-show="!is_mine && !is_local" class="playlist-button edit-button" @click="openUrl(playlist_source_url)">
               <div class="play-list">
                 <span class="icon li-link" />
-                <span>{{ $t('_ORIGIN_LINK') }}</span>
+                <span>{{ t('_ORIGIN_LINK') }}</span>
               </div>
             </div>
             <div v-show="is_mine && !is_local" class="playlist-button edit-button" ng-click="showDialog(6)">
@@ -85,15 +85,15 @@
         </div> -->
         <li class="head">
           <div class="title">
-            <a>{{ $t('_SONGS') + '(' + songs.length + ')' }}</a>
+            <a>{{ t('_SONGS') + '(' + songs.length + ')' }}</a>
           </div>
           <div class="artist">
-            <a>{{ $t('_ARTISTS') }}</a>
+            <a>{{ t('_ARTISTS') }}</a>
           </div>
           <div class="album">
-            <a>{{ $t('_ALBUMS') }}</a>
+            <a>{{ t('_ALBUMS') }}</a>
           </div>
-          <div class="tools">{{ $t('_OPERATION') }}</div>
+          <div class="tools">{{ t('_OPERATION') }}</div>
         </li>
         <li
           v-for="song in songs"
@@ -140,10 +140,15 @@
 </template>
 
 <script>
-import notyf from "../services/notyf"
+import { useI18n } from 'vue-i18n';
+import notyf from '../services/notyf';
 import MediaService from '../services/MediaService';
 import { l1Player } from '@/services/l1_player';
 export default {
+  setup() {
+    const { t } = useI18n();
+    return { t };
+  },
   data() {
     return {
       songs: [],

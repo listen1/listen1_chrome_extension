@@ -65,12 +65,12 @@
                 <!-- open playlist dialog-->
                 <div v-show="dialog_type == 5" class="dialog-open-url">
                   <div class="form-group">
-                    <label>{{ $t('_PLAYLIST_LINK') }}</label>
-                    <input class="form-control" type="text" :placeholder="$t('_EXAMPLE') + 'https://www.xiami.com/collect/198267231'" ng-model="dialog_url" />
+                    <label>{{ t('_PLAYLIST_LINK') }}</label>
+                    <input class="form-control" type="text" :placeholder="t('_EXAMPLE') + 'https://www.xiami.com/collect/198267231'" ng-model="dialog_url" />
                   </div>
                   <div class="buttons">
-                    <button class="btn btn-primary confirm-button" ng-click="openUrl(dialog_url);closeDialog();dialog_url='';">{{ $t('_CONFIRM') }}</button>
-                    <button class="btn btn-default" ng-click="closeDialog()">{{ $t('_CANCEL') }}</button>
+                    <button class="btn btn-primary confirm-button" ng-click="openUrl(dialog_url);closeDialog();dialog_url='';">{{ t('_CONFIRM') }}</button>
+                    <button class="btn btn-default" ng-click="closeDialog()">{{ t('_CANCEL') }}</button>
                   </div>
                 </div>
                 <ul v-show="dialog_type == 6" class="dialog-merge-playlist">
@@ -156,20 +156,20 @@
                   <div class="menu-control" />
                   <div class="menu-title">
                     <div class="title">
-                      {{ $t('_PLATFORM_UNION') }}
+                      {{ t('_PLATFORM_UNION') }}
                     </div>
                   </div>
                   <ul class="nav masthead-nav">
                     <li :class="{ active: $route.name === 'HotPlaylists' }" @click="$router.push('/')">
                       <div class="sidebar-block">
                         <span class="icon li-featured-list" />
-                        <a>{{ $t('_PLAYLISTS') }}</a>
+                        <a>{{ t('_PLAYLISTS') }}</a>
                       </div>
                     </li>
                   </ul>
                   <div v-if="!isChrome || is_login('netease') || is_login('qq')" class="menu-title">
                     <div class="title">
-                      {{ $t('_MY_MUSIC') }}
+                      {{ t('_MY_MUSIC') }}
                     </div>
                   </div>
                   <ul class="nav masthead-nav">
@@ -180,7 +180,7 @@
                     >
                       <div class="sidebar-block">
                         <span class="icon li-featured-list" />
-                        <a>{{ $t('_LOCAL_MUSIC') }}</a>
+                        <a>{{ t('_LOCAL_MUSIC') }}</a>
                       </div>
                     </li>
                     <li
@@ -192,7 +192,7 @@
                         <svg class="feather">
                           <use href="#globe" />
                         </svg>
-                        <a>{{ $t('_MY_NETEASE') }}</a>
+                        <a>{{ t('_MY_NETEASE') }}</a>
                       </div>
                     </li>
                     <li
@@ -204,13 +204,13 @@
                         <svg class="feather">
                           <use href="#globe" />
                         </svg>
-                        <a>{{ $t('_MY_QQ') }}</a>
+                        <a>{{ t('_MY_QQ') }}</a>
                       </div>
                     </li>
                   </ul>
                   <!-- <div class="menu-title" ng-init="loadMyPlaylist();">
                     <div class="title">
-                      {{ $t('_CREATED_PLAYLIST') }}
+                      {{ t('_CREATED_PLAYLIST') }}
                     </div>
                     <svg class="feather icon" @click="showDialog(5)">
                       <use href="#plus-square" />
@@ -278,7 +278,7 @@
                       v-model="keywords"
                       type="text"
                       class="form-control search-input"
-                      :placeholder="$t('_SEARCH_PLACEHOLDER')"
+                      :placeholder="t('_SEARCH_PLACEHOLDER')"
                       ng-model-options="{debounce: 500}"
                       ng-keyup="enterEvent($event)"
                       @input="searchTextChanged"
@@ -504,13 +504,13 @@
                           </div>
                           <div class="info">
                             <div class="singer">
-                              <span>{{ $t('_ARTIST') }}：</span>
+                              <span>{{ t('_ARTIST') }}：</span>
                               <a ng-click="showPlaylist(currentPlaying.artist_id)" title="currentPlaying.artist">
                                 {{ currentPlaying.artist }}
                               </a>
                             </div>
                             <div class="album">
-                              <span>{{ $t('_ALBUM') }}：</span>
+                              <span>{{ t('_ALBUM') }}：</span>
                               <a ng-click="showPlaylist(currentPlaying.album_id)" title="currentPlaying.album">
                                 {{ currentPlaying.album }}
                               </a>
@@ -626,14 +626,14 @@
               <div class="menu-modal" :class="{ slideup: !menuHidden }" @click="togglePlaylist()" />
               <div class="menu" :class="{ slideup: !menuHidden }">
                 <div class="menu-header">
-                  <span class="menu-title">{{ $t('_TOTAL_SONG_PREFIX') }} {{ playlist.length }} {{ $t('_TOTAL_SONG_POSTFIX') }}</span>
+                  <span class="menu-title">{{ t('_TOTAL_SONG_PREFIX') }} {{ playlist.length }} {{ t('_TOTAL_SONG_POSTFIX') }}</span>
                   <!-- <a class="add-all" ng-click="showDialog(0, playlist)">
                     <span class="icon li-songlist" ng-click="togglePlaylist()" />
-                    <span>{{ $t('_ADD_TO_PLAYLIST') }}</span>
+                    <span>{{ t('_ADD_TO_PLAYLIST') }}</span>
                   </a> -->
                   <a class="remove-all" @click="clearPlaylist()">
                     <span class="icon li-del" ng-click="togglePlaylist()" />
-                    <span>{{ $t('_CLEAR_ALL') }}</span>
+                    <span>{{ t('_CLEAR_ALL') }}</span>
                   </a>
 
                   <a class="close" @click="togglePlaylist()">
@@ -694,11 +694,14 @@ import '@/assets/css/common.css';
 import { l1Player } from '@/services/l1_player';
 import { mapState } from 'vuex';
 import DraggableBar from '../components/DraggableBar.vue';
-
+import { useI18n } from 'vue-i18n';
 export default {
   name: 'Home',
   components: { DraggableBar },
-
+  setup() {
+    const { t } = useI18n();
+    return { t };
+  },
   data() {
     return {
       keywords: '',
@@ -781,7 +784,7 @@ export default {
       this.dialog_type = dialog_type;
 
       if (dialog_type === 5) {
-        this.dialog_title = this.$t('_OPEN_PLAYLIST');
+        this.dialog_title = t('_OPEN_PLAYLIST');
       }
     },
     closeDialog() {

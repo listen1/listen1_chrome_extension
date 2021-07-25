@@ -3,7 +3,7 @@
     <div class="source-list">
       <template v-for="(source, index) in sourceList" :key="source.name">
         <div class="source-button" :class="{ active: tab === source.name }" @click="changeTab(source.name)">
-          {{ $t(source.name) }}
+          {{ t(source.name) }}
         </div>
         <div v-if="index != sourceList.length - 1" class="splitter" />
       </template>
@@ -56,8 +56,12 @@
 <script>
 import MediaService from '../services/MediaService';
 import { l1Player } from '@/services/l1_player';
-
+import { useI18n } from 'vue-i18n';
 export default {
+  setup() {
+    const { t } = useI18n();
+    return { t };
+  },
   data() {
     return {
       currentFilterId: '',
