@@ -54,13 +54,22 @@
 </template>
 
 <script>
+import { computed } from 'vue';
 import MediaService from '../services/MediaService';
+import { useRouter } from 'vue-router';
 import { l1Player } from '@/services/l1_player';
 import { useI18n } from 'vue-i18n';
 export default {
   setup() {
     const { t } = useI18n();
-    return { t };
+    const router = useRouter();
+    return {
+      t,
+      showPlaylist: (playlistId) => {
+        router.push('/playlist/' + playlistId);
+      },
+      sourceList: computed(() => MediaService.getSourceList())
+    };
   },
   data() {
     return {
@@ -72,11 +81,6 @@ export default {
       playlistFilters: {},
       allPlaylistFilters: {}
     };
-  },
-  computed: {
-    sourceList() {
-      return MediaService.getSourceList();
-    }
   },
   mounted() {
     this.loadPlaylist();
@@ -111,9 +115,6 @@ export default {
           this.allPlaylistFilters[this.tab] = res.all;
         });
       }
-    },
-    showPlaylist: function (playlistId) {
-      this.$router.push('/playlist/' + playlistId);
     },
     directplaylist(list_id) {
       MediaService.getPlaylist(list_id).then((data) => {

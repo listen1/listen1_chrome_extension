@@ -152,47 +152,42 @@
 </template>
 
 <script>
+import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { mapState } from 'vuex';
+import { mapState, useStore } from 'vuex';
 import MediaService from '../services/MediaService';
 import { l1Player } from '../services/l1_player';
 
 export default {
   setup() {
     const { t } = useI18n();
-    return { t };
-  },
-  data() {
-    return {};
+    const store = useStore();
+    return {
+      t,
+      changeSearchType: (newValue) => {
+        store.commit('search/changeSearchType', newValue);
+        store.commit('search/setSearchPage', 1);
+        store.dispatch('search/search');
+      },
+      changeSourceTab: (newValue) => {
+        store.commit('search/changeSearchTab', newValue);
+        store.commit('search/setSearchPage', 1);
+        store.dispatch('search/search');
+      },
+      changeSearchPage: (offset) => {
+        store.commit('search/changeSearchPage', offset);
+        store.dispatch('search/search');
+      },
+      play: (song) => {
+        l1Player.addTrack(song);
+        l1Player.playById(song.id);
+      },
+      sourceList: computed(() => MediaService.getSourceList())
+    };
   },
 
   computed: {
-    sourceList() {
-      return MediaService.getSourceList();
-    },
     ...mapState('search', ['keywords', 'result', 'curpage', 'totalpage', 'searchType', 'tab', 'loading'])
-  },
-  methods: {
-    changeSearchType(newValue) {
-      this.$store.commit('search/changeSearchType', newValue);
-      this.$store.commit('search/setSearchPage', 1);
-
-      this.$store.dispatch('search/search');
-    },
-    changeSourceTab(newValue) {
-      this.$store.commit('search/changeSearchTab', newValue);
-      this.$store.commit('search/setSearchPage', 1);
-
-      this.$store.dispatch('search/search');
-    },
-    changeSearchPage(offset) {
-      this.$store.commit('search/changeSearchPage', offset);
-      this.$store.dispatch('search/search');
-    },
-    play(song) {
-      l1Player.addTrack(song);
-      l1Player.playById(song.id);
-    }
   }
 };
 </script>

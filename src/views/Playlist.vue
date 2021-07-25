@@ -141,13 +141,20 @@
 
 <script>
 import { useI18n } from 'vue-i18n';
+import { useRouter } from 'vue-router';
 import notyf from '../services/notyf';
 import MediaService from '../services/MediaService';
 import { l1Player } from '@/services/l1_player';
 export default {
   setup() {
     const { t } = useI18n();
-    return { t };
+    const router = useRouter();
+    return {
+      t,
+      showPlaylist(playlistId) {
+        router.push('/playlist/' + playlistId);
+      }
+    };
   },
   data() {
     return {
@@ -186,9 +193,6 @@ export default {
     });
   },
   methods: {
-    showPlaylist(playlistId) {
-      this.$router.push('/playlist/' + playlistId);
-    },
     play(song) {
       l1Player.addTrack(song);
       l1Player.playById(song.id);

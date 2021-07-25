@@ -691,8 +691,10 @@ import 'notyf/notyf.min.css';
 import '@/assets/css/icon.css';
 import '@/assets/css/origin.css';
 import '@/assets/css/common.css';
+import { ref } from 'vue';
 import { l1Player } from '@/services/l1_player';
-import { mapState } from 'vuex';
+import { mapState, useStore } from 'vuex';
+import { useRouter } from 'vue-router';
 import DraggableBar from '../components/DraggableBar.vue';
 import { useI18n } from 'vue-i18n';
 export default {
@@ -700,11 +702,31 @@ export default {
   components: { DraggableBar },
   setup() {
     const { t } = useI18n();
-    return { t };
+    const store = useStore();
+    const router = useRouter();
+    const keywords = ref('')
+    return {
+      t,
+      keywords,
+      searchTextChanged: () => {
+        store.commit('search/changeSearchKeywords', keywords);
+        store.dispatch('search/search', {
+          type: 'search'
+        });
+        router.push('/search');
+      },
+      changePlaymode: () => {
+        const playmodeCount = 3;
+        const newPlaymode = (store.state.playmode + 1) % playmodeCount;
+        store.dispatch('player/changePlaymode', { mode: newPlaymode });
+      },
+      showPlaylist: (playlistId) => {
+        router.push('/playlist/' + playlistId);
+      }
+    };
   },
   data() {
     return {
-      keywords: '',
       is_dialog_hidden: 1,
       dialog_title: '',
       dialog_type: 0,
@@ -791,20 +813,8 @@ export default {
       this.is_dialog_hidden = 1;
       this.dialog_type = 0;
     },
-    searchTextChanged() {
-      this.$store.commit('search/changeSearchKeywords', this.keywords);
-      this.$store.dispatch('search/search', {
-        type: 'search'
-      });
-      this.$router.push('/search');
-    },
     togglePlaylist() {
       this.menuHidden = !this.menuHidden;
-    },
-    changePlaymode() {
-      const playmodeCount = 3;
-      const newPlaymode = (this.playmode + 1) % playmodeCount;
-      this.$store.dispatch('player/changePlaymode', { mode: newPlaymode });
     },
     clearPlaylist() {
       l1Player.clearPlaylist();
@@ -823,9 +833,6 @@ export default {
     },
     toggleMuteStatus() {
       l1Player.toggleMute();
-    },
-    showPlaylist(playlistId) {
-      this.$router.push('/playlist/' + playlistId);
     },
     playFromPlaylist(song) {
       l1Player.playById(song.id);
