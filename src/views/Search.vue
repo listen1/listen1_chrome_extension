@@ -3,7 +3,6 @@
   <div class="page">
     <div class="site-wrapper-innerd">
       <div class="cover-container">
-        <!-- Initialize a new AngularJS app and associate it with a module named "instantSearch"-->
         <div class="searchbox">
           <ul class="source-list">
             <li class="source-button" :class="{ active: searchtab === 'allmusic' }" @click="changeSourceTab('allmusic')">

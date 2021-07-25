@@ -271,12 +271,7 @@ import { useI18n } from 'vue-i18n';
 export default {
   setup() {
     const { t, locale } = useI18n();
-    return { t, locale };
-  },
-  data() {
-    return {
-      isChrome: true
-    };
+    return { t, locale, isChrome: true };
   }
 };
 </script>

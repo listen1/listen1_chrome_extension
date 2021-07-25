@@ -141,70 +141,77 @@
 
 <script>
 import { useI18n } from 'vue-i18n';
-import { useRouter } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import notyf from '../services/notyf';
 import MediaService from '../services/MediaService';
 import { l1Player } from '@/services/l1_player';
+import { onMounted, ref } from 'vue';
 export default {
   setup() {
     const { t } = useI18n();
     const router = useRouter();
-    return {
-      t,
-      showPlaylist(playlistId) {
-        router.push('/playlist/' + playlistId);
-      }
-    };
-  },
-  data() {
-    return {
-      songs: [],
-      cover_img_url: 'images/loading.svg',
-      playlist_title: '',
-      playlist_source_url: '',
-      is_mine: false,
-      is_local: false,
-      window_type: 'list',
-      options: false,
-      isChrome: true
-    };
-  },
-  mounted() {
-    const { listId } = this.$route.params;
-    MediaService.getPlaylist(listId).then((data) => {
+    const route = useRoute();
+    const songs = ref([]);
+    const list_id = ref('');
+    const cover_img_url = ref('images/loading.svg');
+    const playlist_title = ref('');
+    const playlist_source_url = ref('');
+    const is_mine = ref(false);
+    const is_local = ref(false);
+    const window_type = ref('list');
+    const options = ref(false);
+    const is_favorite = ref(false);
+    const isChrome = ref(true);
+    const mountList = async () => {
+      const { listId } = route.params;
+      const data = await MediaService.getPlaylist(listId);
       if (data.status === '0') {
         notyf.info(data.reason);
         // this.popWindow();
         return;
       }
-      this.songs = data.tracks;
-      this.cover_img_url = data.info.cover_img_url;
-      this.playlist_title = data.info.title;
-      this.playlist_source_url = data.info.source_url;
-      this.list_id = data.info.id;
-      this.is_mine = data.info.id.slice(0, 2) === 'my';
-      this.is_local = data.info.id.slice(0, 2) === 'lm';
+      songs.value = data.tracks;
+      cover_img_url.value = data.info.cover_img_url;
+      playlist_title.value = data.info.title;
+      playlist_source_url.value = data.info.source_url;
+      list_id.value = data.info.id;
+      is_mine.value = data.info.id.slice(0, 2) === 'my';
+      is_local.value = data.info.id.slice(0, 2) === 'lm';
 
       //   MediaService.queryPlaylist(data.info.id, "favorite").success((res) => {
       //     this.is_favorite = res.result;
       //   });
 
-      this.window_type = 'list';
-    });
-  },
-  methods: {
-    play(song) {
-      l1Player.addTrack(song);
-      l1Player.playById(song.id);
-    },
-    playMylist(listId) {
-      l1Player.setNewPlaylist(this.songs);
-      l1Player.play();
-      this.list_id = listId;
-    },
-    openUrl(url) {
-      window.open(url, '_blank').focus();
-    }
+      window_type.value = 'list';
+    };
+    onMounted(mountList);
+    return {
+      t,
+      songs,
+      playlist_title,
+      is_local,
+      isChrome,
+      list_id,
+      is_mine,
+      is_favorite,
+      playlist_source_url,
+      cover_img_url,
+      showPlaylist: (playlistId) => {
+        router.push('/playlist/' + playlistId);
+      },
+      play: (song) => {
+        l1Player.addTrack(song);
+        l1Player.playById(song.id);
+      },
+      playMylist: (listId) => {
+        l1Player.setNewPlaylist(this.songs);
+        l1Player.play();
+        list_id.value = listId;
+      },
+      openUrl: (url) => {
+        window.open(url, '_blank').focus();
+      }
+    };
   }
 };
 </script>

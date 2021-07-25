@@ -54,7 +54,7 @@
 </template>
 
 <script>
-import { computed } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import MediaService from '../services/MediaService';
 import { useRouter } from 'vue-router';
 import { l1Player } from '@/services/l1_player';
@@ -63,67 +63,63 @@ export default {
   setup() {
     const { t } = useI18n();
     const router = useRouter();
+    const showMore = ref(false);
+    const currentFilterId = ref('');
+    const tab = ref(MediaService.getSourceList()[0].name);
+    const result = ref([]);
+    const loading = ref(true);
+    const playlistFilters = ref({});
+    const allPlaylistFilters = ref({});
+    const loadPlaylist = () => {
+      const offset = 0;
+      showMore.value = false;
+
+      MediaService.showPlaylistArray(tab.value, offset, currentFilterId.value).then((res) => {
+        result.value = res.result;
+        loading.value = false;
+      });
+
+      if (playlistFilters.value[tab.value] === undefined && allPlaylistFilters.value[tab.value] === undefined) {
+        MediaService.getPlaylistFilters(tab.value).then((res) => {
+          playlistFilters.value[tab.value] = res.recommend;
+          allPlaylistFilters.value[tab.value] = res.all;
+        });
+      }
+    };
+    onMounted(loadPlaylist);
     return {
       t,
+      loadPlaylist,
+      tab,
+      playlistFilters,
+      showMore,
+      allPlaylistFilters,
+      result,
+      changeTab: (newTab) => {
+        tab.value = newTab;
+        result.value = [];
+        currentFilterId.value = '';
+        loadPlaylist();
+      },
+      changeFilter: (filterId) => {
+        result.value = [];
+        currentFilterId.value = filterId;
+        loadPlaylist();
+      },
+      toggleMorePlaylists: () => {
+        showMore.value = !showMore.value;
+      },
       showPlaylist: (playlistId) => {
         router.push('/playlist/' + playlistId);
       },
+      directplaylist: async (list_id) => {
+        const data = await MediaService.getPlaylist(list_id);
+        const songs = data.tracks;
+        l1Player.setNewPlaylist(songs);
+        l1Player.play();
+      },
       sourceList: computed(() => MediaService.getSourceList())
     };
-  },
-  data() {
-    return {
-      currentFilterId: '',
-      result: [],
-      tab: MediaService.getSourceList()[0].name,
-      loading: true,
-      showMore: false,
-      playlistFilters: {},
-      allPlaylistFilters: {}
-    };
-  },
-  mounted() {
-    this.loadPlaylist();
-  },
-  methods: {
-    changeTab: function (newTab) {
-      this.tab = newTab;
-      this.result = [];
-      this.currentFilterId = '';
-
-      this.loadPlaylist();
-    },
-    changeFilter: function (filterId) {
-      this.result = [];
-      this.currentFilterId = filterId;
-      this.loadPlaylist();
-    },
-    toggleMorePlaylists: function () {
-      this.showMore = !this.showMore;
-    },
-    loadPlaylist: function () {
-      const offset = 0;
-      this.showMore = false;
-      MediaService.showPlaylistArray(this.tab, offset, this.currentFilterId).then((res) => {
-        this.result = res.result;
-        this.loading = false;
-      });
-
-      if (this.playlistFilters[this.tab] === undefined && this.allPlaylistFilters[this.tab] === undefined) {
-        MediaService.getPlaylistFilters(this.tab).then((res) => {
-          this.playlistFilters[this.tab] = res.recommend;
-          this.allPlaylistFilters[this.tab] = res.all;
-        });
-      }
-    },
-    directplaylist(list_id) {
-      MediaService.getPlaylist(list_id).then((data) => {
-        this.songs = data.tracks;
-        this.current_list_id = list_id;
-        l1Player.setNewPlaylist(this.songs);
-        l1Player.play();
-      });
-    }
   }
 };
 </script>

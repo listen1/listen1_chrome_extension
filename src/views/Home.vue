@@ -709,7 +709,7 @@ export default {
       t,
       keywords,
       searchTextChanged: () => {
-        store.commit('search/changeSearchKeywords', keywords);
+        store.commit('search/changeSearchKeywords', keywords.value);
         store.dispatch('search/search', {
           type: 'search'
         });
