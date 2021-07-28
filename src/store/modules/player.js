@@ -136,6 +136,9 @@ export default {
     setIsPlaying(state, newValue) {
       state.isPlaying = newValue;
     },
+    setCurrentDuration(state, newValue) {
+      state.currentDuration = newValue;
+    },
     setCurrentPosition(state, newValue) {
       state.currentPosition = newValue;
     },
@@ -262,7 +265,7 @@ export default {
               if (msg.data.duration === 0 || state.currentDuration === durationStr) {
                 return;
               }
-              state.currentDuration = durationStr;
+              commit('setCurrentDuration', durationStr);
             })();
 
             // 'track:progress'
