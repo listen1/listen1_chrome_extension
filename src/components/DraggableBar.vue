@@ -1,12 +1,15 @@
 <template>
-  <div :id="id" class="barbg" @mousedown="onMyMouseDown">
-    <div class="cur" :style="{ width: changingProgress ? cprogress * 100 + '%' : progress + '%' }">
-      <span class="btn"><i /></span>
+  <div class="playbar-clickable">
+    <div :id="id" class="barbg" @mousedown="onMyMouseDown">
+      <div class="cur" :style="{ width: changingProgress ? cprogress * 100 + '%' : progress + '%' }">
+        <span class="btn"><i /></span>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+import { ref } from 'vue';
 export default {
   name: 'DraggableBar',
   props: {
@@ -20,55 +23,54 @@ export default {
     }
   },
   emits: ['update-progress', 'commit-progress'],
-  data() {
+  setup(props, { emit }) {
+    const changingProgress = ref(false);
+    const cprogress = ref(0);
     return {
-      changingProgress: false,
-      cprogress: 0
-    };
-  },
-  methods: {
-    onMyMouseDown(event) {
-      this.changingProgress = true;
-      const containerElem = document.getElementById(this.id);
+      changingProgress,
+      cprogress,
+      onMyMouseDown: (event) => {
+        changingProgress.value = true;
+        const containerElem = document.getElementById(props.id);
 
-      const container = containerElem.getBoundingClientRect();
-      // Prevent default dragging of selected content
-      event.preventDefault();
-      const x = event.clientX - container.left;
-      this.cprogress = x / (container.right - container.left);
+        const container = containerElem.getBoundingClientRect();
+        // Prevent default dragging of selected content
+        event.preventDefault();
+        const x = event.clientX - container.left;
+        cprogress.value = x / (container.right - container.left);
 
-      this.$emit('update-progress', this.cprogress);
-      const self = this;
-      function sync(event) {
-        const container = document.getElementById(self.id).getBoundingClientRect();
-        let x = event.clientX - container.left;
+        emit('update-progress', cprogress.value);
+        const sync = (event) => {
+          const container = document.getElementById(props.id).getBoundingClientRect();
+          let x = event.clientX - container.left;
 
-        if (container) {
-          if (x < 0) {
-            x = 0;
-          } else if (x > container.right - container.left) {
-            x = container.right - container.left;
+          if (container) {
+            if (x < 0) {
+              x = 0;
+            } else if (x > container.right - container.left) {
+              x = container.right - container.left;
+            }
           }
-        }
-        self.cprogress = x / (container.right - container.left);
-      }
-      function mousemove(event) {
-        sync(event);
-        self.$emit('update-progress', self.cprogress);
-      }
+          cprogress.value = x / (container.right - container.left);
+        };
+        const mousemove = (event) => {
+          sync(event);
+          emit('update-progress', cprogress.value);
+        };
 
-      function mouseup(event) {
-        sync(event);
-        self.$emit('commit-progress', self.cprogress);
+        const mouseup = (event) => {
+          sync(event);
+          emit('commit-progress', cprogress.value);
 
-        document.removeEventListener('mousemove', mousemove);
-        document.removeEventListener('mouseup', mouseup);
-        self.changingProgress = false;
+          document.removeEventListener('mousemove', mousemove);
+          document.removeEventListener('mouseup', mouseup);
+          changingProgress.value = false;
+        };
+
+        document.addEventListener('mousemove', mousemove);
+        document.addEventListener('mouseup', mouseup);
       }
-
-      document.addEventListener('mousemove', mousemove);
-      document.addEventListener('mouseup', mouseup);
-    }
+    };
   }
 };
 </script>

@@ -1072,11 +1072,7 @@ ul.detail-songlist li .tools .icon {
   flex: 0 240px;
   box-sizing: border-box;
 }
-.page
-  .settings-content
-  .shortcut_table
-  .shortcut_table-line
-  .shortcut_table-key {
+.page .settings-content .shortcut_table .shortcut_table-line .shortcut_table-key {
   border: solid 1px var(--button-border-color);
   border-radius: 5px;
   padding: 0 10px;
@@ -1084,11 +1080,7 @@ ul.detail-songlist li .tools .icon {
   display: flex;
   align-items: center;
 }
-.page
-  .settings-content
-  .shortcut_table
-  .shortcut_table-line
-  .shortcut_table-globalkey {
+.page .settings-content .shortcut_table .shortcut_table-line .shortcut_table-globalkey {
   border: solid 1px var(--button-border-color);
   border-radius: 5px;
   height: 30px;
@@ -1312,12 +1304,19 @@ svg.searchspinner {
 }
 
 .footer .main-info .detail .playbar .barbg .cur .btn {
-  background: #111111;
+  background: var(--footer-player-bar-cur-button-color);
   height: 8px;
   width: 2px;
   position: absolute;
   right: -2px;
   top: -5px;
+}
+
+.footer .main-info .detail .playbar .playbar-clickable:hover .barbg .cur .btn {
+  width: 10px;
+  height: 10px;
+  border-radius: 5px;
+  top: -3px;
 }
 
 .footer .menu-modal {

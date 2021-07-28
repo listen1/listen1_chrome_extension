@@ -810,7 +810,7 @@ export default {
       toggleMuteStatus: () => {
         l1Player.toggleMute();
       },
-      playFromPlaylist(song) {
+      playFromPlaylist: (song) => {
         l1Player.playById(song.id);
       }
     };
