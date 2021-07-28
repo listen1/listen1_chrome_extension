@@ -6,9 +6,9 @@
 
 function getCSSStringFromSetting(setting) {
   let { backgroundAlpha } = setting;
-  if (backgroundAlpha === 0){
+  if (backgroundAlpha === 0) {
     // NOTE: background alpha 0 results total transparent
-    // which will cause mouse leave event not trigger 
+    // which will cause mouse leave event not trigger
     // correct in windows platform for lyic window if disable
     // hardware accelerate
     backgroundAlpha = 0.01;
@@ -114,10 +114,8 @@ angular.module('listenone').controller('PlayController', [
         'auto_choose_source_list',
         ['kuwo', 'qq', 'migu']
       );
-      $scope.enableStopWhenClose = getLocalStorageValue(
-        'enable_stop_when_close',
-        true
-      );
+      $scope.enableStopWhenClose =
+        isElectron() || getLocalStorageValue('enable_stop_when_close', true);
       $scope.enableNowplayingCoverBackground = getLocalStorageValue(
         'enable_nowplaying_cover_background',
         false
@@ -341,51 +339,49 @@ angular.module('listenone').controller('PlayController', [
         return newstr;
       }
 
-      const process = (result, timeResult, translationFlag) => (
-        line,
-        index
-      ) => {
-        const tagReg = /\[\D*:([^\]]+)\]/g;
-        const tagRegResult = tagReg.exec(line);
-        if (tagRegResult) {
-          const lyricObject = {};
-          lyricObject.seconds = 0;
-          [lyricObject.content] = tagRegResult;
-          result.push(lyricObject);
-          return;
-        }
+      const process =
+        (result, timeResult, translationFlag) => (line, index) => {
+          const tagReg = /\[\D*:([^\]]+)\]/g;
+          const tagRegResult = tagReg.exec(line);
+          if (tagRegResult) {
+            const lyricObject = {};
+            lyricObject.seconds = 0;
+            [lyricObject.content] = tagRegResult;
+            result.push(lyricObject);
+            return;
+          }
 
-        const timeReg = /\[(\d{2,})\:(\d{2})(?:\.(\d{1,3}))?\]/g; // eslint-disable-line no-useless-escape
+          const timeReg = /\[(\d{2,})\:(\d{2})(?:\.(\d{1,3}))?\]/g; // eslint-disable-line no-useless-escape
 
-        let timeRegResult = null;
-        // eslint-disable-next-line no-cond-assign
-        while ((timeRegResult = timeReg.exec(line)) !== null) {
-          const htmlUnescapes = {
-            '&amp;': '&',
-            '&lt;': '<',
-            '&gt;': '>',
-            '&quot;': '"',
-            '&#39;': "'",
-            '&apos;': "'",
-          };
-          timeResult.push({
-            content: line
-              .replace(timeRegResult[0], '')
-              .replace(
-                /&(?:amp|lt|gt|quot|#39|apos);/g,
-                (match) => htmlUnescapes[match]
-              ),
-            seconds:
-              parseInt(timeRegResult[1], 10) * 60 * 1000 + // min
-              parseInt(timeRegResult[2], 10) * 1000 + // sec
-              (timeRegResult[3]
-                ? parseInt(rightPadding(timeRegResult[3], 3, '0'), 10)
-                : 0), // microsec
-            translationFlag,
-            index,
-          });
-        }
-      };
+          let timeRegResult = null;
+          // eslint-disable-next-line no-cond-assign
+          while ((timeRegResult = timeReg.exec(line)) !== null) {
+            const htmlUnescapes = {
+              '&amp;': '&',
+              '&lt;': '<',
+              '&gt;': '>',
+              '&quot;': '"',
+              '&#39;': "'",
+              '&apos;': "'",
+            };
+            timeResult.push({
+              content: line
+                .replace(timeRegResult[0], '')
+                .replace(
+                  /&(?:amp|lt|gt|quot|#39|apos);/g,
+                  (match) => htmlUnescapes[match]
+                ),
+              seconds:
+                parseInt(timeRegResult[1], 10) * 60 * 1000 + // min
+                parseInt(timeRegResult[2], 10) * 1000 + // sec
+                (timeRegResult[3]
+                  ? parseInt(rightPadding(timeRegResult[3], 3, '0'), 10)
+                  : 0), // microsec
+              translationFlag,
+              index,
+            });
+          }
+        };
 
       lines.forEach(process(result, timeResult, false));
       linesTrans.forEach(process(resultTrans, timeResultTrans, true));
@@ -419,9 +415,10 @@ angular.module('listenone').controller('PlayController', [
 
       return result;
     }
-    const mode = getLocalStorageValue('enable_stop_when_close', true)
-      ? 'front'
-      : 'background';
+    const mode =
+      isElectron() || getLocalStorageValue('enable_stop_when_close', true)
+        ? 'front'
+        : 'background';
 
     getPlayer(mode).setMode(mode);
     if (mode === 'front') {
@@ -736,7 +733,8 @@ angular.module('listenone').controller('PlayController', [
     };
 
     $scope.toggleLyricFloatingWindowTranslation = () => {
-      $scope.enableLyricFloatingWindowTranslation = !$scope.enableLyricFloatingWindowTranslation;
+      $scope.enableLyricFloatingWindowTranslation =
+        !$scope.enableLyricFloatingWindowTranslation;
       localStorage.setObject(
         'enable_lyric_floating_window_translation',
         $scope.enableLyricFloatingWindowTranslation
@@ -799,7 +797,8 @@ angular.module('listenone').controller('PlayController', [
 
     $scope.setNowplayingCoverBackground = (toggle) => {
       if (toggle === true) {
-        $scope.enableNowplayingCoverBackground = !$scope.enableNowplayingCoverBackground;
+        $scope.enableNowplayingCoverBackground =
+          !$scope.enableNowplayingCoverBackground;
       }
       localStorage.setObject(
         'enable_nowplaying_cover_background',

@@ -1,9 +1,10 @@
 /* eslint-disable no-param-reassign */
-/* global getPlayer getPlayerAsync addPlayerListener getLocalStorageValue */
+/* global isElectron getPlayer getPlayerAsync addPlayerListener getLocalStorageValue */
 {
-  const mode = getLocalStorageValue('enable_stop_when_close', true)
-    ? 'front'
-    : 'background';
+  const mode =
+    isElectron() || getLocalStorageValue('enable_stop_when_close', true)
+      ? 'front'
+      : 'background';
 
   const myPlayer = getPlayer(mode);
   const l1Player = {
@@ -134,9 +135,8 @@
         if (!player.playing) {
           // load local storage settings
           if (!player.playlist.length) {
-            const localCurrentPlaying = localStorage.getObject(
-              'current-playing'
-            );
+            const localCurrentPlaying =
+              localStorage.getObject('current-playing');
             if (localCurrentPlaying !== null) {
               localCurrentPlaying.forEach((i) => {
                 i.disabled = false;
