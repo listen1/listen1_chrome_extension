@@ -691,7 +691,7 @@ import 'notyf/notyf.min.css';
 import '@/assets/css/icon.css';
 import '@/assets/css/origin.css';
 import '@/assets/css/common.css';
-import { reactive, toRefs } from 'vue';
+import { reactive, toRefs, computed } from 'vue';
 import { l1Player } from '@/services/l1_player';
 import { mapState, useStore } from 'vuex';
 import { useRouter } from 'vue-router';
@@ -731,6 +731,7 @@ export default {
     return {
       t,
       ...toRefs(data),
+      playmode: computed(() => store.state.player.playmode),
       searchTextChanged: () => {
         store.commit('search/changeSearchKeywords', data.keywords);
         store.dispatch('search/search', {
@@ -740,7 +741,7 @@ export default {
       },
       changePlaymode: () => {
         const playmodeCount = 3;
-        const newPlaymode = (store.state.playmode + 1) % playmodeCount;
+        const newPlaymode = (store.state.player.playmode + 1) % playmodeCount;
         store.dispatch('player/changePlaymode', { mode: newPlaymode });
       },
       showPlaylist: (playlistId) => {
@@ -828,7 +829,6 @@ export default {
       'currentDuration',
       'currentPosition',
       'currentPlaying',
-      'playmode',
       'volume',
       'mute'
     ]),
