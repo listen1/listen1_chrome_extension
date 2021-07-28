@@ -145,23 +145,25 @@ import { useRoute, useRouter } from 'vue-router';
 import notyf from '../services/notyf';
 import MediaService from '../services/MediaService';
 import { l1Player } from '@/services/l1_player';
-import { onMounted, ref } from 'vue';
+import { onMounted, reactive, toRefs } from 'vue';
 export default {
   setup() {
     const { t } = useI18n();
     const router = useRouter();
     const route = useRoute();
-    const songs = ref([]);
-    const list_id = ref('');
-    const cover_img_url = ref('images/loading.svg');
-    const playlist_title = ref('');
-    const playlist_source_url = ref('');
-    const is_mine = ref(false);
-    const is_local = ref(false);
-    const window_type = ref('list');
-    const options = ref(false);
-    const is_favorite = ref(false);
-    const isChrome = ref(true);
+    const local = reactive({
+      songs: [],
+      cover_img_url: 'images/loading.svg',
+      playlist_title: '',
+      playlist_source_url: '',
+      is_mine: false,
+      is_local: false,
+      list_id: '',
+      window_type: 'list',
+      isChrome: true,
+      is_favorite: false
+    });
+
     const mountList = async () => {
       const { listId } = route.params;
       const data = await MediaService.getPlaylist(listId);
@@ -170,32 +172,24 @@ export default {
         // this.popWindow();
         return;
       }
-      songs.value = data.tracks;
-      cover_img_url.value = data.info.cover_img_url;
-      playlist_title.value = data.info.title;
-      playlist_source_url.value = data.info.source_url;
-      list_id.value = data.info.id;
-      is_mine.value = data.info.id.slice(0, 2) === 'my';
-      is_local.value = data.info.id.slice(0, 2) === 'lm';
+      local.songs = data.tracks;
+      local.cover_img_url = data.info.cover_img_url;
+      local.playlist_title = data.info.title;
+      local.playlist_source_url = data.info.source_url;
+      local.list_id = data.info.id;
+      local.is_mine = data.info.id.slice(0, 2) === 'my';
+      local.is_local = data.info.id.slice(0, 2) === 'lm';
 
       //   MediaService.queryPlaylist(data.info.id, "favorite").success((res) => {
       //     this.is_favorite = res.result;
       //   });
 
-      window_type.value = 'list';
+      local.window_type = 'list';
     };
     onMounted(mountList);
     return {
       t,
-      songs,
-      playlist_title,
-      is_local,
-      isChrome,
-      list_id,
-      is_mine,
-      is_favorite,
-      playlist_source_url,
-      cover_img_url,
+      ...toRefs(local),
       showPlaylist: (playlistId) => {
         router.push('/playlist/' + playlistId);
       },
@@ -206,7 +200,7 @@ export default {
       playMylist: (listId) => {
         l1Player.setNewPlaylist(this.songs);
         l1Player.play();
-        list_id.value = listId;
+        local.list_id = listId;
       },
       openUrl: (url) => {
         window.open(url, '_blank').focus();

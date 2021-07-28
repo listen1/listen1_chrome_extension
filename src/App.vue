@@ -5,14 +5,15 @@
 
 <script>
 import Home from '@/views/Home';
+import { useStore } from 'vuex';
 import { getPlayer, addPlayerListener } from '@/services/bridge';
 export default {
   components: {
     Home
   },
-  created() {
-    // const mode = getLocalStorageValue('enable_stop_when_close', true) ? 'front' : 'background';
+  setup() {
     const mode = 'front';
+    const store = useStore();
     getPlayer(mode).setMode(mode);
     // if (mode === 'front') {
     //   if (!isElectron()) {
@@ -23,11 +24,11 @@ export default {
     //   }
     // }
     addPlayerListener(mode, (msg, sender, sendResponse) => {
-      this.$store.dispatch('player/playerListener', { mode, msg, sender, sendResponse });
+      store.dispatch('player/playerListener', { mode, msg, sender, sendResponse });
     });
     // initial vuex states
-    this.$store.dispatch('player/initState');
-    this.$store.dispatch('settings/initState');
+    store.dispatch('player/initState');
+    store.dispatch('settings/initState');
   }
 };
 </script>

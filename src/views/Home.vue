@@ -691,7 +691,7 @@ import 'notyf/notyf.min.css';
 import '@/assets/css/icon.css';
 import '@/assets/css/origin.css';
 import '@/assets/css/common.css';
-import { ref } from 'vue';
+import { reactive, toRefs } from 'vue';
 import { l1Player } from '@/services/l1_player';
 import { mapState, useStore } from 'vuex';
 import { useRouter } from 'vue-router';
@@ -704,29 +704,8 @@ export default {
     const { t } = useI18n();
     const store = useStore();
     const router = useRouter();
-    const keywords = ref('')
-    return {
-      t,
-      keywords,
-      searchTextChanged: () => {
-        store.commit('search/changeSearchKeywords', keywords.value);
-        store.dispatch('search/search', {
-          type: 'search'
-        });
-        router.push('/search');
-      },
-      changePlaymode: () => {
-        const playmodeCount = 3;
-        const newPlaymode = (store.state.playmode + 1) % playmodeCount;
-        store.dispatch('player/changePlaymode', { mode: newPlaymode });
-      },
-      showPlaylist: (playlistId) => {
-        router.push('/playlist/' + playlistId);
-      }
-    };
-  },
-  data() {
-    return {
+    const data = reactive({
+      keywords: '',
       is_dialog_hidden: 1,
       dialog_title: '',
       dialog_type: 0,
@@ -748,8 +727,95 @@ export default {
       is_favorite: false,
       playlist_highlight: false,
       menuHidden: true
+    });
+    return {
+      t,
+      ...toRefs(data),
+      searchTextChanged: () => {
+        store.commit('search/changeSearchKeywords', data.keywords);
+        store.dispatch('search/search', {
+          type: 'search'
+        });
+        router.push('/search');
+      },
+      changePlaymode: () => {
+        const playmodeCount = 3;
+        const newPlaymode = (store.state.playmode + 1) % playmodeCount;
+        store.dispatch('player/changePlaymode', { mode: newPlaymode });
+      },
+      showPlaylist: (playlistId) => {
+        router.push('/playlist/' + playlistId);
+      },
+      playPauseToggle: () => {
+        l1Player.togglePlayPause();
+      },
+      prevTrack: () => {
+        l1Player.prev();
+      },
+      nextTrack: () => {
+        l1Player.next();
+      },
+      toggleNowPlaying: () => {
+        if (data.window_type != 'track') {
+          data.window_type = 'track';
+        } else {
+          data.window_type = '';
+        }
+      },
+      is_login: (platfrom) => {
+        return false;
+      },
+      newDialogOption: (option) => {
+        data.dialog_type = option;
+      },
+      showDialog: (dialog_type, dialog_data) => {
+        data.is_dialog_hidden = 0;
+        data.dialog_data = dialog_data;
+        const dialogWidth = 400;
+        const dialogHeight = 430;
+        const left = window.innerWidth / 2 - dialogWidth / 2;
+        const top = window.innerHeight / 2 - dialogHeight / 2;
+        data.myStyle = {
+          left: `${left}px`,
+          top: `${top}px`
+        };
+        data.dialog_type = dialog_type;
+
+        if (data.dialog_type === 5) {
+          data.dialog_title = t('_OPEN_PLAYLIST');
+        }
+      },
+      closeDialog: () => {
+        data.is_dialog_hidden = 1;
+        data.dialog_type = 0;
+      },
+      togglePlaylist: () => {
+        data.menuHidden = !data.menuHidden;
+      },
+      clearPlaylist: () => {
+        l1Player.clearPlaylist();
+      },
+      changeProgress: (progress) => {
+        l1Player.seek(progress);
+      },
+      changeVolume: (progress) => {
+        l1Player.setVolume(progress * 100);
+        l1Player.unmute();
+      },
+      commitVolume: (progress) => {
+        const current = localStorage.getObject('player-settings');
+        current.volume = progress * 100;
+        localStorage.setObject('player-settings', current);
+      },
+      toggleMuteStatus: () => {
+        l1Player.toggleMute();
+      },
+      playFromPlaylist(song) {
+        l1Player.playById(song.id);
+      }
     };
   },
+
   computed: {
     ...mapState('player', [
       'playlist',
@@ -767,76 +833,6 @@ export default {
       'mute'
     ]),
     ...mapState('settings', ['enableNowplayingCoverBackground', 'enableLyricTranslation', 'enableNowplayingBitrate', 'enableNowplayingPlatform'])
-  },
-
-  methods: {
-    playPauseToggle() {
-      l1Player.togglePlayPause();
-    },
-    prevTrack() {
-      l1Player.prev();
-    },
-    nextTrack() {
-      l1Player.next();
-    },
-    toggleNowPlaying() {
-      if (this.window_type != 'track') {
-        this.window_type = 'track';
-      } else {
-        this.window_type = '';
-      }
-    },
-    is_login(platform) {
-      return false;
-    },
-    newDialogOption(option) {
-      this.dialog_type = option;
-    },
-    showDialog(dialog_type, data) {
-      this.is_dialog_hidden = 0;
-      this.dialog_data = data;
-      const dialogWidth = 400;
-      const dialogHeight = 430;
-      const left = window.innerWidth / 2 - dialogWidth / 2;
-      const top = window.innerHeight / 2 - dialogHeight / 2;
-      this.myStyle = {
-        left: `${left}px`,
-        top: `${top}px`
-      };
-      this.dialog_type = dialog_type;
-
-      if (dialog_type === 5) {
-        this.dialog_title = t('_OPEN_PLAYLIST');
-      }
-    },
-    closeDialog() {
-      this.is_dialog_hidden = 1;
-      this.dialog_type = 0;
-    },
-    togglePlaylist() {
-      this.menuHidden = !this.menuHidden;
-    },
-    clearPlaylist() {
-      l1Player.clearPlaylist();
-    },
-    changeProgress(progress) {
-      l1Player.seek(progress);
-    },
-    changeVolume(progress) {
-      l1Player.setVolume(progress * 100);
-      l1Player.unmute();
-    },
-    commitVolume(progress) {
-      const current = localStorage.getObject('player-settings');
-      current.volume = progress * 100;
-      localStorage.setObject('player-settings', current);
-    },
-    toggleMuteStatus() {
-      l1Player.toggleMute();
-    },
-    playFromPlaylist(song) {
-      l1Player.playById(song.id);
-    }
   }
 };
 </script>
