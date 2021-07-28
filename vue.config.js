@@ -11,6 +11,7 @@ module.exports = {
   },
   chainWebpack: (config) => {
     config.devtool('cheap-module-source-map');
+    config.resolve.alias.set('vue-i18n', 'vue-i18n/dist/vue-i18n.runtime.esm-bundler');
     config.module
       .rule('i18n')
       .test(/\.(json5?|ya?ml)$/)
