@@ -41,18 +41,22 @@ export default class bilibili {
   static async bi_get_playlist(url) {
     const list_id = getParameterByName('list_id', url).split('_').pop();
     const target_url = `https://www.bilibili.com/audio/music-service-c/web/menu/info?sid=${list_id}`;
-    const response = await axios.get(target_url);
-    const { data } = response.data;
-    const info = {
-      cover_img_url: data.cover,
-      title: data.title,
-      id: `biplaylist_${list_id}`,
-      source_url: `https://www.bilibili.com/audio/am${list_id}`
-    };
     const target = `https://www.bilibili.com/audio/music-service-c/web/song/of-menu?pn=1&ps=100&sid=${list_id}`;
-    const res = await axios.get(target);
-
-    const tracks = res.data.data.data.map((item) => this.bi_convert_song(item));
+    const getInfo = async () => {
+      const { data } = (await axios.get(target_url)).data;
+      return {
+        cover_img_url: data.cover,
+        title: data.title,
+        id: `biplaylist_${list_id}`,
+        source_url: `https://www.bilibili.com/audio/am${list_id}`
+      };
+    };
+    const getTracks = async () => {
+      const { data } = await axios.get(target);
+      const tracks = data.data.data.map((item) => this.bi_convert_song(item));
+      return tracks;
+    };
+    const [info, tracks] = await Promise.all([getInfo(), getTracks()]);
     return {
       info,
       tracks
@@ -80,18 +84,22 @@ export default class bilibili {
 
   static async bi_artist(url) {
     const artist_id = getParameterByName('list_id', url).split('_').pop();
-    let target_url = `https://api.bilibili.com/x/space/acc/info?mid=${artist_id}&jsonp=jsonp`;
-    const response = await axios.get(target_url);
-
-    const info = {
-      cover_img_url: response.data.data.face,
-      title: response.data.data.name,
-      id: `biartist_${artist_id}`,
-      source_url: `https://space.bilibili.com/${artist_id}/#/audio`
+    const target_url = `https://api.bilibili.com/x/space/acc/info?mid=${artist_id}&jsonp=jsonp`;
+    const target = `https://api.bilibili.com/audio/music-service-c/web/song/upper?pn=1&ps=0&order=2&uid=${artist_id}`;
+    const getInfo = async () => {
+      const { data } = await axios.get(target_url);
+      return {
+        cover_img_url: data.data.face,
+        title: data.data.name,
+        id: `biartist_${artist_id}`,
+        source_url: `https://space.bilibili.com/${artist_id}/#/audio`
+      };
     };
-    target_url = `https://api.bilibili.com/audio/music-service-c/web/song/upper?pn=1&ps=0&order=2&uid=${artist_id}`;
-    const res = await axios.get(target_url);
-    const tracks = res.data.data.data.map((item) => this.bi_convert_song(item));
+    const getTracks = async () => {
+      const { data } = await axios.get(target);
+      return data.data.data.map((item) => this.bi_convert_song(item));
+    };
+    const [tracks, info] = await Promise.all([getTracks(), getInfo()]);
     return {
       tracks,
       info

@@ -112,8 +112,7 @@ export default class kugou {
   static async kg_get_playlist(url) {
     const list_id = getParameterByName('list_id', url).split('_').pop();
     const target_url = `http://m.kugou.com/plist/list/${list_id}?json=true`;
-    const response = await axios.get(target_url);
-    const { data } = response;
+    const { data } = await axios.get(target_url);
 
     const info = {
       cover_img_url: data.info.list.imgurl ? data.info.list.imgurl.replace('{size}', '400') : '',
