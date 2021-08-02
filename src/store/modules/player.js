@@ -410,11 +410,11 @@ export default {
             break;
           }
           case 'RETRIEVE_URL_FAIL': {
-            state.copyrightNotice();
+            notyf.info(I18n.global.t('_COPYRIGHT_ISSUE'), true);
             break;
           }
           case 'RETRIEVE_URL_FAIL_ALL': {
-            state.failAllNotice();
+            notyf.warning(I18n.global.t('_FAIL_ALL_NOTICE'), true);
             break;
           }
           default:

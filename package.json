@@ -30,11 +30,11 @@
     "@vue/cli-plugin-eslint": "~4.5.0",
     "@vue/cli-plugin-router": "~4.5.0",
     "@vue/cli-service": "~4.5.0",
-    "@vue/compiler-sfc": "^3.1.4",
-    "eslint": "^7.31.0",
+    "@vue/compiler-sfc": "^3.1.5",
+    "eslint": "^7.32.0",
     "eslint-plugin-vue": "7.12.1",
     "vue-cli-plugin-browser-extension": "^0.25.2",
-    "vue-eslint-parser": "^7.9.0"
+    "vue-eslint-parser": "^7.10.0"
   },
   "eslintConfig": {
     "parser": "vue-eslint-parser",
