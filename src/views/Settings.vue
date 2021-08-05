@@ -266,14 +266,10 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import { useI18n } from 'vue-i18n';
-export default {
-  setup() {
-    const { t, locale } = useI18n();
-    return { t, locale, isChrome: true };
-  }
-};
+const { t, locale } = useI18n();
+const isChrome = false;
 </script>
 
 <style>

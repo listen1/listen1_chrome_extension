@@ -52,74 +52,65 @@
     </div>
   </div>
 </template>
-
-<script>
-import { computed, onMounted, reactive, toRefs } from 'vue';
-import MediaService from '../services/MediaService';
-import { useRouter } from 'vue-router';
+<script setup>
 import { l1Player } from '@/services/l1_player';
+import { computed, onMounted, ref, toRefs } from 'vue';
 import { useI18n } from 'vue-i18n';
-export default {
-  setup() {
-    const { t } = useI18n();
-    const router = useRouter();
-    const data = reactive({
-      currentFilterId: '',
-      result: [],
-      tab: MediaService.getSourceList()[0].name,
-      loading: true,
-      showMore: false,
-      playlistFilters: {},
-      allPlaylistFilters: {}
+import { useRouter } from 'vue-router';
+import MediaService from '../services/MediaService';
+
+const { t } = useI18n();
+const router = useRouter();
+const currentFilterId = ref('');
+const result = ref([]);
+const tab = ref(MediaService.getSourceList()[0].name);
+const loading = ref(true);
+const showMore = ref(false);
+const playlistFilters = ref({});
+const allPlaylistFilters = ref({});
+
+const loadPlaylist = () => {
+  const offset = 0;
+  showMore.value = false;
+
+  MediaService.showPlaylistArray(tab.value, offset, currentFilterId.value).then((res) => {
+    result.value = res.result;
+    loading.value = false;
+  });
+
+  if (playlistFilters.value[tab.value] === undefined && allPlaylistFilters.value[tab.value] === undefined) {
+    MediaService.getPlaylistFilters(tab.value).then((res) => {
+      playlistFilters.value[tab.value] = res.recommend;
+      allPlaylistFilters.value[tab.value] = res.all;
     });
-
-    const loadPlaylist = () => {
-      const offset = 0;
-      data.showMore = false;
-
-      MediaService.showPlaylistArray(data.tab, offset, data.currentFilterId).then((res) => {
-        data.result = res.result;
-        data.loading = false;
-      });
-
-      if (data.playlistFilters[data.tab] === undefined && data.allPlaylistFilters[data.tab] === undefined) {
-        MediaService.getPlaylistFilters(data.tab).then((res) => {
-          data.playlistFilters[data.tab] = res.recommend;
-          data.allPlaylistFilters[data.tab] = res.all;
-        });
-      }
-    };
-    onMounted(loadPlaylist);
-    return {
-      t,
-      ...toRefs(data),
-      changeTab: (newTab) => {
-        data.tab = newTab;
-        data.result = [];
-        data.currentFilterId = '';
-        loadPlaylist();
-      },
-      changeFilter: (filterId) => {
-        data.result = [];
-        data.currentFilterId = filterId;
-        loadPlaylist();
-      },
-      toggleMorePlaylists: () => {
-        data.showMore = !data.showMore;
-      },
-      showPlaylist: (playlistId) => {
-        router.push('/playlist/' + playlistId);
-      },
-      directplaylist: async (list_id) => {
-        const data = await MediaService.getPlaylist(list_id);
-        const songs = data.tracks;
-        l1Player.setNewPlaylist(songs);
-        l1Player.play();
-      },
-      sourceList: computed(() => MediaService.getSourceList())
-    };
   }
 };
+onMounted(loadPlaylist);
+
+const changeTab = (newTab) => {
+  tab.value = newTab;
+  result.value = [];
+  currentFilterId.value = '';
+  loadPlaylist();
+};
+const changeFilter = (filterId) => {
+  result.value = [];
+  currentFilterId.value = filterId;
+  loadPlaylist();
+};
+const toggleMorePlaylists = () => {
+  showMore.value = !showMore.value;
+};
+const showPlaylist = (playlistId) => {
+  router.push('/playlist/' + playlistId);
+};
+const directplaylist = async (list_id) => {
+  const data = await MediaService.getPlaylist(list_id);
+  const songs = data.tracks;
+  l1Player.setNewPlaylist(songs);
+  l1Player.play();
+};
+const sourceList = computed(() => MediaService.getSourceList());
 </script>
 
 <style>

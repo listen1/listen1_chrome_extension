@@ -150,45 +150,41 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { mapState, useStore } from 'vuex';
-import MediaService from '../services/MediaService';
+import { useStore } from 'vuex';
 import { l1Player } from '../services/l1_player';
+import MediaService from '../services/MediaService';
 
-export default {
-  setup() {
-    const { t } = useI18n();
-    const store = useStore();
-    return {
-      t,
-      changeSearchType: (newValue) => {
-        store.commit('search/changeSearchType', newValue);
-        store.commit('search/setSearchPage', 1);
-        store.dispatch('search/search');
-      },
-      changeSourceTab: (newValue) => {
-        store.commit('search/changeSearchTab', newValue);
-        store.commit('search/setSearchPage', 1);
-        store.dispatch('search/search');
-      },
-      changeSearchPage: (offset) => {
-        store.commit('search/changeSearchPage', offset);
-        store.dispatch('search/search');
-      },
-      play: (song) => {
-        l1Player.addTrack(song);
-        l1Player.playById(song.id);
-      },
-      sourceList: computed(() => MediaService.getSourceList())
-    };
-  },
-
-  computed: {
-    ...mapState('search', ['keywords', 'result', 'curpage', 'totalpage', 'searchType', 'tab', 'loading'])
-  }
+const { t } = useI18n();
+const store = useStore();
+const keywords = computed(() => store.state.search.keywords);
+const result = computed(() => store.state.search.result);
+const curpage = computed(() => store.state.search.curpage);
+const totalpage = computed(() => store.state.search.totalpage);
+const searchType = computed(() => store.state.search.searchType);
+const tab = computed(() => store.state.search.tab);
+const loading = computed(() => store.state.search.loading);
+const changeSearchType = (newValue) => {
+  store.commit('search/changeSearchType', newValue);
+  store.commit('search/setSearchPage', 1);
+  store.dispatch('search/search');
 };
+const changeSourceTab = (newValue) => {
+  store.commit('search/changeSearchTab', newValue);
+  store.commit('search/setSearchPage', 1);
+  store.dispatch('search/search');
+};
+const changeSearchPage = (offset) => {
+  store.commit('search/changeSearchPage', offset);
+  store.dispatch('search/search');
+};
+const play = (song) => {
+  l1Player.addTrack(song);
+  l1Player.playById(song.id);
+};
+const sourceList = computed(() => MediaService.getSourceList());
 </script>
 
 <style>
