@@ -192,6 +192,9 @@ const playMylist = (listId) => {
   l1Player.play();
   list_id.value = listId;
 };
+const showPlaylist = (playlistId) => {
+  router.push('/playlist/' + playlistId);
+};
 const openUrl = (url) => {
   window.open(url, '_blank').focus();
 };

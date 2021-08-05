@@ -24,7 +24,7 @@
   },
   "devDependencies": {
     "@intlify/vue-i18n-loader": "^2.1.2",
-    "@types/chrome": "^0.0.148",
+    "@types/chrome": "^0.0.154",
     "@types/wicg-mediasession": "^1.1.2",
     "@vue/cli-plugin-babel": "~4.5.0",
     "@vue/cli-plugin-eslint": "~4.5.0",
