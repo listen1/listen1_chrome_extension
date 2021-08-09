@@ -572,22 +572,20 @@ export default class kuwo {
     if (!data) {
       return [];
     }
+    /** @type {{cover_img_url:string;id:string;source_url:string;title:string}[]}*/
     const result = data.data.map((item) => ({
       cover_img_url: item.img,
       title: item.name,
       id: `kwplaylist_${item.id}`,
       source_url: `https://www.kuwo.cn/playlist_detail/${item.id}`
     }));
-    return {
-      result
-    };
+    return result;
   }
 
   static async kw_get_playlist(url) {
     // eslint-disable-line no-unused-vars
     const list_id = getParameterByName('list_id', url).split('_').pop();
-    const target_url =
-      'https://nplserver.kuwo.cn/pl.svc?' + 'op=getlistinfo&pn=0&rn=0&encode=utf-8&keyset=pl2012&pcmp4=1' + `&pid=${list_id}&vipver=MUSIC_9.0.2.0_W1&newver=1`;
+    const target_url = `https://nplserver.kuwo.cn/pl.svc?op=getlistinfo&pn=0&rn=0&encode=utf-8&keyset=pl2012&pcmp4=1&pid=${list_id}&vipver=MUSIC_9.0.2.0_W1&newver=1`;
     // https://www.kuwo.cn/api/www/playlist/playListInfo?pid=3134372426&pn=1&rn=30
     const { data } = await axios.get(target_url);
 

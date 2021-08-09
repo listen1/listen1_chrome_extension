@@ -27,15 +27,14 @@ export default class bilibili {
 
     const response = await axios.get(target_url);
     const { data } = response.data.data;
+    /** @type {{cover_img_url:string;id:string;source_url:string;title:string}[]}*/
     const result = data.map((item) => ({
       cover_img_url: item.cover,
       title: item.title,
       id: `biplaylist_${item.menuId}`,
       source_url: `https://www.bilibili.com/audio/am${item.menuId}`
     }));
-    return {
-      result
-    };
+    return result;
   }
 
   static async bi_get_playlist(url) {

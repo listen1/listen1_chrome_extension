@@ -228,14 +228,14 @@ export default class taihe {
         subCateId: subCate
       }
     });
-
+    /** @type {{cover_img_url:string;id:string;source_url:string;title:string}[]}*/
     const result = data.data.result.map((item) => ({
       cover_img_url: item.pic,
       title: item.title,
       id: `thplaylist_${item.id}`,
       source_url: `https://music.taihe.com/songlist/${item.id}`
     }));
-    return { result };
+    return result;
   }
 
   static parse_url(url) {

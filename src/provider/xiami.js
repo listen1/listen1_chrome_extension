@@ -1,11 +1,6 @@
 export default class xiami {
   static show_playlist() {
-    return {
-      success: (fn) =>
-        fn({
-          result: []
-        })
-    };
+    return [];
   }
 
   // eslint-disable-next-line no-unused-vars

@@ -1,14 +1,18 @@
 <template>
   <div class="playbar-clickable">
     <div :id="id" class="barbg" @mousedown="onMyMouseDown">
-      <div class="cur" :style="{ width: changingProgress ? cprogress * 100 + '%' : progress + '%' }">
-        <span class="btn"><i /></span>
+      <div
+        class="cur"
+        :style="{ width: changingProgress ? cprogress * 100 + '%' : progress + '%' }"
+      >
+        <span class="btn">
+          <i />
+        </span>
       </div>
     </div>
   </div>
 </template>
 <script setup>
-import { defineProps, defineEmits, ref } from 'vue';
 const props = defineProps({
   id: {
     type: String,
@@ -20,19 +24,19 @@ const props = defineProps({
   }
 });
 const emits = defineEmits(['update-progress', 'commit-progress']);
-const changingProgress = ref(false);
-const cprogress = ref(0);
+let changingProgress = $ref(false);
+let cprogress = $ref(0);
 const onMyMouseDown = (event) => {
-  changingProgress.value = true;
+  changingProgress = true;
   const containerElem = document.getElementById(props.id);
 
   const container = containerElem.getBoundingClientRect();
   // Prevent default dragging of selected content
   event.preventDefault();
   const x = event.clientX - container.left;
-  cprogress.value = x / (container.right - container.left);
+  cprogress = x / (container.right - container.left);
 
-  emits('update-progress', cprogress.value);
+  emits('update-progress', cprogress);
   const sync = (event) => {
     const container = document.getElementById(props.id).getBoundingClientRect();
     let x = event.clientX - container.left;
@@ -44,20 +48,20 @@ const onMyMouseDown = (event) => {
         x = container.right - container.left;
       }
     }
-    cprogress.value = x / (container.right - container.left);
+    cprogress = x / (container.right - container.left);
   };
   const mousemove = (event) => {
     sync(event);
-    emits('update-progress', cprogress.value);
+    emits('update-progress', cprogress);
   };
 
   const mouseup = (event) => {
     sync(event);
-    emits('commit-progress', cprogress.value);
+    emits('commit-progress', cprogress);
 
     document.removeEventListener('mousemove', mousemove);
     document.removeEventListener('mouseup', mouseup);
-    changingProgress.value = false;
+    changingProgress = false;
   };
 
   document.addEventListener('mousemove', mousemove);

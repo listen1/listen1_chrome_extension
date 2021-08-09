@@ -288,15 +288,14 @@ export default class kugou {
 
     const { data } = await axios.get(target_url);
     // const total = data.plist.total;
+    /** @type {{cover_img_url:string;id:string;source_url:string;title:string}[]}*/
     const result = data.plist.list.info.map((item) => ({
       cover_img_url: item.imgurl ? item.imgurl.replace('{size}', '400') : '',
       title: item.specialname,
       id: `kgplaylist_${item.specialid}`,
       source_url: 'https://www.kugou.com/yy/special/single/{size}.html'.replace('{size}', item.specialid)
     }));
-    return {
-      result
-    };
+    return result;
   }
 
   static parse_url(url) {

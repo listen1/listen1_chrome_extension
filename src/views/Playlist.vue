@@ -3,7 +3,10 @@
     <div class="playlist-detail">
       <div class="detail-head">
         <div class="detail-head-cover">
-          <img :src="cover_img_url" err-src="https://y.gtimg.cn/mediastyle/global/img/singer_300.png" />
+          <img
+            :src="cover_img_url"
+            err-src="https://y.gtimg.cn/mediastyle/global/img/singer_300.png"
+          />
         </div>
         <div class="detail-head-title">
           <h2>{{ playlist_title }}</h2>
@@ -15,14 +18,14 @@
               </div>
               <!-- <div class="add-list" ng-click="addMylist(list_id)">
                 <span class="icon li-add" />
-              </div> -->
+              </div>-->
             </div>
             <!-- <div v-show="is_local" class="playlist-button clone-button" ng-click="addLocalMusic(list_id)">
               <div class="play-list">
                 <span class="icon li-songlist" />
                 <span>{{ $t('_ADD_LOCAL_SONGS') }}</span>
               </div>
-            </div> -->
+            </div>-->
             <!-- <div v-show="!is_mine && !is_local" class="playlist-button clone-button" ng-click="clonePlaylist(list_id)">
               <div class="play-list">
                 <span class="icon li-songlist" />
@@ -40,7 +43,7 @@
                 </svg>
                 <span>{{ $t('_EDIT') }}</span>
               </div>
-            </div> -->
+            </div>-->
             <!-- <div v-show="!is_mine && !is_local" class="playlist-button fav-button" ng-click="favoritePlaylist(list_id)">
               <div class="play-list" ng-class="{'favorited':is_favorite,'notfavorite':!is_favorite}">
                 <svg class="feather">
@@ -48,20 +51,32 @@
                 </svg>
                 <span>is_favorite?_FAVORITED:_FAVORITE</span>
               </div>
-            </div> -->
-            <div v-show="isChrome && is_favorite && !is_local" class="playlist-button edit-button" ng-click="closeWindow();showPlaylist(list_id)">
+            </div>-->
+            <div
+              v-show="isChrome && is_favorite && !is_local"
+              class="playlist-button edit-button"
+              ng-click="closeWindow();showPlaylist(list_id)"
+            >
               <div class="play-list">
                 <span class="icon li-loop" />
                 <span>{{ t('_REFRESH_PLAYLIST') }}</span>
               </div>
             </div>
-            <div v-show="!is_mine && !is_local" class="playlist-button edit-button" @click="openUrl(playlist_source_url)">
+            <div
+              v-show="!is_mine && !is_local"
+              class="playlist-button edit-button"
+              @click="openUrl(playlist_source_url)"
+            >
               <div class="play-list">
                 <span class="icon li-link" />
                 <span>{{ t('_ORIGIN_LINK') }}</span>
               </div>
             </div>
-            <div v-show="is_mine && !is_local" class="playlist-button edit-button" ng-click="showDialog(6)">
+            <div
+              v-show="is_mine && !is_local"
+              class="playlist-button edit-button"
+              ng-click="showDialog(6)"
+            >
               <div class="play-list">
                 <svg class="feather">
                   <use href="#git-merge" />
@@ -82,7 +97,7 @@
             <use href="#x" />
           </svg>
           <input class="playlist-search-input" type="text" ng-model="playlistFilter.key" :placeholder="$t('_SEARCH_PLAYLIST')" />
-        </div> -->
+        </div>-->
         <li class="head">
           <div class="title">
             <a>{{ t('_SONGS') + '(' + songs.length + ')' }}</a>
@@ -130,8 +145,15 @@
               ng-click="removeSongFromPlaylist(song, list_id)"
             >
               <span class="icon li-del" />
-            </a> -->
-            <a v-show="song.options && !is_local" title="_ORIGIN_LINK" class="source-button" @click="openUrl(song.source_url)"><span class="icon li-link" /></a>
+            </a>-->
+            <a
+              v-show="song.options && !is_local"
+              title="_ORIGIN_LINK"
+              class="source-button"
+              @click="openUrl(song.source_url)"
+            >
+              <span class="icon li-link" />
+            </a>
           </div>
         </li>
       </ul>
@@ -141,7 +163,7 @@
 
 <script setup>
 import { l1Player } from '@/services/l1_player';
-import { onMounted, ref } from 'vue';
+import { onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 import MediaService from '../services/MediaService';
@@ -150,16 +172,16 @@ import notyf from '../services/notyf';
 const { t } = useI18n();
 const router = useRouter();
 const route = useRoute();
-const songs = ref([]);
-const cover_img_url = ref('images/loading.svg');
-const playlist_title = ref('');
-const playlist_source_url = ref('');
-const is_mine = ref(false);
-const is_local = ref(false);
-const list_id = ref('');
-const window_type = ref('list');
+let songs = $ref([]);
+let cover_img_url = $ref('images/loading.svg');
+let playlist_title = $ref('');
+let playlist_source_url = $ref('');
+let is_mine = $ref(false);
+let is_local = $ref(false);
+let list_id = $ref('');
+let window_type = $ref('list');
 const isChrome = true;
-const is_favorite = ref(false);
+let is_favorite = $ref(false);
 
 onMounted(async () => {
   const { listId } = route.params;
@@ -169,28 +191,28 @@ onMounted(async () => {
     // this.popWindow();
     return;
   }
-  songs.value = data.tracks;
-  cover_img_url.value = data.info.cover_img_url;
-  playlist_title.value = data.info.title;
-  playlist_source_url.value = data.info.source_url;
-  list_id.value = data.info.id;
-  is_mine.value = data.info.id.slice(0, 2) === 'my';
-  is_local.value = data.info.id.slice(0, 2) === 'lm';
+  songs = data.tracks;
+  cover_img_url = data.info.cover_img_url;
+  playlist_title = data.info.title;
+  playlist_source_url = data.info.source_url;
+  list_id = data.info.id;
+  is_mine = data.info.id.slice(0, 2) === 'my';
+  is_local = data.info.id.slice(0, 2) === 'lm';
 
   //   MediaService.queryPlaylist(data.info.id, "favorite").success((res) => {
   //     this.is_favorite = res.result;
   //   });
 
-  window_type.value = 'list';
+  window_type = 'list';
 });
 const play = (song) => {
   l1Player.addTrack(song);
   l1Player.playById(song.id);
 };
 const playMylist = (listId) => {
-  l1Player.setNewPlaylist(songs.value);
+  l1Player.setNewPlaylist(songs);
   l1Player.play();
-  list_id.value = listId;
+  list_id = listId;
 };
 const showPlaylist = (playlistId) => {
   router.push('/playlist/' + playlistId);
