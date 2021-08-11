@@ -12,6 +12,46 @@
           <button class="language-button" @click="locale = 'en-US'">English</button>
           <button class="language-button" @click="locale = 'fr-FR'">French</button>
         </div>
+        <div class="settings-title">
+          <span>{{ t('_NOWPLAYING_DISPLAY') }}</span>
+        </div>
+        <div class="settings-content">
+          <div class="shortcut">
+            <vue-feather
+              v-show="!enableNowplayingCoverBackground"
+              type="square"
+              @click="toggleCoverBackground"
+            ></vue-feather>
+            <vue-feather
+              v-show="enableNowplayingCoverBackground"
+              type="check-square"
+              @click="toggleCoverBackground"
+            ></vue-feather>
+            {{ t('_NOWPLAYING_COVER_BACKGROUND_NOTICE') }}
+          </div>
+          <div class="shortcut">
+            <vue-feather v-show="!enableNowplayingBitrate" type="square" @click="toggleBitrate"></vue-feather>
+            <vue-feather
+              v-show="enableNowplayingBitrate"
+              type="check-square"
+              @click="toggleBitrate"
+            ></vue-feather>
+            {{ t('_NOWPLAYING_BITRATE_NOTICE') }}
+          </div>
+          <div class="shortcut">
+            <vue-feather
+              v-show="!enableNowplayingPlatform"
+              type="square"
+              @click="togglePlayingPlatform"
+            ></vue-feather>
+            <vue-feather
+              v-show="enableNowplayingPlatform"
+              type="check-square"
+              @click="togglePlayingPlatform"
+            ></vue-feather>
+            {{ t('_NOWPLAYING_PLATFORM_NOTICE') }}
+          </div>
+        </div>
         <!-- <div class="settings-title">
           <span>{{ $t('_THEME') }}</span>
         </div>
@@ -239,22 +279,28 @@
           proxyMode.displayText
           <span v-show="proxyMode_name == 'custom'">proxyRules</span>
           <button ng-click="showDialog(12)">{{ $t('_MODIFY') }}</button>
-        </div> -->
+        </div>-->
         <div class="settings-title">
           <span>{{ t('_ABOUT') }}</span>
         </div>
         <div class="settings-content">
           <p>
             Listen 1 {{ t('_HOMEPAGE') }}:
-            <a open-url="'https://listen1.github.io/listen1/'">https://listen1.github.io/listen1/</a>
+            <a
+              open-url="'https://listen1.github.io/listen1/'"
+            >https://listen1.github.io/listen1/</a>
           </p>
           <p>Listen 1 {{ t('_EMAIL') }}: githublisten1@gmail.com</p>
           <p>
             {{ t('_FEEDBACK') }}:
-            <a v-if="isChrome" open-url="'https://github.com/listen1/listen1_chrome_extension/issues'">
-              https://github.com/listen1/listen1_chrome_extension/issues
-            </a>
-            <a v-if="!isChrome" open-url="'https://github.com/listen1/listen1_desktop/issues'">https://github.com/listen1/listen1_desktop/issues</a>
+            <a
+              v-if="isChrome"
+              open-url="'https://github.com/listen1/listen1_chrome_extension/issues'"
+            >https://github.com/listen1/listen1_chrome_extension/issues</a>
+            <a
+              v-if="!isChrome"
+              open-url="'https://github.com/listen1/listen1_desktop/issues'"
+            >https://github.com/listen1/listen1_desktop/issues</a>
           </p>
           <p>{{ t('_DESIGNER') }}: iparanoid</p>
           <p>{{ t('_VERSION') }}: v3.0.0 (DEVELOPER VERSION)</p>
@@ -268,8 +314,16 @@
 
 <script setup>
 import { useI18n } from 'vue-i18n';
+import { useStore } from 'vuex';
 const { t, locale } = useI18n();
+const store = useStore();
 const isChrome = true;
+const enableNowplayingCoverBackground = $computed(() => store.state.settings.enableNowplayingCoverBackground)
+const enableNowplayingBitrate = $computed(() => store.state.settings.enableNowplayingBitrate)
+const enableNowplayingPlatform = $computed(() => store.state.settings.enableNowplayingPlatform)
+const toggleCoverBackground = () => store.dispatch("settings/setState", { enableNowplayingCoverBackground: !enableNowplayingCoverBackground })
+const toggleBitrate = () => store.dispatch("settings/setState", { enableNowplayingBitrate: !enableNowplayingBitrate })
+const togglePlayingPlatform = () => store.dispatch("settings/setState", { enableNowplayingPlatform: !enableNowplayingPlatform })
 </script>
 
 <style>
