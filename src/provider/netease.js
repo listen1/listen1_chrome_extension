@@ -67,25 +67,20 @@ export default class netease {
 
   static async ne_show_toplist(offset) {
     if (offset !== undefined && offset > 0) {
-      return {
-        result: []
-      };
+      return [];
     }
     const url = 'https://music.163.com/weapi/toplist/detail';
     const data = this.weapi({});
 
     const response = await axios.post(url, new URLSearchParams(data));
-    const result = [];
-    response.data.list.forEach((item) => {
-      const playlist = {
-        cover_img_url: item.coverImgUrl,
-        id: `neplaylist_${item.id}`,
-        source_url: `https://music.163.com/#/playlist?id=${item.id}`,
-        title: item.name
-      };
-      result.push(playlist);
-    });
-    return { result };
+    /** @type {{cover_img_url:string;id:string;source_url:string;title:string}[]}*/
+    const result = response.data.list.map((item) => ({
+      cover_img_url: item.coverImgUrl,
+      id: `neplaylist_${item.id}`,
+      source_url: `https://music.163.com/#/playlist?id=${item.id}`,
+      title: item.name
+    }));
+    return result;
   }
 
   static async show_playlist(url) {
@@ -116,9 +111,7 @@ export default class netease {
       id: `neplaylist_${getParameterByName('id', item.getElementsByTagName('div')[0].getElementsByTagName('a')[0].href)}`,
       source_url: `https://music.163.com/#/playlist?id=${getParameterByName('id', item.getElementsByTagName('div')[0].getElementsByTagName('a')[0].href)}`
     }));
-    return {
-      result
-    };
+    return result;
   }
 
   static ne_ensure_cookie(callback) {

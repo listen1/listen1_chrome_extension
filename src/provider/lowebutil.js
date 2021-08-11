@@ -32,7 +32,6 @@ export function cookieGet(cookieRequest, callback) {
 export async function cookieGetPromise(cookieRequest) {
   return new Promise((res, rej) => {
     if (!isElectron()) {
-
       chrome.cookies.get(cookieRequest, (cookie) => {
         res(cookie);
       });

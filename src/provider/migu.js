@@ -47,9 +47,7 @@ export default class migu {
 
   static async mg_show_toplist(offset) {
     if (offset !== undefined && offset > 0) {
-      return {
-        result: []
-      };
+      return [];
     }
 
     const url = 'https://app.c.nf.migu.cn/MIGUM3.0/v1.0/template/rank-list/release?dataVersion=1616469593718&templateVersion=9';
@@ -73,35 +71,35 @@ export default class migu {
         cover_img_url: 'https://cdnmusic.migu.cn/tycms_picture/20/02/36/20020512065402_360x360_2997.png',
         title: '尖叫新歌榜',
         id: 'mgtoplist_27553319',
-        source: ''
+        source_url: ''
       },
       {
         cover_img_url: 'https://cdnmusic.migu.cn/tycms_picture/20/04/99/200408163640868_360x360_6587.png',
         title: '尖叫热歌榜',
         id: 'mgtoplist_27186466',
-        source: ''
+        source_url: ''
       },
       {
         cover_img_url: 'https://cdnmusic.migu.cn/tycms_picture/20/04/99/200408163702795_360x360_1614.png',
         title: '尖叫原创榜',
         id: 'mgtoplist_27553408',
-        source: ''
+        source_url: ''
       },
       {
         cover_img_url: 'https://cdnmusic.migu.cn/tycms_picture/20/05/136/200515161733982_360x360_1523.png',
         title: '音乐榜',
         id: 'mgtoplist_1',
-        source: ''
+        source_url: ''
       },
       {
         cover_img_url: 'https://cdnmusic.migu.cn/tycms_picture/20/05/136/200515161848938_360x360_673.png',
         title: '影视榜',
         id: 'mgtoplist_2',
-        source: ''
+        source_url: ''
       }
     ];
     const result = chart_board.concat(migu_board, global_board);
-    return { result };
+    return result;
   }
 
   static async show_playlist(url) {
@@ -124,6 +122,7 @@ export default class migu {
 
     const response = await axios.get(target_url);
     const data = !filterId ? response.data.data.contentItemList[0].itemList : response.data.data.contentItemList.itemList;
+    /** @type {{cover_img_url:string;id:string;source_url:string;title:string}[]}*/
     const result = data.map((item) => {
       const match = /id=([0-9]+)&/.exec(item.actionUrl);
       const id = match ? match[1] : '';
@@ -134,7 +133,7 @@ export default class migu {
         source_url: `https://music.migu.cn/v3/music/playlist/${id}`
       };
     });
-    return { result };
+    return result;
   }
 
   static async mg_toplist(url) {

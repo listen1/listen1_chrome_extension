@@ -3,17 +3,16 @@
   <div class="page">
     <div class="site-wrapper-innerd">
       <div class="cover-container">
-        <!-- Initialize a new AngularJS app and associate it with a module named "instantSearch"-->
         <div class="searchbox">
           <ul class="source-list">
             <li class="source-button" :class="{ active: searchtab === 'allmusic' }" @click="changeSourceTab('allmusic')">
-              <a>{{ $t('_ALL_MUSIC') }}(Beta)</a>
+              <a>{{ t('_ALL_MUSIC') }}(Beta)</a>
             </li>
             <div class="splitter" />
 
             <template v-for="(source, index) in sourceList" :key="source.name">
               <div class="source-button" :class="{ active: tab === source.name }" @click="changeSourceTab(source.name)">
-                {{ $t(source.name) }}
+                {{ t(source.name) }}
               </div>
               <div v-if="index != sourceList.length - 1" class="splitter" />
             </template>
@@ -63,25 +62,25 @@
           <ul class="detail-songlist">
             <li v-if="searchType === 0" class="head">
               <div class="title">
-                <a>{{ $t('_SONGS') }}</a>
+                <a>{{ t('_SONGS') }}</a>
               </div>
               <div class="artist">
-                <a>{{ $t('_ARTISTS') }}</a>
+                <a>{{ t('_ARTISTS') }}</a>
               </div>
               <div class="album">
-                <a>{{ $t('_ALBUMS') }}</a>
+                <a>{{ t('_ALBUMS') }}</a>
               </div>
-              <div class="tools">{{ $t('_OPERATION') }}</div>
+              <div class="tools">{{ t('_OPERATION') }}</div>
             </li>
             <li v-if="searchType === 1" class="head">
               <div class="title">
-                <a>{{ $t('_PLAYLIST_TITLE') }}</a>
+                <a>{{ t('_PLAYLIST_TITLE') }}</a>
               </div>
               <div class="artist">
-                <a>{{ $t('_PLAYLIST_AUTHOR') }}</a>
+                <a>{{ t('_PLAYLIST_AUTHOR') }}</a>
               </div>
               <div class="album">
-                <a>{{ $t('_PLAYLIST_SONG_COUNT') }}</a>
+                <a>{{ t('_PLAYLIST_SONG_COUNT') }}</a>
               </div>
             </li>
             <template v-if="searchType === 0">
@@ -151,45 +150,41 @@
   </div>
 </template>
 
-<script>
-import { mapState } from 'vuex';
-import MediaService from '../services/MediaService';
+<script setup>
+import { computed } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { useStore } from 'vuex';
 import { l1Player } from '../services/l1_player';
+import MediaService from '../services/MediaService';
 
-export default {
-  data() {
-    return {};
-  },
-
-  computed: {
-    sourceList() {
-      return MediaService.getSourceList();
-    },
-    ...mapState('search', ['keywords', 'result', 'curpage', 'totalpage', 'searchType', 'tab', 'loading'])
-  },
-  methods: {
-    changeSearchType(newValue) {
-      this.$store.commit('search/changeSearchType', newValue);
-      this.$store.commit('search/setSearchPage', 1);
-
-      this.$store.dispatch('search/search');
-    },
-    changeSourceTab(newValue) {
-      this.$store.commit('search/changeSearchTab', newValue);
-      this.$store.commit('search/setSearchPage', 1);
-
-      this.$store.dispatch('search/search');
-    },
-    changeSearchPage(offset) {
-      this.$store.commit('search/changeSearchPage', offset);
-      this.$store.dispatch('search/search');
-    },
-    play(song) {
-      l1Player.addTrack(song);
-      l1Player.playById(song.id);
-    }
-  }
+const { t } = useI18n();
+const store = useStore();
+const keywords = computed(() => store.state.search.keywords);
+const result = computed(() => store.state.search.result);
+const curpage = computed(() => store.state.search.curpage);
+const totalpage = computed(() => store.state.search.totalpage);
+const searchType = computed(() => store.state.search.searchType);
+const tab = computed(() => store.state.search.tab);
+const loading = computed(() => store.state.search.loading);
+const changeSearchType = (newValue) => {
+  store.commit('search/changeSearchType', newValue);
+  store.commit('search/setSearchPage', 1);
+  store.dispatch('search/search');
 };
+const changeSourceTab = (newValue) => {
+  store.commit('search/changeSearchTab', newValue);
+  store.commit('search/setSearchPage', 1);
+  store.dispatch('search/search');
+};
+const changeSearchPage = (offset) => {
+  store.commit('search/changeSearchPage', offset);
+  store.dispatch('search/search');
+};
+const play = (song) => {
+  l1Player.addTrack(song);
+  l1Player.playById(song.id);
+};
+const sourceList = computed(() => MediaService.getSourceList());
 </script>
 
 <style>

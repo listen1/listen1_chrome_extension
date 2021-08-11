@@ -1,7 +1,8 @@
 import MediaService from '../../services/MediaService';
 import { isElectron, smoothScrollTo } from '@/provider/lowebutil';
 import { l1Player } from '@/services/l1_player';
-
+import notyf from '../../services/notyf';
+import I18n from '../../i18n';
 function rightPadding(str, length, padChar) {
   const newstr = str + new Array(length - str.length + 1).join(padChar);
   return newstr;
@@ -135,6 +136,9 @@ export default {
     setIsPlaying(state, newValue) {
       state.isPlaying = newValue;
     },
+    setCurrentDuration(state, newValue) {
+      state.currentDuration = newValue;
+    },
     setCurrentPosition(state, newValue) {
       state.currentPosition = newValue;
     },
@@ -198,7 +202,7 @@ export default {
             break;
           }
           case 'PLAY_FAILED': {
-            notyf.info(i18next.t('_COPYRIGHT_ISSUE'), true);
+            notyf.info(I18n.global.t('_COPYRIGHT_ISSUE'), true);
             break;
           }
 
@@ -261,7 +265,7 @@ export default {
               if (msg.data.duration === 0 || state.currentDuration === durationStr) {
                 return;
               }
-              state.currentDuration = durationStr;
+              commit('setCurrentDuration', durationStr);
             })();
 
             // 'track:progress'
@@ -406,11 +410,11 @@ export default {
             break;
           }
           case 'RETRIEVE_URL_FAIL': {
-            state.copyrightNotice();
+            notyf.info(I18n.global.t('_COPYRIGHT_ISSUE'), true);
             break;
           }
           case 'RETRIEVE_URL_FAIL_ALL': {
-            state.failAllNotice();
+            notyf.warning(I18n.global.t('_FAIL_ALL_NOTICE'), true);
             break;
           }
           default:

@@ -30,9 +30,17 @@
                 </ul>
                 <!-- create new playlist dialog-->
                 <div v-show="dialog_type == 1" class="dialog-newplaylist">
-                  <input class="form-control" type="text" placeholder="_INPUT_NEW_PLAYLIST_TITLE" ng-model="newlist_title" />
+                  <input
+                    class="form-control"
+                    type="text"
+                    placeholder="_INPUT_NEW_PLAYLIST_TITLE"
+                    ng-model="newlist_title"
+                  />
                   <div class="buttons">
-                    <button class="btn btn-primary confirm-button" ng-click="createAndAddPlaylist()">_CONFIRM</button>
+                    <button
+                      class="btn btn-primary confirm-button"
+                      ng-click="createAndAddPlaylist()"
+                    >_CONFIRM</button>
                     <button class="btn btn-default" ng-click="cancelNewDialog(0)">_CANCEL</button>
                   </div>
                 </div>
@@ -40,41 +48,76 @@
                 <div v-show="dialog_type == 3" class="dialog-editplaylist">
                   <div class="form-group">
                     <label>_PLAYLIST_TITLE</label>
-                    <input class="form-control" type="text" placeholder="_INPUT_PLAYLIST_TITLE" ng-model="dialog_playlist_title" />
+                    <input
+                      class="form-control"
+                      type="text"
+                      placeholder="_INPUT_PLAYLIST_TITLE"
+                      ng-model="dialog_playlist_title"
+                    />
                   </div>
                   <div class="form-group">
                     <label>_PLAYLIST_COVER_IMAGE_URL</label>
-                    <input class="form-control" type="text" placeholder="_INPUT_PLAYLIST_COVER_IMAGE_URL" ng-model="dialog_cover_img_url" />
+                    <input
+                      class="form-control"
+                      type="text"
+                      placeholder="_INPUT_PLAYLIST_COVER_IMAGE_URL"
+                      ng-model="dialog_cover_img_url"
+                    />
                   </div>
                   <div class="buttons">
-                    <button class="btn btn-primary confirm-button" ng-click="editMyPlaylist(list_id)">_CONFIRM</button>
+                    <button
+                      class="btn btn-primary confirm-button"
+                      ng-click="editMyPlaylist(list_id)"
+                    >_CONFIRM</button>
                     <button class="btn btn-default" ng-click="closeDialog()">_CANCEL</button>
                   </div>
                   <div class="dialog-footer">
-                    <button class="btn btn-danger remove-button" ng-click="removeMyPlaylist(list_id)">_REMOVE_PLAYLIST</button>
+                    <button
+                      class="btn btn-danger remove-button"
+                      ng-click="removeMyPlaylist(list_id)"
+                    >_REMOVE_PLAYLIST</button>
                   </div>
                 </div>
                 <div v-show="dialog_type == 4" class="dialog-connect-lastfm">
                   <p>_OPENING_LASTFM_PAGE</p>
                   <p>_CONFIRM_NOTICE_LASTFM</p>
                   <div class="buttons">
-                    <button class="btn btn-primary confirm-button" ng-click="lastfm.updateStatus();closeDialog();">_AUTHORIZED_FINISHED</button>
-                    <button class="btn btn-warning warning-button" ng-click="lastfm.getAuth();">_AUTHORIZED_REOPEN</button>
+                    <button
+                      class="btn btn-primary confirm-button"
+                      ng-click="lastfm.updateStatus();closeDialog();"
+                    >_AUTHORIZED_FINISHED</button>
+                    <button
+                      class="btn btn-warning warning-button"
+                      ng-click="lastfm.getAuth();"
+                    >_AUTHORIZED_REOPEN</button>
                   </div>
                 </div>
                 <!-- open playlist dialog-->
                 <div v-show="dialog_type == 5" class="dialog-open-url">
                   <div class="form-group">
-                    <label>{{ $t('_PLAYLIST_LINK') }}</label>
-                    <input class="form-control" type="text" :placeholder="$t('_EXAMPLE') + 'https://www.xiami.com/collect/198267231'" ng-model="dialog_url" />
+                    <label>{{ t('_PLAYLIST_LINK') }}</label>
+                    <input
+                      class="form-control"
+                      type="text"
+                      :placeholder="t('_EXAMPLE') + 'https://www.xiami.com/collect/198267231'"
+                      ng-model="dialog_url"
+                    />
                   </div>
                   <div class="buttons">
-                    <button class="btn btn-primary confirm-button" ng-click="openUrl(dialog_url);closeDialog();dialog_url='';">{{ $t('_CONFIRM') }}</button>
-                    <button class="btn btn-default" ng-click="closeDialog()">{{ $t('_CANCEL') }}</button>
+                    <button
+                      class="btn btn-primary confirm-button"
+                      ng-click="openUrl(dialog_url);closeDialog();dialog_url='';"
+                    >{{ t('_CONFIRM') }}</button>
+                    <button class="btn btn-default" ng-click="closeDialog()">{{ t('_CANCEL') }}</button>
                   </div>
                 </div>
                 <ul v-show="dialog_type == 6" class="dialog-merge-playlist">
-                  <li ng-repeat="playlist in myplaylist track by $index" ng-class-odd="'odd'" ng-class-even="'even'" ng-click="mergePlaylist(playlist.info.id)">
+                  <li
+                    ng-repeat="playlist in myplaylist track by $index"
+                    ng-class-odd="'odd'"
+                    ng-class-even="'even'"
+                    ng-click="mergePlaylist(playlist.info.id)"
+                  >
                     <img ng-src=" playlist.info.cover_img_url " />
                     <h2>playlist.info.title</h2>
                   </li>
@@ -83,8 +126,14 @@
                   <p>_OPENING_GITHUB_PAGE</p>
                   <p>_CONFIRM_NOTICE_GITHUB</p>
                   <div class="buttons">
-                    <button class="btn btn-primary confirm-button" ng-click="updateGithubStatus();closeDialog();">_AUTHORIZED_FINISHED</button>
-                    <button class="btn btn-warning warning-button" ng-click="openGithubAuth();">_AUTHORIZED_REOPEN</button>
+                    <button
+                      class="btn btn-primary confirm-button"
+                      ng-click="updateGithubStatus();closeDialog();"
+                    >_AUTHORIZED_FINISHED</button>
+                    <button
+                      class="btn btn-warning warning-button"
+                      ng-click="openGithubAuth();"
+                    >_AUTHORIZED_REOPEN</button>
                   </div>
                 </div>
                 <ul v-show="dialog_type == 8" class="dialog-backuplist">
@@ -101,15 +150,20 @@
                     <img ng-src="images/mycover.jpg" />
                     <h2>
                       backup.id
-                      <br />
-                      backup.description
+                      <br />backup.description
                     </h2>
                   </li>
                 </ul>
                 <!-- create new backup dialog-->
                 <div v-show="dialog_type == 9" class="dialog-newbackup">
-                  <button class="btn btn-primary confirm-button" ng-click="backupMySettings2Gist(null, true);closeDialog();">_CREATE_PUBLIC_BACKUP</button>
-                  <button class="btn btn-primary confirm-button" ng-click="backupMySettings2Gist(null, false);closeDialog();">_CREATE_PRIVATE_BACKUP</button>
+                  <button
+                    class="btn btn-primary confirm-button"
+                    ng-click="backupMySettings2Gist(null, true);closeDialog();"
+                  >_CREATE_PUBLIC_BACKUP</button>
+                  <button
+                    class="btn btn-primary confirm-button"
+                    ng-click="backupMySettings2Gist(null, false);closeDialog();"
+                  >_CREATE_PRIVATE_BACKUP</button>
                   <button class="btn btn-default" ng-click="cancelNewDialog(8)">_CANCEL</button>
                 </div>
                 <ul v-show="dialog_type == 10" class="dialog-backuplist">
@@ -126,16 +180,30 @@
                 <div v-show="dialog_type == 11" class="dialog-open-login">
                   <p>_LOGIN_DIALOG_NOTICE</p>
                   <div class="buttons">
-                    <button class="btn btn-primary confirm-button" ng-click="closeDialog();refreshAuthStatus();">_LOGIN_SUCCESS</button>
-                    <button class="btn btn-warning warning-button" ng-click="openLogin(dialog_data);">_LOGIN_FAIL_RETRY</button>
+                    <button
+                      class="btn btn-primary confirm-button"
+                      ng-click="closeDialog();refreshAuthStatus();"
+                    >_LOGIN_SUCCESS</button>
+                    <button
+                      class="btn btn-warning warning-button"
+                      ng-click="openLogin(dialog_data);"
+                    >_LOGIN_FAIL_RETRY</button>
                   </div>
                 </div>
                 <div v-show="dialog_type == 12" class="dialog-proxy">
-                  <select ng-options="mode.displayText for mode in proxyModes" ng-model="proxyModeInput" ng-change="changeProxyMode(proxyModeInput)" />
+                  <select
+                    ng-options="mode.displayText for mode in proxyModes"
+                    ng-model="proxyModeInput"
+                    ng-change="changeProxyMode(proxyModeInput)"
+                  />
                   <div ng-show="proxyModeInput_name == 'custom'" class="custom-proxy">
                     <div class="rule-input">
                       <div class="field-name">_PROTOCOL</div>
-                      <select ng-options="protocol for protocol in proxyProtocols" ng-model="proxyProtocol" ng-change="changeProxyProtocol(proxyProtocol)" />
+                      <select
+                        ng-options="protocol for protocol in proxyProtocols"
+                        ng-model="proxyProtocol"
+                        ng-change="changeProxyProtocol(proxyProtocol)"
+                      />
                       <div class="field-name">_HOST</div>
                       <input id="proxy-rules-host" type="text" />
                       <div class="field-name">_PORT</div>
@@ -143,7 +211,10 @@
                     </div>
                   </div>
                   <div class="buttons">
-                    <button class="btn btn-primary confirm-button" ng-click="setProxyConfig();closeDialog();">_CONFIRM</button>
+                    <button
+                      class="btn btn-primary confirm-button"
+                      ng-click="setProxyConfig();closeDialog();"
+                    >_CONFIRM</button>
                     <button class="btn btn-warning warning-button" ng-click="closeDialog();">_CANCEL</button>
                   </div>
                 </div>
@@ -155,22 +226,21 @@
                 <div class="flex-scroll-wrapper">
                   <div class="menu-control" />
                   <div class="menu-title">
-                    <div class="title">
-                      {{ $t('_PLATFORM_UNION') }}
-                    </div>
+                    <div class="title">{{ t('_PLATFORM_UNION') }}</div>
                   </div>
                   <ul class="nav masthead-nav">
-                    <li :class="{ active: $route.name === 'HotPlaylists' }" @click="$router.push('/')">
+                    <li
+                      :class="{ active: $route.name === 'HotPlaylists' }"
+                      @click="$router.push('/')"
+                    >
                       <div class="sidebar-block">
                         <span class="icon li-featured-list" />
-                        <a>{{ $t('_PLAYLISTS') }}</a>
+                        <a>{{ t('_PLAYLISTS') }}</a>
                       </div>
                     </li>
                   </ul>
                   <div v-if="!isChrome || is_login('netease') || is_login('qq')" class="menu-title">
-                    <div class="title">
-                      {{ $t('_MY_MUSIC') }}
-                    </div>
+                    <div class="title">{{ t('_MY_MUSIC') }}</div>
                   </div>
                   <ul class="nav masthead-nav">
                     <li
@@ -180,7 +250,7 @@
                     >
                       <div class="sidebar-block">
                         <span class="icon li-featured-list" />
-                        <a>{{ $t('_LOCAL_MUSIC') }}</a>
+                        <a>{{ t('_LOCAL_MUSIC') }}</a>
                       </div>
                     </li>
                     <li
@@ -192,7 +262,7 @@
                         <svg class="feather">
                           <use href="#globe" />
                         </svg>
-                        <a>{{ $t('_MY_NETEASE') }}</a>
+                        <a>{{ t('_MY_NETEASE') }}</a>
                       </div>
                     </li>
                     <li
@@ -204,13 +274,13 @@
                         <svg class="feather">
                           <use href="#globe" />
                         </svg>
-                        <a>{{ $t('_MY_QQ') }}</a>
+                        <a>{{ t('_MY_QQ') }}</a>
                       </div>
                     </li>
                   </ul>
                   <!-- <div class="menu-title" ng-init="loadMyPlaylist();">
                     <div class="title">
-                      {{ $t('_CREATED_PLAYLIST') }}
+                      {{ t('_CREATED_PLAYLIST') }}
                     </div>
                     <svg class="feather icon" @click="showDialog(5)">
                       <use href="#plus-square" />
@@ -236,7 +306,7 @@
                         <a>i.info.title</a>
                       </div>
                     </li>
-                  </ul> -->
+                  </ul>-->
                   <!-- <div class="menu-title" ng-init="loadFavoritePlaylist();">
                     <div class="title">
                       {{ $t('_FAVORITED_PLAYLIST') }}
@@ -262,7 +332,7 @@
                         <a>i.info.title</a>
                       </div>
                     </li>
-                  </ul> -->
+                  </ul>-->
                 </div>
               </div>
 
@@ -278,7 +348,7 @@
                       v-model="keywords"
                       type="text"
                       class="form-control search-input"
-                      :placeholder="$t('_SEARCH_PLACEHOLDER')"
+                      :placeholder="t('_SEARCH_PLACEHOLDER')"
                       ng-model-options="{debounce: 500}"
                       ng-keyup="enterEvent($event)"
                       @input="searchTextChanged"
@@ -290,9 +360,14 @@
                         <vue-feather type="users"></vue-feather>
                       </span>
                     </router-link>
-                  </div> -->
-                  <div ng-class="{ 'active': (current_tag==4) && (window_url_stack.length ==0)}" class="settings">
-                    <router-link to="/settings"><span class="icon li-setting" /></router-link>
+                  </div>-->
+                  <div
+                    ng-class="{ 'active': (current_tag==4) && (window_url_stack.length ==0)}"
+                    class="settings"
+                  >
+                    <router-link to="/settings">
+                      <span class="icon li-setting" />
+                    </router-link>
                   </div>
                   <div v-if="!isChrome && !isMac" class="window-control">
                     <svg class="icon" window-control="window_min">
@@ -306,16 +381,26 @@
                     </svg>
                   </div>
                 </div>
-                <div class="browser flex-scroll-wrapper" infinite-scroll="scrolling()" content-selector="'#playlist-content'">
+                <div
+                  class="browser flex-scroll-wrapper"
+                  infinite-scroll="scrolling()"
+                  content-selector="'#playlist-content'"
+                >
                   <!-- hot playlist window-->
                   <router-view :key="$route.name + ($route.params.listId || '')" />
 
                   <!-- track list window-->
                   <div class="page">
-                    <div v-show="is_window_hidden != 1 && window_type == 'list'" class="playlist-detail">
+                    <div
+                      v-show="is_window_hidden != 1 && window_type == 'list'"
+                      class="playlist-detail"
+                    >
                       <div class="detail-head">
                         <div class="detail-head-cover">
-                          <img ng-src=" cover_img_url " err-src="https://y.gtimg.cn/mediastyle/global/img/singer_300.png" />
+                          <img
+                            ng-src=" cover_img_url "
+                            err-src="https://y.gtimg.cn/mediastyle/global/img/singer_300.png"
+                          />
                         </div>
                         <div class="detail-head-title">
                           <h2>playlist_title</h2>
@@ -329,13 +414,21 @@
                                 <span class="icon li-add" />
                               </div>
                             </div>
-                            <div v-show="is_local" class="playlist-button clone-button" ng-click="addLocalMusic(list_id)">
+                            <div
+                              v-show="is_local"
+                              class="playlist-button clone-button"
+                              ng-click="addLocalMusic(list_id)"
+                            >
                               <div class="play-list">
                                 <span class="icon li-songlist" />
                                 <span>_ADD_LOCAL_SONGS</span>
                               </div>
                             </div>
-                            <div v-show="!is_mine && !is_local" class="playlist-button clone-button" ng-click="clonePlaylist(list_id)">
+                            <div
+                              v-show="!is_mine && !is_local"
+                              class="playlist-button clone-button"
+                              ng-click="clonePlaylist(list_id)"
+                            >
                               <div class="play-list">
                                 <span class="icon li-songlist" />
                                 <span>_ADD_TO_PLAYLIST</span>
@@ -353,8 +446,15 @@
                                 <span>_EDIT</span>
                               </div>
                             </div>
-                            <div v-show="!is_mine && !is_local" class="playlist-button fav-button" ng-click="favoritePlaylist(list_id)">
-                              <div class="play-list" ng-class="{'favorited':is_favorite,'notfavorite':!is_favorite}">
+                            <div
+                              v-show="!is_mine && !is_local"
+                              class="playlist-button fav-button"
+                              ng-click="favoritePlaylist(list_id)"
+                            >
+                              <div
+                                class="play-list"
+                                ng-class="{'favorited':is_favorite,'notfavorite':!is_favorite}"
+                              >
                                 <svg class="feather">
                                   <use href="#star" />
                                 </svg>
@@ -371,13 +471,21 @@
                                 <span>_REFRESH_PLAYLIST</span>
                               </div>
                             </div>
-                            <div v-show="!is_mine && !is_local" class="playlist-button edit-button" open-url="playlist_source_url">
+                            <div
+                              v-show="!is_mine && !is_local"
+                              class="playlist-button edit-button"
+                              open-url="playlist_source_url"
+                            >
                               <div class="play-list">
                                 <span class="icon li-link" />
                                 <span>_ORIGIN_LINK</span>
                               </div>
                             </div>
-                            <div v-show="is_mine && !is_local" class="playlist-button edit-button" ng-click="showDialog(6)">
+                            <div
+                              v-show="is_mine && !is_local"
+                              class="playlist-button edit-button"
+                              ng-click="showDialog(6)"
+                            >
                               <div class="play-list">
                                 <svg class="feather">
                                   <use href="#git-merge" />
@@ -394,10 +502,19 @@
                           <svg class="feather playlist-search-icon">
                             <use href="#search" />
                           </svg>
-                          <svg class="feather playlist-clear-icon" ng-show="playlistFilter.key!=''" ng-click="clearFilter()">
+                          <svg
+                            class="feather playlist-clear-icon"
+                            ng-show="playlistFilter.key!=''"
+                            ng-click="clearFilter()"
+                          >
                             <use href="#x" />
                           </svg>
-                          <input class="playlist-search-input" type="text" ng-model="playlistFilter.key" placeholder="_SEARCH_PLAYLIST" />
+                          <input
+                            class="playlist-search-input"
+                            type="text"
+                            ng-model="playlistFilter.key"
+                            placeholder="_SEARCH_PLAYLIST"
+                          />
                         </div>
                         <li class="head">
                           <div class="title">
@@ -436,8 +553,20 @@
                             <a ng-click="showPlaylist(song.album_id)">song.album</a>
                           </div>
                           <div class="tools">
-                            <a ng-show="options" title="_ADD_TO_QUEUE" class="detail-add-button" add-without-play="song"><span class="icon li-add" /></a>
-                            <a ng-show="options" title="_ADD_TO_PLAYLIST" class="detail-fav-button" ng-click="showDialog(0, song)">
+                            <a
+                              ng-show="options"
+                              title="_ADD_TO_QUEUE"
+                              class="detail-add-button"
+                              add-without-play="song"
+                            >
+                              <span class="icon li-add" />
+                            </a>
+                            <a
+                              ng-show="options"
+                              title="_ADD_TO_PLAYLIST"
+                              class="detail-fav-button"
+                              ng-click="showDialog(0, song)"
+                            >
                               <span class="icon li-songlist" />
                             </a>
                             <a
@@ -448,7 +577,12 @@
                             >
                               <span class="icon li-del" />
                             </a>
-                            <a ng-show="options && !is_local" title="_ORIGIN_LINK" class="source-button" open-url="song.source_url">
+                            <a
+                              ng-show="options && !is_local"
+                              title="_ORIGIN_LINK"
+                              class="source-button"
+                              open-url="song.source_url"
+                            >
                               <span class="icon li-link" />
                             </a>
                           </div>
@@ -464,8 +598,16 @@
                       }"
                     >
                       <div class="draggable-zone" />
-                      <div ng-if="enableNowplayingCoverBackground" class="bg" ng-style="{'background-image': 'url(' + currentPlaying.img_url + ')'}" />
-                      <div class="translate-switch" ng-click="toggleLyricTranslation()" ng-class="{selected: enableLyricTranslation}">译</div>
+                      <div
+                        ng-if="enableNowplayingCoverBackground"
+                        class="bg"
+                        ng-style="{'background-image': 'url(' + currentPlaying.img_url + ')'}"
+                      />
+                      <div
+                        class="translate-switch"
+                        ng-click="toggleLyricTranslation()"
+                        ng-class="{selected: enableLyricTranslation}"
+                      >译</div>
                       <div class="close" :class="isMac ? 'mac' : ''" @click="toggleNowPlaying()">
                         <vue-feather type="chevron-down"></vue-feather>
                       </div>
@@ -480,40 +622,47 @@
                         <svg class="icon" window-control="window_close">
                           <use href="#x" />
                         </svg>
-                      </div> -->
+                      </div>-->
 
                       <div class="playsong-detail">
                         <div class="detail-head">
                           <div class="detail-head-cover">
-                            <img :src="currentPlaying.img_url" err-src="https://y.gtimg.cn/mediastyle/global/img/album_300.png" />
+                            <img
+                              :src="currentPlaying.img_url"
+                              err-src="https://y.gtimg.cn/mediastyle/global/img/album_300.png"
+                            />
                           </div>
                           <div class="detail-head-title">
                             <!--<a title="加入收藏" class="clone" ng-click="showDialog(0, currentPlaying)">收藏</a>
-                <a open-url="currentPlaying.source_url" title="原始链接" class="link">原始链接</a>-->
+                            <a open-url="currentPlaying.source_url" title="原始链接" class="link">原始链接</a>-->
                           </div>
                         </div>
                         <div class="detail-songinfo">
                           <div class="title">
                             <h2>{{ currentPlaying.title }}</h2>
-                            <span v-if="enableNowplayingBitrate && currentPlaying.bitrate !== undefined" class="badge">
-                              {{ currentPlaying.bitrate }}
-                            </span>
-                            <span v-if="enableNowplayingPlatform && currentPlaying.platform !== undefined" class="badge platform">
-                              {{ currentPlaying.platformText }}
-                            </span>
+                            <span
+                              v-if="enableNowplayingBitrate && currentPlaying.bitrate !== undefined"
+                              class="badge"
+                            >{{ currentPlaying.bitrate }}</span>
+                            <span
+                              v-if="enableNowplayingPlatform && currentPlaying.platform !== undefined"
+                              class="badge platform"
+                            >{{ currentPlaying.platformText }}</span>
                           </div>
                           <div class="info">
                             <div class="singer">
-                              <span>{{ $t('_ARTIST') }}：</span>
-                              <a ng-click="showPlaylist(currentPlaying.artist_id)" title="currentPlaying.artist">
-                                {{ currentPlaying.artist }}
-                              </a>
+                              <span>{{ t('_ARTIST') }}：</span>
+                              <a
+                                ng-click="showPlaylist(currentPlaying.artist_id)"
+                                title="currentPlaying.artist"
+                              >{{ currentPlaying.artist }}</a>
                             </div>
                             <div class="album">
-                              <span>{{ $t('_ALBUM') }}：</span>
-                              <a ng-click="showPlaylist(currentPlaying.album_id)" title="currentPlaying.album">
-                                {{ currentPlaying.album }}
-                              </a>
+                              <span>{{ t('_ALBUM') }}：</span>
+                              <a
+                                ng-click="showPlaylist(currentPlaying.album_id)"
+                                title="currentPlaying.album"
+                              >{{ currentPlaying.album }}</a>
                             </div>
                           </div>
                           <div class="lyric">
@@ -527,9 +676,7 @@
                                 hide: line.translationFlag && !enableLyricTranslation,
                                 translate: line.translationFlag
                               }"
-                            >
-                              {{ line.content }}
-                            </p>
+                            >{{ line.content }}</p>
                             <div class="placeholder" />
                           </div>
                         </div>
@@ -542,7 +689,11 @@
             <div class="footer">
               <div class="left-control">
                 <span class="icon li-previous" @click="prevTrack()" />
-                <span class="icon li-play play" :class="isPlaying ? 'li-pause' : 'li-play'" @click="playPauseToggle()" />
+                <span
+                  class="icon li-play play"
+                  :class="isPlaying ? 'li-pause' : 'li-play'"
+                  @click="playPauseToggle()"
+                />
                 <span class="icon li-next" @click="nextTrack()" />
               </div>
               <div class="main-info">
@@ -564,7 +715,10 @@
                   </svg>
                 </div>
                 <div v-if="playlist.length > 0" class="cover" @click="toggleNowPlaying()">
-                  <img :src="currentPlaying.img_url" err-src="https://y.gtimg.cn/mediastyle/global/img/album_300.png" />
+                  <img
+                    :src="currentPlaying.img_url"
+                    err-src="https://y.gtimg.cn/mediastyle/global/img/album_300.png"
+                  />
                   <div class="mask">
                     <svg class="feather">
                       <use href="#chevrons-up" />
@@ -575,8 +729,8 @@
                   <div class="ctrl">
                     <!-- <a ng-click="showDialog(0, currentPlaying)" title="_ADD_TO_PLAYLIST">
                       <span class="icon li-songlist" />
-                    </a> -->
-                    <a title="" @click="changePlaymode()">
+                    </a>-->
+                    <a title @click="changePlaymode()">
                       <span v-show="playmode == 0" class="icon li-loop" />
                       <span v-show="playmode == 1" class="icon li-random-loop" />
                       <span v-show="playmode == 2" class="icon li-single-cycle" />
@@ -584,28 +738,29 @@
                   </div>
 
                   <div class="title">
-                    <span v-if="currentPlaying.source === 'xiami'" style="color: orange; font-size: medium">⚠️</span>
+                    <span
+                      v-if="currentPlaying.source === 'xiami'"
+                      style="color: orange; font-size: medium"
+                    >⚠️</span>
                     {{ currentPlaying.title }}
                   </div>
                   <div class="more-info">
-                    <div class="current">
-                      {{ currentPosition }}
-                    </div>
+                    <div class="current">{{ currentPosition }}</div>
                     <div class="singer">
-                      <a @click="showPlaylist(currentPlaying.artist_id)">
-                        {{ currentPlaying.artist }}
-                      </a>
+                      <a @click="showPlaylist(currentPlaying.artist_id)">{{ currentPlaying.artist }}</a>
                       -
-                      <a @click="showPlaylist(currentPlaying.album_id)">
-                        {{ currentPlaying.album }}
-                      </a>
+                      <a
+                        @click="showPlaylist(currentPlaying.album_id)"
+                      >{{ currentPlaying.album }}</a>
                     </div>
-                    <div class="total">
-                      {{ currentDuration }}
-                    </div>
+                    <div class="total">{{ currentDuration }}</div>
                   </div>
                   <div class="playbar">
-                    <draggable-bar id="progressbar" :progress="myProgress" @commit-progress="changeProgress"></draggable-bar>
+                    <draggable-bar
+                      id="progressbar"
+                      :progress="myProgress"
+                      @commit-progress="changeProgress"
+                    ></draggable-bar>
                   </div>
                 </div>
               </div>
@@ -613,27 +768,42 @@
                 <div class="playlist-toggle">
                   <span class="icon li-list" @click="togglePlaylist()" />
                 </div>
-                <div class="volume-ctrl" volume-wheel="">
-                  <span class="icon" :class="mute ? 'li-mute' : 'li-volume'" @click="toggleMuteStatus()" />
+                <div class="volume-ctrl" volume-wheel>
+                  <span
+                    class="icon"
+                    :class="mute ? 'li-mute' : 'li-volume'"
+                    @click="toggleMuteStatus()"
+                  />
                   <div class="m-pbar volume">
-                    <draggable-bar id="volumebar" :progress="volume" @update-progress="changeVolume" @commit-progress="commitVolume"></draggable-bar>
+                    <draggable-bar
+                      id="volumebar"
+                      :progress="volume"
+                      @update-progress="changeVolume"
+                      @commit-progress="commitVolume"
+                    ></draggable-bar>
                   </div>
                 </div>
                 <div v-if="!isChrome" class="lyric-toggle">
-                  <div ng-click="openLyricFloatingWindow(true)" class="lyric-icon" ng-class="{'selected': enableLyricFloatingWindow}">词</div>
+                  <div
+                    ng-click="openLyricFloatingWindow(true)"
+                    class="lyric-icon"
+                    ng-class="{'selected': enableLyricFloatingWindow}"
+                  >词</div>
                 </div>
               </div>
               <div class="menu-modal" :class="{ slideup: !menuHidden }" @click="togglePlaylist()" />
               <div class="menu" :class="{ slideup: !menuHidden }">
                 <div class="menu-header">
-                  <span class="menu-title">{{ $t('_TOTAL_SONG_PREFIX') }} {{ playlist.length }} {{ $t('_TOTAL_SONG_POSTFIX') }}</span>
+                  <span
+                    class="menu-title"
+                  >{{ t('_TOTAL_SONG_PREFIX') }} {{ playlist.length }} {{ t('_TOTAL_SONG_POSTFIX') }}</span>
                   <!-- <a class="add-all" ng-click="showDialog(0, playlist)">
                     <span class="icon li-songlist" ng-click="togglePlaylist()" />
-                    <span>{{ $t('_ADD_TO_PLAYLIST') }}</span>
-                  </a> -->
+                    <span>{{ t('_ADD_TO_PLAYLIST') }}</span>
+                  </a>-->
                   <a class="remove-all" @click="clearPlaylist()">
                     <span class="icon li-del" ng-click="togglePlaylist()" />
-                    <span>{{ $t('_CLEAR_ALL') }}</span>
+                    <span>{{ t('_CLEAR_ALL') }}</span>
                   </a>
 
                   <a class="close" @click="togglePlaylist()">
@@ -663,16 +833,30 @@
                     </div>
                     <div class="song-title" :class="song.disabled ? 'disabled' : ''">
                       <a @click="playFromPlaylist(song)">
-                        <span v-if="song.source === 'xiami'" style="color: orange; border-radius: 12px; border: solid 1px; padding: 0 4px">⚠️ 🦐</span>
+                        <span
+                          v-if="song.source === 'xiami'"
+                          style="color: orange; border-radius: 12px; border: solid 1px; padding: 0 4px"
+                        >⚠️ 🦐</span>
                         {{ song.title }}
                       </a>
                     </div>
                     <div class="song-singer">
-                      <a ng-click="showPlaylist(song.artist_id); togglePlaylist();">{{ song.artist }}</a>
+                      <a
+                        ng-click="showPlaylist(song.artist_id); togglePlaylist();"
+                      >{{ song.artist }}</a>
                     </div>
                     <div class="tools">
-                      <span v-show="playlist_highlight" remove-from-playlist="song" data-index="$index" class="icon li-del" />
-                      <span v-show="playlist_highlight" open-url="song.source_url" class="icon li-link" />
+                      <span
+                        v-show="playlist_highlight"
+                        remove-from-playlist="song"
+                        data-index="$index"
+                        class="icon li-del"
+                      />
+                      <span
+                        v-show="playlist_highlight"
+                        open-url="song.source_url"
+                        class="icon li-link"
+                      />
                     </div>
                     <!-- <div class="song-time">00:00</div> -->
                   </li>
@@ -686,147 +870,142 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import 'notyf/notyf.min.css';
 import '@/assets/css/icon.css';
 import '@/assets/css/origin.css';
 import '@/assets/css/common.css';
 import { l1Player } from '@/services/l1_player';
-import { mapState } from 'vuex';
+import { useStore } from 'vuex';
+import { useRouter } from 'vue-router';
 import DraggableBar from '../components/DraggableBar.vue';
+import { useI18n } from 'vue-i18n';
+const { t } = useI18n();
+const store = useStore();
+const router = useRouter();
+let keywords = $ref('')
+let is_dialog_hidden = $ref(1)
+let dialog_title = $ref('')
+let dialog_type = $ref(0)
+let dialog_data = $ref({})
+let myStyle = $ref({})
+let current_tag = $ref(2)
+let is_window_hidden = $ref(1)
+let window_type = $ref('')
+let lastTrackId = $ref('')
+let loading = $ref(false)
+let options = $ref('')
+let githubStatus = $ref({})
+let proxyMode_name = $ref('')
+let lastestVersion = $ref('')
+let is_local = $ref(false)
+let is_mine = $ref(false)
+let isMac = $ref(false)
+let isChrome = $ref(true)
+let is_favorite = $ref(false)
+let playlist_highlight = $ref(false)
+let menuHidden = $ref(true)
+const playmode = $computed(() => store.state.player.playmode)
 
-export default {
-  name: 'Home',
-  components: { DraggableBar },
-
-  data() {
-    return {
-      keywords: '',
-      is_dialog_hidden: 1,
-      dialog_title: '',
-      dialog_type: 0,
-      dialog_data: {},
-      myStyle: {},
-      current_tag: 2,
-      is_window_hidden: 1,
-      window_type: '',
-      lastTrackId: '',
-      loading: false,
-      options: '',
-      githubStatus: {},
-      proxyMode_name: '',
-      lastestVersion: '',
-      is_local: false,
-      is_mine: false,
-      isChrome: true,
-      isMac: false,
-      is_favorite: false,
-      playlist_highlight: false,
-      menuHidden: true
-    };
-  },
-  computed: {
-    ...mapState('player', [
-      'playlist',
-      'isPlaying',
-      'lyricArray',
-      'lyricLineNumber',
-      'lyricLineNumberTrans',
-      'myProgress',
-      'changingProgress',
-      'currentDuration',
-      'currentPosition',
-      'currentPlaying',
-      'playmode',
-      'volume',
-      'mute'
-    ]),
-    ...mapState('settings', ['enableNowplayingCoverBackground', 'enableLyricTranslation', 'enableNowplayingBitrate', 'enableNowplayingPlatform'])
-  },
-
-  methods: {
-    playPauseToggle() {
-      l1Player.togglePlayPause();
-    },
-    prevTrack() {
-      l1Player.prev();
-    },
-    nextTrack() {
-      l1Player.next();
-    },
-    toggleNowPlaying() {
-      if (this.window_type != 'track') {
-        this.window_type = 'track';
-      } else {
-        this.window_type = '';
-      }
-    },
-    is_login(platform) {
-      return false;
-    },
-    newDialogOption(option) {
-      this.dialog_type = option;
-    },
-    showDialog(dialog_type, data) {
-      this.is_dialog_hidden = 0;
-      this.dialog_data = data;
-      const dialogWidth = 400;
-      const dialogHeight = 430;
-      const left = window.innerWidth / 2 - dialogWidth / 2;
-      const top = window.innerHeight / 2 - dialogHeight / 2;
-      this.myStyle = {
-        left: `${left}px`,
-        top: `${top}px`
-      };
-      this.dialog_type = dialog_type;
-
-      if (dialog_type === 5) {
-        this.dialog_title = this.$t('_OPEN_PLAYLIST');
-      }
-    },
-    closeDialog() {
-      this.is_dialog_hidden = 1;
-      this.dialog_type = 0;
-    },
-    searchTextChanged() {
-      this.$store.commit('search/changeSearchKeywords', this.keywords);
-      this.$store.dispatch('search/search', {
-        type: 'search'
-      });
-      this.$router.push('/search');
-    },
-    togglePlaylist() {
-      this.menuHidden = !this.menuHidden;
-    },
-    changePlaymode() {
-      const playmodeCount = 3;
-      const newPlaymode = (this.playmode + 1) % playmodeCount;
-      this.$store.dispatch('player/changePlaymode', { mode: newPlaymode });
-    },
-    clearPlaylist() {
-      l1Player.clearPlaylist();
-    },
-    changeProgress(progress) {
-      l1Player.seek(progress);
-    },
-    changeVolume(progress) {
-      l1Player.setVolume(progress * 100);
-      l1Player.unmute();
-    },
-    commitVolume(progress) {
-      const current = localStorage.getObject('player-settings');
-      current.volume = progress * 100;
-      localStorage.setObject('player-settings', current);
-    },
-    toggleMuteStatus() {
-      l1Player.toggleMute();
-    },
-    showPlaylist(playlistId) {
-      this.$router.push('/playlist/' + playlistId);
-    },
-    playFromPlaylist(song) {
-      l1Player.playById(song.id);
-    }
+const searchTextChanged = () => {
+  store.commit('search/changeSearchKeywords', keywords);
+  store.dispatch('search/search', {
+    type: 'search'
+  });
+  router.push('/search');
+};
+const changePlaymode = () => {
+  const playmodeCount = 3;
+  const newPlaymode = (playmode + 1) % playmodeCount;
+  store.dispatch('player/changePlaymode', { mode: newPlaymode });
+};
+const showPlaylist = (playlistId) => {
+  router.push('/playlist/' + playlistId);
+};
+const playPauseToggle = () => {
+  l1Player.togglePlayPause();
+};
+const prevTrack = () => {
+  l1Player.prev();
+};
+const nextTrack = () => {
+  l1Player.next();
+};
+const toggleNowPlaying = () => {
+  if (window_type != 'track') {
+    window_type = 'track';
+  } else {
+    window_type = '';
   }
 };
+const is_login = (platfrom) => {
+  return false;
+};
+const newDialogOption = (option) => {
+  dialog_type = option;
+};
+const showDialog = (dialogType, dialogData) => {
+  is_dialog_hidden = 0;
+  dialog_data = dialogData;
+  const dialogWidth = 400;
+  const dialogHeight = 430;
+  const left = window.innerWidth / 2 - dialogWidth / 2;
+  const top = window.innerHeight / 2 - dialogHeight / 2;
+  myStyle = {
+    left: `${left}px`,
+    top: `${top}px`
+  };
+  dialog_type = dialogType;
+
+  if (dialog_type === 5) {
+    dialog_title = t('_OPEN_PLAYLIST');
+  }
+};
+const closeDialog = () => {
+  is_dialog_hidden = 1;
+  dialog_type = 0;
+};
+const togglePlaylist = () => {
+  menuHidden = !menuHidden;
+};
+const clearPlaylist = () => {
+  l1Player.clearPlaylist();
+};
+const changeProgress = (progress) => {
+  l1Player.seek(progress);
+};
+const changeVolume = (progress) => {
+  l1Player.setVolume(progress * 100);
+  l1Player.unmute();
+};
+const commitVolume = (progress) => {
+  const current = localStorage.getObject('player-settings');
+  current.volume = progress * 100;
+  localStorage.setObject('player-settings', current);
+};
+const toggleMuteStatus = () => {
+  l1Player.toggleMute();
+};
+const playFromPlaylist = (song) => {
+  l1Player.playById(song.id);
+};
+
+const playlist = $computed(() => store.state.player.playlist)
+const isPlaying = $computed(() => store.state.player.isPlaying)
+const lyricArray = $computed(() => store.state.player.lyricArray)
+const lyricLineNumber = $computed(() => store.state.player.lyricLineNumber)
+const lyricLineNumberTrans = $computed(() => store.state.player.lyricLineNumberTrans)
+const myProgress = $computed(() => store.state.player.myProgress)
+const changingProgress = $computed(() => store.state.player.changingProgress)
+const currentDuration = $computed(() => store.state.player.currentDuration)
+const currentPosition = $computed(() => store.state.player.currentPosition)
+const currentPlaying = $computed(() => store.state.player.currentPlaying)
+const volume = $computed(() => store.state.player.volume)
+const mute = $computed(() => store.state.player.mute)
+
+const enableNowplayingCoverBackground = $computed(() => store.state.settings.enableNowplayingCoverBackground)
+const enableLyricTranslation = $computed(() => store.state.settings.enableLyricTranslation)
+const enableNowplayingBitrate = $computed(() => store.state.settings.enableNowplayingBitrate)
+const enableNowplayingPlatform = $computed(() => store.state.settings.enableNowplayingPlatform)
+
 </script>

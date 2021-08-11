@@ -20,7 +20,7 @@ notyf.warning = (msg, replace) => {
   if (replace) {
     notyf.dismissAll();
   }
-  window.notyf.open({
+  notyf.open({
     type: 'warning',
     message: msg
   });

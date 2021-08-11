@@ -1,4 +1,4 @@
-import { createI18n } from 'vue-i18n/dist/vue-i18n.runtime.esm-bundler';
+import { createI18n } from 'vue-i18n';
 
 import en_US from '@/i18n/en_US';
 import fr_FR from '@/i18n/fr_FR';
@@ -13,6 +13,7 @@ const messages = {
 };
 
 const i18n = createI18n({
+  legacy: false,
   locale: 'zh-CN', // set locale
   fallbackLocale: 'en-US', // set fallback locale
   messages // set locale messages

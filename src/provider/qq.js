@@ -9,25 +9,20 @@ export default class qq {
 
   static async qq_show_toplist(offset) {
     if (offset !== undefined && offset > 0) {
-      return {
-        result: []
-      };
+      return [];
     }
     const url =
       'https://c.y.qq.com/v8/fcg-bin/fcg_myqq_toplist.fcg?g_tk=5381&inCharset=utf-8&outCharset=utf-8&notice=0&format=json&uin=0&needNewCode=1&platform=h5';
 
-    const response = await axios.get(url);
-    const result = [];
-    response.data.data.topList.forEach((item) => {
-      const playlist = {
-        cover_img_url: item.picUrl,
-        id: `qqtoplist_${item.id}`,
-        source_url: `https://y.qq.com/n/yqq/toplist/${item.id}.html`,
-        title: item.topTitle
-      };
-      result.push(playlist);
-    });
-    return { result };
+    const { data } = await axios.get(url);
+    /** @type {{cover_img_url:string;id:string;source_url:string;title:string}[]}*/
+    const result = data.data.topList.map((item) => ({
+      cover_img_url: item.picUrl,
+      id: `qqtoplist_${item.id}`,
+      source_url: `https://y.qq.com/n/yqq/toplist/${item.id}.html`,
+      title: item.topTitle
+    }));
+    return result;
   }
 
   static async show_playlist(url) {
@@ -46,6 +41,7 @@ export default class qq {
       '&notice=0&platform=yqq.json&needNewCode=0' +
       `&categoryId=${filterId}&sortId=5&sin=${offset}&ein=${29 + offset}`;
     const { data } = await axios.get(target_url);
+    /** @type {{cover_img_url:string;id:string;source_url:string;title:string}[]}*/
     const playlists = data.data.list.map((item) => ({
       cover_img_url: item.imgurl,
       title: this.htmlDecode(item.dissname),
@@ -53,9 +49,7 @@ export default class qq {
       source_url: `https://y.qq.com/n/ryqq/playlist/${item.dissid}`
     }));
 
-    return {
-      result: playlists
-    };
+    return playlists;
   }
 
   static qq_get_image_url(qqimgid, img_type) {
@@ -501,12 +495,7 @@ export default class qq {
     data.data.categories.forEach((cate) => {
       const result = { category: cate.categoryGroupName, filters: [] };
       if (cate.usable === 1) {
-        cate.items.forEach((item) => {
-          result.filters.push({
-            id: item.categoryId,
-            name: this.htmlDecode(item.categoryName)
-          });
-        });
+        result.filters = cate.items.map((item) => ({ id: item.categoryId, name: this.htmlDecode(item.categoryName) }));
         all.push(result);
       }
     });

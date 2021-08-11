@@ -1,10 +1,12 @@
 <template>
-  <div class="page page-hot-playlist" ng-controller="PlayListController" ng-init="loadPlaylist();">
+  <div class="page page-hot-playlist">
     <div class="source-list">
       <template v-for="(source, index) in sourceList" :key="source.name">
-        <div class="source-button" :class="{ active: tab === source.name }" @click="changeTab(source.name)">
-          {{ $t(source.name) }}
-        </div>
+        <div
+          class="source-button"
+          :class="{ active: tab === source.name }"
+          @click="changeTab(source.name)"
+        >{{ t(source.name) }}</div>
         <div v-if="index != sourceList.length - 1" class="splitter" />
       </template>
     </div>
@@ -15,13 +17,19 @@
         class="l1-button filter-item"
         ng-class="{'active':filter.id === currentFilterId}"
         @click="changeFilter(filter.id)"
-      >
-        {{ filter.name }}
-      </div>
-      <div v-show="playlistFilters[tab] && playlistFilters[tab].length > 0" class="l1-button filter-item" @click="toggleMorePlaylists()">更多...</div>
+      >{{ filter.name }}</div>
+      <div
+        v-show="playlistFilters[tab] && playlistFilters[tab].length > 0"
+        class="l1-button filter-item"
+        @click="toggleMorePlaylists()"
+      >更多...</div>
     </div>
     <div v-show="showMore" class="all-playlist-filter">
-      <div v-for="category in allPlaylistFilters[tab] || []" :key="category.category" class="category">
+      <div
+        v-for="category in allPlaylistFilters[tab] || []"
+        :key="category.category"
+        class="category"
+      >
         <div class="category-title">{{ category.category }}</div>
         <div class="category-filters">
           <div v-for="filter in category.filters" :key="filter.name" class="filter-item">
@@ -46,81 +54,67 @@
           </li>
           <!-- <div class="loading_bottom">
                               <img src="images/loading-1.gif" height="40px" />
-                            </div> -->
+          </div>-->
         </ul>
       </div>
     </div>
   </div>
 </template>
-
-<script>
-import MediaService from '../services/MediaService';
+<script setup>
 import { l1Player } from '@/services/l1_player';
+import { computed, onMounted } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { useRouter } from 'vue-router';
+import MediaService from '../services/MediaService';
 
-export default {
-  data() {
-    return {
-      currentFilterId: '',
-      result: [],
-      tab: MediaService.getSourceList()[0].name,
-      loading: true,
-      showMore: false,
-      playlistFilters: {},
-      allPlaylistFilters: {}
-    };
-  },
-  computed: {
-    sourceList() {
-      return MediaService.getSourceList();
-    }
-  },
-  mounted() {
-    this.loadPlaylist();
-  },
-  methods: {
-    changeTab: function (newTab) {
-      this.tab = newTab;
-      this.result = [];
-      this.currentFilterId = '';
+const { t } = useI18n();
+const router = useRouter();
+let currentFilterId = $ref('');
+let result = $ref([]);
+let tab = $ref(MediaService.getSourceList()[0].name);
+let loading = $ref(true);
+let showMore = $ref(false);
+let playlistFilters = $ref({});
+let allPlaylistFilters = $ref({});
 
-      this.loadPlaylist();
-    },
-    changeFilter: function (filterId) {
-      this.result = [];
-      this.currentFilterId = filterId;
-      this.loadPlaylist();
-    },
-    toggleMorePlaylists: function () {
-      this.showMore = !this.showMore;
-    },
-    loadPlaylist: function () {
-      const offset = 0;
-      this.showMore = false;
-      MediaService.showPlaylistArray(this.tab, offset, this.currentFilterId).then((res) => {
-        this.result = res.result;
-        this.loading = false;
-      });
+const loadPlaylist = async () => {
+  const offset = 0;
+  showMore = false;
+  result = await MediaService.showPlaylistArray(tab, offset, currentFilterId);
+  loading = false;
 
-      if (this.playlistFilters[this.tab] === undefined && this.allPlaylistFilters[this.tab] === undefined) {
-        MediaService.getPlaylistFilters(this.tab).then((res) => {
-          this.playlistFilters[this.tab] = res.recommend;
-          this.allPlaylistFilters[this.tab] = res.all;
-        });
-      }
-    },
-    showPlaylist: function (playlistId) {
-      this.$router.push('/playlist/' + playlistId);
-    },
-    directplaylist(list_id) {
-      MediaService.getPlaylist(list_id).then((data) => {
-        this.songs = data.tracks;
-        this.current_list_id = list_id;
-        l1Player.setNewPlaylist(this.songs);
-        l1Player.play();
-      });
-    }
+  if (playlistFilters[tab] === undefined && allPlaylistFilters[tab] === undefined) {
+    const { recommend, all } = await MediaService.getPlaylistFilters(tab)
+    playlistFilters[tab] = recommend;
+    allPlaylistFilters[tab] = all;
   }
 };
+onMounted(loadPlaylist);
+
+const changeTab = (newTab) => {
+  tab = newTab;
+  result = [];
+  currentFilterId = '';
+  loadPlaylist();
+};
+const changeFilter = (filterId) => {
+  result = [];
+  currentFilterId = filterId;
+  loadPlaylist();
+};
+const toggleMorePlaylists = () => {
+  showMore = !showMore;
+};
+const showPlaylist = (playlistId) => {
+  router.push('/playlist/' + playlistId);
+};
+const directplaylist = async (list_id) => {
+  const data = await MediaService.getPlaylist(list_id);
+  const songs = data.tracks;
+  l1Player.setNewPlaylist(songs);
+  l1Player.play();
+};
+const sourceList = computed(() => MediaService.getSourceList());
 </script>
 
 <style>

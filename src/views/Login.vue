@@ -10,7 +10,7 @@
               <div class="usercard-nickname">musicAuth[source].nickname</div>
               <div class="usercard-info">source</div>
             </div>
-            <button ng-click="logout(source)">{{ $t('_LOGOUT') }}</button>
+            <button ng-click="logout(source)">{{ t('_LOGOUT') }}</button>
           </div>
         </div>
         <div ng-show="!is_login(source)">
@@ -18,11 +18,11 @@
             <img src="images/placeholder.png" />
 
             <div class="usercard-title">
-              <div class="usercard-nickname">{{ $t('_NOT_LOGIN_NICKNAME') }}</div>
+              <div class="usercard-nickname">{{ t('_NOT_LOGIN_NICKNAME') }}</div>
               <div class="usercard-info">source</div>
             </div>
 
-            <button ng-click=" openLogin(source);showDialog(11, source);">{{ $t('_LOGIN') }}</button>
+            <button ng-click=" openLogin(source);showDialog(11, source);">{{ t('_LOGIN') }}</button>
           </div>
         </div>
       </div>
@@ -30,8 +30,9 @@
   </div>
 </template>
 
-<script>
-export default {};
+<script setup>
+import { useI18n } from 'vue-i18n';
+const { t } = useI18n();
 </script>
 
 <style>
