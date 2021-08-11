@@ -1,5 +1,5 @@
 <template>
-  <div class="page page-hot-playlist" ng-controller="PlayListController" ng-init="loadPlaylist();">
+  <div class="page page-hot-playlist">
     <div class="source-list">
       <template v-for="(source, index) in sourceList" :key="source.name">
         <div
@@ -80,17 +80,13 @@ let allPlaylistFilters = $ref({});
 const loadPlaylist = async () => {
   const offset = 0;
   showMore = false;
-
-  const res = await MediaService.showPlaylistArray(tab, offset, currentFilterId)
-  result = res;
+  result = await MediaService.showPlaylistArray(tab, offset, currentFilterId);
   loading = false;
 
-
   if (playlistFilters[tab] === undefined && allPlaylistFilters[tab] === undefined) {
-    MediaService.getPlaylistFilters(tab).then((res) => {
-      playlistFilters[tab] = res.recommend;
-      allPlaylistFilters[tab] = res.all;
-    });
+    const { recommend, all } = await MediaService.getPlaylistFilters(tab)
+    playlistFilters[tab] = recommend;
+    allPlaylistFilters[tab] = all;
   }
 };
 onMounted(loadPlaylist);
