@@ -15,28 +15,22 @@ export default {
   },
   mutations: {
     setBySetting(state, newValue) {
-      for (let k in newValue) {
-        state[k] = newValue[k];
+      for (const [key, value] of Object.entries(newValue)) {
+        state[key] = value;
       }
     }
   },
 
   actions: {
     saveState({ state }) {
-      const settings = {
-        enable_nowplaying_cover_background: state.enableNowplayingCoverBackground,
-        enable_nowplaying_bitrate: state.enableNowplayingBitrate,
-        enable_nowplaying_platform: state.enableNowplayingPlatform
-      };
-      for (const [key, value] of Object.entries(settings)) {
+      for (const [key, value] of Object.entries(state)) {
         localStorage.setObject(key, value);
       }
     },
-    initState({ commit, dispatch }) {
-      const settingKeys = ['enable_nowplaying_cover_background', 'enable_nowplaying_bitrate', 'enable_nowplaying_platform'];
-      const localSettings = settingKeys.map((key) => localStorage.getObject(key));
-      if (localSettings.some((value) => value === null)) {
-        dispatch('saveState');
+    initState({ commit, dispatch, state }) {
+      const localSettings = Object.keys(state).reduce((res, cur) => ({ ...res, [cur]: localStorage.getObject(cur) }), {});
+      if (Object.values(localSettings).some((value) => value === null)) {
+        dispatch('saveState', state);
       } else {
         commit('setBySetting', localSettings);
       }
