@@ -599,9 +599,9 @@
                     >
                       <div class="draggable-zone" />
                       <div
-                        ng-if="enableNowplayingCoverBackground"
+                        v-if="enableNowplayingCoverBackground"
                         class="bg"
-                        ng-style="{'background-image': 'url(' + currentPlaying.img_url + ')'}"
+                        :style="{backgroundImage:`url(${currentPlaying.img_url}`}"
                       />
                       <div
                         class="translate-switch"
@@ -647,7 +647,7 @@
                             <span
                               v-if="enableNowplayingPlatform && currentPlaying.platform !== undefined"
                               class="badge platform"
-                            >{{ currentPlaying.platformText }}</span>
+                            >{{ currentPlaying.platform }}</span>
                           </div>
                           <div class="info">
                             <div class="singer">

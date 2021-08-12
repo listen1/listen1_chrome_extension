@@ -253,4 +253,4 @@ const myplaylistFactory = () => {
   };
 };
 
-export default myplaylistFactory(); // eslint-disable-line no-unused-vars
+export default myplaylistFactory();
