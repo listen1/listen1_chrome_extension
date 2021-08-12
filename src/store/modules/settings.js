@@ -24,15 +24,18 @@ export default {
   actions: {
     saveState({ state }) {
       const settings = {
-        enableNowplayingCoverBackground: state.enableNowplayingCoverBackground,
-        enableNowplayingBitrate: state.enableNowplayingBitrate,
-        enableNowplayingPlatform: state.enableNowplayingPlatform
+        enable_nowplaying_cover_background: state.enableNowplayingCoverBackground,
+        enable_nowplaying_bitrate: state.enableNowplayingBitrate,
+        enable_nowplaying_platform: state.enableNowplayingPlatform
       };
-      localStorage.setObject('listen1-settings', settings);
+      for (const [key, value] of Object.entries(settings)) {
+        localStorage.setObject(key, value);
+      }
     },
     initState({ commit, dispatch }) {
-      const localSettings = localStorage.getObject('listen1-settings');
-      if (localSettings === null) {
+      const settingKeys = ['enable_nowplaying_cover_background', 'enable_nowplaying_bitrate', 'enable_nowplaying_platform'];
+      const localSettings = settingKeys.map((key) => localStorage.getObject(key));
+      if (localSettings.some((value) => value === null)) {
         dispatch('saveState');
       } else {
         commit('setBySetting', localSettings);
