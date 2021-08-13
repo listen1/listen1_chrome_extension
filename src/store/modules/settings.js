@@ -1,3 +1,14 @@
+const nameMapping = {
+  enableAutoChooseSource: 'enable_auto_choose_source',
+  enableStopWhenClose: 'enable_stop_when_close',
+  enableNowplayingCoverBackground: 'enable_nowplaying_cover_background',
+  enableNowplayingBitrate: 'enable_nowplaying_bitrate',
+  enableLyricFloatingWindow: 'enable_lyric_floating_window',
+  enableLyricFloatingWindowTranslation: 'enable_lyric_floating_window_translation',
+  enableGlobalShortCut: 'enable_global_shortcut',
+  enableNowplayingPlatform: 'enable_nowplaying_platform',
+  enableLyricTranslation: 'enable_lyric_translation'
+};
 export default {
   namespaced: true,
   state() {
@@ -24,11 +35,11 @@ export default {
   actions: {
     saveState({ state }) {
       for (const [key, value] of Object.entries(state)) {
-        localStorage.setObject(key, value);
+        localStorage.setObject(nameMapping[key], value);
       }
     },
     initState({ commit, dispatch, state }) {
-      const localSettings = Object.keys(state).reduce((res, cur) => ({ ...res, [cur]: localStorage.getObject(cur) }), {});
+      const localSettings = Object.keys(nameMapping).reduce((res, cur) => ({ ...res, [cur]: localStorage.getObject(nameMapping[cur]) }));
       if (Object.values(localSettings).some((value) => value === null)) {
         dispatch('saveState', state);
       } else {
