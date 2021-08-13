@@ -1,3 +1,14 @@
+const nameMapping = {
+  enableAutoChooseSource: 'enable_auto_choose_source',
+  enableStopWhenClose: 'enable_stop_when_close',
+  enableNowplayingCoverBackground: 'enable_nowplaying_cover_background',
+  enableNowplayingBitrate: 'enable_nowplaying_bitrate',
+  enableLyricFloatingWindow: 'enable_lyric_floating_window',
+  enableLyricFloatingWindowTranslation: 'enable_lyric_floating_window_translation',
+  enableGlobalShortCut: 'enable_global_shortcut',
+  enableNowplayingPlatform: 'enable_nowplaying_platform',
+  enableLyricTranslation: 'enable_lyric_translation'
+};
 export default {
   namespaced: true,
   state() {
@@ -15,28 +26,24 @@ export default {
   },
   mutations: {
     setBySetting(state, newValue) {
-      for (let k in newValue) {
-        state[k] = newValue[k];
+      for (const [key, value] of Object.entries(newValue)) {
+        state[key] = value;
       }
     }
   },
 
   actions: {
     saveState({ state }) {
-      const settings = {
-        enable_nowplaying_cover_background: state.enableNowplayingCoverBackground,
-        enable_nowplaying_bitrate: state.enableNowplayingBitrate,
-        enable_nowplaying_platform: state.enableNowplayingPlatform
-      };
-      for (const [key, value] of Object.entries(settings)) {
-        localStorage.setObject(key, value);
+      for (const [key, value] of Object.entries(state)) {
+        if (nameMapping[key]) {
+          localStorage.setObject(nameMapping[key], value);
+        }
       }
     },
-    initState({ commit, dispatch }) {
-      const settingKeys = ['enable_nowplaying_cover_background', 'enable_nowplaying_bitrate', 'enable_nowplaying_platform'];
-      const localSettings = settingKeys.map((key) => localStorage.getObject(key));
-      if (localSettings.some((value) => value === null)) {
-        dispatch('saveState');
+    initState({ commit, dispatch, state }) {
+      const localSettings = Object.keys(nameMapping).reduce((res, cur) => ({ ...res, [cur]: localStorage.getObject(nameMapping[cur]) }));
+      if (Object.values(localSettings).some((value) => value === null)) {
+        dispatch('saveState', state);
       } else {
         commit('setBySetting', localSettings);
       }
