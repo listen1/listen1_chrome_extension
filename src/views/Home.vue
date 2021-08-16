@@ -601,7 +601,7 @@
                       <div
                         v-if="enableNowplayingCoverBackground"
                         class="bg"
-                        :style="{backgroundImage:`url(${currentPlaying.img_url}`}"
+                        :style="{ backgroundImage: `url(${currentPlaying.img_url}` }"
                       />
                       <div
                         class="translate-switch"
@@ -647,7 +647,7 @@
                             <span
                               v-if="enableNowplayingPlatform && currentPlaying.platform !== undefined"
                               class="badge platform"
-                            >{{ currentPlaying.platform }}</span>
+                            >{{ t(currentPlaying.platform) }}</span>
                           </div>
                           <div class="info">
                             <div class="singer">
@@ -938,7 +938,7 @@ const toggleNowPlaying = () => {
     window_type = '';
   }
 };
-const is_login = (platfrom) => {
+const is_login = (platform) => {
   return false;
 };
 const newDialogOption = (option) => {

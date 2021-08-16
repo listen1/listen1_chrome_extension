@@ -8,7 +8,7 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
-    "async": "^3.2.0",
+    "async": "^3.2.1",
     "axios": "^0.21.1",
     "core-js": "^3.15.2",
     "feather-icons": "^4.28.0",
@@ -23,7 +23,7 @@
     "vuex": "^4.0.2"
   },
   "devDependencies": {
-    "@intlify/vue-i18n-loader": "^2.1.2",
+    "@intlify/vue-i18n-loader": "^3.0.0",
     "@types/chrome": "^0.0.154",
     "@types/wicg-mediasession": "^1.1.2",
     "@vue/cli-plugin-babel": "~4.5.0",
