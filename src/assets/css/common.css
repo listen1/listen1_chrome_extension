@@ -9,6 +9,8 @@ body {
 
 a {
   cursor: pointer;
+  text-decoration: none;
+  color: var(--text-default-color);
 }
 
 .wrap {
