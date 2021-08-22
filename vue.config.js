@@ -30,6 +30,17 @@ module.exports = {
       ...config.get('externals'),
       electron: 'electron'
     });
+    config.plugin('feature-flags').use(require('webpack').DefinePlugin, [
+      {
+        __VUE_OPTIONS_API__: false,
+        __VUE_PROD_DEVTOOLS__: false,
+        __INTLIFY_PROD_DEVTOOLS__: false,
+        __VUE_I18N_FULL_INSTALL__: false,
+        __VUE_I18N_LEGACY_API__: false,
+        __VUE_I18N_PROD_DEVTOOLS__: false,
+        version: JSON.stringify(require('./package.json').version)
+      }
+    ]);
   },
   pluginOptions: {
     browserExtension: {

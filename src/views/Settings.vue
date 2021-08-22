@@ -286,24 +286,19 @@
         <div class="settings-content">
           <p>
             Listen 1 {{ t('_HOMEPAGE') }}:
-            <a
-              open-url="'https://listen1.github.io/listen1/'"
-            >https://listen1.github.io/listen1/</a>
+            <Href to="https://listen1.github.io/listen1/" />
           </p>
-          <p>Listen 1 {{ t('_EMAIL') }}: githublisten1@gmail.com</p>
+          <p>
+            Listen 1 {{ t('_EMAIL') }}:
+            <Href to="mailto:githublisten1@gmail.com" display="githublisten1@gmail.com" />
+          </p>
           <p>
             {{ t('_FEEDBACK') }}:
-            <a
-              v-if="isChrome"
-              open-url="'https://github.com/listen1/listen1_chrome_extension/issues'"
-            >https://github.com/listen1/listen1_chrome_extension/issues</a>
-            <a
-              v-if="!isChrome"
-              open-url="'https://github.com/listen1/listen1_desktop/issues'"
-            >https://github.com/listen1/listen1_desktop/issues</a>
+            <Href v-if="isChrome" to="https://github.com/listen1/listen1_chrome_extension/issues" />
+            <Href v-else to="https://github.com/listen1/listen1_desktop/issues" />
           </p>
           <p>{{ t('_DESIGNER') }}: iparanoid</p>
-          <p>{{ t('_VERSION') }}: v3.0.0 (DEVELOPER VERSION)</p>
+          <p>{{ `${t('_VERSION')}: v${Version}` }} (DEVELOPER VERSION)</p>
           <p>LICENSE: {{ t('_LICENSE_NOTICE') }}</p>
           <!-- <p v-show="lastestVersion != ''">{{ $t('_LATEST_VERSION') }}: lastestVersion</p> -->
         </div>
@@ -315,7 +310,9 @@
 <script setup>
 import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
+import Href from '../components/Href.vue'
 const { t, locale } = useI18n();
+const Version = version;
 const store = useStore();
 const isChrome = true;
 const enableNowplayingCoverBackground = $computed(() => store.state.settings.enableNowplayingCoverBackground)
