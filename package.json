@@ -3,57 +3,39 @@
   "version": "3.0.0",
   "private": false,
   "scripts": {
-    "dev": "vue-cli-service build --mode development --watch --no-clean",
-    "build": "vue-cli-service build --modern",
-    "lint": "vue-cli-service lint"
+    "build": "rollup -c",
+    "start": "rollup -c -w"
   },
-  "dependencies": {
+  "description": "one for all free music in china",
+  "devDependencies": {
+    "@intlify/rollup-plugin-vue-i18n": "^2.0.3",
+    "@rollup/plugin-commonjs": "^20.0.0",
+    "@rollup/plugin-image": "^2.1.1",
+    "@rollup/plugin-json": "^4.1.0",
+    "@rollup/plugin-node-resolve": "^13.0.4",
+    "@rollup/plugin-replace": "^3.0.0",
+    "@types/chrome": "^0.0.154",
+    "@vitejs/plugin-vue": "^1.6.0",
+    "@vue/compiler-sfc": "^3.2.6",
     "async": "^3.2.1",
     "axios": "^0.21.1",
-    "core-js": "^3.15.2",
     "feather-icons": "^4.28.0",
     "howler": "^2.2.3",
     "node-forge": "^0.10.0",
     "notyf": "^3.10.0",
+    "postcss": "^8.3.6",
     "prettier": "^2.3.2",
-    "vue": "^3.2.4",
+    "rollup": "^2.56.3",
+    "rollup-plugin-chrome-extension": "^3.6.1",
+    "rollup-plugin-copy": "^3.4.0",
+    "rollup-plugin-polyfill-node": "^0.7.0",
+    "rollup-plugin-postcss": "^4.0.1",
+    "rollup-plugin-vue": "^6.0.0",
+    "vue": "^3.2.6",
     "vue-feather": "^2.0.0-rc",
     "vue-i18n": "^9.1.7",
-    "vue-router": "^4.0.10",
+    "vue-router": "^4.0.11",
     "vuex": "^4.0.2"
-  },
-  "devDependencies": {
-    "@intlify/vue-i18n-loader": "^3.0.0",
-    "@types/chrome": "^0.0.154",
-    "@types/wicg-mediasession": "^1.1.2",
-    "@vue/cli-plugin-babel": "~4.5.0",
-    "@vue/cli-plugin-eslint": "~4.5.0",
-    "@vue/cli-plugin-router": "~4.5.0",
-    "@vue/cli-service": "^4.5.13",
-    "@vue/compiler-sfc": "^3.2.4",
-    "eslint": "^7.32.0",
-    "eslint-plugin-vue": "^7.16.0",
-    "vue-cli-plugin-browser-extension": "^0.25.2",
-    "vue-eslint-parser": "^7.10.0"
-  },
-  "eslintConfig": {
-    "parser": "vue-eslint-parser",
-    "root": true,
-    "env": {
-      "node": true,
-      "webextensions": true
-    },
-    "extends": [
-      "plugin:vue/vue3-essential",
-      "eslint:recommended"
-    ],
-    "parserOptions": {
-      "ecmaVersion": 2021
-    },
-    "rules": {
-      "no-unused-vars": "off",
-      "no-undef": "off"
-    }
   },
   "browserslist": [
     "last 8 chrome versions",

@@ -15,7 +15,7 @@
                 <!-- choose playlist dialog-->
                 <ul v-show="dialog_type == 0" class="dialog-playlist">
                   <li class="detail-add" @click="newDialogOption(1)">
-                    <img src="images/mycover.jpg" />
+                    <img src="../images/mycover.jpg" />
                     <h2>_CREATE_PLAYLIST</h2>
                   </li>
                   <li
@@ -138,7 +138,7 @@
                 </div>
                 <ul v-show="dialog_type == 8" class="dialog-backuplist">
                   <li class="detail-add" ng-click="newDialogOption(9)">
-                    <img src="images/mycover.jpg" />
+                    <img src="../images/mycover.jpg" />
                     <h2>_CREATE_PLAYLIST_BACKUP</h2>
                   </li>
                   <li
@@ -147,7 +147,7 @@
                     ng-class-even="'even'"
                     ng-click="backupMySettings2Gist(backup.id, backup.public); closeDialog();"
                   >
-                    <img ng-src="images/mycover.jpg" />
+                    <img ng-src="../images/mycover.jpg" />
                     <h2>
                       backup.id
                       <br />backup.description
@@ -173,7 +173,7 @@
                     ng-class-even="'even'"
                     ng-click="importMySettingsFromGist(backup.id); closeDialog();"
                   >
-                    <img ng-src="images/mycover.jpg" />
+                    <img ng-src="../images/mycover.jpg" />
                     <h2>backup.id backup.description</h2>
                   </li>
                 </ul>
@@ -872,10 +872,10 @@
 
 <script setup>
 import 'notyf/notyf.min.css';
-import '@/assets/css/icon.css';
-import '@/assets/css/origin.css';
-import '@/assets/css/common.css';
-import { l1Player } from '@/services/l1_player';
+import '../assets/css/icon.css';
+import '../assets/css/origin.css';
+import '../assets/css/common.css';
+import { l1Player } from '../services/l1_player';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
 import DraggableBar from '../components/DraggableBar.vue';
@@ -905,7 +905,7 @@ let isChrome = $ref(true)
 let is_favorite = $ref(false)
 let playlist_highlight = $ref(false)
 let menuHidden = $ref(true)
-const playmode = $computed(() => store.state.player.playmode)
+let playmode = $computed(() => store.state.player.playmode)
 
 const searchTextChanged = () => {
   store.commit('search/changeSearchKeywords', keywords);
@@ -990,22 +990,22 @@ const playFromPlaylist = (song) => {
   l1Player.playById(song.id);
 };
 
-const playlist = $computed(() => store.state.player.playlist)
-const isPlaying = $computed(() => store.state.player.isPlaying)
-const lyricArray = $computed(() => store.state.player.lyricArray)
-const lyricLineNumber = $computed(() => store.state.player.lyricLineNumber)
-const lyricLineNumberTrans = $computed(() => store.state.player.lyricLineNumberTrans)
-const myProgress = $computed(() => store.state.player.myProgress)
-const changingProgress = $computed(() => store.state.player.changingProgress)
-const currentDuration = $computed(() => store.state.player.currentDuration)
-const currentPosition = $computed(() => store.state.player.currentPosition)
-const currentPlaying = $computed(() => store.state.player.currentPlaying)
-const volume = $computed(() => store.state.player.volume)
-const mute = $computed(() => store.state.player.mute)
+let playlist = $computed(() => store.state.player.playlist)
+let isPlaying = $computed(() => store.state.player.isPlaying)
+let lyricArray = $computed(() => store.state.player.lyricArray)
+let lyricLineNumber = $computed(() => store.state.player.lyricLineNumber)
+let lyricLineNumberTrans = $computed(() => store.state.player.lyricLineNumberTrans)
+let myProgress = $computed(() => store.state.player.myProgress)
+let changingProgress = $computed(() => store.state.player.changingProgress)
+let currentDuration = $computed(() => store.state.player.currentDuration)
+let currentPosition = $computed(() => store.state.player.currentPosition)
+let currentPlaying = $computed(() => store.state.player.currentPlaying)
+let volume = $computed(() => store.state.player.volume)
+let mute = $computed(() => store.state.player.mute)
 
-const enableNowplayingCoverBackground = $computed(() => store.state.settings.enableNowplayingCoverBackground)
-const enableLyricTranslation = $computed(() => store.state.settings.enableLyricTranslation)
-const enableNowplayingBitrate = $computed(() => store.state.settings.enableNowplayingBitrate)
-const enableNowplayingPlatform = $computed(() => store.state.settings.enableNowplayingPlatform)
+let enableNowplayingCoverBackground = $computed(() => store.state.settings.enableNowplayingCoverBackground)
+let enableLyricTranslation = $computed(() => store.state.settings.enableLyricTranslation)
+let enableNowplayingBitrate = $computed(() => store.state.settings.enableNowplayingBitrate)
+let enableNowplayingPlatform = $computed(() => store.state.settings.enableNowplayingPlatform)
 
 </script>

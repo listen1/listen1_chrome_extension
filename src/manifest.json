@@ -1,9 +1,8 @@
 {
   "manifest_version": 2,
-  "name": "__MSG_extName__",
+  "name": "Listen 1 Next",
   "homepage_url": "https://github.com/listen1",
   "description": "one for all free music in china",
-  "default_locale": "en",
   "permissions": [
     "notifications",
     "unlimitedStorage",
@@ -29,11 +28,20 @@
     "48": "images/logo_48.png"
   },
   "background": {
-    "scripts": ["js/background.js"],
+    "scripts": ["background.js"],
     "persistent": true
   },
   "browser_action": {
     "default_icon": "images/logo.png",
-    "default_title": "__MSG_extName__"
-  }
+    "default_title": "Listen1 Next"
+  },
+  "web_accessible_resources": [
+    "assets/fonts/listen1-icon.eot",
+    "assets/fonts/listen1-icon.ttf",
+    "assets/fonts/listen1-icon.woff",
+    "assets/fonts/listen1-icon.svg",
+    "images/loading.svg",
+    "images/*.png",
+    "images/*.jpg"
+  ]
 }

@@ -298,7 +298,7 @@
             <Href v-else to="https://github.com/listen1/listen1_desktop/issues" />
           </p>
           <p>{{ t('_DESIGNER') }}: iparanoid</p>
-          <p>{{ `${t('_VERSION')}: v${Version}` }} (DEVELOPER VERSION)</p>
+          <p>{{ `${t('_VERSION')}: v${version}` }} (DEVELOPER VERSION)</p>
           <p>LICENSE: {{ t('_LICENSE_NOTICE') }}</p>
           <!-- <p v-show="lastestVersion != ''">{{ $t('_LATEST_VERSION') }}: lastestVersion</p> -->
         </div>
@@ -311,13 +311,14 @@
 import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
 import Href from '../components/Href.vue'
+import pkg from "../../package.json"
 const { t, locale } = useI18n();
-const Version = version;
+const version = pkg.version;
 const store = useStore();
 const isChrome = true;
-const enableNowplayingCoverBackground = $computed(() => store.state.settings.enableNowplayingCoverBackground)
-const enableNowplayingBitrate = $computed(() => store.state.settings.enableNowplayingBitrate)
-const enableNowplayingPlatform = $computed(() => store.state.settings.enableNowplayingPlatform)
+let enableNowplayingCoverBackground = $computed(() => store.state.settings.enableNowplayingCoverBackground)
+let enableNowplayingBitrate = $computed(() => store.state.settings.enableNowplayingBitrate)
+let enableNowplayingPlatform = $computed(() => store.state.settings.enableNowplayingPlatform)
 const toggleCoverBackground = () => store.dispatch("settings/setState", { enableNowplayingCoverBackground: !enableNowplayingCoverBackground })
 const toggleBitrate = () => store.dispatch("settings/setState", { enableNowplayingBitrate: !enableNowplayingBitrate })
 const togglePlayingPlatform = () => store.dispatch("settings/setState", { enableNowplayingPlatform: !enableNowplayingPlatform })

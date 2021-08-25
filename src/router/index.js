@@ -1,10 +1,10 @@
 import { createRouter, createWebHashHistory } from 'vue-router';
-import HotPlaylists from '../views/HotPlaylists';
-import Login from '../views/Login';
-import MyPlatform from '../views/MyPlatform';
-import Playlist from '../views/Playlist';
-import Search from '../views/Search';
-import Settings from '../views/Settings';
+import HotPlaylists from '../views/HotPlaylists.vue';
+import Login from '../views/Login.vue';
+import MyPlatform from '../views/MyPlatform.vue';
+import Playlist from '../views/Playlist.vue';
+import Search from '../views/Search.vue';
+import Settings from '../views/Settings.vue';
 const routes = [
   {
     path: '/',
