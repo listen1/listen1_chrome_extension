@@ -311,9 +311,8 @@
 import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
 import Href from '../components/Href.vue'
-import pkg from "../../package.json"
+import { version } from "../../package.json"
 const { t, locale } = useI18n();
-const version = pkg.version;
 const store = useStore();
 const isChrome = true;
 let enableNowplayingCoverBackground = $computed(() => store.state.settings.enableNowplayingCoverBackground)
