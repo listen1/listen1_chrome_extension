@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { concat } from 'async';
+import concat from 'async-es/concat';
 import forge from 'node-forge';
 import { getParameterByName, cookieSet, cookieRemove, cookieGetPromise } from './lowebutil';
 

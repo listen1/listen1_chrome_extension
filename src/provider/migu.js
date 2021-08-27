@@ -1,5 +1,5 @@
 import axios from 'axios';
-import async from 'async';
+import concat from 'async-es/concat';
 import forge from 'node-forge';
 import { getParameterByName } from './lowebutil';
 
@@ -345,7 +345,7 @@ export default class migu {
     const total = response.data.resource[0].musicNum;
     const page = Math.ceil(total / 50);
     const page_array = Array.from({ length: page }, (v, k) => k + 1);
-    const tracks = await async.concat(page_array, (item, callback) => this.mg_render_tracks(url, item, callback));
+    const tracks = await concat(page_array, (item, callback) => this.mg_render_tracks(url, item, callback));
     return { tracks, info };
   }
 
@@ -364,7 +364,7 @@ export default class migu {
     const total = data.resource[0].totalCount;
     const page = Math.ceil(total / 50);
     const page_array = Array.from({ length: page }, (v, k) => k + 1);
-    const tracks = await async.concat(page_array, (item, callback) => this.mg_render_tracks(url, item, callback));
+    const tracks = await concat(page_array, (item, callback) => this.mg_render_tracks(url, item, callback));
     return {
       tracks,
       info
