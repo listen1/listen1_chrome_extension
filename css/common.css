@@ -619,7 +619,7 @@ https://stackoverflow.com/questions/19889615/can-an-angular-directive-pass-argum
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
-  filter: blur(90px) brightness(0.8);
+  filter: blur(10px) brightness(0.6);
   transition: background ease-in-out 1.5s;
 }
 
