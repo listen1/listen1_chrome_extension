@@ -4,3 +4,4 @@
 .eslintcache
 
 node_modules
+dist
