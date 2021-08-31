@@ -1,4 +1,4 @@
-import { createI18n } from 'vue-i18n/dist/vue-i18n.runtime.esm-bundler.js';
+import { createI18n } from 'vue-i18n';
 
 import en_US from './i18n/en_US.json';
 import fr_FR from './i18n/fr_FR.json';
