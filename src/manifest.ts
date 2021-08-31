@@ -1,5 +1,6 @@
 import type { ManifestV2 } from 'rollup-plugin-chrome-extension';
 const mv2: ManifestV2 = {
+  name: 'Listen 1 Next',
   manifest_version: 2,
   homepage_url: 'https://github.com/listen1',
   description: 'one for all free music in china',
