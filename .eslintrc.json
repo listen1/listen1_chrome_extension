@@ -14,7 +14,8 @@
         "axios": "readonly",
         "window": "readonly",
         "browser": "readonly",
-        "chrome": "readonly"
+        "chrome": "readonly",
+        "api":true
     },
     "env": {
         "browser": true,

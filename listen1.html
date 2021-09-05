@@ -502,13 +502,14 @@
                       </span>
                     </div>
                     <div
+                      class="settings"
                       ng-class="{ 'active': (current_tag==4) && (window_url_stack.length ==0)}"
                       ng-click="showTag(4)"
                       class="settings"
                     >
                       <span class="icon li-setting"></span>
                     </div>
-                    <div ng-if="!isChrome && !isMac" class="window-control">
+                    <div ng-if="isLinux" class="window-control">
                       <svg class="icon" window-control="window_min">
                         <use href="#minimize-2"></use>
                       </svg>
@@ -1724,7 +1725,7 @@
                           </svg>
                         </div>
 
-                        <div ng-if="!isChrome && !isMac" class="window-control">
+                        <div ng-if="isLinux" class="window-control">
                           <svg class="icon" window-control="window_min">
                             <use href="#minimize-2"></use>
                           </svg>

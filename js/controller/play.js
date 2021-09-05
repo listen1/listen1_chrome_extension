@@ -2,7 +2,7 @@
 /* eslint-disable no-shadow */
 /* eslint-disable import/no-unresolved */
 /* eslint-disable global-require */
-/* global angular notyf i18next MediaService l1Player hotkeys GithubClient isElectron require getLocalStorageValue getPlayer getPlayerAsync addPlayerListener smoothScrollTo lastfm */
+/* global angular notyf i18next MediaService l1Player hotkeys GithubClient isElectron getLocalStorageValue getPlayer getPlayerAsync addPlayerListener smoothScrollTo lastfm */
 
 function getCSSStringFromSetting(setting) {
   let { backgroundAlpha } = setting;
@@ -46,13 +46,16 @@ angular.module('listenone').controller('PlayController', [
     $scope.enableGloablShortcut = false;
     $scope.isChrome = !isElectron();
     $scope.isMac = false;
-
+    $scope.isLinux = false;
+    $scope.isWindows = false;
     $scope.currentDuration = '0:00';
     $scope.currentPosition = '0:00';
 
     if (!$scope.isChrome) {
       // eslint-disable-next-line no-undef
-      $scope.isMac = process.platform === 'darwin';
+      $scope.isMac = api.platform === 'darwin';
+      $scope.isLinux = api.platform === 'linux';
+      $scope.isWindows = api.platform === 'win32';
     }
 
     function switchMode(mode) {
@@ -165,8 +168,7 @@ angular.module('listenone').controller('PlayController', [
         $scope.enableGlobalShortCut
       );
 
-      const { ipcRenderer } = require('electron');
-      ipcRenderer.send('control', message);
+      api.ipcRenderer.send('control', message);
     };
 
     $scope.openLyricFloatingWindow = (toggle) => {
@@ -186,8 +188,7 @@ angular.module('listenone').controller('PlayController', [
         'enable_lyric_floating_window',
         $scope.enableLyricFloatingWindow
       );
-      const { ipcRenderer } = require('electron');
-      ipcRenderer.send(
+      api.ipcRenderer.send(
         'control',
         message,
         getCSSStringFromSetting($scope.floatWindowSetting)
@@ -195,12 +196,11 @@ angular.module('listenone').controller('PlayController', [
     };
 
     if (isElectron()) {
-      const { webFrame, ipcRenderer } = require('electron');
       // webFrame.setVisualZoomLevelLimits(1, 3);
-      ipcRenderer.on('setZoomLevel', (event, level) => {
-        webFrame.setZoomLevel(level);
+      api.onSetZoom((level) => {
+        api.setZoomLevel(level);
       });
-      ipcRenderer.on('lyricWindow', (event, arg) => {
+      api.onLyricWindow((arg) => {
         if (arg === 'float_window_close') {
           $scope.openLyricFloatingWindow(true);
         } else if (
@@ -252,9 +252,8 @@ angular.module('listenone').controller('PlayController', [
           'float_window_setting',
           $scope.floatWindowSetting
         );
-        const { ipcRenderer } = require('electron');
         const message = 'update_lyric_floating_window_css';
-        ipcRenderer.send(
+        api.ipcRenderer.send(
           'control',
           message,
           getCSSStringFromSetting($scope.floatWindowSetting)
@@ -490,7 +489,6 @@ angular.module('listenone').controller('PlayController', [
                 $scope.lyricLineNumberTrans = lastObjectTrans.lineNumber;
               }
               if (isElectron()) {
-                const { ipcRenderer } = require('electron');
                 const currentLyric =
                   $scope.lyricArray[lastObject.lineNumber].content;
                 let currentLyricTrans = '';
@@ -501,7 +499,7 @@ angular.module('listenone').controller('PlayController', [
                   currentLyricTrans =
                     $scope.lyricArray[lastObjectTrans.lineNumber].content;
                 }
-                ipcRenderer.send('currentLyric', {
+                api.ipcRenderer.send('currentLyric', {
                   lyric: currentLyric,
                   tlyric: currentLyricTrans,
                 });
@@ -585,9 +583,8 @@ angular.module('listenone').controller('PlayController', [
             });
             $scope.lastTrackId = msg.data.id;
             if (isElectron()) {
-              const { ipcRenderer } = require('electron');
-              ipcRenderer.send('currentLyric', track.title);
-              ipcRenderer.send('trackPlayingNow', track);
+              api.ipcRenderer.send('currentLyric', track.title);
+              api.ipcRenderer.send('trackPlayingNow', track);
             }
             break;
           }
@@ -638,11 +635,10 @@ angular.module('listenone').controller('PlayController', [
 
             $rootScope.document_title = title;
             if (isElectron()) {
-              const { ipcRenderer } = require('electron');
               if (msg.data.isPlaying) {
-                ipcRenderer.send('isPlaying', true);
+                api.ipcRenderer.send('isPlaying', true);
               } else {
-                ipcRenderer.send('isPlaying', false);
+                api.ipcRenderer.send('isPlaying', false);
               }
             }
 
@@ -742,7 +738,7 @@ angular.module('listenone').controller('PlayController', [
     };
 
     if (isElectron()) {
-      require('electron').ipcRenderer.on('globalShortcut', (event, message) => {
+      api.onGlobalShortcut((event, message) => {
         if (message === 'right') {
           l1Player.next();
         } else if (message === 'left') {

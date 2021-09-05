@@ -1,5 +1,5 @@
 /* eslint-disable no-shadow */
-/* global l1Player require */
+/* global l1Player */
 /* global angular isElectron i18next i18nextHttpBackend Notyf notyf */
 /* global setPrototypeOfLocalStorage  */
 /* eslint-disable global-require */
@@ -208,8 +208,7 @@ const main = () => {
       link(scope, element, attrs) {
         element.bind('click', (event) => {
           if (isElectron()) {
-            const { shell } = require('electron');
-            shell.openExternal(scope.url);
+            api.ipcRenderer.send('open-url', scope.url);
           } else {
             $window.open(scope.url, '_blank');
           }
@@ -228,8 +227,7 @@ const main = () => {
       link(scope, element, attrs) {
         element.bind('click', (event) => {
           if (isElectron()) {
-            const { ipcRenderer } = require('electron');
-            ipcRenderer.send('control', scope.action);
+            api.ipcRenderer.send('control', scope.action);
           }
         });
       },

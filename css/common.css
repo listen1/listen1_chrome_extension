@@ -283,6 +283,7 @@ https://stackoverflow.com/questions/19889615/can-an-angular-directive-pass-argum
 
 .navigation .settings {
   flex: 0 0 32px;
+  margin-top: 25px;
 }
 
 .navigation .icon {

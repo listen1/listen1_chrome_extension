@@ -1,4 +1,4 @@
-/* global isElectron require */
+/* global isElectron */
 /* eslint-disable global-require */
 function github() {
   const OAUTH_URL = 'https://github.com/login/oauth';
@@ -51,15 +51,7 @@ function github() {
         const url = `${OAUTH_URL}/authorize?client_id=${client_id}&scope=gist`;
         if (isElectron()) {
           // normal window for link
-          const { BrowserWindow } = require('electron').remote; // eslint-disable-line import/no-unresolved
-          let win = new BrowserWindow({
-            width: 1000,
-            height: 670,
-          });
-          win.on('closed', () => {
-            win = null;
-          });
-          win.loadURL(url);
+          api.ipcRenderer.send('openUrl', url);
           return;
         }
         window.open(url, '_blank');

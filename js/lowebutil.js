@@ -14,7 +14,7 @@ function getParameterByName(name, url) {
 }
 
 function isElectron() {
-  return window && window.process && window.process.type;
+  return window.api.isElectron;
 }
 
 function cookieGet(cookieRequest, callback) {
@@ -23,16 +23,13 @@ function cookieGet(cookieRequest, callback) {
       callback(cookie);
     });
   }
-  const remote = require('electron').remote; // eslint-disable-line
-  remote.session.defaultSession.cookies
-    .get(cookieRequest)
-    .then((cookieArray) => {
-      let cookie = null;
-      if (cookieArray.length > 0) {
-        [cookie] = cookieArray;
-      }
-      callback(cookie);
-    });
+  api.getCookie(cookieRequest).then((cookieArray) => {
+    let cookie = null;
+    if (cookieArray.length > 0) {
+      [cookie] = cookieArray;
+    }
+    callback(cookie);
+  });
 }
 
 function cookieSet(cookie, callback) {
@@ -41,10 +38,8 @@ function cookieSet(cookie, callback) {
       callback(arg1, arg2);
     });
   }
-  const remote = require('electron').remote; // eslint-disable-line
-  remote.session.defaultSession.cookies.set(cookie).then((arg1, arg2) => {
-    callback(null, arg1, arg2);
-  });
+  api.setCookie(cookie);
+  callback(null);
 }
 function cookieRemove(cookie, callback) {
   if (!isElectron()) {
@@ -52,12 +47,8 @@ function cookieRemove(cookie, callback) {
       callback(arg1, arg2);
     });
   }
-  const remote = require('electron').remote; // eslint-disable-line
-  remote.session.defaultSession.cookies
-    .remove(cookie.url, cookie.name)
-    .then((arg1, arg2) => {
-      callback(null, arg1, arg2);
-    });
+  api.ipcRender.send('removeCookie', cookie);
+  callback(null);
 }
 
 function setPrototypeOfLocalStorage() {

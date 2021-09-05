@@ -621,9 +621,7 @@ angular.module('listenone').controller('NavigationController', [
 
     $scope.addLocalMusic = (list_id) => {
       if (isElectron()) {
-        const { remote } = require('electron');
-        const remoteFunctions = remote.require('./functions.js');
-        remote.dialog
+        api.dialog
           .showOpenDialog({
             title: '添加歌曲',
             properties: ['openFile', 'multiSelections'],
@@ -640,7 +638,7 @@ angular.module('listenone').controller('NavigationController', [
             }
 
             result.filePaths.forEach((fp) => {
-              remoteFunctions.readAudioTags(fp).then((md) => {
+              api.readAudioTags(fp).then((md) => {
                 const track = {
                   id: `lmtrack_${fp}`,
                   title: md.common.title,
