@@ -168,7 +168,8 @@ svg {
 
 /* split content to up/down 2 parts */
 .main .content .navigation {
-  height: 46px;
+  height: env(titlebar-area-height, 46px);
+  left: env(titlebar-area-x, 0);
   flex: 0 0 46px;
   border-bottom: solid 1px var(--line-default-color);
   display: flex;

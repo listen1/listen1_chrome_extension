@@ -14,7 +14,7 @@ function getParameterByName(name, url) {
 }
 
 function isElectron() {
-  return window.api.isElectron;
+  return window.api && window.api.isElectron;
 }
 
 function cookieGet(cookieRequest, callback) {
