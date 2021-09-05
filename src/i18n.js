@@ -1,9 +1,9 @@
 import { createI18n } from 'vue-i18n';
 
-import en_US from '@/i18n/en_US';
-import fr_FR from '@/i18n/fr_FR';
-import zh_CN from '@/i18n/zh_CN';
-import zh_TC from '@/i18n/zh_TC';
+import en_US from './i18n/en_US.json';
+import fr_FR from './i18n/fr_FR.json';
+import zh_CN from './i18n/zh_CN.json';
+import zh_TC from './i18n/zh_TC.json';
 
 const messages = {
   'en-US': en_US,

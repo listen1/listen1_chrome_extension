@@ -1,5 +1,5 @@
 import axios from 'axios';
-import async from 'async';
+import concat from 'async-es/concat';
 import forge from 'node-forge';
 import { getParameterByName } from './lowebutil';
 
@@ -113,7 +113,7 @@ export default class taihe {
     const total = data.trackCount;
     const page = Math.ceil(total / 100);
     const page_array = Array.from({ length: page }, (v, k) => k + 1);
-    const tracks = await async.concat(page_array, (item, callback) => this.th_render_tracks(url, item, callback));
+    const tracks = await concat(page_array, (item, callback) => this.th_render_tracks(url, item, callback));
     return { tracks, info };
   }
 

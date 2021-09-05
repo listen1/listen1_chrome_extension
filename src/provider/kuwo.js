@@ -1,4 +1,4 @@
-import async from 'async';
+import concat from 'async-es/concat';
 import axios from 'axios';
 import { cookieGet, getParameterByName } from './lowebutil';
 
@@ -72,7 +72,7 @@ export default class kuwo {
     data_list.forEach((item, index) => {
       fnDict[index] = (cb) => handler(index, item, handler_extra_param_list, cb);
     });
-    async.parallel(fnDict, (err, results) => {
+    parallel(fnDict, (err, results) => {
       callback(null, data_list.map((item, index) => results[index]));
     });
   }
@@ -491,7 +491,7 @@ export default class kuwo {
     const total = data.songnum;
     const page = Math.ceil(total / 100);
     const page_array = Array.from({ length: page }, (v, k) => k + 1);
-    const tracks = await async.concat(page_array, (item, callback) => this.kw_render_tracks(url, item, callback));
+    const tracks = await concat(page_array, (item, callback) => this.kw_render_tracks(url, item, callback));
     return {
       tracks,
       info
@@ -598,7 +598,7 @@ export default class kuwo {
     const { total } = data;
     const page = Math.ceil(total / 100);
     const page_array = Array.from({ length: page }, (v, k) => k + 1);
-    const tracks = await async.concat(page_array, (item, callback) => this.kw_render_tracks(url, item, callback));
+    const tracks = await concat(page_array, (item, callback) => this.kw_render_tracks(url, item, callback));
     return { tracks, info };
 
     /*

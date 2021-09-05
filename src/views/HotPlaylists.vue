@@ -61,7 +61,7 @@
   </div>
 </template>
 <script setup>
-import { l1Player } from '@/services/l1_player';
+import { l1Player } from '../services/l1_player';
 import { computed, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';

@@ -1,4 +1,4 @@
-import { parallel } from 'async';
+import parallel from 'async-es/parallel';
 export function getParameterByName(name, url) {
   if (!url) url = window.location.href;
   name = name.replace(/[\[\]]/g, '\\$&'); // eslint-disable-line no-useless-escape

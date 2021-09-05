@@ -1,6 +1,6 @@
 import MediaService from '../../services/MediaService';
-import { isElectron, smoothScrollTo } from '@/provider/lowebutil';
-import { l1Player } from '@/services/l1_player';
+import { isElectron, smoothScrollTo } from '../../provider/lowebutil';
+import { l1Player } from '../../services/l1_player';
 import notyf from '../../services/notyf';
 import I18n from '../../i18n';
 function rightPadding(str, length, padChar) {

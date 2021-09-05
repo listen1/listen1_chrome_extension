@@ -4,9 +4,9 @@
 
 
 <script setup>
-import Home from '@/views/Home';
+import Home from './views/Home.vue';
 import { useStore } from 'vuex';
-import { getPlayer, addPlayerListener } from '@/services/bridge';
+import { getPlayer, addPlayerListener } from './services/bridge';
 const mode = 'front';
 const store = useStore();
 getPlayer(mode).setMode(mode);
