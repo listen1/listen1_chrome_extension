@@ -59,6 +59,20 @@ export function cookieSet(cookie, callback) {
     callback(null, arg1, arg2);
   });
 }
+export function cookieSetPromise(cookie) {
+  return new Promise((res, rej) => {
+    if (!isElectron()) {
+      return chrome.cookies.set(cookie, (arg1, arg2) => {
+        res(arg1, arg2);
+      });
+    }
+    const remote = require('electron').remote; // eslint-disable-line
+    remote.session.defaultSession.cookies.set(cookie).then((arg1, arg2) => {
+      res(null, arg1, arg2);
+    });
+  });
+}
+
 export function cookieRemove(cookie, callback) {
   if (!isElectron()) {
     return chrome.cookies.remove(cookie, (arg1, arg2) => {

@@ -3,10 +3,6 @@ import { isElectron, smoothScrollTo } from '../../provider/lowebutil';
 import { l1Player } from '../../services/l1_player';
 import notyf from '../../services/notyf';
 import I18n from '../../i18n';
-function rightPadding(str, length, padChar) {
-  const newstr = str + new Array(length - str.length + 1).join(padChar);
-  return newstr;
-}
 function parseLyric(lyric, tlyric) {
   const lines = lyric.split('\n');
   let result = [];
@@ -51,7 +47,7 @@ function parseLyric(lyric, tlyric) {
         seconds:
           parseInt(timeRegResult[1], 10) * 60 * 1000 + // min
           parseInt(timeRegResult[2], 10) * 1000 + // sec
-          (timeRegResult[3] ? parseInt(rightPadding(timeRegResult[3], 3, '0'), 10) : 0), // microsec
+          (timeRegResult[3] ? parseInt(timeRegResult[3].padEnd(3, '0'), 10) : 0), // microsec
         translationFlag,
         index
       });

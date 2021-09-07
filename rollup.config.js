@@ -8,7 +8,6 @@ import replace from '@rollup/plugin-replace';
 import vue from '@vitejs/plugin-vue';
 import { chromeExtension, simpleReloader } from 'rollup-plugin-chrome-extension';
 import clear from 'rollup-plugin-clear';
-import nodePolyfills from 'rollup-plugin-polyfill-node';
 import postcss from 'rollup-plugin-postcss';
 import zip from 'rollup-plugin-zip';
 const development = process.env.BUILD === 'development';
@@ -21,7 +20,7 @@ export default {
   plugins: [
     // always put chromeExtension() before other plugins
     chromeExtension(),
-    vue({ refTransform: 'vue' }),
+    vue({ refTransform: true }),
     VueI18nPlugin({
       include: 'src/i18n/**',
       forceStringify: true
@@ -47,7 +46,6 @@ export default {
     simpleReloader(),
     // the plugins below are optional
     commonjs(),
-    nodePolyfills(),
     development ? null : zip({ dir: 'artifacts' }),
     development ? null : clear({ targets: ['dist'] })
   ]
