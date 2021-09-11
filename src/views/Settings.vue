@@ -313,11 +313,28 @@ import { useStore } from 'vuex';
 import Href from '../components/Href.vue'
 import { version } from "../../package.json"
 const { t, locale } = useI18n();
-document.documentElement.lang = locale.value;
 const setLocale = (loc) => {
   locale.value = loc;
-  document.documentElement.lang = loc
+  let htmlLang;
+  switch (loc) {
+    case 'zh-CN':
+      htmlLang = 'zh-Hans';
+      break;
+    case 'zh-TC':
+      htmlLang = 'zh-Hant';
+      break;
+    case 'en-US':
+      htmlLang = 'en';
+      break;
+    case 'fr-FR':
+      htmlLang = 'fr';
+      break;
+    default:
+      break;
+  }
+  document.documentElement.lang = htmlLang;
 }
+setLocale(locale.value);
 const store = useStore();
 const isChrome = true;
 let enableNowplayingCoverBackground = $computed(() => store.state.settings.enableNowplayingCoverBackground)
