@@ -7,10 +7,11 @@ import resolve from '@rollup/plugin-node-resolve';
 import replace from '@rollup/plugin-replace';
 import vue from '@vitejs/plugin-vue';
 import { chromeExtension, simpleReloader } from 'rollup-plugin-chrome-extension';
-import clear from 'rollup-plugin-clear';
+import { emptyDir } from 'rollup-plugin-empty-dir';
 import postcss from 'rollup-plugin-postcss';
 import zip from 'rollup-plugin-zip';
-const development = process.env.BUILD === 'development';
+const production = !process.env.ROLLUP_WATCH;
+const NODE_ENV = production ? 'production' : 'development';
 export default {
   input: ['src/manifest.ts'],
   output: {
@@ -18,7 +19,7 @@ export default {
     format: 'esm'
   },
   plugins: [
-    // always put chromeExtension() before other plugins
+    emptyDir(),
     chromeExtension(),
     vue({ refTransform: true }),
     VueI18nPlugin({
@@ -34,7 +35,8 @@ export default {
       }
     }),
     replace({
-      'process.env.NODE_ENV': JSON.stringify(process.env.BUILD),
+      preventAssignment: true,
+      'process.env.NODE_ENV': JSON.stringify(NODE_ENV),
       __VUE_I18N_FULL_INSTALL__: 'false',
       __VUE_I18N_LEGACY_API__: 'false',
       __VUE_I18N_PROD_DEVTOOLS__: 'false',
@@ -46,7 +48,6 @@ export default {
     simpleReloader(),
     // the plugins below are optional
     commonjs(),
-    development ? null : zip({ dir: 'artifacts' }),
-    development ? null : clear({ targets: ['dist'] })
+    production && zip({ dir: 'artifacts' })
   ]
 };
