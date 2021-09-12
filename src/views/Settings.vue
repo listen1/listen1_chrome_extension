@@ -310,31 +310,10 @@
 <script setup>
 import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
-import Href from '../components/Href.vue'
-import { version } from "../../package.json"
+import { version } from "../../package.json";
+import Href from '../components/Href.vue';
+import { setLocale } from '../i18n';
 const { t, locale } = useI18n();
-const setLocale = (loc) => {
-  locale.value = loc;
-  let htmlLang;
-  switch (loc) {
-    case 'zh-CN':
-      htmlLang = 'zh-Hans';
-      break;
-    case 'zh-TC':
-      htmlLang = 'zh-Hant';
-      break;
-    case 'en-US':
-      htmlLang = 'en';
-      break;
-    case 'fr-FR':
-      htmlLang = 'fr';
-      break;
-    default:
-      break;
-  }
-  document.documentElement.lang = htmlLang;
-}
-setLocale(locale.value);
 const store = useStore();
 const isChrome = true;
 let enableNowplayingCoverBackground = $computed(() => store.state.settings.enableNowplayingCoverBackground)

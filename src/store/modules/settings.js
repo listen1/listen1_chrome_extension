@@ -1,4 +1,5 @@
 const nameMapping = {
+  language: 'language',
   enableAutoChooseSource: 'enable_auto_choose_source',
   enableStopWhenClose: 'enable_stop_when_close',
   enableNowplayingCoverBackground: 'enable_nowplaying_cover_background',
@@ -13,6 +14,7 @@ export default {
   namespaced: true,
   state() {
     return {
+      language: 'zh-CN',
       enableAutoChooseSource: false,
       enableStopWhenClose: true,
       enableNowplayingCoverBackground: false,
