@@ -1,7 +1,7 @@
 import axios from 'axios';
 import concat from 'async-es/concat';
 import forge from 'node-forge';
-import { getParameterByName, cookieSet, cookieRemove, cookieGetPromise } from './lowebutil';
+import { getParameterByName, cookieSet, cookieRemove, cookieGetPromise, cookieSetPromise } from './lowebutil';
 
 export default class netease {
   static _create_secret_key(size) {
@@ -261,7 +261,6 @@ export default class netease {
       });
     });
   }
-
   static bootstrap_track(track, success, failure) {
     const sound = {};
     const target_url = `https://interface3.music.163.com/eapi/song/enhance/player/url`;

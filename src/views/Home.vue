@@ -848,14 +848,15 @@
 
 <script setup>
 import 'notyf/notyf.min.css';
+import { useI18n } from 'vue-i18n';
+import { useRouter } from 'vue-router';
+import { useStore } from 'vuex';
+import '../assets/css/common.css';
 import '../assets/css/icon.css';
 import '../assets/css/origin.css';
-import '../assets/css/common.css';
-import { l1Player } from '../services/l1_player';
-import { useStore } from 'vuex';
-import { useRouter } from 'vue-router';
 import DraggableBar from '../components/DraggableBar.vue';
-import { useI18n } from 'vue-i18n';
+import { setLocale } from '../i18n';
+import { l1Player } from '../services/l1_player';
 const { t } = useI18n();
 const store = useStore();
 const router = useRouter();
@@ -979,9 +980,10 @@ let currentPlaying = $computed(() => store.state.player.currentPlaying)
 let volume = $computed(() => store.state.player.volume)
 let mute = $computed(() => store.state.player.mute)
 
+let language = $computed(() => store.state.settings.language)
 let enableNowplayingCoverBackground = $computed(() => store.state.settings.enableNowplayingCoverBackground)
 let enableLyricTranslation = $computed(() => store.state.settings.enableLyricTranslation)
 let enableNowplayingBitrate = $computed(() => store.state.settings.enableNowplayingBitrate)
 let enableNowplayingPlatform = $computed(() => store.state.settings.enableNowplayingPlatform)
-
+setLocale(language);
 </script>

@@ -7,10 +7,10 @@
           <span>{{ t('_LANGUAGE') }}</span>
         </div>
         <div class="settings-content">
-          <button class="language-button" @click="locale = 'zh-CN'">简体中文</button>
-          <button class="language-button" @click="locale = 'zh-TC'">繁体中文</button>
-          <button class="language-button" @click="locale = 'en-US'">English</button>
-          <button class="language-button" @click="locale = 'fr-FR'">French</button>
+          <button class="language-button" @click="setLocale('zh-CN')">简体中文</button>
+          <button class="language-button" @click="setLocale('zh-TC')">繁体中文</button>
+          <button class="language-button" @click="setLocale('en-US')">English</button>
+          <button class="language-button" @click="setLocale('fr-FR')">French</button>
         </div>
         <div class="settings-title">
           <span>{{ t('_NOWPLAYING_DISPLAY') }}</span>
@@ -310,8 +310,9 @@
 <script setup>
 import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
-import Href from '../components/Href.vue'
-import { version } from "../../package.json"
+import { version } from "../../package.json";
+import Href from '../components/Href.vue';
+import { setLocale } from '../i18n';
 const { t, locale } = useI18n();
 const store = useStore();
 const isChrome = true;
