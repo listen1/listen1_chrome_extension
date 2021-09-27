@@ -8,7 +8,15 @@
     "start": "rollup -c -w",
     "build:electron": "rollup --config rollup.config.electron.js",
     "start:electron:dev": "rollup --config rollup.config.electron.js -w",
-    "start:electron": "electron ."
+    "start:electron": "electron .",
+    "dist": "electron-builder .",
+    "dist:linux": "electron-builder --linux --ia32 --x64",
+    "dist:linux32": "electron-builder --linux --ia32",
+    "dist:linux64": "electron-builder --linux --x64",
+    "dist:win": "electron-builder --win --ia32 --x64",
+    "dist:win32": "electron-builder --win --ia32",
+    "dist:win64": "electron-builder --win --x64",
+    "dist:mac": "CSC_IDENTITY_AUTO_DISCOVERY=false DEBUG=electron-builder electron-builder --mac"
   },
   "description": "one for all free music in china",
   "devDependencies": {
@@ -25,7 +33,8 @@
     "async-es": "^3.2.1",
     "axios": "^0.21.4",
     "electron": "^13.1.7",
-    "electron-reloader": "^0.2.0",
+    "electron-builder": "^22.11.7",
+    "electron-reloader": "^1.2.1",
     "feather-icons": "^4.28.0",
     "howler": "^2.2.3",
     "node-forge": "^0.10.0",
@@ -48,5 +57,92 @@
   "browserslist": [
     "last 8 chrome versions",
     "last 5 firefox versions"
-  ]
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/listen1/listen1_chrome_extension.git"
+  },
+  "keywords": [
+    "Electron",
+    "Listen 1"
+  ],
+  "author": "Listen 1 <githublisten1@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/listen1/listen1_chrome_extension/issues"
+  },
+  "homepage": "https://github.com/listen1/listen1_chrome_extension#readme",
+  "build": {
+    "appId": "com.listen1.listen1",
+    "productName": "Listen1",
+    "asar": true,
+    "artifactName": "${name}_${version}_${os}_${arch}.${ext}",
+    "directories": {
+      "output": "desktop_dist"
+    },
+    "dmg": {
+      "icon": "build/disk.icns",
+      "contents": [
+        {
+          "x": 192,
+          "y": 344
+        },
+        {
+          "x": 448,
+          "y": 344,
+          "type": "link",
+          "path": "/Applications"
+        }
+      ]
+    },
+    "mac": {
+      "target": [
+        {
+          "target": "dmg",
+          "arch": [
+            "x64",
+            "arm64",
+            "universal"
+          ]
+        }
+      ],
+      "category": "public.app-category.music"
+    },
+    "linux": {
+      "target": [
+        "tar.gz",
+        "appImage",
+        "deb"
+      ]
+    },
+    "nsis": {
+      "runAfterFinish": false,
+      "deleteAppDataOnUninstall": true,
+      "allowToChangeInstallationDirectory": true,
+      "oneClick": false,
+      "installerLanguages": "zh_CN",
+      "language": 2052,
+      "perMachine": true,
+      "createDesktopShortcut": true
+    },
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64",
+            "ia32"
+          ]
+        },
+        {
+          "target": "7z",
+          "arch": [
+            "x64",
+            "ia32"
+          ]
+        }
+      ],
+      "icon": "build/icon.ico"
+    }
+  }
 }
