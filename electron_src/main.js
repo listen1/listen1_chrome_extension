@@ -1,16 +1,17 @@
 import electron from 'electron';
-import isDev from './isDev';
-import reloader from 'electron-reloader';
-
-isDev && reloader(module);
 
 const { app, BrowserWindow } = electron;
+import isDev from './isDev';
+import reloader from 'electron-reloader';
+import { fixCORS } from './cors';
+isDev && reloader(module);
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow;
 
 function createWindow() {
+  fixCORS();
   const transparent = false;
   const width = 1000;
   const height = 670;
