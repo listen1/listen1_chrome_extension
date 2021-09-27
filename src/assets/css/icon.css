@@ -1,10 +1,8 @@
 @font-face {
   font-family: 'listen1-icon';
   src: url('../assets/fonts/listen1-icon.eot?4ftssm');
-  src: url('../assets/fonts/listen1-icon.eot') format('embedded-opentype'),
-    url('../assets/fonts/listen1-icon.ttf') format('truetype'),
-    url('../assets/fonts/listen1-icon.woff') format('woff'),
-    url('../assets/fonts/listen1-icon.svg?4ftssm#listen1-icon') format('svg');
+  src: url('../assets/fonts/listen1-icon.eot') format('embedded-opentype'), url('../assets/fonts/listen1-icon.ttf') format('truetype'),
+    url('../assets/fonts/listen1-icon.woff') format('woff'), url('../assets/fonts/listen1-icon.svg?4ftssm#listen1-icon') format('svg');
   font-weight: normal;
   font-style: normal;
 }
