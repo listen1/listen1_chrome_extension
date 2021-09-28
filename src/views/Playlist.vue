@@ -161,7 +161,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { l1Player } from '../services/l1_player';
 import { onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';

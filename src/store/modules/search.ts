@@ -1,8 +1,16 @@
 import MediaService from '../../services/MediaService';
-
+type State = {
+  keywords: string;
+  result: any[];
+  curpage: number;
+  totalpage: number;
+  searchType: number;
+  tab: string;
+  loading: boolean;
+};
 export default {
   namespaced: true,
-  state() {
+  state(): State {
     return {
       keywords: '',
       result: [],
@@ -14,24 +22,24 @@ export default {
     };
   },
   mutations: {
-    setSearchResult(state, { result, loading, totalpage }) {
+    setSearchResult(state: State, { result, loading, totalpage }) {
       state.totalpage = totalpage;
       state.result = result;
       state.loading = loading;
     },
-    changeSearchType(state, searchType) {
+    changeSearchType(state: State, searchType: number) {
       state.searchType = searchType;
     },
-    changeSearchTab(state, tab) {
+    changeSearchTab(state: State, tab: string) {
       state.tab = tab;
     },
-    changeSearchKeywords(state, keywords) {
+    changeSearchKeywords(state: State, keywords: string) {
       state.keywords = keywords;
     },
-    changeSearchPage(state, offset) {
+    changeSearchPage(state: State, offset: number) {
       state.curpage += offset;
     },
-    setSearchPage(state, page) {
+    setSearchPage(state: State, page: number) {
       state.curpage = page;
     }
   },

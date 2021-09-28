@@ -12,21 +12,15 @@
     </div>
   </div>
 </template>
-<script setup>
-const props = defineProps({
-  id: {
-    type: String,
-    default: ''
-  },
-  progress: {
-    type: Number,
-    default: 0
-  }
-});
+<script setup lang="ts">
+const props = defineProps<{
+  id: string
+  progress: number
+}>();
 const emits = defineEmits(['update-progress', 'commit-progress']);
 let changingProgress = $ref(false);
 let cprogress = $ref(0);
-const onMyMouseDown = (event) => {
+const onMyMouseDown = (event: MouseEvent) => {
   changingProgress = true;
   const containerElem = document.getElementById(props.id);
 
@@ -37,7 +31,7 @@ const onMyMouseDown = (event) => {
   cprogress = x / (container.right - container.left);
 
   emits('update-progress', cprogress);
-  const sync = (event) => {
+  const sync = (event: MouseEvent) => {
     const container = document.getElementById(props.id).getBoundingClientRect();
     let x = event.clientX - container.left;
 
@@ -50,12 +44,12 @@ const onMyMouseDown = (event) => {
     }
     cprogress = x / (container.right - container.left);
   };
-  const mousemove = (event) => {
+  const mousemove = (event: MouseEvent) => {
     sync(event);
     emits('update-progress', cprogress);
   };
 
-  const mouseup = (event) => {
+  const mouseup = (event: MouseEvent) => {
     sync(event);
     emits('commit-progress', cprogress);
 

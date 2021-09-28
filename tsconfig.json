@@ -1,0 +1,11 @@
+{
+  "exclude": ["dist", "node_modules","src/i18n.js"],
+  "compilerOptions": {
+    "target": "ES6",
+    "resolveJsonModule": true,
+    "moduleResolution": "node",
+    "outDir": "./dist",
+    "allowJs": true,
+    "types": ["vue/ref-macros"]
+  }
+}

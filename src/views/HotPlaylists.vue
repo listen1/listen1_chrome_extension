@@ -60,7 +60,7 @@
     </div>
   </div>
 </template>
-<script setup>
+<script setup lang="ts">
 import { l1Player } from '../services/l1_player';
 import { computed, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
@@ -91,13 +91,13 @@ const loadPlaylist = async () => {
 };
 onMounted(loadPlaylist);
 
-const changeTab = (newTab) => {
+const changeTab = (newTab: string) => {
   tab = newTab;
   result = [];
   currentFilterId = '';
   loadPlaylist();
 };
-const changeFilter = (filterId) => {
+const changeFilter = (filterId: string) => {
   result = [];
   currentFilterId = filterId;
   loadPlaylist();
@@ -105,7 +105,7 @@ const changeFilter = (filterId) => {
 const toggleMorePlaylists = () => {
   showMore = !showMore;
 };
-const showPlaylist = (playlistId) => {
+const showPlaylist = (playlistId: string) => {
   router.push('/playlist/' + playlistId);
 };
 const directplaylist = async (list_id) => {

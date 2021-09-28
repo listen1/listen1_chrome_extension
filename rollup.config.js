@@ -10,6 +10,8 @@ import { chromeExtension, simpleReloader } from 'rollup-plugin-chrome-extension'
 import { emptyDir } from 'rollup-plugin-empty-dir';
 import postcss from 'rollup-plugin-postcss';
 import zip from 'rollup-plugin-zip';
+import typescript from '@rollup/plugin-typescript';
+
 const production = !process.env.ROLLUP_WATCH;
 const NODE_ENV = production ? 'production' : 'development';
 export default {
@@ -48,6 +50,7 @@ export default {
     simpleReloader(),
     // the plugins below are optional
     commonjs(),
+    typescript(),
     production && zip({ dir: 'artifacts' })
   ]
 };

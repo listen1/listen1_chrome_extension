@@ -9,7 +9,6 @@ audio player has 2 modes, but share same protocol: front and background.
 
 */
 import { threadPlayer, Player } from './player_thread';
-
 function getFrontPlayer() {
   return threadPlayer;
 }
@@ -18,13 +17,13 @@ function getBackgroundPlayer() {
   return chrome.extension.getBackgroundPage().threadPlayer;
 }
 
-function getBackgroundPlayerAsync(callback) {
-  (chrome || browser).runtime.getBackgroundPage((w) => {
+function getBackgroundPlayerAsync(callback: (player: Player) => void) {
+  chrome.runtime.getBackgroundPage((w) => {
     callback(w.threadPlayer);
   });
 }
 
-export function getPlayer(mode) {
+export function getPlayer(mode: Mode) {
   if (mode === 'front') {
     return getFrontPlayer();
   }
@@ -34,7 +33,7 @@ export function getPlayer(mode) {
   return undefined;
 }
 
-export function getPlayerAsync(mode, callback) {
+export function getPlayerAsync(mode: Mode, callback: (player: Player) => void) {
   if (mode === 'front') {
     const player = getFrontPlayer();
     return callback(player);
@@ -50,7 +49,7 @@ function addFrontPlayerListener(listener) {
 }
 
 function addBackgroundPlayerListener(listener) {
-  return (chrome || browser).runtime.onMessage.addListener((msg, sender, res) => {
+  return chrome.runtime.onMessage.addListener((msg, sender, res) => {
     if (!msg.type.startsWith('BG_PLAYER:')) {
       return null;
     }
@@ -77,7 +76,7 @@ function frontPlayerSendMessage(message) {
 }
 
 function backgroundPlayerSendMessage(message) {
-  (chrome || browser).runtime.sendMessage(message);
+  chrome.runtime.sendMessage(message);
 }
 
 export function playerSendMessage(mode, message) {

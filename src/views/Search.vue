@@ -5,15 +5,21 @@
       <div class="cover-container">
         <div class="searchbox">
           <ul class="source-list">
-            <li class="source-button" :class="{ active: searchtab === 'allmusic' }" @click="changeSourceTab('allmusic')">
+            <li
+              class="source-button"
+              :class="{ active: tab === 'allmusic' }"
+              @click="changeSourceTab('allmusic')"
+            >
               <a>{{ t('_ALL_MUSIC') }}(Beta)</a>
             </li>
             <div class="splitter" />
 
             <template v-for="(source, index) in sourceList" :key="source.name">
-              <div class="source-button" :class="{ active: tab === source.name }" @click="changeSourceTab(source.name)">
-                {{ t(source.name) }}
-              </div>
+              <div
+                class="source-button"
+                :class="{ active: tab === source.name }"
+                @click="changeSourceTab(source.name)"
+              >{{ t(source.name) }}</div>
               <div v-if="index != sourceList.length - 1" class="splitter" />
             </template>
 
@@ -37,7 +43,10 @@
                 fill="#000"
                 d="M20.201,5.169c-8.254,0-14.946,6.692-14.946,14.946c0,8.255,6.692,14.946,14.946,14.946 s14.946-6.691,14.946-14.946C35.146,11.861,28.455,5.169,20.201,5.169z M20.201,31.749c-6.425,0-11.634-5.208-11.634-11.634 c0-6.425,5.209-11.634,11.634-11.634c6.425,0,11.633,5.209,11.633,11.634C31.834,26.541,26.626,31.749,20.201,31.749z"
               />
-              <path fill="#000" d="M26.013,10.047l1.654-2.866c-2.198-1.272-4.743-2.012-7.466-2.012h0v3.312h0 C22.32,8.481,24.301,9.057,26.013,10.047z">
+              <path
+                fill="#000"
+                d="M26.013,10.047l1.654-2.866c-2.198-1.272-4.743-2.012-7.466-2.012h0v3.312h0 C22.32,8.481,24.301,9.057,26.013,10.047z"
+              >
                 <animateTransform
                   attributeType="xml"
                   attributeName="transform"
@@ -50,11 +59,19 @@
               </path>
             </svg>
             <div class="search-type">
-              <li class="source-button" :class="{ active: searchType === 0 }" @click="changeSearchType(0)">
+              <li
+                class="source-button"
+                :class="{ active: searchType === 0 }"
+                @click="changeSearchType(0)"
+              >
                 <a>单曲</a>
               </li>
               <div class="splitter" />
-              <li class="source-button" :class="{ active: searchType === 1 }" @click="changeSearchType(1)">
+              <li
+                class="source-button"
+                :class="{ active: searchType === 1 }"
+                @click="changeSearchType(1)"
+              >
                 <a>歌单</a>
               </li>
             </div>
@@ -107,8 +124,20 @@
                 </div>
 
                 <div class="tools">
-                  <a v-show="song.options" title="_ADD_TO_QUEUE" class="detail-add-button" add-without-play="song"><span class="icon li-add" /></a>
-                  <a v-show="song.options" title="_ADD_TO_PLAYLIST" class="detail-fav-button" ng-click="showDialog(0, song)">
+                  <a
+                    v-show="song.options"
+                    title="_ADD_TO_QUEUE"
+                    class="detail-add-button"
+                    add-without-play="song"
+                  >
+                    <span class="icon li-add" />
+                  </a>
+                  <a
+                    v-show="song.options"
+                    title="_ADD_TO_PLAYLIST"
+                    class="detail-fav-button"
+                    ng-click="showDialog(0, song)"
+                  >
                     <span class="icon li-songlist" />
                   </a>
                   <a
@@ -119,15 +148,31 @@
                   >
                     <span class="icon li-del" />
                   </a>
-                  <a v-show="options" title="_ORIGIN_LINK" class="source-button" open-url="song.source_url"><span class="icon li-link" /></a>
+                  <a
+                    v-show="song.options"
+                    title="_ORIGIN_LINK"
+                    class="source-button"
+                    open-url="song.source_url"
+                  >
+                    <span class="icon li-link" />
+                  </a>
                 </div>
               </li>
             </template>
             <template v-if="searchType === 1">
-              <li v-for="playlist in result" :key="playlist.id" ng-class-odd="'odd'" ng-class-even="'even'" class="playlist-result">
+              <li
+                v-for="playlist in result"
+                :key="playlist.id"
+                ng-class-odd="'odd'"
+                ng-class-even="'even'"
+                class="playlist-result"
+              >
                 <div class="title">
                   <a @click="$router.push(`/playlist/${playlist.id}`)">
-                    <img :src="playlist.img_url" err-src="https://y.gtimg.cn/mediastyle/global/img/playlist_300.png" />
+                    <img
+                      :src="playlist.img_url"
+                      err-src="https://y.gtimg.cn/mediastyle/global/img/playlist_300.png"
+                    />
                     <div>
                       {{ playlist.title }}
                       <!-- <span ng-if="isActiveTab('allmusic')" class="source playlist">{{playlist.sourceName}}</span> -->
@@ -140,9 +185,17 @@
             </template>
           </ul>
           <div v-show="totalpage > 1" class="search-pagination">
-            <button class="btn btn-sm btn-pagination" :disabled="curpage == 1" @click="changeSearchPage(-1)">上一页</button>
+            <button
+              class="btn btn-sm btn-pagination"
+              :disabled="curpage == 1"
+              @click="changeSearchPage(-1)"
+            >上一页</button>
             <label>{{ curpage }}/{{ totalpage }} 页</label>
-            <button class="btn btn-sm btn-pagination" :disabled="curpage == totalpage" @click="changeSearchPage(1)">下一页</button>
+            <button
+              class="btn btn-sm btn-pagination"
+              :disabled="curpage == totalpage"
+              @click="changeSearchPage(1)"
+            >下一页</button>
           </div>
         </div>
       </div>
@@ -150,8 +203,7 @@
   </div>
 </template>
 
-<script setup>
-import { computed } from 'vue';
+<script setup lang="ts">
 import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
 import { l1Player } from '../services/l1_player';
@@ -159,24 +211,25 @@ import MediaService from '../services/MediaService';
 
 const { t } = useI18n();
 const store = useStore();
-const keywords = computed(() => store.state.search.keywords);
-const result = computed(() => store.state.search.result);
-const curpage = computed(() => store.state.search.curpage);
-const totalpage = computed(() => store.state.search.totalpage);
-const searchType = computed(() => store.state.search.searchType);
-const tab = computed(() => store.state.search.tab);
-const loading = computed(() => store.state.search.loading);
-const changeSearchType = (newValue) => {
+let keywords = $computed(() => store.state.search.keywords);
+let result = $computed(() => store.state.search.result);
+let curpage = $computed(() => store.state.search.curpage);
+let totalpage = $computed(() => store.state.search.totalpage);
+let searchType = $computed(() => store.state.search.searchType);
+let tab = $computed(() => store.state.search.tab);
+let loading = $computed(() => store.state.search.loading);
+let is_mine = $ref(false);
+const changeSearchType = (newValue: number) => {
   store.commit('search/changeSearchType', newValue);
   store.commit('search/setSearchPage', 1);
   store.dispatch('search/search');
 };
-const changeSourceTab = (newValue) => {
+const changeSourceTab = (newValue: string) => {
   store.commit('search/changeSearchTab', newValue);
   store.commit('search/setSearchPage', 1);
   store.dispatch('search/search');
 };
-const changeSearchPage = (offset) => {
+const changeSearchPage = (offset:number) => {
   store.commit('search/changeSearchPage', offset);
   store.dispatch('search/search');
 };
@@ -184,7 +237,7 @@ const play = (song) => {
   l1Player.addTrack(song);
   l1Player.playById(song.id);
 };
-const sourceList = computed(() => MediaService.getSourceList());
+let sourceList = $computed(() => MediaService.getSourceList());
 </script>
 
 <style>

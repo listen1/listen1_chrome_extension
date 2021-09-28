@@ -846,7 +846,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import 'notyf/notyf.min.css';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
@@ -918,10 +918,10 @@ const toggleNowPlaying = () => {
 const is_login = (platform) => {
   return false;
 };
-const newDialogOption = (option) => {
+const newDialogOption = (option: number) => {
   dialog_type = option;
 };
-const showDialog = (dialogType, dialogData) => {
+const showDialog = (dialogType: number, dialogData: object) => {
   is_dialog_hidden = 0;
   dialog_data = dialogData;
   const dialogWidth = 400;
@@ -948,14 +948,14 @@ const togglePlaylist = () => {
 const clearPlaylist = () => {
   l1Player.clearPlaylist();
 };
-const changeProgress = (progress) => {
+const changeProgress = (progress: number) => {
   l1Player.seek(progress);
 };
-const changeVolume = (progress) => {
+const changeVolume = (progress: number) => {
   l1Player.setVolume(progress * 100);
   l1Player.unmute();
 };
-const commitVolume = (progress) => {
+const commitVolume = (progress: number) => {
   const current = localStorage.getObject('player-settings');
   current.volume = progress * 100;
   localStorage.setObject('player-settings', current);
