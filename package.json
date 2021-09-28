@@ -4,7 +4,7 @@
   "private": false,
   "main": "electron_dist/main.js",
   "scripts": {
-    "build": "vue-tsc --noEmit && vite build",
+    "build": "vite build",
     "start": "rollup -c -w",
     "build:electron": "rollup --config rollup.config.electron.js",
     "start:electron:dev": "rollup --config rollup.config.electron.js -w",
@@ -21,6 +21,7 @@
   "description": "one for all free music in china",
   "devDependencies": {
     "@intlify/rollup-plugin-vue-i18n": "^2.0.3",
+    "@intlify/vite-plugin-vue-i18n": "^2.4.0",
     "@rollup/plugin-alias": "^3.1.5",
     "@rollup/plugin-image": "^2.1.1",
     "@rollup/plugin-json": "^4.1.0",
