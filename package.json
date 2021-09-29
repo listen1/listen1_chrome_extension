@@ -4,7 +4,8 @@
   "private": false,
   "main": "electron_dist/main.js",
   "scripts": {
-    "build": "vite build",
+    "build": "vue-tsc --noEmit && vite build",
+    "dev": "vite build -w",
     "start": "rollup -c -w",
     "build:electron": "rollup --config rollup.config.electron.js",
     "start:electron:dev": "rollup --config rollup.config.electron.js -w",
