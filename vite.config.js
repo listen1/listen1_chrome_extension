@@ -5,6 +5,9 @@ import zip from 'rollup-plugin-zip';
 import { defineConfig } from 'vite';
 const { NODE_ENV } = process.env;
 const production = NODE_ENV === 'production';
+// console.log(Object.keys(process));
+if (process.argv.includes('-w') || process.argv.includes('--watch')) process.env.ROLLUP_WATCH = true;
+
 // https://vitejs.dev/config/
 export default defineConfig({
   resolve: {
