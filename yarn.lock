@@ -312,10 +312,10 @@
   dependencies:
     defer-to-connect "^1.0.1"
 
-"@types/chrome@^0.0.157":
-  version "0.0.157"
-  resolved "https://registry.yarnpkg.com/@types/chrome/-/chrome-0.0.157.tgz#5a50bd378f4f632383c6ebbc34c88fb87d501f58"
-  integrity sha512-q5SSmA9nKaDzFi8QkJW9kW8MYwWg9O7PKPUdBxsz+3rPcIF1Kxw0Bexpd70Uq1mU6PN4DBp4qKMXQDybUeiI9w==
+"@types/chrome@^0.0.158":
+  version "0.0.158"
+  resolved "https://registry.yarnpkg.com/@types/chrome/-/chrome-0.0.158.tgz#020edeee31ed9decf127fea1972a63ff08fcf2c6"
+  integrity sha512-sjBs9E/XDlYyLf3YkPYIN6sFZ/d9LbwMSK+BYphenFdkk39M5P8xcRfykk54RgZr8/QMex1yKlX5EB52TaqhsQ==
   dependencies:
     "@types/filesystem" "*"
     "@types/har-format" "*"
@@ -508,7 +508,7 @@
     "@vue/compiler-core" "3.2.19"
     "@vue/shared" "3.2.19"
 
-"@vue/compiler-sfc@3.2.19", "@vue/compiler-sfc@^3.2.11":
+"@vue/compiler-sfc@3.2.19":
   version "3.2.19"
   resolved "https://registry.yarnpkg.com/@vue/compiler-sfc/-/compiler-sfc-3.2.19.tgz#d412195a98ebd49b84602f171719294a1d9549be"
   integrity sha512-pLlbgkO1UHTO02MSpa/sFOXUwIDxSMiKZ1ozE5n71CY4DM+YmI+G3gT/ZHZ46WBId7f3VTF/D8pGwMygcQbrQA==
@@ -2577,7 +2577,7 @@ prepend-http@^2.0.0:
   resolved "https://registry.yarnpkg.com/prepend-http/-/prepend-http-2.0.0.tgz#e92434bfa5ea8c19f41cdfd401d741a3c819d897"
   integrity sha1-6SQ0v6XqjBn0HN/UAddBo8gZ2Jc=
 
-prettier@^2.4.0:
+prettier@^2.4.1:
   version "2.4.1"
   resolved "https://registry.yarnpkg.com/prettier/-/prettier-2.4.1.tgz#671e11c89c14a4cfc876ce564106c4a6726c9f5c"
   integrity sha512-9fbDAXSBcc6Bs1mZrDYb3XKzDLm4EXXL9sC1LqKP5rZkT6KRr/rf9amVUcODVXgguK/isJz0d0hP72WeaKWsvA==
@@ -3463,7 +3463,7 @@ vue-tsc@^0.3.0:
   dependencies:
     vscode-vue-languageservice "^0.27.0"
 
-vue@^3.2.11:
+vue@^3.2.19:
   version "3.2.19"
   resolved "https://registry.yarnpkg.com/vue/-/vue-3.2.19.tgz#da2c80a6a0271c7097fee9e31692adfd9d569c8f"
   integrity sha512-6KAMdIfAtlK+qohTIUE4urwAv4A3YRuo8uAbByApUmiB0CziGAAPs6qVugN6oHPia8YIafHB/37K0O6KZ7sGmA==

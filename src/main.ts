@@ -19,4 +19,9 @@ function setPrototypeOfLocalStorage() {
 }
 setPrototypeOfLocalStorage();
 
-createApp(App).use(router).use(i18n).use(store).component(VueFeather.name || '', VueFeather).mount('#app');
+createApp(App)
+  .use(router)
+  .use(i18n)
+  .use(store)
+  .component(VueFeather.name || '', VueFeather)
+  .mount('#app');
