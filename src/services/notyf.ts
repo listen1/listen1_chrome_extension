@@ -1,4 +1,9 @@
 import { Notyf } from 'notyf';
+
+declare interface NotyfType extends Notyf {
+  warning(msg: string, replace?: boolean): void;
+  info(msg: string, replace?: boolean): void;
+}
 const notyf = new Notyf({
   duration: 5000,
   ripple: true,
@@ -15,7 +20,7 @@ const notyf = new Notyf({
       icon: false
     }
   ]
-});
+}) as NotyfType;
 notyf.warning = (msg, replace) => {
   if (replace) {
     notyf.dismissAll();

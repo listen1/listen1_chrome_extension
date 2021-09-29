@@ -1,16 +1,18 @@
-import { defineConfig } from 'vite'
-import vue from '@vitejs/plugin-vue'
-
+import vueI18n from '@intlify/vite-plugin-vue-i18n';
+import vue from '@vitejs/plugin-vue';
 import { chromeExtension, simpleReloader } from 'rollup-plugin-chrome-extension';
 import zip from 'rollup-plugin-zip';
-const production = !process.env.ROLLUP_WATCH;
-const NODE_ENV = production ? 'production' : 'development';
-
+import { defineConfig } from 'vite';
+const { NODE_ENV } = process.env;
+const production = NODE_ENV === 'production';
 // https://vitejs.dev/config/
 export default defineConfig({
+  resolve: {
+    alias: {
+      'vue-i18n': 'vue-i18n/dist/vue-i18n.runtime.esm-bundler.js'
+    }
+  },
   define: {
-    preventAssignment: true,
-    'process.env.NODE_ENV': JSON.stringify(NODE_ENV),
     __VUE_I18N_FULL_INSTALL__: 'false',
     __VUE_I18N_LEGACY_API__: 'false',
     __VUE_I18N_PROD_DEVTOOLS__: 'false',
@@ -19,12 +21,15 @@ export default defineConfig({
     __VUE_PROD_DEVTOOLS__: 'false'
   },
   plugins: [
-    chromeExtension({ dynamicImportWrapper: false }),
+    chromeExtension(),
+    vueI18n({ include: 'src/i18n/*.json', runtimeOnly: true }),
     vue({ refTransform: true }),
     simpleReloader(),
     production && zip({ dir: 'artifacts' })
   ],
   build: {
+    //we are still in develop here, since sourcemap won't work in extension, it's better not minify the files
+    minify: false,
     emptyOutDir: true,
     rollupOptions: {
       input: ['src/manifest.ts'],
@@ -34,7 +39,7 @@ export default defineConfig({
         entryFileNames: `[name].js`,
         chunkFileNames: `[name].js`,
         assetFileNames: `assets/[name].[ext]`
-      },
+      }
     }
   }
-})
+});

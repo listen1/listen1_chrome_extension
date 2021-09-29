@@ -307,7 +307,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
 import { version } from "../../package.json";

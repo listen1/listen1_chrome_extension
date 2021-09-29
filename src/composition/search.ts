@@ -27,7 +27,7 @@ async function search() {
     result.totalpage = Math.ceil(data.total / 20);
 
     // scroll back to top when finish searching
-    document.querySelector('.site-wrapper-innerd').scrollTo({ top: 0 });
+    document.querySelector('.site-wrapper-innerd')?.scrollTo({ top: 0 });
   });
 }
 watch(condition, search);
