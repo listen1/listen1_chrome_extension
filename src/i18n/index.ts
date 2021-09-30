@@ -19,26 +19,16 @@ const i18n = createI18n({
   // If you need to specify other options, you can set other options
   // ...
 });
-export const setLocale = (language) => {
+export const setLocale = (language: string) => {
   i18n.global.locale.value = language;
   store.dispatch('settings/setState', { language });
-  let htmlLang;
-  switch (language) {
-    case 'zh-CN':
-      htmlLang = 'zh-Hans';
-      break;
-    case 'zh-TC':
-      htmlLang = 'zh-Hant';
-      break;
-    case 'en-US':
-      htmlLang = 'en';
-      break;
-    case 'fr-FR':
-      htmlLang = 'fr';
-      break;
-    default:
-      break;
-  }
+  const langMap: {[code: string]: string} = {
+    'zh-CN': 'zh-Hans',
+    'zh-TC': 'zh-Hant',
+    'en-US': 'en',
+    'fr-FR': 'fr'
+  };
+  const htmlLang = langMap[language] || document.documentElement.lang;
   document.documentElement.lang = htmlLang;
 };
 export default i18n;
