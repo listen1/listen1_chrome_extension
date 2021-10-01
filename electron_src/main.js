@@ -2,7 +2,7 @@ import electron from 'electron';
 // import reloader from 'electron-reloader';
 import { fixCORS } from './cors';
 import isDev from './isDev';
-import Store from 'electron-store';
+const Store = require('electron-store');
 const { app, BrowserWindow } = electron;
 // isDev && reloader(module);
 if (isDev) {
