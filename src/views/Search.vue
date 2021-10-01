@@ -152,11 +152,11 @@
 
 <script setup>
 import { computed } from 'vue';
-
 import { useI18n } from 'vue-i18n';
+import useSearch from '../composition/search';
 import { l1Player } from '../services/l1_player';
 import MediaService from '../services/MediaService';
-import useSearch from '../composition/search';
+
 const { t } = useI18n();
 const { condition, result } = useSearch();
 

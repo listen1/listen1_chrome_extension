@@ -36,6 +36,6 @@ const mv2: ManifestV2 = {
     default_icon: 'images/logo.png',
     default_title: 'Listen1 Next'
   },
-  web_accessible_resources: ['assets/fonts/*', 'images/*', 'index.html']
+  web_accessible_resources: ['assets/fonts/*', 'images/*', 'index.html'],
 };
 export default mv2;
