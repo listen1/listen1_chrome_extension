@@ -446,12 +446,12 @@
               class="songdetail-wrapper"
               :class="{
                 slidedown: window_type !== 'track',
-                coverbg: enableNowplayingCoverBackground
+                coverbg: settings.enableNowplayingCoverBackground
               }"
             >
               <div class="draggable-zone" />
-              <div v-if="enableNowplayingCoverBackground" class="bg" :style="{ backgroundImage: `url(${currentPlaying.img_url}` }" />
-              <div class="translate-switch" ng-click="toggleLyricTranslation()" ng-class="{selected: enableLyricTranslation}">译</div>
+              <div v-if="settings.enableNowplayingCoverBackground" class="bg" :style="{ backgroundImage: `url(${currentPlaying.img_url}` }" />
+              <div class="translate-switch" ng-click="toggleLyricTranslation()" ng-class="{selected: settings.enableLyricTranslation}">译</div>
               <div class="close" :class="isMac ? 'mac' : ''" @click="toggleNowPlaying()">
                 <vue-feather type="chevron-down"></vue-feather>
               </div>
@@ -481,8 +481,8 @@
                 <div class="detail-songinfo">
                   <div class="title">
                     <h2>{{ currentPlaying.title }}</h2>
-                    <span v-if="enableNowplayingBitrate && currentPlaying.bitrate !== undefined" class="badge">{{ currentPlaying.bitrate }}</span>
-                    <span v-if="enableNowplayingPlatform && currentPlaying.platform !== undefined" class="badge platform">
+                    <span v-if="settings.enableNowplayingBitrate && currentPlaying.bitrate !== undefined" class="badge">{{ currentPlaying.bitrate }}</span>
+                    <span v-if="settings.enableNowplayingPlatform && currentPlaying.platform !== undefined" class="badge platform">
                       {{ t(currentPlaying.platform) }}
                     </span>
                   </div>
@@ -504,7 +504,7 @@
                       :data-line="line.lineNumber"
                       :class="{
                         highlight: line.lineNumber == lyricLineNumber || line.lineNumber == lyricLineNumberTrans,
-                        hide: line.translationFlag && !enableLyricTranslation,
+                        hide: line.translationFlag && !settings.enableLyricTranslation,
                         translate: line.translationFlag
                       }"
                     >
@@ -592,7 +592,7 @@
           </div>
         </div>
         <div v-if="!isChrome" class="lyric-toggle">
-          <div ng-click="openLyricFloatingWindow(true)" class="lyric-icon" ng-class="{'selected': enableLyricFloatingWindow}">词</div>
+          <div ng-click="openLyricFloatingWindow(true)" class="lyric-icon" ng-class="{'selected': settings.enableLyricFloatingWindow}">词</div>
         </div>
       </div>
       <div class="menu-modal" :class="{ slideup: !menuHidden }" @click="togglePlaylist()" />
@@ -661,7 +661,7 @@ import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
 import '../assets/css/common.css';
 import '../assets/css/icon.css';
-import '../assets/css/origin.css';
+
 import DraggableBar from '../components/DraggableBar.vue';
 import { setLocale } from '../i18n';
 import { l1Player } from '../services/l1_player';
@@ -788,10 +788,8 @@ let currentPlaying = $computed(() => store.state.player.currentPlaying);
 let volume = $computed(() => store.state.player.volume);
 let mute = $computed(() => store.state.player.mute);
 
-let language = $computed(() => store.state.settings.language);
-let enableNowplayingCoverBackground = $computed(() => store.state.settings.enableNowplayingCoverBackground);
-let enableLyricTranslation = $computed(() => store.state.settings.enableLyricTranslation);
-let enableNowplayingBitrate = $computed(() => store.state.settings.enableNowplayingBitrate);
-let enableNowplayingPlatform = $computed(() => store.state.settings.enableNowplayingPlatform);
-setLocale(language);
+import useSettings from '../composition/settings';
+const { settings } = useSettings();
+
+setLocale(settings.language);
 </script>
