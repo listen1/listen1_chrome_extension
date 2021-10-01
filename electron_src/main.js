@@ -1,14 +1,42 @@
 import electron from 'electron';
-
-const { app, BrowserWindow } = electron;
-import isDev from './isDev';
 // import reloader from 'electron-reloader';
 import { fixCORS } from './cors';
+import isDev from './isDev';
+import Store from 'electron-store';
+const { app, BrowserWindow } = electron;
 // isDev && reloader(module);
 if (isDev) {
   require('electron-reloader')(module);
 }
-
+const store = new Store();
+const theme = store.get('theme');
+let titleStyle;
+let titleBarStyle;
+switch (theme) {
+  case 'black':
+    titleStyle = { color: '#333333', symbolColor: '#e5e5e5' };
+    break;
+  case 'white':
+    titleStyle = { color: '#ffffff', symbolColor: '#3c3c3c' };
+    break;
+  default:
+    store.set('theme', 'black');
+    titleStyle = { color: '#333333', symbolColor: '#e5e5e5' };
+    break;
+}
+//platform specific
+switch (process.platform) {
+  case 'darwin':
+    titleBarStyle = 'hiddenInset';
+    break;
+  case 'win32':
+    titleBarStyle = 'hidden';
+    break;
+  case 'linux':
+    titleBarStyle = 'hidden';
+  default:
+    break;
+}
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow;
@@ -24,12 +52,12 @@ function createWindow() {
     minHeight: 300,
     minWidth: 600,
     webPreferences: {
-      nodeIntegration: true,
-      enableRemoteModule: true,
-      contextIsolation: false
+      contextIsolation: true,
+      preload: `${__dirname}/preload.js`
     },
     //icon: iconPath,
-    titleBarStyle: 'hiddenInset',
+    titleBarStyle,
+    titleBarOverlay: titleStyle,
     transparent: transparent,
     vibrancy: 'light',
     frame: false,

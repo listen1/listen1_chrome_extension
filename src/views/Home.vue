@@ -656,16 +656,18 @@
 
 <script setup>
 import 'notyf/notyf.min.css';
+import { onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
 import '../assets/css/common.css';
 import '../assets/css/icon.css';
-
 import DraggableBar from '../components/DraggableBar.vue';
+import useSearch from '../composition/search';
+import useSettings from '../composition/settings';
 import { setLocale } from '../i18n';
 import { l1Player } from '../services/l1_player';
-import useSearch from '../composition/search';
+
 
 const { t } = useI18n();
 const store = useStore();
@@ -774,7 +776,19 @@ const toggleMuteStatus = () => {
 const playFromPlaylist = (song) => {
   l1Player.playById(song.id);
 };
-
+onMounted(() => {
+  if ('windowControlsOverlay' in navigator) {
+    console.log(navigator.windowControlsOverlay.getBoundingClientRect())
+    const { x } = navigator.windowControlsOverlay.getBoundingClientRect();
+    const { style } = document.getElementsByClassName('settings')[0];
+    //windows
+    if (x === 0) {
+      //hard coded style. Looking for better solution
+      style.flex = "0 0 170px";
+      style.height = "30px"
+    }
+  }
+})
 let playlist = $computed(() => store.state.player.playlist);
 let isPlaying = $computed(() => store.state.player.isPlaying);
 let lyricArray = $computed(() => store.state.player.lyricArray);
@@ -788,7 +802,6 @@ let currentPlaying = $computed(() => store.state.player.currentPlaying);
 let volume = $computed(() => store.state.player.volume);
 let mute = $computed(() => store.state.player.mute);
 
-import useSettings from '../composition/settings';
 const { settings } = useSettings();
 
 setLocale(settings.language);
