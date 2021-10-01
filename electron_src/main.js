@@ -3,7 +3,7 @@ import electron from 'electron';
 import { fixCORS } from './cors';
 import isDev from './isDev';
 const Store = require('electron-store');
-const { app, BrowserWindow } = electron;
+const { app, BrowserWindow, ipcMain } = electron;
 // isDev && reloader(module);
 if (isDev) {
   require('electron-reloader')(module);
@@ -39,6 +39,7 @@ switch (process.platform) {
 }
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
+/** @type {BrowserWindow}*/
 let mainWindow;
 
 function createWindow() {
@@ -84,6 +85,19 @@ function createWindow() {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', createWindow);
+
+ipcMain.handle('setCookie', async (e, cookie) => {
+  await mainWindow.webContents.session.cookies.set(cookie);
+});
+
+ipcMain.handle('getCookie', async (e, request) => {
+  const cookies = await mainWindow.webContents.session.cookies.get(request);
+  return cookies;
+});
+
+ipcMain.on('removeCookie', (e, cookie) => {
+  mainWindow.webContents.session.cookies.remove(request);
+});
 
 // Quit when all windows are closed.
 app.on('window-all-closed', function () {

@@ -8,3 +8,15 @@ declare module '*.vue' {
   const component: DefineComponent<{}, {}, any>;
   export default component;
 }
+declare module 'global' {
+  import { session, ipcRenderer } from 'electron';
+  global {
+    interface Window {
+      api: {
+        session: typeof session;
+        ipcRenderer: typeof ipcRenderer;
+        platform: typeof process.platform;
+      };
+    }
+  }
+}

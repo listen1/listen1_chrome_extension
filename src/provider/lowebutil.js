@@ -11,7 +11,7 @@ export function getParameterByName(name, url) {
 }
 
 export function isElectron() {
-  return window && window.process && window.process.platform;
+  return window.api?.platform;
 }
 
 export function cookieGet(cookieRequest, callback) {
@@ -20,8 +20,7 @@ export function cookieGet(cookieRequest, callback) {
       callback(cookie);
     });
   }
-  const remote = require('electron').remote; // eslint-disable-line
-  remote.session.defaultSession.cookies.get(cookieRequest).then((cookieArray) => {
+  window.api.getCookie(cookieRequest).then((cookieArray) => {
     let cookie = null;
     if (cookieArray.length > 0) {
       [cookie] = cookieArray;
@@ -36,8 +35,7 @@ export async function cookieGetPromise(cookieRequest) {
         res(cookie);
       });
     } else {
-      const remote = require('electron').remote; // eslint-disable-line
-      remote.session.defaultSession.cookies.get(cookieRequest).then((cookieArray) => {
+      window.api.getCookie(cookieRequest).then((cookieArray) => {
         let cookie = null;
         if (cookieArray.length > 0) {
           [cookie] = cookieArray;
@@ -54,10 +52,8 @@ export function cookieSet(cookie, callback) {
       callback(arg1, arg2);
     });
   }
-  const remote = require('electron').remote; // eslint-disable-line
-  remote.session.defaultSession.cookies.set(cookie).then((arg1, arg2) => {
-    callback(null, arg1, arg2);
-  });
+  window.api.setCookie(cookie);
+  callback(null)
 }
 export function cookieSetPromise(cookie) {
   return new Promise((res, rej) => {
@@ -66,10 +62,8 @@ export function cookieSetPromise(cookie) {
         res(arg1, arg2);
       });
     }
-    const remote = require('electron').remote; // eslint-disable-line
-    remote.session.defaultSession.cookies.set(cookie).then((arg1, arg2) => {
-      res(null, arg1, arg2);
-    });
+    window.api.setCookie(cookie);
+    res(null)
   });
 }
 
@@ -79,8 +73,7 @@ export function cookieRemove(cookie, callback) {
       callback(arg1, arg2);
     });
   }
-  const remote = require('electron').remote; // eslint-disable-line
-  remote.session.defaultSession.cookies.remove(cookie.url, cookie.name).then((arg1, arg2) => {
+  window.api.session.defaultSession.cookies.remove(cookie.url, cookie.name).then((arg1, arg2) => {
     callback(null, arg1, arg2);
   });
 }

@@ -778,7 +778,6 @@ const playFromPlaylist = (song) => {
 };
 onMounted(() => {
   if ('windowControlsOverlay' in navigator) {
-    console.log(navigator.windowControlsOverlay.getBoundingClientRect())
     const { x } = navigator.windowControlsOverlay.getBoundingClientRect();
     const { style } = document.getElementsByClassName('settings')[0];
     //windows
