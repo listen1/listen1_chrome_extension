@@ -323,9 +323,8 @@ export default {
             commit('setLastTrackId', msg.data.id);
 
             if (isElectron()) {
-              const { ipcRenderer } = require('electron');
-              ipcRenderer.send('currentLyric', track.title);
-              ipcRenderer.send('trackPlayingNow', track);
+              window.api.ipcRenderer.send('currentLyric', track.title);
+              window.api.ipcRenderer.send('trackPlayingNow', track);
             }
             break;
           }

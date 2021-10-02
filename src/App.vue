@@ -36,6 +36,7 @@ function applyThemeCSS() {
   } else if (settings.theme == 'black') {
     cssStyle = blackStyle;
   }
+  api.setTheme(settings.theme);
   document.getElementById('theme').textContent = cssStyle;
 }
 onMounted(() => {
