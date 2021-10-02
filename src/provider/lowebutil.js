@@ -11,7 +11,7 @@ export function getParameterByName(name, url) {
 }
 
 export function isElectron() {
-  return window.api?.platform;
+  return Boolean(window.api?.platform);
 }
 
 export function cookieGet(cookieRequest, callback) {
@@ -53,7 +53,7 @@ export function cookieSet(cookie, callback) {
     });
   }
   window.api.setCookie(cookie);
-  callback(null)
+  callback(null);
 }
 export function cookieSetPromise(cookie) {
   return new Promise((res, rej) => {
@@ -63,7 +63,7 @@ export function cookieSetPromise(cookie) {
       });
     }
     window.api.setCookie(cookie);
-    res(null)
+    res(null);
   });
 }
 
