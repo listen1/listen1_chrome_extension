@@ -3,13 +3,20 @@ import electron from 'electron';
 import { fixCORS } from './cors';
 import isDev from './isDev';
 const Store = require('electron-store');
-const { app, BrowserWindow, ipcMain } = electron;
+const { app, BrowserWindow, ipcMain, session } = electron;
 // isDev && reloader(module);
 if (isDev) {
   require('electron-reloader')(module);
 }
 const store = new Store();
 const theme = store.get('theme');
+/** @type {{ width: number; height: number; maximized: boolean; zoomLevel: number}} */
+const windowState = store.get('windowState') || {
+  width: 1000,
+  height: 670,
+  maximized: false,
+  zoomLevel: 0
+};
 let titleStyle;
 let titleBarStyle;
 switch (theme) {
@@ -45,11 +52,10 @@ let mainWindow;
 function createWindow() {
   fixCORS();
   const transparent = false;
-  const width = 1000;
-  const height = 670;
   mainWindow = new BrowserWindow({
-    width: width,
-    height: height,
+    width: windowState.width,
+    height: windowState.height,
+    show: false,
     minHeight: 300,
     minWidth: 600,
     webPreferences: {
@@ -64,11 +70,27 @@ function createWindow() {
     frame: false,
     hasShadow: true
   });
+  if (windowState.maximized) {
+    mainWindow.maximize();
+  }
+  mainWindow.show();
   // and load the index.html of the app.
   const ua = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.119 Safari/537.36';
 
   mainWindow.loadURL(`file://${__dirname}/dist/index.html`, { userAgent: ua });
-
+  mainWindow.on('resized', () => {
+    if (!mainWindow.isMaximized() && !mainWindow.isFullScreen()) {
+      const [width, height] = mainWindow.getSize();
+      windowState.width = width;
+      windowState.height = height;
+    }
+  });
+  mainWindow.on('maximize', () => {
+    windowState.maximized = true;
+  });
+  mainWindow.on('unmaximize', () => {
+    windowState.maximized = false;
+  });
   // Open the DevTools.
   // mainWindow.webContents.openDevTools()
 
@@ -86,17 +108,16 @@ function createWindow() {
 // Some APIs can only be used after this event occurs.
 app.on('ready', createWindow);
 
-ipcMain.handle('setCookie', async (e, cookie) => {
-  await mainWindow.webContents.session.cookies.set(cookie);
+ipcMain.on('setCookie', async (e, cookie) => {
+  await session.defaultSession.cookies.set(cookie);
 });
 
 ipcMain.handle('getCookie', async (e, request) => {
-  const cookies = await mainWindow.webContents.session.cookies.get(request);
-  return cookies;
+  return session.defaultSession.cookies.get(request);
 });
 
-ipcMain.on('removeCookie', (e, cookie) => {
-  mainWindow.webContents.session.cookies.remove(request);
+ipcMain.on('removeCookie', async (e, url, name) => {
+  await session.defaultSession.cookies.remove(url, name);
 });
 
 // Quit when all windows are closed.
@@ -115,6 +136,8 @@ app.on('activate', function () {
     createWindow();
   }
 });
-
+app.on('before-quit', () => {
+  store.set('windowState', windowState);
+});
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.

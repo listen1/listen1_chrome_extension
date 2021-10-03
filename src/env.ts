@@ -9,13 +9,19 @@ declare module '*.vue' {
   export default component;
 }
 declare module 'global' {
-  import { session, ipcRenderer } from 'electron';
+  import { Session, IpcRenderer, Cookie, CookiesGetFilter } from 'electron';
   global {
+    type Theme = 'black' | 'white';
     interface Window {
       api: {
-        session: typeof session;
-        ipcRenderer: typeof ipcRenderer;
-        platform: typeof process.platform;
+        setZoomLevel: (level: number) => void;
+        setTheme: (theme: Theme) => void;
+        getCookie: (request: CookiesGetFilter) => Promise<Cookie[]>;
+        setCookie: (cookie: Cookie) => Promise<void>;
+        removeCookie: (url: string, name: string) => void;
+        session: Session;
+        ipcRenderer: IpcRenderer;
+        platform: NodeJS.Platform;
       };
     }
   }

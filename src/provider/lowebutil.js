@@ -56,13 +56,13 @@ export function cookieSet(cookie, callback) {
   callback(null);
 }
 export function cookieSetPromise(cookie) {
-  return new Promise((res, rej) => {
+  return new Promise(async (res, rej) => {
     if (!isElectron()) {
       return chrome.cookies.set(cookie, (arg1, arg2) => {
         res(arg1, arg2);
       });
     }
-    window.api.setCookie(cookie);
+    await window.api.setCookie(cookie);
     res(null);
   });
 }
@@ -73,9 +73,8 @@ export function cookieRemove(cookie, callback) {
       callback(arg1, arg2);
     });
   }
-  window.api.session.defaultSession.cookies.remove(cookie.url, cookie.name).then((arg1, arg2) => {
-    callback(null, arg1, arg2);
-  });
+  window.api.removeCookie(cookie.url, cookie.name);
+  callback(null);
 }
 
 // function setPrototypeOfLocalStorage() {
