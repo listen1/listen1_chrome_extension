@@ -1,10 +1,7 @@
 <template>
   <div class="playbar-clickable">
     <div :id="id" class="barbg" @mousedown="onMyMouseDown">
-      <div
-        class="cur"
-        :style="{ width: changingProgress ? cprogress * 100 + '%' : progress + '%' }"
-      >
+      <div class="cur" :style="{ width: changingProgress ? cprogress * 100 + '%' : progress + '%' }">
         <span class="btn">
           <i />
         </span>
@@ -13,14 +10,16 @@
   </div>
 </template>
 <script setup lang="ts">
-const props = defineProps<{
-  id: string
-  progress: number
-}>();
+import { ref } from 'vue';
+const props =
+  defineProps<{
+    id: string;
+    progress: number;
+  }>();
 
 const emits = defineEmits(['update-progress', 'commit-progress']);
-let changingProgress = $ref(false);
-let cprogress = $ref(0);
+let changingProgress = ref(false);
+let cprogress = ref(0);
 const onMyMouseDown = (event: MouseEvent) => {
   changingProgress = true;
   const containerElem = document.getElementById(props.id) as HTMLElement;

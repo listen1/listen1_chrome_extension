@@ -62,20 +62,20 @@
 </template>
 <script setup>
 import { l1Player } from '../services/l1_player';
-import { computed, onMounted } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 import MediaService from '../services/MediaService';
 
 const { t } = useI18n();
 const router = useRouter();
-let currentFilterId = $ref('');
-let result = $ref([]);
-let tab = $ref(MediaService.getSourceList()[0].name);
-let loading = $ref(true);
-let showMore = $ref(false);
-let playlistFilters = $ref({});
-let allPlaylistFilters = $ref({});
+let currentFilterId = ref('');
+let result = ref([]);
+let tab = ref(MediaService.getSourceList()[0].name);
+let loading = ref(true);
+let showMore = ref(false);
+let playlistFilters = ref({});
+let allPlaylistFilters = ref({});
 
 const loadPlaylist = async () => {
   const offset = 0;
@@ -103,7 +103,7 @@ const changeFilter = (filterId) => {
   loadPlaylist();
 };
 const toggleMorePlaylists = () => {
-  showMore = !showMore;
+  showMore = !showMore.value;
 };
 const showPlaylist = (playlistId) => {
   router.push('/playlist/' + playlistId);

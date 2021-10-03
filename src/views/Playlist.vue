@@ -163,7 +163,7 @@
 
 <script setup>
 import { l1Player } from '../services/l1_player';
-import { onMounted } from 'vue';
+import { onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 import MediaService from '../services/MediaService';
@@ -172,16 +172,16 @@ import notyf from '../services/notyf';
 const { t } = useI18n();
 const router = useRouter();
 const route = useRoute();
-let songs = $ref([]);
-let cover_img_url = $ref('images/loading.svg');
-let playlist_title = $ref('');
-let playlist_source_url = $ref('');
-let is_mine = $ref(false);
-let is_local = $ref(false);
-let list_id = $ref('');
-let window_type = $ref('list');
+let songs = ref([]);
+let cover_img_url = ref('images/loading.svg');
+let playlist_title = ref('');
+let playlist_source_url = ref('');
+let is_mine = ref(false);
+let is_local = ref(false);
+let list_id = ref('');
+let window_type = ref('list');
 const isChrome = true;
-let is_favorite = $ref(false);
+let is_favorite = ref(false);
 
 onMounted(async () => {
   const { listId } = route.params;

@@ -656,7 +656,7 @@
 
 <script setup>
 import 'notyf/notyf.min.css';
-import { onMounted } from 'vue';
+import { onMounted, ref, computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
@@ -674,36 +674,36 @@ const store = useStore();
 const router = useRouter();
 const { condition } = useSearch();
 
-let is_dialog_hidden = $ref(1);
-let dialog_title = $ref('');
-let dialog_type = $ref(0);
-let dialog_data = $ref({});
-let myStyle = $ref({});
-let current_tag = $ref(2);
-let is_window_hidden = $ref(1);
-let window_type = $ref('');
-let lastTrackId = $ref('');
-let loading = $ref(false);
-let options = $ref('');
-let githubStatus = $ref({});
-let proxyMode_name = $ref('');
-let lastestVersion = $ref('');
-let is_local = $ref(false);
-let is_mine = $ref(false);
-let isMac = $ref(false);
-let isChrome = $ref(true);
-let is_favorite = $ref(false);
-let playlist_highlight = $ref(false);
-let menuHidden = $ref(true);
-let playmode = $computed(() => store.state.player.playmode);
-let input_keywords = $ref('');
+let is_dialog_hidden = ref(1);
+let dialog_title = ref('');
+let dialog_type = ref(0);
+let dialog_data = ref({});
+let myStyle = ref({});
+let current_tag = ref(2);
+let is_window_hidden = ref(1);
+let window_type = ref('');
+let lastTrackId = ref('');
+let loading = ref(false);
+let options = ref('');
+let githubStatus = ref({});
+let proxyMode_name = ref('');
+let lastestVersion = ref('');
+let is_local = ref(false);
+let is_mine = ref(false);
+let isMac = ref(false);
+let isChrome = ref(true);
+let is_favorite = ref(false);
+let playlist_highlight = ref(false);
+let menuHidden = ref(true);
+let playmode = computed(() => store.state.player.playmode);
+let input_keywords = ref('');
 const searchTextChanged = () => {
   condition.keywords = input_keywords;
   router.push('/search');
 };
 const changePlaymode = () => {
   const playmodeCount = 3;
-  const newPlaymode = (playmode + 1) % playmodeCount;
+  const newPlaymode = (playmode.value + 1) % playmodeCount;
   store.dispatch('player/changePlaymode', { mode: newPlaymode });
 };
 const showPlaylist = (playlistId) => {
@@ -719,7 +719,7 @@ const nextTrack = () => {
   l1Player.next();
 };
 const toggleNowPlaying = () => {
-  if (window_type != 'track') {
+  if (window_type.value != 'track') {
     window_type = 'track';
   } else {
     window_type = '';
@@ -744,7 +744,7 @@ const showDialog = (dialogType, dialogData) => {
   };
   dialog_type = dialogType;
 
-  if (dialog_type === 5) {
+  if (dialog_type.value === 5) {
     dialog_title = t('_OPEN_PLAYLIST');
   }
 };
@@ -753,7 +753,7 @@ const closeDialog = () => {
   dialog_type = 0;
 };
 const togglePlaylist = () => {
-  menuHidden = !menuHidden;
+  menuHidden = !menuHidden.value;
 };
 const clearPlaylist = () => {
   l1Player.clearPlaylist();
@@ -788,18 +788,18 @@ onMounted(() => {
     }
   }
 })
-let playlist = $computed(() => store.state.player.playlist);
-let isPlaying = $computed(() => store.state.player.isPlaying);
-let lyricArray = $computed(() => store.state.player.lyricArray);
-let lyricLineNumber = $computed(() => store.state.player.lyricLineNumber);
-let lyricLineNumberTrans = $computed(() => store.state.player.lyricLineNumberTrans);
-let myProgress = $computed(() => store.state.player.myProgress);
-let changingProgress = $computed(() => store.state.player.changingProgress);
-let currentDuration = $computed(() => store.state.player.currentDuration);
-let currentPosition = $computed(() => store.state.player.currentPosition);
-let currentPlaying = $computed(() => store.state.player.currentPlaying);
-let volume = $computed(() => store.state.player.volume);
-let mute = $computed(() => store.state.player.mute);
+let playlist = computed(() => store.state.player.playlist);
+let isPlaying = computed(() => store.state.player.isPlaying);
+let lyricArray = computed(() => store.state.player.lyricArray);
+let lyricLineNumber = computed(() => store.state.player.lyricLineNumber);
+let lyricLineNumberTrans = computed(() => store.state.player.lyricLineNumberTrans);
+let myProgress = computed(() => store.state.player.myProgress);
+let changingProgress = computed(() => store.state.player.changingProgress);
+let currentDuration = computed(() => store.state.player.currentDuration);
+let currentPosition = computed(() => store.state.player.currentPosition);
+let currentPlaying = computed(() => store.state.player.currentPlaying);
+let volume = computed(() => store.state.player.volume);
+let mute = computed(() => store.state.player.mute);
 
 const { settings } = useSettings();
 
