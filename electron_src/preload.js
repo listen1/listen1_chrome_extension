@@ -11,13 +11,15 @@ const setTheme = (theme) => {
   store.set('theme', theme);
 };
 const getCookie = (request) => ipcRenderer.invoke('getCookie', request);
-const setCookie = (cookie) => ipcRenderer.invoke('setCookie', cookie);
+const setCookie = (cookie) => ipcRenderer.send('setCookie', cookie);
+const removeCookie = (url, name) => ipcRenderer.send('removeCookie', url, name);
 contextBridge.exposeInMainWorld('api', {
   setZoomLevel,
   setTheme,
   getCookie,
   setCookie,
-  ipcRenderer,
+  removeCookie,
   session,
+  ipcRenderer,
   platform: process.platform
 });

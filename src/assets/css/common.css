@@ -1020,7 +1020,7 @@ ul.detail-songlist li .tools .icon {
   margin: 0 25px 25px 25px;
 }
 .page .settings-content label.upload-button,
-.page .settings-content .language-button {
+.page .settings-content .setting-button {
   padding: 5px;
   background: var(--button-background-color);
   margin-right: 4px;
@@ -1029,9 +1029,10 @@ ul.detail-songlist li .tools .icon {
 }
 
 .page .settings-content label.upload-button:hover,
-.page .settings-content .language-button:hover {
+.page .settings-content .setting-button:hover {
   background: var(--button-hover-background-color);
 }
+
 .page .settings-content .shortcut {
   display: flex;
   margin-top: 10px;
