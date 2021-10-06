@@ -3,7 +3,8 @@
     "defineProps": "readonly",
     "defineEmits": "readonly",
     "defineExpose": "readonly",
-    "withDefaults": "readonly"
+    "withDefaults": "readonly",
+    "$ref": "readonly"
   },
   "env": {
     "browser": true,
