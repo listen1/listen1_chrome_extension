@@ -4,7 +4,8 @@
     "defineEmits": "readonly",
     "defineExpose": "readonly",
     "withDefaults": "readonly",
-    "$ref": "readonly"
+    "$ref": "readonly",
+    "$computed": "readonly"
   },
   "env": {
     "browser": true,

@@ -10,7 +10,6 @@
   </div>
 </template>
 <script setup lang="ts">
-import { ref } from 'vue';
 const props =
   defineProps<{
     id: string;
@@ -18,8 +17,8 @@ const props =
   }>();
 
 const emits = defineEmits(['update-progress', 'commit-progress']);
-let changingProgress = ref(false);
-let cprogress = ref(0);
+let changingProgress = $ref(false);
+let cprogress = $ref(0);
 const onMyMouseDown = (event: MouseEvent) => {
   changingProgress = true;
   const containerElem = document.getElementById(props.id) as HTMLElement;
