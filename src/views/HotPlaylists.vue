@@ -61,6 +61,8 @@
   </div>
 </template>
 <script setup>
+/* eslint-disable @typescript-eslint/no-unused-vars */
+
 import { l1Player } from '../services/l1_player';
 import { computed, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
