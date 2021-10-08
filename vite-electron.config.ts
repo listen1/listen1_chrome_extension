@@ -5,7 +5,7 @@ export default defineConfig({
   build: {
     minify: false,
     rollupOptions: {
-      //@ts-ignore
+      // @ts-ignore: Rollup Plugin Type Mismatch
       plugins: [copy({ targets: [{ src: 'electron_src/preload.js', dest: 'electron_dist' }] })],
       input: 'electron_src/main.js',
       external: ['electron'],
