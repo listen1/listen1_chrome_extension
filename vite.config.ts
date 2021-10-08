@@ -2,7 +2,8 @@ import vueI18n from '@intlify/vite-plugin-vue-i18n';
 import vue from '@vitejs/plugin-vue';
 import { chromeExtension, simpleReloader } from 'rollup-plugin-chrome-extension';
 import zip from 'rollup-plugin-zip';
-import { defineConfig, build } from 'vite';
+import { defineConfig, build, ProxyOptions } from 'vite';
+import HeaderRules from './headerRules.json';
 
 const { NODE_ENV, BUILD_ELECTRON } = process.env;
 const production = NODE_ENV === 'production';
@@ -15,6 +16,31 @@ if (BUILD_ELECTRON) {
     configFile: 'vite-electron.config.ts',
   });
 }
+
+const proxyOptions: { [re: string]: ProxyOptions } = {};
+// @ts-ignore: Known JSON
+HeaderRules.forEach(rule => {
+  rule.pattern.forEach(p => {
+    const url = `/${p}`;
+    const headers: { [name: string]: string } = {};
+    proxyOptions[url] = {
+      target: `https://${p.replace('/', '')}`,
+      hostRewrite: p.replace('/', ''),
+      headers,
+      rewrite: (path) => path.replace(/^\/[^/]*\//, '/'),
+      secure: false,
+      followRedirects: true,
+    }
+
+    Object.entries(rule.headers).forEach(([k, v]) =>
+      // @ts-ignore: Known JSON
+      headers[k.toLowerCase()] = v);
+    headers.host = p.replace('/', '');
+    if (!headers.origin && headers.referer)
+      headers.origin = proxyOptions[url].headers.referer;
+  });
+});
+// console.log(Object.keys(proxyOptions));
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -50,6 +76,32 @@ export default defineConfig({
     // @ts-ignore: Type Mismatch Error
     production && zip({ dir: 'artifacts' })
   ],
+  server: {
+    proxy: proxyOptions
+    // {  
+    // '^/[a-z0-9.-]+\\.[a-z0-9-]{2,6}/.*': {
+    //   configure: (proxy, options) => {
+    //     console.log(options.target);
+    //     options.target = 'https://c.y.qq.com';
+    //     options.headers = {
+    //       'Referer': 'https://y.qq.com',
+    //       'Origin': 'https://y.qq.com'
+    //     };
+    //     options.rewrite = (path) => path.replace(/^\/[^/]*\//, '/');
+    //     options.secure = false;
+    //   }
+    // },
+    // '/music.163.com/': {
+    //   target: 'https://music.163.com',
+    //   headers: {
+    //     'Referer': 'https://music.163.com',
+    //     'Origin': 'https://music.163.com'
+    //   },
+    //   rewrite: (path) => path.replace(/^\/[^/]*\//, '/'),
+    //   secure: false,
+    // }
+    // }
+  },
   build: {
     //we are still in develop here, since sourcemap won't work in extension, it's better not minify the files
     minify: false,
