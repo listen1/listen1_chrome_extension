@@ -13,7 +13,7 @@ const result = reactive({
   loading: false
 });
 async function search() {
-  let { keywords, curpage, searchType, tab } = condition;
+  const { keywords, curpage, searchType, tab } = condition;
   result.tracks = [];
   result.loading = true;
   result.totalpage = 0;
@@ -31,7 +31,7 @@ async function search() {
   });
 }
 watch(condition, search);
-function useSearch() {
+function useSearch(): {[key: string]: unknown} {
   return { condition, result };
 }
 
