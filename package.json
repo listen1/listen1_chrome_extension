@@ -5,7 +5,7 @@
   "main": "electron_dist/main.js",
   "scripts": {
     "build": "vue-tsc --noEmit && vite build",
-    "dev": "vite",
+    "dev": "vite --https",
     "start": "vite build -w",
     "build:electron": "cross-env BUILD_ELECTRON=1 vue-tsc --noEmit && vite build",
     "start:electron:dev": "cross-env BUILD_ELECTRON=1 vite build -w",
