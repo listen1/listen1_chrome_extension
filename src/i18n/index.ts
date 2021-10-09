@@ -19,7 +19,7 @@ const i18n = createI18n({
   // If you need to specify other options, you can set other options
   // ...
 });
-export const setLocale = (language: string) => {
+export const setLocale = (language: string): void => {
   i18n.global.locale.value = language;
   store.dispatch('settings/setState', { language });
   const langMap: {[code: string]: string} = {
