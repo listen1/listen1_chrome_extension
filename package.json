@@ -23,6 +23,7 @@
   "devDependencies": {
     "@intlify/vite-plugin-vue-i18n": "^2.4.0",
     "@types/chrome": "^0.0.158",
+    "@types/http-proxy": "^1.17.7",
     "@types/node-forge": "^0.10.5",
     "@typescript-eslint/eslint-plugin": "^4.32.0",
     "@typescript-eslint/parser": "^4.32.0",
@@ -39,6 +40,7 @@
     "eslint-plugin-vue": "^7.18.0",
     "feather-icons": "^4.28.0",
     "howler": "^2.2.3",
+    "http-proxy": "^1.18.1",
     "node-forge": "^0.10.0",
     "notyf": "^3.10.0",
     "prettier": "^2.4.1",
