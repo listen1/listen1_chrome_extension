@@ -29,3 +29,4 @@ pnpm-debug.log*
 *.pub
 *.zip
 /artifacts
+/cert

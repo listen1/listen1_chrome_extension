@@ -3,6 +3,11 @@ import vue from '@vitejs/plugin-vue';
 import { chromeExtension, simpleReloader } from 'rollup-plugin-chrome-extension';
 import zip from 'rollup-plugin-zip';
 import { defineConfig, build } from 'vite';
+import HeaderRules from './headerRules.json';
+
+import fs from 'fs';
+import http from 'http';
+import httpProxy from 'http-proxy';
 
 const { NODE_ENV, BUILD_ELECTRON } = process.env;
 const production = NODE_ENV === 'production';
@@ -41,6 +46,43 @@ export default defineConfig({
         $('head').last().append($('<link rel="stylesheet" href="assets/main.css">'));
       },
     },
+    {
+      name: 'listen1-proxy',
+      apply: 'serve',
+      buildStart() {
+        const proxy = httpProxy.createProxyServer({});
+        const server = http.createServer((req, res) => {
+          const pathArray = req.url.split('/');
+          const protocol = pathArray[2];
+          req.headers.host = pathArray[4];
+          req.url = `${protocol}//${pathArray.slice(4).join('/')}`;
+          const host = req.headers.host + '/';
+          const matchedRule = HeaderRules.find((rule) =>
+            rule.pattern.some((p) => host.includes(p))
+          );
+          const proxyHeaders: { [header: string]: string } = {};
+          Object.entries(req.headers).forEach(([key, val]) => { // Array is filtered
+            if (typeof val === 'string')
+              proxyHeaders[key] = val;
+          });
+          if (matchedRule) {
+            Object.entries(matchedRule.headers).forEach(
+              ([key, val]) => proxyHeaders[key.toLowerCase()] = val
+            )
+          }
+          if (!proxyHeaders.origin && proxyHeaders.referer)
+            proxyHeaders.origin = proxyHeaders.referer;
+          proxy.web(req, res, {
+            target: `${protocol}//${req.headers.host}`,
+            headers: proxyHeaders,
+            followRedirects: true,
+            secure: false,
+          });
+        });
+
+        server.listen(3001);
+      }
+    },
     // @ts-ignore: Type Mismatch Error
     chromeExtPlugin,
     vueI18n({ include: 'src/i18n/*.json', runtimeOnly: true }),
@@ -50,6 +92,17 @@ export default defineConfig({
     // @ts-ignore: Type Mismatch Error
     production && zip({ dir: 'artifacts' })
   ],
+  server: {
+    proxy: {
+      '/proxy': {
+        target: 'http://localhost:3001',
+      }
+    },
+    https: {
+      key: fs.readFileSync(__dirname + '/cert/localhost.key') || '',
+      cert: fs.readFileSync(__dirname + '/cert/localhost.pem') || '',
+    }
+  },
   build: {
     //we are still in develop here, since sourcemap won't work in extension, it's better not minify the files
     minify: false,

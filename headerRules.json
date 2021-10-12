@@ -1,0 +1,52 @@
+[{
+    "pattern": ["music.163.com/", "interface3.music.163.com/"],
+    "headers": {
+        "Referer": "https://music.163.com/"
+    }
+}, {
+    "pattern": ["gist.githubusercontent.com/"],
+    "headers": {
+        "Referer": "https://gist.githubusercontent.com/"
+    }
+}, {
+    "pattern": ["c.y.qq.com/", "i.y.qq.com/", "qqmusic.qq.com/", "music.qq.com/", "imgcache.qq.com/"],
+    "headers": {
+        "Referer": "https://y.qq.com/",
+        "Origin": "https://y.qq.com"
+    }
+}, {
+    "pattern": [".kugou.com/", "m.kugou.com/"],
+    "headers": {
+        "Referer": "https://www.kugou.com/"
+    }
+}, {
+    "pattern": [".kuwo.cn/", "www.kuwo.cn/"],
+    "headers": {
+        "Referer": "https://www.kuwo.cn/"
+    }
+}, {
+    "pattern": [".migu.cn/"],
+    "headers": {
+        "Referer": "https://music.migu.cn/v3/music/player/audio?from=migu"
+    }
+}, {
+    "pattern": ["m.music.migu.cn/"],
+    "headers": {
+        "Referer": "https://m.music.migu.cn/"
+    }
+}, {
+    "pattern": ["app.c.nf.migu.cn/", "d.musicapp.migu.cn/"],
+    "headers": {
+        "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 14_3 like Mac OS X) AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Mobile Safari/534.30"
+    }
+}, {
+    "pattern": ["jadeite.migu.cn/"],
+    "headers": {
+        "User-Agent": "okhttp/3.12.12"
+    }
+}, {
+    "pattern": [".bilibili.com/", "www.bilibili.com/", ".bilivideo.com/"],
+    "headers": {
+        "Referer": "https://www.bilibili.com/"
+    }
+}]
