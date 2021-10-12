@@ -2,7 +2,7 @@ import vueI18n from '@intlify/vite-plugin-vue-i18n';
 import vue from '@vitejs/plugin-vue';
 import { chromeExtension, simpleReloader } from 'rollup-plugin-chrome-extension';
 import zip from 'rollup-plugin-zip';
-import { defineConfig, build, ProxyOptions } from 'vite';
+import { defineConfig, build } from 'vite';
 import HeaderRules from './headerRules.json';
 
 import fs from 'fs';
@@ -20,31 +20,6 @@ if (BUILD_ELECTRON) {
     configFile: 'vite-electron.config.ts',
   });
 }
-
-const proxyOptions: { [re: string]: ProxyOptions } = {};
-// @ts-ignore: Known JSON
-HeaderRules.forEach(rule => {
-  rule.pattern.forEach(p => {
-    const url = `/${p}`;
-    const headers: { [name: string]: string } = {};
-    proxyOptions[url] = {
-      target: `https://${p.replace('/', '')}`,
-      hostRewrite: p.replace('/', ''),
-      headers,
-      rewrite: (path) => path.replace(/^\/[^/]*\//, '/'),
-      secure: false,
-      followRedirects: true,
-    }
-
-    Object.entries(rule.headers).forEach(([k, v]) =>
-      // @ts-ignore: Known JSON
-      headers[k.toLowerCase()] = v);
-    headers.host = p.replace('/', '');
-    if (!headers.origin && headers.referer)
-      headers.origin = proxyOptions[url].headers.referer;
-  });
-});
-// console.log(Object.keys(proxyOptions));
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -91,7 +66,6 @@ export default defineConfig({
               proxyHeaders[key] = val;
           });
           if (matchedRule) {
-            // console.log(matchedRule);
             Object.entries(matchedRule.headers).forEach(
               ([key, val]) => proxyHeaders[key.toLowerCase()] = val
             )
@@ -119,16 +93,14 @@ export default defineConfig({
     production && zip({ dir: 'artifacts' })
   ],
   server: {
-    // proxy: proxyOptions,
     proxy: {
       '/proxy': {
         target: 'http://localhost:3001',
-        // rewrite: path => (console.log(path), path)
       }
     },
     https: {
-      key: fs.readFileSync('cert/localhost.key') || '',
-      cert: fs.readFileSync('cert/localhost.crt') || '',
+      key: fs.readFileSync(__dirname + '/cert/localhost.key') || '',
+      cert: fs.readFileSync(__dirname + '/cert/localhost.pem') || '',
     }
   },
   build: {
