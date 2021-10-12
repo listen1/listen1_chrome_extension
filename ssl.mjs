@@ -1,7 +1,8 @@
-// import { pki } from 'node-forge';
-const { pki } = require('node-forge');
-// import fs from 'fs';
-const fs = require('fs');
+// Script to generate the cert for vite dev
+import forge from 'node-forge';
+const { pki, md } = forge;
+import { rmdirSync, mkdirSync, writeFileSync } from 'fs';
+
 const keys = pki.rsa.generateKeyPair(2048);
 const cert = pki.createCertificate();
 cert.publicKey = keys.publicKey;
@@ -35,6 +36,10 @@ cert.setExtensions([{
     name: 'basicConstraints',
     cA: true
 }, {
+    name: 'authorityKeyIdentifier',
+    keyid: true,
+    issuer: true,
+}, {
     name: 'keyUsage',
     keyCertSign: true,
     digitalSignature: true,
@@ -42,34 +47,19 @@ cert.setExtensions([{
     keyEncipherment: true,
     dataEncipherment: true
 }, {
-    name: 'extKeyUsage',
-    serverAuth: true,
-    clientAuth: true,
-    codeSigning: true,
-    emailProtection: true,
-    timeStamping: true
-}, {
-    name: 'nsCertType',
-    client: true,
-    server: true,
-    email: true,
-    objsign: true,
-    sslCA: true,
-    emailCA: true,
-    objCA: true
-}, {
     name: 'subjectAltName',
     altNames: [{
+        type: 2,
         value: 'localhost'
     }]
 }, {
     name: 'subjectKeyIdentifier'
 }]);
 
-cert.sign(keys.privateKey);
+cert.sign(keys.privateKey, md.sha256.create());
 const pem = pki.certificateToPem(cert);
 const privateKey = pki.privateKeyToPem(keys.privateKey);
-fs.rmdirSync('./cert', { recursive: true });
-fs.mkdirSync('./cert');
-fs.writeFileSync('./cert/localhost.key', privateKey);
-fs.writeFileSync('./cert/localhost.pem', pem);
+rmdirSync('./cert', { recursive: true });
+mkdirSync('./cert');
+writeFileSync('./cert/localhost.key', privateKey);
+writeFileSync('./cert/localhost.pem', pem);
