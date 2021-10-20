@@ -785,10 +785,10 @@ electron-store@^8.0.1:
     conf "^10.0.3"
     type-fest "^1.0.2"
 
-electron@14.1.1:
-  version "14.1.1"
-  resolved "https://registry.yarnpkg.com/electron/-/electron-14.1.1.tgz#643726fe1fd4ad77fbb3a75b211005ed01357485"
-  integrity sha512-eaqaxMq/auE5VDIzYYqDUgZg+68Uiv+8jAQUXqLh8G58kOxqRL9Jw4TJ/w2/KXwWGaVPaUStbvO9BtqVZant+A==
+electron@14.2.0:
+  version "14.2.0"
+  resolved "https://registry.yarnpkg.com/electron/-/electron-14.2.0.tgz#374a9b5d76b8c1e5f123a464200e5db1eabbcbd9"
+  integrity sha512-6CmAv1P0xcwK3FQOSA27fHI36/wctSFVgj46VODn56srXXQWeolkK1VzeAFNE613iAuuH9jJdHvE3gz+c7XkNA==
   dependencies:
     "@electron/get" "^1.0.1"
     "@types/node" "^14.6.2"
