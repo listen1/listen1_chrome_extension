@@ -3,7 +3,7 @@ node_modules
 /dist
 /electron_dist
 /desktop_dist
-
+electron_src/dist
 
 # local env files
 .env.local

@@ -10,11 +10,6 @@ if (process.argv.includes('-w') || process.argv.includes('--watch')) process.env
 
 const chromeExtPlugin = chromeExtension();
 
-if (BUILD_ELECTRON) {
-  build({
-    configFile: 'vite-electron.config.ts',
-  });
-}
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -58,7 +53,7 @@ export default defineConfig({
       external: ['src/assets/main.css'],
       input: ['src/manifest.ts'],
       output: {
-        dir: BUILD_ELECTRON ? 'electron_dist/dist' : 'dist',
+        dir: BUILD_ELECTRON ? 'electron_src/dist' : 'dist',
         format: 'esm',
         entryFileNames: `[name].js`,
         chunkFileNames: `[name].js`,

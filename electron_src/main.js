@@ -1,7 +1,7 @@
-import electron from 'electron';
+const electron = require('electron');
 // import reloader from 'electron-reloader';
-import { fixCORS } from './cors';
-import isDev from './isDev';
+const { fixCORS } = require('./cors');
+const isDev = require('./isDev');
 const Store = require('electron-store');
 const { app, BrowserWindow, ipcMain, session } = electron;
 // isDev && reloader(module);
@@ -41,6 +41,7 @@ switch (process.platform) {
     break;
   case 'linux':
     titleBarStyle = 'hidden';
+    break;
   default:
     break;
 }

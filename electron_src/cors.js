@@ -1,11 +1,9 @@
-import electron from 'electron';
-
-const { session } = electron;
+const { session } = require('electron');
 
 /**
  * @param {electron.OnBeforeSendHeadersListenerDetails} details
  */
-export function hack_referer_header(details) {
+function hack_referer_header(details) {
   let replace_referer = true;
   let replace_origin = true;
   let add_referer = true;
@@ -90,7 +88,7 @@ export function hack_referer_header(details) {
   details.requestHeaders = headers;
 }
 
-export function fixCORS() {
+function fixCORS() {
   const filter = {
     urls: [
       '*://*.music.163.com/*',
@@ -119,3 +117,4 @@ export function fixCORS() {
     callback({ cancel: false, requestHeaders: details.requestHeaders });
   });
 }
+module.exports = { fixCORS, hack_referer_header };
