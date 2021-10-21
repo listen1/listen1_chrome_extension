@@ -57,7 +57,8 @@
         "tar.gz",
         "appImage",
         "deb"
-      ]
+      ],
+      "category":"audio"
     },
     "nsis": {
       "runAfterFinish": false,
