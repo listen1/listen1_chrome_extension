@@ -58,7 +58,7 @@
         "appImage",
         "deb"
       ],
-      "category":"audio"
+      "category":"Audio"
     },
     "nsis": {
       "runAfterFinish": false,
