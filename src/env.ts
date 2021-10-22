@@ -8,7 +8,7 @@ declare module '*.vue' {
   export default component;
 }
 declare module 'global' {
-  import { Session, IpcRenderer, Cookie, CookiesGetFilter } from 'electron';
+  import type { Session, IpcRenderer, Cookie, CookiesGetFilter } from 'electron';
   global {
     type Theme = 'black' | 'white';
     interface Window {
