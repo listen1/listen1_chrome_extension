@@ -1,22 +1,29 @@
-import electron from 'electron';
+const electron = require('electron');
 // import reloader from 'electron-reloader';
-import { fixCORS } from './cors';
-import isDev from './isDev';
+const { fixCORS } = require('./cors');
+const isDev = require('./isDev');
 const Store = require('electron-store');
 const { app, BrowserWindow, ipcMain, session } = electron;
 // isDev && reloader(module);
 if (isDev) {
   require('electron-reloader')(module);
 }
-const store = new Store();
+const schema = {
+  theme: { type: 'string', default: 'black' },
+  windowState: {
+    type: 'object',
+    default: {
+      width: 1000,
+      height: 670,
+      maximized: false,
+      zoomLevel: 0
+    }
+  }
+};
+const store = new Store({ schema });
 const theme = store.get('theme');
 /** @type {{ width: number; height: number; maximized: boolean; zoomLevel: number}} */
-const windowState = store.get('windowState') || {
-  width: 1000,
-  height: 670,
-  maximized: false,
-  zoomLevel: 0
-};
+const windowState = store.get('windowState');
 let titleStyle;
 let titleBarStyle;
 switch (theme) {
@@ -25,10 +32,6 @@ switch (theme) {
     break;
   case 'white':
     titleStyle = { color: '#ffffff', symbolColor: '#3c3c3c' };
-    break;
-  default:
-    store.set('theme', 'black');
-    titleStyle = { color: '#333333', symbolColor: '#e5e5e5' };
     break;
 }
 //platform specific
@@ -41,6 +44,7 @@ switch (process.platform) {
     break;
   case 'linux':
     titleBarStyle = 'hidden';
+    break;
   default:
     break;
 }
