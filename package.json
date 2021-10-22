@@ -6,7 +6,7 @@
     "build": "vue-tsc --noEmit && vite build",
     "dev": "vite",
     "start": "vite build -w",
-    "build:electron": "cross-env BUILD_ELECTRON=1 vue-tsc --noEmit && vite build",
+    "build:electron": "cross-env BUILD_ELECTRON=1 vue-tsc --noEmit && BUILD_ELECTRON=1 vite build",
     "start:electron:dev": "cross-env BUILD_ELECTRON=1 vite build -w"
   },
   "description": "one for all free music in china",
