@@ -56,14 +56,15 @@ export function cookieSet(cookie, callback) {
   callback(null);
 }
 export function cookieSetPromise(cookie) {
-  return new Promise(async (res, rej) => {
+  return new Promise((res, rej) => {
     if (!isElectron()) {
       return chrome.cookies.set(cookie, (arg1, arg2) => {
         res(arg1, arg2);
       });
     }
-    await window.api.setCookie(cookie);
-    res(null);
+    window.api.setCookie(cookie).then(() => {
+      res(null);
+    });
   });
 }
 

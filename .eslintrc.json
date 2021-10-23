@@ -7,7 +7,9 @@
     "$ref": "readonly",
     "$computed": "readonly",
     "module": "readonly",
-    "process": "readonly"
+    "process": "readonly",
+    "require": "readonly",
+    "__dirname": "readonly"
   },
   "env": {
     "browser": true,
@@ -23,6 +25,7 @@
   },
   "plugins": ["vue", "@typescript-eslint"],
   "rules": {
-    "@typescript-eslint/ban-ts-comment": ["error", { "ts-ignore": "allow-with-description" }]
+    "@typescript-eslint/ban-ts-comment": ["error", { "ts-ignore": "allow-with-description" }],
+    "@typescript-eslint/no-var-requires": "off"
   }
 }
