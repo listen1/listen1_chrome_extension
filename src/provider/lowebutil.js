@@ -15,31 +15,24 @@ export function isElectron() {
 }
 
 export function cookieGet(cookieRequest, callback) {
-  if (!isElectron()) {
+  if (cookieStore in window) {
+    cookieStore.get(cookieRequest).then((cookie) => {
+      callback(cookie);
+    });
+  } else {
     return chrome.cookies.get(cookieRequest, (cookie) => {
       callback(cookie);
     });
   }
-  window.api.getCookie(cookieRequest).then((cookieArray) => {
-    let cookie = null;
-    if (cookieArray.length > 0) {
-      [cookie] = cookieArray;
-    }
-    callback(cookie);
-  });
 }
 export async function cookieGetPromise(cookieRequest) {
   return new Promise((res, rej) => {
-    if (!isElectron()) {
-      chrome.cookies.get(cookieRequest, (cookie) => {
+    if (cookieStore in window) {
+      cookieStore.get(cookieRequest).then((cookie) => {
         res(cookie);
       });
     } else {
-      window.api.getCookie(cookieRequest).then((cookieArray) => {
-        let cookie = null;
-        if (cookieArray.length > 0) {
-          [cookie] = cookieArray;
-        }
+      chrome.cookies.get(cookieRequest, (cookie) => {
         res(cookie);
       });
     }
@@ -47,35 +40,40 @@ export async function cookieGetPromise(cookieRequest) {
 }
 
 export function cookieSet(cookie, callback) {
-  if (!isElectron()) {
+  if (cookieStore in window) {
+    cookieStore.set(cookie).then(() => {
+      callback();
+    });
+  } else {
     return chrome.cookies.set(cookie, (arg1, arg2) => {
       callback(arg1, arg2);
     });
   }
-  window.api.setCookie(cookie);
-  callback(null);
 }
 export function cookieSetPromise(cookie) {
   return new Promise((res, rej) => {
-    if (!isElectron()) {
+    if (cookieStore in window) {
+      cookieStore.set(cookie).then(() => {
+        res();
+      });
+    } else {
       return chrome.cookies.set(cookie, (arg1, arg2) => {
         res(arg1, arg2);
       });
     }
-    window.api.setCookie(cookie).then(() => {
-      res(null);
-    });
   });
 }
 
 export function cookieRemove(cookie, callback) {
-  if (!isElectron()) {
+  if (cookieStore in window) {
+    cookieStore.delete(cookie).then(() => {
+      callback();
+    });
+  } else {
     return chrome.cookies.remove(cookie, (arg1, arg2) => {
       callback(arg1, arg2);
     });
   }
-  window.api.removeCookie(cookie.url, cookie.name);
-  callback(null);
 }
 
 // function setPrototypeOfLocalStorage() {

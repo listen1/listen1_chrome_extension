@@ -9,7 +9,8 @@
     "module": "readonly",
     "process": "readonly",
     "require": "readonly",
-    "__dirname": "readonly"
+    "__dirname": "readonly",
+    "cookieStore": "readonly"
   },
   "env": {
     "browser": true,
