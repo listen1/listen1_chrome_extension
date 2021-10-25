@@ -15,20 +15,12 @@ export function isElectron() {
 }
 
 export function cookieGet(cookieRequest, callback) {
-  if (cookieStore in window) {
-    cookieStore.get(cookieRequest).then((cookie) => {
-      callback(cookie);
-    });
-  } else {
-    return chrome.cookies.get(cookieRequest, (cookie) => {
-      callback(cookie);
-    });
-  }
+  cookieGetPromise(cookieRequest).then(callback);
 }
 export async function cookieGetPromise(cookieRequest) {
   return new Promise((res, rej) => {
-    if (cookieStore in window) {
-      cookieStore.get(cookieRequest).then((cookie) => {
+    if (cookieStore) {
+      cookieStore.get(cookieRequest.name).then((cookie) => {
         res(cookie);
       });
     } else {
@@ -40,22 +32,12 @@ export async function cookieGetPromise(cookieRequest) {
 }
 
 export function cookieSet(cookie, callback) {
-  if (cookieStore in window) {
-    cookieStore.set(cookie).then(() => {
-      callback();
-    });
-  } else {
-    return chrome.cookies.set(cookie, (arg1, arg2) => {
-      callback(arg1, arg2);
-    });
-  }
+  cookieSetPromise(cookie).then(callback);
 }
 export function cookieSetPromise(cookie) {
   return new Promise((res, rej) => {
-    if (cookieStore in window) {
-      cookieStore.set(cookie).then(() => {
-        res();
-      });
+    if (cookieStore) {
+      cookieStore.set({ ...cookie, expires: cookie.expirationDate }).then(res);
     } else {
       return chrome.cookies.set(cookie, (arg1, arg2) => {
         res(arg1, arg2);
@@ -66,9 +48,7 @@ export function cookieSetPromise(cookie) {
 
 export function cookieRemove(cookie, callback) {
   if (cookieStore in window) {
-    cookieStore.delete(cookie).then(() => {
-      callback();
-    });
+    cookieStore.delete(cookie).then(callback);
   } else {
     return chrome.cookies.remove(cookie, (arg1, arg2) => {
       callback(arg1, arg2);
