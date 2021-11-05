@@ -54,11 +54,11 @@ export default defineConfig({
         const server = http.createServer((req, res) => {
           const pathArray = req.url.split('/');
           const protocol = pathArray[2];
-          req.headers.host = pathArray[4];
+          const host = pathArray[4];
+          const host2 = host + '/';
           req.url = `${protocol}//${pathArray.slice(4).join('/')}`;
-          const host = req.headers.host + '/';
           const matchedRule = HeaderRules.find((rule) =>
-            rule.pattern.some((p) => host.includes(p))
+            rule.pattern.some((p) => host2.includes(p))
           );
           const proxyHeaders: { [header: string]: string } = {};
           Object.entries(req.headers).forEach(([key, val]) => { // Array is filtered
@@ -67,16 +67,24 @@ export default defineConfig({
           });
           if (matchedRule) {
             Object.entries(matchedRule.headers).forEach(
-              ([key, val]) => proxyHeaders[key.toLowerCase()] = val
+              ([key, val]) => {
+                proxyHeaders[key.toLowerCase()] = val;
+                req.headers[key.toLowerCase()] = val;
+              }
             )
           }
           if (!proxyHeaders.origin && proxyHeaders.referer)
             proxyHeaders.origin = proxyHeaders.referer;
           proxy.web(req, res, {
-            target: `${protocol}//${req.headers.host}`,
+            target: `${protocol}//${host}`,
             headers: proxyHeaders,
+            hostRewrite: host,
             followRedirects: true,
             secure: false,
+          }, (err, req, res,) => {
+            console.log(err.message);
+            console.log(req.url);
+            console.log(res.statusCode);
           });
         });
 

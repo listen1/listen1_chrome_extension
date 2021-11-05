@@ -71,7 +71,7 @@ export default class kugou {
   static kg_render_playlist_result_item(index, item, params, callback) {
     const { hash } = item;
 
-    let target_url = `${'http://m.kugou.com/app/i/getSongInfo.php?cmd=playInfo&hash='}${hash}`;
+    let target_url = `${'https://m.kugou.com/app/i/getSongInfo.php?cmd=playInfo&hash='}${hash}`;
     const track = {
       id: `kgtrack_${hash}`,
       title: '',
@@ -96,7 +96,7 @@ export default class kugou {
         // track['img_url'] = data.imgUrl.replace('{size}', '400');
       }
       // Fix album
-      target_url = `http://mobilecdnbj.kugou.com/api/v3/album/info?albumid=${item.album_id}`;
+      target_url = `https://mobilecdnbj.kugou.com/api/v3/album/info?albumid=${item.album_id}`;
       axios.get(target_url).then((res) => {
         const { data: res_data } = res;
         if (res_data.status && res_data.data !== undefined && res_data.data !== null) {
@@ -111,7 +111,7 @@ export default class kugou {
 
   static async kg_get_playlist(url) {
     const list_id = getParameterByName('list_id', url).split('_').pop();
-    const target_url = `http://m.kugou.com/plist/list/${list_id}?json=true`;
+    const target_url = `https://m.kugou.com/plist/list/${list_id}?json=true`;
     const { data } = await axios.get(target_url);
 
     const info = {
@@ -144,7 +144,7 @@ export default class kugou {
     track.artist = one[0].trim();
     // Fix album name and img
     const target_url = `${'https://www.kugou.com/yy/index.php?r=play/getdata&hash='}${item.hash}`;
-    axios.get(`http://mobilecdnbj.kugou.com/api/v3/album/info?albumid=${item.album_id}`).then((response) => {
+    axios.get(`https://mobilecdnbj.kugou.com/api/v3/album/info?albumid=${item.album_id}`).then((response) => {
       const { data } = response;
       if (data.status && data.data !== undefined) {
         track.album = data.data.albumname;
@@ -160,7 +160,7 @@ export default class kugou {
 
   static async kg_artist(url) {
     const artist_id = getParameterByName('list_id', url).split('_').pop();
-    let target_url = `http://mobilecdnbj.kugou.com/api/v3/singer/info?singerid=${artist_id}`;
+    let target_url = `https://mobilecdnbj.kugou.com/api/v3/singer/info?singerid=${artist_id}`;
     const { data } = await axios.get(target_url);
 
     const info = {
@@ -169,7 +169,7 @@ export default class kugou {
       id: `kgartist_${artist_id}`,
       source_url: 'https://www.kugou.com/singer/{id}.html'.replace('{id}', artist_id)
     };
-    target_url = `http://mobilecdnbj.kugou.com/api/v3/singer/song?singerid=${artist_id}&page=1&pagesize=30`;
+    target_url = `https://mobilecdnbj.kugou.com/api/v3/singer/song?singerid=${artist_id}&page=1&pagesize=30`;
     const res = await axios.get(target_url);
     const tracks = await async_process(res.data.data.info, this.kg_render_artist_result_item, [info]);
     return { tracks, info };
@@ -246,7 +246,7 @@ export default class kugou {
       lyric_url: item.hash
     };
     // Fix other data
-    const target_url = `${'http://m.kugou.com/app/i/getSongInfo.php?cmd=playInfo&hash='}${item.hash}`;
+    const target_url = `${'https://m.kugou.com/app/i/getSongInfo.php?cmd=playInfo&hash='}${item.hash}`;
     axios.get(target_url).then((response) => {
       const { data } = response;
       track.title = data.songName;
@@ -259,7 +259,7 @@ export default class kugou {
 
   static async kg_album(url) {
     const album_id = getParameterByName('list_id', url).split('_').pop();
-    let target_url = `${'http://mobilecdnbj.kugou.com/api/v3/album/info?albumid='}${album_id}`;
+    let target_url = `${'https://mobilecdnbj.kugou.com/api/v3/album/info?albumid='}${album_id}`;
 
     let info;
     // info
@@ -272,7 +272,7 @@ export default class kugou {
       source_url: 'https://www.kugou.com/album/{id}.html'.replace('{id}', data.data.albumid)
     };
 
-    target_url = `${'http://mobilecdnbj.kugou.com/api/v3/album/song?albumid='}${album_id}&page=1&pagesize=-1`;
+    target_url = `${'https://mobilecdnbj.kugou.com/api/v3/album/song?albumid='}${album_id}&page=1&pagesize=-1`;
     const res = await axios.get(target_url);
     const tracks = await async_process(res.data.data.info, this.kg_render_album_result_item, [info, album_id]);
     return { tracks, info };
@@ -284,7 +284,7 @@ export default class kugou {
       offset = 0;
     }
     // const page = offset / 30 + 1;
-    const target_url = `${'http://m.kugou.com/plist/index&json=true&page='}${offset}`;
+    const target_url = `${'https://m.kugou.com/plist/index&json=true&page='}${offset}`;
 
     const { data } = await axios.get(target_url);
     // const total = data.plist.total;
