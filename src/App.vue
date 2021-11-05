@@ -6,11 +6,11 @@
 <script setup>
 import Home from './views/Home.vue';
 import { onMounted, watch } from 'vue';
-import { useStore } from 'vuex';
+import usePlayer from './composition/player'
 import { getPlayer, addPlayerListener } from './services/bridge';
 import useSettings from './composition/settings';
 const mode = 'front';
-const store = useStore();
+const { player, playerListener, initState } = usePlayer();
 getPlayer(mode).setMode(mode);
 // if (mode === 'front') {
 //   if (!isElectron()) {
@@ -21,10 +21,10 @@ getPlayer(mode).setMode(mode);
 //   }
 // }
 addPlayerListener(mode, (msg, sender, sendResponse) => {
-  store.dispatch('player/playerListener', { mode, msg, sender, sendResponse });
+  playerListener(mode, msg, sender, sendResponse);
 });
 // initial vuex states
-store.dispatch('player/initState');
+initState();
 const { settings, loadSettings } = useSettings();
 
 import whiteStyle from './assets/css/iparanoid.css';

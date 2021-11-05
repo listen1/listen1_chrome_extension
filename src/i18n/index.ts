@@ -21,7 +21,7 @@ const i18n = createI18n({
   // ...
 });
 export const setLocale = (language: Language): void => {
-  i18n.global.locale.value = language;
+  i18n.global.locale = language;
   settings.language = language;
   const langMap: { [code: string]: string } = {
     'zh-CN': 'zh-Hans',
