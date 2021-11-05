@@ -3,12 +3,13 @@
     "$ref": "readonly",
     "$computed": "readonly",
     "module": "readonly",
-    "process": "readonly"
+    "process": "readonly",
+    "MediaMetadata": "readonly"
   },
   "env": {
     "browser": true,
     "es2021": true,
-    "node":true,
+    "node": true,
     "webextensions": true,
     "vue/setup-compiler-macros": true
   },

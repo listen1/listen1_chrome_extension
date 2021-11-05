@@ -851,10 +851,10 @@ import 'notyf/notyf.min.css';
 import { onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
-import usePlayer from '../composition/player'
 import '../assets/css/common.css';
 import '../assets/css/icon.css';
 import DraggableBar from '../components/DraggableBar.vue';
+import usePlayer from '../composition/player';
 import useSearch from '../composition/search';
 import useSettings from '../composition/settings';
 import { setLocale } from '../i18n';

@@ -58,7 +58,7 @@
         "appImage",
         "deb"
       ],
-      "category":"Audio"
+      "category": "Audio"
     },
     "nsis": {
       "runAfterFinish": false,
@@ -92,7 +92,8 @@
   },
   "devDependencies": {
     "electron": "14.2.0",
-    "electron-builder": "^22.13.1"
+    "electron-builder": "^22.13.1",
+    "electron-reloader": "^1.2.1"
   },
   "dependencies": {
     "electron-store": "^8.0.1"

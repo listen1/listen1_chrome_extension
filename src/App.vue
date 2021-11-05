@@ -4,14 +4,16 @@
 
 
 <script setup>
-import Home from './views/Home.vue';
 import { onMounted, watch } from 'vue';
-import usePlayer from './composition/player'
-import { getPlayer, addPlayerListener } from './services/bridge';
+import whiteStyle from './assets/css/iparanoid.css';
+import blackStyle from './assets/css/origin.css';
+import usePlayer from './composition/player';
 import useSettings from './composition/settings';
+import { addPlayerListener, getPlayer } from './services/bridge';
+import Home from './views/Home.vue';
 const mode = 'front';
 const { player, playerListener, initState } = usePlayer();
-getPlayer(mode).setMode(mode);
+getPlayer(mode)?.setMode(mode);
 // if (mode === 'front') {
 //   if (!isElectron()) {
 //     // avoid background keep playing when change to front mode
@@ -27,8 +29,6 @@ addPlayerListener(mode, (msg, sender, sendResponse) => {
 initState();
 const { settings, loadSettings } = useSettings();
 
-import whiteStyle from './assets/css/iparanoid.css';
-import blackStyle from './assets/css/origin.css';
 function applyThemeCSS() {
   let cssStyle = '';
   if (settings.theme == 'white') {
