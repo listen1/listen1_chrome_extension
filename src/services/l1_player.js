@@ -1,5 +1,6 @@
 import { getPlayer, addPlayerListener, getPlayerAsync } from './bridge';
 import { getLocalStorageValue } from '../provider/lowebutil';
+import iDB from './db';
 
 const mode = getLocalStorageValue('enable_stop_when_close', true) ? 'front' : 'background';
 
@@ -128,10 +129,11 @@ export const l1Player = {
     return l1Player.status.playlist.find((track) => track.id === id);
   },
   connectPlayer() {
-    getPlayerAsync(mode, (player) => {
+    getPlayerAsync(mode, async (player) => {
       if (!player.playing) {
         // load local storage settings
-        const localCurrentPlaying = localStorage.getObject('current-playing');
+        // const localCurrentPlaying = localStorage.getObject('current-playing');
+        const localCurrentPlaying = await iDB.Tracks.where('playlist').equals('current').toArray();
         const localPlayerSettings = localStorage.getObject('player-settings');
 
         if (!player.playlist.length) {

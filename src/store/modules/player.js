@@ -3,6 +3,8 @@ import { isElectron, smoothScrollTo } from '../../provider/lowebutil';
 import { l1Player } from '../../services/l1_player';
 import notyf from '../../services/notyf';
 import I18n from '../../i18n';
+import iDB from '../../services/db';
+
 function parseLyric(lyric, tlyric) {
   const lines = lyric.split('\n');
   let result = [];
@@ -340,7 +342,9 @@ export default {
           case 'PLAYLIST': {
             // 'player:playlist'
             commit('setPlaylist', msg.data);
-            localStorage.setObject('current-playing', msg.data);
+            // localStorage.setObject('current-playing', msg.data);
+            msg.data.forEach((track) => track.playlist = 'current');
+            iDB.Tracks.bulkPut(msg.data);
 
             break;
           }
