@@ -39,8 +39,8 @@ function applyThemeCSS() {
   window.api?.setTheme(settings.theme);
   document.getElementById('theme').textContent = cssStyle;
 }
-onMounted(() => {
-  loadSettings();
+onMounted(async () => {
+  await loadSettings();
   applyThemeCSS();
 });
 watch(settings, applyThemeCSS);

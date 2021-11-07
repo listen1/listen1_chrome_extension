@@ -24,6 +24,13 @@ class Track {
   [key: string]: unknown;
 }
 
+class Setting {
+  key!: string;
+  value!: unknown;
+
+  static readonly INDEX_STRING = '&key';
+}
+
 class Playlist {
   id!: string;
   title!: string;
@@ -36,11 +43,13 @@ class Playlist {
 
 const models: { [key: string]: model } = {
   Tracks: Track,
+  Settings: Setting,
   Playlists: Playlist,
 };
 
 export class L1DB extends Dexie {
   Tracks!: Dexie.Table<Track, [string, string]>;
+  Settings!: Dexie.Table<Setting, [string]>;
   Playlistsettings!: Dexie.Table<Playlist, [string]>;
 
   constructor() {

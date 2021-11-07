@@ -1,5 +1,6 @@
 import { reactive } from 'vue';
 import { setPrototypeOfLocalStorage } from '../utils';
+import iDB from '../services/db';
 
 setPrototypeOfLocalStorage();
 
@@ -30,22 +31,30 @@ const settings = reactive({
   theme: 'black'
 });
 
-function flushSettings() {
-  for (const [key, value] of Object.entries(settings)) {
-    if (nameMapping[key]) {
-      localStorage.setObject(nameMapping[key], value);
-    }
-  }
+async function flushSettings() {
+  await iDB.Settings.bulkPut(Object.keys(settings).map((key) => ({
+    key: nameMapping[key] || key,
+    value: settings[key],
+  }))
+  );
 }
 function setSettings(newValue) {
   for (const [key, value] of Object.entries(newValue)) {
     settings[key] = value;
+    iDB.Settings.put({ key: nameMapping[key] || key, value });
   }
-  flushSettings();
 }
-function loadSettings() {
-  const localSettings = Object.keys(nameMapping).reduce((res, cur) => ({ ...res, [cur]: localStorage.getObject(nameMapping[cur]) }));
-  if (Object.values(localSettings).some((value) => value === null)) {
+async function loadSettings() {
+  const dbRes = (await iDB.Settings.toArray()).reduce((ret, cur) => {
+    ret[cur.key] = cur.value;
+    return ret;
+  }, {});
+  const localSettings =
+    Object.keys(nameMapping).reduce((res, cur) => {
+      res[cur] = dbRes[nameMapping[cur]];
+      return res;
+    }, {});
+  if (Object.values(localSettings).some((value) => value === undefined)) {
     flushSettings();
   } else {
     setSettings(localSettings);
@@ -55,5 +64,6 @@ function loadSettings() {
 function useSettings() {
   return { settings, setSettings, loadSettings };
 }
+loadSettings();
 
 export default useSettings;
