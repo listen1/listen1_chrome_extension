@@ -23,6 +23,7 @@
     "axios": "^0.21.4",
     "browserslist": "^4.17.2",
     "cross-env": "^7.0.3",
+    "dexie": "^3.0.3",
     "electron-reloader": "^1.2.1",
     "electron-store": "^8.0.1",
     "eslint": "^7.32.0",
