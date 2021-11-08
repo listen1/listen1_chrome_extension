@@ -1,7 +1,7 @@
 import Dexie from 'dexie';
 
-interface model {
-  new(): any;
+interface MODEL {
+  new(): unknown;
   INDEX_STRING: string;
 }
 
@@ -41,7 +41,7 @@ class Playlist {
   static readonly INDEX_STRING = '&id, is_mine';
 }
 
-const models: { [key: string]: model } = {
+const models: { [key: string]: MODEL } = {
   Tracks: Track,
   Settings: Setting,
   Playlists: Playlist,
@@ -55,7 +55,7 @@ export class L1DB extends Dexie {
   constructor() {
     super("Listen1");
     const schema =
-      Object.entries(models).reduce((ret: any, cur) => {
+      Object.entries(models).reduce((ret: { [key: string]: string }, cur) => {
         ret[cur[0]] = cur[1].INDEX_STRING;
         return ret;
       }, {});
@@ -69,13 +69,19 @@ iDB.open();
 
 iDB.tables.forEach((table) => {
   const keys = [...Object.getOwnPropertyNames(new models[table.name]())];
-  function defHook(primKey: unknown, originalObj: any) {
+  function createHook(primKey: unknown, originalObj: Record<string, unknown>) {
     const formattedObj = { ...originalObj };
     Object.keys(formattedObj).forEach(key => keys.includes(key) ? null : delete formattedObj[key]);
     originalObj = formattedObj;
   }
-  table.hook('creating', defHook);
-  table.hook('updating', defHook);
+  function updateHook(mod: any) {
+    const formattedObj = { ...mod };
+    Object.keys(formattedObj).forEach(key => keys.includes(key) ? null : delete formattedObj[key]);
+    mod = formattedObj;
+  }
+  table.hook('creating', createHook);
+  table.hook('updating', updateHook);
 });
 
 export default iDB;
+ 

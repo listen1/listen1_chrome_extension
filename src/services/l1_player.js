@@ -1,6 +1,6 @@
 import { getPlayer, addPlayerListener, getPlayerAsync } from './bridge';
 import { getLocalStorageValue } from '../provider/lowebutil';
-import iDB from './db';
+import iDB from './DBService';
 
 const mode = getLocalStorageValue('enable_stop_when_close', true) ? 'front' : 'background';
 

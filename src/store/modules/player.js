@@ -3,7 +3,7 @@ import { isElectron, smoothScrollTo } from '../../provider/lowebutil';
 import { l1Player } from '../../services/l1_player';
 import notyf from '../../services/notyf';
 import I18n from '../../i18n';
-import iDB from '../../services/db';
+import iDB from '../../services/DBService';
 
 function parseLyric(lyric, tlyric) {
   const lines = lyric.split('\n');

@@ -1,6 +1,6 @@
 import { reactive } from 'vue';
 import { setPrototypeOfLocalStorage } from '../utils';
-import iDB from '../services/db';
+import iDB from '../services/DBService';
 
 setPrototypeOfLocalStorage();
 
