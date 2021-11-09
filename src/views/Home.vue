@@ -341,7 +341,7 @@
                         <span>_EDIT</span>
                       </div>
                     </div>
-                    <div v-show="!is_mine && !is_local" class="playlist-button fav-button" ng-click="favoritePlaylist(list_id)">
+                    <div v-show="!is_mine && !is_local" class="playlist-button fav-button" @click="favoritePlaylist(list_id)">
                       <div class="play-list" ng-class="{'favorited':is_favorite,'notfavorite':!is_favorite}">
                         <svg class="feather">
                           <use href="#star" />
@@ -349,7 +349,7 @@
                         <span>is_favorite?_FAVORITED:_FAVORITE</span>
                       </div>
                     </div>
-                    <div v-show="isChrome && is_favorite && !is_local" class="playlist-button edit-button" ng-click="closeWindow();showPlaylist(list_id)">
+                    <div v-show="isChrome && is_favorite && !is_local" class="playlist-button edit-button" @click="closeWindow();showPlaylist(list_id)">
                       <div class="play-list">
                         <span class="icon li-loop" />
                         <span>_REFRESH_PLAYLIST</span>

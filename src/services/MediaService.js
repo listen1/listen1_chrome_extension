@@ -8,7 +8,7 @@ import migu from '../provider/migu';
 import taihe from '../provider/taihe';
 import { getLocalStorageValue } from '../provider/lowebutil';
 // import localmusic from "@/provider/localmusic";
-// import myplaylist from '@/provider/myplaylist';
+import myplaylist from '../provider/myplaylist';
 
 const sourceList = [
   {
@@ -212,11 +212,17 @@ const MediaService = {
   //     return myplaylist.show_myplaylist("favorite");
   //   },
 
-  queryPlaylist(listId, type) {
-    const result = myplaylist.myplaylist_containers(type, listId);
-    return {
-      success: (fn) => fn({ result })
-    };
+  isMyPlaylist(listId) {
+    const url = `/playlist?list_id=${listId}`;
+    return new Promise((res)=>{
+      myplaylist.get_playlist(url).success((playlist)=> {
+        if(playlist) {
+          res(true)
+        }
+        res(false);
+      });
+    });
+
   },
 
   getPlaylist(listId) {
@@ -235,25 +241,15 @@ const MediaService = {
     return provider.get_playlist(url);
   },
 
-  //   clonePlaylist(id, type) {
-  //     const provider = getProviderByItemId(id);
-  //     const url = `/playlist?list_id=${id}`;
-  //     return {
-  //       success: (fn) => {
-  //         provider.get_playlist(url).success((data) => {
-  //           myplaylist.save_myplaylist(type, data);
-  //           fn();
-  //         });
-  //       },
-  //     };
-  //   },
+  clonePlaylist(id, type) {
+    const provider = getProviderByItemId(id);
+    const url = `/playlist?list_id=${id}`;
+    return myplaylist.save_myplaylist(type, provider.get_playlist(url));
+  },
 
-  //   removeMyPlaylist(id, type) {
-  //     myplaylist.remove_myplaylist(type, id);
-  //     return {
-  //       success: (fn) => fn(),
-  //     };
-  //   },
+  removeMyPlaylist(id, type) {
+    return myplaylist.remove_myplaylist(type, id);
+  },
 
   //   addMyPlaylist(id, track) {
   //     const newPlaylist = myplaylist.add_track_to_myplaylist(id, track);

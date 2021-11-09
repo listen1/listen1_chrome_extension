@@ -44,14 +44,12 @@
                 <span>{{ $t('_EDIT') }}</span>
               </div>
             </div>-->
-            <!-- <div v-show="!is_mine && !is_local" class="playlist-button fav-button" ng-click="favoritePlaylist(list_id)">
-              <div class="play-list" ng-class="{'favorited':is_favorite,'notfavorite':!is_favorite}">
-                <svg class="feather">
-                  <use href="#star" />
-                </svg>
-                <span>is_favorite?_FAVORITED:_FAVORITE</span>
+            <div v-show="!is_mine && !is_local" class="playlist-button fav-button" @click="favoritePlaylist(list_id)">
+              <div class="play-list" :class="{'favorited':is_favorite,'notfavorite':!is_favorite}">
+                <vue-feather type="star"></vue-feather>
+                <span>{{ t(is_favorite ? '_FAVORITED' : '_FAVORITE') }}</span>
               </div>
-            </div>-->
+            </div>
             <div
               v-show="isChrome && is_favorite && !is_local"
               class="playlist-button edit-button"
@@ -201,9 +199,7 @@ onMounted(async () => {
   is_mine = data.info.id.slice(0, 2) === 'my';
   is_local = data.info.id.slice(0, 2) === 'lm';
 
-  //   MediaService.queryPlaylist(data.info.id, "favorite").success((res) => {
-  //     this.is_favorite = res.result;
-  //   });
+  is_favorite = await MediaService.isMyPlaylist(data.info.id);
 
   window_type = 'list';
 });
@@ -221,6 +217,23 @@ const showPlaylist = (playlistId) => {
 };
 const openUrl = (url) => {
   window.open(url, '_blank').focus();
+};
+const favoritePlaylist = async (list_id) => {
+  if (is_favorite) {
+    await removeFavoritePlaylist(list_id);
+    is_favorite = false;
+  } else {
+    await addFavoritePlaylist(list_id);
+    is_favorite = true;
+  }
+}
+const addFavoritePlaylist = async (list_id) => {
+  await MediaService.clonePlaylist(list_id, 'favorite');
+  notyf.success(t('_FAVORITE_PLAYLIST_SUCCESS'));
+};
+const removeFavoritePlaylist = async (list_id) => {
+  await MediaService.removeMyPlaylist(list_id, 'favorite');
+  notyf.success(t('_UNFAVORITE_PLAYLIST_SUCCESS'));
 };
 </script>
 

@@ -36,9 +36,10 @@ class Playlist {
   title!: string;
   cover_img_url!: string;
   source_url?: string;
-  is_mine!: boolean;
+  type!: 'current' | 'favorite' | 'my';
+  order!: string[];
 
-  static readonly INDEX_STRING = '&id, is_mine';
+  static readonly INDEX_STRING = '&id, type';
 }
 
 const models: { [key: string]: MODEL } = {
@@ -50,7 +51,7 @@ const models: { [key: string]: MODEL } = {
 export class L1DB extends Dexie {
   Tracks!: Dexie.Table<Track, [string, string]>;
   Settings!: Dexie.Table<Setting, [string]>;
-  Playlistsettings!: Dexie.Table<Playlist, [string]>;
+  Playlists!: Dexie.Table<Playlist, [string]>;
 
   constructor() {
     super("Listen1");
@@ -83,5 +84,11 @@ iDB.tables.forEach((table) => {
   table.hook('updating', updateHook);
 });
 
+if(!localStorage.getItem('V3_MIGRATED')) {
+  const localCurrentPlaying = JSON.parse(localStorage.getItem('current-playing') || '[]');
+  localCurrentPlaying.forEach((track: Record<string, unknown>) => track.playlist = 'current');
+  iDB.Tracks.bulkPut(localCurrentPlaying);
+  localStorage.setItem('V3_MIGRATED', 'true');
+}
+
 export default iDB;
- 
