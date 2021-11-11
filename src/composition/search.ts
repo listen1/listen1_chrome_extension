@@ -17,21 +17,19 @@ async function search() {
   result.tracks = [];
   result.loading = true;
   result.totalpage = 0;
-  MediaService.search(tab, {
+  const data = await MediaService.search(tab, {
     keywords: keywords,
     curpage: curpage,
     type: searchType
-  }).then((data) => {
-    result.tracks = data.result;
-    result.loading = false;
-    result.totalpage = Math.ceil(data.total / 20);
-
-    // scroll back to top when finish searching
-    document.querySelector('.site-wrapper-innerd')?.scrollTo({ top: 0 });
   });
+  result.tracks = data.result;
+  result.loading = false;
+  result.totalpage = Math.ceil(data.total / 20);
+  // scroll back to top when finish searching
+  document.querySelector('.site-wrapper-innerd')?.scrollTo({ top: 0 });
 }
 watch(condition, search);
-function useSearch(): {[key: string]: unknown} {
+function useSearch(): { [key: string]: unknown } {
   return { condition, result };
 }
 
