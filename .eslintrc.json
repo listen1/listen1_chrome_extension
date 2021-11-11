@@ -1,18 +1,17 @@
 {
   "globals": {
-    "defineProps": "readonly",
-    "defineEmits": "readonly",
-    "defineExpose": "readonly",
-    "withDefaults": "readonly",
     "$ref": "readonly",
     "$computed": "readonly",
     "module": "readonly",
-    "process": "readonly"
+    "process": "readonly",
+    "MediaMetadata": "readonly"
   },
   "env": {
     "browser": true,
     "es2021": true,
-    "webextensions": true
+    "node": true,
+    "webextensions": true,
+    "vue/setup-compiler-macros": true
   },
   "extends": ["eslint:recommended", "plugin:vue/vue3-essential", "plugin:@typescript-eslint/recommended"],
   "parser": "vue-eslint-parser",
@@ -21,6 +20,7 @@
     "parser": "@typescript-eslint/parser",
     "sourceType": "module"
   },
+  "ignorePatterns": "dist/",
   "plugins": ["vue", "@typescript-eslint"],
   "rules": {
     "@typescript-eslint/ban-ts-comment": ["error", { "ts-ignore": "allow-with-description" }]

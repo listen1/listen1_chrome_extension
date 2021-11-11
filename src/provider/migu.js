@@ -1,7 +1,7 @@
 import axios from 'axios';
 import concat from 'async-es/concat';
 import forge from 'node-forge';
-import { getParameterByName } from './lowebutil';
+import { getParameterByName, cookieRemove } from './lowebutil';
 
 export default class migu {
   static mg_convert_song(song) {

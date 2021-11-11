@@ -362,7 +362,7 @@ export class Player {
 
   /**
    * Skip to the next or previous track.
-   * @param  {String} direction 'next' or 'prev'.
+   * @param  {'next'|'prev'|'random'} direction 'next' or 'prev'.
    */
   skip(direction) {
     Howler.unload();
@@ -503,13 +503,12 @@ export class Player {
       playedFrom: this.playedFrom,
       playing: this.playing
     };
-    if ('setPositionState' in navigator.mediaSession) {
-      navigator.mediaSession.setPositionState({
-        duration: this.currentHowl ? this.currentHowl.duration() : 0,
-        playbackRate: this.currentHowl ? this.currentHowl.rate() : 1,
-        position: this.currentHowl ? this.currentHowl.seek() : 0
-      });
-    }
+
+    navigator.mediaSession.setPositionState?.({
+      duration: this.currentHowl ? this.currentHowl.duration() : 0,
+      playbackRate: this.currentHowl ? this.currentHowl.rate() : 1,
+      position: this.currentHowl ? this.currentHowl.seek() : 0
+    });
 
     playerSendMessage(this.mode, {
       type: 'BG_PLAYER:FRAME_UPDATE',
