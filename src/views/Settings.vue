@@ -7,10 +7,10 @@
           <span>{{ t('_LANGUAGE') }}</span>
         </div>
         <div class="settings-content">
-          <button class="setting-button" @click="setLocale('zh-CN')">简体中文</button>
-          <button class="setting-button" @click="setLocale('zh-TC')">繁体中文</button>
-          <button class="setting-button" @click="setLocale('en-US')">English</button>
-          <button class="setting-button" @click="setLocale('fr-FR')">French</button>
+          <OptionButton text="简体中文" @click="setLocale('zh-CN')" />
+          <OptionButton text="繁体中文" @click="setLocale('zh-TC')" />
+          <OptionButton text="English" @click="setLocale('en-US')" />
+          <OptionButton text="French" @click="setLocale('fr-FR')" />
         </div>
         <div class="settings-title">
           <span>{{ t('_NOWPLAYING_DISPLAY') }}</span>
@@ -60,10 +60,8 @@
           <span>{{ t('_THEME') }}</span>
         </div>
         <div class="settings-content">
-          <div>
-            <button class="setting-button" @click="setTheme('white')">{{ t('_THEME_WHITE') }}</button>
-            <button class="setting-button" @click="setTheme('black')">{{ t('_THEME_BLACK') }}</button>
-          </div>
+          <OptionButton :text="t('_THEME_WHITE')" @click="setTheme('white')" />
+          <OptionButton :text="t('_THEME_BLACK')" @click="setTheme('black')" />
         </div>
         <!-- <div class="settings-title">
           <span>{{ $t('_AUTO_CHOOSE_SOURCE') }}</span>
@@ -315,6 +313,7 @@
 import { useI18n } from 'vue-i18n';
 import { version } from '../../package.json';
 import Href from '../components/Href.vue';
+import OptionButton from '../components/OptionButton.vue';
 import useSettings from '../composition/settings';
 import { setLocale } from '../i18n';
 import { isElectron } from '../provider/lowebutil';

@@ -43,7 +43,7 @@
         <ul class="playlist-covers">
           <li v-for="i in result" :key="i.id">
             <div class="u-cover">
-              <img :src="i.cover_img_url" @click="showPlaylist(i.id)" />
+              <CoverArt :src="i.cover_img_url" @click="showPlaylist(i.id)"/>
               <div class="bottom" @click="directplaylist(i.id)">
                 <vue-feather type="play-circle"></vue-feather>
               </div>
@@ -68,6 +68,7 @@ import { computed, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 import MediaService from '../services/MediaService';
+import CoverArt from '../components/CoverArt.vue';
 
 const { t } = useI18n();
 const router = useRouter();

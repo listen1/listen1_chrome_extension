@@ -359,17 +359,6 @@ https://stackoverflow.com/questions/19889615/can-an-angular-directive-pass-argum
   position: relative;
 }
 
-.playlist-covers .u-cover img {
-  height: 136px;
-  min-width: 136px;
-  max-width: 100%;
-  object-fit: cover;
-  margin: auto;
-  border: solid 1px var(--line-default-color);
-  margin-bottom: 2px;
-  cursor: pointer;
-}
-
 .playlist-covers .u-cover .bottom {
   position: absolute;
   right: 5px;
@@ -1019,8 +1008,7 @@ ul.detail-songlist li .tools .icon {
 .page .settings-content {
   margin: 0 25px 25px 25px;
 }
-.page .settings-content label.upload-button,
-.page .settings-content .setting-button {
+.page .settings-content label.upload-button {
   padding: 5px;
   background: var(--button-background-color);
   margin-right: 4px;
@@ -1028,8 +1016,7 @@ ul.detail-songlist li .tools .icon {
   cursor: pointer;
 }
 
-.page .settings-content label.upload-button:hover,
-.page .settings-content .setting-button:hover {
+.page .settings-content label.upload-button:hover {
   background: var(--button-hover-background-color);
 }
 
