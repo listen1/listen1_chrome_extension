@@ -843,10 +843,10 @@ electron-store@^8.0.1:
     conf "^10.0.3"
     type-fest "^1.0.2"
 
-electron@14.2.0:
-  version "14.2.0"
-  resolved "https://registry.yarnpkg.com/electron/-/electron-14.2.0.tgz#374a9b5d76b8c1e5f123a464200e5db1eabbcbd9"
-  integrity sha512-6CmAv1P0xcwK3FQOSA27fHI36/wctSFVgj46VODn56srXXQWeolkK1VzeAFNE613iAuuH9jJdHvE3gz+c7XkNA==
+electron@14.2.1:
+  version "14.2.1"
+  resolved "https://registry.yarnpkg.com/electron/-/electron-14.2.1.tgz#ee8b9cfa8c04ad4d9456daa5bbac562c2c2517a1"
+  integrity sha512-20cLOVpmjIgYMgsDLpI36VQhv0bIy54sSBAP3rLFtrs/kVVHLu0educMVZkkMm5GJPd2vvU4mcK7f43JgVRcNg==
   dependencies:
     "@electron/get" "^1.0.1"
     "@types/node" "^14.6.2"
