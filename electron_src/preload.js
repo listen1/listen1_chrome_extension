@@ -1,6 +1,5 @@
 const { contextBridge, ipcRenderer, session, webFrame } = require('electron');
-const Store = require('electron-store');
-const store = new Store();
+const store = require('./store');
 const ipcOn = (channel) => (fn) => {
   ipcRenderer.on(channel, (event, ...args) => fn(...args));
 };
