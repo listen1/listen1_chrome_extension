@@ -61,6 +61,11 @@ async function loadSettings() {
   }
 }
 
+export function migrateSettings() {
+  const lsSettings = Object.keys(nameMapping).reduce((res, cur) => ({ ...res, [cur]: localStorage.getObject(nameMapping[cur]) }));
+  setSettings(lsSettings);
+}
+
 function useSettings() {
   return { settings, setSettings, loadSettings };
 }

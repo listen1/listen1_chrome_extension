@@ -1,4 +1,5 @@
 import Dexie from 'dexie';
+import { migrateSettings } from '../composition/settings';
 
 interface MODEL {
   new(): unknown;
@@ -84,10 +85,11 @@ iDB.tables.forEach((table) => {
   table.hook('updating', updateHook);
 });
 
-if(!localStorage.getItem('V3_MIGRATED')) {
+export function dbMigrate() {
   const localCurrentPlaying = JSON.parse(localStorage.getItem('current-playing') || '[]');
   localCurrentPlaying.forEach((track: Record<string, unknown>) => track.playlist = 'current');
   iDB.Tracks.bulkPut(localCurrentPlaying);
+  migrateSettings();
   localStorage.setItem('V3_MIGRATED', 'true');
 }
 

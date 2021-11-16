@@ -11,6 +11,10 @@ import usePlayer from './composition/player';
 import useSettings from './composition/settings';
 import { addPlayerListener, getPlayer } from './services/bridge';
 import Home from './views/Home.vue';
+import { dbMigrate } from './services/DBService';
+if (!localStorage.getItem('V3_MIGRATED')) {
+  dbMigrate();
+}
 const mode = 'front';
 const { player, playerListener, initState } = usePlayer();
 getPlayer(mode)?.setMode(mode);
