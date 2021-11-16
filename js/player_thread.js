@@ -34,6 +34,9 @@
     get currentAudio() {
       return this.playlist[this.index];
     }
+    get currentAudioSrc() {
+        return this._media_uri_list[(this.playlist[this.index].id)];
+    }
 
     get currentHowl() {
       return this.currentAudio && this.currentAudio.howl;

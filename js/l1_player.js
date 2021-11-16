@@ -24,6 +24,22 @@
         player.pause();
       });
     },
+    downcurrent() {
+        getPlayerAsync(mode, (player) => {
+            // window.open( player.currentAudioSrc);
+            //  window.location.href = player.currentAudioSrc;
+            var url = player.currentAudioSrc;
+            var temp = url;
+        if(url){
+            if(url.indexOf("?")!=-1){
+                temp = url.substring(0,url.indexOf("?"));
+            }
+            var fileExtension = temp.substring(temp.lastIndexOf('.') + 1);
+            downloadfileblob(url, player.currentAudio.title+"."+fileExtension)
+        }
+
+    });
+    },
     togglePlayPause() {
       getPlayerAsync(mode, (player) => {
         if (player.playing) {

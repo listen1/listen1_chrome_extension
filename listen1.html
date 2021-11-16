@@ -16,6 +16,9 @@
     <link href="css/origin.css" rel="stylesheet" id="theme" />
     <link href="css/common.css" rel="stylesheet" />
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha512-SfTiTlX6kk+qitfevl/7LibUOeJWlt9rbyDn92a1DqWOw9vWG2MFoays0sgObmWazO5BQPiFucnnEAjpAB+/Sw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+
     <link href="images/logo_16.png" rel="shortcut icon" />
     <link href="images/logo_16.png" rel="bookmark" />
     <script>
@@ -24,6 +27,7 @@
         module = undefined;
       }
     </script>
+    <script type="text/javascript" src="js/download.js"></script>
     <script type="text/javascript" src="js/vendor/angular.min.js"></script>
     <script src="js/vendor/i18next.min.js"></script>
     <script src="js/vendor/i18nextHttpBackend.min.js"></script>
@@ -1869,6 +1873,9 @@
                           ng-show="settings.playmode == 2"
                           class="icon li-single-cycle"
                         ></span>
+                      </a>
+                      <a ng-click="download(currentPlaying.source_url)">
+                        <i class="fa fa-download" aria-hidden="true"></i>
                       </a>
                     </div>
 
