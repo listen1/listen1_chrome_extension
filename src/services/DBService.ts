@@ -87,6 +87,10 @@ iDB.tables.forEach((table) => {
 
 export function dbMigrate() {
   const localCurrentPlaying = JSON.parse(localStorage.getItem('current-playing') || '[]');
+  iDB.Playlists.put({
+    id: 'current', title: 'current', cover_img_url: '', type: 'current',
+    order: localCurrentPlaying.map((i: Record<string, unknown>) => i.id),
+  });
   localCurrentPlaying.forEach((track: Record<string, unknown>) => track.playlist = 'current');
   iDB.Tracks.bulkPut(localCurrentPlaying);
   migrateSettings();

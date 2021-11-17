@@ -41,7 +41,7 @@ const myplaylistFactory = () => {
 
   function get_myplaylist(url) {
     const list_id = getParameterByName('list_id', url);
-    
+
     return {
       async success(fn) {
         const playlistInfo = await iDB.Playlists.get(list_id);
@@ -50,7 +50,9 @@ const myplaylistFactory = () => {
         };
         // clear url field when load old playlist
         if (playlistInfo) {
-          playlist.tracks = await iDB.Tracks.where('playlist').equals(list_id).toArray();
+          playlist.tracks = await iDB.Tracks.where('playlist').equals(list_id).toArray().then(tracks =>
+            playlistInfo.order ? playlistInfo.order.map(id => tracks.find(track => track.id = id)) : tracks,
+          );
         } else {
           playlist = null;
         }
@@ -94,14 +96,16 @@ const myplaylistFactory = () => {
   const save_myplaylist = async (playlist_type, playlistObj) => {
     const playlist = await playlistObj;
 
+    const playlistInfo = { ...playlist.info };
+    playlistInfo.order = playlist.tracks.map(track => track.id);
+
     // update listid
     let playlist_id = '';
     if (playlist_type === 'my') {
       playlist_id = `myplaylist_${guid()}`;
-      const playlistInfo = {...playlist.info};
       playlistInfo.type = 'my';
       playlist.tracks.forEach(track => track.playlist = playlist_id);
-      await iDB.transaction('rw', iDB.Tracks, iDB.Playlists, async() => {
+      await iDB.transaction('rw', iDB.Tracks, iDB.Playlists, async () => {
         await iDB.Playlists.put(playlistInfo);
         await iDB.Tracks.where('playlist').equals(playlist_id).delete();
         await iDB.Tracks.bulkAdd(playlist.tracks);
@@ -109,17 +113,16 @@ const myplaylistFactory = () => {
 
     } else if (playlist_type === 'favorite') {
       playlist_id = playlist.info.id;
-      const playlistInfo = {...playlist.info};
-      playlist.tracks.forEach(track => track.playlist = playlist_id);
       playlistInfo.type = 'favorite';
+      playlist.tracks.forEach(track => track.playlist = playlist_id);
       await iDB.Playlists.put(playlistInfo);
-      
+
       // remove all tracks info, cause favorite playlist always load latest
     }
   };
 
   const remove_myplaylist = async (playlist_type, playlist_id) => {
-    await iDB.transaction('rw', iDB.Tracks, iDB.Playlists, async() => {
+    await iDB.transaction('rw', iDB.Tracks, iDB.Playlists, async () => {
       await iDB.Playlists.where('id').equals(playlist_id).delete();
       await iDB.Tracks.where('playlist').equals(playlist_id).delete();
     });
