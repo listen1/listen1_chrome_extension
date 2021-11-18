@@ -1,5 +1,6 @@
 import { getParameterByName } from './lowebutil';
 import iDB from '../services/DBService';
+import EventService from '../services/EventService';
 
 const myplaylistFactory = () => {
   function array_move(arr, old_index, new_index) {
@@ -115,6 +116,7 @@ const myplaylistFactory = () => {
 
       // remove all tracks info, cause favorite playlist always load latest
     }
+    EventService.emit(`playlist:${playlist_type}:update`)
   };
 
   const remove_myplaylist = async (playlist_type, playlist_id) => {
@@ -122,6 +124,7 @@ const myplaylistFactory = () => {
       await iDB.Playlists.where('id').equals(playlist_id).delete();
       await iDB.Tracks.where('playlist').equals(playlist_id).delete();
     });
+    EventService.emit(`playlist:${playlist_type}:update`);
   };
 
   function add_track_to_myplaylist(playlist_id, track) {

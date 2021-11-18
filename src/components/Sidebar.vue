@@ -105,6 +105,7 @@
 import { onMounted } from '@vue/runtime-core';
 import { useI18n } from 'vue-i18n';
 import MediaService from '../services/MediaService';
+import $event from '../services/EventService';
 
 const isChrome = true;
 
@@ -114,9 +115,19 @@ const is_login = (platform: string) => {
 };
 let favoriteplaylists = $ref<unknown[]>([]);
 
+const refreshFav = () => {
+  MediaService.showFavPlaylist().then((res) => (favoriteplaylists = res));
+};
+const refreshMy = () => {
+  MediaService.showMyPlaylist().then((res) => (favoriteplaylists = res));
+};
+
 onMounted(() => {
-  MediaService.showFavPlaylist().then((res) => favoriteplaylists = res);
+  MediaService.showFavPlaylist().then((res) => (favoriteplaylists = res));
 });
+
+$event.on('playlist:favorite:update', refreshFav);
+$event.on('playlist:my:update', refreshMy);
 </script>
 
 <style>
