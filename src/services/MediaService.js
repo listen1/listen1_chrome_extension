@@ -182,9 +182,9 @@ const MediaService = {
     }
   },
 
-  //   showMyPlaylist() {
-  //     return myplaylist.show_myplaylist("my");
-  //   },
+  showMyPlaylist() {
+    return myplaylist.get_myplaylists_list("my");
+  },
 
   showPlaylistArray(source, offset, filter_id) {
     const provider = getProviderByName(source);
@@ -208,9 +208,9 @@ const MediaService = {
     return provider.lyric(url);
   },
 
-  //   showFavPlaylist() {
-  //     return myplaylist.show_myplaylist("favorite");
-  //   },
+  showFavPlaylist() {
+    return myplaylist.get_myplaylists_list("favorite");
+  },
 
   isMyPlaylist(listId) {
     const url = `/playlist?list_id=${listId}`;

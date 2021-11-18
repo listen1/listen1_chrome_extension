@@ -218,116 +218,7 @@
     </div>
 
     <div class="main" ng-controller="MyPlayListController">
-      <div class="sidebar">
-        <div class="flex-scroll-wrapper">
-          <div class="menu-control" />
-          <div class="menu-title">
-            <div class="title">{{ t('_PLATFORM_UNION') }}</div>
-          </div>
-          <ul class="nav masthead-nav">
-            <li :class="{ active: $route.name === 'HotPlaylists' }" @click="$router.push('/')">
-              <div class="sidebar-block">
-                <span class="icon li-featured-list" />
-                <a>{{ t('_PLAYLISTS') }}</a>
-              </div>
-            </li>
-          </ul>
-          <div v-if="!isChrome || is_login('netease') || is_login('qq')" class="menu-title">
-            <div class="title">{{ t('_MY_MUSIC') }}</div>
-          </div>
-          <ul class="nav masthead-nav">
-            <li
-              v-if="!isChrome"
-              ng-click="showPlaylist('lmplaylist_reserve')"
-              ng-class="{ 'active':window_type=='list' && ( '/playlist?list_id=lmplaylist_reserve' === getCurrentUrl() ) }"
-            >
-              <div class="sidebar-block">
-                <span class="icon li-featured-list" />
-                <a>{{ t('_LOCAL_MUSIC') }}</a>
-              </div>
-            </li>
-            <li
-              v-if="is_login('netease')"
-              ng-click="showTag(6, {platform:'netease', user: musicAuth.netease});"
-              ng-class="{ 'active':(current_tag==6 && tag_params.platform=='netease') && (window_url_stack.length ==0) }"
-            >
-              <div class="sidebar-block">
-                <svg class="feather">
-                  <use href="#globe" />
-                </svg>
-                <a>{{ t('_MY_NETEASE') }}</a>
-              </div>
-            </li>
-            <li
-              v-if="is_login('qq')"
-              ng-click="showTag(6, {platform:'qq', user: musicAuth.qq});"
-              ng-class="{ 'active':(current_tag==6 && tag_params.platform=='qq') && (window_url_stack.length ==0) }"
-            >
-              <div class="sidebar-block">
-                <svg class="feather">
-                  <use href="#globe" />
-                </svg>
-                <a>{{ t('_MY_QQ') }}</a>
-              </div>
-            </li>
-          </ul>
-          <!-- <div class="menu-title" ng-init="loadMyPlaylist();">
-                    <div class="title">
-                      {{ t('_CREATED_PLAYLIST') }}
-                    </div>
-                    <svg class="feather icon" @click="showDialog(5)">
-                      <use href="#plus-square" />
-                    </svg>
-                  </div>
-                  <ul class="nav masthead-nav">
-                    <li
-                      ng-repeat="i in myplaylists track by $index"
-                      ng-class="{ 'active':window_type=='list' && ( ('/playlist?list_id='+i.info.id) === getCurrentUrl() ) }"
-                      ng-click="showPlaylist(i.info.id)"
-                      drag-drop-zone
-                      drag-zone-type="'application/listen1-myplaylist'"
-                      drop-zone-ondrop="onSidebarPlaylistDrop('my', i.info.id, arg1, arg2, arg3)"
-                      draggable="true"
-                      sortable="true"
-                      drag-zone-object="i"
-                      drag-zone-title="i.info.title"
-                    >
-                      <div class="sidebar-block">
-                        <svg class="feather">
-                          <use href="#disc" />
-                        </svg>
-                        <a>i.info.title</a>
-                      </div>
-                    </li>
-          </ul>-->
-          <!-- <div class="menu-title" ng-init="loadFavoritePlaylist();">
-                    <div class="title">
-                      {{ $t('_FAVORITED_PLAYLIST') }}
-                    </div>
-                  </div>
-                  <ul class="nav masthead-nav">
-                    <li
-                      ng-repeat="i in favoriteplaylists track by $index"
-                      ng-class="{ 'active':window_type=='list' && ( ('/playlist?list_id='+i.info.id) === getCurrentUrl() ) }"
-                      ng-click="showPlaylist(i.info.id, {useCache: false})"
-                      drag-drop-zone
-                      drag-zone-type="'application/listen1-favoriteplaylist'"
-                      drop-zone-ondrop="onSidebarPlaylistDrop('favorite', i.info.id, arg1, arg2, arg3)"
-                      draggable="true"
-                      sortable="true"
-                      drag-zone-object="i"
-                      drag-zone-title="i.info.title"
-                    >
-                      <div class="sidebar-block">
-                        <svg class="feather">
-                          <use href="#disc" />
-                        </svg>
-                        <a>i.info.title</a>
-                      </div>
-                    </li>
-          </ul>-->
-        </div>
-      </div>
+      <Sidebar></Sidebar>
 
       <div class="content" ng-controller="InstantSearchController">
         <div class="navigation">
@@ -859,7 +750,7 @@ import useSearch from '../composition/search';
 import useSettings from '../composition/settings';
 import { setLocale } from '../i18n';
 import { l1Player } from '../services/l1_player';
-
+import Sidebar from '../components/Sidebar.vue';
 
 const { t } = useI18n();
 const { player, playerListener } = usePlayer()
@@ -916,9 +807,6 @@ const toggleNowPlaying = () => {
   } else {
     window_type = '';
   }
-};
-const is_login = (platform) => {
-  return false;
 };
 const newDialogOption = (option) => {
   dialog_type = option;

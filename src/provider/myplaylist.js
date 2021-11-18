@@ -23,20 +23,16 @@ const myplaylistFactory = () => {
     }
     return key;
   }
-  function show_myplaylist(playlist_type) {
-    return {
-      async success(fn) {
-        let playlists = await iDB.Playlists.where('type').equals(playlist_type).toArray();
-        const resultPromise = playlists.reduce(async (res, id) => {
-          //const playlist = localStorage.getObject(id);
-          const playlist = await iDB.Tracks.where('playlist').equals(id).toArray();
-          res.push(playlist);
-          return res;
-        }, []);
-        const result = await Promise.all(resultPromise);
-        return fn({ result });
-      }
-    };
+  async function get_myplaylists_list(playlist_type) {
+    let playlists = await iDB.Playlists.where('type').equals(playlist_type).toArray();
+    // const resultPromise = playlists.map(async (res, id) => {
+    //   //const playlist = localStorage.getObject(id);
+    //   const playlist = await iDB.Tracks.where('playlist').equals(id).toArray();
+    //   res.push(playlist);
+    //   return res;
+    // }, []);
+    // const result = await Promise.all(resultPromise);
+    return playlists;
   }
 
   function get_myplaylist(url) {
@@ -228,7 +224,7 @@ const myplaylistFactory = () => {
   }
 
   return {
-    show_myplaylist,
+    get_myplaylists_list,
     save_myplaylist,
     get_playlist: get_myplaylist,
     remove_myplaylist,
