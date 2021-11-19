@@ -32,7 +32,7 @@ class Setting {
   static readonly INDEX_STRING = '&key';
 }
 
-class Playlist {
+export class Playlist {
   id!: string;
   title!: string;
   cover_img_url!: string;

@@ -79,7 +79,7 @@
         <li
           v-for="(i, index) in favoriteplaylists"
           :key="index"
-          :class="{ active: window_type == 'list' && '/playlist/' + i.id === $router.currentRoute.path }"
+          :class="{ active: route.path === `/playlist/${i.id}`}"
           @click="$router.push(`/playlist/${i.id}`)"
           drag-drop-zone
           drag-zone-type="'application/listen1-favoriteplaylist'"
@@ -102,18 +102,19 @@
 </script>
 
 <script setup lang="ts">
-import { onMounted } from '@vue/runtime-core';
+import { onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
-import MediaService from '../services/MediaService';
+import type { Playlist } from '../services/DBService';
 import $event from '../services/EventService';
-
+import MediaService from '../services/MediaService';
+import { useRoute } from 'vue-router';
 const isChrome = true;
-
+const route = useRoute();
 const { t } = useI18n();
 const is_login = (platform: string) => {
   return false;
 };
-let favoriteplaylists = $ref<unknown[]>([]);
+let favoriteplaylists = $ref<Playlist[]>([]);
 
 const refreshFav = () => {
   MediaService.showFavPlaylist().then((res) => (favoriteplaylists = res));
