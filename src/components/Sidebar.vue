@@ -20,7 +20,8 @@
         <li
           v-if="!isChrome"
           @click="showPlaylist('lmplaylist_reserve')"
-          :class="{ active: window_type == 'list' && '/playlist?list_id=lmplaylist_reserve' === getCurrentUrl() }">
+          :class="{ active: window_type == 'list' && '/playlist?list_id=lmplaylist_reserve' === getCurrentUrl() }"
+        >
           <div class="sidebar-block">
             <span class="icon li-featured-list" />
             <a>{{ t('_LOCAL_MUSIC') }}</a>
@@ -29,7 +30,8 @@
         <li
           v-if="is_login('netease')"
           @click="showTag(6, { platform: 'netease', user: musicAuth.netease })"
-          :class="{ active: current_tag == 6 && tag_params.platform == 'netease' && window_url_stack.length == 0 }">
+          :class="{ active: current_tag == 6 && tag_params.platform == 'netease' && window_url_stack.length == 0 }"
+        >
           <div class="sidebar-block">
             <vue-feather type="globe" />
             <a>{{ t('_MY_NETEASE') }}</a>
@@ -38,7 +40,8 @@
         <li
           v-if="is_login('qq')"
           @click="showTag(6, { platform: 'qq', user: musicAuth.qq })"
-          :class="{ active: current_tag == 6 && tag_params.platform == 'qq' && window_url_stack.length == 0 }">
+          :class="{ active: current_tag == 6 && tag_params.platform == 'qq' && window_url_stack.length == 0 }"
+        >
           <div class="sidebar-block">
             <vue-feather type="globe" />
             <a>{{ t('_MY_QQ') }}</a>
@@ -46,9 +49,7 @@
         </li>
       </ul>
       <div class="menu-title" ng-init="loadMyPlaylist();">
-        <div class="title">
-          {{ t('_CREATED_PLAYLIST') }}
-        </div>
+        <div class="title">{{ t('_CREATED_PLAYLIST') }}</div>
         <vue-feather type="plus-square" />
       </div>
       <ul class="nav masthead-nav">
@@ -63,7 +64,8 @@
           draggable="true"
           sortable="true"
           drag-zone-object="i"
-          drag-zone-title="i.info.title">
+          drag-zone-title="i.info.title"
+        >
           <div class="sidebar-block">
             <vue-feather type="disc" />
             <a>{{ i.title }}</a>
@@ -71,15 +73,13 @@
         </li>
       </ul>
       <div class="menu-title">
-        <div class="title">
-          {{ t('_FAVORITED_PLAYLIST') }}
-        </div>
+        <div class="title">{{ t('_FAVORITED_PLAYLIST') }}</div>
       </div>
       <ul class="nav masthead-nav">
         <li
           v-for="(i, index) in favoriteplaylists"
           :key="index"
-          :class="{ active: route.path === `/playlist/${i.id}`}"
+          :class="{ active: route.path === `/playlist/${i.id}` }"
           @click="$router.push(`/playlist/${i.id}`)"
           drag-drop-zone
           drag-zone-type="'application/listen1-favoriteplaylist'"
@@ -87,7 +87,8 @@
           draggable="true"
           sortable="true"
           drag-zone-object="i"
-          drag-zone-title="i.info.title">
+          drag-zone-title="i.info.title"
+        >
           <div class="sidebar-block">
             <vue-feather type="disc" />
             <a>{{ i.title }}</a>
