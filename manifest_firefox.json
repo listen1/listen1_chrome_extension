@@ -43,6 +43,7 @@
     "*://*.kugou.com/",
     "*://*.kuwo.cn/",
     "*://*.bilibili.com/*",
+    "*://*.bilivideo.com/*",
     "*://*.migu.cn/*",
     "*://api.github.com/*",
     "*://github.com/*",
