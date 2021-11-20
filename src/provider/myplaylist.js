@@ -25,7 +25,9 @@ const myplaylistFactory = () => {
     return key;
   }
   async function get_myplaylists_list(playlist_type) {
+    const order = await iDB.Settings.get({ key: playlist_type + 'playlist_order' }) || [];
     let playlists = await iDB.Playlists.where('type').equals(playlist_type).toArray();
+    playlists = order.map((id) => playlists.find(playlist => playlist.id === id));
     // const resultPromise = playlists.map(async (res, id) => {
     //   //const playlist = localStorage.getObject(id);
     //   const playlist = await iDB.Tracks.where('playlist').equals(id).toArray();
@@ -36,26 +38,21 @@ const myplaylistFactory = () => {
     return playlists;
   }
 
-  function get_myplaylist(url) {
+  async function get_myplaylist(url) {
     const list_id = getParameterByName('list_id', url);
-
-    return {
-      async success(fn) {
-        const playlistInfo = await iDB.Playlists.get(list_id);
-        let playlist = {
-          info: playlistInfo,
-        };
-        // clear url field when load old playlist
-        if (playlistInfo) {
-          playlist.tracks = await iDB.Tracks.where('playlist').equals(list_id).toArray().then(tracks =>
-            playlistInfo.order ? playlistInfo.order.map(id => tracks.find(track => track.id = id)) : tracks,
-          );
-        } else {
-          playlist = null;
-        }
-        fn(playlist);
-      }
+    const playlistInfo = await iDB.Playlists.get(list_id);
+    let playlist = {
+      info: playlistInfo,
     };
+    // clear url field when load old playlist
+    if (playlistInfo) {
+      playlist.tracks = await iDB.Tracks.where('playlist').equals(list_id).toArray().then(tracks =>
+        playlistInfo.order ? playlistInfo.order.map(id => tracks.find(track => track.id = id)) : tracks,
+      );
+    } else {
+      playlist = null;
+    }
+    return playlist;
   }
 
   function guid() {
@@ -94,15 +91,19 @@ const myplaylistFactory = () => {
     const playlist = await playlistObj;
 
     const playlistInfo = { ...playlist.info };
-    playlistInfo.order = playlist.tracks.map(track => track.id);
 
     // update listid
     let playlist_id = '';
     if (playlist_type === 'my') {
       playlist_id = `myplaylist_${guid()}`;
+      playlistInfo.id = playlist_id;
       playlistInfo.type = 'my';
+      playlistInfo.order = playlist.tracks.map(track => track.id);
       playlist.tracks.forEach(track => track.playlist = playlist_id);
-      await iDB.transaction('rw', iDB.Tracks, iDB.Playlists, async () => {
+      await iDB.transaction('rw', [iDB.Settings, iDB.Tracks, iDB.Playlists], async () => {
+        await iDB.Settings.where('key')
+          .equals('my_playlist_order')
+          .modify((order) => order.value.push(playlist_id));
         await iDB.Playlists.put(playlistInfo);
         await iDB.Tracks.where('playlist').equals(playlist_id).delete();
         await iDB.Tracks.bulkAdd(playlist.tracks);
@@ -111,12 +112,16 @@ const myplaylistFactory = () => {
     } else if (playlist_type === 'favorite') {
       playlist_id = playlist.info.id;
       playlistInfo.type = 'favorite';
-      playlist.tracks.forEach(track => track.playlist = playlist_id);
+      await iDB.Settings.where('key')
+        .equals('favorite_playlist_order')
+        .modify((order) => order.value.push(playlist_id));
       await iDB.Playlists.put(playlistInfo);
 
       // remove all tracks info, cause favorite playlist always load latest
     }
-    EventService.emit(`playlist:${playlist_type}:update`)
+    EventService.emit(`playlist:${playlist_type}:update`);
+
+    return playlist_id;
   };
 
   const remove_myplaylist = async (playlist_type, playlist_id) => {
