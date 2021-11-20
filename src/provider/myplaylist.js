@@ -134,7 +134,7 @@ const myplaylistFactory = () => {
         .equals(playlist_type + '_playlist_order')
         .modify((order) => {
           if (order.value.includes(playlist_id))
-            order.value.slice(order.value.indexOf(playlist_id), 1);
+            order.value.splice(order.value.indexOf(playlist_id), 1);
         })
       await iDB.Playlists.where('id').equals(playlist_id).delete();
       await iDB.Tracks.where('playlist').equals(playlist_id).delete();
