@@ -26,24 +26,24 @@
                 <span>{{ $t('_ADD_LOCAL_SONGS') }}</span>
               </div>
             </div>-->
-            <!-- <div v-show="!is_mine && !is_local" class="playlist-button clone-button" ng-click="clonePlaylist(list_id)">
+            <div v-show="!is_mine && !is_local" class="playlist-button clone-button" @click="clonePlaylist(list_id)">
               <div class="play-list">
                 <span class="icon li-songlist" />
-                <span>{{ $t('_ADD_TO_PLAYLIST') }}</span>
+                <span>{{ t('_ADD_TO_PLAYLIST') }}</span>
               </div>
             </div>
             <div
               v-show="is_mine && !is_local"
               class="playlist-button edit-button"
-              ng-click="showDialog(3, {list_id: list_id, playlist_title: playlist_title, cover_img_url: cover_img_url})"
+              @click="showDialog(3, {list_id: list_id, playlist_title: playlist_title, cover_img_url: cover_img_url})"
             >
               <div class="play-list">
                 <svg class="feather">
                   <use href="#edit" />
                 </svg>
-                <span>{{ $t('_EDIT') }}</span>
+                <span>{{ t('_EDIT') }}</span>
               </div>
-            </div>-->
+            </div>
             <div v-show="!is_mine && !is_local" class="playlist-button fav-button" @click="favoritePlaylist(list_id)">
               <div class="play-list" :class="{'favorited':is_favorite,'notfavorite':!is_favorite}">
                 <vue-feather type="star"></vue-feather>
@@ -53,7 +53,7 @@
             <div
               v-show="isChrome && is_favorite && !is_local"
               class="playlist-button edit-button"
-              ng-click="closeWindow();showPlaylist(list_id)"
+              @click="closeWindow();showPlaylist(list_id)"
             >
               <div class="play-list">
                 <span class="icon li-loop" />
@@ -73,13 +73,13 @@
             <div
               v-show="is_mine && !is_local"
               class="playlist-button edit-button"
-              ng-click="showDialog(6)"
+              @click="showDialog(6)"
             >
               <div class="play-list">
                 <svg class="feather">
                   <use href="#git-merge" />
                 </svg>
-                <span>_IMPORT</span>
+                <span>{{ t('_IMPORT') }}</span>
               </div>
             </div>
           </div>
@@ -135,7 +135,7 @@
           </div>
           <div class="tools">
             <!-- <a v-show="song.options" title="_ADD_TO_QUEUE" class="detail-add-button" add-without-play="song"><span class="icon li-add" /></a> -->
-            <!-- <a v-show="song.options" title="_ADD_TO_PLAYLIST" class="detail-fav-button" ng-click="showDialog(0, song)"><span class="icon li-songlist" /></a> -->
+            <a v-show="song.options" title="_ADD_TO_PLAYLIST" class="detail-fav-button" @click="showModal('AddToPlaylist', { tracks: [song] })"><span class="icon li-songlist" /></a>
             <!-- <a
               v-show="song.options && (is_mine == '1' || is_local)"
               title="_REMOVE_FROM_PLAYLIST"
@@ -146,7 +146,7 @@
             </a>-->
             <a
               v-show="song.options && !is_local"
-              title="_ORIGIN_LINK"
+              :title="t('_ORIGIN_LINK')"
               class="source-button"
               @click="openUrl(song.source_url)"
             >
@@ -163,7 +163,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
 import { l1Player } from '../services/l1_player';
-import { onMounted } from 'vue';
+import { onMounted, inject } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 import MediaService from '../services/MediaService';
@@ -235,6 +235,7 @@ const removeFavoritePlaylist = async (list_id) => {
   await MediaService.removeMyPlaylist(list_id, 'favorite');
   notyf.success(t('_UNFAVORITE_PLAYLIST_SUCCESS'));
 };
+const showModal = inject('showModal');
 </script>
 
 <style>

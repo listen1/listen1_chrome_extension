@@ -1574,70 +1574,9 @@ svg.searchspinner {
 /* footer end */
 
 /* dialog start */
-.shadow {
-  position: fixed;
-  background: rgba(30, 30, 30, 0.9);
-  _position: absolute;
-  z-index: 9999;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  width: 100%;
-  height: 100%;
-  background-image: url(data:image/gif;base64,R0lGODlhAQABAID/AMDAwAAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==);
-}
-
-.dialog {
-  position: absolute;
-  top: 120px;
-  width: 400px;
-  height: 430px;
-  z-index: 10000;
-  overflow: hidden;
-  border-radius: 4px;
-  background-color: var(--dialog-background-color);
-  color: var(--dialog-text-color);
-  box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
-}
-
-.dialog-header {
-  height: 30px;
-  font-size: 15px;
-  font-weight: bold;
-  text-align: left;
-  padding: 12px;
-}
-
-.dialog-header .dialog-close {
-  float: right;
-  font-size: 26px;
-  cursor: pointer;
-  margin-top: -10px;
-}
-
-.dialog-body {
-  padding: 0 20px;
-  height: 370px;
-  overflow-y: auto;
-  background-color: var(--dialog-background-color);
-}
-
-.dialog-body .buttons {
-  display: flex;
-  justify-content: center;
-  margin-top: 20px;
-}
-
-.dialog-body .buttons .confirm-button {
-  margin-right: 20px;
-}
 .dialog .detail-songlist li:hover {
   background-color: #e3e3e5;
   cursor: pointer;
-}
-.dialog-body input {
-  width: 100%;
 }
 
 .dialog-playlist,
