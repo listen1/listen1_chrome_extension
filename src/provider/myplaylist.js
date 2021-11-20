@@ -132,31 +132,21 @@ const myplaylistFactory = () => {
     EventService.emit(`playlist:${playlist_type}:update`);
   };
 
-  function add_track_to_myplaylist(playlist_id, track) {
-    const playlist = localStorage.getObject(playlist_id);
-    if (playlist == null) {
+  async function add_track_to_myplaylist(playlist_id, tracks) {
+    const playlist = await iDB.Playlists.get({ id: playlist_id });
+    if (!playlist) {
       return null;
     }
-    // new track will always insert in beginning of playlist
-    if (Array.isArray(track)) {
-      playlist.tracks = track.concat(playlist.tracks);
-    } else {
-      playlist.tracks.unshift(track);
-    }
-
     // dedupe
-    const newTracks = [];
-    const trackIds = [];
-
-    playlist.tracks.forEach((tracki) => {
-      if (trackIds.indexOf(tracki.id) === -1) {
-        newTracks.push(tracki);
-        trackIds.push(tracki.id);
-      }
+    const filterTracks = tracks.filter((i) => !playlist.order.includes(i.id));
+    playlist.order = playlist.order.concat(filterTracks.map(i => i.id));
+    filterTracks.forEach(i => i.playlist = playlist_id);
+    await iDB.transaction('rw', [iDB.Playlists, iDB.Tracks], () => {
+      // new track will always insert in beginning of playlist
+      iDB.Playlists.put(playlist);
+      iDB.Tracks.bulkPut(filterTracks);
     });
-    playlist.tracks = newTracks;
 
-    localStorage.setObject(playlist_id, playlist);
     return playlist;
   }
 
@@ -189,24 +179,16 @@ const myplaylistFactory = () => {
     localStorage.setObject(playlist_id, playlist);
   }
 
-  function create_myplaylist(playlist_title, track) {
-    const playlist = {};
-
-    const info = {
-      cover_img_url: 'images/mycover.jpg',
-      title: playlist_title,
-      id: '',
-      source_url: ''
+  function create_myplaylist(playlist_title, tracks) {
+    const playlist = {
+      info: {
+        cover_img_url: 'images/mycover.jpg',
+        title: playlist_title,
+        id: '',
+        source_url: '',
+      },
+      tracks,
     };
-
-    playlist.is_mine = 1;
-    playlist.info = info;
-
-    if (Array.isArray(track)) {
-      playlist.tracks = track;
-    } else {
-      playlist.tracks = [track];
-    }
 
     // notice: create only used by my playlist, favorite created by clone interface
     save_myplaylist('my', playlist);
