@@ -1,14 +1,14 @@
 /* eslint-disable no-unused-vars */
 /* global GithubClient */
 chrome.browserAction.onClicked.addListener((tab) => {
-  chrome.tabs.create(
-    {
-      url: chrome.extension.getURL('index.html')
-    },
-    (new_tab) => {
-      // Tab opened.
+  const url = chrome.extension.getURL('index.html');
+  chrome.tabs.query({ url }, (tabs) => {
+    if (tabs.length === 0) {
+      chrome.tabs.create({ url });
+    } else {
+      chrome.tabs.update(tabs[0].id, { active: true });
     }
-  );
+  });
 });
 
 function hack_referer_header(details) {
