@@ -102,7 +102,7 @@
 </script>
 
 <script setup lang="ts">
-import { onMounted } from '@vue/runtime-core';
+import { onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import MediaService from '../services/MediaService';
 import $event from '../services/EventService';
@@ -114,16 +114,18 @@ const is_login = (platform: string) => {
   return false;
 };
 let favoriteplaylists = $ref<unknown[]>([]);
+let myplaylists = $ref<unknown[]>([]);
 
 const refreshFav = () => {
   MediaService.showFavPlaylist().then((res) => (favoriteplaylists = res));
 };
 const refreshMy = () => {
-  MediaService.showMyPlaylist().then((res) => (favoriteplaylists = res));
+  MediaService.showMyPlaylist().then((res) => (myplaylists = res));
 };
 
 onMounted(() => {
-  MediaService.showFavPlaylist().then((res) => (favoriteplaylists = res));
+  refreshMy();
+  refreshFav();
 });
 
 $event.on('playlist:favorite:update', refreshFav);
