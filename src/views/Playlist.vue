@@ -26,7 +26,7 @@
                 <span>{{ $t('_ADD_LOCAL_SONGS') }}</span>
               </div>
             </div>-->
-            <div v-show="!is_mine && !is_local" class="playlist-button clone-button" @click="clonePlaylist(list_id)">
+            <div v-show="!is_mine && !is_local" class="playlist-button clone-button" @click="saveAsMyPlaylist(list_id)">
               <div class="play-list">
                 <span class="icon li-songlist" />
                 <span>{{ t('_ADD_TO_PLAYLIST') }}</span>
@@ -234,6 +234,10 @@ const addFavoritePlaylist = async (list_id) => {
 const removeFavoritePlaylist = async (list_id) => {
   await MediaService.removeMyPlaylist(list_id, 'favorite');
   notyf.success(t('_UNFAVORITE_PLAYLIST_SUCCESS'));
+};
+const saveAsMyPlaylist = async (list_id) => {
+  await MediaService.clonePlaylist(list_id, 'my');
+  notyf.success(t('_ADD_TO_PLAYLIST_SUCCESS'));
 };
 const showModal = inject('showModal');
 </script>

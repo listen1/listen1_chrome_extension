@@ -47,7 +47,7 @@ const myplaylistFactory = () => {
     // clear url field when load old playlist
     if (playlistInfo) {
       playlist.tracks = await iDB.Tracks.where('playlist').equals(list_id).toArray().then(tracks =>
-        playlistInfo.order ? playlistInfo.order.map(id => tracks.find(track => track.id = id)) : tracks,
+        playlistInfo.order ? playlistInfo.order.map(id => tracks.find(track => track.id === id)) : tracks,
       );
     } else {
       playlist = null;
