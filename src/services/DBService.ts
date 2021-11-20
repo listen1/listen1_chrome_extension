@@ -85,6 +85,15 @@ iDB.tables.forEach((table) => {
   table.hook('updating', updateHook);
 });
 
+iDB.Playlists.get({ id: 'current' }).then((playlist)=>{
+  if(!playlist) {
+    iDB.Playlists.put({
+      id: 'current', title: 'current', cover_img_url: '', type: 'current',
+      order: [],
+    });
+  }
+});
+
 export function dbMigrate() {
   const localCurrentPlaying = JSON.parse(localStorage.getItem('current-playing') || '[]');
   iDB.Playlists.put({
