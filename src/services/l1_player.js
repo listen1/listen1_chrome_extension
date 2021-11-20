@@ -132,17 +132,16 @@ export const l1Player = {
     getPlayerAsync(mode, async (player) => {
       if (!player.playing) {
         // load local storage settings
-        // const localCurrentPlaying = localStorage.getObject('current-playing');
+        const currentPlaylist = await iDB.Playlists.get({ id: 'current' });
         const localCurrentPlaying = await iDB.Tracks.where('playlist').equals('current').toArray();
+        const currentPlaying = currentPlaylist.order.map((id) => localCurrentPlaying.find(track => track.id = id));
         const localPlayerSettings = localStorage.getObject('player-settings');
 
         if (!player.playlist.length) {
-          if (localCurrentPlaying !== null) {
-            localCurrentPlaying.forEach((i) => {
-              i.disabled = false;
-            });
-            player.setNewPlaylist(localCurrentPlaying);
-          }
+          currentPlaying.forEach((i) => {
+            i.disabled = false;
+          });
+          player.setNewPlaylist(currentPlaying);
         }
 
         if (localPlayerSettings !== null) {

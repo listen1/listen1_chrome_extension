@@ -33,7 +33,9 @@ export default defineConfig({
       name: 'inject-css',
       buildStart() {
         const $ = chromeExtPlugin._plugins.html.cache.html$[0];
-        $('head').last().append($('<link rel="stylesheet" href="assets/main.css">'));
+        if($('head link').last().attr('href') !== 'assets/main.css') {
+          $('head').last().append($('<link rel="stylesheet" href="assets/main.css">'));
+        }
       },
     },
     // @ts-ignore: Type Mismatch Error

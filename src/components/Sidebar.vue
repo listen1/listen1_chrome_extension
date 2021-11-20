@@ -115,17 +115,20 @@ const { t } = useI18n();
 const is_login = (platform: string) => {
   return false;
 };
+
 let favoriteplaylists = $ref<Playlist[]>([]);
+let myplaylists = $ref<unknown[]>([]);
 
 const refreshFav = () => {
   MediaService.showFavPlaylist().then((res) => (favoriteplaylists = res));
 };
 const refreshMy = () => {
-  MediaService.showMyPlaylist().then((res) => (favoriteplaylists = res));
+  MediaService.showMyPlaylist().then((res) => (myplaylists = res));
 };
 
 onMounted(() => {
-  MediaService.showFavPlaylist().then((res) => (favoriteplaylists = res));
+  refreshMy();
+  refreshFav();
 });
 
 $event.on('playlist:favorite:update', refreshFav);

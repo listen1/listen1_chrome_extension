@@ -4,7 +4,7 @@ import iDB from '../services/DBService';
 
 setPrototypeOfLocalStorage();
 
-const nameMapping = {
+const nameMapping: Record<string, string> = {
   language: 'language',
   enableAutoChooseSource: 'enable_auto_choose_source',
   enableStopWhenClose: 'enable_stop_when_close',
@@ -17,7 +17,7 @@ const nameMapping = {
   enableLyricTranslation: 'enable_lyric_translation',
   theme: 'theme'
 };
-const settings = reactive({
+const settings: Record<string, unknown> = reactive({
   language: 'zh-CN',
   enableAutoChooseSource: false,
   enableStopWhenClose: true,
@@ -38,19 +38,19 @@ async function flushSettings() {
   }))
   );
 }
-function setSettings(newValue) {
+function setSettings(newValue: Record<string, unknown>) {
   for (const [key, value] of Object.entries(newValue)) {
     settings[key] = value;
     iDB.Settings.put({ key: nameMapping[key] || key, value });
   }
 }
 async function loadSettings() {
-  const dbRes = (await iDB.Settings.toArray()).reduce((ret, cur) => {
+  const dbRes: Record<string, unknown> = (await iDB.Settings.toArray()).reduce((ret: Record<string, unknown>, cur) => {
     ret[cur.key] = cur.value;
     return ret;
   }, {});
   const localSettings =
-    Object.keys(nameMapping).reduce((res, cur) => {
+    Object.keys(nameMapping).reduce((res: Record<string, unknown>, cur) => {
       res[cur] = dbRes[nameMapping[cur]];
       return res;
     }, {});
@@ -62,7 +62,7 @@ async function loadSettings() {
 }
 
 export function migrateSettings() {
-  const lsSettings = Object.keys(nameMapping).reduce((res, cur) => ({ ...res, [cur]: localStorage.getObject(nameMapping[cur]) }));
+  const lsSettings = Object.keys(nameMapping).reduce((res, cur) => ({ ...res, [cur]: localStorage.getObject(nameMapping[cur]) }), {});
   setSettings(lsSettings);
 }
 

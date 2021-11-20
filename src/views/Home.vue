@@ -1,4 +1,6 @@
 <template>
+  <Modal ref="modalRef"></Modal>
+
   <div class="wrap">
     <!-- dialog-->
     <div v-show="is_dialog_hidden !== 1" class="shadow" />
@@ -9,37 +11,9 @@
       </div>
       <div class="dialog-body">
         <!-- choose playlist dialog-->
-        <ul v-show="dialog_type == 0" class="dialog-playlist">
-          <li class="detail-add" @click="newDialogOption(1)">
-            <img src="../images/mycover.jpg" />
-            <h2>_CREATE_PLAYLIST</h2>
-          </li>
-          <li
-            ng-repeat="playlist in myplaylist track by $index"
-            ng-class-odd="'odd'"
-            ng-class-even="'even'"
-            ng-click="chooseDialogOption(playlist.info.id)"
-          >
-            <img ng-src=" playlist.info.cover_img_url " />
-            <h2>playlist.info.title</h2>
-          </li>
-        </ul>
+
         <!-- create new playlist dialog-->
-        <div v-show="dialog_type == 1" class="dialog-newplaylist">
-          <input
-            class="form-control"
-            type="text"
-            placeholder="_INPUT_NEW_PLAYLIST_TITLE"
-            ng-model="newlist_title"
-          />
-          <div class="buttons">
-            <button
-              class="btn btn-primary confirm-button"
-              ng-click="createAndAddPlaylist()"
-            >_CONFIRM</button>
-            <button class="btn btn-default" ng-click="cancelNewDialog(0)">_CANCEL</button>
-          </div>
-        </div>
+
         <!-- edit playlist dialog-->
         <div v-show="dialog_type == 3" class="dialog-editplaylist">
           <div class="form-group">
@@ -739,7 +713,7 @@
 <script setup>
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import 'notyf/notyf.min.css';
-import { onMounted } from 'vue';
+import { onMounted, provide } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 import '../assets/css/common.css';
@@ -750,6 +724,8 @@ import useSearch from '../composition/search';
 import useSettings from '../composition/settings';
 import { setLocale } from '../i18n';
 import { l1Player } from '../services/l1_player';
+import Modal from '../components/Modal.vue';
+import DefaultModal from '../components/modals/DefaultModal.vue';
 import Sidebar from '../components/Sidebar.vue';
 
 const { t } = useI18n();
@@ -856,6 +832,11 @@ const toggleMuteStatus = () => {
 const playFromPlaylist = (song) => {
   l1Player.playById(song.id);
 };
+
+let modalRef = $ref(null);
+provide('showModal', (type, opt) => {
+  modalRef.showModal(type, opt);
+});
 onMounted(() => {
   if ('windowControlsOverlay' in navigator) {
     const { x } = navigator.windowControlsOverlay.getBoundingClientRect();

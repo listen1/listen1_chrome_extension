@@ -98,7 +98,7 @@ const PROVIDERS = [
     searchable: true,
     support_login: false,
     id: 'th'
-  }
+  },
   //   {
   //     name: "localmusic",
   //     instance: localmusic,
@@ -107,14 +107,14 @@ const PROVIDERS = [
   //     support_login: false,
   //     id: "lm",
   //   },
-  //   {
-  //     name: "myplaylist",
-  //     instance: myplaylist,
-  //     searchable: false,
-  //     hidden: true,
-  //     support_login: false,
-  //     id: "my",
-  //   },
+  {
+    name: "myplaylist",
+    instance: myplaylist,
+    searchable: false,
+    hidden: true,
+    support_login: false,
+    id: "my",
+  },
 ];
 
 function getProviderByName(sourceName) {
@@ -212,17 +212,10 @@ const MediaService = {
     return myplaylist.get_myplaylists_list("favorite");
   },
 
-  isMyPlaylist(listId) {
+  async isMyPlaylist(listId) {
     const url = `/playlist?list_id=${listId}`;
-    return new Promise((res)=>{
-      myplaylist.get_playlist(url).success((playlist)=> {
-        if(playlist) {
-          res(true)
-        }
-        res(false);
-      });
-    });
-
+    const playlist = await myplaylist.get_playlist(url);
+    return !!playlist;
   },
 
   getPlaylist(listId) {
@@ -241,22 +234,19 @@ const MediaService = {
     return provider.get_playlist(url);
   },
 
-  clonePlaylist(id, type) {
+  async clonePlaylist(id, type) {
     const provider = getProviderByItemId(id);
     const url = `/playlist?list_id=${id}`;
-    return myplaylist.save_myplaylist(type, provider.get_playlist(url));
+    return myplaylist.save_myplaylist(type, await provider.get_playlist(url));
   },
 
   removeMyPlaylist(id, type) {
     return myplaylist.remove_myplaylist(type, id);
   },
 
-  //   addMyPlaylist(id, track) {
-  //     const newPlaylist = myplaylist.add_track_to_myplaylist(id, track);
-  //     return {
-  //       success: (fn) => fn(newPlaylist),
-  //     };
-  //   },
+  async addMyPlaylist(id, tracks) {
+    return myplaylist.add_track_to_myplaylist(id, tracks);
+  },
   //   insertTrackToMyPlaylist(id, track, to_track, direction) {
   //     const newPlaylist = myplaylist.insert_track_to_myplaylist(
   //       id,
@@ -285,14 +275,9 @@ const MediaService = {
   //     return provider.remove_from_playlist(id, track);
   //   },
 
-  //   createMyPlaylist(title, track) {
-  //     myplaylist.create_myplaylist(title, track);
-  //     return {
-  //       success: (fn) => {
-  //         fn();
-  //       },
-  //     };
-  //   },
+  createMyPlaylist(title, track) {
+    myplaylist.create_myplaylist(title, track);
+  },
   //   insertMyplaylistToMyplaylists(
   //     playlistType,
   //     playlistId,
