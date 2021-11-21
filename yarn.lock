@@ -3013,7 +3013,7 @@ vue-tsc@^0.29.3:
     "@volar/shared" "0.29.3"
     vscode-vue-languageservice "0.29.3"
 
-vue@^3.2.22:
+vue@^3.2.21:
   version "3.2.22"
   resolved "https://registry.yarnpkg.com/vue/-/vue-3.2.22.tgz#46e4dd89e98cc4b851ae1eb35f00ced413a34bb7"
   integrity sha512-KD5nZpXVZquOC6926Xnp3zOvswrUyO9Rya7ZUoxWFQEjFDW4iACtwzubRB4Um2Om9kj6CaJOqAVRDSFlqLpdgw==
