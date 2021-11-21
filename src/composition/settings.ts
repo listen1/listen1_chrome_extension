@@ -1,6 +1,6 @@
 import { reactive } from 'vue';
-import { setPrototypeOfLocalStorage } from '../utils';
 import iDB from '../services/DBService';
+import { setPrototypeOfLocalStorage } from '../utils';
 
 setPrototypeOfLocalStorage();
 
@@ -32,16 +32,17 @@ const settings: Record<string, unknown> = reactive({
 });
 
 async function flushSettings() {
-  await iDB.Settings.bulkPut(Object.keys(settings).map((key) => ({
-    key: nameMapping[key] || key,
-    value: settings[key],
-  }))
+  await iDB.Settings.bulkPut(
+    Object.keys(settings).map((key) => ({
+      key,
+      value: settings[key]
+    }))
   );
 }
 function setSettings(newValue: Record<string, unknown>) {
   for (const [key, value] of Object.entries(newValue)) {
     settings[key] = value;
-    iDB.Settings.put({ key: nameMapping[key] || key, value });
+    iDB.Settings.put({ key, value });
   }
 }
 async function loadSettings() {
@@ -49,20 +50,18 @@ async function loadSettings() {
     ret[cur.key] = cur.value;
     return ret;
   }, {});
-  const localSettings =
-    Object.keys(nameMapping).reduce((res: Record<string, unknown>, cur) => {
-      res[cur] = dbRes[nameMapping[cur]];
-      return res;
-    }, {});
-  if (Object.values(localSettings).some((value) => value === undefined)) {
+  if (Object.values(dbRes).some((value) => value === undefined)) {
     flushSettings();
   } else {
-    setSettings(localSettings);
+    setSettings(dbRes);
   }
 }
 
 export function migrateSettings() {
-  const lsSettings = Object.keys(nameMapping).reduce((res, cur) => ({ ...res, [cur]: localStorage.getObject(nameMapping[cur]) }), {});
+  let lsSettings = Object.keys(nameMapping).reduce((res, cur) => ({ ...res, [cur]: localStorage.getObject(nameMapping[cur]) }), {});
+  if (Object.values(lsSettings).some((value) => value === undefined || value === null)) {
+    lsSettings = settings;
+  }
   setSettings(lsSettings);
 }
 
