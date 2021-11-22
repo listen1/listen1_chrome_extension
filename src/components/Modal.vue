@@ -27,7 +27,6 @@ const showModal = (type = 'DefaultModal', opt: Record<string, unknown> = {}) => 
   show = true;
   modalType = components[type] || DefaultModal;
   options = opt;
-  console.log(type);
 };
 provide('showModal', showModal);
 
