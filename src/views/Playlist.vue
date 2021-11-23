@@ -135,7 +135,7 @@
           </div>
           <div class="tools">
             <!-- <a v-show="song.options" title="_ADD_TO_QUEUE" class="detail-add-button" add-without-play="song"><span class="icon li-add" /></a> -->
-            <a v-show="song.options" title="_ADD_TO_PLAYLIST" class="detail-fav-button" @click="showModal('AddToPlaylist', { tracks: [song] })"><span class="icon li-songlist" /></a>
+            <a v-show="song.options" :title="t('_ADD_TO_PLAYLIST')" class="detail-fav-button" @click="showModal('AddToPlaylist', { tracks: [song] })"><span class="icon li-songlist" /></a>
             <!-- <a
               v-show="song.options && (is_mine == '1' || is_local)"
               title="_REMOVE_FROM_PLAYLIST"
