@@ -38,9 +38,7 @@
               @click="showDialog(3, {list_id: list_id, playlist_title: playlist_title, cover_img_url: cover_img_url})"
             >
               <div class="play-list">
-                <svg class="feather">
-                  <use href="#edit" />
-                </svg>
+                <vue-feather type="edit" />
                 <span>{{ t('_EDIT') }}</span>
               </div>
             </div>
@@ -76,9 +74,7 @@
               @click="showDialog(6)"
             >
               <div class="play-list">
-                <svg class="feather">
-                  <use href="#git-merge" />
-                </svg>
+                 <vue-feather type="git-merge" />
                 <span>{{ t('_IMPORT') }}</span>
               </div>
             </div>
