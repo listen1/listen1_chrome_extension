@@ -461,7 +461,7 @@ export default class netease extends MusicResource {
     };
   }
 
-  static parseUrl(url) {
+  static async parseUrl(url) {
     let result;
     let id = '';
     // eslint-disable-next-line no-param-reassign
@@ -489,11 +489,7 @@ export default class netease extends MusicResource {
         id: `nealbum_${id}`
       };
     }
-    return {
-      success: (fn) => {
-        fn(result);
-      }
-    };
+    return result;
   }
 
   static getPlaylist(url) {

@@ -48,9 +48,9 @@
           </div>
         </li>
       </ul>
-      <div class="menu-title" ng-init="loadMyPlaylist();">
+      <div class="menu-title">
         <div class="title">{{ t('_CREATED_PLAYLIST') }}</div>
-        <vue-feather type="plus-square" />
+        <vue-feather type="plus-square" @click="showModal('ParseUrl', {})"/>
       </div>
       <ul class="nav masthead-nav">
         <li
@@ -103,7 +103,7 @@
 </script>
 
 <script setup lang="ts">
-import { onMounted } from 'vue';
+import { onMounted, inject } from 'vue';
 import { useI18n } from 'vue-i18n';
 import type { Playlist } from '../services/DBService';
 import $event from '../services/EventService';
@@ -130,6 +130,7 @@ onMounted(() => {
   refreshMy();
   refreshFav();
 });
+const showModal = inject('showModal');
 
 $event.on('playlist:favorite:update', refreshFav);
 $event.on('playlist:my:update', refreshMy);

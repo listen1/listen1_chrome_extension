@@ -679,7 +679,7 @@ export default class migu extends MusicResource {
     };
   }
 
-  static parseUrl(url) {
+  static async parseUrl(url) {
     let result;
     // eslint-disable-next-line no-param-reassign
     url = url.replace('music.migu.cn/v3/my/playlist/', 'music.migu.cn/v3/music/playlist/');
@@ -691,11 +691,7 @@ export default class migu extends MusicResource {
         id: `mgplaylist_${regex_result[1]}`
       };
     }
-    return {
-      success: (fn) => {
-        fn(result);
-      }
-    };
+    return result;
   }
 
   static getPlaylist(url) {

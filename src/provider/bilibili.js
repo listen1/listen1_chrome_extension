@@ -106,7 +106,7 @@ export default class bilibili extends MusicResource {
     };
   }
 
-  static parseUrl(url) {
+  static async parseUrl(url) {
     let result;
     const match = /\/\/www.bilibili.com\/audio\/am([0-9]+)/.exec(url);
     if (match != null) {
@@ -116,11 +116,7 @@ export default class bilibili extends MusicResource {
         id: `biplaylist_${playlist_id}`
       };
     }
-    return {
-      success: (fn) => {
-        fn(result);
-      }
-    };
+    return result;
   }
 
   static bootstrapTrack(track, success, failure) {

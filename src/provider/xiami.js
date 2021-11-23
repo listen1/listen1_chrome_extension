@@ -67,13 +67,9 @@ export default class xiami extends MusicResource {
     };
   }
 
-  static parseUrl() {
+  static async parseUrl() {
     let result;
-    return {
-      success: (fn) => {
-        fn(result);
-      }
-    };
+    return result;
   }
 
   static getPlaylist(url) {

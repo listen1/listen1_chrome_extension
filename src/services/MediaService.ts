@@ -142,9 +142,9 @@ function getProviderByName(sourceName: string) {
   return provider;
 }
 
-// function getAllProviders() {
-//   return PROVIDERS.filter((i) => !i.hidden).map((i) => i.instance);
-// }
+function getAllProviders() {
+  return PROVIDERS.filter((i) => !i.hidden).map((i) => i.instance);
+}
 
 function getAllSearchProviders() {
   return PROVIDERS.filter((i) => i.searchable).map((i) => i.instance);
@@ -331,28 +331,17 @@ const MediaService = {
     myplaylist.editMyplaylist(id, title, coverImgUrl);
   },
 
-  //   parseURL(url) {
-  //     return {
-  //       success: (fn) => {
-  //         const providers = getAllProviders();
-  //         Promise.all(
-  //           providers.map(
-  //             (provider) =>
-  //               new Promise((res, rej) =>
-  //                 provider.parseUrl(url).success((r) => {
-  //                   if (r !== undefined) {
-  //                     return rej(r);
-  //                   }
-  //                   return res(r);
-  //                 })
-  //               )
-  //           )
-  //         )
-  //           .then(() => fn({}))
-  //           .catch((result) => fn({ result }));
-  //       },
-  //     };
-  //   },
+  async parseURL(url: string) {
+    const providers = getAllProviders();
+    for (let i = 0; i < providers.length; i++) {
+      const provider = providers[i];
+      const result = await provider.parseUrl(url);
+      if (result != null) {
+        return result;
+      }
+    }
+    return null;
+  },
 
   //   mergePlaylist(source, target) {
   //     const tarData = localStorage.getObject(target).tracks;

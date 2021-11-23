@@ -611,7 +611,7 @@ export default class kuwo extends MusicResource {
           */
   }
 
-  static parseUrl(myurl) {
+  static async parseUrl(myurl) {
     let result;
     let id;
     let url = myurl;
@@ -644,11 +644,7 @@ export default class kuwo extends MusicResource {
         };
       }
     }
-    return {
-      success: (fn) => {
-        fn(result);
-      }
-    };
+    return result;
   }
 
   static getPlaylist(url) {
