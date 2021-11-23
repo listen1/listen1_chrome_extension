@@ -541,7 +541,7 @@ export default class qq extends MusicResource {
     return { status: 'success', data: result };
   }
 
-  static async get_user_created_playlist(url) {
+  static async getUserCreatedPlaylist(url) {
     const user_id = getParameterByName('user_id', url);
     // TODO: load more than size
     const size = 100;
@@ -582,7 +582,7 @@ export default class qq extends MusicResource {
     };
   }
 
-  static async get_user_favorite_playlist(url) {
+  static async getUserFavoritePlaylist(url) {
     const user_id = getParameterByName('user_id', url);
     // TODO: load more than size
     const size = 100;
@@ -620,7 +620,7 @@ export default class qq extends MusicResource {
     };
   }
 
-  static async get_recommend_playlist() {
+  static async getRecommendPlaylist() {
     const target_url = `https://u.y.qq.com/cgi-bin/musicu.fcg?format=json&&loginUin=0&hostUin=0inCharset=utf8&outCharset=utf-8&platform=yqq.json&needNewCode=0&data=${encodeURIComponent(
       JSON.stringify({
         comm: {

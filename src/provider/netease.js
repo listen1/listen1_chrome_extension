@@ -724,15 +724,15 @@ export default class netease extends MusicResource {
     };
   }
 
-  static get_user_created_playlist(url) {
+  static getUserCreatedPlaylist(url) {
     return this.get_user_playlist(url, 'created');
   }
 
-  static get_user_favorite_playlist(url) {
+  static getUserFavoritePlaylist(url) {
     return this.get_user_playlist(url, 'favorite');
   }
 
-  static async get_recommend_playlist() {
+  static async getRecommendPlaylist() {
     const target_url = 'https://music.163.com/weapi/personalized/playlist';
 
     const req_data = {

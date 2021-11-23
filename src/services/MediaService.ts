@@ -443,18 +443,18 @@ const MediaService = {
   //     const provider = getProviderByName(source);
   //     const url = `/get_user_create_playlist?${queryStringify(options)}`;
 
-  //     return provider.get_user_created_playlist(url);
+  //     return provider.getUserCreatedPlaylist(url);
   //   },
   //   getUserFavoritePlaylist(source, options) {
   //     const provider = getProviderByName(source);
   //     const url = `/get_user_favorite_playlist?${queryStringify(options)}`;
 
-  //     return provider.get_user_favorite_playlist(url);
+  //     return provider.getUserFavoritePlaylist(url);
   //   },
   //   getRecommendPlaylist(source) {
   //     const provider = getProviderByName(source);
 
-  //     return provider.get_recommend_playlist();
+  //     return provider.getRecommendPlaylist();
   //   },
   //   logout(source) {
   //     const provider = getProviderByName(source);

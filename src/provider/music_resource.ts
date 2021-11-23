@@ -38,4 +38,13 @@ export default class MusicResource {
   static logout() {
     throw new NotImplementedError('');
   }
+  static getUserCreatedPlaylist(url: string) {
+    throw new NotImplementedError('');
+  }
+  static getUserFavoritePlaylist(url: string) {
+    throw new NotImplementedError('');
+  }
+  static getRecommendPlaylist() {
+    throw new NotImplementedError('');
+  }
 }
