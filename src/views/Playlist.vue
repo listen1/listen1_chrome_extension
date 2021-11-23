@@ -38,9 +38,7 @@
               @click="showDialog(3, {list_id: list_id, playlist_title: playlist_title, cover_img_url: cover_img_url})"
             >
               <div class="play-list">
-                <svg class="feather">
-                  <use href="#edit" />
-                </svg>
+                <vue-feather type="edit" />
                 <span>{{ t('_EDIT') }}</span>
               </div>
             </div>
@@ -76,9 +74,7 @@
               @click="showDialog(6)"
             >
               <div class="play-list">
-                <svg class="feather">
-                  <use href="#git-merge" />
-                </svg>
+                 <vue-feather type="git-merge" />
                 <span>{{ t('_IMPORT') }}</span>
               </div>
             </div>
@@ -109,10 +105,9 @@
           <div class="tools">{{ t('_OPERATION') }}</div>
         </li>
         <li
-          v-for="song in songs"
+          v-for="(song,index) in songs"
           :key="song.id"
-          ng-class-odd="'odd'"
-          ng-class-even="'even'"
+          :class="{'even': index % 2 === 0, 'odd': index % 2 !== 0 }"
           draggable="true"
           drag-drop-zone
           drag-zone-object="song"
@@ -135,7 +130,7 @@
           </div>
           <div class="tools">
             <!-- <a v-show="song.options" title="_ADD_TO_QUEUE" class="detail-add-button" add-without-play="song"><span class="icon li-add" /></a> -->
-            <a v-show="song.options" title="_ADD_TO_PLAYLIST" class="detail-fav-button" @click="showModal('AddToPlaylist', { tracks: [song] })"><span class="icon li-songlist" /></a>
+            <a v-show="song.options" :title="t('_ADD_TO_PLAYLIST')" class="detail-fav-button" @click="showModal('AddToPlaylist', { tracks: [song] })"><span class="icon li-songlist" /></a>
             <!-- <a
               v-show="song.options && (is_mine == '1' || is_local)"
               title="_REMOVE_FROM_PLAYLIST"

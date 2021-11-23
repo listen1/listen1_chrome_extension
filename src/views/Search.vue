@@ -85,10 +85,9 @@
             </li>
             <template v-if="condition.searchType === 0">
               <li
-                v-for="song in result.tracks"
+                v-for="(song,index) in result.tracks"
                 :key="song.id"
-                ng-class-odd="'odd'"
-                ng-class-even="'even'"
+                :class="{'even': index % 2 === 0, 'odd': index % 2 !== 0 }"
                 @mouseenter="song.options = true"
                 @mouseleave="song.options = undefined"
               >
