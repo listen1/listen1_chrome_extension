@@ -2,6 +2,7 @@ import axios from 'axios';
 import concat from 'async-es/concat';
 import forge from 'node-forge';
 import { getParameterByName } from './lowebutil';
+import MusicResource from './music_resource';
 
 const axiosTH = axios.create({
   baseURL: 'https://music.taihe.com/v1'
@@ -22,7 +23,7 @@ axiosTH.interceptors.request.use(
   { synchronous: true }
 );
 
-export default class taihe {
+export default class taihe extends MusicResource {
   static th_convert_song(song) {
     const track = {
       id: `thtrack_${song.id}`,

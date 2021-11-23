@@ -1,4 +1,5 @@
 import { getParameterByName } from './lowebutil';
+import MusicResource from './music_resource';
 
 /* global getParameterByName */
 
@@ -12,7 +13,7 @@ const defaultLocalMusicPlaylist = {
   }
 };
 
-export default class localmusic {
+export default class localmusic extends MusicResource {
   static show_playlist(url, hm) {
     return {
       success: (fn) =>
@@ -153,16 +154,4 @@ export default class localmusic {
       all: []
     };
   }
-
-  // return {
-  //   show_playlist: lm_show_playlist,
-  //   get_playlist_filters,
-  //   get_playlist,
-  //   parse_url: lm_parse_url,
-  //   bootstrap_track: lm_bootstrap_track,
-  //   search: lm_search,
-  //   lyric: lm_lyric,
-  //   add_playlist: lm_add_playlist,
-  //   remove_from_playlist: lm_remove_from_playlist,
-  // };
 }

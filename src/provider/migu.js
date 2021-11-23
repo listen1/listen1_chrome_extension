@@ -1,9 +1,10 @@
 import axios from 'axios';
 import concat from 'async-es/concat';
 import forge from 'node-forge';
-import { getParameterByName, cookieRemove } from './lowebutil';
+import { getParameterByName } from './lowebutil';
+import MusicResource from './music_resource';
 
-export default class migu {
+export default class migu extends MusicResource {
   static mg_convert_song(song) {
     return {
       id: `mgtrack_${song.copyrightId}`,
@@ -794,17 +795,4 @@ export default class migu {
     musicCookieList.map((name) => removeFn('https://music.migu.cn', name));
     passportCookieList.map((name) => removeFn('https://passport.migu.cn', name));
   }
-
-  // return {
-  //   show_playlist: mg_show_playlist,
-  //   get_playlist_filters,
-  //   get_playlist,
-  //   parse_url: mg_parse_url,
-  //   bootstrap_track: mg_bootstrap_track,
-  //   search: mg_search,
-  //   lyric: mg_lyric,
-  //   get_user: migu_get_user,
-  //   get_login_url: migu_get_login_url,
-  //   logout: mg_logout,
-  // };
 }

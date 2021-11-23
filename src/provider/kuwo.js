@@ -1,6 +1,7 @@
 import concat from 'async-es/concat';
 import axios from 'axios';
 import { cookieGet, getParameterByName } from './lowebutil';
+import MusicResource from './music_resource';
 
 const kwConvertSong = (item) => ({
   id: `kwtrack_${item.rid}`,
@@ -35,7 +36,7 @@ function html_decode(str) {
   }
   return text;
 }
-export default class kuwo {
+export default class kuwo extends MusicResource {
   // Fix single quote in json
   static fix_json(data) {
     return data.replace(/(')/g, '"');
@@ -680,17 +681,4 @@ export default class kuwo {
   }
 
   static logout() {}
-
-  // return {
-  //   show_playlist: kw_show_playlist,
-  //   get_playlist_filters,
-  //   get_playlist,
-  //   parse_url: kw_parse_url,
-  //   bootstrap_track: kw_bootstrap_track,
-  //   search: kw_search,
-  //   lyric: kw_lyric,
-  //   get_user: kw_get_user,
-  //   get_login_url: kw_get_login_url,
-  //   logout: kw_logout,
-  // };
 }

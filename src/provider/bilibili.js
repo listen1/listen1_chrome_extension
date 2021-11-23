@@ -1,7 +1,8 @@
 import axios from 'axios';
 import { getParameterByName } from './lowebutil';
+import MusicResource from './music_resource';
 
-export default class bilibili {
+export default class bilibili extends MusicResource {
   static bi_convert_song(song_info) {
     const track = {
       id: `bitrack_${song_info.id}`,
@@ -208,17 +209,4 @@ export default class bilibili {
   }
 
   static logout() {}
-
-  // return {
-  //   show_playlist: bi_show_playlist,
-  //   get_playlist_filters,
-  //   get_playlist,
-  //   parse_url: bi_parse_url,
-  //   bootstrap_track: bi_bootstrap_track,
-  //   search: bi_search,
-  //   lyric: bi_lyric,
-  //   get_user: bi_get_user,
-  //   get_login_url: bi_get_login_url,
-  //   logout: bi_logout,
-  // };
 }

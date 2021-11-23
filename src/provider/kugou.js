@@ -1,7 +1,8 @@
 import axios from 'axios';
 import { getParameterByName, async_process } from './lowebutil';
+import MusicResource from './music_resource';
 
-export default class kugou {
+export default class kugou extends MusicResource {
   static kg_convert_song(song) {
     const track = {
       id: `kgtrack_${song.FileHash}`,
@@ -346,17 +347,4 @@ export default class kugou {
   }
 
   static logout() {}
-
-  // return {
-  //   show_playlist: kg_show_playlist,
-  //   get_playlist_filters,
-  //   get_playlist,
-  //   parse_url: kg_parse_url,
-  //   bootstrap_track: kg_bootstrap_track,
-  //   search: kg_search,
-  //   lyric: kg_lyric,
-  //   get_user: kg_get_user,
-  //   get_login_url: kg_get_login_url,
-  //   logout: kg_logout,
-  // };
 }

@@ -2,8 +2,8 @@ import axios from 'axios';
 import concat from 'async-es/concat';
 import forge from 'node-forge';
 import { getParameterByName, cookieSet, cookieRemove, cookieGetPromise, cookieSetPromise } from './lowebutil';
-
-export default class netease {
+import MusicResource from './music_resource';
+export default class netease extends MusicResource {
   static _create_secret_key(size) {
     const result = [];
     const choice = '012345679abcdef'.split('');

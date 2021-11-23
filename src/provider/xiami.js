@@ -1,4 +1,6 @@
-export default class xiami {
+import MusicResource from './music_resource';
+
+export default class xiami extends MusicResource {
   static show_playlist() {
     return [];
   }
@@ -103,17 +105,4 @@ export default class xiami {
   }
 
   static logout() {}
-
-  // return {
-  //   show_playlist: xm_show_playlist,
-  //   get_playlist_filters,
-  //   get_playlist,
-  //   parse_url: xm_parse_url,
-  //   bootstrap_track: xm_bootstrap_track,
-  //   search: xm_search,
-  //   lyric: xm_lyric,
-  //   get_user: xm_get_user,
-  //   get_login_url: xm_get_login_url,
-  //   logout: xm_logout,
-  // };
 }

@@ -1,7 +1,8 @@
 import axios from 'axios';
 import { getParameterByName, cookieRemove, cookieGetPromise } from './lowebutil';
+import MusicResource from './music_resource';
 
-export default class qq {
+export default class qq extends MusicResource {
   static htmlDecode(value) {
     const parser = new DOMParser();
     return parser.parseFromString(value, 'text/html').body.textContent;
