@@ -11,9 +11,9 @@ import { getLocalStorageValue } from '../provider/lowebutil';
 import myplaylist from '../provider/myplaylist';
 
 interface Provider {
-  get_playlist: (url: string) => any,
-  search: (url: string) => any,
-  lyric: (url: string) => any,
+  getPlaylist: (url: string) => any;
+  search: (url: string) => any;
+  lyric: (url: string) => any;
 }
 
 const sourceList: {
@@ -21,43 +21,43 @@ const sourceList: {
   displayId: string;
   searchable?: boolean;
 }[] = [
-    {
-      name: 'netease',
-      displayId: '_NETEASE_MUSIC'
-    },
-    {
-      name: 'qq',
-      displayId: '_QQ_MUSIC'
-    },
-    {
-      name: 'kugou',
-      displayId: '_KUGOU_MUSIC'
-    },
-    {
-      name: 'kuwo',
-      displayId: '_KUWO_MUSIC'
-    },
-    {
-      name: 'bilibili',
-      displayId: '_BILIBILI_MUSIC',
-      searchable: false
-    },
-    {
-      name: 'migu',
-      displayId: '_MIGU_MUSIC'
-    },
-    {
-      name: 'taihe',
-      displayId: '_TAIHE_MUSIC'
-    }
-  ];
+  {
+    name: 'netease',
+    displayId: '_NETEASE_MUSIC'
+  },
+  {
+    name: 'qq',
+    displayId: '_QQ_MUSIC'
+  },
+  {
+    name: 'kugou',
+    displayId: '_KUGOU_MUSIC'
+  },
+  {
+    name: 'kuwo',
+    displayId: '_KUWO_MUSIC'
+  },
+  {
+    name: 'bilibili',
+    displayId: '_BILIBILI_MUSIC',
+    searchable: false
+  },
+  {
+    name: 'migu',
+    displayId: '_MIGU_MUSIC'
+  },
+  {
+    name: 'taihe',
+    displayId: '_TAIHE_MUSIC'
+  }
+];
 const PROVIDERS: {
-  id: string,
-  name: string,
-  instance: any,
-  searchable: boolean,
-  support_login: boolean,
-  hidden?: boolean,
+  id: string;
+  name: string;
+  instance: any;
+  searchable: boolean;
+  support_login: boolean;
+  hidden?: boolean;
 }[] = [
   {
     name: 'netease',
@@ -125,13 +125,13 @@ const PROVIDERS: {
   //     id: "lm",
   //   },
   {
-    name: "myplaylist",
+    name: 'myplaylist',
     instance: myplaylist,
     searchable: false,
     hidden: true,
     support_login: false,
-    id: "my",
-  },
+    id: 'my'
+  }
 ];
 
 function getProviderByName(sourceName: string) {
@@ -192,9 +192,9 @@ const MediaService = {
       // search all platform and merge result
       const platformResultArray = await Promise.all(getAllSearchProviders().map((p) => p.search(url)));
       const result: {
-        result: any[],
-        total: number,
-        type: string,
+        result: any[];
+        total: number;
+        type: string;
       } = {
         result: [],
         total: 1000,
@@ -216,18 +216,18 @@ const MediaService = {
   },
 
   showMyPlaylist() {
-    return myplaylist.get_myplaylists_list("my");
+    return myplaylist.get_myplaylists_list('my');
   },
 
   showPlaylistArray(source: string, offset: string, filter_id: string) {
     const provider = getProviderByName(source);
     const url = `/show_playlist?${queryStringify({ offset, filter_id })}`;
-    return provider.show_playlist(url);
+    return provider.showPlaylist(url);
   },
 
   getPlaylistFilters(source: string) {
     const provider = getProviderByName(source);
-    return provider.get_playlist_filters();
+    return provider.getPlaylistFilters();
   },
 
   getLyric(track_id: string, album_id: string, lyric_url: string, tlyric_url: string) {
@@ -242,12 +242,12 @@ const MediaService = {
   },
 
   showFavPlaylist() {
-    return myplaylist.get_myplaylists_list("favorite");
+    return myplaylist.get_myplaylists_list('favorite');
   },
 
   async isMyPlaylist(listId: string) {
     const url = `/playlist?list_id=${listId}`;
-    const playlist = await myplaylist.get_playlist(url);
+    const playlist = await myplaylist.getPlaylist(url);
     return !!playlist;
   },
 
@@ -264,13 +264,13 @@ const MediaService = {
     //     success: (fn) => fn(hit),
     //   };
     // }
-    return provider.get_playlist(url);
+    return provider.getPlaylist(url);
   },
 
   async clonePlaylist(id: string, type: string) {
     const provider = getProviderByItemId(id);
     const url = `/playlist?list_id=${id}`;
-    return myplaylist.save_myplaylist(type, await provider.get_playlist(url));
+    return myplaylist.save_myplaylist(type, await provider.getPlaylist(url));
   },
 
   removeMyPlaylist(id: string, type: string) {
@@ -342,7 +342,7 @@ const MediaService = {
   //           providers.map(
   //             (provider) =>
   //               new Promise((res, rej) =>
-  //                 provider.parse_url(url).success((r) => {
+  //                 provider.parseUrl(url).success((r) => {
   //                   if (r !== undefined) {
   //                     return rej(r);
   //                   }
@@ -396,7 +396,7 @@ const MediaService = {
             // compare search track and track to check if they are same
             // TODO: better similar compare method (duration, md5)
             if (!searchTrack.disable && searchTrack.title === track.title && searchTrack.artist === track.artist) {
-              provider.bootstrap_track(
+              provider.bootstrapTrack(
                 searchTrack,
                 (response: Record<string, unknown>) => {
                   sound.url = response.url;
@@ -422,7 +422,7 @@ const MediaService = {
 
     const provider = getProviderByName(track.source);
 
-    provider.bootstrap_track(track, successCallback, failureCallback);
+    provider.bootstrapTrack(track, successCallback, failureCallback);
   }
 
   //   login(source, options) {
@@ -433,11 +433,11 @@ const MediaService = {
   //   },
   //   getUser(source) {
   //     const provider = getProviderByName(source);
-  //     return provider.get_user();
+  //     return provider.getUser();
   //   },
   //   getLoginUrl(source) {
   //     const provider = getProviderByName(source);
-  //     return provider.get_login_url();
+  //     return provider.getLoginUrl();
   //   },
   //   getUserCreatedPlaylist(source, options) {
   //     const provider = getProviderByName(source);

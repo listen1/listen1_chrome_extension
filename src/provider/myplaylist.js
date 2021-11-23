@@ -27,7 +27,7 @@ const myplaylistFactory = () => {
   async function get_myplaylists_list(playlist_type) {
     const order = await iDB.Settings.get({ key: playlist_type + '_playlist_order' });
     let playlists = await iDB.Playlists.where('type').equals(playlist_type).toArray();
-    playlists = order?.value.map((id) => playlists.find(playlist => playlist.id === id));
+    playlists = order?.value.map((id) => playlists.find((playlist) => playlist.id === id));
     // const resultPromise = playlists.map(async (res, id) => {
     //   //const playlist = localStorage.getObject(id);
     //   const playlist = await iDB.Tracks.where('playlist').equals(id).toArray();
@@ -42,13 +42,14 @@ const myplaylistFactory = () => {
     const list_id = getParameterByName('list_id', url);
     const playlistInfo = await iDB.Playlists.get(list_id);
     let playlist = {
-      info: playlistInfo,
+      info: playlistInfo
     };
     // clear url field when load old playlist
     if (playlistInfo) {
-      playlist.tracks = await iDB.Tracks.where('playlist').equals(list_id).toArray().then(tracks =>
-        playlistInfo.order ? playlistInfo.order.map(id => tracks.find(track => track.id === id)) : tracks,
-      );
+      playlist.tracks = await iDB.Tracks.where('playlist')
+        .equals(list_id)
+        .toArray()
+        .then((tracks) => (playlistInfo.order ? playlistInfo.order.map((id) => tracks.find((track) => track.id === id)) : tracks));
     } else {
       playlist = null;
     }
@@ -98,8 +99,8 @@ const myplaylistFactory = () => {
       playlist_id = `myplaylist_${guid()}`;
       playlistInfo.id = playlist_id;
       playlistInfo.type = 'my';
-      playlistInfo.order = playlist.tracks.map(track => track.id);
-      playlist.tracks.forEach(track => track.playlist = playlist_id);
+      playlistInfo.order = playlist.tracks.map((track) => track.id);
+      playlist.tracks.forEach((track) => (track.playlist = playlist_id));
       await iDB.transaction('rw', [iDB.Settings, iDB.Tracks, iDB.Playlists], async () => {
         await iDB.Settings.where('key')
           .equals('my_playlist_order')
@@ -108,7 +109,6 @@ const myplaylistFactory = () => {
         await iDB.Tracks.where('playlist').equals(playlist_id).delete();
         await iDB.Tracks.bulkAdd(playlist.tracks);
       });
-
     } else if (playlist_type === 'favorite') {
       playlist_id = playlist.info.id;
       playlistInfo.type = 'favorite';
@@ -133,9 +133,8 @@ const myplaylistFactory = () => {
       await iDB.Settings.where('key')
         .equals(playlist_type + '_playlist_order')
         .modify((order) => {
-          if (order.value.includes(playlist_id))
-            order.value.splice(order.value.indexOf(playlist_id), 1);
-        })
+          if (order.value.includes(playlist_id)) order.value.splice(order.value.indexOf(playlist_id), 1);
+        });
       await iDB.Playlists.where('id').equals(playlist_id).delete();
       await iDB.Tracks.where('playlist').equals(playlist_id).delete();
     });
@@ -149,8 +148,8 @@ const myplaylistFactory = () => {
     }
     // dedupe
     const filterTracks = tracks.filter((i) => !playlist.order.includes(i.id));
-    playlist.order = playlist.order.concat(filterTracks.map(i => i.id));
-    filterTracks.forEach(i => i.playlist = playlist_id);
+    playlist.order = playlist.order.concat(filterTracks.map((i) => i.id));
+    filterTracks.forEach((i) => (i.playlist = playlist_id));
     await iDB.transaction('rw', [iDB.Playlists, iDB.Tracks], () => {
       // new track will always insert in beginning of playlist
       iDB.Playlists.put(playlist);
@@ -195,9 +194,9 @@ const myplaylistFactory = () => {
         cover_img_url: 'images/mycover.jpg',
         title: playlist_title,
         id: '',
-        source_url: '',
+        source_url: ''
       },
-      tracks,
+      tracks
     };
 
     // notice: create only used by my playlist, favorite created by clone interface
@@ -226,7 +225,7 @@ const myplaylistFactory = () => {
   return {
     get_myplaylists_list,
     save_myplaylist,
-    get_playlist: get_myplaylist,
+    getPlaylist: get_myplaylist,
     remove_myplaylist,
     add_track_to_myplaylist,
     remove_track_from_myplaylist,

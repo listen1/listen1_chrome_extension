@@ -7,19 +7,19 @@ class NotImplementedError extends Error {
 }
 
 export default class MusicResource {
-  static async show_playlist(url: string) {
+  static async showPlaylist(url: string) {
     throw new NotImplementedError('');
   }
-  static async get_playlist_filters() {
+  static async getPlaylistFilters() {
     throw new NotImplementedError('');
   }
-  static get_playlist(url: string) {
+  static getPlaylist(url: string) {
     throw new NotImplementedError('');
   }
-  static parse_url(url: string) {
+  static parseUrl(url: string) {
     throw new NotImplementedError('');
   }
-  static bootstrap_track(track: any, success: any, failure: any) {
+  static bootstrapTrack(track: any, success: any, failure: any) {
     throw new NotImplementedError('');
   }
   static async search(url: string) {
@@ -29,10 +29,10 @@ export default class MusicResource {
   static async lyric(url: string) {
     throw new NotImplementedError('');
   }
-  static async get_user() {
+  static async getUser() {
     throw new NotImplementedError('');
   }
-  static get_login_url() {
+  static getLoginUrl() {
     throw new NotImplementedError('');
   }
   static logout() {

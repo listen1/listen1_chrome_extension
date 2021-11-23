@@ -1,12 +1,12 @@
 import MusicResource from './music_resource';
 
 export default class xiami extends MusicResource {
-  static show_playlist() {
+  static showPlaylist() {
     return [];
   }
 
   // eslint-disable-next-line no-unused-vars
-  static bootstrap_track(track, success, failure) {
+  static bootstrapTrack(track, success, failure) {
     const sound = {};
     failure(sound);
   }
@@ -67,7 +67,7 @@ export default class xiami extends MusicResource {
     };
   }
 
-  static parse_url() {
+  static parseUrl() {
     let result;
     return {
       success: (fn) => {
@@ -76,7 +76,7 @@ export default class xiami extends MusicResource {
     };
   }
 
-  static get_playlist(url) {
+  static getPlaylist(url) {
     const list_id = getParameterByName('list_id', url).split('_')[0];
     switch (list_id) {
       case 'xmplaylist':
@@ -90,17 +90,17 @@ export default class xiami extends MusicResource {
     }
   }
 
-  static get_playlist_filters() {
+  static getPlaylistFilters() {
     return {
       success: (fn) => fn({ recommend: [], all: [] })
     };
   }
 
-  static async get_user() {
+  static async getUser() {
     return { status: 'fail', data: {} };
   }
 
-  static get_login_url() {
+  static getLoginUrl() {
     return `https://www.xiami.com`;
   }
 

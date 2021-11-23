@@ -103,7 +103,7 @@ export default class migu extends MusicResource {
     return result;
   }
 
-  static async show_playlist(url) {
+  static async showPlaylist(url) {
     const offset = Number(getParameterByName('offset', url));
     const filterId = getParameterByName('filter_id', url);
     if (filterId === 'toplist') {
@@ -394,7 +394,7 @@ export default class migu extends MusicResource {
     };
   }
 
-  static bootstrap_track(track, success, failure) {
+  static bootstrapTrack(track, success, failure) {
     const sound = {};
     const songId = track.song_id;
     /*
@@ -679,7 +679,7 @@ export default class migu extends MusicResource {
     };
   }
 
-  static parse_url(url) {
+  static parseUrl(url) {
     let result;
     // eslint-disable-next-line no-param-reassign
     url = url.replace('music.migu.cn/v3/my/playlist/', 'music.migu.cn/v3/music/playlist/');
@@ -698,7 +698,7 @@ export default class migu extends MusicResource {
     };
   }
 
-  static get_playlist(url) {
+  static getPlaylist(url) {
     const list_id = getParameterByName('list_id', url).split('_')[0];
     switch (list_id) {
       case 'mgplaylist':
@@ -714,7 +714,7 @@ export default class migu extends MusicResource {
     }
   }
 
-  static async get_playlist_filters() {
+  static async getPlaylistFilters() {
     let target_url = 'https://app.c.nf.migu.cn/MIGUM3.0/v1.0/template/musiclistplaza-hottaglist/release';
     const response = await axios.get(target_url);
     const recommend = response.data.data.contentItemList.map((item) => ({
@@ -738,7 +738,7 @@ export default class migu extends MusicResource {
     };
   }
 
-  static async get_user() {
+  static async getUser() {
     const ts = +new Date();
     const url = `https://music.migu.cn/v3/api/user/getUserInfo?_=${ts}`;
     const res = await axios.get(url);
@@ -765,7 +765,7 @@ export default class migu extends MusicResource {
     };
   }
 
-  static get_login_url() {
+  static getLoginUrl() {
     return `https://music.migu.cn`;
   }
 

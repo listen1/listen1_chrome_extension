@@ -26,7 +26,7 @@ export default class qq extends MusicResource {
     return result;
   }
 
-  static async show_playlist(url) {
+  static async showPlaylist(url) {
     const offset = Number(getParameterByName('offset', url)) || 0;
     let filterId = getParameterByName('filter_id', url) || '';
     if (filterId === 'toplist') {
@@ -310,7 +310,7 @@ export default class qq extends MusicResource {
     return result;
   }
 
-  static bootstrap_track(track, success, failure) {
+  static bootstrapTrack(track, success, failure) {
     const sound = {};
     const songId = track.id.slice('qqtrack_'.length);
     const target_url = 'https://u.y.qq.com/cgi-bin/musicu.fcg';
@@ -418,7 +418,7 @@ export default class qq extends MusicResource {
     return { lyric, tlyric };
   }
 
-  static parse_url(url) {
+  static parseUrl(url) {
     return {
       success: (fn) => {
         let result;
@@ -469,7 +469,7 @@ export default class qq extends MusicResource {
     };
   }
 
-  static get_playlist(url) {
+  static getPlaylist(url) {
     const list_id = getParameterByName('list_id', url).split('_')[0];
     switch (list_id) {
       case 'qqplaylist':
@@ -485,7 +485,7 @@ export default class qq extends MusicResource {
     }
   }
 
-  static async get_playlist_filters() {
+  static async getPlaylistFilters() {
     const target_url =
       'https://c.y.qq.com/splcloud/fcgi-bin/fcg_get_diss_tag_conf.fcg' +
       `?picmid=1&rnd=${Math.random()}&g_tk=732560869` +
@@ -654,7 +654,7 @@ export default class qq extends MusicResource {
       }
     };
   }
-  static async get_user() {
+  static async getUser() {
     const domain = 'https://y.qq.com';
     const qqCookie = await cookieGetPromise({
       url: domain,
@@ -674,7 +674,7 @@ export default class qq extends MusicResource {
     }
   }
 
-  static get_login_url() {
+  static getLoginUrl() {
     return `https://y.qq.com/portal/profile.html`;
   }
 

@@ -334,7 +334,7 @@ export default class kuwo extends MusicResource {
   }
 
   // eslint-disable-next-line no-unused-vars
-  static bootstrap_track(track, success, failure) {
+  static bootstrapTrack(track, success, failure) {
     const sound = {};
     const song_id = track.id.slice('kwtrack_'.length);
     const target_url = 'https://antiserver.kuwo.cn/anti.s?' + `type=convert_url&format=mp3&response=url&rid=${song_id}`;
@@ -506,7 +506,7 @@ export default class kuwo extends MusicResource {
           */
   }
 
-  static async show_playlist(url) {
+  static async showPlaylist(url) {
     const offset = Number(getParameterByName('offset', url));
 
     /* const id_available = {
@@ -611,7 +611,7 @@ export default class kuwo extends MusicResource {
           */
   }
 
-  static parse_url(myurl) {
+  static parseUrl(myurl) {
     let result;
     let id;
     let url = myurl;
@@ -651,7 +651,7 @@ export default class kuwo extends MusicResource {
     };
   }
 
-  static get_playlist(url) {
+  static getPlaylist(url) {
     const list_id = getParameterByName('list_id', url).split('_')[0];
     switch (list_id) {
       case 'kwplaylist':
@@ -665,18 +665,18 @@ export default class kuwo extends MusicResource {
     }
   }
 
-  static async get_playlist_filters() {
+  static async getPlaylistFilters() {
     return {
       recommend: [],
       all: []
     };
   }
 
-  static async get_user() {
+  static async getUser() {
     return { status: 'fail', data: {} };
   }
 
-  static get_login_url() {
+  static getLoginUrl() {
     return `https://www.kuwo.com`;
   }
 

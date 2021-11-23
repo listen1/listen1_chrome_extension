@@ -18,7 +18,7 @@ export default class bilibili extends MusicResource {
     return track;
   }
 
-  static async show_playlist(url) {
+  static async showPlaylist(url) {
     let offset = getParameterByName('offset', url);
     if (offset === undefined) {
       offset = 0;
@@ -106,7 +106,7 @@ export default class bilibili extends MusicResource {
     };
   }
 
-  static parse_url(url) {
+  static parseUrl(url) {
     let result;
     const match = /\/\/www.bilibili.com\/audio\/am([0-9]+)/.exec(url);
     if (match != null) {
@@ -123,7 +123,7 @@ export default class bilibili extends MusicResource {
     };
   }
 
-  static bootstrap_track(track, success, failure) {
+  static bootstrapTrack(track, success, failure) {
     const sound = {};
     const song_id = track.id.slice('bitrack_'.length);
     const target_url = `https://www.bilibili.com/audio/music-service-c/web/url?sid=${song_id}`;
@@ -179,7 +179,7 @@ export default class bilibili extends MusicResource {
     return { lyric: data };
   }
 
-  static get_playlist(url) {
+  static getPlaylist(url) {
     const list_id = getParameterByName('list_id', url).split('_')[0];
     switch (list_id) {
       case 'biplaylist':
@@ -193,18 +193,18 @@ export default class bilibili extends MusicResource {
     }
   }
 
-  static async get_playlist_filters() {
+  static async getPlaylistFilters() {
     return {
       recommend: [],
       all: []
     };
   }
 
-  static async get_user() {
+  static async getUser() {
     return { status: 'fail', data: {} };
   }
 
-  static get_login_url() {
+  static getLoginUrl() {
     return `https://www.bilibili.com`;
   }
 
