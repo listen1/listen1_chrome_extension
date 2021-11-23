@@ -9,8 +9,8 @@ const props = defineProps<{
 
 const displayName = props.display || props.to;
 </script>
-<style>
-a {
+<style scoped>
+.a {
     color: var(--text-default-color);
 }
 </style>
