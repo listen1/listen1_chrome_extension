@@ -26,6 +26,7 @@
       </div>
     </template>
     <template #footer>
+      <button class="btn btn-danger remove-button"  @click="removeMyPlaylist()">{{ t('_REMOVE_PLAYLIST') }}</button>
       <button class="btn btn-primary confirm-button" @click="editPlaylist()" >{{ t('_CONFIRM') }}</button>
       <button class="btn btn-default" @click="$emit('close')">{{ t('_CANCEL') }}</button>
     </template>
@@ -52,6 +53,10 @@ let imageUrl = $ref(props.cover_img_url);
 
 const editPlaylist = () => {
   MediaService.editMyPlaylist(props.list_id, title, imageUrl);
+  emit('close');
+}
+const removeMyPlaylist = () => {
+  MediaService.removeMyPlaylist(props.list_id, 'my');
   emit('close');
 }
 
