@@ -277,7 +277,7 @@ const MediaService = {
     return myplaylist.removeMyplaylist(type, id);
   },
 
-  async addMyPlaylist(id: string, tracks: string) {
+  async addMyPlaylist(id: string, tracks: unknown[]) {
     return myplaylist.addTrackToMyplaylist(id, tracks);
   },
   //   insertTrackToMyPlaylist(id, track, to_track, direction) {
@@ -308,7 +308,7 @@ const MediaService = {
   //     return provider.remove_from_playlist(id, track);
   //   },
 
-  createMyPlaylist(title: string, track: string) {
+  createMyPlaylist(title: string, track: unknown[]) {
     myplaylist.createMyplaylist(title, track);
   },
   //   insertMyplaylistToMyplaylists(
@@ -327,12 +327,9 @@ const MediaService = {
   //       success: (fn) => fn(newPlaylists),
   //     };
   //   },
-  //   editMyPlaylist(id, title, coverImgUrl) {
-  //     myplaylist.editMyplaylist(id, title, coverImgUrl);
-  //     return {
-  //       success: (fn) => fn(),
-  //     };
-  //   },
+  editMyPlaylist(id: string, title: string, coverImgUrl: string) {
+    myplaylist.editMyplaylist(id, title, coverImgUrl);
+  },
 
   //   parseURL(url) {
   //     return {
