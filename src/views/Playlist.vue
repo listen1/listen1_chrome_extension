@@ -109,10 +109,9 @@
           <div class="tools">{{ t('_OPERATION') }}</div>
         </li>
         <li
-          v-for="song in songs"
+          v-for="(song,index) in songs"
           :key="song.id"
-          ng-class-odd="'odd'"
-          ng-class-even="'even'"
+          :class="{'even': index % 2 === 0, 'odd': index % 2 !== 0 }"
           draggable="true"
           drag-drop-zone
           drag-zone-object="song"

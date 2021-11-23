@@ -662,14 +662,13 @@
         </div>
         <ul class="menu-list">
           <li
-            v-for="song in playlist"
+            v-for="(song, index) in playlist"
             id="song song.id "
             :key="song.id"
             ng-class="{ playing: currentPlaying.id == song.id }"
             ng-mouseenter="playlist_highlight=true"
             ng-mouseleave="playlist_highlight=false"
-            ng-class-odd="'odd'"
-            ng-class-even="'even'"
+            :class="{'even': index % 2 === 0, 'odd': index % 2 !== 0 }"
             draggable="true"
             drag-drop-zone
             drag-zone-object="song"
