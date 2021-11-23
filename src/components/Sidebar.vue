@@ -56,7 +56,7 @@
         <li
           v-for="(i, index) in myplaylists"
           :key="index"
-          :class="{ active: window_type == 'list' && '/playlist/' + i.id === $router.currentRoute.path }"
+          :class="{ active: route.path === `/playlist/${i.id}` }"
           @click="$router.push(`/playlist/${i.id}`)"
           drag-drop-zone
           drag-zone-type="'application/listen1-myplaylist'"
