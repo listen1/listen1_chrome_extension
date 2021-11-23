@@ -4,7 +4,7 @@ body {
   padding: 0;
   font-size: var(--text-default-size);
   color: var(--text-default-color);
-  font-family: system-ui, 'PingFang SC', STHeiti, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', 'PingFang SC,' STHeiti, system-ui, sans-serif;
 }
 
 a {
@@ -726,7 +726,6 @@ https://stackoverflow.com/questions/19889615/can-an-angular-directive-pass-argum
   color: var(--lyric-default-color);
   scrollbar-width: thin;
   scrollbar-color: var(--scroll-color) transparent;
-  font-size: var(--lyric-font-size);
 }
 .page .coverbg .playsong-detail .detail-songinfo .lyric {
   color: var(--lyric-on-cover-color);

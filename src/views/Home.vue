@@ -525,6 +525,7 @@
                       v-for="line in lyricArray"
                       :key="line.lineNumber"
                       :data-line="line.lineNumber"
+                      :style="{ fontWeight: lyricFontWeight, fontSize: `${lyricFontSize}px` }"
                       :class="{
                         highlight: line.lineNumber == lyricLineNumber || line.lineNumber == lyricLineNumberTrans,
                         hide: line.translationFlag && !settings.enableLyricTranslation,
@@ -861,7 +862,8 @@ let currentPosition = $computed(() => player.currentPosition);
 let currentPlaying = $computed(() => player.currentPlaying);
 let volume = $computed(() => player.volume);
 let mute = $computed(() => player.mute);
-
+let lyricFontWeight = $computed(() => settings.lyricFontWeight);
+let lyricFontSize = $computed(() => settings.lyricFontSize);
 const { settings } = useSettings();
 
 setLocale(settings.language);

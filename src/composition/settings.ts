@@ -28,7 +28,10 @@ const settings: Record<string, unknown> = reactive({
   enableGlobalShortCut: false,
   enableNowplayingPlatform: false,
   enableLyricTranslation: false,
-  theme: 'black'
+  theme: 'black',
+  //lyric settings
+  lyricFontSize: 20,
+  lyricFontWeight: 500,
 });
 
 async function flushSettings() {
