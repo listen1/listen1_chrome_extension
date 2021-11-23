@@ -2,6 +2,7 @@ import axios from 'axios';
 import concat from 'async-es/concat';
 import forge from 'node-forge';
 import { getParameterByName } from './lowebutil';
+import MusicResource from './music_resource';
 
 const axiosTH = axios.create({
   baseURL: 'https://music.taihe.com/v1'
@@ -22,7 +23,7 @@ axiosTH.interceptors.request.use(
   { synchronous: true }
 );
 
-export default class taihe {
+export default class taihe extends MusicResource {
   static th_convert_song(song) {
     const track = {
       id: `thtrack_${song.id}`,
@@ -144,7 +145,7 @@ export default class taihe {
     };
   }
 
-  static bootstrap_track(track, success, failure) {
+  static bootstrapTrack(track, success, failure) {
     const sound = {};
     const song_id = track.id.slice('thtrack_'.length);
     axiosTH
@@ -218,7 +219,7 @@ export default class taihe {
     };
   }
 
-  static async show_playlist(url) {
+  static async showPlaylist(url) {
     const offset = Number(getParameterByName('offset', url));
     const subCate = getParameterByName('filter_id', url);
     const { data } = await axiosTH.get('/tracklist/list', {
@@ -238,7 +239,7 @@ export default class taihe {
     return result;
   }
 
-  static parse_url(url) {
+  static parseUrl(url) {
     let result;
     let id = '';
     let match = /\/\/music.taihe.com\/([a-z]+)\//.exec(url);
@@ -271,7 +272,7 @@ export default class taihe {
     };
   }
 
-  static get_playlist(url) {
+  static getPlaylist(url) {
     const list_id = getParameterByName('list_id', url).split('_')[0];
     switch (list_id) {
       case 'thplaylist':
@@ -285,7 +286,7 @@ export default class taihe {
     }
   }
 
-  static async get_playlist_filters() {
+  static async getPlaylistFilters() {
     const res = await axiosTH.get('/tracklist/category');
     return {
       recommend: [{ id: '', name: '推荐歌单' }],
@@ -299,11 +300,11 @@ export default class taihe {
     };
   }
 
-  static get_user() {
+  static getUser() {
     return { status: 'fail', data: {} };
   }
 
-  static get_login_url() {
+  static getLoginUrl() {
     return `https://music.taihe.com`;
   }
 

@@ -2,8 +2,8 @@ import axios from 'axios';
 import concat from 'async-es/concat';
 import forge from 'node-forge';
 import { getParameterByName, cookieSet, cookieRemove, cookieGetPromise, cookieSetPromise } from './lowebutil';
-
-export default class netease {
+import MusicResource from './music_resource';
+export default class netease extends MusicResource {
   static _create_secret_key(size) {
     const result = [];
     const choice = '012345679abcdef'.split('');
@@ -83,7 +83,7 @@ export default class netease {
     return result;
   }
 
-  static async show_playlist(url) {
+  static async showPlaylist(url) {
     const order = 'hot';
     const offset = getParameterByName('offset', url);
     const filterId = getParameterByName('filter_id', url);
@@ -261,7 +261,7 @@ export default class netease {
       });
     });
   }
-  static bootstrap_track(track, success, failure) {
+  static bootstrapTrack(track, success, failure) {
     const sound = {};
     const target_url = `https://interface3.music.163.com/eapi/song/enhance/player/url`;
     let song_id = track.id;
@@ -461,7 +461,7 @@ export default class netease {
     };
   }
 
-  static parse_url(url) {
+  static parseUrl(url) {
     let result;
     let id = '';
     // eslint-disable-next-line no-param-reassign
@@ -496,7 +496,7 @@ export default class netease {
     };
   }
 
-  static get_playlist(url) {
+  static getPlaylist(url) {
     const list_id = getParameterByName('list_id', url).split('_')[0];
     switch (list_id) {
       case 'neplaylist':
@@ -510,7 +510,7 @@ export default class netease {
     }
   }
 
-  static async get_playlist_filters() {
+  static async getPlaylistFilters() {
     const recommend = [
       { id: '', name: '全部' },
       { id: 'toplist', name: '排行榜' },
@@ -724,15 +724,15 @@ export default class netease {
     };
   }
 
-  static get_user_created_playlist(url) {
+  static getUserCreatedPlaylist(url) {
     return this.get_user_playlist(url, 'created');
   }
 
-  static get_user_favorite_playlist(url) {
+  static getUserFavoritePlaylist(url) {
     return this.get_user_playlist(url, 'favorite');
   }
 
-  static async get_recommend_playlist() {
+  static async getRecommendPlaylist() {
     const target_url = 'https://music.163.com/weapi/personalized/playlist';
 
     const req_data = {
@@ -761,7 +761,7 @@ export default class netease {
     };
   }
 
-  static async get_user() {
+  static async getUser() {
     const url = `https://music.163.com/api/nuser/account/get`;
 
     const encrypt_req_data = this.weapi({});
@@ -787,7 +787,7 @@ export default class netease {
     };
   }
 
-  static get_login_url() {
+  static getLoginUrl() {
     return `https://music.163.com/#/login`;
   }
 

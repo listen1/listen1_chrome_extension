@@ -2,8 +2,8 @@ import { getParameterByName } from './lowebutil';
 import iDB from '../services/DBService';
 import EventService from '../services/EventService';
 
-const myplaylistFactory = () => {
-  function array_move(arr, old_index, new_index) {
+export default class MyPlaylist {
+  static array_move(arr, old_index, new_index) {
     // https://stackoverflow.com/questions/5306680/move-an-array-element-from-one-array-position-to-another
     if (new_index >= arr.length) {
       let k = new_index - arr.length + 1;
@@ -15,7 +15,7 @@ const myplaylistFactory = () => {
     arr.splice(new_index, 0, arr.splice(old_index, 1)[0]);
     return arr; // for testing
   }
-  function getPlaylistObjectKey(playlist_type) {
+  static getPlaylistObjectKey(playlist_type) {
     let key = '';
     if (playlist_type === 'my') {
       key = 'c';
@@ -24,10 +24,10 @@ const myplaylistFactory = () => {
     }
     return key;
   }
-  async function get_myplaylists_list(playlist_type) {
+  static async getMyplaylistsList(playlist_type) {
     const order = await iDB.Settings.get({ key: playlist_type + '_playlist_order' });
     let playlists = await iDB.Playlists.where('type').equals(playlist_type).toArray();
-    playlists = order?.value.map((id) => playlists.find(playlist => playlist.id === id));
+    playlists = order?.value.map((id) => playlists.find((playlist) => playlist.id === id));
     // const resultPromise = playlists.map(async (res, id) => {
     //   //const playlist = localStorage.getObject(id);
     //   const playlist = await iDB.Tracks.where('playlist').equals(id).toArray();
@@ -38,24 +38,25 @@ const myplaylistFactory = () => {
     return playlists;
   }
 
-  async function get_myplaylist(url) {
+  static async getPlaylist(url) {
     const list_id = getParameterByName('list_id', url);
     const playlistInfo = await iDB.Playlists.get(list_id);
     let playlist = {
-      info: playlistInfo,
+      info: playlistInfo
     };
     // clear url field when load old playlist
     if (playlistInfo) {
-      playlist.tracks = await iDB.Tracks.where('playlist').equals(list_id).toArray().then(tracks =>
-        playlistInfo.order ? playlistInfo.order.map(id => tracks.find(track => track.id === id)) : tracks,
-      );
+      playlist.tracks = await iDB.Tracks.where('playlist')
+        .equals(list_id)
+        .toArray()
+        .then((tracks) => (playlistInfo.order ? playlistInfo.order.map((id) => tracks.find((track) => track.id === id)) : tracks));
     } else {
       playlist = null;
     }
     return playlist;
   }
 
-  function guid() {
+  static guid() {
     function s4() {
       return Math.floor((1 + Math.random()) * 0x10000)
         .toString(16)
@@ -64,8 +65,8 @@ const myplaylistFactory = () => {
     return `${s4() + s4()}-${s4()}-${s4()}-${s4()}-${s4()}${s4()}${s4()}`;
   }
 
-  function insert_myplaylist_to_myplaylists(playlist_type, playlist_id, to_playlist_id, direction) {
-    const key = getPlaylistObjectKey(playlist_type);
+  static insertMyplaylistToMyplaylists(playlist_type, playlist_id, to_playlist_id, direction) {
+    const key = this.getPlaylistObjectKey(playlist_type);
     if (key === '') {
       return [];
     }
@@ -81,13 +82,13 @@ const myplaylistFactory = () => {
     }
     const offset = direction === 'top' ? 0 : 1;
 
-    array_move(playlists, index, insertIndex + offset);
+    this.array_move(playlists, index, insertIndex + offset);
 
     localStorage.setObject(key, playlists);
     return playlists;
   }
 
-  const save_myplaylist = async (playlist_type, playlistObj) => {
+  static async saveMyplaylist(playlist_type, playlistObj) {
     const playlist = await playlistObj;
 
     const playlistInfo = { ...playlist.info };
@@ -95,11 +96,11 @@ const myplaylistFactory = () => {
     // update listid
     let playlist_id = '';
     if (playlist_type === 'my') {
-      playlist_id = `myplaylist_${guid()}`;
+      playlist_id = `myplaylist_${this.guid()}`;
       playlistInfo.id = playlist_id;
       playlistInfo.type = 'my';
-      playlistInfo.order = playlist.tracks.map(track => track.id);
-      playlist.tracks.forEach(track => track.playlist = playlist_id);
+      playlistInfo.order = playlist.tracks.map((track) => track.id);
+      playlist.tracks.forEach((track) => (track.playlist = playlist_id));
       await iDB.transaction('rw', [iDB.Settings, iDB.Tracks, iDB.Playlists], async () => {
         await iDB.Settings.where('key')
           .equals('my_playlist_order')
@@ -108,7 +109,6 @@ const myplaylistFactory = () => {
         await iDB.Tracks.where('playlist').equals(playlist_id).delete();
         await iDB.Tracks.bulkAdd(playlist.tracks);
       });
-
     } else if (playlist_type === 'favorite') {
       playlist_id = playlist.info.id;
       playlistInfo.type = 'favorite';
@@ -126,31 +126,30 @@ const myplaylistFactory = () => {
     EventService.emit(`playlist:${playlist_type}:update`);
 
     return playlist_id;
-  };
+  }
 
-  const remove_myplaylist = async (playlist_type, playlist_id) => {
+  static async removeMyplaylist(playlist_type, playlist_id) {
     await iDB.transaction('rw', [iDB.Settings, iDB.Tracks, iDB.Playlists], async () => {
       await iDB.Settings.where('key')
         .equals(playlist_type + '_playlist_order')
         .modify((order) => {
-          if (order.value.includes(playlist_id))
-            order.value.splice(order.value.indexOf(playlist_id), 1);
-        })
+          if (order.value.includes(playlist_id)) order.value.splice(order.value.indexOf(playlist_id), 1);
+        });
       await iDB.Playlists.where('id').equals(playlist_id).delete();
       await iDB.Tracks.where('playlist').equals(playlist_id).delete();
     });
     EventService.emit(`playlist:${playlist_type}:update`);
-  };
+  }
 
-  async function add_track_to_myplaylist(playlist_id, tracks) {
+  static async addTrackToMyplaylist(playlist_id, tracks) {
     const playlist = await iDB.Playlists.get({ id: playlist_id });
     if (!playlist) {
       return null;
     }
     // dedupe
     const filterTracks = tracks.filter((i) => !playlist.order.includes(i.id));
-    playlist.order = playlist.order.concat(filterTracks.map(i => i.id));
-    filterTracks.forEach(i => i.playlist = playlist_id);
+    playlist.order = playlist.order.concat(filterTracks.map((i) => i.id));
+    filterTracks.forEach((i) => (i.playlist = playlist_id));
     await iDB.transaction('rw', [iDB.Playlists, iDB.Tracks], () => {
       // new track will always insert in beginning of playlist
       iDB.Playlists.put(playlist);
@@ -160,7 +159,7 @@ const myplaylistFactory = () => {
     return playlist;
   }
 
-  function insert_track_to_myplaylist(playlist_id, track, to_track, direction) {
+  static insertTrackToMyplaylist(playlist_id, track, to_track, direction) {
     const playlist = localStorage.getObject(playlist_id);
     if (playlist == null) {
       return null;
@@ -174,12 +173,12 @@ const myplaylistFactory = () => {
       insertIndex -= 1;
     }
     const offset = direction === 'top' ? 0 : 1;
-    array_move(playlist.tracks, index, insertIndex + offset);
+    this.array_move(playlist.tracks, index, insertIndex + offset);
     localStorage.setObject(playlist_id, playlist);
     return playlist;
   }
 
-  function remove_track_from_myplaylist(playlist_id, track_id) {
+  static removeTrackFromMyplaylist(playlist_id, track_id) {
     const playlist = localStorage.getObject(playlist_id);
     if (playlist == null) {
       return;
@@ -189,22 +188,22 @@ const myplaylistFactory = () => {
     localStorage.setObject(playlist_id, playlist);
   }
 
-  function create_myplaylist(playlist_title, tracks) {
+  static createMyplaylist(playlist_title, tracks) {
     const playlist = {
       info: {
         cover_img_url: 'images/mycover.jpg',
         title: playlist_title,
         id: '',
-        source_url: '',
+        source_url: ''
       },
-      tracks,
+      tracks
     };
 
     // notice: create only used by my playlist, favorite created by clone interface
-    save_myplaylist('my', playlist);
+    this.saveMyplaylist('my', playlist);
   }
 
-  function edit_myplaylist(playlist_id, title, cover_img_url) {
+  static editMyplaylist(playlist_id, title, cover_img_url) {
     const playlist = localStorage.getObject(playlist_id);
     if (playlist == null) {
       return;
@@ -214,28 +213,12 @@ const myplaylistFactory = () => {
     localStorage.setObject(playlist_id, playlist);
   }
 
-  function myplaylist_containers(playlist_type, list_id) {
-    const key = getPlaylistObjectKey(playlist_type);
+  static myplaylistContainers(playlist_type, list_id) {
+    const key = this.getPlaylistObjectKey(playlist_type);
     if (key === '') {
       return false;
     }
     const playlist = localStorage.getObject(list_id);
     return playlist !== null && playlist.is_fav;
   }
-
-  return {
-    get_myplaylists_list,
-    save_myplaylist,
-    get_playlist: get_myplaylist,
-    remove_myplaylist,
-    add_track_to_myplaylist,
-    remove_track_from_myplaylist,
-    create_myplaylist,
-    edit_myplaylist,
-    myplaylist_containers,
-    insert_track_to_myplaylist,
-    insert_myplaylist_to_myplaylists
-  };
-};
-
-export default myplaylistFactory();
+}

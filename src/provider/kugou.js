@@ -1,7 +1,8 @@
 import axios from 'axios';
 import { getParameterByName, async_process } from './lowebutil';
+import MusicResource from './music_resource';
 
-export default class kugou {
+export default class kugou extends MusicResource {
   static kg_convert_song(song) {
     const track = {
       id: `kgtrack_${song.FileHash}`,
@@ -192,7 +193,7 @@ export default class kugou {
     return result;
   }
 
-  static bootstrap_track(track, success, failure) {
+  static bootstrapTrack(track, success, failure) {
     const track_id = track.id.slice('kgtrack_'.length);
     const album_id = track.album_id.slice('kgalbum_'.length);
     let target_url = `https://wwwapi.kugou.com/yy/index.php?r=play/getdata&callback=jQuery&hash=${track_id}&dfid=dfid&mid=mid&platid=4`;
@@ -278,7 +279,7 @@ export default class kugou {
     return { tracks, info };
   }
 
-  static async show_playlist(url) {
+  static async showPlaylist(url) {
     let offset = getParameterByName('offset', url);
     if (offset === undefined) {
       offset = 0;
@@ -298,7 +299,7 @@ export default class kugou {
     return result;
   }
 
-  static parse_url(url) {
+  static parseUrl(url) {
     let result;
     const match = /\/\/www.kugou.com\/yy\/special\/single\/([0-9]+).html/.exec(url);
     if (match != null) {
@@ -315,7 +316,7 @@ export default class kugou {
     };
   }
 
-  static get_playlist(url) {
+  static getPlaylist(url) {
     // eslint-disable-line no-unused-vars
     const list_id = getParameterByName('list_id', url).split('_')[0];
     switch (list_id) {
@@ -330,33 +331,20 @@ export default class kugou {
     }
   }
 
-  static async get_playlist_filters() {
+  static async getPlaylistFilters() {
     return {
       recommend: [],
       all: []
     };
   }
 
-  static async get_user() {
+  static async getUser() {
     return { status: 'fail', data: {} };
   }
 
-  static get_login_url() {
+  static getLoginUrl() {
     return `https://www.kugou.com`;
   }
 
   static logout() {}
-
-  // return {
-  //   show_playlist: kg_show_playlist,
-  //   get_playlist_filters,
-  //   get_playlist,
-  //   parse_url: kg_parse_url,
-  //   bootstrap_track: kg_bootstrap_track,
-  //   search: kg_search,
-  //   lyric: kg_lyric,
-  //   get_user: kg_get_user,
-  //   get_login_url: kg_get_login_url,
-  //   logout: kg_logout,
-  // };
 }

@@ -1,7 +1,8 @@
 import axios from 'axios';
 import { getParameterByName } from './lowebutil';
+import MusicResource from './music_resource';
 
-export default class bilibili {
+export default class bilibili extends MusicResource {
   static bi_convert_song(song_info) {
     const track = {
       id: `bitrack_${song_info.id}`,
@@ -17,7 +18,7 @@ export default class bilibili {
     return track;
   }
 
-  static async show_playlist(url) {
+  static async showPlaylist(url) {
     let offset = getParameterByName('offset', url);
     if (offset === undefined) {
       offset = 0;
@@ -105,7 +106,7 @@ export default class bilibili {
     };
   }
 
-  static parse_url(url) {
+  static parseUrl(url) {
     let result;
     const match = /\/\/www.bilibili.com\/audio\/am([0-9]+)/.exec(url);
     if (match != null) {
@@ -122,7 +123,7 @@ export default class bilibili {
     };
   }
 
-  static bootstrap_track(track, success, failure) {
+  static bootstrapTrack(track, success, failure) {
     const sound = {};
     const song_id = track.id.slice('bitrack_'.length);
     const target_url = `https://www.bilibili.com/audio/music-service-c/web/url?sid=${song_id}`;
@@ -178,7 +179,7 @@ export default class bilibili {
     return { lyric: data };
   }
 
-  static get_playlist(url) {
+  static getPlaylist(url) {
     const list_id = getParameterByName('list_id', url).split('_')[0];
     switch (list_id) {
       case 'biplaylist':
@@ -192,33 +193,20 @@ export default class bilibili {
     }
   }
 
-  static async get_playlist_filters() {
+  static async getPlaylistFilters() {
     return {
       recommend: [],
       all: []
     };
   }
 
-  static async get_user() {
+  static async getUser() {
     return { status: 'fail', data: {} };
   }
 
-  static get_login_url() {
+  static getLoginUrl() {
     return `https://www.bilibili.com`;
   }
 
   static logout() {}
-
-  // return {
-  //   show_playlist: bi_show_playlist,
-  //   get_playlist_filters,
-  //   get_playlist,
-  //   parse_url: bi_parse_url,
-  //   bootstrap_track: bi_bootstrap_track,
-  //   search: bi_search,
-  //   lyric: bi_lyric,
-  //   get_user: bi_get_user,
-  //   get_login_url: bi_get_login_url,
-  //   logout: bi_logout,
-  // };
 }

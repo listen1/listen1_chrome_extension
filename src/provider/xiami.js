@@ -1,10 +1,12 @@
-export default class xiami {
-  static show_playlist() {
+import MusicResource from './music_resource';
+
+export default class xiami extends MusicResource {
+  static showPlaylist() {
     return [];
   }
 
   // eslint-disable-next-line no-unused-vars
-  static bootstrap_track(track, success, failure) {
+  static bootstrapTrack(track, success, failure) {
     const sound = {};
     failure(sound);
   }
@@ -65,7 +67,7 @@ export default class xiami {
     };
   }
 
-  static parse_url() {
+  static parseUrl() {
     let result;
     return {
       success: (fn) => {
@@ -74,7 +76,7 @@ export default class xiami {
     };
   }
 
-  static get_playlist(url) {
+  static getPlaylist(url) {
     const list_id = getParameterByName('list_id', url).split('_')[0];
     switch (list_id) {
       case 'xmplaylist':
@@ -88,32 +90,19 @@ export default class xiami {
     }
   }
 
-  static get_playlist_filters() {
+  static getPlaylistFilters() {
     return {
       success: (fn) => fn({ recommend: [], all: [] })
     };
   }
 
-  static async get_user() {
+  static async getUser() {
     return { status: 'fail', data: {} };
   }
 
-  static get_login_url() {
+  static getLoginUrl() {
     return `https://www.xiami.com`;
   }
 
   static logout() {}
-
-  // return {
-  //   show_playlist: xm_show_playlist,
-  //   get_playlist_filters,
-  //   get_playlist,
-  //   parse_url: xm_parse_url,
-  //   bootstrap_track: xm_bootstrap_track,
-  //   search: xm_search,
-  //   lyric: xm_lyric,
-  //   get_user: xm_get_user,
-  //   get_login_url: xm_get_login_url,
-  //   logout: xm_logout,
-  // };
 }

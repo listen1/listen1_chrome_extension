@@ -1,4 +1,5 @@
 import { getParameterByName } from './lowebutil';
+import MusicResource from './music_resource';
 
 /* global getParameterByName */
 
@@ -12,8 +13,8 @@ const defaultLocalMusicPlaylist = {
   }
 };
 
-export default class localmusic {
-  static show_playlist(url, hm) {
+export default class localmusic extends MusicResource {
+  static showPlaylist(url, hm) {
     return {
       success: (fn) =>
         fn({
@@ -65,7 +66,7 @@ export default class localmusic {
     return playlist;
   }
 
-  static bootstrap_track(track, success, failure) {
+  static bootstrapTrack(track, success, failure) {
     const sound = {};
     sound.url = track.sound_url;
     sound.platform = 'localmusic';
@@ -109,7 +110,7 @@ export default class localmusic {
     };
   }
 
-  static parse_url(url) {
+  static parseUrl(url) {
     let result;
     return {
       success: (fn) => {
@@ -118,7 +119,7 @@ export default class localmusic {
     };
   }
 
-  static get_playlist(url) {
+  static getPlaylist(url) {
     const list_id = getParameterByName('list_id', url).split('_')[0];
     switch (list_id) {
       case 'lmplaylist':
@@ -147,22 +148,10 @@ export default class localmusic {
     };
   }
 
-  static async get_playlist_filters() {
+  static async getPlaylistFilters() {
     return {
       recommend: [],
       all: []
     };
   }
-
-  // return {
-  //   show_playlist: lm_show_playlist,
-  //   get_playlist_filters,
-  //   get_playlist,
-  //   parse_url: lm_parse_url,
-  //   bootstrap_track: lm_bootstrap_track,
-  //   search: lm_search,
-  //   lyric: lm_lyric,
-  //   add_playlist: lm_add_playlist,
-  //   remove_from_playlist: lm_remove_from_playlist,
-  // };
 }

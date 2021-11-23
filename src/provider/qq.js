@@ -1,7 +1,8 @@
 import axios from 'axios';
 import { getParameterByName, cookieRemove, cookieGetPromise } from './lowebutil';
+import MusicResource from './music_resource';
 
-export default class qq {
+export default class qq extends MusicResource {
   static htmlDecode(value) {
     const parser = new DOMParser();
     return parser.parseFromString(value, 'text/html').body.textContent;
@@ -25,7 +26,7 @@ export default class qq {
     return result;
   }
 
-  static async show_playlist(url) {
+  static async showPlaylist(url) {
     const offset = Number(getParameterByName('offset', url)) || 0;
     let filterId = getParameterByName('filter_id', url) || '';
     if (filterId === 'toplist') {
@@ -309,7 +310,7 @@ export default class qq {
     return result;
   }
 
-  static bootstrap_track(track, success, failure) {
+  static bootstrapTrack(track, success, failure) {
     const sound = {};
     const songId = track.id.slice('qqtrack_'.length);
     const target_url = 'https://u.y.qq.com/cgi-bin/musicu.fcg';
@@ -417,7 +418,7 @@ export default class qq {
     return { lyric, tlyric };
   }
 
-  static parse_url(url) {
+  static parseUrl(url) {
     return {
       success: (fn) => {
         let result;
@@ -468,7 +469,7 @@ export default class qq {
     };
   }
 
-  static get_playlist(url) {
+  static getPlaylist(url) {
     const list_id = getParameterByName('list_id', url).split('_')[0];
     switch (list_id) {
       case 'qqplaylist':
@@ -484,7 +485,7 @@ export default class qq {
     }
   }
 
-  static async get_playlist_filters() {
+  static async getPlaylistFilters() {
     const target_url =
       'https://c.y.qq.com/splcloud/fcgi-bin/fcg_get_diss_tag_conf.fcg' +
       `?picmid=1&rnd=${Math.random()}&g_tk=732560869` +
@@ -540,7 +541,7 @@ export default class qq {
     return { status: 'success', data: result };
   }
 
-  static async get_user_created_playlist(url) {
+  static async getUserCreatedPlaylist(url) {
     const user_id = getParameterByName('user_id', url);
     // TODO: load more than size
     const size = 100;
@@ -581,7 +582,7 @@ export default class qq {
     };
   }
 
-  static async get_user_favorite_playlist(url) {
+  static async getUserFavoritePlaylist(url) {
     const user_id = getParameterByName('user_id', url);
     // TODO: load more than size
     const size = 100;
@@ -619,7 +620,7 @@ export default class qq {
     };
   }
 
-  static async get_recommend_playlist() {
+  static async getRecommendPlaylist() {
     const target_url = `https://u.y.qq.com/cgi-bin/musicu.fcg?format=json&&loginUin=0&hostUin=0inCharset=utf8&outCharset=utf-8&platform=yqq.json&needNewCode=0&data=${encodeURIComponent(
       JSON.stringify({
         comm: {
@@ -653,7 +654,7 @@ export default class qq {
       }
     };
   }
-  static async get_user() {
+  static async getUser() {
     const domain = 'https://y.qq.com';
     const qqCookie = await cookieGetPromise({
       url: domain,
@@ -673,7 +674,7 @@ export default class qq {
     }
   }
 
-  static get_login_url() {
+  static getLoginUrl() {
     return `https://y.qq.com/portal/profile.html`;
   }
 
