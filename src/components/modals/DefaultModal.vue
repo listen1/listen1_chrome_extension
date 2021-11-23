@@ -1,12 +1,12 @@
 <template>
   <div class="modal-mask">
-    <div class="modal-wrapper" @click.self="$parent.$emit('close')">
+    <div class="modal-wrapper" @click.self="$parent?.$emit('close')">
       <div class="modal-container">
         <div class="modal-header">
           <div class="modal-header-slot">
             <slot name="header">default header</slot>
           </div>
-          <span class="modal-close" @click="$parent.$emit('close')">×</span>
+          <span class="modal-close" @click="$parent?.$emit('close')">×</span>
         </div>
 
         <div class="modal-body">
@@ -16,7 +16,7 @@
         <div class="modal-footer">
           <slot name="footer">
             default footer
-            <button class="modal-default-button" @click="$parent.$emit('close')">OK</button>
+            <button class="modal-default-button" @click="$parent?.$emit('close')">OK</button>
           </slot>
         </div>
       </div>
