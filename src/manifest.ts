@@ -8,6 +8,7 @@ const mv2: ManifestV2 = {
     'notifications',
     'unlimitedStorage',
     'cookies',
+    'tabs',
     '*://music.163.com/*',
     '*://*.music.163.com/*',
     '*://*.xiami.com/*',
