@@ -8,40 +8,57 @@ import migu from '../provider/migu';
 import taihe from '../provider/taihe';
 import { getLocalStorageValue } from '../provider/lowebutil';
 // import localmusic from "@/provider/localmusic";
-// import myplaylist from '@/provider/myplaylist';
+import myplaylist from '../provider/myplaylist';
 
-const sourceList = [
-  {
-    name: 'netease',
-    displayId: '_NETEASE_MUSIC'
-  },
-  {
-    name: 'qq',
-    displayId: '_QQ_MUSIC'
-  },
-  {
-    name: 'kugou',
-    displayId: '_KUGOU_MUSIC'
-  },
-  {
-    name: 'kuwo',
-    displayId: '_KUWO_MUSIC'
-  },
-  {
-    name: 'bilibili',
-    displayId: '_BILIBILI_MUSIC',
-    searchable: false
-  },
-  {
-    name: 'migu',
-    displayId: '_MIGU_MUSIC'
-  },
-  {
-    name: 'taihe',
-    displayId: '_TAIHE_MUSIC'
-  }
-];
-const PROVIDERS = [
+interface Provider {
+  get_playlist: (url: string) => any,
+  search: (url: string) => any,
+  lyric: (url: string) => any,
+}
+
+const sourceList: {
+  name: string;
+  displayId: string;
+  searchable?: boolean;
+}[] = [
+    {
+      name: 'netease',
+      displayId: '_NETEASE_MUSIC'
+    },
+    {
+      name: 'qq',
+      displayId: '_QQ_MUSIC'
+    },
+    {
+      name: 'kugou',
+      displayId: '_KUGOU_MUSIC'
+    },
+    {
+      name: 'kuwo',
+      displayId: '_KUWO_MUSIC'
+    },
+    {
+      name: 'bilibili',
+      displayId: '_BILIBILI_MUSIC',
+      searchable: false
+    },
+    {
+      name: 'migu',
+      displayId: '_MIGU_MUSIC'
+    },
+    {
+      name: 'taihe',
+      displayId: '_TAIHE_MUSIC'
+    }
+  ];
+const PROVIDERS: {
+  id: string,
+  name: string,
+  instance: any,
+  searchable: boolean,
+  support_login: boolean,
+  hidden?: boolean,
+}[] = [
   {
     name: 'netease',
     instance: netease,
@@ -98,7 +115,7 @@ const PROVIDERS = [
     searchable: true,
     support_login: false,
     id: 'th'
-  }
+  },
   //   {
   //     name: "localmusic",
   //     instance: localmusic,
@@ -107,18 +124,22 @@ const PROVIDERS = [
   //     support_login: false,
   //     id: "lm",
   //   },
-  //   {
-  //     name: "myplaylist",
-  //     instance: myplaylist,
-  //     searchable: false,
-  //     hidden: true,
-  //     support_login: false,
-  //     id: "my",
-  //   },
+  {
+    name: "myplaylist",
+    instance: myplaylist,
+    searchable: false,
+    hidden: true,
+    support_login: false,
+    id: "my",
+  },
 ];
 
-function getProviderByName(sourceName) {
-  return (PROVIDERS.find((i) => i.name === sourceName) || {}).instance;
+function getProviderByName(sourceName: string) {
+  const provider = PROVIDERS.find((i) => i.name === sourceName)?.instance;
+  if (!provider) {
+    throw Error('Unknown Provider');
+  }
+  return provider;
 }
 
 // function getAllProviders() {
@@ -129,14 +150,22 @@ function getAllSearchProviders() {
   return PROVIDERS.filter((i) => i.searchable).map((i) => i.instance);
 }
 
-function getProviderNameByItemId(itemId) {
+function getProviderNameByItemId(itemId: string) {
   const prefix = itemId.slice(0, 2);
-  return (PROVIDERS.find((i) => i.id === prefix) || {}).name;
+  const name = PROVIDERS.find((i) => i.id === prefix)?.name;
+  if (!name) {
+    throw Error('Unknown Provider');
+  }
+  return name;
 }
 
-function getProviderByItemId(itemId) {
+function getProviderByItemId(itemId: string) {
   const prefix = itemId.slice(0, 2);
-  return (PROVIDERS.find((i) => i.id === prefix) || {}).instance;
+  const provider: Provider | undefined = PROVIDERS.find((i) => i.id === prefix)?.instance;
+  if (!provider) {
+    throw Error('Unknown Provider');
+  }
+  return provider;
 }
 
 // // /* cache for all playlist request except myplaylist and localmusic */
@@ -145,7 +174,7 @@ function getProviderByItemId(itemId) {
 // //   maxAge: 60 * 60 * 1000, // 1 hour cache expire
 // // });
 
-function queryStringify(options) {
+function queryStringify(options: unknown) {
   const query = JSON.parse(JSON.stringify(options));
   return new URLSearchParams(query).toString();
 }
@@ -157,12 +186,16 @@ const MediaService = {
   //   getLoginProviders() {
   //     return PROVIDERS.filter((i) => !i.hidden && i.support_login);
   //   },
-  async search(source, options) {
+  async search(source: string, options: unknown) {
     const url = `/search?${queryStringify(options)}`;
     if (source === 'allmusic') {
       // search all platform and merge result
       const platformResultArray = await Promise.all(getAllSearchProviders().map((p) => p.search(url)));
-      const result = {
+      const result: {
+        result: any[],
+        total: number,
+        type: string,
+      } = {
         result: [],
         total: 1000,
         type: platformResultArray[0].type
@@ -182,22 +215,22 @@ const MediaService = {
     }
   },
 
-  //   showMyPlaylist() {
-  //     return myplaylist.show_myplaylist("my");
-  //   },
+  showMyPlaylist() {
+    return myplaylist.get_myplaylists_list("my");
+  },
 
-  showPlaylistArray(source, offset, filter_id) {
+  showPlaylistArray(source: string, offset: string, filter_id: string) {
     const provider = getProviderByName(source);
     const url = `/show_playlist?${queryStringify({ offset, filter_id })}`;
     return provider.show_playlist(url);
   },
 
-  getPlaylistFilters(source) {
+  getPlaylistFilters(source: string) {
     const provider = getProviderByName(source);
     return provider.get_playlist_filters();
   },
 
-  getLyric(track_id, album_id, lyric_url, tlyric_url) {
+  getLyric(track_id: string, album_id: string, lyric_url: string, tlyric_url: string) {
     const provider = getProviderByItemId(track_id);
     const url = `/lyric?${queryStringify({
       track_id,
@@ -208,18 +241,17 @@ const MediaService = {
     return provider.lyric(url);
   },
 
-  //   showFavPlaylist() {
-  //     return myplaylist.show_myplaylist("favorite");
-  //   },
-
-  queryPlaylist(listId, type) {
-    const result = myplaylist.myplaylist_containers(type, listId);
-    return {
-      success: (fn) => fn({ result })
-    };
+  showFavPlaylist() {
+    return myplaylist.get_myplaylists_list("favorite");
   },
 
-  getPlaylist(listId) {
+  async isMyPlaylist(listId: string) {
+    const url = `/playlist?list_id=${listId}`;
+    const playlist = await myplaylist.get_playlist(url);
+    return !!playlist;
+  },
+
+  getPlaylist(listId: string) {
     const provider = getProviderByItemId(listId);
     const url = `/playlist?list_id=${listId}`;
     // let hit = null;
@@ -235,32 +267,19 @@ const MediaService = {
     return provider.get_playlist(url);
   },
 
-  //   clonePlaylist(id, type) {
-  //     const provider = getProviderByItemId(id);
-  //     const url = `/playlist?list_id=${id}`;
-  //     return {
-  //       success: (fn) => {
-  //         provider.get_playlist(url).success((data) => {
-  //           myplaylist.save_myplaylist(type, data);
-  //           fn();
-  //         });
-  //       },
-  //     };
-  //   },
+  async clonePlaylist(id: string, type: string) {
+    const provider = getProviderByItemId(id);
+    const url = `/playlist?list_id=${id}`;
+    return myplaylist.save_myplaylist(type, await provider.get_playlist(url));
+  },
 
-  //   removeMyPlaylist(id, type) {
-  //     myplaylist.remove_myplaylist(type, id);
-  //     return {
-  //       success: (fn) => fn(),
-  //     };
-  //   },
+  removeMyPlaylist(id: string, type: string) {
+    return myplaylist.remove_myplaylist(type, id);
+  },
 
-  //   addMyPlaylist(id, track) {
-  //     const newPlaylist = myplaylist.add_track_to_myplaylist(id, track);
-  //     return {
-  //       success: (fn) => fn(newPlaylist),
-  //     };
-  //   },
+  async addMyPlaylist(id: string, tracks: string) {
+    return myplaylist.add_track_to_myplaylist(id, tracks);
+  },
   //   insertTrackToMyPlaylist(id, track, to_track, direction) {
   //     const newPlaylist = myplaylist.insert_track_to_myplaylist(
   //       id,
@@ -289,14 +308,9 @@ const MediaService = {
   //     return provider.remove_from_playlist(id, track);
   //   },
 
-  //   createMyPlaylist(title, track) {
-  //     myplaylist.create_myplaylist(title, track);
-  //     return {
-  //       success: (fn) => {
-  //         fn();
-  //       },
-  //     };
-  //   },
+  createMyPlaylist(title: string, track: string) {
+    myplaylist.create_myplaylist(title, track);
+  },
   //   insertMyplaylistToMyplaylists(
   //     playlistType,
   //     playlistId,
@@ -356,9 +370,9 @@ const MediaService = {
   //     };
   //   },
 
-  bootstrapTrack(track, playerSuccessCallback, playerFailCallback) {
+  bootstrapTrack(track: any, playerSuccessCallback: (res?: unknown) => unknown, playerFailCallback: (res?: unknown) => unknown) {
     const successCallback = playerSuccessCallback;
-    const sound = {};
+    const sound: Record<string, unknown> = {};
     function failureCallback() {
       if (localStorage.getObject('enable_auto_choose_source') === false) {
         playerFailCallback();
@@ -366,9 +380,9 @@ const MediaService = {
       }
       const trackPlatform = getProviderNameByItemId(track.id);
       /** @type{Array} */
-      const failover_source_list = getLocalStorageValue('auto_choose_source_list', ['kuwo', 'qq', 'migu']).filter((i) => i !== trackPlatform);
+      const failover_source_list = getLocalStorageValue('auto_choose_source_list', ['kuwo', 'qq', 'migu']).filter((i: string) => i !== trackPlatform);
 
-      const getUrlAsync = failover_source_list.map(async (source) => {
+      const getUrlAsync = failover_source_list.map(async (source: string) => {
         if (track.source === source) {
           return;
         }
@@ -376,7 +390,7 @@ const MediaService = {
         const curpage = 1;
         const url = `/search?keywords=${keyword}&curpage=${curpage}&type=0`;
         const provider = getProviderByName(source);
-        provider.search(url).then((data) => {
+        provider.search(url).then((data: any) => {
           for (let i = 0; i < data.result.length; i += 1) {
             const searchTrack = data.result[i];
             // compare search track and track to check if they are same
@@ -384,7 +398,7 @@ const MediaService = {
             if (!searchTrack.disable && searchTrack.title === track.title && searchTrack.artist === track.artist) {
               provider.bootstrap_track(
                 searchTrack,
-                (response) => {
+                (response: Record<string, unknown>) => {
                   sound.url = response.url;
                   sound.bitrate = response.bitrate;
                   sound.platform = response.platform;

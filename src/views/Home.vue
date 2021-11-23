@@ -1,4 +1,6 @@
 <template>
+  <Modal ref="modalRef"></Modal>
+
   <div class="wrap">
     <!-- dialog-->
     <div v-show="is_dialog_hidden !== 1" class="shadow" />
@@ -9,37 +11,9 @@
       </div>
       <div class="dialog-body">
         <!-- choose playlist dialog-->
-        <ul v-show="dialog_type == 0" class="dialog-playlist">
-          <li class="detail-add" @click="newDialogOption(1)">
-            <img src="../images/mycover.jpg" />
-            <h2>_CREATE_PLAYLIST</h2>
-          </li>
-          <li
-            ng-repeat="playlist in myplaylist track by $index"
-            ng-class-odd="'odd'"
-            ng-class-even="'even'"
-            ng-click="chooseDialogOption(playlist.info.id)"
-          >
-            <img ng-src=" playlist.info.cover_img_url " />
-            <h2>playlist.info.title</h2>
-          </li>
-        </ul>
+
         <!-- create new playlist dialog-->
-        <div v-show="dialog_type == 1" class="dialog-newplaylist">
-          <input
-            class="form-control"
-            type="text"
-            placeholder="_INPUT_NEW_PLAYLIST_TITLE"
-            ng-model="newlist_title"
-          />
-          <div class="buttons">
-            <button
-              class="btn btn-primary confirm-button"
-              ng-click="createAndAddPlaylist()"
-            >_CONFIRM</button>
-            <button class="btn btn-default" ng-click="cancelNewDialog(0)">_CANCEL</button>
-          </div>
-        </div>
+
         <!-- edit playlist dialog-->
         <div v-show="dialog_type == 3" class="dialog-editplaylist">
           <div class="form-group">
@@ -218,116 +192,7 @@
     </div>
 
     <div class="main" ng-controller="MyPlayListController">
-      <div class="sidebar">
-        <div class="flex-scroll-wrapper">
-          <div class="menu-control" />
-          <div class="menu-title">
-            <div class="title">{{ t('_PLATFORM_UNION') }}</div>
-          </div>
-          <ul class="nav masthead-nav">
-            <li :class="{ active: $route.name === 'HotPlaylists' }" @click="$router.push('/')">
-              <div class="sidebar-block">
-                <span class="icon li-featured-list" />
-                <a>{{ t('_PLAYLISTS') }}</a>
-              </div>
-            </li>
-          </ul>
-          <div v-if="!isChrome || is_login('netease') || is_login('qq')" class="menu-title">
-            <div class="title">{{ t('_MY_MUSIC') }}</div>
-          </div>
-          <ul class="nav masthead-nav">
-            <li
-              v-if="!isChrome"
-              ng-click="showPlaylist('lmplaylist_reserve')"
-              ng-class="{ 'active':window_type=='list' && ( '/playlist?list_id=lmplaylist_reserve' === getCurrentUrl() ) }"
-            >
-              <div class="sidebar-block">
-                <span class="icon li-featured-list" />
-                <a>{{ t('_LOCAL_MUSIC') }}</a>
-              </div>
-            </li>
-            <li
-              v-if="is_login('netease')"
-              ng-click="showTag(6, {platform:'netease', user: musicAuth.netease});"
-              ng-class="{ 'active':(current_tag==6 && tag_params.platform=='netease') && (window_url_stack.length ==0) }"
-            >
-              <div class="sidebar-block">
-                <svg class="feather">
-                  <use href="#globe" />
-                </svg>
-                <a>{{ t('_MY_NETEASE') }}</a>
-              </div>
-            </li>
-            <li
-              v-if="is_login('qq')"
-              ng-click="showTag(6, {platform:'qq', user: musicAuth.qq});"
-              ng-class="{ 'active':(current_tag==6 && tag_params.platform=='qq') && (window_url_stack.length ==0) }"
-            >
-              <div class="sidebar-block">
-                <svg class="feather">
-                  <use href="#globe" />
-                </svg>
-                <a>{{ t('_MY_QQ') }}</a>
-              </div>
-            </li>
-          </ul>
-          <!-- <div class="menu-title" ng-init="loadMyPlaylist();">
-                    <div class="title">
-                      {{ t('_CREATED_PLAYLIST') }}
-                    </div>
-                    <svg class="feather icon" @click="showDialog(5)">
-                      <use href="#plus-square" />
-                    </svg>
-                  </div>
-                  <ul class="nav masthead-nav">
-                    <li
-                      ng-repeat="i in myplaylists track by $index"
-                      ng-class="{ 'active':window_type=='list' && ( ('/playlist?list_id='+i.info.id) === getCurrentUrl() ) }"
-                      ng-click="showPlaylist(i.info.id)"
-                      drag-drop-zone
-                      drag-zone-type="'application/listen1-myplaylist'"
-                      drop-zone-ondrop="onSidebarPlaylistDrop('my', i.info.id, arg1, arg2, arg3)"
-                      draggable="true"
-                      sortable="true"
-                      drag-zone-object="i"
-                      drag-zone-title="i.info.title"
-                    >
-                      <div class="sidebar-block">
-                        <svg class="feather">
-                          <use href="#disc" />
-                        </svg>
-                        <a>i.info.title</a>
-                      </div>
-                    </li>
-          </ul>-->
-          <!-- <div class="menu-title" ng-init="loadFavoritePlaylist();">
-                    <div class="title">
-                      {{ $t('_FAVORITED_PLAYLIST') }}
-                    </div>
-                  </div>
-                  <ul class="nav masthead-nav">
-                    <li
-                      ng-repeat="i in favoriteplaylists track by $index"
-                      ng-class="{ 'active':window_type=='list' && ( ('/playlist?list_id='+i.info.id) === getCurrentUrl() ) }"
-                      ng-click="showPlaylist(i.info.id, {useCache: false})"
-                      drag-drop-zone
-                      drag-zone-type="'application/listen1-favoriteplaylist'"
-                      drop-zone-ondrop="onSidebarPlaylistDrop('favorite', i.info.id, arg1, arg2, arg3)"
-                      draggable="true"
-                      sortable="true"
-                      drag-zone-object="i"
-                      drag-zone-title="i.info.title"
-                    >
-                      <div class="sidebar-block">
-                        <svg class="feather">
-                          <use href="#disc" />
-                        </svg>
-                        <a>i.info.title</a>
-                      </div>
-                    </li>
-          </ul>-->
-        </div>
-      </div>
+      <Sidebar></Sidebar>
 
       <div class="content" ng-controller="InstantSearchController">
         <div class="navigation">
@@ -848,7 +713,7 @@
 <script setup>
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import 'notyf/notyf.min.css';
-import { onMounted } from 'vue';
+import { onMounted, provide } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 import '../assets/css/common.css';
@@ -859,7 +724,9 @@ import useSearch from '../composition/search';
 import useSettings from '../composition/settings';
 import { setLocale } from '../i18n';
 import { l1Player } from '../services/l1_player';
-
+import Modal from '../components/Modal.vue';
+import DefaultModal from '../components/modals/DefaultModal.vue';
+import Sidebar from '../components/Sidebar.vue';
 
 const { t } = useI18n();
 const { player, playerListener } = usePlayer()
@@ -917,9 +784,6 @@ const toggleNowPlaying = () => {
     window_type = '';
   }
 };
-const is_login = (platform) => {
-  return false;
-};
 const newDialogOption = (option) => {
   dialog_type = option;
 };
@@ -968,6 +832,11 @@ const toggleMuteStatus = () => {
 const playFromPlaylist = (song) => {
   l1Player.playById(song.id);
 };
+
+let modalRef = $ref(null);
+provide('showModal', (type, opt) => {
+  modalRef.showModal(type, opt);
+});
 onMounted(() => {
   if ('windowControlsOverlay' in navigator) {
     const { x } = navigator.windowControlsOverlay.getBoundingClientRect();

@@ -4,6 +4,8 @@ import { isElectron, smoothScrollTo } from '../provider/lowebutil';
 import { l1Player } from '../services/l1_player';
 import MediaService from '../services/MediaService';
 import notyf from '../services/notyf';
+import iDB from '../services/DBService';
+
 function parseLyric(lyric, tlyric) {
   const lines = lyric.split('\n');
   let result = [];
@@ -269,7 +271,12 @@ function playerListener(mode, msg, sender, sendResponse) {
       case 'PLAYLIST': {
         // 'player:playlist'
         player.playlist = msg.data;
-        localStorage.setObject('current-playing', msg.data);
+        msg.data.forEach((track) => track.playlist = 'current');
+        iDB.Playlists.put({
+          id: 'current', title: 'current', cover_img_url: '', type: 'current',
+          order: msg.data.map(i => i.id),
+        });
+        iDB.Tracks.bulkPut(msg.data);
 
         break;
       }
