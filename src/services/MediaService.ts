@@ -216,7 +216,7 @@ const MediaService = {
   },
 
   showMyPlaylist() {
-    return myplaylist.get_myplaylists_list('my');
+    return myplaylist.getMyplaylistsList('my');
   },
 
   showPlaylistArray(source: string, offset: string, filter_id: string) {
@@ -242,7 +242,7 @@ const MediaService = {
   },
 
   showFavPlaylist() {
-    return myplaylist.get_myplaylists_list('favorite');
+    return myplaylist.getMyplaylistsList('favorite');
   },
 
   async isMyPlaylist(listId: string) {
@@ -270,18 +270,18 @@ const MediaService = {
   async clonePlaylist(id: string, type: string) {
     const provider = getProviderByItemId(id);
     const url = `/playlist?list_id=${id}`;
-    return myplaylist.save_myplaylist(type, await provider.getPlaylist(url));
+    return myplaylist.saveMyplaylist(type, await provider.getPlaylist(url));
   },
 
   removeMyPlaylist(id: string, type: string) {
-    return myplaylist.remove_myplaylist(type, id);
+    return myplaylist.removeMyplaylist(type, id);
   },
 
   async addMyPlaylist(id: string, tracks: string) {
-    return myplaylist.add_track_to_myplaylist(id, tracks);
+    return myplaylist.addTrackToMyplaylist(id, tracks);
   },
   //   insertTrackToMyPlaylist(id, track, to_track, direction) {
-  //     const newPlaylist = myplaylist.insert_track_to_myplaylist(
+  //     const newPlaylist = myplaylist.insertTrackToMyplaylist(
   //       id,
   //       track,
   //       to_track,
@@ -297,7 +297,7 @@ const MediaService = {
   //   },
 
   //   removeTrackFromMyPlaylist(id, track) {
-  //     myplaylist.remove_track_from_myplaylist(id, track);
+  //     myplaylist.removeTrackFromMyplaylist(id, track);
   //     return {
   //       success: (fn) => fn(),
   //     };
@@ -309,7 +309,7 @@ const MediaService = {
   //   },
 
   createMyPlaylist(title: string, track: string) {
-    myplaylist.create_myplaylist(title, track);
+    myplaylist.createMyplaylist(title, track);
   },
   //   insertMyplaylistToMyplaylists(
   //     playlistType,
@@ -317,7 +317,7 @@ const MediaService = {
   //     toPlaylistId,
   //     direction
   //   ) {
-  //     const newPlaylists = myplaylist.insert_myplaylist_to_myplaylists(
+  //     const newPlaylists = myplaylist.insertMyplaylistToMyplaylists(
   //       playlistType,
   //       playlistId,
   //       toPlaylistId,
@@ -328,7 +328,7 @@ const MediaService = {
   //     };
   //   },
   //   editMyPlaylist(id, title, coverImgUrl) {
-  //     myplaylist.edit_myplaylist(id, title, coverImgUrl);
+  //     myplaylist.editMyplaylist(id, title, coverImgUrl);
   //     return {
   //       success: (fn) => fn(),
   //     };
@@ -362,7 +362,7 @@ const MediaService = {
   //     const srcData = localStorage.getObject(source).tracks;
   //     tarData.forEach((tarTrack) => {
   //       if (!srcData.find((srcTrack) => srcTrack.id === tarTrack.id)) {
-  //         myplaylist.add_track_to_myplaylist(source, tarTrack);
+  //         myplaylist.addTrackToMyplaylist(source, tarTrack);
   //       }
   //     });
   //     return {

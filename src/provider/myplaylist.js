@@ -2,8 +2,8 @@ import { getParameterByName } from './lowebutil';
 import iDB from '../services/DBService';
 import EventService from '../services/EventService';
 
-const myplaylistFactory = () => {
-  function array_move(arr, old_index, new_index) {
+export default class MyPlaylist {
+  static array_move(arr, old_index, new_index) {
     // https://stackoverflow.com/questions/5306680/move-an-array-element-from-one-array-position-to-another
     if (new_index >= arr.length) {
       let k = new_index - arr.length + 1;
@@ -15,7 +15,7 @@ const myplaylistFactory = () => {
     arr.splice(new_index, 0, arr.splice(old_index, 1)[0]);
     return arr; // for testing
   }
-  function getPlaylistObjectKey(playlist_type) {
+  static getPlaylistObjectKey(playlist_type) {
     let key = '';
     if (playlist_type === 'my') {
       key = 'c';
@@ -24,7 +24,7 @@ const myplaylistFactory = () => {
     }
     return key;
   }
-  async function get_myplaylists_list(playlist_type) {
+  static async getMyplaylistsList(playlist_type) {
     const order = await iDB.Settings.get({ key: playlist_type + '_playlist_order' });
     let playlists = await iDB.Playlists.where('type').equals(playlist_type).toArray();
     playlists = order?.value.map((id) => playlists.find((playlist) => playlist.id === id));
@@ -38,7 +38,7 @@ const myplaylistFactory = () => {
     return playlists;
   }
 
-  async function get_myplaylist(url) {
+  static async getPlaylist(url) {
     const list_id = getParameterByName('list_id', url);
     const playlistInfo = await iDB.Playlists.get(list_id);
     let playlist = {
@@ -56,7 +56,7 @@ const myplaylistFactory = () => {
     return playlist;
   }
 
-  function guid() {
+  static guid() {
     function s4() {
       return Math.floor((1 + Math.random()) * 0x10000)
         .toString(16)
@@ -65,8 +65,8 @@ const myplaylistFactory = () => {
     return `${s4() + s4()}-${s4()}-${s4()}-${s4()}-${s4()}${s4()}${s4()}`;
   }
 
-  function insert_myplaylist_to_myplaylists(playlist_type, playlist_id, to_playlist_id, direction) {
-    const key = getPlaylistObjectKey(playlist_type);
+  static insertMyplaylistToMyplaylists(playlist_type, playlist_id, to_playlist_id, direction) {
+    const key = this.getPlaylistObjectKey(playlist_type);
     if (key === '') {
       return [];
     }
@@ -82,13 +82,13 @@ const myplaylistFactory = () => {
     }
     const offset = direction === 'top' ? 0 : 1;
 
-    array_move(playlists, index, insertIndex + offset);
+    this.array_move(playlists, index, insertIndex + offset);
 
     localStorage.setObject(key, playlists);
     return playlists;
   }
 
-  const save_myplaylist = async (playlist_type, playlistObj) => {
+  static async saveMyplaylist(playlist_type, playlistObj) {
     const playlist = await playlistObj;
 
     const playlistInfo = { ...playlist.info };
@@ -96,7 +96,7 @@ const myplaylistFactory = () => {
     // update listid
     let playlist_id = '';
     if (playlist_type === 'my') {
-      playlist_id = `myplaylist_${guid()}`;
+      playlist_id = `myplaylist_${this.guid()}`;
       playlistInfo.id = playlist_id;
       playlistInfo.type = 'my';
       playlistInfo.order = playlist.tracks.map((track) => track.id);
@@ -126,9 +126,9 @@ const myplaylistFactory = () => {
     EventService.emit(`playlist:${playlist_type}:update`);
 
     return playlist_id;
-  };
+  }
 
-  const remove_myplaylist = async (playlist_type, playlist_id) => {
+  static async removeMyplaylist(playlist_type, playlist_id) {
     await iDB.transaction('rw', [iDB.Settings, iDB.Tracks, iDB.Playlists], async () => {
       await iDB.Settings.where('key')
         .equals(playlist_type + '_playlist_order')
@@ -139,9 +139,9 @@ const myplaylistFactory = () => {
       await iDB.Tracks.where('playlist').equals(playlist_id).delete();
     });
     EventService.emit(`playlist:${playlist_type}:update`);
-  };
+  }
 
-  async function add_track_to_myplaylist(playlist_id, tracks) {
+  static async addTrackToMyplaylist(playlist_id, tracks) {
     const playlist = await iDB.Playlists.get({ id: playlist_id });
     if (!playlist) {
       return null;
@@ -159,7 +159,7 @@ const myplaylistFactory = () => {
     return playlist;
   }
 
-  function insert_track_to_myplaylist(playlist_id, track, to_track, direction) {
+  static insertTrackToMyplaylist(playlist_id, track, to_track, direction) {
     const playlist = localStorage.getObject(playlist_id);
     if (playlist == null) {
       return null;
@@ -173,12 +173,12 @@ const myplaylistFactory = () => {
       insertIndex -= 1;
     }
     const offset = direction === 'top' ? 0 : 1;
-    array_move(playlist.tracks, index, insertIndex + offset);
+    this.array_move(playlist.tracks, index, insertIndex + offset);
     localStorage.setObject(playlist_id, playlist);
     return playlist;
   }
 
-  function remove_track_from_myplaylist(playlist_id, track_id) {
+  static removeTrackFromMyplaylist(playlist_id, track_id) {
     const playlist = localStorage.getObject(playlist_id);
     if (playlist == null) {
       return;
@@ -188,7 +188,7 @@ const myplaylistFactory = () => {
     localStorage.setObject(playlist_id, playlist);
   }
 
-  function create_myplaylist(playlist_title, tracks) {
+  static createMyplaylist(playlist_title, tracks) {
     const playlist = {
       info: {
         cover_img_url: 'images/mycover.jpg',
@@ -200,10 +200,10 @@ const myplaylistFactory = () => {
     };
 
     // notice: create only used by my playlist, favorite created by clone interface
-    save_myplaylist('my', playlist);
+    this.saveMyplaylist('my', playlist);
   }
 
-  function edit_myplaylist(playlist_id, title, cover_img_url) {
+  static editMyplaylist(playlist_id, title, cover_img_url) {
     const playlist = localStorage.getObject(playlist_id);
     if (playlist == null) {
       return;
@@ -213,28 +213,12 @@ const myplaylistFactory = () => {
     localStorage.setObject(playlist_id, playlist);
   }
 
-  function myplaylist_containers(playlist_type, list_id) {
-    const key = getPlaylistObjectKey(playlist_type);
+  static myplaylistContainers(playlist_type, list_id) {
+    const key = this.getPlaylistObjectKey(playlist_type);
     if (key === '') {
       return false;
     }
     const playlist = localStorage.getObject(list_id);
     return playlist !== null && playlist.is_fav;
   }
-
-  return {
-    get_myplaylists_list,
-    save_myplaylist,
-    getPlaylist: get_myplaylist,
-    remove_myplaylist,
-    add_track_to_myplaylist,
-    remove_track_from_myplaylist,
-    create_myplaylist,
-    edit_myplaylist,
-    myplaylist_containers,
-    insert_track_to_myplaylist,
-    insert_myplaylist_to_myplaylists
-  };
-};
-
-export default myplaylistFactory();
+}
