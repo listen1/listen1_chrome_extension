@@ -35,7 +35,7 @@
             <div
               v-show="is_mine && !is_local"
               class="playlist-button edit-button"
-              @click="showDialog(3, {list_id: list_id, playlist_title: playlist_title, cover_img_url: cover_img_url})"
+              @click="showModal('EditPlaylist', {list_id: list_id, playlist_title: playlist_title, cover_img_url: cover_img_url})"
             >
               <div class="play-list">
                 <vue-feather type="edit" />
@@ -163,6 +163,7 @@ import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 import MediaService from '../services/MediaService';
 import notyf from '../services/notyf';
+import $event from '../services/EventService';
 
 const { t } = useI18n();
 const router = useRouter();
@@ -177,9 +178,9 @@ let list_id = $ref('');
 let window_type = $ref('list');
 const isChrome = true;
 let is_favorite = $ref(false);
+const { listId } = route.params;
 
-onMounted(async () => {
-  const { listId } = route.params;
+const refreshPlaylist = async () => {
   const data = await MediaService.getPlaylist(listId);
   if (data.status === '0') {
     notyf.info(data.reason);
@@ -197,6 +198,9 @@ onMounted(async () => {
   is_favorite = await MediaService.isMyPlaylist(data.info.id);
 
   window_type = 'list';
+};
+onMounted(async () => {
+  await refreshPlaylist();
 });
 const play = (song) => {
   l1Player.addTrack(song);
@@ -221,7 +225,7 @@ const favoritePlaylist = async (list_id) => {
     await addFavoritePlaylist(list_id);
     is_favorite = true;
   }
-}
+};
 const addFavoritePlaylist = async (list_id) => {
   await MediaService.clonePlaylist(list_id, 'favorite');
   notyf.success(t('_FAVORITE_PLAYLIST_SUCCESS'));
@@ -235,6 +239,10 @@ const saveAsMyPlaylist = async (list_id) => {
   notyf.success(t('_ADD_TO_PLAYLIST_SUCCESS'));
 };
 const showModal = inject('showModal');
+
+// TODO: avoid to use event bus to refresh state
+// use global ref to keep more clear way to manage state
+$event.on(`playlist:id:${listId}:update`, refreshPlaylist);
 </script>
 
 <style>

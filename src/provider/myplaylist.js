@@ -203,14 +203,9 @@ export default class MyPlaylist {
     this.saveMyplaylist('my', playlist);
   }
 
-  static editMyplaylist(playlist_id, title, cover_img_url) {
-    const playlist = localStorage.getObject(playlist_id);
-    if (playlist == null) {
-      return;
-    }
-    playlist.info.title = title;
-    playlist.info.cover_img_url = cover_img_url;
-    localStorage.setObject(playlist_id, playlist);
+  static async editMyplaylist(playlist_id, title, cover_img_url) {
+    await iDB.Playlists.where({ id: playlist_id }).modify({ title, cover_img_url });
+    EventService.emit(`playlist:id:${playlist_id}:update`);
   }
 
   static myplaylistContainers(playlist_type, list_id) {
