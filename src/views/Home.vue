@@ -25,17 +25,6 @@
           </div>
         </div>
 
-        <ul v-show="dialog_type == 6" class="dialog-merge-playlist">
-          <li
-            ng-repeat="playlist in myplaylist track by $index"
-            ng-class-odd="'odd'"
-            ng-class-even="'even'"
-            ng-click="mergePlaylist(playlist.info.id)"
-          >
-            <img ng-src=" playlist.info.cover_img_url " />
-            <h2>playlist.info.title</h2>
-          </li>
-        </ul>
         <div v-show="dialog_type == 7" class="dialog-connect-github">
           <p>_OPENING_GITHUB_PAGE</p>
           <p>_CONFIRM_NOTICE_GITHUB</p>
