@@ -16,7 +16,7 @@
       <div v-if="!isChrome || is_login('netease') || is_login('qq')" class="menu-title">
         <div class="title">{{ t('_MY_MUSIC') }}</div>
       </div>
-      <ul class="nav masthead-nav">
+      <!-- <ul class="nav masthead-nav">
         <li
           v-if="!isChrome"
           @click="showPlaylist('lmplaylist_reserve')"
@@ -47,7 +47,7 @@
             <a>{{ t('_MY_QQ') }}</a>
           </div>
         </li>
-      </ul>
+      </ul> -->
       <div class="menu-title">
         <div class="title">{{ t('_CREATED_PLAYLIST') }}</div>
         <vue-feather type="plus-square" @click="showModal('ParseUrl', {})"/>
@@ -99,9 +99,6 @@
   </div>
 </template>
 
-<script lang="ts">
-</script>
-
 <script setup lang="ts">
 import { onMounted, inject } from 'vue';
 import { useI18n } from 'vue-i18n';
@@ -116,8 +113,8 @@ const is_login = (platform: string) => {
   return false;
 };
 
-let favoriteplaylists = $ref<Playlist[]>([]);
-let myplaylists = $ref<unknown[]>([]);
+let favoriteplaylists: any = $ref<Playlist[]>([]);
+let myplaylists: any = $ref<unknown[]>([]);
 
 const refreshFav = () => {
   MediaService.showFavPlaylist().then((res) => (favoriteplaylists = res));
@@ -130,7 +127,7 @@ onMounted(() => {
   refreshMy();
   refreshFav();
 });
-const showModal = inject('showModal');
+const showModal: any = inject('showModal');
 
 $event.on('playlist:favorite:update', refreshFav);
 $event.on('playlist:my:update', refreshMy);

@@ -22,7 +22,7 @@ import MediaService from '../../services/MediaService';
 import { useI18n } from 'vue-i18n';
 
 const { t } = useI18n();
-let myplaylist = $ref<unknown[]>([]);
+let myplaylist: any[] = $ref<unknown[]>([]);
 const emit = defineEmits(['close']);
 const props = defineProps<{
     list_id: string,
