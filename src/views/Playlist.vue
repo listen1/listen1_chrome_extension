@@ -16,9 +16,9 @@
                 <span class="icon li-play-s" />
                 {{ t('_PLAY_ALL') }}
               </div>
-              <!-- <div class="add-list" ng-click="addMylist(list_id)">
+              <div class="add-list" @click="addMylist(list_id)">
                 <span class="icon li-add" />
-              </div>-->
+              </div>
             </div>
             <!-- <div v-show="is_local" class="playlist-button clone-button" ng-click="addLocalMusic(list_id)">
               <div class="play-list">
@@ -129,16 +129,16 @@
             <a @click="showPlaylist(song.album_id)">{{ song.album }}</a>
           </div>
           <div class="tools">
-            <!-- <a v-show="song.options" title="_ADD_TO_QUEUE" class="detail-add-button" add-without-play="song"><span class="icon li-add" /></a> -->
+            <a v-show="song.options" :title="t('_ADD_TO_QUEUE')" class="detail-add-button" @click="addToPlay(song)"><span class="icon li-add" /></a>
             <a v-show="song.options" :title="t('_ADD_TO_PLAYLIST')" class="detail-fav-button" @click="showModal('AddToPlaylist', { tracks: [song] })"><span class="icon li-songlist" /></a>
-            <!-- <a
+            <a
               v-show="song.options && (is_mine == '1' || is_local)"
-              title="_REMOVE_FROM_PLAYLIST"
+              :title="t('_REMOVE_FROM_PLAYLIST')"
               class="detail-delete-button"
-              ng-click="removeSongFromPlaylist(song, list_id)"
+              @click="removeSongFromPlaylist(song.id, list_id)"
             >
               <span class="icon li-del" />
-            </a>-->
+            </a>
             <a
               v-show="song.options && !is_local"
               :title="t('_ORIGIN_LINK')"
@@ -206,6 +206,10 @@ const play = (song) => {
   l1Player.addTrack(song);
   l1Player.playById(song.id);
 };
+const addToPlay = (song) => {
+  l1Player.addTrack(song);
+  notyf.success(t('_ADD_TO_QUEUE_SUCCESS'));
+};
 const playMylist = (listId) => {
   l1Player.setNewPlaylist(songs);
   l1Player.play();
@@ -238,6 +242,14 @@ const saveAsMyPlaylist = async (list_id) => {
   await MediaService.clonePlaylist(list_id, 'my');
   notyf.success(t('_ADD_TO_PLAYLIST_SUCCESS'));
 };
+const removeSongFromPlaylist = async (track_id, list_id) => {
+  await MediaService.removeTrackFromMyPlaylist(track_id, list_id);
+  notyf.success(t('_REMOVE_SONG_FROM_PLAYLIST_SUCCESS'));
+};
+const addMylist = () =>{
+  l1Player.addTracks(songs);
+  notyf.success(t('_ADD_TO_QUEUE_SUCCESS'));
+}
 const showModal = inject('showModal');
 
 // TODO: avoid to use event bus to refresh state

@@ -134,7 +134,7 @@ export const l1Player = {
         // load local storage settings
         const currentPlaylist = await iDB.Playlists.get({ id: 'current' });
         const localCurrentPlaying = await iDB.Tracks.where('playlist').equals('current').toArray();
-        const currentPlaying = currentPlaylist.order.map((id) => localCurrentPlaying.find(track => track.id = id));
+        const currentPlaying = currentPlaylist.order.map((id) => localCurrentPlaying.find((track) => track.id == id));
         const localPlayerSettings = localStorage.getObject('player-settings');
 
         if (!player.playlist.length) {
