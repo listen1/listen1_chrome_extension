@@ -520,8 +520,8 @@
             </a>-->
             <a title @click="changePlaymode()">
               <span v-show="playmode == 0" class="icon li-loop" />
-              <span v-show="playmode == 1" class="icon li-random-loop" />
-              <span v-show="playmode == 2" class="icon li-single-cycle" />
+              <span v-show="playmode == 1" class="icon li-single-cycle" />
+              <span v-show="playmode == 2" class="icon li-random-loop" />
             </a>
           </div>
 
