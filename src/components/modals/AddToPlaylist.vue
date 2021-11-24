@@ -26,8 +26,8 @@ import MediaService from '../../services/MediaService';
 import { useI18n } from 'vue-i18n';
 
 const { t } = useI18n();
-let myplaylist = $ref<unknown[]>([]);
-const showModal = inject('showModal');
+let myplaylist: any = $ref<unknown[]>([]);
+const showModal: any = inject('showModal');
 
 const addToPlaylist = (playlist: string) => {
   MediaService.addMyPlaylist(playlist, props.tracks.map(toRaw));

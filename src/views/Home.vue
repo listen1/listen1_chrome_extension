@@ -697,6 +697,7 @@ const changePlaymode = () => {
   const playmodeCount = 3;
   const newPlaymode = (playmode + 1) % playmodeCount;
   player.playmode = newPlaymode;
+  l1Player.setLoopMode(newPlaymode);
 };
 const showPlaylist = (playlistId) => {
   router.push('/playlist/' + playlistId);

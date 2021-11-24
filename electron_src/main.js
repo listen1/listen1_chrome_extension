@@ -40,6 +40,7 @@ switch (process.platform) {
 // be closed automatically when the JavaScript object is garbage collected.
 /** @type {BrowserWindow}*/
 let mainWindow;
+let willQuitApp = false;
 
 function createWindow() {
   fixCORS();
@@ -86,12 +87,18 @@ function createWindow() {
   // Open the DevTools.
   // mainWindow.webContents.openDevTools()
 
-  // Emitted when the window is closed.
-  mainWindow.on('closed', function () {
-    // Dereference the window object, usually you would store windows
-    // in an array if your app supports multi windows, this is the time
-    // when you should delete the corresponding element.
-    mainWindow = null;
+  mainWindow.on('close', (e) => {
+    if (willQuitApp) {
+      /* the user tried to quit the app */
+      mainWindow = null;
+    } else {
+      /* the user only tried to close the window */
+      //if (process.platform != 'linux') {
+      e.preventDefault();
+      mainWindow.hide();
+      //mainWindow.minimize();
+      //}
+    }
   });
 }
 
@@ -128,8 +135,16 @@ app.on('activate', function () {
     createWindow();
   }
 });
+
 app.on('before-quit', () => {
+  if (mainWindow.webContents.isDevToolsOpened()) {
+    mainWindow.webContents.closeDevTools();
+  }
+
   store.set('windowState', windowState);
+
+  willQuitApp = true;
 });
+
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
