@@ -16,9 +16,9 @@
                 <span class="icon li-play-s" />
                 {{ t('_PLAY_ALL') }}
               </div>
-              <!-- <div class="add-list" ng-click="addMylist(list_id)">
+              <div class="add-list" @click="addMylist(list_id)">
                 <span class="icon li-add" />
-              </div>-->
+              </div>
             </div>
             <!-- <div v-show="is_local" class="playlist-button clone-button" ng-click="addLocalMusic(list_id)">
               <div class="play-list">
@@ -208,6 +208,7 @@ const play = (song) => {
 };
 const addToPlay = (song) => {
   l1Player.addTrack(song);
+  notyf.success(t('_ADD_TO_QUEUE_SUCCESS'));
 };
 const playMylist = (listId) => {
   l1Player.setNewPlaylist(songs);
@@ -245,6 +246,10 @@ const removeSongFromPlaylist = async (track_id, list_id) => {
   await MediaService.removeTrackFromMyPlaylist(track_id, list_id);
   notyf.success(t('_REMOVE_SONG_FROM_PLAYLIST_SUCCESS'));
 };
+const addMylist = () =>{
+  l1Player.addTracks(songs);
+  notyf.success(t('_ADD_TO_QUEUE_SUCCESS'));
+}
 const showModal = inject('showModal');
 
 // TODO: avoid to use event bus to refresh state
