@@ -299,7 +299,7 @@ export default class kugou extends MusicResource {
     return result;
   }
 
-  static parseUrl(url) {
+  static async parseUrl(url) {
     let result;
     const match = /\/\/www.kugou.com\/yy\/special\/single\/([0-9]+).html/.exec(url);
     if (match != null) {
@@ -309,11 +309,7 @@ export default class kugou extends MusicResource {
         id: `kgplaylist_${playlist_id}`
       };
     }
-    return {
-      success: (fn) => {
-        fn(result);
-      }
-    };
+    return result;
   }
 
   static getPlaylist(url) {

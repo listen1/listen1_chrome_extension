@@ -11,6 +11,9 @@
 import CreatePlaylist from './modals/CreatePlaylist.vue';
 import AddToPlaylist from './modals/AddToPlaylist.vue';
 import DefaultModal from './modals/DefaultModal.vue';
+import EditPlaylist from './modals/EditPlaylist.vue';
+import ParseUrl from './modals/ParseUrl.vue';
+import ImportPlaylist from './modals/ImportPlaylist.vue';
 import { provide } from 'vue';
 
 let show = $ref(false);
@@ -21,6 +24,9 @@ const components: Record<string, any> = {
   DefaultModal,
   CreatePlaylist,
   AddToPlaylist,
+  EditPlaylist,
+  ParseUrl,
+  ImportPlaylist
 };
 
 const showModal = (type = 'DefaultModal', opt: Record<string, unknown> = {}) => {

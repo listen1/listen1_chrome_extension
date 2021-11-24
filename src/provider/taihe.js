@@ -239,7 +239,7 @@ export default class taihe extends MusicResource {
     return result;
   }
 
-  static parseUrl(url) {
+  static async parseUrl(url) {
     let result;
     let id = '';
     let match = /\/\/music.taihe.com\/([a-z]+)\//.exec(url);
@@ -265,11 +265,7 @@ export default class taihe extends MusicResource {
         id
       };
     }
-    return {
-      success: (fn) => {
-        fn(result);
-      }
-    };
+    return result;
   }
 
   static getPlaylist(url) {

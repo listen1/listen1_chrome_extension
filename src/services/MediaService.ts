@@ -142,9 +142,9 @@ function getProviderByName(sourceName: string) {
   return provider;
 }
 
-// function getAllProviders() {
-//   return PROVIDERS.filter((i) => !i.hidden).map((i) => i.instance);
-// }
+function getAllProviders() {
+  return PROVIDERS.filter((i) => !i.hidden).map((i) => i.instance);
+}
 
 function getAllSearchProviders() {
   return PROVIDERS.filter((i) => i.searchable).map((i) => i.instance);
@@ -277,8 +277,8 @@ const MediaService = {
     return myplaylist.removeMyplaylist(type, id);
   },
 
-  async addMyPlaylist(id: string, tracks: string) {
-    return myplaylist.addTrackToMyplaylist(id, tracks);
+  async addMyPlaylist(id: string, tracks: unknown[]) {
+    return myplaylist.addTracksToMyplaylist(id, tracks);
   },
   //   insertTrackToMyPlaylist(id, track, to_track, direction) {
   //     const newPlaylist = myplaylist.insertTrackToMyplaylist(
@@ -308,7 +308,7 @@ const MediaService = {
   //     return provider.remove_from_playlist(id, track);
   //   },
 
-  createMyPlaylist(title: string, track: string) {
+  createMyPlaylist(title: string, track: unknown[]) {
     myplaylist.createMyplaylist(title, track);
   },
   //   insertMyplaylistToMyplaylists(
@@ -327,48 +327,28 @@ const MediaService = {
   //       success: (fn) => fn(newPlaylists),
   //     };
   //   },
-  //   editMyPlaylist(id, title, coverImgUrl) {
-  //     myplaylist.editMyplaylist(id, title, coverImgUrl);
-  //     return {
-  //       success: (fn) => fn(),
-  //     };
-  //   },
+  editMyPlaylist(id: string, title: string, coverImgUrl: string) {
+    myplaylist.editMyplaylist(id, title, coverImgUrl);
+  },
 
-  //   parseURL(url) {
-  //     return {
-  //       success: (fn) => {
-  //         const providers = getAllProviders();
-  //         Promise.all(
-  //           providers.map(
-  //             (provider) =>
-  //               new Promise((res, rej) =>
-  //                 provider.parseUrl(url).success((r) => {
-  //                   if (r !== undefined) {
-  //                     return rej(r);
-  //                   }
-  //                   return res(r);
-  //                 })
-  //               )
-  //           )
-  //         )
-  //           .then(() => fn({}))
-  //           .catch((result) => fn({ result }));
-  //       },
-  //     };
-  //   },
+  async parseURL(url: string) {
+    const providers = getAllProviders();
+    for (let i = 0; i < providers.length; i++) {
+      const provider = providers[i];
+      const result = await provider.parseUrl(url);
+      if (result != null) {
+        return result;
+      }
+    }
+    return null;
+  },
 
-  //   mergePlaylist(source, target) {
-  //     const tarData = localStorage.getObject(target).tracks;
-  //     const srcData = localStorage.getObject(source).tracks;
-  //     tarData.forEach((tarTrack) => {
-  //       if (!srcData.find((srcTrack) => srcTrack.id === tarTrack.id)) {
-  //         myplaylist.addTrackToMyplaylist(source, tarTrack);
-  //       }
-  //     });
-  //     return {
-  //       success: (fn) => fn(),
-  //     };
-  //   },
+  async mergePlaylist(masterPlaylistId: string, branchPlaylistId: string) {
+    console.log(masterPlaylistId, branchPlaylistId);
+    const branchPlaylist = await myplaylist.getPlaylistById(branchPlaylistId);
+
+    await myplaylist.addTracksToMyplaylist(masterPlaylistId, branchPlaylist.tracks);
+  },
 
   bootstrapTrack(track: any, playerSuccessCallback: (res?: unknown) => unknown, playerFailCallback: (res?: unknown) => unknown) {
     const successCallback = playerSuccessCallback;

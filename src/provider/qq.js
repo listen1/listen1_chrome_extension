@@ -418,55 +418,41 @@ export default class qq extends MusicResource {
     return { lyric, tlyric };
   }
 
-  static parseUrl(url) {
-    return {
-      success: (fn) => {
-        let result;
+  static async parseUrl(url) {
+    let result;
 
-        let match = /\/\/y.qq.com\/n\/yqq\/playlist\/([0-9]+)/.exec(url);
-        if (match != null) {
-          const playlist_id = match[1];
-          result = {
-            type: 'playlist',
-            id: `qqplaylist_${playlist_id}`
-          };
-        }
-        match = /\/\/y.qq.com\/n\/yqq\/playsquare\/([0-9]+)/.exec(url);
-        if (match != null) {
-          const playlist_id = match[1];
-          result = {
-            type: 'playlist',
-            id: `qqplaylist_${playlist_id}`
-          };
-        }
-        match = /\/\/y.qq.com\/n\/m\/detail\/taoge\/index.html\?id=([0-9]+)/.exec(url);
-        if (match != null) {
-          const playlist_id = match[1];
-          result = {
-            type: 'playlist',
-            id: `qqplaylist_${playlist_id}`
-          };
-        }
-
-        // c.y.qq.com/base/fcgi-bin/u?__=1MsbSLu
-        match = /\/\/c.y.qq.com\/base\/fcgi-bin\/u\?__=([0-9a-zA-Z]+)/.exec(url);
-        if (match != null) {
-          return axios
-            .get(url)
-            .then((response) => {
-              const { responseURL } = response.request;
-              const playlist_id = getParameterByName('id', responseURL);
-              result = {
-                type: 'playlist',
-                id: `qqplaylist_${playlist_id}`
-              };
-              return fn(result);
-            })
-            .catch(() => fn(undefined));
-        }
-        return fn(result);
+    const matchList = [
+      /\/\/y.qq.com\/n\/yqq\/playlist\/([0-9]+)/,
+      /\/\/y.qq.com\/n\/ryqq\/playlist\/([0-9]+)/,
+      /\/\/y.qq.com\/n\/yqq\/playsquare\/([0-9]+)/,
+      /\/\/y.qq.com\/n\/m\/detail\/taoge\/index.html\?id=([0-9]+)/
+    ];
+    matchList.forEach((reg) => {
+      const match = reg.exec(url);
+      if (match != null) {
+        const playlist_id = match[1];
+        result = {
+          type: 'playlist',
+          id: `qqplaylist_${playlist_id}`
+        };
+        return result;
       }
-    };
+    });
+
+    // https://c.y.qq.com/base/fcgi-bin/u?__=1MsbSLu
+    let match = /\/\/c.y.qq.com\/base\/fcgi-bin\/u\?__=([0-9a-zA-Z]+)/.exec(url);
+    if (match != null) {
+      const response = await axios.get(url);
+
+      const { responseURL } = response.request;
+      const playlist_id = getParameterByName('id', responseURL);
+      result = {
+        type: 'playlist',
+        id: `qqplaylist_${playlist_id}`
+      };
+      return result;
+    }
+    return result;
   }
 
   static getPlaylist(url) {

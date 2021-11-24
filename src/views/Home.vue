@@ -9,45 +9,7 @@
         <span>{{ dialog_title }}</span>
         <span class="dialog-close" @click="closeDialog()">×</span>
       </div>
-      <div class="dialog-body">
-        <!-- choose playlist dialog-->
-
-        <!-- create new playlist dialog-->
-
-        <!-- edit playlist dialog-->
-        <div v-show="dialog_type == 3" class="dialog-editplaylist">
-          <div class="form-group">
-            <label>_PLAYLIST_TITLE</label>
-            <input
-              class="form-control"
-              type="text"
-              placeholder="_INPUT_PLAYLIST_TITLE"
-              ng-model="dialog_playlist_title"
-            />
-          </div>
-          <div class="form-group">
-            <label>_PLAYLIST_COVER_IMAGE_URL</label>
-            <input
-              class="form-control"
-              type="text"
-              placeholder="_INPUT_PLAYLIST_COVER_IMAGE_URL"
-              ng-model="dialog_cover_img_url"
-            />
-          </div>
-          <div class="buttons">
-            <button
-              class="btn btn-primary confirm-button"
-              ng-click="editMyPlaylist(list_id)"
-            >_CONFIRM</button>
-            <button class="btn btn-default" ng-click="closeDialog()">_CANCEL</button>
-          </div>
-          <div class="dialog-footer">
-            <button
-              class="btn btn-danger remove-button"
-              ng-click="removeMyPlaylist(list_id)"
-            >_REMOVE_PLAYLIST</button>
-          </div>
-        </div>
+      <div class="dialog-body">    
         <div v-show="dialog_type == 4" class="dialog-connect-lastfm">
           <p>_OPENING_LASTFM_PAGE</p>
           <p>_CONFIRM_NOTICE_LASTFM</p>
@@ -62,36 +24,7 @@
             >_AUTHORIZED_REOPEN</button>
           </div>
         </div>
-        <!-- open playlist dialog-->
-        <div v-show="dialog_type == 5" class="dialog-open-url">
-          <div class="form-group">
-            <label>{{ t('_PLAYLIST_LINK') }}</label>
-            <input
-              class="form-control"
-              type="text"
-              :placeholder="t('_EXAMPLE') + 'https://www.xiami.com/collect/198267231'"
-              ng-model="dialog_url"
-            />
-          </div>
-          <div class="buttons">
-            <button
-              class="btn btn-primary confirm-button"
-              ng-click="openUrl(dialog_url);closeDialog();dialog_url='';"
-            >{{ t('_CONFIRM') }}</button>
-            <button class="btn btn-default" ng-click="closeDialog()">{{ t('_CANCEL') }}</button>
-          </div>
-        </div>
-        <ul v-show="dialog_type == 6" class="dialog-merge-playlist">
-          <li
-            ng-repeat="playlist in myplaylist track by $index"
-            ng-class-odd="'odd'"
-            ng-class-even="'even'"
-            ng-click="mergePlaylist(playlist.info.id)"
-          >
-            <img ng-src=" playlist.info.cover_img_url " />
-            <h2>playlist.info.title</h2>
-          </li>
-        </ul>
+
         <div v-show="dialog_type == 7" class="dialog-connect-github">
           <p>_OPENING_GITHUB_PAGE</p>
           <p>_CONFIRM_NOTICE_GITHUB</p>

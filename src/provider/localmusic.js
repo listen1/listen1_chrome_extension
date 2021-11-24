@@ -110,13 +110,9 @@ export default class localmusic extends MusicResource {
     };
   }
 
-  static parseUrl(url) {
+  static async parseUrl(url) {
     let result;
-    return {
-      success: (fn) => {
-        fn(result);
-      }
-    };
+    return result;
   }
 
   static getPlaylist(url) {

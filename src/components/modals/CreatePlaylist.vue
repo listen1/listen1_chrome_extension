@@ -19,7 +19,7 @@
 import DefaultModal from './DefaultModal.vue';
 import { useI18n } from 'vue-i18n';
 import MediaService from '../../services/MediaService';
-import { toRaw, unref } from 'vue';
+import { toRaw } from 'vue';
 
 const { t } = useI18n();
 let newlistTitle = $ref('');
