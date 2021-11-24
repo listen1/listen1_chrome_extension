@@ -131,14 +131,14 @@
           <div class="tools">
             <!-- <a v-show="song.options" title="_ADD_TO_QUEUE" class="detail-add-button" add-without-play="song"><span class="icon li-add" /></a> -->
             <a v-show="song.options" :title="t('_ADD_TO_PLAYLIST')" class="detail-fav-button" @click="showModal('AddToPlaylist', { tracks: [song] })"><span class="icon li-songlist" /></a>
-            <!-- <a
+            <a
               v-show="song.options && (is_mine == '1' || is_local)"
-              title="_REMOVE_FROM_PLAYLIST"
+              :title="t('_REMOVE_FROM_PLAYLIST')"
               class="detail-delete-button"
-              ng-click="removeSongFromPlaylist(song, list_id)"
+              @click="removeSongFromPlaylist(song.id, list_id)"
             >
               <span class="icon li-del" />
-            </a>-->
+            </a>
             <a
               v-show="song.options && !is_local"
               :title="t('_ORIGIN_LINK')"
@@ -237,6 +237,10 @@ const removeFavoritePlaylist = async (list_id) => {
 const saveAsMyPlaylist = async (list_id) => {
   await MediaService.clonePlaylist(list_id, 'my');
   notyf.success(t('_ADD_TO_PLAYLIST_SUCCESS'));
+};
+const removeSongFromPlaylist = async (track_id, list_id) => {
+  await MediaService.removeTrackFromMyPlaylist(track_id, list_id);
+  notyf.success(t('_REMOVE_SONG_FROM_PLAYLIST_SUCCESS'));
 };
 const showModal = inject('showModal');
 

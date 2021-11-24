@@ -296,12 +296,9 @@ const MediaService = {
   //     return provider.add_playlist(id, tracks);
   //   },
 
-  //   removeTrackFromMyPlaylist(id, track) {
-  //     myplaylist.removeTrackFromMyplaylist(id, track);
-  //     return {
-  //       success: (fn) => fn(),
-  //     };
-  //   },
+  async removeTrackFromMyPlaylist(track_id: string, list_id: string) {
+    myplaylist.removeTrackFromMyplaylist(track_id, list_id);
+  },
 
   //   removeTrackFromPlaylist(id, track) {
   //     const provider = getProviderByItemId(id);

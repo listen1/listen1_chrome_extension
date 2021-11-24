@@ -184,14 +184,23 @@ export default class MyPlaylist {
     return playlist;
   }
 
-  static removeTrackFromMyplaylist(playlist_id, track_id) {
-    const playlist = localStorage.getObject(playlist_id);
-    if (playlist == null) {
-      return;
+  static async removeTrackFromMyplaylist(track_id, playlist_id) {
+    const playlist = await iDB.Playlists.get({ id: playlist_id });
+    if (!playlist) {
+      return null;
     }
-    const newtracks = playlist.tracks.filter((item) => item.id !== track_id);
-    playlist.tracks = newtracks;
-    localStorage.setObject(playlist_id, playlist);
+    // remove from order
+    playlist.order = playlist.order.filter((i) => i != track_id);
+    // remove from tracks
+    await iDB.transaction('rw', [iDB.Playlists, iDB.Tracks], async () => {
+      console.log(playlist_id, track_id);
+      await iDB.Tracks.where({ playlist: playlist_id, id: track_id }).delete();
+      await iDB.Playlists.put(playlist);
+    });
+
+    EventService.emit(`playlist:id:${playlist_id}:update`);
+
+    return playlist;
   }
 
   static createMyplaylist(playlist_title, tracks) {
