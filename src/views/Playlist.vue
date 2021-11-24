@@ -71,7 +71,7 @@
             <div
               v-show="is_mine && !is_local"
               class="playlist-button edit-button"
-              @click="showDialog(6)"
+              @click="showModal('ImportPlaylist', {list_id})"
             >
               <div class="play-list">
                  <vue-feather type="git-merge" />

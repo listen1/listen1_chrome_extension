@@ -278,7 +278,7 @@ const MediaService = {
   },
 
   async addMyPlaylist(id: string, tracks: unknown[]) {
-    return myplaylist.addTrackToMyplaylist(id, tracks);
+    return myplaylist.addTracksToMyplaylist(id, tracks);
   },
   //   insertTrackToMyPlaylist(id, track, to_track, direction) {
   //     const newPlaylist = myplaylist.insertTrackToMyplaylist(
@@ -343,18 +343,12 @@ const MediaService = {
     return null;
   },
 
-  //   mergePlaylist(source, target) {
-  //     const tarData = localStorage.getObject(target).tracks;
-  //     const srcData = localStorage.getObject(source).tracks;
-  //     tarData.forEach((tarTrack) => {
-  //       if (!srcData.find((srcTrack) => srcTrack.id === tarTrack.id)) {
-  //         myplaylist.addTrackToMyplaylist(source, tarTrack);
-  //       }
-  //     });
-  //     return {
-  //       success: (fn) => fn(),
-  //     };
-  //   },
+  async mergePlaylist(masterPlaylistId: string, branchPlaylistId: string) {
+    console.log(masterPlaylistId, branchPlaylistId);
+    const branchPlaylist = await myplaylist.getPlaylistById(branchPlaylistId);
+
+    await myplaylist.addTracksToMyplaylist(masterPlaylistId, branchPlaylist.tracks);
+  },
 
   bootstrapTrack(track: any, playerSuccessCallback: (res?: unknown) => unknown, playerFailCallback: (res?: unknown) => unknown) {
     const successCallback = playerSuccessCallback;

@@ -40,9 +40,14 @@ export default class MyPlaylist {
 
   static async getPlaylist(url) {
     const list_id = getParameterByName('list_id', url);
+    return await this.getPlaylistById(list_id);
+  }
+
+  static async getPlaylistById(list_id) {
     const playlistInfo = await iDB.Playlists.get(list_id);
     let playlist = {
-      info: playlistInfo
+      info: playlistInfo,
+      tracks: []
     };
     // clear url field when load old playlist
     if (playlistInfo) {
@@ -55,7 +60,6 @@ export default class MyPlaylist {
     }
     return playlist;
   }
-
   static guid() {
     function s4() {
       return Math.floor((1 + Math.random()) * 0x10000)
@@ -141,7 +145,7 @@ export default class MyPlaylist {
     EventService.emit(`playlist:${playlist_type}:update`);
   }
 
-  static async addTrackToMyplaylist(playlist_id, tracks) {
+  static async addTracksToMyplaylist(playlist_id, tracks) {
     const playlist = await iDB.Playlists.get({ id: playlist_id });
     if (!playlist) {
       return null;
@@ -155,6 +159,8 @@ export default class MyPlaylist {
       iDB.Playlists.put(playlist);
       iDB.Tracks.bulkPut(filterTracks);
     });
+
+    EventService.emit(`playlist:id:${playlist_id}:update`);
 
     return playlist;
   }
