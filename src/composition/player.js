@@ -271,10 +271,13 @@ function playerListener(mode, msg, sender, sendResponse) {
       case 'PLAYLIST': {
         // 'player:playlist'
         player.playlist = msg.data;
-        msg.data.forEach((track) => track.playlist = 'current');
+        msg.data.forEach((track) => (track.playlist = 'current'));
         iDB.Playlists.put({
-          id: 'current', title: 'current', cover_img_url: '', type: 'current',
-          order: msg.data.map(i => i.id),
+          id: 'current',
+          title: 'current',
+          cover_img_url: '',
+          type: 'current',
+          order: msg.data.map((i) => i.id)
         });
         iDB.Tracks.bulkPut(msg.data);
 
