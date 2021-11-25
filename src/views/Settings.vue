@@ -57,24 +57,27 @@
           <SettingButton :text="t('_THEME_WHITE')" @click="setTheme('white')" />
           <SettingButton :text="t('_THEME_BLACK')" @click="setTheme('black')" />
         </div>
-        <SettingTitle text="Style" />
+        <SettingTitle :text="t('_STYLE')" />
         <div class="settings-content">
           <p>
-            Lyric Font Size:
+            {{ `${t('_LYRIC_SIZE')}: ` }}
             <input
               class="settings-input"
-              v-model="settings.lyricFontSize"
+              v-model.lazy="settings.lyricFontSize"
               type="number"
-              min="0"
+              min="10"
               max="40"
               :style="{
-                width: `${`${settings.lyricFontSize}`.length + 1}ch`
+                width: `${`${settings.lyricFontSize}`.length + 2}ch`
               }"
             />px
           </p>
           <p>
-            Lyric Font Weight: 
-            <select class="settings-input" v-model="settings.lyricFontWeight">
+            {{ `${t('_LYRIC_WEIGHT')}: ` }}
+            <select
+              class="settings-input"
+              v-model="settings.lyricFontWeight"
+            >
               <option
                 v-for="option in fontWeightOptions"
                 :value="option.value"

@@ -168,5 +168,8 @@
   "_PROTOCOL": "Protocol",
   "_HOST": "Host",
   "_PORT": "Port",
-  "ZOOM_IN_OUT": "Zoom In/Out"
+  "ZOOM_IN_OUT": "Zoom In/Out",
+  "_LYRIC_WEIGHT": "Lyric Font Weight",
+  "_LYRIC_SIZE": "Lyric Font Size",
+  "_STYLE": "Style"
 }
