@@ -581,10 +581,10 @@
           <span
             class="menu-title"
           >{{ t('_TOTAL_SONG_PREFIX') }} {{ playlist.length }} {{ t('_TOTAL_SONG_POSTFIX') }}</span>
-          <!-- <a class="add-all" ng-click="showDialog(0, playlist)">
+          <a class="add-all" @click="modalRef.showModal('AddToPlaylist', { tracks: playlist })">
                     <span class="icon li-songlist" ng-click="togglePlaylist()" />
                     <span>{{ t('_ADD_TO_PLAYLIST') }}</span>
-          </a>-->
+          </a>
           <a class="remove-all" @click="clearPlaylist()">
             <span class="icon li-del" ng-click="togglePlaylist()" />
             <span>{{ t('_CLEAR_ALL') }}</span>
