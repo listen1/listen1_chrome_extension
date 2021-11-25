@@ -63,15 +63,15 @@
             <div class="singer">
               <span>{{ t('_ARTIST') }}：</span>
               <a
-                ng-click="showPlaylist(currentPlaying.artist_id)"
-                title="currentPlaying.artist"
+                @click="showPlaylist(currentPlaying.artist_id);setOverlayType('');"
+                :title="currentPlaying.artist"
               >{{ currentPlaying.artist }}</a>
             </div>
             <div class="album">
               <span>{{ t('_ALBUM') }}：</span>
               <a
-                ng-click="showPlaylist(currentPlaying.album_id)"
-                title="currentPlaying.album"
+                @click="showPlaylist(currentPlaying.album_id);setOverlayType('');"
+                :title="currentPlaying.album"
               >{{ currentPlaying.album }}</a>
             </div>
           </div>
@@ -96,16 +96,16 @@
   </div>
 </template>
 <script setup>
-
 import { useI18n } from 'vue-i18n';
 import usePlayer from '../composition/player';
 import useSettings from '../composition/settings';
 import useOverlay from '../composition/overlay';
+import { useRouter } from 'vue-router';
 
 const { t } = useI18n();
 const { player } = usePlayer();
 let { overlay, setOverlayType } = useOverlay();
-
+const router = useRouter();
 
 let isMac = $ref(false);
 
@@ -117,6 +117,9 @@ const toggleNowPlaying = () => {
   }
 };
 
+const showPlaylist = (playlistId) => {
+  router.push('/playlist/' + playlistId);
+};
 
 let lyricArray = $computed(() => player.lyricArray);
 let lyricLineNumber = $computed(() => player.lyricLineNumber);
@@ -126,5 +129,4 @@ let currentPlaying = $computed(() => player.currentPlaying);
 let lyricFontWeight = $computed(() => settings.lyricFontWeight);
 let lyricFontSize = $computed(() => settings.lyricFontSize);
 const { settings } = useSettings();
-
 </script>
