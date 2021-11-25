@@ -47,53 +47,47 @@
             <a>{{ t('_MY_QQ') }}</a>
           </div>
         </li>
-      </ul> -->
+      </ul>-->
       <div class="menu-title">
         <div class="title">{{ t('_CREATED_PLAYLIST') }}</div>
-        <vue-feather type="plus-square" @click="showModal('ParseUrl', {})"/>
+        <vue-feather type="plus-square" @click="showModal('ParseUrl', {})" />
       </div>
       <ul class="nav masthead-nav">
-        <li
+        <DragDropZone
           v-for="(i, index) in myplaylists"
           :key="index"
           :class="{ active: route.path === `/playlist/${i.id}` }"
-          @click="$router.push(`/playlist/${i.id}`)"
-          drag-drop-zone
-          drag-zone-type="'application/listen1-myplaylist'"
-          drop-zone-ondrop="onSidebarPlaylistDrop('my', i.info.id, arg1, arg2, arg3)"
-          draggable="true"
-          sortable="true"
-          drag-zone-object="i"
-          drag-zone-title="i.info.title"
-        >
+          :dragobject="i"
+          :dragtitle="i.title"
+          :sortable="true"
+          dragtype="application/listen1-myplaylist"
+          @drop="onSidebarPlaylistDrop('my', i.id, $event)"
+          @click="$router.push(`/playlist/${i.id}`)">
           <div class="sidebar-block">
             <vue-feather type="disc" />
             <a>{{ i.title }}</a>
           </div>
-        </li>
+        </DragDropZone>
       </ul>
       <div class="menu-title">
         <div class="title">{{ t('_FAVORITED_PLAYLIST') }}</div>
       </div>
       <ul class="nav masthead-nav">
-        <li
+        <DragDropZone
           v-for="(i, index) in favoriteplaylists"
           :key="index"
           :class="{ active: route.path === `/playlist/${i.id}` }"
+          :dragobject="i"
+          :dragtitle="i.title"
+          :sortable="true"
+          dragtype="application/listen1-favoriteplaylist"
           @click="$router.push(`/playlist/${i.id}`)"
-          drag-drop-zone
-          drag-zone-type="'application/listen1-favoriteplaylist'"
-          drop-zone-ondrop="onSidebarPlaylistDrop('favorite', i.info.id, arg1, arg2, arg3)"
-          draggable="true"
-          sortable="true"
-          drag-zone-object="i"
-          drag-zone-title="i.info.title"
-        >
+          @drop="onSidebarPlaylistDrop('favorite', i.id, $event)">
           <div class="sidebar-block">
             <vue-feather type="disc" />
             <a>{{ i.title }}</a>
           </div>
-        </li>
+        </DragDropZone>
       </ul>
     </div>
   </div>
@@ -105,6 +99,9 @@ import { useI18n } from 'vue-i18n';
 import type { Playlist } from '../services/DBService';
 import $event from '../services/EventService';
 import MediaService from '../services/MediaService';
+import DragDropZone from '../components/DragDropZone.vue';
+import notyf from '../services/notyf';
+
 import { useRoute } from 'vue-router';
 const isChrome = true;
 const route = useRoute();
@@ -122,7 +119,25 @@ const refreshFav = () => {
 const refreshMy = () => {
   MediaService.showMyPlaylist().then((res) => (myplaylists = res));
 };
+const onSidebarPlaylistDrop = async (playlistType: string, list_id: string, event: any) => {
+  const { data, dragType, direction } = event;
 
+  if (playlistType === 'my' && dragType === 'application/listen1-song') {
+    await MediaService.addMyPlaylist(list_id, [data]);
+    notyf.success(t('_ADD_TO_PLAYLIST_SUCCESS'));
+  } else if (
+    (playlistType === 'my' && dragType === 'application/listen1-myplaylist') ||
+    (playlistType === 'favorite' && dragType === 'application/listen1-favoriteplaylist')
+  ) {
+    await MediaService.reorderMyplaylist(playlistType, data.id, list_id, direction);
+    if (playlistType === 'my') {
+      refreshMy();
+    }
+    if (playlistType === 'favorite') {
+      refreshFav();
+    }
+  }
+};
 onMounted(() => {
   refreshMy();
   refreshFav();
@@ -132,6 +147,3 @@ const showModal: any = inject('showModal');
 $event.on('playlist:favorite:update', refreshFav);
 $event.on('playlist:my:update', refreshMy);
 </script>
-
-<style>
-</style>
