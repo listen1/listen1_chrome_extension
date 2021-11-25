@@ -126,7 +126,7 @@
           :key="song.id"
           ng-class="{ playing: currentPlaying.id == song.id }"
           @mouseenter="song.highlight=true"
-          @mouseleave="song.highlight=false"
+          @mouseleave="song.highlight=undefined"
           :class="{'even': index % 2 === 0, 'odd': index % 2 !== 0 }"
           draggable="true"
           drag-drop-zone
