@@ -430,6 +430,10 @@ https://stackoverflow.com/questions/19889615/can-an-angular-directive-pass-argum
   flex: 1;
 }
 
+.page .playlist-detail .detail-head .detail-head-title h2 {
+  height: 33px;
+}
+
 .playlist-button-list {
   display: flex;
   flex-flow: row wrap;
