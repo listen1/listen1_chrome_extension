@@ -515,9 +515,9 @@
         </div>
         <div v-if="playlist.length > 0" class="detail">
           <div class="ctrl">
-            <!-- <a ng-click="showDialog(0, currentPlaying)" title="_ADD_TO_PLAYLIST">
+            <a @click="modalRef.showModal('AddToPlaylist', { tracks: [currentPlaying] })" :title="t('_ADD_TO_PLAYLIST')">
                       <span class="icon li-songlist" />
-            </a>-->
+            </a>
             <a title @click="changePlaymode()">
               <span v-show="playmode == 0" class="icon li-loop" />
               <span v-show="playmode == 1" class="icon li-single-cycle" />
