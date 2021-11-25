@@ -1,4 +1,4 @@
-import { reactive } from 'vue';
+import { reactive, watch } from 'vue';
 import iDB from '../services/DBService';
 import { setPrototypeOfLocalStorage } from '../utils';
 
@@ -31,7 +31,7 @@ const settings: Record<string, unknown> = reactive({
   theme: 'black',
   //lyric settings
   lyricFontSize: 15,
-  lyricFontWeight: 400,
+  lyricFontWeight: 400
 });
 
 async function flushSettings() {
@@ -72,5 +72,7 @@ function useSettings() {
   return { settings, setSettings, loadSettings };
 }
 loadSettings();
-
+watch(settings, (_, newSetting) => {
+  setSettings(newSetting);
+});
 export default useSettings;

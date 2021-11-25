@@ -3,18 +3,14 @@
   <div class="page" ng-init="lastfm.updateStatus(); updateGithubStatus();">
     <div class="site-wrapper-innerd">
       <div class="cover-container">
-        <div class="settings-title">
-          <span>{{ t('_LANGUAGE') }}</span>
-        </div>
+        <SettingTitle :text="t('_LANGUAGE')" />
         <div class="settings-content">
           <SettingButton text="简体中文" @click="setLocale('zh-CN')" />
           <SettingButton text="繁体中文" @click="setLocale('zh-TC')" />
           <SettingButton text="English" @click="setLocale('en-US')" />
           <SettingButton text="French" @click="setLocale('fr-FR')" />
         </div>
-        <div class="settings-title">
-          <span>{{ t('_NOWPLAYING_DISPLAY') }}</span>
-        </div>
+        <SettingTitle :text="t('_NOWPLAYING_DISPLAY')" />
         <div class="settings-content">
           <div class="shortcut">
             <vue-feather
@@ -56,14 +52,40 @@
             {{ t('_NOWPLAYING_PLATFORM_NOTICE') }}
           </div>
         </div>
-        <div class="settings-title">
-          <span>{{ t('_THEME') }}</span>
-        </div>
+        <SettingTitle :text="t('_THEME')" />
         <div class="settings-content">
-          <div>
-            <SettingButton :text="t('_THEME_WHITE')" @click="setTheme('white')" />
-            <SettingButton :text="t('_THEME_BLACK')" @click="setTheme('black')" />
-          </div>
+          <SettingButton :text="t('_THEME_WHITE')" @click="setTheme('white')" />
+          <SettingButton :text="t('_THEME_BLACK')" @click="setTheme('black')" />
+        </div>
+        <SettingTitle text="Style" />
+        <div class="settings-content">
+          <p>
+            Lyric Font Size:
+            <input
+              class="settings-input"
+              v-model="settings.lyricFontSize"
+              type="number"
+              min="0"
+              max="40"
+              :style="{
+                width: `${`${settings.lyricFontSize}`.length + 1}ch`
+              }"
+            />px
+          </p>
+          <p>
+            Lyric Font Weight:
+            <input
+              class="settings-input"
+              step="100"
+              v-model="settings.lyricFontWeight"
+              type="number"
+              min="100"
+              max="900"
+              :style="{
+                width: `${`${settings.lyricFontWeight}`.length + 1}ch`
+              }"
+            />
+          </p>
         </div>
         <!-- <div class="settings-title">
           <span>{{ $t('_AUTO_CHOOSE_SOURCE') }}</span>
@@ -284,9 +306,7 @@
           <span v-show="proxyMode_name == 'custom'">proxyRules</span>
           <button ng-click="showDialog(12)">{{ $t('_MODIFY') }}</button>
         </div>-->
-        <div class="settings-title">
-          <span>{{ t('_ABOUT') }}</span>
-        </div>
+        <SettingTitle :text="t('_ABOUT')" />
         <div class="settings-content">
           <p>
             Listen 1 {{ t('_HOMEPAGE') }}:
@@ -319,7 +339,7 @@ import useSettings from '../composition/settings';
 import { setLocale } from '../i18n';
 import { isElectron } from '../provider/lowebutil';
 import SettingButton from '../components/SettingButton.vue';
-import SettingButton1 from '../components/SettingButton.vue';
+import SettingTitle from '../components/SettingTitle.vue';
 const { t } = useI18n();
 const { settings, setSettings } = useSettings();
 const isChrome = !isElectron();
@@ -329,3 +349,18 @@ const toggleBitrate = () => setSettings({ enableNowplayingBitrate: !settings.ena
 const togglePlayingPlatform = () => setSettings({ enableNowplayingPlatform: !settings.enableNowplayingPlatform });
 const setTheme = (theme: string) => setSettings({ theme });
 </script>
+<style>
+.settings-input {
+  padding: 5px;
+  text-align: left;
+  background-color: var(--content-background-color);
+  border: 1px solid var(--search-input-background-color);
+  border-radius: 4px;
+  margin-right: 4px;
+  color: var(--text-default-color);
+  transition: background-color 0.2s;
+}
+.settings-input:hover {
+  background: var(--search-input-background-color);
+}
+</style>
