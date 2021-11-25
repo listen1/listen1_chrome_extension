@@ -3,10 +3,7 @@
     <div class="playlist-detail">
       <div class="detail-head">
         <div class="detail-head-cover">
-          <img
-            :src="cover_img_url"
-            err-src="https://y.gtimg.cn/mediastyle/global/img/singer_300.png"
-          />
+          <img :src="cover_img_url" err-src="https://y.gtimg.cn/mediastyle/global/img/singer_300.png" />
         </div>
         <div class="detail-head-title">
           <h2>{{ playlist_title }}</h2>
@@ -35,15 +32,14 @@
             <div
               v-show="is_mine && !is_local"
               class="playlist-button edit-button"
-              @click="showModal('EditPlaylist', {list_id: list_id, playlist_title: playlist_title, cover_img_url: cover_img_url})"
-            >
+              @click="showModal('EditPlaylist', { list_id: list_id, playlist_title: playlist_title, cover_img_url: cover_img_url })">
               <div class="play-list">
                 <vue-feather type="edit" />
                 <span>{{ t('_EDIT') }}</span>
               </div>
             </div>
             <div v-show="!is_mine && !is_local" class="playlist-button fav-button" @click="favoritePlaylist(list_id)">
-              <div class="play-list" :class="{'favorited':is_favorite,'notfavorite':!is_favorite}">
+              <div class="play-list" :class="{ favorited: is_favorite, notfavorite: !is_favorite }">
                 <vue-feather type="star"></vue-feather>
                 <span>{{ t(is_favorite ? '_FAVORITED' : '_FAVORITE') }}</span>
               </div>
@@ -51,30 +47,24 @@
             <div
               v-show="isChrome && is_favorite && !is_local"
               class="playlist-button edit-button"
-              @click="closeWindow();showPlaylist(list_id)"
-            >
+              @click="
+                closeWindow();
+                showPlaylist(list_id);
+              ">
               <div class="play-list">
                 <span class="icon li-loop" />
                 <span>{{ t('_REFRESH_PLAYLIST') }}</span>
               </div>
             </div>
-            <div
-              v-show="!is_mine && !is_local"
-              class="playlist-button edit-button"
-              @click="openUrl(playlist_source_url)"
-            >
+            <div v-show="!is_mine && !is_local" class="playlist-button edit-button" @click="openUrl(playlist_source_url)">
               <div class="play-list">
                 <span class="icon li-link" />
                 <span>{{ t('_ORIGIN_LINK') }}</span>
               </div>
             </div>
-            <div
-              v-show="is_mine && !is_local"
-              class="playlist-button edit-button"
-              @click="showModal('ImportPlaylist', {list_id})"
-            >
+            <div v-show="is_mine && !is_local" class="playlist-button edit-button" @click="showModal('ImportPlaylist', { list_id })">
               <div class="play-list">
-                 <vue-feather type="git-merge" />
+                <vue-feather type="git-merge" />
                 <span>{{ t('_IMPORT') }}</span>
               </div>
             </div>
@@ -104,20 +94,17 @@
           </div>
           <div class="tools">{{ t('_OPERATION') }}</div>
         </li>
-        <li
-          v-for="(song,index) in songs"
+        <DragDropZone
+          v-for="(song, index) in songs"
           :key="song.id"
-          :class="{'even': index % 2 === 0, 'odd': index % 2 !== 0 }"
-          draggable="true"
-          drag-drop-zone
-          drag-zone-object="song"
-          drag-zone-title="song.title"
-          sortable="is_mine || is_local"
-          drag-zone-type="'application/listen1-song'"
-          drop-zone-ondrop="onPlaylistSongDrop(list_id, song, arg1, arg2, arg3)"
+          :class="{ even: index % 2 === 0, odd: index % 2 !== 0 }"
+          :dragobject="song"
+          :dragtitle="song.title"
+          :sortable="is_mine || is_local"
+          :dragtype="'application/listen1-song'"
+          @drop="onPlaylistSongDrop(list_id, song, $event)"
           @mouseenter="song.options = true"
-          @mouseleave="song.options = undefined"
-        >
+          @mouseleave="song.options = undefined">
           <div class="title">
             <!-- <a class="disabled" ng-if="song.disabled" ng-click="copyrightNotice()"> song.title </a> -->
             <a add-and-play="song" @click="play(song)">{{ song.title }}</a>
@@ -130,25 +117,21 @@
           </div>
           <div class="tools">
             <a v-show="song.options" :title="t('_ADD_TO_QUEUE')" class="detail-add-button" @click="addToPlay(song)"><span class="icon li-add" /></a>
-            <a v-show="song.options" :title="t('_ADD_TO_PLAYLIST')" class="detail-fav-button" @click="showModal('AddToPlaylist', { tracks: [song] })"><span class="icon li-songlist" /></a>
+            <a v-show="song.options" :title="t('_ADD_TO_PLAYLIST')" class="detail-fav-button" @click="showModal('AddToPlaylist', { tracks: [song] })">
+              <span class="icon li-songlist" />
+            </a>
             <a
               v-show="song.options && (is_mine == '1' || is_local)"
               :title="t('_REMOVE_FROM_PLAYLIST')"
               class="detail-delete-button"
-              @click="removeSongFromPlaylist(song.id, list_id)"
-            >
+              @click="removeSongFromPlaylist(song.id, list_id)">
               <span class="icon li-del" />
             </a>
-            <a
-              v-show="song.options && !is_local"
-              :title="t('_ORIGIN_LINK')"
-              class="source-button"
-              @click="openUrl(song.source_url)"
-            >
+            <a v-show="song.options && !is_local" :title="t('_ORIGIN_LINK')" class="source-button" @click="openUrl(song.source_url)">
               <span class="icon li-link" />
             </a>
           </div>
-        </li>
+        </DragDropZone>
       </ul>
     </div>
   </div>
@@ -164,6 +147,7 @@ import { useRoute, useRouter } from 'vue-router';
 import MediaService from '../services/MediaService';
 import notyf from '../services/notyf';
 import $event from '../services/EventService';
+import DragDropZone from '../components/DragDropZone.vue';
 
 const { t } = useI18n();
 const router = useRouter();
@@ -246,16 +230,27 @@ const removeSongFromPlaylist = async (track_id, list_id) => {
   await MediaService.removeTrackFromMyPlaylist(track_id, list_id);
   notyf.success(t('_REMOVE_SONG_FROM_PLAYLIST_SUCCESS'));
 };
-const addMylist = () =>{
+const addMylist = () => {
   l1Player.addTracks(songs);
   notyf.success(t('_ADD_TO_QUEUE_SUCCESS'));
-}
+};
+const onPlaylistSongDrop = async (list_id, song, event) => {
+  const { data, dragType, direction } = event;
+
+  if (dragType === 'application/listen1-song') {
+    // insert song
+    await MediaService.insertTrackToMyPlaylist(
+      list_id,
+      data,
+      song,
+      direction
+    );
+    await refreshPlaylist();
+  }
+};
 const showModal = inject('showModal');
 
 // TODO: avoid to use event bus to refresh state
 // use global ref to keep more clear way to manage state
 $event.on(`playlist:id:${listId}:update`, refreshPlaylist);
 </script>
-
-<style>
-</style>

@@ -165,13 +165,13 @@ export default class MyPlaylist {
     return playlist;
   }
 
-  static insertTrackToMyplaylist(playlist_id, track, to_track, direction) {
-    const playlist = localStorage.getObject(playlist_id);
+  static async insertTrackToMyplaylist(playlist_id, track, to_track, direction) {
+    const playlist = await iDB.Playlists.get({ id: playlist_id });
     if (playlist == null) {
       return null;
     }
-    const index = playlist.tracks.findIndex((i) => i.id === track.id);
-    let insertIndex = playlist.tracks.findIndex((i) => i.id === to_track.id);
+    const index = playlist.order.findIndex((i) => i === track.id);
+    let insertIndex = playlist.order.findIndex((i) => i === to_track.id);
     if (index === insertIndex) {
       return playlist;
     }
@@ -179,8 +179,8 @@ export default class MyPlaylist {
       insertIndex -= 1;
     }
     const offset = direction === 'top' ? 0 : 1;
-    this.array_move(playlist.tracks, index, insertIndex + offset);
-    localStorage.setObject(playlist_id, playlist);
+    this.array_move(playlist.order, index, insertIndex + offset);
+    iDB.Playlists.put(playlist);
     return playlist;
   }
 

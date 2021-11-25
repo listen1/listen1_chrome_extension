@@ -280,21 +280,13 @@ const MediaService = {
   async addMyPlaylist(id: string, tracks: unknown[]) {
     return myplaylist.addTracksToMyplaylist(id, tracks);
   },
-  //   insertTrackToMyPlaylist(id, track, to_track, direction) {
-  //     const newPlaylist = myplaylist.insertTrackToMyplaylist(
-  //       id,
-  //       track,
-  //       to_track,
-  //       direction
-  //     );
-  //     return {
-  //       success: (fn) => fn(newPlaylist),
-  //     };
-  //   },
-  //   addPlaylist(id, tracks) {
-  //     const provider = getProviderByItemId(id);
-  //     return provider.add_playlist(id, tracks);
-  //   },
+  async insertTrackToMyPlaylist(id: string, track: any, to_track: any, direction: string) {
+    return await myplaylist.insertTrackToMyplaylist(id, track, to_track, direction);
+  },
+  // addPlaylist(id, tracks) {
+  //   const provider = getProviderByItemId(id);
+  //   return provider.add_playlist(id, tracks);
+  // },
 
   async removeTrackFromMyPlaylist(track_id: string, list_id: string) {
     myplaylist.removeTrackFromMyplaylist(track_id, list_id);
