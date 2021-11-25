@@ -1022,8 +1022,7 @@ ul.detail-songlist li .tools .icon {
 .page .settings-content {
   margin: 0 25px 25px 25px;
 }
-.page .settings-content label.upload-button,
-.page .settings-content .setting-button {
+.page .settings-content label.upload-button {
   padding: 5px;
   background: var(--button-background-color);
   margin-right: 4px;
@@ -1031,8 +1030,7 @@ ul.detail-songlist li .tools .icon {
   cursor: pointer;
 }
 
-.page .settings-content label.upload-button:hover,
-.page .settings-content .setting-button:hover {
+.page .settings-content label.upload-button:hover {
   background: var(--button-hover-background-color);
 }
 
