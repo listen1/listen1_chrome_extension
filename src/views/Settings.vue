@@ -73,18 +73,14 @@
             />px
           </p>
           <p>
-            Lyric Font Weight:
-            <input
-              class="settings-input"
-              step="100"
-              v-model="settings.lyricFontWeight"
-              type="number"
-              min="100"
-              max="900"
-              :style="{
-                width: `${`${settings.lyricFontWeight}`.length + 1}ch`
-              }"
-            />
+            Lyric Font Weight: 
+            <select class="settings-input" v-model="settings.lyricFontWeight">
+              <option
+                v-for="option in fontWeightOptions"
+                :value="option.value"
+                :key="option.text"
+              >{{ option.text }}</option>
+            </select>
           </p>
         </div>
         <!-- <div class="settings-title">
@@ -348,6 +344,36 @@ const toggleCoverBackground = () => setSettings({ enableNowplayingCoverBackgroun
 const toggleBitrate = () => setSettings({ enableNowplayingBitrate: !settings.enableNowplayingBitrate });
 const togglePlayingPlatform = () => setSettings({ enableNowplayingPlatform: !settings.enableNowplayingPlatform });
 const setTheme = (theme: string) => setSettings({ theme });
+const fontWeightOptions = [
+  {
+    text: t('Extra Light'),
+    value: 200,
+  },
+  {
+    text: t('Light'),
+    value: 300,
+  },
+  {
+    text: t('Normal'),
+    value: 400,
+  },
+  {
+    text: t('Medium'),
+    value: 500,
+  },
+  {
+    text: t('Semi Bold'),
+    value: 600,
+  },
+  {
+    text: t('Bold'),
+    value: 700,
+  },
+  {
+    text: t('Extra Bold'),
+    value: 800,
+  },
+];
 </script>
 <style>
 .settings-input {
