@@ -7,10 +7,10 @@
           <span>{{ t('_LANGUAGE') }}</span>
         </div>
         <div class="settings-content">
-          <button class="setting-button" @click="setLocale('zh-CN')">简体中文</button>
-          <button class="setting-button" @click="setLocale('zh-TC')">繁体中文</button>
-          <button class="setting-button" @click="setLocale('en-US')">English</button>
-          <button class="setting-button" @click="setLocale('fr-FR')">French</button>
+          <SettingButton text="简体中文" @click="setLocale('zh-CN')" />
+          <SettingButton text="繁体中文" @click="setLocale('zh-TC')" />
+          <SettingButton text="English" @click="setLocale('en-US')" />
+          <SettingButton text="French" @click="setLocale('fr-FR')" />
         </div>
         <div class="settings-title">
           <span>{{ t('_NOWPLAYING_DISPLAY') }}</span>
@@ -61,8 +61,8 @@
         </div>
         <div class="settings-content">
           <div>
-            <button class="setting-button" @click="setTheme('white')">{{ t('_THEME_WHITE') }}</button>
-            <button class="setting-button" @click="setTheme('black')">{{ t('_THEME_BLACK') }}</button>
+            <SettingButton :text="t('_THEME_WHITE')" @click="setTheme('white')" />
+            <SettingButton :text="t('_THEME_BLACK')" @click="setTheme('black')" />
           </div>
         </div>
         <!-- <div class="settings-title">
@@ -318,6 +318,8 @@ import Href from '../components/Href.vue';
 import useSettings from '../composition/settings';
 import { setLocale } from '../i18n';
 import { isElectron } from '../provider/lowebutil';
+import SettingButton from '../components/SettingButton.vue';
+import SettingButton1 from '../components/SettingButton.vue';
 const { t } = useI18n();
 const { settings, setSettings } = useSettings();
 const isChrome = !isElectron();
