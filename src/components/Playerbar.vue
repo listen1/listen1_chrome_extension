@@ -125,8 +125,8 @@
           id="song song.id "
           :key="song.id"
           ng-class="{ playing: currentPlaying.id == song.id }"
-          ng-mouseenter="playlist_highlight=true"
-          ng-mouseleave="playlist_highlight=false"
+          @mouseenter="song.highlight=true"
+          @mouseleave="song.highlight=false"
           :class="{'even': index % 2 === 0, 'odd': index % 2 !== 0 }"
           draggable="true"
           drag-drop-zone
@@ -153,12 +153,12 @@
           </div>
           <div class="tools">
             <span
-              v-show="playlist_highlight"
-              remove-from-playlist="song"
-              data-index="$index"
+              v-show="song.highlight"
+              @click="removeTrack(index)"
               class="icon li-del"
             />
-            <span v-show="playlist_highlight" open-url="song.source_url" class="icon li-link" />
+            <span v-show="song.highlight" @click="openUrl(song.source_url)" class="icon li-link" />
+        
           </div>
           <!-- <div class="song-time">00:00</div> -->
         </li>
@@ -181,7 +181,6 @@ const router = useRouter();
 
 let window_type = $ref('');
 let isChrome = $ref(true);
-let playlist_highlight = $ref(false);
 let menuHidden = $ref(true);
 let playmode = $computed(() => player.playmode);
 
@@ -236,7 +235,9 @@ const toggleMuteStatus = () => {
 const playFromPlaylist = (song) => {
   l1Player.playById(song.id);
 };
-
+const removeTrack = (index) => {
+  l1Player.removeTrack(index);
+};
 const showModal = inject('showModal');
 
 let playlist = $computed(() => player.playlist);
