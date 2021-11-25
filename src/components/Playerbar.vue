@@ -173,13 +173,14 @@ import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 import DraggableBar from '../components/DraggableBar.vue';
 import usePlayer from '../composition/player';
+import useOverlay from '../composition/overlay';
 import { l1Player } from '../services/l1_player';
 
 const { t } = useI18n();
 const { player } = usePlayer();
 const router = useRouter();
 
-let window_type = $ref('');
+let { overlay, setOverlayType } = useOverlay();
 let isChrome = $ref(true);
 let menuHidden = $ref(true);
 let playmode = $computed(() => player.playmode);
@@ -204,10 +205,10 @@ const nextTrack = () => {
   l1Player.next();
 };
 const toggleNowPlaying = () => {
-  if (window_type != 'track') {
-    window_type = 'track';
+  if (overlay.type != 'track') {
+    setOverlayType('track');
   } else {
-    window_type = '';
+    setOverlayType('');
   }
 };
 

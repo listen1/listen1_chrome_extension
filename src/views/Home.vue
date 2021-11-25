@@ -178,6 +178,7 @@
           content-selector="'#playlist-content'"
         >
           <router-view :key="$route.name + ($route.params.listId || '')" />
+          <NowPlaying/>
         </div>
       </div>
     </div>
@@ -203,6 +204,7 @@ import Modal from '../components/Modal.vue';
 import DefaultModal from '../components/modals/DefaultModal.vue';
 import Sidebar from '../components/Sidebar.vue';
 import Playerbar from '../components/Playerbar.vue';
+import NowPlaying from '../views/NowPlaying.vue';
 
 const { t } = useI18n();
 const { player, playerListener } = usePlayer()
