@@ -69,27 +69,22 @@ export default class MyPlaylist {
     return `${s4() + s4()}-${s4()}-${s4()}-${s4()}-${s4()}${s4()}${s4()}`;
   }
 
-  static insertMyplaylistToMyplaylists(playlist_type, playlist_id, to_playlist_id, direction) {
-    const key = this.getPlaylistObjectKey(playlist_type);
-    if (key === '') {
-      return [];
-    }
-    const playlists = localStorage.getObject(key);
-
-    const index = playlists.findIndex((i) => i === playlist_id);
-    let insertIndex = playlists.findIndex((i) => i === to_playlist_id);
-    if (index === insertIndex) {
-      return playlists;
-    }
-    if (insertIndex > index) {
-      insertIndex -= 1;
-    }
-    const offset = direction === 'top' ? 0 : 1;
-
-    this.array_move(playlists, index, insertIndex + offset);
-
-    localStorage.setObject(key, playlists);
-    return playlists;
+  static async reorderMyplaylist(playlist_type, playlist_id, to_playlist_id, direction) {
+    await iDB.Settings.where('key')
+      .equals(playlist_type + '_playlist_order')
+      .modify((order) => {
+        const index = order.value.findIndex((i) => i === playlist_id);
+        let insertIndex = order.value.findIndex((i) => i === to_playlist_id);
+        if (index === insertIndex) {
+          return order;
+        }
+        if (insertIndex > index) {
+          insertIndex -= 1;
+        }
+        const offset = direction === 'top' ? 0 : 1;
+        this.array_move(order.value, index, insertIndex + offset);
+        return order;
+      });
   }
 
   static async saveMyplaylist(playlist_type, playlistObj) {

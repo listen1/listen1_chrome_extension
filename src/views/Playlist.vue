@@ -101,7 +101,7 @@
           :dragobject="song"
           :dragtitle="song.title"
           :sortable="is_mine || is_local"
-          :dragtype="'application/listen1-song'"
+          dragtype="application/listen1-song"
           @drop="onPlaylistSongDrop(list_id, song, $event)"
           @mouseenter="song.options = true"
           @mouseleave="song.options = undefined">

@@ -18,9 +18,8 @@ const props = defineProps<{
   dragobject: any;
   dragtitle: string;
   dragtype: string;
-  ondragleave: any;
+  ondragleave?: any;
   sortable: boolean;
-  el: any;
 }>();
 const emits = defineEmits(['drop']);
 let root: any = $ref(null);
