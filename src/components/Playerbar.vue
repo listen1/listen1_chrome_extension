@@ -33,9 +33,7 @@
           err-src="https://y.gtimg.cn/mediastyle/global/img/album_300.png"
         />
         <div class="mask">
-          <svg class="feather">
-            <use href="#chevrons-up" />
-          </svg>
+          <vue-feather type="chevrons-up" />
         </div>
       </div>
       <div v-if="playlist.length > 0" class="detail">
