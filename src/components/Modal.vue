@@ -14,6 +14,7 @@ import DefaultModal from './modals/DefaultModal.vue';
 import EditPlaylist from './modals/EditPlaylist.vue';
 import ParseUrl from './modals/ParseUrl.vue';
 import ImportPlaylist from './modals/ImportPlaylist.vue';
+import OpenLogin from './modals/OpenLogin.vue';
 import { provide } from 'vue';
 
 let show = $ref(false);
@@ -26,7 +27,8 @@ const components: Record<string, any> = {
   AddToPlaylist,
   EditPlaylist,
   ParseUrl,
-  ImportPlaylist
+  ImportPlaylist,
+  OpenLogin
 };
 
 const showModal = (type = 'DefaultModal', opt: Record<string, unknown> = {}) => {

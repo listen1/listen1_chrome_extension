@@ -183,9 +183,10 @@ const MediaService = {
   getSourceList() {
     return sourceList;
   },
-  //   getLoginProviders() {
-  //     return PROVIDERS.filter((i) => !i.hidden && i.support_login);
-  //   },
+  getLoginProviders() {
+    const result = PROVIDERS.filter((i) => !i.hidden && i.support_login);
+    return result;
+  },
   async search(source: string, options: unknown) {
     const url = `/search?${queryStringify(options)}`;
     if (source === 'allmusic') {
@@ -379,44 +380,44 @@ const MediaService = {
     const provider = getProviderByName(track.source);
 
     provider.bootstrapTrack(track, successCallback, failureCallback);
+  },
+
+  async login(source: string, options: any) {
+    const url = `/login?${queryStringify(options)}`;
+    const provider = getProviderByName(source);
+
+    return await provider.login(url);
+  },
+  async getUser(source: string) {
+    const provider = getProviderByName(source);
+    return await provider.getUser();
+  },
+  getLoginUrl(source: string) {
+    const provider = getProviderByName(source);
+    return provider.getLoginUrl();
+  },
+  async getUserCreatedPlaylist(source: string, options: any) {
+    const provider = getProviderByName(source);
+    const url = `/get_user_create_playlist?${queryStringify(options)}`;
+
+    return await provider.getUserCreatedPlaylist(url);
+  },
+  async getUserFavoritePlaylist(source: string, options: any) {
+    const provider = getProviderByName(source);
+    const url = `/get_user_favorite_playlist?${queryStringify(options)}`;
+
+    return await provider.getUserFavoritePlaylist(url);
+  },
+  async getRecommendPlaylist(source: string) {
+    const provider = getProviderByName(source);
+
+    return await provider.getRecommendPlaylist();
+  },
+  async logout(source: string) {
+    const provider = getProviderByName(source);
+
+    return provider.logout();
   }
-
-  //   login(source, options) {
-  //     const url = `/login?${queryStringify(options)}`;
-  //     const provider = getProviderByName(source);
-
-  //     return provider.login(url);
-  //   },
-  //   getUser(source) {
-  //     const provider = getProviderByName(source);
-  //     return provider.getUser();
-  //   },
-  //   getLoginUrl(source) {
-  //     const provider = getProviderByName(source);
-  //     return provider.getLoginUrl();
-  //   },
-  //   getUserCreatedPlaylist(source, options) {
-  //     const provider = getProviderByName(source);
-  //     const url = `/get_user_create_playlist?${queryStringify(options)}`;
-
-  //     return provider.getUserCreatedPlaylist(url);
-  //   },
-  //   getUserFavoritePlaylist(source, options) {
-  //     const provider = getProviderByName(source);
-  //     const url = `/get_user_favorite_playlist?${queryStringify(options)}`;
-
-  //     return provider.getUserFavoritePlaylist(url);
-  //   },
-  //   getRecommendPlaylist(source) {
-  //     const provider = getProviderByName(source);
-
-  //     return provider.getRecommendPlaylist();
-  //   },
-  //   logout(source) {
-  //     const provider = getProviderByName(source);
-
-  //     return provider.logout();
-  //   },
 };
 
 // eslint-disable-next-line no-unused-vars

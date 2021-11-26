@@ -144,13 +144,13 @@
               @input="searchTextChanged"
             />
           </div>
-          <!-- <div ng-class="{ 'active': (current_tag==4) && (window_url_stack.length ==0)}" ng-click="showTag(5)" class="settings">
-                    <router-link to="/login">
-                      <span class="icon">
-                        <vue-feather type="users"></vue-feather>
-                      </span>
-                    </router-link>
-          </div>-->
+          <div ng-class="{ 'active': (current_tag==4) && (window_url_stack.length ==0)}" class="settings">
+            <router-link to="/login">
+              <span class="icon">
+                <vue-feather type="users"></vue-feather>
+              </span>
+            </router-link>
+          </div>
           <div
             ng-class="{ 'active': (current_tag==4) && (window_url_stack.length ==0)}"
             class="settings"
@@ -177,7 +177,7 @@
           infinite-scroll="scrolling()"
           content-selector="'#playlist-content'"
         >
-          <router-view :key="$route.name + ($route.params.listId || '')" />
+          <router-view :key="$route.path" />
           <NowPlaying/>
         </div>
       </div>
@@ -197,6 +197,7 @@ import '../assets/css/icon.css';
 import DraggableBar from '../components/DraggableBar.vue';
 import usePlayer from '../composition/player';
 import useSearch from '../composition/search';
+import useAuth from '../composition/auth';
 import useSettings from '../composition/settings';
 import { setLocale } from '../i18n';
 import { l1Player } from '../services/l1_player';
@@ -210,7 +211,7 @@ const { t } = useI18n();
 const { player, playerListener } = usePlayer()
 const router = useRouter();
 const { condition } = useSearch();
-
+const { refreshAuthStatus } = useAuth();
 let is_dialog_hidden = $ref(1);
 let dialog_title = $ref('');
 let dialog_type = $ref(0);
@@ -327,6 +328,7 @@ onMounted(() => {
       style.height = "30px"
     }
   }
+  refreshAuthStatus();
 })
 let playlist = $computed(() => player.playlist);
 let isPlaying = $computed(() => player.isPlaying);
