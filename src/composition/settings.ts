@@ -32,8 +32,8 @@ const settings = reactive({
   enableLyricTranslation: false,
   theme: 'black',
   //lyric settings
-  lyricFontSize: 20,
-  lyricFontWeight: 500
+  lyricFontSize: 15,
+  lyricFontWeight: 400
 });
 type settingsType = typeof settings;
 type settingsKey = keyof settingsType;
