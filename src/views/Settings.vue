@@ -60,7 +60,7 @@
         <SettingTitle :text="t('_STYLE')" />
         <div class="settings-content">
           <p>
-            {{ `${t('_LYRIC_SIZE')}: ` }}
+            {{ `${t('_LYRIC_SIZE')}` }}
             <input
               class="settings-input"
               v-model.lazy="settings.lyricFontSize"
@@ -68,23 +68,23 @@
               min="10"
               max="40"
               :style="{
-                width: `${`${settings.lyricFontSize}`.length + 2}ch`
-              }"
-            />px
+                width: `${`${settings.lyricFontSize}`.length + 3}ch`
+              }" />
+            px
           </p>
           <p>
-            {{ `${t('_LYRIC_WEIGHT')}: ` }}
-            <select
-              class="settings-input"
-              v-model="settings.lyricFontWeight"
-            >
-              <option
-                v-for="option in fontWeightOptions"
-                :value="option.value"
-                :key="option.text"
-              >{{ option.text }}</option>
+            {{ `${t('_LYRIC_WEIGHT')}` }}
+            <select class="settings-input" v-model="settings.lyricFontWeight">
+              <option v-for="option in fontWeightOptions" :value="option.value" :key="option.text">
+                {{ option.text }}
+              </option>
             </select>
           </p>
+          <div class="setting-font-preview">
+            <p :style="{ fontWeight: settings.lyricFontWeight, fontSize: `${settings.lyricFontSize}px` }">
+              Listen1，自由的享受音乐的乐趣
+            </p>
+          </div>
         </div>
         <!-- <div class="settings-title">
           <span>{{ $t('_AUTO_CHOOSE_SOURCE') }}</span>
@@ -380,6 +380,7 @@ const fontWeightOptions = [
 </script>
 <style>
 .settings-input {
+  margin-left: 10px;
   padding: 5px;
   text-align: left;
   background-color: var(--content-background-color);
@@ -391,5 +392,12 @@ const fontWeightOptions = [
 }
 .settings-input:hover {
   background: var(--search-input-background-color);
+}
+.setting-font-preview {
+  color: var(--lyric-default-color);
+  display: flex;
+  align-items: center;
+  height: 40px;
+  overflow: hidden;
 }
 </style>
