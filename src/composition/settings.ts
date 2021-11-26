@@ -4,7 +4,7 @@ import { setPrototypeOfLocalStorage } from '../utils';
 
 setPrototypeOfLocalStorage();
 
-const nameMapping: Record<string, string> = {
+const nameMapping = {
   language: 'language',
   enableAutoChooseSource: 'enable_auto_choose_source',
   enableStopWhenClose: 'enable_stop_when_close',
@@ -17,7 +17,9 @@ const nameMapping: Record<string, string> = {
   enableLyricTranslation: 'enable_lyric_translation',
   theme: 'theme'
 };
-const settings: Record<string, unknown> = reactive({
+type nameMapping = typeof nameMapping;
+type mappingKey = keyof nameMapping;
+const settings = reactive({
   language: 'zh-CN',
   enableAutoChooseSource: false,
   enableStopWhenClose: true,
@@ -33,18 +35,23 @@ const settings: Record<string, unknown> = reactive({
   lyricFontSize: 20,
   lyricFontWeight: 500
 });
-
+type settingsType = typeof settings;
+type settingsKey = keyof settingsType;
+type Entries<T> = {
+  [K in keyof T]: [K, T[K]];
+}[keyof T][];
+type settingEntries = Entries<settingsType>;
 async function flushSettings() {
   await iDB.Settings.bulkPut(
-    Object.keys(settings).map((key) => ({
+    (Object.keys(settings) as settingsKey[]).map((key) => ({
       key,
       value: settings[key]
     }))
   );
 }
-function setSettings(newValue: Record<string, unknown>) {
-  for (const [key, value] of Object.entries(newValue)) {
-    settings[key] = value;
+function setSettings(newValue: Partial<Record<settingsKey, unknown>>) {
+  for (const [key, value] of Object.entries(newValue) as settingEntries) {
+    settings[key] = value as never;
     iDB.Settings.put({ key, value });
   }
 }
@@ -61,7 +68,10 @@ async function loadSettings() {
 }
 
 export function migrateSettings() {
-  let lsSettings = Object.keys(nameMapping).reduce((res, cur) => ({ ...res, [cur]: localStorage.getObject(nameMapping[cur]) }), {});
+  let lsSettings = (Object.keys(nameMapping) as mappingKey[]).reduce(
+    (res, cur) => ({ ...res, [cur]: localStorage.getObject(nameMapping[cur]) }),
+    {}
+  ) as Partial<settingsType>;
   if (Object.values(lsSettings).some((value) => value === undefined || value === null)) {
     lsSettings = settings;
   }
