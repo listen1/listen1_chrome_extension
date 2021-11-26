@@ -59,7 +59,6 @@ let tab = $ref(platformSourceList[0].name);
 let myPlatformUser = getMusicAuth(platformId);
 let myPlatformPlaylists = $ref([]);
 onMounted(async () => {
-  console.log('mounted...');
   await loadPlatformPlaylists();
 });
 const showPlaylist = (playlistId) => {
