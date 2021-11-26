@@ -6,10 +6,9 @@ import kuwo from '../provider/kuwo';
 import bilibili from '../provider/bilibili';
 import migu from '../provider/migu';
 import taihe from '../provider/taihe';
-import { getLocalStorageValue } from '../provider/lowebutil';
 // import localmusic from "@/provider/localmusic";
 import myplaylist from '../provider/myplaylist';
-
+import useSettings from '../composition/settings';
 interface Provider {
   getPlaylist: (url: string) => any;
   search: (url: string) => any;
@@ -331,44 +330,47 @@ const MediaService = {
     const successCallback = playerSuccessCallback;
     const sound: Record<string, unknown> = {};
     function failureCallback() {
-      if (localStorage.getObject('enable_auto_choose_source') === false) {
+      const { settings } = useSettings();
+      if (!settings.enableAutoChooseSource) {
         playerFailCallback();
         return;
       }
       const trackPlatform = getProviderNameByItemId(track.id);
-      /** @type{Array} */
-      const failover_source_list = getLocalStorageValue('auto_choose_source_list', ['kuwo', 'qq', 'migu']).filter((i: string) => i !== trackPlatform);
 
-      const getUrlAsync = failover_source_list.map(async (source: string) => {
-        if (track.source === source) {
-          return;
-        }
-        const keyword = `${track.title} ${track.artist}`;
-        const curpage = 1;
-        const url = `/search?keywords=${keyword}&curpage=${curpage}&type=0`;
-        const provider = getProviderByName(source);
-        provider.search(url).then((data: any) => {
-          for (let i = 0; i < data.result.length; i += 1) {
-            const searchTrack = data.result[i];
-            // compare search track and track to check if they are same
-            // TODO: better similar compare method (duration, md5)
-            if (!searchTrack.disable && searchTrack.title === track.title && searchTrack.artist === track.artist) {
-              provider.bootstrapTrack(
-                searchTrack,
-                (response: Record<string, unknown>) => {
-                  sound.url = response.url;
-                  sound.bitrate = response.bitrate;
-                  sound.platform = response.platform;
-                  Promise.reject(sound); // Use Reject to return immediately
-                },
-                Promise.resolve
-              );
+      const failover_source_list = settings.autoChooseSourceList.filter((i: string) => i !== trackPlatform);
+
+      const getUrlAsync = failover_source_list.map(
+        (source: string) =>
+          new Promise((res, rej) => {
+            if (track.source === source) {
               return;
             }
-          }
-          return sound;
-        });
-      });
+            const keyword = `${track.title} ${track.artist}`;
+            const curpage = 1;
+            const url = `/search?keywords=${keyword}&curpage=${curpage}&type=0`;
+            const provider = getProviderByName(source);
+            provider.search(url).then((data: any) => {
+              for (let i = 0; i < data.result.length; i += 1) {
+                const searchTrack = data.result[i];
+                // compare search track and track to check if they are same
+                // TODO: better similar compare method (duration, md5)
+                if (!searchTrack.disable && searchTrack.title === track.title && searchTrack.artist === track.artist) {
+                  provider.bootstrapTrack(
+                    searchTrack,
+                    (response: Record<string, unknown>) => {
+                      sound.url = response.url;
+                      sound.bitrate = response.bitrate;
+                      sound.platform = response.platform;
+                      rej(sound); // Use Reject to return immediately
+                    },
+                    res
+                  );
+                  return;
+                }
+              }
+            });
+          })
+      );
       // TODO: Use Promise.any() in ES2021 replace the tricky workaround
       Promise.all(getUrlAsync)
         .then(playerFailCallback)

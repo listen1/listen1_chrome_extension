@@ -15,6 +15,7 @@ const nameMapping = {
   enableGlobalShortCut: 'enable_global_shortcut',
   enableNowplayingPlatform: 'enable_nowplaying_platform',
   enableLyricTranslation: 'enable_lyric_translation',
+  autoChooseSourceList: 'auto_choose_source_list',
   theme: 'theme'
 };
 type nameMapping = typeof nameMapping;
@@ -33,7 +34,8 @@ const settings = reactive({
   theme: 'black',
   //lyric settings
   lyricFontSize: 15,
-  lyricFontWeight: 400
+  lyricFontWeight: 400,
+  autoChooseSourceList: ['kuwo', 'qq', 'migu']
 });
 type settingsType = typeof settings;
 type settingsKey = keyof settingsType;
