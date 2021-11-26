@@ -168,5 +168,8 @@
   "_PROTOCOL": "代理协议",
   "_HOST": "主机地址",
   "_PORT": "端口",
-  "ZOOM_IN_OUT": "放大/缩小"
+  "ZOOM_IN_OUT": "放大/缩小",
+  "_LYRIC_WEIGHT": "歌词字重",
+  "_LYRIC_SIZE": "歌词大小",
+  "_STYLE": "样式"
 }

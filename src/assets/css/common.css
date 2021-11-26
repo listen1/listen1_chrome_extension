@@ -1007,18 +1007,6 @@ ul.detail-songlist li .tools .icon {
 }
 /* page login end */
 
-/* page setting start */
-.page .settings-title {
-  border-bottom: solid 1px var(--line-default-color);
-  padding-bottom: 10px;
-  max-width: 800px;
-  margin: 0 25px;
-  font-size: 17px;
-  margin-bottom: 10px;
-}
-.page .settings-title:first-of-type {
-  margin-top: 20px;
-}
 .page .settings-content {
   margin: 0 25px 25px 25px;
 }

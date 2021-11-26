@@ -3,18 +3,14 @@
   <div class="page" ng-init="lastfm.updateStatus(); updateGithubStatus();">
     <div class="site-wrapper-innerd">
       <div class="cover-container">
-        <div class="settings-title">
-          <span>{{ t('_LANGUAGE') }}</span>
-        </div>
+        <SettingTitle :text="t('_LANGUAGE')" />
         <div class="settings-content">
           <SettingButton text="简体中文" @click="setLocale('zh-CN')" />
           <SettingButton text="繁体中文" @click="setLocale('zh-TC')" />
           <SettingButton text="English" @click="setLocale('en-US')" />
           <SettingButton text="French" @click="setLocale('fr-FR')" />
         </div>
-        <div class="settings-title">
-          <span>{{ t('_NOWPLAYING_DISPLAY') }}</span>
-        </div>
+        <SettingTitle :text="t('_NOWPLAYING_DISPLAY')" />
         <div class="settings-content">
           <div class="shortcut">
             <vue-feather
@@ -56,13 +52,38 @@
             {{ t('_NOWPLAYING_PLATFORM_NOTICE') }}
           </div>
         </div>
-        <div class="settings-title">
-          <span>{{ t('_THEME') }}</span>
-        </div>
+        <SettingTitle :text="t('_THEME')" />
         <div class="settings-content">
-          <div>
-            <SettingButton :text="t('_THEME_WHITE')" @click="setTheme('white')" />
-            <SettingButton :text="t('_THEME_BLACK')" @click="setTheme('black')" />
+          <SettingButton :text="t('_THEME_WHITE')" @click="setTheme('white')" />
+          <SettingButton :text="t('_THEME_BLACK')" @click="setTheme('black')" />
+        </div>
+        <SettingTitle :text="t('_STYLE')" />
+        <div class="settings-content">
+          <p>
+            {{ `${t('_LYRIC_SIZE')}` }}
+            <input
+              class="settings-input"
+              v-model.lazy="settings.lyricFontSize"
+              type="number"
+              min="10"
+              max="40"
+              :style="{
+                width: `${`${settings.lyricFontSize}`.length + 3}ch`
+              }" />
+            px
+          </p>
+          <p>
+            {{ `${t('_LYRIC_WEIGHT')}` }}
+            <select class="settings-input" v-model="settings.lyricFontWeight">
+              <option v-for="option in fontWeightOptions" :value="option.value" :key="option.text">
+                {{ option.text }}
+              </option>
+            </select>
+          </p>
+          <div class="setting-font-preview">
+            <p :style="{ fontWeight: settings.lyricFontWeight, fontSize: `${settings.lyricFontSize}px` }">
+              Listen1，自由的享受音乐的乐趣
+            </p>
           </div>
         </div>
         <!-- <div class="settings-title">
@@ -284,9 +305,7 @@
           <span v-show="proxyMode_name == 'custom'">proxyRules</span>
           <button ng-click="showDialog(12)">{{ $t('_MODIFY') }}</button>
         </div>-->
-        <div class="settings-title">
-          <span>{{ t('_ABOUT') }}</span>
-        </div>
+        <SettingTitle :text="t('_ABOUT')" />
         <div class="settings-content">
           <p>
             Listen 1 {{ t('_HOMEPAGE') }}:
@@ -319,7 +338,7 @@ import useSettings from '../composition/settings';
 import { setLocale } from '../i18n';
 import { isElectron } from '../provider/lowebutil';
 import SettingButton from '../components/SettingButton.vue';
-import SettingButton1 from '../components/SettingButton.vue';
+import SettingTitle from '../components/SettingTitle.vue';
 const { t } = useI18n();
 const { settings, setSettings } = useSettings();
 const isChrome = !isElectron();
@@ -328,4 +347,57 @@ const toggleCoverBackground = () => setSettings({ enableNowplayingCoverBackgroun
 const toggleBitrate = () => setSettings({ enableNowplayingBitrate: !settings.enableNowplayingBitrate });
 const togglePlayingPlatform = () => setSettings({ enableNowplayingPlatform: !settings.enableNowplayingPlatform });
 const setTheme = (theme: string) => setSettings({ theme });
+const fontWeightOptions = [
+  {
+    text: t('Extra Light'),
+    value: 200,
+  },
+  {
+    text: t('Light'),
+    value: 300,
+  },
+  {
+    text: t('Normal'),
+    value: 400,
+  },
+  {
+    text: t('Medium'),
+    value: 500,
+  },
+  {
+    text: t('Semi Bold'),
+    value: 600,
+  },
+  {
+    text: t('Bold'),
+    value: 700,
+  },
+  {
+    text: t('Extra Bold'),
+    value: 800,
+  },
+];
 </script>
+<style>
+.settings-input {
+  margin-left: 10px;
+  padding: 5px;
+  text-align: left;
+  background-color: var(--content-background-color);
+  border: 1px solid var(--search-input-background-color);
+  border-radius: 4px;
+  margin-right: 4px;
+  color: var(--text-default-color);
+  transition: background-color 0.2s;
+}
+.settings-input:hover {
+  background: var(--search-input-background-color);
+}
+.setting-font-preview {
+  color: var(--lyric-default-color);
+  display: flex;
+  align-items: center;
+  height: 40px;
+  overflow: hidden;
+}
+</style>
