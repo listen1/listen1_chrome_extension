@@ -656,7 +656,7 @@ export default class qq extends MusicResource {
       }
       let { value: uin } = wxCookie;
       uin = `1${uin.slice('o'.length)}`; // replace prefix o with 1
-      return this.get_user_by_uin(uin, fn);
+      return this.get_user_by_uin(uin);
     }
   }
 
@@ -676,7 +676,9 @@ export default class qq extends MusicResource {
             url: 'https://y.qq.com',
             name: 'wxuin'
           },
-          () => {}
+          () => {
+            // empty block
+          }
         );
       }
     );

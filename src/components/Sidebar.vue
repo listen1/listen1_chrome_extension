@@ -16,8 +16,8 @@
       <div v-if="!isChrome || is_login('netease') || is_login('qq')" class="menu-title">
         <div class="title">{{ t('_MY_MUSIC') }}</div>
       </div>
-      <!-- <ul class="nav masthead-nav">
-        <li
+      <ul class="nav masthead-nav">
+        <!-- <li
           v-if="!isChrome"
           @click="showPlaylist('lmplaylist_reserve')"
           :class="{ active: window_type == 'list' && '/playlist?list_id=lmplaylist_reserve' === getCurrentUrl() }"
@@ -26,11 +26,11 @@
             <span class="icon li-featured-list" />
             <a>{{ t('_LOCAL_MUSIC') }}</a>
           </div>
-        </li>
+        </li> -->
         <li
           v-if="is_login('netease')"
-          @click="showTag(6, { platform: 'netease', user: musicAuth.netease })"
-          :class="{ active: current_tag == 6 && tag_params.platform == 'netease' && window_url_stack.length == 0 }"
+          @click="$router.push(`/my_platform/netease`)"
+          :class="{ active: route.path === `/my_platform/netease` }"
         >
           <div class="sidebar-block">
             <vue-feather type="globe" />
@@ -39,15 +39,15 @@
         </li>
         <li
           v-if="is_login('qq')"
-          @click="showTag(6, { platform: 'qq', user: musicAuth.qq })"
-          :class="{ active: current_tag == 6 && tag_params.platform == 'qq' && window_url_stack.length == 0 }"
+          @click="$router.push(`/my_platform/qq`)"
+          :class="{ active: route.path === `/my_platform/qq` }"
         >
           <div class="sidebar-block">
             <vue-feather type="globe" />
             <a>{{ t('_MY_QQ') }}</a>
           </div>
         </li>
-      </ul>-->
+      </ul>
       <div class="menu-title">
         <div class="title">{{ t('_CREATED_PLAYLIST') }}</div>
         <vue-feather type="plus-square" @click="showModal('ParseUrl', {})" />
@@ -101,14 +101,13 @@ import $event from '../services/EventService';
 import MediaService from '../services/MediaService';
 import DragDropZone from '../components/DragDropZone.vue';
 import notyf from '../services/notyf';
+import useAuth from '../composition/auth';
 
 import { useRoute } from 'vue-router';
 const isChrome = true;
 const route = useRoute();
 const { t } = useI18n();
-const is_login = (platform: string) => {
-  return false;
-};
+const {is_login} = useAuth();
 
 let favoriteplaylists: any = $ref<Playlist[]>([]);
 let myplaylists: any = $ref<unknown[]>([]);

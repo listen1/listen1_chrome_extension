@@ -2,27 +2,30 @@
   <!-- content page: 登录 -->
   <div class="page">
     <div class="login">
-      <div ng-repeat="source in loginSourceList">
-        <div ng-show="is_login(source)">
+      <div v-for="source in loginSourceList" :key="source">
+        <div v-if="is_login(source)">
           <div class="usercard">
-            <img ng-src="musicAuth[source].avatar" />
+            <img :src="musicAuth[source].avatar" />
             <div class="usercard-title">
-              <div class="usercard-nickname">musicAuth[source].nickname</div>
-              <div class="usercard-info">source</div>
+              <div class="usercard-nickname">{{ musicAuth[source].nickname }}</div>
+              <div class="usercard-info">{{ t(source) }}</div>
             </div>
-            <button ng-click="logout(source)">{{ t('_LOGOUT') }}</button>
+            <button @click="logout(source)">{{ t('_LOGOUT') }}</button>
           </div>
         </div>
-        <div ng-show="!is_login(source)">
+        <div v-if="!is_login(source)">
           <div class="usercard">
             <img src="../images/placeholder.png" />
 
             <div class="usercard-title">
               <div class="usercard-nickname">{{ t('_NOT_LOGIN_NICKNAME') }}</div>
-              <div class="usercard-info">source</div>
+              <div class="usercard-info">{{ t(source) }}</div>
             </div>
 
-            <button ng-click=" openLogin(source);showDialog(11, source);">{{ t('_LOGIN') }}</button>
+            <button
+              @click="openLogin(source);showModal('OpenLogin', {source});">
+              {{ t('_LOGIN') }}
+            </button>
           </div>
         </div>
       </div>
@@ -32,8 +35,11 @@
 
 <script setup>
 import { useI18n } from 'vue-i18n';
-const { t } = useI18n();
-</script>
+import { inject } from 'vue';
+import useAuth from '../composition/auth';
 
-<style>
-</style>
+const { t } = useI18n();
+const showModal = inject('showModal');
+
+const { musicAuth, is_login, openLogin, loginSourceList, logout } = useAuth();
+</script>

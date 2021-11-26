@@ -3,6 +3,7 @@ import concat from 'async-es/concat';
 import forge from 'node-forge';
 import { getParameterByName } from './lowebutil';
 import MusicResource from './music_resource';
+import { cookieRemove } from './lowebutil';
 
 export default class migu extends MusicResource {
   static mg_convert_song(song) {
@@ -749,7 +750,7 @@ export default class migu extends MusicResource {
         user_id: data.user.uid,
         user_name: data.user.mobile,
         nickname: data.user.nickname,
-        avatar: data.user.avatar.midAvatar,
+        avatar: 'https:' + data.user.avatar.smallAvatar,
         platform: 'migu',
         data
       };

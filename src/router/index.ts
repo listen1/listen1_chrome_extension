@@ -22,7 +22,7 @@ const routes = [
     component: Login
   },
   {
-    path: '/my_platform',
+    path: '/my_platform/:platformId',
     name: 'MyPlatform',
     component: MyPlatform
   },
