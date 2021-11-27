@@ -173,8 +173,9 @@ export default class kuwo extends MusicResource {
             }
             await axios.get('https://www.kuwo.cn/');
             res(this.getToken(true));
+          } else {
+            res(cookie.value);
           }
-          res(cookie.value);
         }
       );
     });
