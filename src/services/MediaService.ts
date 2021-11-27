@@ -354,7 +354,11 @@ const MediaService = {
                 const searchTrack = data.result[i];
                 // compare search track and track to check if they are same
                 // TODO: better similar compare method (duration, md5)
-                if (!searchTrack.disable && searchTrack.title === track.title && searchTrack.artist === track.artist) {
+                if (
+                  !searchTrack.disable &&
+                  searchTrack.title.toLowerCase() === track.title.toLowerCase() &&
+                  searchTrack.artist.toLowerCase() === track.artist.toLowerCase()
+                ) {
                   return provider.bootstrapTrack(
                     searchTrack,
                     (response: Record<string, unknown>) => {
