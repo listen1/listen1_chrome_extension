@@ -81,30 +81,26 @@
             </select>
           </p>
           <div class="setting-font-preview">
-            <p :style="{ fontWeight: settings.lyricFontWeight, fontSize: `${settings.lyricFontSize}px` }">
-              Listen1，自由的享受音乐的乐趣
-            </p>
+            <p :style="{ fontWeight: settings.lyricFontWeight, fontSize: `${settings.lyricFontSize}px` }">Listen1，自由的享受音乐的乐趣</p>
           </div>
         </div>
-        <!-- <div class="settings-title">
-          <span>{{ $t('_AUTO_CHOOSE_SOURCE') }}</span>
-        </div>
+        <SettingTitle :text="t('_AUTO_CHOOSE_SOURCE')" />
         <div class="settings-content">
           <div class="shortcut btn btn-primary confirm-button">
-            <vue-feather v-show="!enableAutoChooseSource" type="square" ng-click="setAutoChooseSource(true)"></vue-feather>
-            <vue-feather v-show="enableAutoChooseSource" type="check-square" ng-click="setAutoChooseSource(true)"></vue-feather>
-            {{ $t('_AUTO_CHOOSE_SOURCE_NOTICE') }}
+            <vue-feather v-show="!settings.enableAutoChooseSource" type="square" @click="setAutoChooseSource(true)"></vue-feather>
+            <vue-feather v-show="settings.enableAutoChooseSource" type="check-square" @click="setAutoChooseSource(false)"></vue-feather>
+            {{ t('_AUTO_CHOOSE_SOURCE_NOTICE') }}
           </div>
-          <div v-show="enableAutoChooseSource" class="search-description">{{ $t('_AUTO_CHOOSE_SOURCE_LIST') }}</div>
-          <div v-show="enableAutoChooseSource" class="search-source-list">
-            <div ng-repeat="item in sourceList" class="search-source">
-              <vue-feather type="square" ng-show="autoChooseSourceList.indexOf(item.name) === -1" ng-click="enableSource(item.name)"></vue-feather>
-              <vue-feather type="check-square" ng-show="autoChooseSourceList.indexOf(item.name) > -1" ng-click="disableSource(item.name)"></vue-feather>
-              item.displayText
+          <div v-show="settings.enableAutoChooseSource" class="search-description">{{ t('_AUTO_CHOOSE_SOURCE_LIST') }}</div>
+          <div v-show="settings.enableAutoChooseSource" class="search-source-list">
+            <div v-for="item in sourceList" :key="item.name" class="search-source">
+              <vue-feather type="square" v-show="settings.autoChooseSourceList.indexOf(item.name) === -1" @click="enableSource(item.name)"></vue-feather>
+              <vue-feather type="check-square" v-show="settings.autoChooseSourceList.indexOf(item.name) > -1" @click="disableSource(item.name)"></vue-feather>
+              {{ t(item.displayId) }}
             </div>
           </div>
         </div>
-        <div ng-if="isChrome" class="settings-title">
+        <!-- <div ng-if="isChrome" class="settings-title">
           <span>{{ $t('_CLOSE_TAB_ACTION') }}({{ $t('_VALID_AFTER_RESTART') }})</span>
         </div>
         <div ng-if="isChrome" class="settings-content">
@@ -347,6 +343,24 @@ const toggleCoverBackground = () => setSettings({ enableNowplayingCoverBackgroun
 const toggleBitrate = () => setSettings({ enableNowplayingBitrate: !settings.enableNowplayingBitrate });
 const togglePlayingPlatform = () => setSettings({ enableNowplayingPlatform: !settings.enableNowplayingPlatform });
 const setTheme = (theme: string) => setSettings({ theme });
+const setAutoChooseSource = (enabled: boolean) => setSettings({ enableAutoChooseSource: enabled });
+const setAutoChooseSourceList = (newList: string[]) => setSettings({ autoChooseSourceList: newList });
+
+const enableSource = (source: string) => {
+  if (settings.autoChooseSourceList.indexOf(source) > -1) {
+    return;
+  }
+  const newList = [...settings.autoChooseSourceList, source];
+  setAutoChooseSourceList(newList);
+};
+
+const disableSource = (source: string) => {
+  if (settings.autoChooseSourceList.indexOf(source) === -1) {
+    return;
+  }
+  const newList = settings.autoChooseSourceList.filter((i) => i !== source);
+  setAutoChooseSourceList(newList);
+};
 const fontWeightOptions = [
   {
     text: t('Extra Light'),
@@ -375,6 +389,38 @@ const fontWeightOptions = [
   {
     text: t('Extra Bold'),
     value: 800,
+  }
+];
+
+const sourceList = [
+  {
+    name: 'netease',
+    displayId: '_NETEASE_MUSIC',
+  },
+  {
+    name: 'qq',
+    displayId: '_QQ_MUSIC',
+  },
+  {
+    name: 'kugou',
+    displayId: '_KUGOU_MUSIC',
+  },
+  {
+    name: 'kuwo',
+    displayId: '_KUWO_MUSIC',
+  },
+  {
+    name: 'bilibili',
+    displayId: '_BILIBILI_MUSIC',
+    searchable: false,
+  },
+  {
+    name: 'migu',
+    displayId: '_MIGU_MUSIC',
+  },
+  {
+    name: 'taihe',
+    displayId: '_TAIHE_MUSIC',
   },
 ];
 </script>

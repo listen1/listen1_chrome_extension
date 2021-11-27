@@ -173,8 +173,9 @@ export default class kuwo extends MusicResource {
             }
             await axios.get('https://www.kuwo.cn/');
             res(this.getToken(true));
+          } else {
+            res(cookie.value);
           }
-          res(cookie.value);
         }
       );
     });
@@ -210,19 +211,27 @@ export default class kuwo extends MusicResource {
   }
   static async getCookie(url) {
     const token = await this.getToken();
-    const response = await axios.get(url, {
-      headers: {
-        csrf: token
-      }
-    });
-    if (response.data.success === false) {
+    const response = await axios
+      .get(url, {
+        headers: {
+          csrf: token
+        }
+      })
+      .catch(() => {
+        return;
+      });
+    if (response !== undefined && response.data.success === false) {
       // token expire, refetch token and start get url
       const token2 = await this.getToken();
-      const res = await axios.get(url, {
-        headers: {
-          csrf: token2
-        }
-      });
+      const res = await axios
+        .get(url, {
+          headers: {
+            csrf: token2
+          }
+        })
+        .catch(() => {
+          return;
+        });
       return res;
     } else {
       return response;
@@ -676,5 +685,7 @@ export default class kuwo extends MusicResource {
     return `https://www.kuwo.com`;
   }
 
-  static logout() {}
+  static logout() {
+    // empty block
+  }
 }

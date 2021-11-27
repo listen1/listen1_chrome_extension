@@ -237,6 +237,9 @@ const playFromPlaylist = (song) => {
 const removeTrack = (index) => {
   l1Player.removeTrack(index);
 };
+const openUrl = (url) => {
+  window.open(url, '_blank').focus();
+};
 const showModal = inject('showModal');
 
 let playlist = $computed(() => player.playlist);
