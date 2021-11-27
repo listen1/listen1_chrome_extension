@@ -355,7 +355,7 @@ const MediaService = {
                 // compare search track and track to check if they are same
                 // TODO: better similar compare method (duration, md5)
                 if (!searchTrack.disable && searchTrack.title === track.title && searchTrack.artist === track.artist) {
-                  provider.bootstrapTrack(
+                  return provider.bootstrapTrack(
                     searchTrack,
                     (response: Record<string, unknown>) => {
                       sound.url = response.url;
@@ -365,9 +365,9 @@ const MediaService = {
                     },
                     res
                   );
-                  return;
                 }
               }
+              res('');
             });
           })
       );
