@@ -3,7 +3,7 @@ const electron = require('electron');
 const { fixCORS } = require('./cors');
 const isDev = require('./isDev');
 const store = require('./store');
-const { app, BrowserWindow, ipcMain, session } = electron;
+const { app, BrowserWindow, ipcMain, session, Menu } = electron;
 // isDev && reloader(module);
 if (isDev) {
   require('electron-reloader')(module);
@@ -38,7 +38,7 @@ switch (process.platform) {
 }
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
-/** @type {BrowserWindow}*/
+/** @type {electron.BrowserWindow}*/
 let mainWindow;
 let willQuitApp = false;
 
@@ -53,7 +53,8 @@ function createWindow() {
     minWidth: 600,
     webPreferences: {
       contextIsolation: true,
-      preload: `${__dirname}/preload.js`
+      preload: `${__dirname}/preload.js`,
+      webSecurity: false
     },
     //icon: iconPath,
     titleBarStyle,
@@ -66,7 +67,64 @@ function createWindow() {
   if (windowState.maximized) {
     mainWindow.maximize();
   }
-  mainWindow.show();
+  mainWindow.on('ready-to-show', () => {
+    mainWindow.webContents.setZoomLevel(windowState.zoomLevel);
+    mainWindow.show();
+  });
+  const menu = Menu.buildFromTemplate([
+    {
+      label: 'Application',
+      submenu: [
+        {
+          label: 'Zoom Out',
+          accelerator: 'CmdOrCtrl+=',
+          click() {
+            if (windowState.zoomLevel <= 2.5) {
+              windowState.zoomLevel += 0.5;
+              mainWindow.webContents.setZoomLevel(windowState.zoomLevel);
+            }
+          }
+        },
+        {
+          label: 'Zoom in',
+          accelerator: 'CmdOrCtrl+-',
+          click() {
+            if (windowState.zoomLevel >= -1) {
+              windowState.zoomLevel -= 0.5;
+              mainWindow.webContents.setZoomLevel(windowState.zoomLevel);
+            }
+          }
+        },
+        {
+          label: 'Toggle Developer Tools',
+          accelerator: 'F12',
+          click() {
+            mainWindow.webContents.toggleDevTools();
+          }
+        },
+        {
+          label: 'About Application',
+          selector: 'orderFrontStandardAboutPanel:'
+        },
+        { type: 'separator' },
+        {
+          label: 'Close Window',
+          accelerator: 'CmdOrCtrl+W',
+          click() {
+            mainWindow.close();
+          }
+        },
+        {
+          label: 'Quit',
+          accelerator: 'Command+Q',
+          click() {
+            app.quit();
+          }
+        }
+      ]
+    }
+  ]);
+  mainWindow.setMenu(menu);
   // and load the index.html of the app.
   const ua = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.119 Safari/537.36';
 
