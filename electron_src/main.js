@@ -1,9 +1,9 @@
-const electron = require('electron');
+const { app, BrowserWindow, ipcMain, session, dialog } = require('electron');
 // import reloader from 'electron-reloader';
 const { fixCORS } = require('./cors');
 const isDev = require('./isDev');
 const store = require('./store');
-const { app, BrowserWindow, ipcMain, session } = electron;
+const { readAudioTags } = require('./readtag');
 // isDev && reloader(module);
 if (isDev) {
   require('electron-reloader')(module);
@@ -119,6 +119,43 @@ ipcMain.on('removeCookie', async (e, url, name) => {
   await session.defaultSession.cookies.remove(url, name);
 });
 
+ipcMain.on('chooseLocalFile', async (event, listId) => {
+  const result = await dialog.showOpenDialog({
+    title: '添加歌曲',
+    properties: ['openFile', 'multiSelections'],
+    filters: [
+      {
+        name: 'Music Files',
+        extensions: ['mp3', 'flac', 'ape']
+      }
+    ]
+  });
+
+  if (result.canceled) {
+    return;
+  }
+  const tracks = [];
+  for (let i = 0; i < result.filePaths.length; i++) {
+    const fp = result.filePaths[i];
+    const md = await readAudioTags(fp);
+    const track = {
+      id: `lmtrack_${fp}`,
+      title: md.common.title,
+      artist: md.common.artist,
+      artist_id: `lmartist_${md.common.artist}`,
+      album: md.common.album,
+      album_id: `lmalbum_${md.common.album}`,
+      source: 'localmusic',
+      source_url: '',
+      img_url: 'images/mycover.jpg',
+      lyrics: md.common.lyrics,
+      // url: "lmtrack_"+fp,
+      sound_url: `file://${fp}`
+    };
+    tracks.push(track);
+  }
+  mainWindow.webContents.send('chooseLocalFile', { tracks, id: listId });
+});
 // Quit when all windows are closed.
 app.on('window-all-closed', function () {
   // On OS X it is common for applications and their menu bar
