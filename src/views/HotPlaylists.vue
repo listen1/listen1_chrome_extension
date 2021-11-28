@@ -64,10 +64,11 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
 import { l1Player } from '../services/l1_player';
-import { computed, onMounted } from 'vue';
+import { computed, onMounted, onUnmounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 import MediaService from '../services/MediaService';
+import EventService from '../services/EventService';
 
 const { t } = useI18n();
 const router = useRouter();
@@ -79,30 +80,49 @@ let showMore = $ref(false);
 let playlistFilters = $ref({});
 let allPlaylistFilters = $ref({});
 
-const loadPlaylist = async () => {
-  const offset = 0;
+const loadPlaylist = async (isReset) => {
+  let offset = 0;
+  if(!isReset){
+    offset = result.length;
+  }
   showMore = false;
-  result = await MediaService.showPlaylistArray(tab, offset, currentFilterId);
+  let response = await MediaService.showPlaylistArray(tab, offset, currentFilterId);
+  if(isReset){
+    result = response;
+  }
+  else {
+    result = [...result, ...response];
+  }
   loading = false;
 
   if (playlistFilters[tab] === undefined && allPlaylistFilters[tab] === undefined) {
-    const { recommend, all } = await MediaService.getPlaylistFilters(tab)
+    const { recommend, all } = await MediaService.getPlaylistFilters(tab);
     playlistFilters[tab] = recommend;
     allPlaylistFilters[tab] = all;
   }
 };
-onMounted(loadPlaylist);
+const handleLoadMore = async () => {
+  await loadPlaylist(false);
+};
+onMounted(() => {
+  loadPlaylist(true);
+  EventService.on(`scroll:bottom`, handleLoadMore);
+});
+
+onUnmounted(() => {
+  EventService.off(`scroll:bottom`, handleLoadMore);
+});
 
 const changeTab = (newTab) => {
   tab = newTab;
   result = [];
   currentFilterId = '';
-  loadPlaylist();
+  loadPlaylist(true);
 };
 const changeFilter = (filterId) => {
   result = [];
   currentFilterId = filterId;
-  loadPlaylist();
+  loadPlaylist(true);
 };
 const toggleMorePlaylists = () => {
   showMore = !showMore;
@@ -119,5 +139,4 @@ const directplaylist = async (list_id) => {
 const sourceList = computed(() => MediaService.getSourceList());
 </script>
 
-<style>
-</style>
+<style></style>

@@ -174,7 +174,8 @@
 
         <div
           class="browser flex-scroll-wrapper"
-          infinite-scroll="scrolling()"
+          id="browser"
+          v-on:scroll.passive='handleScroll'
           content-selector="'#playlist-content'"
         >
           <router-view :key="$route.path" />
@@ -206,6 +207,8 @@ import DefaultModal from '../components/modals/DefaultModal.vue';
 import Sidebar from '../components/Sidebar.vue';
 import Playerbar from '../components/Playerbar.vue';
 import NowPlaying from '../views/NowPlaying.vue';
+import EventService from '../services/EventService';
+
 
 const { t } = useI18n();
 const { player, playerListener } = usePlayer()
@@ -330,6 +333,12 @@ onMounted(() => {
   }
   refreshAuthStatus();
 })
+const handleScroll = ()=>{
+  const element = document.getElementById('browser');
+  if (element.scrollHeight - element.scrollTop === element.clientHeight){
+    EventService.emit(`scroll:bottom`);
+  }
+}
 let playlist = $computed(() => player.playlist);
 let isPlaying = $computed(() => player.isPlaying);
 let lyricArray = $computed(() => player.lyricArray);
