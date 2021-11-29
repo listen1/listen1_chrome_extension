@@ -17,7 +17,7 @@
                 <span class="icon li-add" />
               </div>
             </div>
-            <div class="playlist-button clone-button" @click="addLocalMusic(list_id)">
+            <div v-if="is_local" class="playlist-button clone-button" @click="addLocalMusic(list_id)">
               <div class="play-list">
                 <span class="icon li-songlist" />
                 <span>{{ t('_ADD_LOCAL_SONGS') }}</span>
