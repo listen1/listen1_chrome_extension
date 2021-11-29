@@ -245,7 +245,11 @@ ipcMain.on('floatWindowMoving', (e, { mouseX, mouseY }) => {
   const { x, y } = screen.getCursorScreenPoint();
   floatingWindow?.setPosition(x - mouseX, y - mouseY);
 });
-
+ipcMain.on("trackPlayingNow", (event, track) => {
+  if (mainWindow != null) {
+    initialTray(mainWindow, track);
+  }
+});
 ipcMain.on('chooseLocalFile', async (event, listId) => {
   const result = await dialog.showOpenDialog({
     title: '添加歌曲',
