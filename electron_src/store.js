@@ -31,7 +31,7 @@ const safeGet = (key) => {
 };
 module.exports = {
   get(key) {
-    store.get(key);
+    return store.get(key);
   },
   set(key, value) {
     store.set(key, value);
