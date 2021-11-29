@@ -16,7 +16,9 @@ export function isElectron() {
 export function isMac() {
   return window.api?.platform === 'darwin';
 }
-
+export function isLinux() {
+  return window.api?.platform === 'linux';
+}
 export function cookieGet(cookieRequest, callback) {
   if (!isElectron()) {
     return chrome.cookies.get(cookieRequest, (cookie) => {

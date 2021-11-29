@@ -166,7 +166,7 @@
               </span>
             </router-link>
           </div>
-          <div v-if="isElectron() && !isMac()" class="window-control">
+          <div v-if="isElectron() && isLinux()" class="window-control">
                <vue-feather class="icon" type="minimize-2" @click="sendControl('window_min')"/>
                <vue-feather class="icon" type="maximize" @click="sendControl('window_max')"/>
                <vue-feather class="icon" type="x" @click="sendControl('window_close')"/>
@@ -209,7 +209,7 @@ import Sidebar from '../components/Sidebar.vue';
 import Playerbar from '../components/Playerbar.vue';
 import NowPlaying from '../views/NowPlaying.vue';
 import EventService from '../services/EventService';
-import { isElectron, isMac } from '../provider/lowebutil';
+import { isElectron, isMac,isLinux } from '../provider/lowebutil';
 
 
 const { t } = useI18n();
