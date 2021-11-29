@@ -9,9 +9,9 @@ if (isDev) {
   require('electron-reloader')(module);
 }
 
-const theme = store.get('theme');
+const theme = store.safeGet('theme');
 /** @type {{ width: number; height: number; maximized: boolean; zoomLevel: number}} */
-const windowState = store.get('windowState');
+const windowState = store.safeGet('windowState');
 let titleStyle;
 let titleBarStyle;
 switch (theme) {
