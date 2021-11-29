@@ -11,6 +11,19 @@ const schema = {
     }
   }
 };
-
+const isObject = (value) => {
+  return typeof value === 'object' && !Array.isArray(value) && value !== null;
+};
 const store = new Store({ schema });
-module.exports = store;
+const safeGet = (key) => {
+  // TODO: recursive check default value
+  const result = store.get(key);
+  if (isObject(result)) {
+    return { ...schema[key]['default'], ...result };
+  }
+};
+module.exports = {
+  get: store.get,
+  set: store.set,
+  safeGet
+};
