@@ -279,7 +279,7 @@ ipcMain.on('chooseLocalFile', async (event, listId) => {
       album_id: `lmalbum_${md.common.album}`,
       source: 'localmusic',
       source_url: '',
-      img_url: imgBase64 ? `data:${md.common.picture?.[0].format}; base64, ${imgBase64}` : 'images/mycover.jpg',
+      img_url: imgBase64 ? `data:${md.common.picture?.[0].format};base64,${imgBase64}` : 'images/mycover.jpg',
       lyrics: md.common.lyrics,
       // url: "lmtrack_"+fp,
       sound_url: `file://${fp}`
