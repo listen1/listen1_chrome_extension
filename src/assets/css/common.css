@@ -319,7 +319,7 @@ https://stackoverflow.com/questions/19889615/can-an-angular-directive-pass-argum
 .navigation .window-control {
   flex: 0 0 105px;
   border-left: solid 1px var(--window-control-border-color);
-  margin-left: 15px;
+  margin: 0 15px;
 }
 
 .navigation .window-control svg {
