@@ -1,5 +1,7 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 const { contextBridge, ipcRenderer, session, webFrame } = require('electron');
-const store = require('./store');
+// TODO: import store will throw exception
+// const store = require('./store');
 const ipcOn = (channel) => (fn) => {
   ipcRenderer.on(channel, (event, ...args) => fn(...args));
 };
@@ -7,11 +9,24 @@ const setZoomLevel = (level) => {
   webFrame.setZoomLevel(level);
 };
 const setTheme = (theme) => {
-  store.set('theme', theme);
+  // store.set('theme', theme);
 };
 const getCookie = (request) => ipcRenderer.invoke('getCookie', request);
 const setCookie = (cookie) => ipcRenderer.send('setCookie', cookie);
 const removeCookie = (url, name) => ipcRenderer.send('removeCookie', url, name);
+const sendControl = (args, params) => ipcRenderer.send('control', args, params);
+const sendLyric = (args, params) => ipcRenderer.send('currentLyric', args, params);
+const sendFloatWindowMoving = (args, params) => ipcRenderer.send('floatWindowMoving', args, params);
+const onLyric = (fn) => {
+  ipcRenderer.on('currentLyric', (event, ...args) => fn(...args));
+};
+const onTranslLyric = (fn) => {
+  ipcRenderer.on('currentLyricTrans', (event, ...args) => fn(...args));
+};
+
+const onLyricWindow = (fn) => {
+  ipcRenderer.on('lyricWindow', (event, ...args) => fn(...args));
+};
 contextBridge.exposeInMainWorld('api', {
   setZoomLevel,
   setTheme,
@@ -20,5 +35,11 @@ contextBridge.exposeInMainWorld('api', {
   removeCookie,
   session,
   ipcRenderer,
-  platform: process.platform
+  platform: process.platform,
+  onLyric,
+  onTranslLyric,
+  onLyricWindow,
+  sendControl,
+  sendLyric,
+  sendFloatWindowMoving
 });

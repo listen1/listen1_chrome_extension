@@ -90,11 +90,11 @@
           ></draggable-bar>
         </div>
       </div>
-      <div v-if="!isChrome" class="lyric-toggle">
+      <div v-if="isElectron()" class="lyric-toggle">
         <div
-          ng-click="openLyricFloatingWindow(true)"
+          @click="toggleLyricFloatingWindow(true)"
           class="lyric-icon"
-          ng-class="{'selected': settings.enableLyricFloatingWindow}"
+          :class="{'selected': settings.enableLyricFloatingWindow}"
         >词</div>
       </div>
     </div>
@@ -173,13 +173,16 @@ import DraggableBar from '../components/DraggableBar.vue';
 import usePlayer from '../composition/player';
 import useOverlay from '../composition/overlay';
 import { l1Player } from '../services/l1_player';
+import { isElectron } from '../provider/lowebutil';
+import useSettings from '../composition/settings';
 
 const { t } = useI18n();
 const { player } = usePlayer();
 const router = useRouter();
+const showModal = inject('showModal');
+const { settings, setSettings } = useSettings();
 
 let { overlay, setOverlayType } = useOverlay();
-let isChrome = $ref(true);
 let menuHidden = $ref(true);
 let playmode = $computed(() => player.playmode);
 
@@ -240,7 +243,38 @@ const removeTrack = (index) => {
 const openUrl = (url) => {
   window.open(url, '_blank').focus();
 };
-const showModal = inject('showModal');
+
+function getCSSStringFromSetting(setting) {
+  let { backgroundAlpha } = setting;
+  if (backgroundAlpha === 0) {
+    // NOTE: background alpha 0 results total transparent
+    // which will cause mouse leave event not trigger
+    // correct in windows platform for lyic window if disable
+    // hardware accelerate
+    backgroundAlpha = 0.01;
+  }
+  return `div.content.lyric-content{
+      font-size: ${setting.fontSize}px;
+      color: ${setting.color};
+      background: rgba(36, 36, 36, ${backgroundAlpha});
+    }
+    div.content.lyric-content span.contentTrans {
+      font-size: ${setting.fontSize - 4}px;
+    }
+    `;
+}
+
+const toggleLyricFloatingWindow = () => {
+  let message = '';
+  if (settings.enableLyricFloatingWindow === true) {
+    message = 'disable_lyric_floating_window';
+  } else {
+    message = 'enable_lyric_floating_window';
+  }
+  setSettings({ enableLyricFloatingWindow: !settings.enableLyricFloatingWindow });
+
+  window.api?.sendControl(message, getCSSStringFromSetting(settings.floatWindowSetting));
+};
 
 let playlist = $computed(() => player.playlist);
 let isPlaying = $computed(() => player.isPlaying);
@@ -251,4 +285,43 @@ let currentPlaying = $computed(() => player.currentPlaying);
 let volume = $computed(() => player.volume);
 let mute = $computed(() => player.mute);
 
+if (isElectron()) {
+  window.api?.onLyricWindow((arg) => {
+    if (arg === 'float_window_close') {
+      return toggleLyricFloatingWindow();
+    }
+    const { floatWindowSetting } = settings;
+    if (arg === 'float_window_font_small' || arg === 'float_window_font_large') {
+      const MIN_FONT_SIZE = 12;
+      const MAX_FONT_SIZE = 50;
+      const offset = arg === 'float_window_font_small' ? -1 : 1;
+      floatWindowSetting.fontSize += offset;
+      if (floatWindowSetting.fontSize < MIN_FONT_SIZE) {
+        floatWindowSetting.fontSize = MIN_FONT_SIZE;
+      } else if (floatWindowSetting.fontSize > MAX_FONT_SIZE) {
+        floatWindowSetting.fontSize = MAX_FONT_SIZE;
+      }
+    } else if (arg === 'float_window_background_light' || arg === 'float_window_background_dark') {
+      const MIN_BACKGROUND_ALPHA = 0;
+      const MAX_BACKGROUND_ALPHA = 1;
+      const offset = arg === 'float_window_background_light' ? -0.1 : 0.1;
+      floatWindowSetting.backgroundAlpha += offset;
+      if (floatWindowSetting.backgroundAlpha < MIN_BACKGROUND_ALPHA) {
+        floatWindowSetting.backgroundAlpha = MIN_BACKGROUND_ALPHA;
+      } else if (floatWindowSetting.backgroundAlpha > MAX_BACKGROUND_ALPHA) {
+        floatWindowSetting.backgroundAlpha = MAX_BACKGROUND_ALPHA;
+      }
+    } else if (arg === 'float_window_font_change_color') {
+      const floatWindowlyricColors = ['#ffffff', '#65d29f', '#3c87eb', '#ec63af', '#4f5455', '#eb605b'];
+      const currentIndex = floatWindowlyricColors.indexOf(floatWindowSetting.color);
+      const nextIndex = (currentIndex + 1) % floatWindowlyricColors.length;
+      floatWindowSetting.color = floatWindowlyricColors[nextIndex];
+    }
+    // IMPORTANT: must clone to new object when save setting
+    setSettings({ floatWindowSetting: { ...floatWindowSetting } });
+
+    const message = 'update_lyric_floating_window_css';
+    window.api?.sendControl(message, getCSSStringFromSetting(floatWindowSetting));
+  });
+}
 </script>
