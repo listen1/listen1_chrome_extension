@@ -30,7 +30,11 @@ const safeGet = (key) => {
   }
 };
 module.exports = {
-  get: store.get,
-  set: store.set,
+  get(key) {
+    store.get(key);
+  },
+  set(key, value) {
+    store.set(key, value);
+  },
   safeGet
 };
