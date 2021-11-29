@@ -17,7 +17,7 @@ function createFloatingWindow(cssStyle) {
   }
   if (!floatingWindow) {
     /** @type {Electron.Rectangle} */
-    const winBounds = store.get('floatingWindowBounds');
+    const winBounds = store.safeGet('floatingWindowBounds');
 
     floatingWindow = new BrowserWindow({
       width: 1000,

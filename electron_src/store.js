@@ -9,6 +9,13 @@ const schema = {
       maximized: false,
       zoomLevel: 0
     }
+  },
+  floatingWindowBounds: {
+    type: 'object',
+    default: {
+      width: 1000,
+      height: 100
+    }
   }
 };
 const isObject = (value) => {
