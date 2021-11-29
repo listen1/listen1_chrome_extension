@@ -31,25 +31,25 @@ function initialTray(mainWindow, track) {
         mainWindow.show();
       }
     },
-    { type: 'separator' },
-    {
-      label: '播放/暂停',
-      click() {
-        mainWindow.webContents.send('globalShortcut', 'space');
-      }
-    },
-    {
-      label: '上一首',
-      click() {
-        mainWindow.webContents.send('globalShortcut', 'left');
-      }
-    },
-    {
-      label: '下一首',
-      click() {
-        mainWindow.webContents.send('globalShortcut', 'right');
-      }
-    },
+    // { type: 'separator' },
+    // {
+    //   label: '播放/暂停',
+    //   click() {
+    //     mainWindow.webContents.send('globalShortcut', 'space');
+    //   }
+    // },
+    // {
+    //   label: '上一首',
+    //   click() {
+    //     mainWindow.webContents.send('globalShortcut', 'left');
+    //   }
+    // },
+    // {
+    //   label: '下一首',
+    //   click() {
+    //     mainWindow.webContents.send('globalShortcut', 'right');
+    //   }
+    // },
     {
       label: '显示/隐藏窗口',
       click() {
