@@ -9,7 +9,7 @@
         <span>{{ dialog_title }}</span>
         <span class="dialog-close" @click="closeDialog()">×</span>
       </div>
-      <div class="dialog-body">    
+      <div class="dialog-body">
         <div v-show="dialog_type == 4" class="dialog-connect-lastfm">
           <p>_OPENING_LASTFM_PAGE</p>
           <p>_CONFIRM_NOTICE_LASTFM</p>
@@ -144,7 +144,11 @@
               @input="searchTextChanged"
             />
           </div>
-          <div ng-class="{ 'active': (current_tag==4) && (window_url_stack.length ==0)}" class="settings">
+          <div
+            ng-class="{ 'active': (current_tag==4) && (window_url_stack.length ==0)}"
+            class="settings"
+            :style="platButtonStyle"
+          >
             <router-link to="/login">
               <span class="icon">
                 <vue-feather type="users"></vue-feather>
@@ -154,9 +158,12 @@
           <div
             ng-class="{ 'active': (current_tag==4) && (window_url_stack.length ==0)}"
             class="settings"
+            :style="settingButtonStyle"
           >
             <router-link to="/settings">
-              <span class="icon li-setting" />
+              <span class="icon">
+                <vue-feather type="settings"></vue-feather>
+              </span>
             </router-link>
           </div>
           <div v-if="!isChrome && !isMac" class="window-control">
@@ -175,15 +182,15 @@
         <div
           class="browser flex-scroll-wrapper"
           id="browser"
-          v-on:scroll.passive='handleScroll'
+          v-on:scroll.passive="handleScroll"
           content-selector="'#playlist-content'"
         >
           <router-view :key="$route.path" />
-          <NowPlaying/>
+          <NowPlaying />
         </div>
       </div>
     </div>
-      <Playerbar/>
+    <Playerbar />
   </div>
 </template>
 
@@ -238,6 +245,8 @@ let playlist_highlight = $ref(false);
 let menuHidden = $ref(true);
 let playmode = $computed(() => player.playmode);
 let input_keywords = $ref('');
+let settingButtonStyle = $ref({});
+let platButtonStyle = $ref({});
 const searchTextChanged = () => {
   condition.keywords = input_keywords;
   router.push('/search');
@@ -323,19 +332,26 @@ provide('showModal', (type, opt) => {
 onMounted(() => {
   if ('windowControlsOverlay' in navigator) {
     const { x } = navigator.windowControlsOverlay.getBoundingClientRect();
-    const { style } = document.getElementsByClassName('settings')[0];
     //windows
     if (x === 0) {
       //hard coded style. Looking for better solution
-      style.flex = "0 0 170px";
-      style.height = "30px"
+      settingButtonStyle = {
+        position: 'fixed',
+        left: 'calc(env(titlebar-area-width) - 26px)',
+        top: 'calc(env(titlebar-area-height)/4)'
+      };
+      platButtonStyle = {
+        position: 'fixed',
+        left: 'calc(env(titlebar-area-width) - 62px)',
+        top: 'calc(env(titlebar-area-height)/4)'
+      };
     }
   }
   refreshAuthStatus();
 })
-const handleScroll = ()=>{
+const handleScroll = () => {
   const element = document.getElementById('browser');
-  if (element.scrollHeight - element.scrollTop === element.clientHeight){
+  if (element.scrollHeight - element.scrollTop === element.clientHeight) {
     EventService.emit(`scroll:bottom`);
   }
 }

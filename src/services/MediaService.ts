@@ -6,7 +6,7 @@ import kuwo from '../provider/kuwo';
 import bilibili from '../provider/bilibili';
 import migu from '../provider/migu';
 import taihe from '../provider/taihe';
-// import localmusic from "@/provider/localmusic";
+import localmusic from '../provider/localmusic';
 import myplaylist from '../provider/myplaylist';
 import useSettings from '../composition/settings';
 interface Provider {
@@ -115,14 +115,14 @@ const PROVIDERS: {
     support_login: false,
     id: 'th'
   },
-  //   {
-  //     name: "localmusic",
-  //     instance: localmusic,
-  //     searchable: false,
-  //     hidden: true,
-  //     support_login: false,
-  //     id: "lm",
-  //   },
+  {
+    name: 'localmusic',
+    instance: localmusic,
+    searchable: false,
+    hidden: true,
+    support_login: false,
+    id: 'lm'
+  },
   {
     name: 'myplaylist',
     instance: myplaylist,

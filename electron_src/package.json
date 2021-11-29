@@ -91,11 +91,13 @@
     }
   },
   "devDependencies": {
-    "electron": "14.2.1",
+    "electron": "^16.0.2",
     "electron-builder": "^22.13.1",
     "electron-reloader": "^1.2.1"
   },
   "dependencies": {
-    "electron-store": "^8.0.1"
+    "chardet": "^1.4.0",
+    "electron-store": "^8.0.1",
+    "music-metadata": "^7.11.4"
   }
 }

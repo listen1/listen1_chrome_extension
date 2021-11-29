@@ -2,7 +2,7 @@ import Dexie from 'dexie';
 import { migrateSettings } from '../composition/settings';
 
 interface MODEL {
-  new(): unknown;
+  new (): unknown;
   INDEX_STRING: string;
 }
 
@@ -37,7 +37,7 @@ export class Playlist {
   title!: string;
   cover_img_url!: string;
   source_url?: string;
-  type!: 'current' | 'favorite' | 'my';
+  type!: 'current' | 'favorite' | 'my' | 'local';
   order!: string[];
 
   static readonly INDEX_STRING = '&id, type';
@@ -46,7 +46,7 @@ export class Playlist {
 const models: { [key: string]: MODEL } = {
   Tracks: Track,
   Settings: Setting,
-  Playlists: Playlist,
+  Playlists: Playlist
 };
 
 export class L1DB extends Dexie {
@@ -55,12 +55,11 @@ export class L1DB extends Dexie {
   Playlists!: Dexie.Table<Playlist, [string]>;
 
   constructor() {
-    super("Listen1");
-    const schema =
-      Object.entries(models).reduce((ret: { [key: string]: string }, cur) => {
-        ret[cur[0]] = cur[1].INDEX_STRING;
-        return ret;
-      }, {});
+    super('Listen1');
+    const schema = Object.entries(models).reduce((ret: { [key: string]: string }, cur) => {
+      ret[cur[0]] = cur[1].INDEX_STRING;
+      return ret;
+    }, {});
     this.version(1).stores(schema);
     this.Tracks.mapToClass(Track);
   }
@@ -73,12 +72,12 @@ iDB.tables.forEach((table) => {
   const keys = [...Object.getOwnPropertyNames(new models[table.name]())];
   function createHook(primKey: unknown, originalObj: Record<string, unknown>) {
     const formattedObj = { ...originalObj };
-    Object.keys(formattedObj).forEach(key => keys.includes(key) ? null : delete formattedObj[key]);
+    Object.keys(formattedObj).forEach((key) => (keys.includes(key) ? null : delete formattedObj[key]));
     originalObj = formattedObj;
   }
   function updateHook(mod: any) {
     const formattedObj = { ...mod };
-    Object.keys(formattedObj).forEach(key => keys.includes(key) ? null : delete formattedObj[key]);
+    Object.keys(formattedObj).forEach((key) => (keys.includes(key) ? null : delete formattedObj[key]));
     mod = formattedObj;
   }
   table.hook('creating', createHook);
@@ -86,30 +85,46 @@ iDB.tables.forEach((table) => {
 });
 
 // default items
-iDB.Playlists.get({ id: 'current' }).then((playlist)=>{
-  if(!playlist) {
+iDB.Playlists.get({ id: 'current' }).then((playlist) => {
+  if (!playlist) {
     iDB.Playlists.put({
-      id: 'current', title: 'current', cover_img_url: '', type: 'current',
-      order: [],
+      id: 'current',
+      title: 'current',
+      cover_img_url: '',
+      type: 'current',
+      order: []
     });
   }
 });
-iDB.Settings.bulkAdd([{
-  key: 'favorite_playlist_order',
-  value: [],
-}, {
-  key: 'my_playlist_order',
-  value: [],
-}]);
+iDB.Settings.bulkAdd([
+  {
+    key: 'favorite_playlist_order',
+    value: []
+  },
+  {
+    key: 'my_playlist_order',
+    value: []
+  }
+]);
+
+function migratePlaylist(tracks: any, newId: string, newTitle: string, newType: 'current' | 'favorite' | 'my' | 'local') {
+  iDB.Playlists.put({
+    id: newId,
+    title: newTitle,
+    cover_img_url: 'images/mycover.jpg',
+    type: newType,
+    order: tracks.map((i: Record<string, unknown>) => i.id)
+  });
+  tracks.forEach((track: Record<string, unknown>) => (track.playlist = newId));
+  iDB.Tracks.bulkPut(tracks);
+}
 
 export function dbMigrate() {
-  const localCurrentPlaying = JSON.parse(localStorage.getItem('current-playing') || '[]');
-  iDB.Playlists.put({
-    id: 'current', title: 'current', cover_img_url: '', type: 'current',
-    order: localCurrentPlaying.map((i: Record<string, unknown>) => i.id),
-  });
-  localCurrentPlaying.forEach((track: Record<string, unknown>) => track.playlist = 'current');
-  iDB.Tracks.bulkPut(localCurrentPlaying);
+  let tracks = JSON.parse(localStorage.getItem('current-playing') || '[]');
+  migratePlaylist(tracks, 'current', 'current', 'current');
+  const localmusicPlaylist = JSON.parse(localStorage.getItem('lmplaylist_reserve') || '{}');
+  tracks = localmusicPlaylist['tracks'] || [];
+  migratePlaylist(tracks, 'lmplaylist_reserve', '本地音乐', 'local');
   migrateSettings();
   localStorage.setItem('V3_MIGRATED', 'true');
 }

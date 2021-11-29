@@ -5,6 +5,9 @@ const { contextBridge, ipcRenderer, session, webFrame } = require('electron');
 const ipcOn = (channel) => (fn) => {
   ipcRenderer.on(channel, (event, ...args) => fn(...args));
 };
+const ipcOnce = (channel) => (fn) => {
+  ipcRenderer.once(channel, (event, ...args) => fn(...args));
+};
 const setZoomLevel = (level) => {
   webFrame.setZoomLevel(level);
 };
@@ -14,6 +17,7 @@ const setTheme = (theme) => {
 const getCookie = (request) => ipcRenderer.invoke('getCookie', request);
 const setCookie = (cookie) => ipcRenderer.send('setCookie', cookie);
 const removeCookie = (url, name) => ipcRenderer.send('removeCookie', url, name);
+
 const sendControl = (args, params) => ipcRenderer.send('control', args, params);
 const sendLyric = (args, params) => ipcRenderer.send('currentLyric', args, params);
 const sendFloatWindowMoving = (args, params) => ipcRenderer.send('floatWindowMoving', args, params);
@@ -27,7 +31,11 @@ const onTranslLyric = (fn) => {
 const onLyricWindow = (fn) => {
   ipcRenderer.on('lyricWindow', (event, ...args) => fn(...args));
 };
+
+const chooseLocalFile = (listId) => ipcRenderer.send('chooseLocalFile', listId);
+
 contextBridge.exposeInMainWorld('api', {
+  chooseLocalFile,
   setZoomLevel,
   setTheme,
   getCookie,
@@ -41,5 +49,7 @@ contextBridge.exposeInMainWorld('api', {
   onLyricWindow,
   sendControl,
   sendLyric,
-  sendFloatWindowMoving
+  sendFloatWindowMoving,
+  ipcOn,
+  ipcOnce
 });

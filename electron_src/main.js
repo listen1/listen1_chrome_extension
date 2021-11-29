@@ -1,19 +1,20 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-const electron = require('electron');
+const { app, BrowserWindow, ipcMain, session, Menu, dialog, screen } = require('electron');
 // import reloader from 'electron-reloader';
 const { fixCORS } = require('./cors');
 const isDev = require('./isDev');
 const store = require('./store');
-const { app, BrowserWindow, ipcMain, session, screen } = electron;
+const { readAudioTags } = require('./readtag');
+
 // isDev && reloader(module);
 if (isDev) {
   require('electron-reloader')(module);
 }
 const { getFloatingWindow, createFloatingWindow, updateFloatingWindow } = require('./float_window');
 
-const theme = store.get('theme');
+const theme = store.safeGet('theme');
 /** @type {{ width: number; height: number; maximized: boolean; zoomLevel: number}} */
-const windowState = store.get('windowState');
+const windowState = store.safeGet('windowState');
 let titleStyle;
 let titleBarStyle;
 switch (theme) {
@@ -40,7 +41,7 @@ switch (process.platform) {
 }
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
-/** @type {BrowserWindow}*/
+/** @type {electron.BrowserWindow}*/
 let mainWindow;
 let willQuitApp = false;
 
@@ -55,7 +56,8 @@ function createWindow() {
     minWidth: 600,
     webPreferences: {
       contextIsolation: true,
-      preload: `${__dirname}/preload.js`
+      preload: `${__dirname}/preload.js`,
+      webSecurity: false
     },
     //icon: iconPath,
     titleBarStyle,
@@ -68,7 +70,64 @@ function createWindow() {
   if (windowState.maximized) {
     mainWindow.maximize();
   }
-  mainWindow.show();
+  mainWindow.on('ready-to-show', () => {
+    mainWindow.webContents.setZoomLevel(windowState.zoomLevel);
+    mainWindow.show();
+  });
+  const menu = Menu.buildFromTemplate([
+    {
+      label: 'Application',
+      submenu: [
+        {
+          label: 'Zoom Out',
+          accelerator: 'CmdOrCtrl+=',
+          click() {
+            if (windowState.zoomLevel <= 2.5) {
+              windowState.zoomLevel += 0.5;
+              mainWindow.webContents.setZoomLevel(windowState.zoomLevel);
+            }
+          }
+        },
+        {
+          label: 'Zoom in',
+          accelerator: 'CmdOrCtrl+-',
+          click() {
+            if (windowState.zoomLevel >= -1) {
+              windowState.zoomLevel -= 0.5;
+              mainWindow.webContents.setZoomLevel(windowState.zoomLevel);
+            }
+          }
+        },
+        {
+          label: 'Toggle Developer Tools',
+          accelerator: 'F12',
+          click() {
+            mainWindow.webContents.toggleDevTools();
+          }
+        },
+        {
+          label: 'About Application',
+          selector: 'orderFrontStandardAboutPanel:'
+        },
+        { type: 'separator' },
+        {
+          label: 'Close Window',
+          accelerator: 'CmdOrCtrl+W',
+          click() {
+            mainWindow.close();
+          }
+        },
+        {
+          label: 'Quit',
+          accelerator: 'Command+Q',
+          click() {
+            app.quit();
+          }
+        }
+      ]
+    }
+  ]);
+  mainWindow.setMenu(menu);
   // and load the index.html of the app.
   const ua = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.119 Safari/537.36';
 
@@ -171,6 +230,47 @@ ipcMain.on('floatWindowMoving', (e, { mouseX, mouseY }) => {
 
   const { x, y } = screen.getCursorScreenPoint();
   floatingWindow?.setPosition(x - mouseX, y - mouseY);
+});
+
+
+ipcMain.on('chooseLocalFile', async (event, listId) => {
+  const result = await dialog.showOpenDialog({
+    title: '添加歌曲',
+    properties: ['openFile', 'multiSelections'],
+    filters: [
+      {
+        name: 'Music Files',
+        extensions: ['mp3', 'flac', 'ape']
+      }
+    ]
+  });
+
+  if (result.canceled) {
+    return;
+  }
+  const tracks = [];
+  for (let i = 0; i < result.filePaths.length; i++) {
+    const fp = result.filePaths[i];
+    const md = await readAudioTags(fp);
+    const imgBase64 = md.common.picture?.[0]?.data?.toString('base64');
+    const track = {
+      id: `lmtrack_${fp}`,
+      title: md.common.title,
+      artist: md.common.artist,
+      artist_id: `lmartist_${md.common.artist}`,
+      album: md.common.album,
+      album_id: `lmalbum_${md.common.album}`,
+      source: 'localmusic',
+      source_url: '',
+      img_url: imgBase64 ? `data:${md.common.picture?.[0].format}; base64, ${imgBase64}` : 'images/mycover.jpg',
+      lyrics: md.common.lyrics,
+      // url: "lmtrack_"+fp,
+      sound_url: `file://${fp}`
+    };
+    tracks.push(track);
+  }
+
+  mainWindow.webContents.send('chooseLocalFile', { tracks, id: listId });
 });
 
 // Quit when all windows are closed.

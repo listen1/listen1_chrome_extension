@@ -23,6 +23,8 @@ declare module 'global' {
         platform: NodeJS.Platform;
         sendControl: any;
         onLyricWindow: any;
+        ipcOn: any;
+        ipcOnce: any;
       };
     }
   }
