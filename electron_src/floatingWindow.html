@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link href="listen1_chrome_extension/css/icon.css" rel="stylesheet" />
+    <title>Listen1</title>
+    <style>
+      div.content {
+        border-radius: 5px;
+        min-height: 70px;
+        box-sizing: border-box;
+        overflow: hidden;
+        text-align: center;
+        font-size: 24px;
+        color: white;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        user-select: none;
+        transition: background ease-in-out 0.1s;
+      }
+
+      /* span.contentTrans {
+        font-size: 18px;
+      }
+      body.unlocked-body:hover .content {
+        background: rgba(36, 36, 36, 0.8);
+      } */
+      body {
+        font-family: "SF Pro Text", "SF Pro Icons", "Helvetica Neue",
+          "Microsoft Yahei", "Helvetica", "Arial", sans-serif;
+        overflow: hidden;
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+      }
+      .feather {
+        height: 16px;
+        width: 16px;
+        fill: none;
+        stroke: #999999;
+        display: inline-block;
+        background-color: rgba(255,255,255,0.01);
+      }
+      #toolbar {
+        user-select: none;
+        position: fixed;
+        top: 3px;
+        z-index: 9999;
+        margin: 0 auto;
+        left: 0;
+        right: 0;
+        text-align: center;
+      }
+      .icon:hover,
+      .icon:hover .feather {
+        stroke: #ffffff;
+      }
+      .group-first-icon {
+        margin-left: 10px;
+      }
+      #currentLyricAll {
+        width: 100%;
+        height: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      style="visibility: hidden; position: absolute; width: 0px; height: 0px"
+    >
+      <!-- load feather icon svg sprite -->
+      <svg xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <symbol id="x" viewBox="0 0 24 24">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </symbol>
+          <symbol id="lock" viewBox="0 0 24 24">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+          </symbol>
+          <symbol id="unlock" viewBox="0 0 24 24">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+            <path d="M7 11V7a5 5 0 0 1 9.9-1"></path>
+          </symbol>
+          <symbol id="type" viewBox="0 0 24 24">
+            <polyline points="4 7 4 4 20 4 20 7"></polyline>
+            <line x1="9" y1="20" x2="15" y2="20"></line>
+            <line x1="12" y1="4" x2="12" y2="20"></line>
+          </symbol>
+          <symbol id="plus" viewBox="0 0 24 24">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </symbol>
+          <symbol id="minus" viewBox="0 0 24 24">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </symbol>
+          <symbol id="sun" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </symbol>
+          <symbol id="aperture" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="14.31" y1="8" x2="20.05" y2="17.94"></line>
+            <line x1="9.69" y1="8" x2="21.17" y2="8"></line>
+            <line x1="7.38" y1="12" x2="13.12" y2="2.06"></line>
+            <line x1="9.69" y1="16" x2="3.95" y2="6.06"></line>
+            <line x1="14.31" y1="16" x2="2.83" y2="16"></line>
+            <line x1="16.62" y1="12" x2="10.88" y2="21.94"></line>
+          </symbol>
+        </defs>
+      </svg>
+    </div>
+    <div id="currentLyricAll" class="content lyric-content">
+      <span id="currentLyric" class="contentOriginal">Listen1</span>
+      <span id="currentLyricTrans" class="contentTrans"></span>
+    </div>
+    <div id="toolbar">
+      <div class="locked">
+        <svg class="feather icon window-action" id="lock-icon">
+          <use href="#lock"></use>
+        </svg>
+      </div>
+      <div class="unlocked">
+        <svg
+          class="feather icon control-action"
+          id="close-icon"
+          data-msg="float_window_close"
+        >
+          <use href="#x"></use>
+        </svg>
+        <svg class="feather icon window-action" id="unlock-icon">
+          <use href="#unlock"></use>
+        </svg>
+        <a
+          class="icon control-action group-first-icon"
+          id="font-small-icon"
+          data-msg="float_window_font_small"
+        >
+          <svg class="feather">
+            <use href="#type"></use>
+          </svg>
+          <svg class="feather" style="margin-left: -10px">
+            <use href="#minus"></use>
+          </svg>
+        </a>
+        <a
+          class="icon control-action"
+          id="font-large-icon"
+          data-msg="float_window_font_large"
+        >
+          <svg class="feather">
+            <use href="#type"></use>
+          </svg>
+          <svg class="feather icon" style="margin-left: -10px">
+            <use href="#plus"></use>
+          </svg>
+        </a>
+        <a
+          class="icon control-action group-first-icon"
+          data-msg="float_window_background_dark"
+        >
+          <svg class="feather">
+            <use href="#sun"></use>
+          </svg>
+          <svg class="feather icon" style="margin-left: -10px">
+            <use href="#minus"></use>
+          </svg>
+        </a>
+        <a class="icon control-action" data-msg="float_window_background_light">
+          <svg class="feather">
+            <use href="#sun"></use>
+          </svg>
+          <svg class="feather icon" style="margin-left: -10px">
+            <use href="#plus"></use>
+          </svg>
+        </a>
+        <a
+          class="icon control-action group-first-icon"
+          id="font-large-icon"
+          data-msg="float_window_font_change_color"
+        >
+          <svg class="feather">
+            <use href="#aperture"></use>
+          </svg>
+        </a>
+      </div>
+    </div>
+    <script>
+      currentLyric = document.getElementById("currentLyric");
+      window.api.onLyric((arg) => {
+        currentLyric.innerHTML = arg;
+      });
+      currentLyricTrans = document.getElementById("currentLyricTrans");
+      window.api.onTranslLyric((arg) => {
+        currentLyricTrans.innerHTML = arg;
+      });
+    </script>
+    <script>
+      let IS_WINDOW_LOCKED = false;
+
+      function renderToolBar() {
+        if (IS_WINDOW_LOCKED) {
+          document.getElementsByClassName("locked")[0].style.display = "block";
+          document.getElementsByClassName("unlocked")[0].style.display = "none";
+          document.querySelector("body").classList.remove("unlocked-body");
+        } else {
+          document.getElementsByClassName("locked")[0].style.display = "none";
+          document.getElementsByClassName("unlocked")[0].style.display =
+            "block";
+          document.querySelector("body").classList.add("unlocked-body");
+        }
+      }
+
+      // enter lyric window zone, show/hide lock icon
+      document.getElementById("toolbar").style.display = "none";
+
+      document.addEventListener("mouseenter", (event) => {
+        document.getElementById("toolbar").style.display = "block";
+      });
+      document.addEventListener("mouseleave", (event) => {
+        document.getElementById("toolbar").style.display = "none";
+      });
+
+      // enter lock icon zone, make window start to receive mouse event
+      document
+        .getElementById("lock-icon")
+        .addEventListener("mouseenter", (event) => {
+          if (!IS_WINDOW_LOCKED) {
+            return;
+          }
+          const message = "float_window_accept_mouse_event";
+          window.api.sendControl(message);
+        });
+
+      document
+        .getElementById("lock-icon")
+        .addEventListener("mouseleave", (event) => {
+          if (!IS_WINDOW_LOCKED) {
+            return;
+          }
+          const message = "float_window_ignore_mouse_event";
+          window.api.sendControl(message);
+        });
+
+      Array.from(document.getElementsByClassName("window-action")).forEach(
+        (elem) => {
+          elem.addEventListener(
+            "click",
+            function () {
+              // toggle floating window lock/unlock status
+              IS_WINDOW_LOCKED = !IS_WINDOW_LOCKED;
+              renderToolBar();
+              const message = IS_WINDOW_LOCKED
+                ? "float_window_ignore_mouse_event"
+                : "float_window_accept_mouse_event";
+              window.api.sendControl(message);
+            },
+            false
+          );
+        }
+      );
+
+      Array.from(document.getElementsByClassName("control-action")).forEach(
+        (elem) => {
+          elem.addEventListener("click", (event) => {
+            const message = event.currentTarget.dataset.msg;
+            window.api.sendControl(message);
+          });
+        }
+      );
+      // drag can't use webkit-app-region becse mouse enter will not trigger
+      // we use custom handle, more details please read link below
+      // https://github.com/electron/electron/issues/1354#issuecomment-404348957
+      let animationId;
+      let mouseX;
+      let mouseY;
+
+      function onMouseDown(e) {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+
+        document.addEventListener("mouseup", onMouseUp);
+        requestAnimationFrame(this.moveWindow);
+      }
+
+      function onMouseUp(e) {
+        document.removeEventListener("mouseup", onMouseUp);
+        cancelAnimationFrame(animationId);
+      }
+
+      function moveWindow() {
+        window.api.sendFloatWindowMoving({
+          mouseX,
+          mouseY,
+        });
+        animationId = requestAnimationFrame(moveWindow);
+      }
+
+      document
+        .getElementById("currentLyricAll")
+        .addEventListener("mousedown", (event) => {
+          onMouseDown(event);
+        });
+
+      renderToolBar();
+    </script>
+  </body>
+</html>

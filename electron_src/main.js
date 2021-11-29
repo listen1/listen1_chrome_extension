@@ -1,4 +1,5 @@
-const { app, BrowserWindow, ipcMain, session, Menu, dialog } = require('electron');
+/* eslint-disable @typescript-eslint/no-var-requires */
+const { app, BrowserWindow, ipcMain, session, Menu, dialog, screen } = require('electron');
 // import reloader from 'electron-reloader';
 const { fixCORS } = require('./cors');
 const isDev = require('./isDev');
@@ -9,6 +10,7 @@ const { readAudioTags } = require('./readtag');
 if (isDev) {
   require('electron-reloader')(module);
 }
+const { getFloatingWindow, createFloatingWindow, updateFloatingWindow } = require('./float_window');
 
 const theme = store.safeGet('theme');
 /** @type {{ width: number; height: number; maximized: boolean; zoomLevel: number}} */
@@ -178,6 +180,59 @@ ipcMain.on('removeCookie', async (e, url, name) => {
   await session.defaultSession.cookies.remove(url, name);
 });
 
+ipcMain.on('currentLyric', (event, arg) => {
+  const floatingWindow = getFloatingWindow();
+  if (floatingWindow && floatingWindow !== null) {
+    floatingWindow.webContents.send('currentLyric', arg.lyric);
+    floatingWindow.webContents.send('currentLyricTrans', arg.tlyric);
+  }
+});
+
+ipcMain.on('control', async (event, arg, params) => {
+  const floatingWindow = getFloatingWindow();
+  switch (arg) {
+    case 'enable_lyric_floating_window':
+      createFloatingWindow(params);
+      break;
+
+    case 'disable_lyric_floating_window':
+      floatingWindow?.hide();
+      break;
+
+    case 'float_window_accept_mouse_event':
+      floatingWindow.setIgnoreMouseEvents(false);
+      break;
+
+    case 'float_window_ignore_mouse_event':
+      floatingWindow.setIgnoreMouseEvents(true, { forward: true });
+      break;
+
+    case 'float_window_close':
+    case 'float_window_font_small':
+    case 'float_window_font_large':
+    case 'float_window_background_light':
+    case 'float_window_background_dark':
+    case 'float_window_font_change_color':
+      // sync float window settings
+      mainWindow.webContents.send('lyricWindow', arg);
+      break;
+
+    case 'update_lyric_floating_window_css':
+      await updateFloatingWindow(params);
+      break;
+    default:
+      break;
+  }
+});
+
+ipcMain.on('floatWindowMoving', (e, { mouseX, mouseY }) => {
+  const floatingWindow = getFloatingWindow();
+
+  const { x, y } = screen.getCursorScreenPoint();
+  floatingWindow?.setPosition(x - mouseX, y - mouseY);
+});
+
+
 ipcMain.on('chooseLocalFile', async (event, listId) => {
   const result = await dialog.showOpenDialog({
     title: '添加歌曲',
@@ -217,6 +272,7 @@ ipcMain.on('chooseLocalFile', async (event, listId) => {
 
   mainWindow.webContents.send('chooseLocalFile', { tracks, id: listId });
 });
+
 // Quit when all windows are closed.
 app.on('window-all-closed', function () {
   // On OS X it is common for applications and their menu bar

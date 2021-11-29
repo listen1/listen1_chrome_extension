@@ -170,23 +170,17 @@ function playerListener(mode, msg, sender, sendResponse) {
           if (lastObjectTrans && lastObjectTrans.lineNumber !== player.lyricLineNumberTrans) {
             player.lyricLineNumberTrans = lastObjectTrans.lineNumber;
           }
-          // if (isElectron()) {
-          //   const { ipcRenderer } = require("electron");
-          //   const currentLyric =
-          //     state.lyricArray[lastObject.lineNumber].content;
-          //   let currentLyricTrans = "";
-          //   if (
-          //     state.enableLyricFloatingWindowTranslation === true &&
-          //     lastObjectTrans
-          //   ) {
-          //     currentLyricTrans =
-          //       state.lyricArray[lastObjectTrans.lineNumber].content;
-          //   }
-          //   ipcRenderer.send("currentLyric", {
-          //     lyric: currentLyric,
-          //     tlyric: currentLyricTrans,
-          //   });
-          // }
+          if (isElectron()) {
+            const currentLyric = player.lyricArray[lastObject.lineNumber].content;
+            let currentLyricTrans = '';
+            if (player.enableLyricFloatingWindowTranslation === true && lastObjectTrans) {
+              currentLyricTrans = player.lyricArray[lastObjectTrans.lineNumber].content;
+            }
+            window.api?.sendLyric({
+              lyric: currentLyric,
+              tlyric: currentLyricTrans
+            });
+          }
         }
 
         // 'currentTrack:duration'
@@ -256,8 +250,8 @@ function playerListener(mode, msg, sender, sendResponse) {
         player.lastTrackId = msg.data.id;
         player.lastTrackId = msg.data.id;
         if (isElectron()) {
-          window.api.ipcRenderer.send('currentLyric', track.title);
-          window.api.ipcRenderer.send('trackPlayingNow', track);
+          window.api?.sendLyric({ lyric: `${track.title} - ${track.artist}`, tlyric: '' });
+          // window.api.ipcRenderer.send('trackPlayingNow', track);
         }
         break;
       }

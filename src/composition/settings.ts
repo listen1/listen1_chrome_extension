@@ -12,6 +12,7 @@ const nameMapping = {
   enableNowplayingBitrate: 'enable_nowplaying_bitrate',
   enableLyricFloatingWindow: 'enable_lyric_floating_window',
   enableLyricFloatingWindowTranslation: 'enable_lyric_floating_window_translation',
+  floatWindowSetting: 'float_window_setting',
   enableGlobalShortCut: 'enable_global_shortcut',
   enableNowplayingPlatform: 'enable_nowplaying_platform',
   enableLyricTranslation: 'enable_lyric_translation',
@@ -31,6 +32,7 @@ const settings = reactive({
   enableGlobalShortCut: false,
   enableNowplayingPlatform: false,
   enableLyricTranslation: false,
+  floatWindowSetting: { backgroundAlpha: 0.6, fontSize: 22, color: '#ffffff' },
   theme: 'black',
   //lyric settings
   lyricFontSize: 15,
