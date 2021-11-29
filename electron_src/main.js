@@ -138,6 +138,7 @@ ipcMain.on('chooseLocalFile', async (event, listId) => {
   for (let i = 0; i < result.filePaths.length; i++) {
     const fp = result.filePaths[i];
     const md = await readAudioTags(fp);
+    const imgBase64 = md.common.picture?.[0]?.data?.toString('base64');
     const track = {
       id: `lmtrack_${fp}`,
       title: md.common.title,
@@ -147,13 +148,14 @@ ipcMain.on('chooseLocalFile', async (event, listId) => {
       album_id: `lmalbum_${md.common.album}`,
       source: 'localmusic',
       source_url: '',
-      img_url: 'images/mycover.jpg',
+      img_url: imgBase64 ? `data:${md.common.picture?.[0].format}; base64, ${imgBase64}` : 'images/mycover.jpg',
       lyrics: md.common.lyrics,
       // url: "lmtrack_"+fp,
       sound_url: `file://${fp}`
     };
     tracks.push(track);
   }
+
   mainWindow.webContents.send('chooseLocalFile', { tracks, id: listId });
 });
 // Quit when all windows are closed.
