@@ -82,7 +82,7 @@ function initialTray(mainWindow, track) {
     case 'win32':
       trayIconPath = join(__dirname, '/resources/logo_32.png');
       // fix transparent window not working in linux bug
-      app.disableHardwareAcceleration();
+      // app.disableHardwareAcceleration();
       break;
     default:
       break;
