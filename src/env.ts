@@ -21,6 +21,8 @@ declare module 'global' {
         session: Session;
         ipcRenderer: IpcRenderer;
         platform: NodeJS.Platform;
+        ipcOn: any;
+        ipcOnce: any;
       };
     }
   }

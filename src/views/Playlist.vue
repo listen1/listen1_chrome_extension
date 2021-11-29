@@ -17,12 +17,12 @@
                 <span class="icon li-add" />
               </div>
             </div>
-            <!-- <div v-show="is_local" class="playlist-button clone-button" ng-click="addLocalMusic(list_id)">
+            <div class="playlist-button clone-button" @click="addLocalMusic(list_id)">
               <div class="play-list">
                 <span class="icon li-songlist" />
-                <span>{{ $t('_ADD_LOCAL_SONGS') }}</span>
+                <span>{{ t('_ADD_LOCAL_SONGS') }}</span>
               </div>
-            </div>-->
+            </div>
             <div v-show="!is_mine && !is_local" class="playlist-button clone-button" @click="saveAsMyPlaylist(list_id)">
               <div class="play-list">
                 <span class="icon li-songlist" />
@@ -239,12 +239,7 @@ const onPlaylistSongDrop = async (list_id, song, event) => {
 
   if (dragType === 'application/listen1-song') {
     // insert song
-    await MediaService.insertTrackToMyPlaylist(
-      list_id,
-      data,
-      song,
-      direction
-    );
+    await MediaService.insertTrackToMyPlaylist(list_id, data, song, direction);
     await refreshPlaylist();
   }
 };
@@ -253,4 +248,13 @@ const showModal = inject('showModal');
 // TODO: avoid to use event bus to refresh state
 // use global ref to keep more clear way to manage state
 $event.on(`playlist:id:${listId}:update`, refreshPlaylist);
+
+const addLocalMusic = (list_id) => {
+  window.api.chooseLocalFile(list_id);
+  window.api.ipcOnce('chooseLocalFile')(async (message) => {
+    const { tracks } = message;
+    await MediaService.addMyPlaylist(list_id, tracks);
+    await refreshPlaylist();
+  });
+};
 </script>

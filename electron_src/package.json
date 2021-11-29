@@ -96,6 +96,8 @@
     "electron-reloader": "^1.2.1"
   },
   "dependencies": {
-    "electron-store": "^8.0.1"
+    "chardet": "^1.4.0",
+    "electron-store": "^8.0.1",
+    "music-metadata": "^7.11.4"
   }
 }

@@ -17,16 +17,16 @@
         <div class="title">{{ t('_MY_MUSIC') }}</div>
       </div>
       <ul class="nav masthead-nav">
-        <!-- <li
-          v-if="!isChrome"
-          @click="showPlaylist('lmplaylist_reserve')"
-          :class="{ active: window_type == 'list' && '/playlist?list_id=lmplaylist_reserve' === getCurrentUrl() }"
+        <li
+          v-if="isElectron()"
+          @click="$router.push('/playlist/lmplaylist_reserve')"
+          :class="{ active: route.path === '/playlist/lmplaylist_reserve' }"
         >
           <div class="sidebar-block">
             <span class="icon li-featured-list" />
             <a>{{ t('_LOCAL_MUSIC') }}</a>
           </div>
-        </li> -->
+        </li>
         <li
           v-if="is_login('netease')"
           @click="$router.push(`/my_platform/netease`)"
@@ -102,6 +102,7 @@ import MediaService from '../services/MediaService';
 import DragDropZone from '../components/DragDropZone.vue';
 import notyf from '../services/notyf';
 import useAuth from '../composition/auth';
+import { isElectron } from '../provider/lowebutil';
 
 import { useRoute } from 'vue-router';
 const isChrome = true;
