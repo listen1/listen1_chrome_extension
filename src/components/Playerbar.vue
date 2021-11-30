@@ -86,7 +86,7 @@
             id="volumebar"
             :progress="volume"
             @update-progress="changeVolume"
-            @commit-progress="commitVolume"
+            @commit-progress="changeVolume"
           ></draggable-bar>
         </div>
       </div>
@@ -225,11 +225,6 @@ const changeProgress = (progress) => {
 const changeVolume = (progress) => {
   l1Player.setVolume(progress * 100);
   l1Player.unmute();
-};
-const commitVolume = (progress) => {
-  const current = localStorage.getObject('player-settings');
-  current.volume = progress * 100;
-  localStorage.setObject('player-settings', current);
 };
 const toggleMuteStatus = () => {
   l1Player.toggleMute();
