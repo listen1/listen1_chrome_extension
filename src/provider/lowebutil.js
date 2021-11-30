@@ -77,27 +77,6 @@ export function cookieRemove(cookie, callback) {
   callback(null);
 }
 
-// function setPrototypeOfLocalStorage() {
-//   const proto = Object.getPrototypeOf(localStorage);
-//   proto.getObject = function getObject(key) {
-//     const value = this.getItem(key);
-//     return value && JSON.parse(value);
-//   };
-//   proto.setObject = function setObject(key, value) {
-//     this.setItem(key, JSON.stringify(value));
-//   };
-//   Object.setPrototypeOf(localStorage, proto);
-// }
-
-export function getLocalStorageValue(key, defaultValue) {
-  const keyString = localStorage.getItem(key);
-  let result = keyString && JSON.parse(keyString);
-  if (result === null) {
-    result = defaultValue;
-  }
-  return result;
-}
-
 function easeInOutQuad(t, b, c, d) {
   // t = current time
   // b = start value

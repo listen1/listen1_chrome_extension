@@ -218,7 +218,7 @@ import EventService from '../services/EventService';
 
 
 const { t } = useI18n();
-const { player, playerListener } = usePlayer()
+const { player, playerListener } = usePlayer();
 const router = useRouter();
 const { condition } = useSearch();
 const { refreshAuthStatus } = useAuth();
@@ -247,6 +247,8 @@ let playmode = $computed(() => player.playmode);
 let input_keywords = $ref('');
 let settingButtonStyle = $ref({});
 let platButtonStyle = $ref({});
+const { settings, getSettingsAsync } = useSettings();
+
 const searchTextChanged = () => {
   condition.keywords = input_keywords;
   router.push('/search');
@@ -340,13 +342,14 @@ onMounted(() => {
     }
   }
   refreshAuthStatus();
-})
+  loadLocalSettings();
+});
 const handleScroll = () => {
   const element = document.getElementById('browser');
   if (element.scrollHeight - element.scrollTop === element.clientHeight) {
     EventService.emit(`scroll:bottom`);
   }
-}
+};
 let playlist = $computed(() => player.playlist);
 let isPlaying = $computed(() => player.isPlaying);
 let lyricArray = $computed(() => player.lyricArray);
@@ -361,7 +364,14 @@ let volume = $computed(() => player.volume);
 let mute = $computed(() => player.mute);
 let lyricFontWeight = $computed(() => settings.lyricFontWeight);
 let lyricFontSize = $computed(() => settings.lyricFontSize);
-const { settings } = useSettings();
-
 setLocale(settings.language);
+
+const loadLocalSettings = async () => {
+  const settings = await getSettingsAsync();
+  if (settings.playerSettings.nowplaying_track_id !== undefined) {
+    l1Player.loadById(settings.playerSettings.nowplaying_track_id);
+  }
+  l1Player.setLoopMode(settings.playerSettings.playmode);
+  l1Player.setVolume(settings.playerSettings.volume);
+};
 </script>
