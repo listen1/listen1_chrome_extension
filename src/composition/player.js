@@ -254,7 +254,7 @@ function playerListener(mode, msg, sender, sendResponse) {
         player.lastTrackId = msg.data.id;
         if (isElectron()) {
           window.api?.sendLyric({ lyric: `${track.title} - ${track.artist}`, tlyric: '' });
-          // window.api.ipcRenderer.send('trackPlayingNow', track);
+          window.api?.sendTrackPlayingNow(track);
         }
         break;
       }

@@ -13,6 +13,9 @@ export function getParameterByName(name, url) {
 export function isElectron() {
   return Boolean(window.api?.platform);
 }
+export function isMac() {
+  return window.api?.platform === 'darwin';
+}
 
 export function cookieGet(cookieRequest, callback) {
   if (!isElectron()) {

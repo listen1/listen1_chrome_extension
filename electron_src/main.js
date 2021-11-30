@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-const { app, BrowserWindow, ipcMain, session, Menu, dialog, screen } = require('electron');
+const { app, BrowserWindow, ipcMain, session, Menu, dialog, screen, Tray } = require('electron');
 // import reloader from 'electron-reloader';
 const { fixCORS } = require('./cors');
 const isDev = require('./isDev');
 const store = require('./store');
 const { readAudioTags } = require('./readtag');
-
+const { initialTray } = require('./tray');
 // isDev && reloader(module);
 if (isDev) {
   require('electron-reloader')(module);
@@ -128,6 +128,7 @@ function createWindow() {
     }
   ]);
   mainWindow.setMenu(menu);
+  initialTray(mainWindow);
   // and load the index.html of the app.
   const ua = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.119 Safari/537.36';
 
@@ -220,6 +221,19 @@ ipcMain.on('control', async (event, arg, params) => {
     case 'update_lyric_floating_window_css':
       await updateFloatingWindow(params);
       break;
+
+    case 'window_min':
+      mainWindow.minimize();
+      break;
+
+    case 'window_max':
+      windowState.maximized ? mainWindow.unmaximize() : mainWindow.maximize();
+      windowState.maximized = !windowState.maximized;
+      break;
+
+    case 'window_close':
+      mainWindow.close();
+      break;
     default:
       break;
   }
@@ -231,8 +245,11 @@ ipcMain.on('floatWindowMoving', (e, { mouseX, mouseY }) => {
   const { x, y } = screen.getCursorScreenPoint();
   floatingWindow?.setPosition(x - mouseX, y - mouseY);
 });
-
-
+ipcMain.on("trackPlayingNow", (event, track) => {
+  if (mainWindow != null) {
+    initialTray(mainWindow, track);
+  }
+});
 ipcMain.on('chooseLocalFile', async (event, listId) => {
   const result = await dialog.showOpenDialog({
     title: '添加歌曲',
@@ -287,6 +304,9 @@ app.on('activate', function () {
   // dock icon is clicked and there are no other windows open.
   if (mainWindow === null) {
     createWindow();
+  }
+  else {
+    mainWindow.show();
   }
 });
 

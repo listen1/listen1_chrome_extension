@@ -166,16 +166,10 @@
               </span>
             </router-link>
           </div>
-          <div v-if="!isChrome && !isMac" class="window-control">
-            <svg class="icon" window-control="window_min">
-              <use href="#minimize-2" />
-            </svg>
-            <svg class="icon" window-control="window_max">
-              <use href="#maximize" />
-            </svg>
-            <svg class="icon" window-control="window_close">
-              <use href="#x" />
-            </svg>
+          <div v-if="isElectron() && !isMac()" class="window-control">
+               <vue-feather class="icon" type="minimize-2" @click="sendControl('window_min')"/>
+               <vue-feather class="icon" type="maximize" @click="sendControl('window_max')"/>
+               <vue-feather class="icon" type="x" @click="sendControl('window_close')"/>
           </div>
         </div>
 
@@ -215,6 +209,7 @@ import Sidebar from '../components/Sidebar.vue';
 import Playerbar from '../components/Playerbar.vue';
 import NowPlaying from '../views/NowPlaying.vue';
 import EventService from '../services/EventService';
+import { isElectron, isMac } from '../provider/lowebutil';
 
 
 const { t } = useI18n();
@@ -238,8 +233,6 @@ let proxyMode_name = $ref('');
 let lastestVersion = $ref('');
 let is_local = $ref(false);
 let is_mine = $ref(false);
-let isMac = $ref(false);
-let isChrome = $ref(true);
 let is_favorite = $ref(false);
 let playlist_highlight = $ref(false);
 let menuHidden = $ref(true);
@@ -366,6 +359,7 @@ let lyricFontWeight = $computed(() => settings.lyricFontWeight);
 let lyricFontSize = $computed(() => settings.lyricFontSize);
 setLocale(settings.language);
 
+
 const loadLocalSettings = async () => {
   const settings = await getSettingsAsync();
   if (settings.playerSettings.nowplaying_track_id !== undefined) {
@@ -374,4 +368,9 @@ const loadLocalSettings = async () => {
   l1Player.setLoopMode(settings.playerSettings.playmode);
   l1Player.setVolume(settings.playerSettings.volume);
 };
+
+const sendControl = (message) => {
+  window.api?.sendControl(message);
+}
+
 </script>
