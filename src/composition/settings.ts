@@ -17,6 +17,7 @@ const nameMapping = {
   enableNowplayingPlatform: 'enable_nowplaying_platform',
   enableLyricTranslation: 'enable_lyric_translation',
   autoChooseSourceList: 'auto_choose_source_list',
+  playerSettings: 'player_settings',
   theme: 'theme'
 };
 type nameMapping = typeof nameMapping;
@@ -34,6 +35,7 @@ const settings = reactive({
   enableLyricTranslation: false,
   floatWindowSetting: { backgroundAlpha: 0.6, fontSize: 22, color: '#ffffff' },
   theme: 'black',
+  playerSettings: { playmode: 0, volume: 100 },
   //lyric settings
   lyricFontSize: 15,
   lyricFontWeight: 400,
@@ -59,6 +61,11 @@ function setSettings(newValue: Partial<Record<settingsKey, unknown>>) {
     iDB.Settings.put({ key, value });
   }
 }
+function saveSettingsToDB(newValue: Partial<Record<settingsKey, unknown>>) {
+  for (const [key, value] of Object.entries(newValue) as settingEntries) {
+    iDB.Settings.put({ key, value });
+  }
+}
 async function loadSettings() {
   const dbRes: Record<string, unknown> = (await iDB.Settings.toArray()).reduce((ret: Record<string, unknown>, cur) => {
     ret[cur.key] = cur.value;
@@ -81,9 +88,15 @@ export function migrateSettings() {
   }
   setSettings(lsSettings);
 }
-
+async function getSettingsAsync() {
+  const dbRes: Record<string, unknown> = (await iDB.Settings.toArray()).reduce((ret: Record<string, unknown>, cur) => {
+    ret[cur.key] = cur.value;
+    return ret;
+  }, {});
+  return dbRes;
+}
 function useSettings() {
-  return { settings, setSettings, loadSettings };
+  return { settings, setSettings, loadSettings, saveSettingsToDB, getSettingsAsync };
 }
 loadSettings();
 watch(settings, (_, newSetting) => {
