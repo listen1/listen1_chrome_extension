@@ -309,15 +309,7 @@ const clearPlaylist = () => {
 const changeProgress = (progress) => {
   l1Player.seek(progress);
 };
-const changeVolume = (progress) => {
-  l1Player.setVolume(progress * 100);
-  l1Player.unmute();
-};
-const commitVolume = (progress) => {
-  const current = localStorage.getObject('player-settings');
-  current.volume = progress * 100;
-  localStorage.setObject('player-settings', current);
-};
+
 const toggleMuteStatus = () => {
   l1Player.toggleMute();
 };
