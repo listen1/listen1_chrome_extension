@@ -5,6 +5,7 @@ import { l1Player } from '../services/l1_player';
 import MediaService from '../services/MediaService';
 import notyf from '../services/notyf';
 import iDB from '../services/DBService';
+import useSettings from '../composition/settings';
 
 function parseLyric(lyric, tlyric) {
   const lines = lyric.split('\n');
@@ -107,23 +108,27 @@ const player = reactive({
   nowplaying_track_id: -1,
   volume: 90
 });
+
 function saveState() {
-  const settings = {
+  const { saveSettingsToDB } = useSettings();
+
+  const newPlayerSettings = {
     playmode: player.playmode,
     nowplaying_track_id: player.nowplaying_track_id,
     volume: player.volume
   };
-  localStorage.setObject('player-settings', settings);
+
+  saveSettingsToDB({ playerSettings: newPlayerSettings });
 }
+
 function initState() {
-  const localSettings = localStorage.getObject('player-settings');
-  if (localSettings === null) {
-    saveState();
-  } else {
-    player.playmode = localSettings.playmode;
-    player.nowplaying_track_id = localSettings.nowplaying_track_id;
-    player.volume = localSettings.volume;
-  }
+  const { getSettingsAsync } = useSettings();
+  getSettingsAsync().then((settings) => {
+    player.playmode = settings.playerSettings.playmode;
+    player.nowplaying_track_id = settings.playerSettings.nowplaying_track_id;
+    player.volume = settings.playerSettings.volume;
+  });
+
   l1Player.connectPlayer();
 }
 function playerListener(mode, msg, sender, sendResponse) {
@@ -220,10 +225,8 @@ function playerListener(mode, msg, sender, sendResponse) {
           break;
         }
 
-        // const current = localStorage.getObject('player-settings') || {};
         player.nowplaying_track_id = msg.data.id;
 
-        // current.nowplaying_track_id = msg.data.id;
         saveState();
         // update lyric
         player.lyricArray = [];

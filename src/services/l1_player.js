@@ -1,8 +1,8 @@
 import { getPlayer, addPlayerListener, getPlayerAsync } from './bridge';
-import { getLocalStorageValue } from '../provider/lowebutil';
 import iDB from './DBService';
+import useSettings from '../composition/settings';
 
-const mode = getLocalStorageValue('enable_stop_when_close', true) ? 'front' : 'background';
+const mode = 'front'; // mode: front | background; background is not supported by now
 
 export const myPlayer = getPlayer(mode);
 export const l1Player = {
@@ -135,17 +135,15 @@ export const l1Player = {
         const currentPlaylist = await iDB.Playlists.get({ id: 'current' });
         const localCurrentPlaying = await iDB.Tracks.where('playlist').equals('current').toArray();
         const currentPlaying = currentPlaylist.order.map((id) => localCurrentPlaying.find((track) => track.id == id));
-        const localPlayerSettings = localStorage.getObject('player-settings');
 
-        if (!player.playlist.length) {
-          currentPlaying.forEach((i) => {
-            i.disabled = false;
-          });
-          player.setNewPlaylist(currentPlaying);
-        }
+        currentPlaying.forEach((i) => {
+          i.disabled = false;
+        });
+        player.playlist = currentPlaying;
 
-        if (localPlayerSettings !== null) {
-          player.loadById(localPlayerSettings.nowplaying_track_id);
+        const { settings } = useSettings();
+        if (settings.playerSettings.nowplaying_track_id !== undefined) {
+          player.loadById(settings.playerSettings.nowplaying_track_id);
         }
       }
 

@@ -180,7 +180,7 @@ const { t } = useI18n();
 const { player } = usePlayer();
 const router = useRouter();
 const showModal = inject('showModal');
-const { settings, setSettings } = useSettings();
+const { settings, setSettings, saveSettingsToDB,getSettingsAsync } = useSettings();
 
 let { overlay, setOverlayType } = useOverlay();
 let menuHidden = $ref(true);
@@ -191,6 +191,12 @@ const changePlaymode = () => {
   const newPlaymode = (playmode + 1) % playmodeCount;
   player.playmode = newPlaymode;
   l1Player.setLoopMode(newPlaymode);
+
+  const task = async () => {
+    const settings = await getSettingsAsync();
+    saveSettingsToDB({playerSettings: {...settings.playerSettings, playmode: newPlaymode}});
+  };
+  task();
 };
 
 const showPlaylist = (playlistId) => {
@@ -227,9 +233,14 @@ const changeVolume = (progress) => {
   l1Player.unmute();
 };
 const commitVolume = (progress) => {
-  const current = localStorage.getObject('player-settings');
-  current.volume = progress * 100;
-  localStorage.setObject('player-settings', current);
+  changeVolume(progress);
+  // TODO: use settings.playerSettings will get old init value
+  // must use getSettings to fetch recent value
+  const task = async () => {
+    const settings = await getSettingsAsync();
+    saveSettingsToDB({playerSettings: {...settings.playerSettings, volume: progress * 100}});
+  };
+  task();
 };
 const toggleMuteStatus = () => {
   l1Player.toggleMute();
