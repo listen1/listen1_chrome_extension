@@ -1,9 +1,9 @@
 import { reactive } from 'vue';
 import MediaService from '../services/MediaService';
 import { parseLyric, calculateLine } from '../services/lyric';
-import { smoothScrollTo } from '../provider/lowebutil';
+import { isElectron, smoothScrollTo } from '../provider/lowebutil';
 import iDB from '../services/DBService';
-import useSettings from '../composition/settings';
+import useSettings, { getSetting } from '../composition/settings';
 
 const player = reactive({
   playlist: [],
@@ -57,10 +57,20 @@ export class PlayerEventListener {
       // save now playing
       savePlayerSettings();
 
+      // clear lyric'
+      player.lyricArray = [];
+      player._lyricArrayIndex = -1;
+      player.lyricLineNumber = -1;
+      player.lyricLineNumberTrans = -1;
       const { lyric, tlyric } = await MediaService.getLyric(track.id, track.album_id, track.lyric_url, track.tlyric_url);
+
       if (lyric) {
         player.lyricArray = parseLyric(lyric, tlyric);
-        player._lyricArrayIndex = -1;
+      }
+
+      if (isElectron()) {
+        window.api?.sendLyric({ lyric: `${track.title} - ${track.artist}`, tlyric: '' });
+        window.api?.sendTrackPlayingNow(track);
       }
     } else if (name === 'custom:playlist') {
       const { playlist } = params;
@@ -83,8 +93,9 @@ export class PlayerEventListener {
       if (!player.enableLyric) {
         return;
       }
+
       const { lineNumber, transLineNumber, index } = calculateLine(
-        params.seconds,
+        params.position,
         player.lyricArray,
         player.lyricLineNumber,
         player.lyricLineNumberTrans,
@@ -99,6 +110,13 @@ export class PlayerEventListener {
           const adjustOffset = 30;
           const offset = lineElement.offsetTop - windowHeight / 2 + adjustOffset;
           smoothScrollTo(document.querySelector('.lyric'), offset, 500);
+
+          if (isElectron()) {
+            window.api?.sendLyric({
+              lyric: player.lyricArray[lineNumber].content,
+              tlyric: getSetting('enableLyricTranslation') ? player.lyricArray[transLineNumber].content : ''
+            });
+          }
         }
 
         player.lyricLineNumber = lineNumber;

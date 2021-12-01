@@ -98,7 +98,6 @@ export function calculateLine(currentSeconds, lyricArray, lyricLineNumber, lyric
     } else {
       break;
     }
-    i++;
   }
   let newLineNumber = lyricLineNumber;
   let newTransLineNumber = lyricLineNumberTrans;
@@ -108,5 +107,6 @@ export function calculateLine(currentSeconds, lyricArray, lyricLineNumber, lyric
       newTransLineNumber = lastObjectTrans.lineNumber;
     }
   }
+
   return { lineNumber: newLineNumber, transLineNumber: newTransLineNumber, index };
 }
