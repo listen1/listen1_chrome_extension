@@ -188,7 +188,6 @@ export default class MyPlaylist {
     playlist.order = playlist.order.filter((i) => i != track_id);
     // remove from tracks
     await iDB.transaction('rw', [iDB.Playlists, iDB.Tracks], async () => {
-      console.log(playlist_id, track_id);
       await iDB.Tracks.where({ playlist: playlist_id, id: track_id }).delete();
       await iDB.Playlists.put(playlist);
     });

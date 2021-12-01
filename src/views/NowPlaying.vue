@@ -112,8 +112,10 @@ let isMac = $ref(false);
 const toggleNowPlaying = () => {
   if (overlay.type != 'track') {
     setOverlayType('track');
+    player.enableLyric = true;
   } else {
     setOverlayType('');
+    player.enableLyric = false;
   }
 };
 
@@ -125,7 +127,7 @@ let lyricArray = $computed(() => player.lyricArray);
 let lyricLineNumber = $computed(() => player.lyricLineNumber);
 let lyricLineNumberTrans = $computed(() => player.lyricLineNumberTrans);
 
-let currentPlaying = $computed(() => player.currentPlaying);
+let currentPlaying = $computed(() => player.currentPlaying || {});
 let lyricFontWeight = $computed(() => settings.lyricFontWeight);
 let lyricFontSize = $computed(() => settings.lyricFontSize);
 const { settings } = useSettings();

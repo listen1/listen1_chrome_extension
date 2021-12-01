@@ -195,8 +195,7 @@ const addToPlay = (song) => {
   notyf.success(t('_ADD_TO_QUEUE_SUCCESS'));
 };
 const playMylist = (listId) => {
-  l1Player.setNewPlaylist(songs);
-  l1Player.play();
+  l1Player.playTracks(songs);
   list_id = listId;
 };
 const showPlaylist = (playlistId) => {
