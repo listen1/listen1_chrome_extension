@@ -120,7 +120,7 @@
       <ul class="menu-list">
         <li
           v-for="(song, index) in playlist"
-          id="song song.id "
+          :id="'song_'+song.id "
           :key="song.id"
           ng-class="{ playing: currentPlaying.id == song.id }"
           @mouseenter="song.highlight=true"

@@ -72,6 +72,8 @@ export class PlayerEventListener {
         window.api?.sendLyric({ lyric: `${track.title} - ${track.artist}`, tlyric: '' });
         window.api?.sendTrackPlayingNow(track);
       }
+      // update scroll position in current list
+      document.getElementById(`song_${track.id}`).scrollIntoView({ behavior: 'smooth', block: 'center' });
     } else if (name === 'custom:nowplaying_loaded') {
       if (!player.currentPlaying) {
         return;
