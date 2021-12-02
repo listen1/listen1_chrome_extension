@@ -72,6 +72,14 @@ export class PlayerEventListener {
         window.api?.sendLyric({ lyric: `${track.title} - ${track.artist}`, tlyric: '' });
         window.api?.sendTrackPlayingNow(track);
       }
+    } else if (name === 'custom:nowplaying_loaded') {
+      if (!player.currentPlaying) {
+        return;
+      }
+      const { bitrate, platform, url } = params;
+      player.currentPlaying.bitrate = bitrate;
+      player.currentPlaying.platform = platform;
+      player.currentPlaying.url = url;
     } else if (name === 'custom:playlist') {
       const { playlist } = params;
       player.playlist = playlist;

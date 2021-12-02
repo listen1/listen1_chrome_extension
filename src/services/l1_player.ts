@@ -133,7 +133,7 @@ class l1PlayerProto {
       }
       return;
     }
-    const sound: unknown = await MediaService.bootstrapTrackAsync(track).catch(async () => {
+    const result: unknown = await MediaService.bootstrapTrackAsync(track).catch(async () => {
       this._emit('custom:track_not_playable', { track });
 
       track.disabled = true;
@@ -145,11 +145,13 @@ class l1PlayerProto {
       }
     });
 
-    if (!sound) {
+    if (!result) {
       return;
     }
+    const sound: Sound = <Sound>result;
 
-    this._audio.src = (sound as Sound).url;
+    this._audio.src = sound.url;
+    this._emit('custom:nowplaying_loaded', { track, url: sound.url, bitrate: sound.bitrate, platform: sound.platform });
     // Resets the media to the beginning and selects the best available source
     // from the sources provided using the src attribute or the <source> element.
     this._audio.load(); //suspends and restores all audio element
