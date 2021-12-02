@@ -12,6 +12,7 @@ interface Track {
   source: string;
   source_url: string;
   title: string;
+  disabled?: boolean;
 }
 
 interface Sound {
@@ -111,19 +112,47 @@ class l1PlayerProto {
     const track = this.playlist.find((t) => t.id === id);
     await this._play(track);
   }
-  async _play(track?: Track) {
+  async _play(track?: Track, playDirection = 1, tryCount = 1) {
     // raw play method, internal usage only
     if (!track) {
       return;
     }
-    const sound: unknown = await MediaService.bootstrapTrackAsync(track).catch();
+    if (tryCount > this.playlist.length) {
+      this._emit('custom:playlist_not_playable', {});
+      return;
+    }
+
+    this.playing = track;
+    this._emit('custom:nowplaying', { track: this.playing });
+
+    if (track.disabled) {
+      if (playDirection === -1) {
+        this.prev(tryCount + 1);
+      } else {
+        this.next(tryCount + 1);
+      }
+      return;
+    }
+    const sound: unknown = await MediaService.bootstrapTrackAsync(track).catch(async () => {
+      this._emit('custom:track_not_playable', { track });
+
+      track.disabled = true;
+      await new Promise((r) => setTimeout(r, 2000));
+      if (playDirection === -1) {
+        this.prev(tryCount + 1);
+      } else {
+        this.next(tryCount + 1);
+      }
+    });
+
+    if (!sound) {
+      return;
+    }
 
     this._audio.src = (sound as Sound).url;
     // Resets the media to the beginning and selects the best available source
     // from the sources provided using the src attribute or the <source> element.
     this._audio.load(); //suspends and restores all audio element
-    this.playing = track;
-    this._emit('custom:nowplaying', { track: this.playing });
   }
   loadById(id: string) {
     const track = this.playlist.find((t) => t.id === id);
@@ -149,7 +178,7 @@ class l1PlayerProto {
   getDuration(): number {
     return this._audio.duration;
   }
-  prev() {
+  prev(tryCount = 0) {
     if (this.playlist.length === 0) {
       return;
     }
@@ -159,9 +188,9 @@ class l1PlayerProto {
       const shuffleIndex = this._shuffleArray.findIndex((i) => i === index);
       prevIndex = this._shuffleArray[posMod(shuffleIndex - 1, this._shuffleArray.length)];
     }
-    this._play(this.playlist[prevIndex]);
+    this._play(this.playlist[prevIndex], -1, tryCount);
   }
-  next() {
+  next(tryCount = 0) {
     if (this.playlist.length === 0) {
       return;
     }
@@ -172,7 +201,7 @@ class l1PlayerProto {
       const shuffleIndex = this._shuffleArray.findIndex((i) => i === index);
       nextIndex = this._shuffleArray[posMod(shuffleIndex + 1, this._shuffleArray.length)];
     }
-    this._play(this.playlist[nextIndex]);
+    this._play(this.playlist[nextIndex], 1, tryCount);
   }
   _reshuffleIfNeeded() {
     if (this.loopMode !== PlayerLoopMode.SHUFFLE) {
