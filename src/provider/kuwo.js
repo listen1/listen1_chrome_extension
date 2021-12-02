@@ -1,4 +1,3 @@
-import concat from 'async-es/concat';
 import axios from 'axios';
 import { cookieGet, getParameterByName } from './lowebutil';
 import MusicResource from './music_resource';
@@ -269,7 +268,7 @@ export default class kuwo extends MusicResource {
     });
   }
 
-  static kw_render_tracks(url, page, callback) {
+  static kw_render_tracks(url, page) {
     const list_id = getParameterByName('list_id', url).split('_').pop();
     const playlist_type = getParameterByName('list_id', url).split('_')[0];
     let tracks_url = '';
@@ -286,9 +285,11 @@ export default class kuwo extends MusicResource {
         break;
     }
     // axios.get(tracks_url).then((response) => {
-    this.kw_cookie_get(tracks_url, (response) => {
-      const tracks = response.data.data.musicList.map(kwConvertSong);
-      return callback(null, tracks);
+    return new Promise((res)=>{
+      this.kw_cookie_get(tracks_url, (response) => {
+        const tracks = response.data.data.musicList.map(kwConvertSong);
+        res(tracks);
+      });
     });
   }
 
@@ -501,7 +502,7 @@ export default class kuwo extends MusicResource {
     const total = data.songnum;
     const page = Math.ceil(total / 100);
     const page_array = Array.from({ length: page }, (v, k) => k + 1);
-    const tracks = await concat(page_array, (item, callback) => this.kw_render_tracks(url, item, callback));
+    const tracks = (await Promise.all(page_array.map(page => this.kw_render_tracks(url, page)))).flat();
     return {
       tracks,
       info
@@ -608,7 +609,7 @@ export default class kuwo extends MusicResource {
     const { total } = data;
     const page = Math.ceil(total / 100);
     const page_array = Array.from({ length: page }, (v, k) => k + 1);
-    const tracks = await concat(page_array, (item, callback) => this.kw_render_tracks(url, item, callback));
+    const tracks = (await Promise.all(page_array.map(page => this.kw_render_tracks(url, page)))).flat();
     return { tracks, info };
 
     /*

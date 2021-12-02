@@ -682,11 +682,6 @@ assert-never@^1.2.1:
   resolved "https://registry.yarnpkg.com/assert-never/-/assert-never-1.2.1.tgz#11f0e363bf146205fb08193b5c7b90f4d1cf44fe"
   integrity sha512-TaTivMB6pYI1kXwrFlEhLeGfOqoDNdTxjCdwRfFFkEA30Eu+k48W34nlok2EYWJfFFzqaEmichdNM7th6M5HNw==
 
-async-es@^3.2.2:
-  version "3.2.2"
-  resolved "https://registry.yarnpkg.com/async-es/-/async-es-3.2.2.tgz#3b9036bab9c770b616689e83582ae3cf111d2fbb"
-  integrity sha512-067V3pgBnMQp8bgg3bYWduYWCiWebh8UCgCV7W/oHPnzL9nHamJdlalaaKjnOQlmdAz0IGfp2K9eNAqRoEym7g==
-
 axios@^0.24.0:
   version "0.24.0"
   resolved "https://registry.yarnpkg.com/axios/-/axios-0.24.0.tgz#804e6fa1e4b9c5288501dd9dff56a7a0940d20d6"

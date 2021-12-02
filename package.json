@@ -19,7 +19,6 @@
     "@typescript-eslint/eslint-plugin": "^5.3.1",
     "@typescript-eslint/parser": "^5.3.1",
     "@vitejs/plugin-vue": "^1.10.0",
-    "async-es": "^3.2.2",
     "axios": "^0.24.0",
     "browserslist": "^4.17.6",
     "cross-env": "^7.0.3",

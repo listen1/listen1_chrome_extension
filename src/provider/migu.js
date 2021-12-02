@@ -1,5 +1,4 @@
 import axios from 'axios';
-import concat from 'async-es/concat';
 import forge from 'node-forge';
 import { getParameterByName } from './lowebutil';
 import MusicResource from './music_resource';
@@ -26,7 +25,7 @@ export default class migu extends MusicResource {
     };
   }
 
-  static mg_render_tracks(url, page, callback) {
+  static async mg_render_tracks(url, page) {
     const list_id = getParameterByName('list_id', url).split('_').pop();
     const playlist_type = getParameterByName('list_id', url).split('_')[0];
     let tracks_url = '';
@@ -40,11 +39,10 @@ export default class migu extends MusicResource {
       default:
         break;
     }
-    axios.get(tracks_url).then((response) => {
-      const data = playlist_type === 'mgplaylist' ? response.data.list : response.data.songList;
-      const tracks = data.map((item) => this.mg_convert_song(item));
-      return callback(null, tracks);
-    });
+    const response = await axios.get(tracks_url);
+    const data = playlist_type === 'mgplaylist' ? response.data.list : response.data.songList;
+    const tracks = data.map((item) => this.mg_convert_song(item));
+    return tracks;
   }
 
   static async mg_show_toplist(offset) {
@@ -347,7 +345,7 @@ export default class migu extends MusicResource {
     const total = response.data.resource[0].musicNum;
     const page = Math.ceil(total / 50);
     const page_array = Array.from({ length: page }, (v, k) => k + 1);
-    const tracks = await concat(page_array, (item, callback) => this.mg_render_tracks(url, item, callback));
+    const tracks = (await Promise.all(page_array.map(page => this.mg_render_tracks(url, page)))).flat();
     return { tracks, info };
   }
 
@@ -366,7 +364,7 @@ export default class migu extends MusicResource {
     const total = data.resource[0].totalCount;
     const page = Math.ceil(total / 50);
     const page_array = Array.from({ length: page }, (v, k) => k + 1);
-    const tracks = await concat(page_array, (item, callback) => this.mg_render_tracks(url, item, callback));
+    const tracks = (await Promise.all(page_array.map(page => this.mg_render_tracks(url, page)))).flat();
     return {
       tracks,
       info
