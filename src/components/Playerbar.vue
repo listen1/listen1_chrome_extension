@@ -84,7 +84,7 @@
         <div class="m-pbar volume">
           <draggable-bar
             id="volumebar"
-            :progress="volume"
+            :progress="volume*100"
             @update-progress="changeVolume"
             @commit-progress="commitVolume"
           ></draggable-bar>
@@ -152,7 +152,7 @@
           <div class="tools">
             <span
               v-show="song.highlight"
-              @click="removeTrack(index)"
+              @click="removeTrack(song)"
               class="icon li-del"
             />
             <span v-show="song.highlight" @click="openUrl(song.source_url)" class="icon li-link" />
@@ -191,12 +191,6 @@ const changePlaymode = () => {
   const newPlaymode = (playmode + 1) % playmodeCount;
   player.playmode = newPlaymode;
   l1Player.setLoopMode(newPlaymode);
-
-  const task = async () => {
-    const settings = await getSettingsAsync();
-    saveSettingsToDB({playerSettings: {...settings.playerSettings, playmode: newPlaymode}});
-  };
-  task();
 };
 
 const showPlaylist = (playlistId) => {
@@ -214,8 +208,10 @@ const nextTrack = () => {
 const toggleNowPlaying = () => {
   if (overlay.type != 'track') {
     setOverlayType('track');
+    player.enableLyric = true;
   } else {
     setOverlayType('');
+    player.enableLyric = false;
   }
 };
 
@@ -229,7 +225,7 @@ const changeProgress = (progress) => {
   l1Player.seek(progress);
 };
 const changeVolume = (progress) => {
-  l1Player.setVolume(progress * 100);
+  l1Player.setVolume(progress);
   l1Player.unmute();
 };
 const commitVolume = (progress) => {
@@ -248,8 +244,8 @@ const toggleMuteStatus = () => {
 const playFromPlaylist = (song) => {
   l1Player.playById(song.id);
 };
-const removeTrack = (index) => {
-  l1Player.removeTrack(index);
+const removeTrack = (track) => {
+  l1Player.removeTrack(track);
 };
 const openUrl = (url) => {
   window.open(url, '_blank').focus();
@@ -292,7 +288,7 @@ let isPlaying = $computed(() => player.isPlaying);
 let myProgress = $computed(() => player.myProgress);
 let currentDuration = $computed(() => player.currentDuration);
 let currentPosition = $computed(() => player.currentPosition);
-let currentPlaying = $computed(() => player.currentPlaying);
+let currentPlaying = $computed(() => player.currentPlaying || {});
 let volume = $computed(() => player.volume);
 let mute = $computed(() => player.mute);
 

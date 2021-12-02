@@ -150,7 +150,7 @@
 </template>
 
 <script setup>
-import { computed, inject } from 'vue';
+import { computed, inject, toRaw } from 'vue';
 import { useI18n } from 'vue-i18n';
 import useSearch from '../composition/search';
 import { l1Player } from '../services/l1_player';
@@ -173,7 +173,7 @@ const changeSearchPage = (offset) => {
   condition.curpage += offset;
 };
 const play = (song) => {
-  l1Player.addTrack(song);
+  l1Player.addTrack(toRaw(song));
   l1Player.playById(song.id);
 };
 const openUrl = (url) => {

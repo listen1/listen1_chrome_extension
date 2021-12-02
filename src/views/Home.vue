@@ -213,7 +213,7 @@ import { isElectron, isMac } from '../provider/lowebutil';
 
 
 const { t } = useI18n();
-const { player, playerListener } = usePlayer();
+const { player } = usePlayer();
 const router = useRouter();
 const { condition } = useSearch();
 const { refreshAuthStatus } = useAuth();
@@ -240,7 +240,7 @@ let playmode = $computed(() => player.playmode);
 let input_keywords = $ref('');
 let settingButtonStyle = $ref({});
 let platButtonStyle = $ref({});
-const { settings, getSettingsAsync } = useSettings();
+const { settings } = useSettings();
 
 const searchTextChanged = () => {
   condition.keywords = input_keywords;
@@ -335,7 +335,6 @@ onMounted(() => {
     }
   }
   refreshAuthStatus();
-  loadLocalSettings();
 });
 const handleScroll = () => {
   const element = document.getElementById('browser');
@@ -360,14 +359,7 @@ let lyricFontSize = $computed(() => settings.lyricFontSize);
 setLocale(settings.language);
 
 
-const loadLocalSettings = async () => {
-  const settings = await getSettingsAsync();
-  if (settings.playerSettings.nowplaying_track_id !== undefined) {
-    l1Player.loadById(settings.playerSettings.nowplaying_track_id);
-  }
-  l1Player.setLoopMode(settings.playerSettings.playmode);
-  l1Player.setVolume(settings.playerSettings.volume);
-};
+
 
 const sendControl = (message) => {
   window.api?.sendControl(message);

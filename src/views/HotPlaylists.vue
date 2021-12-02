@@ -133,8 +133,7 @@ const showPlaylist = (playlistId) => {
 const directplaylist = async (list_id) => {
   const data = await MediaService.getPlaylist(list_id);
   const songs = data.tracks;
-  l1Player.setNewPlaylist(songs);
-  l1Player.play();
+  l1Player.playTracks(songs);
 };
 const sourceList = computed(() => MediaService.getSourceList());
 </script>

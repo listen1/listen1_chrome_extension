@@ -320,10 +320,12 @@ const MediaService = {
   },
 
   async mergePlaylist(masterPlaylistId: string, branchPlaylistId: string) {
-    console.log(masterPlaylistId, branchPlaylistId);
     const branchPlaylist = await myplaylist.getPlaylistById(branchPlaylistId);
-
     await myplaylist.addTracksToMyplaylist(masterPlaylistId, branchPlaylist.tracks);
+  },
+
+  async bootstrapTrackAsync(track: any) {
+    return new Promise((res, rej) => this.bootstrapTrack(track, res, rej));
   },
 
   bootstrapTrack(track: any, playerSuccessCallback: (res?: unknown) => unknown, playerFailCallback: (res?: unknown) => unknown) {
