@@ -8,11 +8,12 @@ import { onMounted, watch } from 'vue';
 import whiteStyle from './assets/css/iparanoid.css';
 import blackStyle from './assets/css/origin.css';
 import usePlayer from './composition/player';
-import useSettings from './composition/settings';
+import useSettings, { migrateSettings } from './composition/settings';
 import { addPlayerListener, getPlayer } from './services/bridge';
 import Home from './views/Home.vue';
 import { dbMigrate } from './services/DBService';
 if (!localStorage.getItem('V3_MIGRATED')) {
+  migrateSettings();
   dbMigrate();
 }
 const mode = 'front';
