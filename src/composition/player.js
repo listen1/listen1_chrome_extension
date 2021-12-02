@@ -75,17 +75,20 @@ export class PlayerEventListener {
     } else if (name === 'custom:playlist') {
       const { playlist } = params;
       player.playlist = playlist;
+      playlist.forEach((track) => (track.playlist = 'current'));
 
       // save playlist
-      playlist.forEach((track) => (track.playlist = 'current'));
-      iDB.Playlists.put({
-        id: 'current',
-        title: 'current',
-        cover_img_url: '',
-        type: 'current',
-        order: playlist.map((i) => i.id)
+      await iDB.transaction('rw', [iDB.Tracks, iDB.Playlists], async () => {
+        await iDB.Playlists.put({
+          id: 'current',
+          title: 'current',
+          cover_img_url: '',
+          type: 'current',
+          order: playlist.map((i) => i.id)
+        });
+        await iDB.Tracks.where('playlist').equals('current').delete();
+        await iDB.Tracks.bulkPut(playlist);
       });
-      iDB.Tracks.bulkPut(playlist);
     } else if (name === 'timeupdate') {
       player.currentDuration = formatTime(params.duration);
       player.currentPosition = formatTime(params.position);

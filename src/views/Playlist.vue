@@ -141,7 +141,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
 import { l1Player } from '../services/l1_player';
-import { onMounted, inject } from 'vue';
+import { onMounted, inject,toRaw } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 import MediaService from '../services/MediaService';
@@ -187,15 +187,15 @@ onMounted(async () => {
   await refreshPlaylist();
 });
 const play = (song) => {
-  l1Player.addTrack(song);
+  l1Player.addTrack(toRaw(song));
   l1Player.playById(song.id);
 };
 const addToPlay = (song) => {
-  l1Player.addTrack(song);
+  l1Player.addTrack(toRaw(song));
   notyf.success(t('_ADD_TO_QUEUE_SUCCESS'));
 };
 const playMylist = (listId) => {
-  l1Player.playTracks(songs);
+  l1Player.playTracks(toRaw(songs));
   list_id = listId;
 };
 const showPlaylist = (playlistId) => {
@@ -229,8 +229,8 @@ const removeSongFromPlaylist = async (track_id, list_id) => {
   await MediaService.removeTrackFromMyPlaylist(track_id, list_id);
   notyf.success(t('_REMOVE_SONG_FROM_PLAYLIST_SUCCESS'));
 };
-const addMylist = () => {
-  l1Player.addTracks(songs);
+const addMylist = async () => {
+  await l1Player.addTracks(toRaw(songs));
   notyf.success(t('_ADD_TO_QUEUE_SUCCESS'));
 };
 const onPlaylistSongDrop = async (list_id, song, event) => {
