@@ -113,10 +113,8 @@ let isMac = $ref(false);
 const toggleNowPlaying = () => {
   if (overlay.type != 'track') {
     setOverlayType('track');
-    player.enableLyric = true;
   } else {
     setOverlayType('');
-    player.enableLyric = false;
   }
 };
 

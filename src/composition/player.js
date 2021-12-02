@@ -4,11 +4,11 @@ import { parseLyric, calculateLine } from '../services/lyric';
 import { isElectron, smoothScrollTo } from '../provider/lowebutil';
 import iDB from '../services/DBService';
 import useSettings, { getSetting } from '../composition/settings';
+import useOverlay from '../composition/overlay';
 
 const player = reactive({
   playlist: [],
   isPlaying: false,
-  enableLyric: false,
   lyricArray: [],
   _lyricArrayIndex: -1,
   lyricLineNumber: -1,
@@ -103,7 +103,10 @@ export class PlayerEventListener {
       player.currentDuration = formatTime(params.duration);
       player.currentPosition = formatTime(params.position);
       player.myProgress = (params.position / params.duration) * 100;
-      if (!player.enableLyric) {
+      const { overlay } = useOverlay();
+      const { settings } = useSettings();
+
+      if (overlay.type !== 'track' && !settings.enableLyricFloatingWindow) {
         return;
       }
 
