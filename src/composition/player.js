@@ -57,7 +57,10 @@ export class PlayerEventListener {
       // save now playing
       savePlayerSettings();
 
-      // clear lyric'
+      player.position = 0;
+      player.myProgress = 0;
+
+      // clear lyric
       player.lyricArray = [];
       player._lyricArrayIndex = -1;
       player.lyricLineNumber = -1;

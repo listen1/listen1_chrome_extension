@@ -113,6 +113,7 @@ class l1PlayerProto {
     await this._play(track);
   }
   async _play(track?: Track, playDirection = 1, tryCount = 1) {
+    this._audio.pause();
     // raw play method, internal usage only
     if (!track) {
       return;
