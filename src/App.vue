@@ -40,6 +40,7 @@ const initPlayer = async () => {
   const currentPlaylist = await iDB.Playlists.get({ id: 'current' });
   const localCurrentPlaying = await iDB.Tracks.where('playlist').equals('current').toArray();
   const tracks = currentPlaylist.order.map((id) => localCurrentPlaying.find((track) => track.id == id));
+  const dbSettings = await iDB.Settings.where('key').equals('playerSettings').toArray();
 
   tracks.forEach((i) => {
     i.disabled = false;
@@ -47,7 +48,6 @@ const initPlayer = async () => {
 
   l1Player.addTracks(tracks);
 
-  const dbSettings = await iDB.Settings.where('key').equals('playerSettings').toArray();
 
   let playerSettings = {};
   if (dbSettings.length > 0) {
