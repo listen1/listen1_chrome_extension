@@ -9,7 +9,7 @@ import blackStyle from './assets/css/origin.css';
 import useSettings from './composition/settings';
 import Home from './views/Home.vue';
 import iDB, { dbMigrate } from './services/DBService';
-import {PlayerEventListener} from './composition/player';
+import { PlayerEventListener } from './composition/player';
 import { l1Player } from './services/l1_player';
 import { initMediaSession, MediaSessionEventListener } from './services/media_session';
 
@@ -17,7 +17,7 @@ if (!localStorage.getItem('V3_MIGRATED')) {
   dbMigrate();
 }
 
-const { settings, loadSettings, getSettingsAsync } = useSettings();
+const { settings, loadSettings } = useSettings();
 
 function applyThemeCSS() {
   let cssStyle = '';
@@ -35,7 +35,6 @@ const initPlayer = async () => {
   if ('mediaSession' in navigator) {
     l1Player.addEventListener(new MediaSessionEventListener());
   }
-  const settings = await getSettingsAsync();
 
   // load local storage settings
   const currentPlaylist = await iDB.Playlists.get({ id: 'current' });
@@ -47,10 +46,20 @@ const initPlayer = async () => {
   });
 
   l1Player.addTracks(tracks);
-  l1Player.setLoopMode(settings.playerSettings.playmode);
-  l1Player.setVolume(settings.playerSettings.volume / 100);
-  if (settings.playerSettings.nowplaying_track_id !== undefined) {
-    l1Player.loadById(settings.playerSettings.nowplaying_track_id);
+
+  const dbSettings = await iDB.Settings.where('key').equals('playerSettings').toArray();
+
+  let playerSettings = {};
+  if (dbSettings.length > 0) {
+    playerSettings = dbSettings[0].value;
+  } else {
+    playerSettings = settings.playerSettings;
+  }
+
+  l1Player.setLoopMode(playerSettings.playmode);
+  l1Player.setVolume(playerSettings.volume / 100);
+  if (playerSettings.nowplaying_track_id !== undefined) {
+    l1Player.loadById(playerSettings.nowplaying_track_id);
   }
 };
 
