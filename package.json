@@ -41,7 +41,7 @@
     "vue-feather": "^2.0.0-rc.1",
     "vue-i18n": "9.1.9",
     "vue-router": "^4.0.12",
-    "vue-tsc": "^0.29.3"
+    "vue-tsc": "^0.29.8"
   },
   "browserslist": [
     "last 8 chrome versions",
