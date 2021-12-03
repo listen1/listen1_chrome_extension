@@ -27,6 +27,9 @@ export function initMediaSession() {
   });
   mediaSession.setActionHandler('seekto', (details) => {
     const { seekTime } = details;
+    if (!seekTime) {
+      return;
+    }
     l1Player.seek(seekTime / l1Player.getDuration());
   });
   mediaSession.setActionHandler('nexttrack', () => {
@@ -38,7 +41,7 @@ export function initMediaSession() {
 }
 
 export class MediaSessionEventListener {
-  async onEvent(name, params) {
+  async onEvent(name: string, params: any) {
     if ('mediaSession' in navigator === false) {
       return;
     }
