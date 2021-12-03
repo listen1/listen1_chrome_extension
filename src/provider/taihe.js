@@ -1,5 +1,4 @@
 import axios from 'axios';
-import concat from 'async-es/concat';
 import forge from 'node-forge';
 import { getParameterByName } from './lowebutil';
 import MusicResource from './music_resource';
@@ -42,21 +41,18 @@ export default class taihe extends MusicResource {
     return track;
   }
 
-  static th_render_tracks(url, page, callback) {
+  static async th_render_tracks(url, page) {
     const list_id = getParameterByName('list_id', url).split('_').pop();
-    axiosTH
-      .get('/tracklist/info', {
-        params: {
-          id: list_id,
-          pageNo: page,
-          pageSize: 100
-        }
-      })
-      .then((response) => {
-        const data = response.data.data.trackList;
-        const tracks = data.map(this.th_convert_song);
-        return callback(null, tracks);
-      });
+    const response = await axiosTH.get('/tracklist/info', {
+      params: {
+        id: list_id,
+        pageNo: page,
+        pageSize: 100
+      }
+    });
+    const data = response.data.data.trackList;
+    const tracks = data.map(this.th_convert_song);
+    return tracks;
   }
 
   static async search(url) {
@@ -114,7 +110,7 @@ export default class taihe extends MusicResource {
     const total = data.trackCount;
     const page = Math.ceil(total / 100);
     const page_array = Array.from({ length: page }, (v, k) => k + 1);
-    const tracks = await concat(page_array, (item, callback) => this.th_render_tracks(url, item, callback));
+    const tracks = (await Promise.all(page_array.map(page => this.th_render_tracks(url, page)))).flat();
     return { tracks, info };
   }
 
@@ -304,5 +300,5 @@ export default class taihe extends MusicResource {
     return `https://music.taihe.com`;
   }
 
-  static logout() {}
+  static logout() { }
 }

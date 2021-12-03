@@ -1,5 +1,4 @@
 import Dexie from 'dexie';
-import { migrateSettings } from '../composition/settings';
 
 interface MODEL {
   new (): unknown;
@@ -125,7 +124,6 @@ export function dbMigrate() {
   const localmusicPlaylist = JSON.parse(localStorage.getItem('lmplaylist_reserve') || '{}');
   tracks = localmusicPlaylist['tracks'] || [];
   migratePlaylist(tracks, 'lmplaylist_reserve', '本地音乐', 'local');
-  migrateSettings();
   localStorage.setItem('V3_MIGRATED', 'true');
 }
 

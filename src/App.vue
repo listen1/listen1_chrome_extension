@@ -6,7 +6,8 @@
 import { onMounted, watch } from 'vue';
 import whiteStyle from './assets/css/iparanoid.css';
 import blackStyle from './assets/css/origin.css';
-import useSettings from './composition/settings';
+import useSettings, { migrateSettings } from './composition/settings';
+
 import Home from './views/Home.vue';
 import iDB, { dbMigrate } from './services/DBService';
 import { PlayerEventListener } from './composition/player';
@@ -14,6 +15,7 @@ import { l1Player } from './services/l1_player';
 import { initMediaSession, MediaSessionEventListener } from './services/media_session';
 
 if (!localStorage.getItem('V3_MIGRATED')) {
+  migrateSettings();
   dbMigrate();
 }
 

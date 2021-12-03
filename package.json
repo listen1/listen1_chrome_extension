@@ -19,7 +19,6 @@
     "@typescript-eslint/eslint-plugin": "^5.3.1",
     "@typescript-eslint/parser": "^5.3.1",
     "@vitejs/plugin-vue": "^1.10.0",
-    "async-es": "^3.2.2",
     "axios": "^0.24.0",
     "browserslist": "^4.17.6",
     "cross-env": "^7.0.3",
@@ -40,7 +39,7 @@
     "vue-feather": "^2.0.0-rc.1",
     "vue-i18n": "9.1.9",
     "vue-router": "^4.0.12",
-    "vue-tsc": "^0.29.3"
+    "vue-tsc": "^0.29.8"
   },
   "browserslist": [
     "last 8 chrome versions",
