@@ -1,23 +1,30 @@
-export function parseLyric(lyric, tlyric) {
+interface LyricLine {
+  index: number;
+  seconds: number;
+  translationFlag: boolean;
+  lineNumber: number;
+  content: string;
+}
+export function parseLyric(lyric: string, tlyric: string) {
   const lines = lyric.split('\n');
-  let result = [];
-  const timeResult = [];
+  let result: LyricLine[] = [];
+  const timeResult: LyricLine[] = [];
 
   if (typeof tlyric !== 'string') {
     tlyric = '';
   }
   const linesTrans = tlyric.split('\n');
-  const resultTrans = [];
-  const timeResultTrans = [];
+  const resultTrans: LyricLine[] = [];
+  const timeResultTrans: LyricLine[] = [];
   if (tlyric === '') {
     linesTrans.splice(0);
   }
 
-  const process = (result, timeResult, translationFlag) => (line, index) => {
+  const process = (result: LyricLine[], timeResult: LyricLine[], translationFlag: boolean) => (line: string, index: number) => {
     const tagReg = /\[\D*:([^\]]+)\]/g;
     const tagRegResult = tagReg.exec(line);
     if (tagRegResult) {
-      const lyricObject = {};
+      const lyricObject: LyricLine = <LyricLine>{};
       lyricObject.seconds = 0;
       [lyricObject.content] = tagRegResult;
       result.push(lyricObject);
@@ -29,7 +36,7 @@ export function parseLyric(lyric, tlyric) {
     let timeRegResult = null;
     // eslint-disable-next-line no-cond-assign
     while ((timeRegResult = timeReg.exec(line)) !== null) {
-      const htmlUnescapes = {
+      const htmlUnescapes: { [key: string]: string } = {
         '&amp;': '&',
         '&lt;': '<',
         '&gt;': '>',
@@ -37,8 +44,8 @@ export function parseLyric(lyric, tlyric) {
         '&#39;': "'",
         '&apos;': "'"
       };
-      timeResult.push({
-        content: line.replace(timeRegResult[0], '').replace(/&(?:amp|lt|gt|quot|#39|apos);/g, (match) => htmlUnescapes[match]),
+      timeResult.push(<LyricLine>{
+        content: line.replace(timeRegResult[0], '').replace(/&(?:amp|lt|gt|quot|#39|apos);/g, (match: string) => htmlUnescapes[match] || ''),
         seconds:
           parseInt(timeRegResult[1], 10) * 60 * 1000 + // min
           parseInt(timeRegResult[2], 10) * 1000 + // sec
@@ -82,7 +89,7 @@ export function parseLyric(lyric, tlyric) {
   return result;
 }
 
-export function calculateLine(currentSeconds, lyricArray, lyricLineNumber, lyricLineNumberTrans, lastIndex) {
+export function calculateLine(currentSeconds: number, lyricArray: LyricLine[], lyricLineNumber: number, lyricLineNumberTrans: number, lastIndex: number) {
   let lastObject = null;
   let lastObjectTrans = null;
   let index = lastIndex;
