@@ -95,11 +95,10 @@ async function getSettingsAsync() {
   }, {});
   return dbRes;
 }
+export function getSetting(key: settingsKey) {
+  return settings[key];
+}
 function useSettings() {
   return { settings, setSettings, loadSettings, saveSettingsToDB, getSettingsAsync };
 }
-loadSettings();
-watch(settings, (_, newSetting) => {
-  setSettings(newSetting);
-});
 export default useSettings;

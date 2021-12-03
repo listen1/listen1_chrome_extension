@@ -84,7 +84,7 @@
         <div class="m-pbar volume">
           <draggable-bar
             id="volumebar"
-            :progress="volume"
+            :progress="volume*100"
             @update-progress="changeVolume"
             @commit-progress="commitVolume"
           ></draggable-bar>
@@ -118,21 +118,18 @@
         </a>
       </div>
       <ul class="menu-list">
-        <li
+        <DragDropZone
           v-for="(song, index) in playlist"
-          id="song song.id "
+          :id="'song_'+song.id "
           :key="song.id"
-          ng-class="{ playing: currentPlaying.id == song.id }"
+          :class="{ playing: currentPlaying.id == song.id ,'even': index % 2 === 0, 'odd': index % 2 !== 0}"
+          dragtype="application/listen1-song"
+          :dragobject="song"
+          :dragtitle="song.title"
+          :sortable="true"
           @mouseenter="song.highlight=true"
           @mouseleave="song.highlight=undefined"
-          :class="{'even': index % 2 === 0, 'odd': index % 2 !== 0 }"
-          draggable="true"
-          drag-drop-zone
-          drag-zone-object="song"
-          drag-zone-title="song.title"
-          sortable="true"
-          drag-zone-type="'application/listen1-song'"
-          drop-zone-ondrop="onCurrentPlayingSongDrop(song, arg1, arg2, arg3)"
+          @drop="onCurrentPlayingSongDrop(song, $event)"
         >
           <div class="song-status-icon">
             <vue-feather v-show="currentPlaying.id == song.id" type="play"></vue-feather>
@@ -152,21 +149,21 @@
           <div class="tools">
             <span
               v-show="song.highlight"
-              @click="removeTrack(index)"
+              @click="removeTrack(song)"
               class="icon li-del"
             />
             <span v-show="song.highlight" @click="openUrl(song.source_url)" class="icon li-link" />
         
           </div>
           <!-- <div class="song-time">00:00</div> -->
-        </li>
+        </DragDropZone>
       </ul>
     </div>
   </div>
 </template>
 <script setup>
 
-import { inject } from 'vue';
+import { inject,toRaw } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 import DraggableBar from '../components/DraggableBar.vue';
@@ -175,6 +172,7 @@ import useOverlay from '../composition/overlay';
 import { l1Player } from '../services/l1_player';
 import { isElectron } from '../provider/lowebutil';
 import useSettings from '../composition/settings';
+import DragDropZone from '../components/DragDropZone.vue';
 
 const { t } = useI18n();
 const { player } = usePlayer();
@@ -191,12 +189,6 @@ const changePlaymode = () => {
   const newPlaymode = (playmode + 1) % playmodeCount;
   player.playmode = newPlaymode;
   l1Player.setLoopMode(newPlaymode);
-
-  const task = async () => {
-    const settings = await getSettingsAsync();
-    saveSettingsToDB({playerSettings: {...settings.playerSettings, playmode: newPlaymode}});
-  };
-  task();
 };
 
 const showPlaylist = (playlistId) => {
@@ -229,7 +221,7 @@ const changeProgress = (progress) => {
   l1Player.seek(progress);
 };
 const changeVolume = (progress) => {
-  l1Player.setVolume(progress * 100);
+  l1Player.setVolume(progress);
   l1Player.unmute();
 };
 const commitVolume = (progress) => {
@@ -248,13 +240,19 @@ const toggleMuteStatus = () => {
 const playFromPlaylist = (song) => {
   l1Player.playById(song.id);
 };
-const removeTrack = (index) => {
-  l1Player.removeTrack(index);
+const removeTrack = (track) => {
+  l1Player.removeTrack(track);
 };
 const openUrl = (url) => {
   window.open(url, '_blank').focus();
 };
-
+const onCurrentPlayingSongDrop = (song,event) => {
+  const { data, dragType, direction } = event;
+  if (dragType === 'application/listen1-song') {
+    // insert song
+    l1Player.insertTrack(data, toRaw(song), direction);
+  }
+}
 function getCSSStringFromSetting(setting) {
   let { backgroundAlpha } = setting;
   if (backgroundAlpha === 0) {
@@ -287,12 +285,12 @@ const toggleLyricFloatingWindow = () => {
   window.api?.sendControl(message, getCSSStringFromSetting(settings.floatWindowSetting));
 };
 
-let playlist = $computed(() => player.playlist);
+let playlist = $computed(() => player.playlist.value);
 let isPlaying = $computed(() => player.isPlaying);
 let myProgress = $computed(() => player.myProgress);
 let currentDuration = $computed(() => player.currentDuration);
 let currentPosition = $computed(() => player.currentPosition);
-let currentPlaying = $computed(() => player.currentPlaying);
+let currentPlaying = $computed(() => player.currentPlaying || {});
 let volume = $computed(() => player.volume);
 let mute = $computed(() => player.mute);
 

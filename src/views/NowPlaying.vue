@@ -15,8 +15,8 @@
       />
       <div
         class="translate-switch"
-        ng-click="toggleLyricTranslation()"
-        ng-class="{selected: settings.enableLyricTranslation}"
+        @click="toggleLyricTranslation()"
+        :class="{selected: settings.enableLyricTranslation}"
       >译</div>
       <div class="close" :class="isMac ? 'mac' : ''" @click="toggleNowPlaying()">
         <vue-feather type="chevron-down"></vue-feather>
@@ -106,6 +106,7 @@ const { t } = useI18n();
 const { player } = usePlayer();
 let { overlay, setOverlayType } = useOverlay();
 const router = useRouter();
+const { settings, setSettings} = useSettings();
 
 let isMac = $ref(false);
 
@@ -121,12 +122,13 @@ const showPlaylist = (playlistId) => {
   router.push('/playlist/' + playlistId);
 };
 
-let lyricArray = $computed(() => player.lyricArray);
+const toggleLyricTranslation = () => setSettings({ enableLyricTranslation: !settings.enableLyricTranslation });
+
+let lyricArray = $computed(() => player.lyricArray.value);
 let lyricLineNumber = $computed(() => player.lyricLineNumber);
 let lyricLineNumberTrans = $computed(() => player.lyricLineNumberTrans);
 
-let currentPlaying = $computed(() => player.currentPlaying);
+let currentPlaying = $computed(() => player.currentPlaying || {});
 let lyricFontWeight = $computed(() => settings.lyricFontWeight);
 let lyricFontSize = $computed(() => settings.lyricFontSize);
-const { settings } = useSettings();
 </script>
