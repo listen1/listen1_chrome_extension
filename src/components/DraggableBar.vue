@@ -1,6 +1,6 @@
 <template>
-  <div class="playbar-clickable">
-    <div :id="id" class="barbg" @mousedown="onMyMouseDown">
+  <div :id="id" class="playbar-clickable" @mousedown="onMyMouseDown">
+    <div  class="barbg" >
       <div
         class="cur"
         :style="{ width: changingProgress ? cprogress * 100 + '%' : progress + '%' }"
@@ -65,4 +65,13 @@ const onMyMouseDown = (event: MouseEvent) => {
 </script>
 
 <style>
+.playbar-clickable {
+    cursor: pointer;
+    height: 15px;
+    padding-top: 6px;
+    box-sizing: border-box;
+}
+.playbar-clickable .barbg {
+  margin-top:0;
+}
 </style>

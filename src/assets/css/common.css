@@ -1278,11 +1278,11 @@ svg.searchspinner {
 }
 
 .footer .main-info .detail .playbar {
-  width: 100%;
+  margin: 0 10px;
 }
 
 .footer .main-info .detail .playbar .barbg {
-  margin: 8px 10px 0 10px;
+
   height: 3px;
   background: var(--footer-player-bar-background-color);
 }
@@ -1537,18 +1537,18 @@ svg.searchspinner {
   flex: 1;
 }
 
+.footer .right-control .volume-ctrl .m-pbar .playbar-clickable {
+  width: 140px;
+}
+
 .footer .right-control .volume-ctrl .barbg {
   height: 3px;
-
   background: var(--volume-bar-background-color);
-  margin-top: 7px;
-  width: 140px;
 }
 
 .footer .right-control .volume-ctrl .barbg .cur {
   height: 100%;
   background: var(--volume-bar-current-background-color);
-
   position: relative;
 }
 
