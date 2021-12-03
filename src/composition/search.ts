@@ -29,7 +29,7 @@ async function search() {
   document.querySelector('.site-wrapper-innerd')?.scrollTo({ top: 0 });
 }
 watch(condition, search);
-function useSearch(): { [key: string]: unknown } {
+function useSearch() {
   return { condition, result };
 }
 

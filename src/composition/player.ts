@@ -1,15 +1,39 @@
 import { reactive } from 'vue';
 import MediaService from '../services/MediaService';
-import { parseLyric, calculateLine } from '../services/lyric';
+import { parseLyric, calculateLine, LyricLine } from '../services/lyric';
 import { isElectron, smoothScrollTo } from '../provider/lowebutil';
 import iDB from '../services/DBService';
-import useSettings, { getSetting } from '../composition/settings';
-import useOverlay from '../composition/overlay';
+import useSettings, { getSetting } from './settings';
+import useOverlay from './overlay';
+
+interface Track {
+  id: string;
+  album: string;
+  album_id: string;
+  artist: string;
+  artist_id: string;
+  img_url: string;
+  options?: string;
+  source: string;
+  source_url: string;
+  title: string;
+  disabled?: boolean;
+  bitrate?: string;
+  platform?: string;
+  url?: string;
+}
+
+interface TrackRecord {
+  id: string;
+  playlist: string;
+}
+
+type NullableTrack = Track | null;
 
 const player = reactive({
-  playlist: { value: [] }, // array is not reactive
+  playlist: { value: <Track[]>[] }, // array is not reactive
   isPlaying: false,
-  lyricArray: { value: [] },
+  lyricArray: { value: <LyricLine[]>[] },
   _lyricArrayIndex: -1,
   lyricLineNumber: -1,
   lyricLineNumberTrans: -1,
@@ -18,7 +42,7 @@ const player = reactive({
   changingProgress: false,
   currentDuration: '0:00',
   currentPosition: '0:00',
-  currentPlaying: null,
+  currentPlaying: <NullableTrack>null,
   mute: false,
   // state below is loaded from storage
   playmode: 0,
@@ -36,14 +60,14 @@ function savePlayerSettings() {
 
   saveSettingsToDB({ playerSettings: newPlayerSettings });
 }
-function formatTime(secs) {
+function formatTime(secs: number) {
   const minutes = Math.floor(secs / 60) || 0;
   const seconds = Math.round(secs - minutes * 60) || 0;
 
   return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
 }
 export class PlayerEventListener {
-  async onEvent(name, params) {
+  async onEvent(name: string, params: any) {
     if (name === 'playing') {
       player.isPlaying = true;
     } else if (name === 'pause') {
@@ -57,7 +81,6 @@ export class PlayerEventListener {
       // save now playing
       savePlayerSettings();
 
-      player.position = 0;
       player.myProgress = 0;
 
       // clear lyric
@@ -76,7 +99,7 @@ export class PlayerEventListener {
         window.api?.sendTrackPlayingNow(track);
       }
       // update scroll position in current list
-      document.getElementById(`song_${track.id}`).scrollIntoView({ behavior: 'smooth', block: 'center' });
+      document.getElementById(`song_${track.id}`)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
     } else if (name === 'custom:nowplaying_loaded') {
       if (!player.currentPlaying) {
         return;
@@ -88,7 +111,7 @@ export class PlayerEventListener {
     } else if (name === 'custom:playlist') {
       const { playlist } = params;
       player.playlist = { value: playlist };
-      playlist.forEach((track) => (track.playlist = 'current'));
+      playlist.forEach((track: TrackRecord) => (track.playlist = 'current'));
 
       // save playlist
       await iDB.transaction('rw', [iDB.Tracks, iDB.Playlists], async () => {
@@ -97,7 +120,7 @@ export class PlayerEventListener {
           title: 'current',
           cover_img_url: '',
           type: 'current',
-          order: playlist.map((i) => i.id)
+          order: playlist.map((i: TrackRecord) => i.id)
         });
         await iDB.Tracks.where('playlist').equals('current').delete();
         await iDB.Tracks.bulkPut(playlist);
@@ -124,10 +147,17 @@ export class PlayerEventListener {
       if (lineNumber != player.lyricLineNumber) {
         if (player.lyricLineNumber != -1) {
           const lineElement = document.querySelector(`.page .playsong-detail .detail-songinfo .lyric p[data-line="${player.lyricLineNumber}"]`);
-          const windowHeight = document.querySelector('.page .playsong-detail .detail-songinfo .lyric').offsetHeight;
+          if (!lineElement) {
+            return;
+          }
+          const windowElement = document.querySelector('.page .playsong-detail .detail-songinfo .lyric');
+          if (!windowElement) {
+            return;
+          }
+          const windowHeight = (windowElement as HTMLElement).offsetHeight;
 
           const adjustOffset = 30;
-          const offset = lineElement.offsetTop - windowHeight / 2 + adjustOffset;
+          const offset = (lineElement as HTMLElement).offsetTop - windowHeight / 2 + adjustOffset;
           smoothScrollTo(document.querySelector('.lyric'), offset, 500);
 
           if (isElectron()) {

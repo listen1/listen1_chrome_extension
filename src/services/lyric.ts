@@ -1,11 +1,11 @@
-interface LyricLine {
+export interface LyricLine {
   index: number;
   seconds: number;
   translationFlag: boolean;
   lineNumber: number;
   content: string;
 }
-export function parseLyric(lyric: string, tlyric: string) {
+export function parseLyric(lyric: string, tlyric: string): LyricLine[] {
   const lines = lyric.split('\n');
   let result: LyricLine[] = [];
   const timeResult: LyricLine[] = [];

@@ -6,7 +6,7 @@ const setOverlayType = (newType: string) => {
   overlay.type = newType;
 };
 
-function useOverlay(): { [key: string]: unknown } {
+function useOverlay() {
   return { overlay, setOverlayType };
 }
 

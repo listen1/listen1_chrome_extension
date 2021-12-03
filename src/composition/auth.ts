@@ -40,7 +40,7 @@ const logout = (source: string) => {
   setMusicAuth(source, {});
   MediaService.logout(source);
 };
-function useAuth(): { [key: string]: any } {
+function useAuth() {
   return { getMusicAuth, musicAuth, is_login, openLogin, refreshAuthStatus, loginSourceList, logout };
 }
 

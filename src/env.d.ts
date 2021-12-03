@@ -18,6 +18,9 @@ declare module 'global' {
         getCookie: (request: CookiesGetFilter) => Promise<Cookie[]>;
         setCookie: (cookie: Cookie) => Promise<void>;
         removeCookie: (url: string, name: string) => void;
+        sendLyric: (params: any) => void;
+        sendTrackPlayingNow: (params: any) => void;
+
         session: Session;
         ipcRenderer: IpcRenderer;
         platform: NodeJS.Platform;
