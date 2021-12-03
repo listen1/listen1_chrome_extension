@@ -1242,13 +1242,15 @@ svg.searchspinner {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
-  margin: 3px 60px 0 60px;
+  margin: 4px 60px 0 60px;
+  height: 20px;
 }
 
 .footer .main-info .detail .more-info {
   padding: 0 10px;
   display: flex;
   color: var(--text-subtitle-color);
+  height: 17px;
 }
 
 .footer .main-info .detail .more-info .singer {
@@ -1299,7 +1301,9 @@ svg.searchspinner {
   right: -2px;
   top: -5px;
 }
-
+.footer .main-info .detail .playbar .playbar-clickable {
+  cursor: pointer;
+}
 .footer .main-info .detail .playbar .playbar-clickable:hover .barbg .cur .btn {
   width: 10px;
   height: 10px;
