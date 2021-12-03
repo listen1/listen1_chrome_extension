@@ -218,7 +218,7 @@ svg {
 .sidebar ul li .sidebar-block {
   display: flex;
   align-items: center;
-  line-height: 28px;
+  height: 28px;
   padding-left: 12px;
   margin: 3px 0;
   color: var(--text-default-color);
