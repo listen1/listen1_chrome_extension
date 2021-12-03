@@ -124,7 +124,7 @@ const showPlaylist = (playlistId) => {
 
 const toggleLyricTranslation = () => setSettings({ enableLyricTranslation: !settings.enableLyricTranslation });
 
-let lyricArray = $computed(() => player.lyricArray);
+let lyricArray = $computed(() => player.lyricArray.value);
 let lyricLineNumber = $computed(() => player.lyricLineNumber);
 let lyricLineNumberTrans = $computed(() => player.lyricLineNumberTrans);
 

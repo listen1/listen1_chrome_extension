@@ -7,9 +7,9 @@ import useSettings, { getSetting } from '../composition/settings';
 import useOverlay from '../composition/overlay';
 
 const player = reactive({
-  playlist: [],
+  playlist: { value: [] }, // array is not reactive
   isPlaying: false,
-  lyricArray: [],
+  lyricArray: { value: [] },
   _lyricArrayIndex: -1,
   lyricLineNumber: -1,
   lyricLineNumberTrans: -1,
@@ -61,14 +61,14 @@ export class PlayerEventListener {
       player.myProgress = 0;
 
       // clear lyric
-      player.lyricArray = [];
+      player.lyricArray = { value: [] };
       player._lyricArrayIndex = -1;
       player.lyricLineNumber = -1;
       player.lyricLineNumberTrans = -1;
       const { lyric, tlyric } = await MediaService.getLyric(track.id, track.album_id, track.lyric_url, track.tlyric_url);
 
       if (lyric) {
-        player.lyricArray = parseLyric(lyric, tlyric);
+        player.lyricArray = { value: parseLyric(lyric, tlyric) };
       }
 
       if (isElectron()) {
@@ -87,7 +87,7 @@ export class PlayerEventListener {
       player.currentPlaying.url = url;
     } else if (name === 'custom:playlist') {
       const { playlist } = params;
-      player.playlist = playlist;
+      player.playlist = { value: playlist };
       playlist.forEach((track) => (track.playlist = 'current'));
 
       // save playlist
@@ -115,7 +115,7 @@ export class PlayerEventListener {
 
       const { lineNumber, transLineNumber, index } = calculateLine(
         params.position,
-        player.lyricArray,
+        player.lyricArray.value,
         player.lyricLineNumber,
         player.lyricLineNumberTrans,
         player._lyricArrayIndex
@@ -132,8 +132,8 @@ export class PlayerEventListener {
 
           if (isElectron()) {
             window.api?.sendLyric({
-              lyric: player.lyricArray[lineNumber].content,
-              tlyric: getSetting('enableLyricTranslation') ? player.lyricArray[transLineNumber].content : ''
+              lyric: player.lyricArray.value[lineNumber].content,
+              tlyric: getSetting('enableLyricTranslation') && player.lyricArray.value[transLineNumber] ? player.lyricArray.value[transLineNumber].content : ''
             });
           }
         }

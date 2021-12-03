@@ -1,20 +1,8 @@
 import { getParameterByName } from './lowebutil';
 import iDB from '../services/DBService';
 import EventService from '../services/EventService';
-
+import { arrayMove } from '../utils';
 export default class MyPlaylist {
-  static array_move(arr, old_index, new_index) {
-    // https://stackoverflow.com/questions/5306680/move-an-array-element-from-one-array-position-to-another
-    if (new_index >= arr.length) {
-      let k = new_index - arr.length + 1;
-      while (k > 0) {
-        k -= 1;
-        arr.push(undefined);
-      }
-    }
-    arr.splice(new_index, 0, arr.splice(old_index, 1)[0]);
-    return arr; // for testing
-  }
   static getPlaylistObjectKey(playlist_type) {
     let key = '';
     if (playlist_type === 'my') {
@@ -82,7 +70,7 @@ export default class MyPlaylist {
           insertIndex -= 1;
         }
         const offset = direction === 'top' ? 0 : 1;
-        this.array_move(order.value, index, insertIndex + offset);
+        arrayMove(order.value, index, insertIndex + offset);
         return order;
       });
   }
@@ -174,7 +162,7 @@ export default class MyPlaylist {
       insertIndex -= 1;
     }
     const offset = direction === 'top' ? 0 : 1;
-    this.array_move(playlist.order, index, insertIndex + offset);
+    arrayMove(playlist.order, index, insertIndex + offset);
     iDB.Playlists.put(playlist);
     return playlist;
   }

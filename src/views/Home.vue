@@ -342,9 +342,9 @@ const handleScroll = () => {
     EventService.emit(`scroll:bottom`);
   }
 };
-let playlist = $computed(() => player.playlist);
+let playlist = $computed(() => player.playlist.value);
 let isPlaying = $computed(() => player.isPlaying);
-let lyricArray = $computed(() => player.lyricArray);
+let lyricArray = $computed(() => player.lyricArray.value);
 let lyricLineNumber = $computed(() => player.lyricLineNumber);
 let lyricLineNumberTrans = $computed(() => player.lyricLineNumberTrans);
 let myProgress = $computed(() => player.myProgress);

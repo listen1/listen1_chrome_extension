@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import MediaService from './MediaService';
+import { arrayMove } from '../utils';
 
 interface Track {
   id: string;
@@ -250,8 +251,18 @@ class l1PlayerProto {
     this._emit('custom:playlist', { playlist: this.playlist });
     this._reshuffleIfNeeded();
   }
-  insertTrack(track: Track, to_track: Track, direction: number) {
-    console.log('insertTrack', track, to_track, direction);
+  insertTrack(track: Track, to_track: Track, direction: string) {
+    const index = this.playlist.findIndex((i) => i.id === track.id);
+    let insertIndex = this.playlist.findIndex((i) => i.id === to_track.id);
+    if (index === insertIndex) {
+      return;
+    }
+    if (insertIndex > index) {
+      insertIndex -= 1;
+    }
+    const offset = direction === 'top' ? 0 : 1;
+    arrayMove(this.playlist, index, insertIndex + offset);
+    this._emit('custom:playlist', { playlist: this.playlist });
   }
   removeTrack(track: Track) {
     this.playlist = this.playlist.filter((tr) => tr.id != track.id);
