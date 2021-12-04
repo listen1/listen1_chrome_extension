@@ -61,7 +61,7 @@ function createWindow() {
     },
     //icon: iconPath,
     titleBarStyle,
-    titleBarOverlay: titleStyle,
+    titleBarOverlay: false,
     transparent: transparent,
     vibrancy: 'light',
     frame: false,
