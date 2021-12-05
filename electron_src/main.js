@@ -140,12 +140,6 @@ function createWindow() {
       windowState.height = height;
     }
   });
-  mainWindow.on('maximize', () => {
-    windowState.maximized = true;
-  });
-  mainWindow.on('unmaximize', () => {
-    windowState.maximized = false;
-  });
   // Open the DevTools.
   // mainWindow.webContents.openDevTools()
 
