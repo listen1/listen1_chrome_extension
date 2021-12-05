@@ -66,8 +66,17 @@ export default class localmusic extends MusicResource {
   }
 
   static async lyric(url) {
+    const track_id = getParameterByName('track_id', url);
+    const list_id = 'lmplaylist_reserve';
+    const playlist = await this.getPlaylistById(list_id);
+
+    const track = playlist.tracks.find((item) => item.id === track_id);
+    let lyric = '';
+    if (track.lyrics !== undefined) {
+      [lyric] = track.lyrics;
+    }
     return {
-      lyric: '',
+      lyric,
       tlyric: ''
     };
   }
