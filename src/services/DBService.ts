@@ -89,8 +89,19 @@ iDB.Playlists.get({ id: 'current' }).then((playlist) => {
     iDB.Playlists.put({
       id: 'current',
       title: 'current',
-      cover_img_url: '',
+      cover_img_url: 'images/mycover.jpg',
       type: 'current',
+      order: []
+    });
+  }
+});
+iDB.Playlists.get({ id: 'lmplaylist_reserve' }).then((playlist) => {
+  if (!playlist) {
+    iDB.Playlists.put({
+      id: 'lmplaylist_reserve',
+      title: '本地音乐',
+      cover_img_url: 'images/mycover.jpg',
+      type: 'local',
       order: []
     });
   }

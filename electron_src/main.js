@@ -12,7 +12,7 @@ if (isDev) {
 }
 const { getFloatingWindow, createFloatingWindow, updateFloatingWindow } = require('./float_window');
 
-const theme = store.safeGet('theme');
+const theme = store.get('theme');
 /** @type {{ width: number; height: number; maximized: boolean; zoomLevel: number}} */
 const windowState = store.safeGet('windowState');
 let titleStyle;
@@ -41,7 +41,7 @@ switch (process.platform) {
 }
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
-/** @type {electron.BrowserWindow}*/
+/** @type {Electron.BrowserWindow}*/
 let mainWindow;
 let willQuitApp = false;
 
@@ -61,7 +61,7 @@ function createWindow() {
     },
     //icon: iconPath,
     titleBarStyle,
-    titleBarOverlay: titleStyle,
+    titleBarOverlay: false,
     transparent: transparent,
     vibrancy: 'light',
     frame: false,
@@ -245,7 +245,7 @@ ipcMain.on('floatWindowMoving', (e, { mouseX, mouseY }) => {
   const { x, y } = screen.getCursorScreenPoint();
   floatingWindow?.setPosition(x - mouseX, y - mouseY);
 });
-ipcMain.on("trackPlayingNow", (event, track) => {
+ipcMain.on('trackPlayingNow', (event, track) => {
   if (mainWindow != null) {
     initialTray(mainWindow, track);
   }
@@ -279,7 +279,7 @@ ipcMain.on('chooseLocalFile', async (event, listId) => {
       album_id: `lmalbum_${md.common.album}`,
       source: 'localmusic',
       source_url: '',
-      img_url: imgBase64 ? `data:${md.common.picture?.[0].format}; base64, ${imgBase64}` : 'images/mycover.jpg',
+      img_url: imgBase64 ? `data:${md.common.picture?.[0].format};base64,${imgBase64}` : 'images/mycover.jpg',
       lyrics: md.common.lyrics,
       // url: "lmtrack_"+fp,
       sound_url: `file://${fp}`
@@ -304,8 +304,7 @@ app.on('activate', function () {
   // dock icon is clicked and there are no other windows open.
   if (mainWindow === null) {
     createWindow();
-  }
-  else {
+  } else {
     mainWindow.show();
   }
 });
