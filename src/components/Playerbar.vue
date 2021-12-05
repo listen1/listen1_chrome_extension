@@ -76,7 +76,7 @@
         <span class="icon li-list" @click="togglePlaylist()" />
       </div>
       <div class="volume-ctrl" volume-wheel>
-        <vue-feather class="icon" :type="getVolumeIcon" size="18px" @click="toggleMuteStatus()" />
+        <vue-feather class="icon" :type="volumeIcon" size="18px" @click="toggleMuteStatus()" />
         <div class="m-pbar volume">
           <draggable-bar
             id="volumebar"
@@ -88,7 +88,7 @@
       </div>
       <div v-if="isElectron()" class="lyric-toggle">
         <div
-          @click="toggleLyricFloatingWindow(true)"
+          @click="toggleLyricFloatingWindow()"
           class="lyric-icon"
           :class="{ 'selected': settings.enableLyricFloatingWindow }"
         >词</div>
@@ -153,17 +153,16 @@
   </div>
 </template>
 <script setup>
-
 import { inject, toRaw } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
-import DraggableBar from '../components/DraggableBar.vue';
-import usePlayer from '../composition/player';
-import useOverlay from '../composition/overlay';
-import { l1Player } from '../services/l1_player';
-import { isElectron } from '../provider/lowebutil';
-import useSettings from '../composition/settings';
 import DragDropZone from '../components/DragDropZone.vue';
+import DraggableBar from '../components/DraggableBar.vue';
+import useOverlay from '../composition/overlay';
+import usePlayer from '../composition/player';
+import useSettings from '../composition/settings';
+import { isElectron } from '../provider/lowebutil';
+import { l1Player } from '../services/l1_player';
 
 const { t } = useI18n();
 const { player } = usePlayer();
@@ -183,7 +182,7 @@ const changePlaymode = () => {
 };
 
 const showPlaylist = (playlistId) => {
-  router.push('/playlist/' + playlistId);
+  router.push(`/playlist/${playlistId}`);
 };
 const playPauseToggle = () => {
   l1Player.togglePlayPause();
@@ -229,12 +228,12 @@ const toggleMuteStatus = () => {
   player.mute = !player.mute;
   l1Player.toggleMute();
 };
-let getVolumeIcon = $computed(() => {
+let volumeIcon = $computed(() => {
   if (player.mute) {
     return 'volume-x';
-  } else if (player.volume > 0.5) {
+  } else if (volume > 0.5) {
     return 'volume-2';
-  } else if (player.volume > 0) {
+  } else if (volume > 0) {
     return 'volume-1';
   } else {
     return 'volume';
@@ -247,7 +246,7 @@ const removeTrack = (track) => {
   l1Player.removeTrack(track);
 };
 const openUrl = (url) => {
-  window.open(url, '_blank').focus();
+  window.open(url, '_blank')?.focus();
 };
 const onCurrentPlayingSongDrop = (song, event) => {
   const { data, dragType, direction } = event;
