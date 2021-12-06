@@ -98,7 +98,7 @@ const defaultPlaylists: { [key: string]: any } = {
     type: 'local',
     order: []
   },
-  redheart: {
+  myplaylist_redheart: {
     id: 'myplaylist_redheart',
     title: '我喜欢的音乐',
     cover_img_url: 'images/mycover.jpg',

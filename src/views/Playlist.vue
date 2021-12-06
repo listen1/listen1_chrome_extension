@@ -30,7 +30,7 @@
               </div>
             </div>
             <div
-              v-show="is_mine && !is_local && list_id !='myplaylist_redheart'"
+              v-show="is_mine && !is_local && list_id != 'myplaylist_redheart'"
               class="playlist-button edit-button"
               @click="showModal('EditPlaylist', { list_id: list_id, playlist_title: playlist_title, cover_img_url: cover_img_url })">
               <div class="play-list">
@@ -107,6 +107,9 @@
           @mouseleave="song.options = undefined">
           <div class="title">
             <!-- <a class="disabled" ng-if="song.disabled" ng-click="copyrightNotice()"> song.title </a> -->
+            <vue-feather v-if="!isRedHeart(song.id)" type="heart" size="18" stroke-width="1" stroke="#666666" @click="setRedHeart(toRaw(song), true)" />
+            <vue-feather v-if="isRedHeart(song.id)" type="heart" fill="red" stroke="red" size="18" @click="setRedHeart(toRaw(song), false)" />
+
             <a add-and-play="song" @click="play(song)">{{ song.title }}</a>
           </div>
           <div class="artist">
@@ -141,13 +144,14 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
 import { l1Player } from '../services/l1_player';
-import { onMounted, inject,toRaw } from 'vue';
+import { onMounted, inject, toRaw } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 import MediaService from '../services/MediaService';
 import notyf from '../services/notyf';
 import $event from '../services/EventService';
 import DragDropZone from '../components/DragDropZone.vue';
+import useRedHeart from '../composition/redheart';
 
 const { t } = useI18n();
 const router = useRouter();
@@ -243,7 +247,7 @@ const onPlaylistSongDrop = async (list_id, song, event) => {
   }
 };
 const showModal = inject('showModal');
-
+const {isRedHeart, setRedHeart} = useRedHeart();
 // TODO: avoid to use event bus to refresh state
 // use global ref to keep more clear way to manage state
 $event.on(`playlist:id:${listId}:update`, refreshPlaylist);

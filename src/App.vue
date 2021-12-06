@@ -7,6 +7,7 @@ import { onMounted, watch } from 'vue';
 import whiteStyle from './assets/css/iparanoid.css';
 import blackStyle from './assets/css/origin.css';
 import useSettings, { migrateSettings } from './composition/settings';
+import useRedHeart from './composition/redheart';
 
 import Home from './views/Home.vue';
 import iDB, { dbMigrate } from './services/DBService';
@@ -73,7 +74,12 @@ onMounted(async () => {
   await initPlayer();
   // TODO: diagnose slow loadSetting function
   await loadSettings();
+  
+  const {initRedHeart} = useRedHeart();
+  await initRedHeart();
+
   applyThemeCSS();
+
 });
 watch(settings, applyThemeCSS);
 </script>
