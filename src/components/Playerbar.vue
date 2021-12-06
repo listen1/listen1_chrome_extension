@@ -56,7 +56,7 @@
           {{ currentPlaying.title }}
         </div>
         <div class="more-info">
-          <div class="current">{{ currentPosition }}</div>
+          <div class="current">{{ formatTime(currentPosition) }}</div>
           <div class="singer">
             <a @click="showPlaylist(currentPlaying.artist_id)">{{ currentPlaying.artist }}</a>
             -
@@ -64,10 +64,14 @@
               @click="showPlaylist(currentPlaying.album_id)"
             >{{ currentPlaying.album }}</a>
           </div>
-          <div class="total">{{ currentDuration }}</div>
+          <div class="total">{{ formatTime(currentDuration) }}</div>
         </div>
         <div class="playbar">
-          <draggable-bar id="progressbar" :progress="myProgress" @commit-progress="changeProgress"></draggable-bar>
+          <draggable-bar id="progressbar" 
+            :progress="myProgress"
+            @commit-progress="commitProgress"
+            @update-progress="updateProgress">
+          </draggable-bar>
         </div>
       </div>
     </div>
@@ -163,6 +167,7 @@ import usePlayer from '../composition/player';
 import useSettings from '../composition/settings';
 import { isElectron } from '../provider/lowebutil';
 import { l1Player } from '../services/l1_player';
+import { formatTime } from '../utils';
 
 const { t } = useI18n();
 const { player } = usePlayer();
@@ -207,9 +212,17 @@ const togglePlaylist = () => {
 const clearPlaylist = () => {
   l1Player.clearPlaylist();
 };
-const changeProgress = (progress) => {
+const updateProgress = (progress) => {
+  player.changingProgress = true;
+  player.currentPosition = currentDuration * progress;
+}
+
+const commitProgress = (progress) => {
   l1Player.seek(progress);
+  player.changingProgress = false;
+
 };
+
 const changeVolume = (progress) => {
   l1Player.setVolume(progress);
   l1Player.unmute();
