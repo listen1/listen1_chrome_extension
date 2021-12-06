@@ -1749,10 +1749,12 @@ svg.searchspinner {
 /* widget playlist-filter start */
 
 .playlist-filter {
+  line-height: 38px;
   margin: 0 26px 10px 26px;
 }
 
 .playlist-filter .filter-item {
+  line-height: 20px;
   padding: 5px 15px;
   margin-right: 10px;
 }
