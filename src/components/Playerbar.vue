@@ -30,7 +30,7 @@
       <div v-if="playlist.length > 0" class="cover" @click="toggleNowPlaying()">
         <img
           :src="currentPlaying.img_url"
-          err-src="https://y.gtimg.cn/mediastyle/global/img/album_300.png"
+          @error="showImage($event, 'images/mycover.jpg')"
         />
         <div class="mask">
           <vue-feather type="chevrons-up" />
@@ -299,6 +299,10 @@ const toggleLyricFloatingWindow = () => {
   setSettings({ enableLyricFloatingWindow: !settings.enableLyricFloatingWindow });
 
   window.api?.sendControl(message, getCSSStringFromSetting(settings.floatWindowSetting));
+};
+
+const showImage = (e,url) => {
+  e.target.src = url;
 };
 
 let playlist = $computed(() => player.playlist.value);
