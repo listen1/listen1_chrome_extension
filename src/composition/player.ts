@@ -96,13 +96,12 @@ export class PlayerEventListener {
       // update scroll position in current list
       document.getElementById(`song_${track.id}`)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
     } else if (name === 'custom:nowplaying_loaded') {
+      console.log(name, params);
       if (!player.currentPlaying) {
         return;
       }
       const { bitrate, platform, url } = params;
-      player.currentPlaying.bitrate = bitrate;
-      player.currentPlaying.platform = platform;
-      player.currentPlaying.url = url;
+      player.currentPlaying = { ...player.currentPlaying, bitrate, platform, url };
     } else if (name === 'custom:playlist') {
       const { playlist } = params;
       player.playlist = { value: playlist };
