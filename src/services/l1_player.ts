@@ -52,12 +52,37 @@ function posMod(m: number, n: number) {
   return ((m % n) + n) % n;
 }
 
+/*
+l1PlayerProto
+Wrap html audio element to provide playlist management.
+
+Usage:
+```
+const l1Player = l1PlayerProto();
+class PlayerEventListener {
+  async onEvent(name: string, params: any) {
+    if(name === 'playing'){
+      // support all audio element event
+    } else if (name === 'timeupdate') {
+      // support all audio element event
+    } else if (name === 'custom:playlist'){
+      // use custom prefix to indicate custom event
+    }
+  }
+}
+const listener = {}
+l1Player.addEventListener([new PlayerEventListener()]);
+l1Player.playTracks([track]);
+```
+*/
 class l1PlayerProto {
   playlist = <Track[]>[];
   muted = false;
   volume = 1; // 0-1
   loopMode = PlayerLoopMode.LOOP_ALL;
   playing: Track | null = null;
+  // NOTICE: isPlaying indicate whether playing task is started
+  // NOT indicate whether audio file is playing
   isPlaying = false;
   _audio: HTMLAudioElement;
   _eventListenerArray = <PlayerListener[]>[];
