@@ -347,7 +347,6 @@ let isPlaying = $computed(() => player.isPlaying);
 let lyricArray = $computed(() => player.lyricArray.value);
 let lyricLineNumber = $computed(() => player.lyricLineNumber);
 let lyricLineNumberTrans = $computed(() => player.lyricLineNumberTrans);
-let myProgress = $computed(() => player.myProgress);
 let currentPlaying = $computed(() => player.currentPlaying);
 let volume = $computed(() => player.volume);
 let mute = $computed(() => player.mute);

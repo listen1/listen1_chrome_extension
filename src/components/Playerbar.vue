@@ -220,7 +220,8 @@ const updateProgress = (progress) => {
 const commitProgress = (progress) => {
   l1Player.seek(progress);
   player.changingProgress = false;
-
+  player.currentPosition = currentDuration * progress;
+  player.myProgress = progress*100;
 };
 
 const changeVolume = (progress) => {
