@@ -39,7 +39,7 @@
           <div class="detail-head-cover">
             <img
               :src="currentPlaying.img_url"
-              err-src="https://y.gtimg.cn/mediastyle/global/img/album_300.png"
+               @error="showImage($event, 'images/mycover.jpg')"
             />
           </div>
           <div class="detail-head-title">
@@ -123,6 +123,10 @@ const showPlaylist = (playlistId) => {
 };
 
 const toggleLyricTranslation = () => setSettings({ enableLyricTranslation: !settings.enableLyricTranslation });
+
+const showImage = (e,url) => {
+  e.target.src = url;
+};
 
 let lyricArray = $computed(() => player.lyricArray.value);
 let lyricLineNumber = $computed(() => player.lyricLineNumber);
