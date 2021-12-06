@@ -14,6 +14,9 @@ interface Track {
   source_url: string;
   title: string;
   disabled?: boolean;
+  bitrate?: string;
+  platform?: string;
+  url?: string;
 }
 
 interface Sound {
@@ -193,25 +196,31 @@ class l1PlayerProto {
       }
       return;
     }
-    const result: unknown = await MediaService.bootstrapTrackAsync(track).catch(async () => {
-      this._emit('custom:track_not_playable', { track });
-
-      track.disabled = true;
-      await new Promise((r) => setTimeout(r, 2000));
-      if (playDirection === -1) {
-        this._prev(tryCount + 1);
-      } else {
-        this._next(tryCount + 1);
+    if(track.url === undefined) {
+      const result: unknown = await MediaService.bootstrapTrackAsync(track).catch(async () => {
+        this._emit('custom:track_not_playable', { track });
+  
+        track.disabled = true;
+        await new Promise((r) => setTimeout(r, 2000));
+        if (playDirection === -1) {
+          this._prev(tryCount + 1);
+        } else {
+          this._next(tryCount + 1);
+        }
+      });
+  
+      if (!result) {
+        return;
       }
-    });
-
-    if (!result) {
-      return;
+      const sound: Sound = <Sound>result;
+      track.url = sound.url;
+      track.bitrate = sound.bitrate;
+      track.platform = sound.platform;
     }
-    const sound: Sound = <Sound>result;
 
-    this._audio.src = sound.url;
-    this._emit('custom:nowplaying_loaded', { track, url: sound.url, bitrate: sound.bitrate, platform: sound.platform });
+    this._audio.src = track.url;
+
+    this._emit('custom:nowplaying_loaded', { track, url: track.url, bitrate: track.bitrate, platform: track.platform });
     // Resets the media to the beginning and selects the best available source
     // from the sources provided using the src attribute or the <source> element.
     this._audio.load(); //suspends and restores all audio element
