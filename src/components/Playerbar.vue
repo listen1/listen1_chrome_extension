@@ -222,6 +222,8 @@ const commitProgress = (progress) => {
   player.changingProgress = false;
   player.currentPosition = currentDuration * progress;
   player.myProgress = progress*100;
+  // reset lryic array last search position
+  player._lyricArrayIndex = -1;
 };
 
 const changeVolume = (progress) => {
