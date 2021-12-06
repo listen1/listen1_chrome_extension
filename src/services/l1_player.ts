@@ -87,6 +87,7 @@ class l1PlayerProto {
   _audio: HTMLAudioElement;
   _eventListenerArray = <PlayerListener[]>[];
   _shuffleArray: number[] = [];
+  _startProgress = 0;
 
   constructor() {
     this._audio = new window.Audio();
@@ -95,7 +96,7 @@ class l1PlayerProto {
     this._audio.autoplay = true;
     this._audio.preload = 'auto';
     this._audio.muted = this.muted;
-    const allowEventArray = ['playing', 'timeupdate', 'pause', 'ended'];
+    const allowEventArray = ['playing', 'timeupdate', 'pause', 'ended', 'durationchange'];
     allowEventArray.forEach((name) =>
       this._audio.addEventListener(name, () => {
         const params: StringDict = {};
@@ -107,6 +108,13 @@ class l1PlayerProto {
             return;
           }
           this._next(0);
+        } else if (name === 'durationchange') {
+          if (this._startProgress != 0) {
+            // start progress only work once 
+            // set by seek method
+            this._audio.currentTime = this._audio.duration * this._startProgress;
+            this._startProgress = 0;
+          }
         }
         return this._emit(name, params);
       })
@@ -217,14 +225,26 @@ class l1PlayerProto {
     this._emit('custom:nowplaying', { track: this.playing });
   }
   seek(percent: number) {
-    if (!this._audio.src) {
-      return;
-    }
     if (percent < 0 || percent > 1) {
       throw Error('seek range not in 0 and 1');
     }
+    if (!this._audio.src && !this.playing) {
+      return;
+    }
+    this._emit('custom:playlist_playing', {});
+    this.isPlaying = true;
+
+    if (!this._audio.src && this.playing) {
+      this._startProgress = percent;
+      // set try count to this.playlist.length to disable skip to 
+      // other song if this song fail
+      this._play(this.playing, 1, this.playlist.length);
+      return;
+    }
+
     const time = this._audio.duration * percent;
     this._audio.currentTime = time;
+    this._audio.play();
   }
   getPosition(): number {
     return this._audio.currentTime;
