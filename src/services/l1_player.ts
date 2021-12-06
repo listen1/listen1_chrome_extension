@@ -58,9 +58,11 @@ class l1PlayerProto {
   volume = 1; // 0-1
   loopMode = PlayerLoopMode.LOOP_ALL;
   playing: Track | null = null;
+  isPlaying = false;
   _audio: HTMLAudioElement;
   _eventListenerArray = <PlayerListener[]>[];
   _shuffleArray: number[] = [];
+
   constructor() {
     this._audio = new window.Audio();
     this._audio.volume = this.volume;
@@ -79,7 +81,7 @@ class l1PlayerProto {
           if (this.loopMode === PlayerLoopMode.LOOP_ONE) {
             return;
           }
-          this.next();
+          this._next(0);
         }
         return this._emit(name, params);
       })
@@ -89,27 +91,46 @@ class l1PlayerProto {
     this._eventListenerArray.push(eventLisnter);
   }
   play() {
+    this._emit('custom:playlist_playing', {});
+    this.isPlaying = true;
     this._audio.play();
   }
   pause() {
+    this._emit('custom:playlist_pause', {});
+    this.isPlaying = false;
+
     this._audio.pause();
+  }
+  prev() {
+    this._emit('custom:playlist_playing', {});
+    this.isPlaying = true;
+    this._prev(0);
+  }
+  next() {
+    this._emit('custom:playlist_playing', {});
+    this.isPlaying = true;
+    this._next(0);
   }
   _emit(name: string, params: StringDict) {
     return this._eventListenerArray.forEach((listener) => listener.onEvent(name, params));
   }
   togglePlayPause() {
-    if (this._audio.paused) {
+    this.isPlaying = !this.isPlaying;
+
+    if (this.isPlaying) {
       if (this._audio.src === '' && this.playing) {
         // first time play when loaded
-        this._play(this.playing);
+        this.playById(this.playing.id);
       } else {
-        this._audio.play();
+        this.play();
       }
     } else {
-      this._audio.pause();
+      this.pause();
     }
   }
   async playById(id: string) {
+    this._emit('custom:playlist_playing', {});
+    this.isPlaying = true;
     const track = this.playlist.find((t) => t.id === id);
     await this._play(track);
   }
@@ -123,15 +144,18 @@ class l1PlayerProto {
       this._emit('custom:playlist_not_playable', {});
       return;
     }
+    if (!this.isPlaying) {
+      return;
+    }
 
     this.playing = track;
     this._emit('custom:nowplaying', { track: this.playing });
 
     if (track.disabled) {
       if (playDirection === -1) {
-        this.prev(tryCount + 1);
+        this._prev(tryCount + 1);
       } else {
-        this.next(tryCount + 1);
+        this._next(tryCount + 1);
       }
       return;
     }
@@ -141,9 +165,9 @@ class l1PlayerProto {
       track.disabled = true;
       await new Promise((r) => setTimeout(r, 2000));
       if (playDirection === -1) {
-        this.prev(tryCount + 1);
+        this._prev(tryCount + 1);
       } else {
-        this.next(tryCount + 1);
+        this._next(tryCount + 1);
       }
     });
 
@@ -182,7 +206,7 @@ class l1PlayerProto {
   getDuration(): number {
     return this._audio.duration;
   }
-  prev(tryCount = 0) {
+  _prev(tryCount: number) {
     if (this.playlist.length === 0) {
       return;
     }
@@ -194,7 +218,7 @@ class l1PlayerProto {
     }
     this._play(this.playlist[prevIndex], -1, tryCount);
   }
-  next(tryCount = 0) {
+  _next(tryCount: number) {
     if (this.playlist.length === 0) {
       return;
     }
@@ -295,6 +319,9 @@ class l1PlayerProto {
     if (tracks.length === 0) {
       return;
     }
+    this._emit('custom:playlist_playing', {});
+    this.isPlaying = true;
+
     this.playlist = tracks;
     this._emit('custom:playlist', { playlist: this.playlist });
     this._reshuffleIfNeeded();
