@@ -41,7 +41,10 @@ const initPlayer = async () => {
   // load local storage settings
   const currentPlaylist = await iDB.Playlists.get({ id: 'current' });
   const localCurrentPlaying = await iDB.Tracks.where('playlist').equals('current').toArray();
-  const tracks = currentPlaylist.order.map((id) => localCurrentPlaying.find((track) => track.id == id));
+  let tracks = [];
+  if(currentPlaylist !== undefined) {
+    tracks = currentPlaylist.order.map((id) => localCurrentPlaying.find((track) => track.id == id));
+  }
   const dbSettings = await iDB.Settings.where('key').equals('playerSettings').toArray();
 
   tracks.forEach((i) => {
