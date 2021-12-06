@@ -38,8 +38,11 @@
       </div>
       <div v-if="playlist.length > 0" class="detail">
         <div class="ctrl">
-          <a @click="showModal('AddToPlaylist', { tracks: [currentPlaying] })" :title="t('_ADD_TO_PLAYLIST')">
-                    <span class="icon li-songlist" />
+          <a
+            @click="showModal('AddToPlaylist', { tracks: [currentPlaying] })"
+            :title="t('_ADD_TO_PLAYLIST')"
+          >
+            <span class="icon li-songlist" />
           </a>
           <a title @click="changePlaymode()">
             <span v-show="playmode == 0" class="icon li-loop" />
@@ -49,10 +52,7 @@
         </div>
 
         <div class="title">
-          <span
-            v-if="currentPlaying.source === 'xiami'"
-            style="color: orange; font-size: medium"
-          >⚠️</span>
+          <span v-if="currentPlaying.source === 'xiami'" style="color: orange; font-size: medium">⚠️</span>
           {{ currentPlaying.title }}
         </div>
         <div class="more-info">
@@ -67,11 +67,7 @@
           <div class="total">{{ currentDuration }}</div>
         </div>
         <div class="playbar">
-          <draggable-bar
-            id="progressbar"
-            :progress="myProgress"
-            @commit-progress="changeProgress"
-          ></draggable-bar>
+          <draggable-bar id="progressbar" :progress="myProgress" @commit-progress="changeProgress"></draggable-bar>
         </div>
       </div>
     </div>
@@ -80,11 +76,11 @@
         <span class="icon li-list" @click="togglePlaylist()" />
       </div>
       <div class="volume-ctrl" volume-wheel>
-        <span class="icon" :class="mute ? 'li-mute' : 'li-volume'" @click="toggleMuteStatus()" />
+        <vue-feather class="icon" :type="volumeIcon" size="18px" @click="toggleMuteStatus()" />
         <div class="m-pbar volume">
           <draggable-bar
             id="volumebar"
-            :progress="volume*100"
+            :progress="volume * 100"
             @update-progress="changeVolume"
             @commit-progress="commitVolume"
           ></draggable-bar>
@@ -92,9 +88,9 @@
       </div>
       <div v-if="isElectron()" class="lyric-toggle">
         <div
-          @click="toggleLyricFloatingWindow(true)"
+          @click="toggleLyricFloatingWindow()"
           class="lyric-icon"
-          :class="{'selected': settings.enableLyricFloatingWindow}"
+          :class="{ 'selected': settings.enableLyricFloatingWindow }"
         >词</div>
       </div>
     </div>
@@ -105,8 +101,8 @@
           class="menu-title"
         >{{ t('_TOTAL_SONG_PREFIX') }} {{ playlist.length }} {{ t('_TOTAL_SONG_POSTFIX') }}</span>
         <a class="add-all" @click="showModal('AddToPlaylist', { tracks: playlist })">
-                  <span class="icon li-songlist" ng-click="togglePlaylist()" />
-                  <span>{{ t('_ADD_TO_PLAYLIST') }}</span>
+          <span class="icon li-songlist" ng-click="togglePlaylist()" />
+          <span>{{ t('_ADD_TO_PLAYLIST') }}</span>
         </a>
         <a class="remove-all" @click="clearPlaylist()">
           <span class="icon li-del" ng-click="togglePlaylist()" />
@@ -120,15 +116,15 @@
       <ul class="menu-list">
         <DragDropZone
           v-for="(song, index) in playlist"
-          :id="'song_'+song.id "
+          :id="'song_' + song.id"
           :key="song.id"
-          :class="{ playing: currentPlaying.id == song.id ,'even': index % 2 === 0, 'odd': index % 2 !== 0}"
+          :class="{ playing: currentPlaying.id == song.id, 'even': index % 2 === 0, 'odd': index % 2 !== 0 }"
           dragtype="application/listen1-song"
           :dragobject="song"
           :dragtitle="song.title"
           :sortable="true"
-          @mouseenter="song.highlight=true"
-          @mouseleave="song.highlight=undefined"
+          @mouseenter="song.highlight = true"
+          @mouseleave="song.highlight = undefined"
           @drop="onCurrentPlayingSongDrop(song, $event)"
         >
           <div class="song-status-icon">
@@ -147,13 +143,8 @@
             <a @click="showPlaylist(song.artist_id); togglePlaylist();">{{ song.artist }}</a>
           </div>
           <div class="tools">
-            <span
-              v-show="song.highlight"
-              @click="removeTrack(song)"
-              class="icon li-del"
-            />
+            <span v-show="song.highlight" @click="removeTrack(song)" class="icon li-del" />
             <span v-show="song.highlight" @click="openUrl(song.source_url)" class="icon li-link" />
-        
           </div>
           <!-- <div class="song-time">00:00</div> -->
         </DragDropZone>
@@ -162,23 +153,22 @@
   </div>
 </template>
 <script setup>
-
-import { inject,toRaw } from 'vue';
+import { inject, toRaw } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
-import DraggableBar from '../components/DraggableBar.vue';
-import usePlayer from '../composition/player';
-import useOverlay from '../composition/overlay';
-import { l1Player } from '../services/l1_player';
-import { isElectron } from '../provider/lowebutil';
-import useSettings from '../composition/settings';
 import DragDropZone from '../components/DragDropZone.vue';
+import DraggableBar from '../components/DraggableBar.vue';
+import useOverlay from '../composition/overlay';
+import usePlayer from '../composition/player';
+import useSettings from '../composition/settings';
+import { isElectron } from '../provider/lowebutil';
+import { l1Player } from '../services/l1_player';
 
 const { t } = useI18n();
 const { player } = usePlayer();
 const router = useRouter();
 const showModal = inject('showModal');
-const { settings, setSettings, saveSettingsToDB,getSettingsAsync } = useSettings();
+const { settings, setSettings, saveSettingsToDB, getSettingsAsync } = useSettings();
 
 let { overlay, setOverlayType } = useOverlay();
 let menuHidden = $ref(true);
@@ -192,7 +182,7 @@ const changePlaymode = () => {
 };
 
 const showPlaylist = (playlistId) => {
-  router.push('/playlist/' + playlistId);
+  router.push(`/playlist/${playlistId}`);
 };
 const playPauseToggle = () => {
   l1Player.togglePlayPause();
@@ -230,13 +220,25 @@ const commitVolume = (progress) => {
   // must use getSettings to fetch recent value
   const task = async () => {
     const settings = await getSettingsAsync();
-    saveSettingsToDB({playerSettings: {...settings.playerSettings, volume: progress * 100}});
+    saveSettingsToDB({ playerSettings: { ...settings.playerSettings, volume: progress * 100 } });
   };
   task();
 };
 const toggleMuteStatus = () => {
+  player.mute = !player.mute;
   l1Player.toggleMute();
 };
+let volumeIcon = $computed(() => {
+  if (player.mute) {
+    return 'volume-x';
+  } else if (volume > 0.5) {
+    return 'volume-2';
+  } else if (volume > 0) {
+    return 'volume-1';
+  } else {
+    return 'volume';
+  }
+});
 const playFromPlaylist = (song) => {
   l1Player.playById(song.id);
 };
@@ -244,9 +246,9 @@ const removeTrack = (track) => {
   l1Player.removeTrack(track);
 };
 const openUrl = (url) => {
-  window.open(url, '_blank').focus();
+  window.open(url, '_blank')?.focus();
 };
-const onCurrentPlayingSongDrop = (song,event) => {
+const onCurrentPlayingSongDrop = (song, event) => {
   const { data, dragType, direction } = event;
   if (dragType === 'application/listen1-song') {
     // insert song
@@ -292,7 +294,6 @@ let currentDuration = $computed(() => player.currentDuration);
 let currentPosition = $computed(() => player.currentPosition);
 let currentPlaying = $computed(() => player.currentPlaying || {});
 let volume = $computed(() => player.volume);
-let mute = $computed(() => player.mute);
 
 if (isElectron()) {
   window.api?.onLyricWindow((arg) => {

@@ -140,15 +140,14 @@ function createWindow() {
       windowState.height = height;
     }
   });
+  // Open the DevTools.
+  // mainWindow.webContents.openDevTools()
   mainWindow.on('maximize', () => {
     windowState.maximized = true;
   });
   mainWindow.on('unmaximize', () => {
     windowState.maximized = false;
   });
-  // Open the DevTools.
-  // mainWindow.webContents.openDevTools()
-
   mainWindow.on('close', (e) => {
     if (willQuitApp) {
       /* the user tried to quit the app */
@@ -228,7 +227,6 @@ ipcMain.on('control', async (event, arg, params) => {
 
     case 'window_max':
       windowState.maximized ? mainWindow.unmaximize() : mainWindow.maximize();
-      windowState.maximized = !windowState.maximized;
       break;
 
     case 'window_close':
