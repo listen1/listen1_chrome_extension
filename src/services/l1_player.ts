@@ -167,6 +167,7 @@ class l1PlayerProto {
     }
     if (tryCount > this.playlist.length) {
       this._emit('custom:playlist_not_playable', {});
+      this.pause();
       return;
     }
     if (!this.isPlaying) {
