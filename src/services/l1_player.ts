@@ -2,6 +2,7 @@
 import MediaService from './MediaService';
 import { arrayMove } from '../utils';
 
+const FALI_WAIT_SECOND = 1;
 interface Track {
   id: string;
   album: string;
@@ -201,7 +202,7 @@ class l1PlayerProto {
         this._emit('custom:track_not_playable', { track });
   
         track.disabled = true;
-        await new Promise((r) => setTimeout(r, 2000));
+        await new Promise((r) => setTimeout(r, FALI_WAIT_SECOND * 1000));
         if (playDirection === -1) {
           this._prev(tryCount + 1);
         } else {
