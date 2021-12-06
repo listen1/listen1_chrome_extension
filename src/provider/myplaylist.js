@@ -13,9 +13,12 @@ export default class MyPlaylist {
     return key;
   }
   static async getMyplaylistsList(playlist_type) {
-    const order = await iDB.Settings.get({ key: playlist_type + '_playlist_order' });
+    let order = await iDB.Settings.get({ key: playlist_type + '_playlist_order' });
     let playlists = await iDB.Playlists.where('type').equals(playlist_type).toArray();
-    playlists = order?.value.map((id) => playlists.find((playlist) => playlist.id === id));
+    if (playlist_type === 'my' && (order === undefined || order.value.length == 0)) {
+      order = { value: ['redheart'] };
+    }
+    playlists = order.value.map((id) => playlists.find((playlist) => playlist.id === id));
     // const resultPromise = playlists.map(async (res, id) => {
     //   //const playlist = localStorage.getObject(id);
     //   const playlist = await iDB.Tracks.where('playlist').equals(id).toArray();

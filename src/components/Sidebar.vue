@@ -64,7 +64,8 @@
           @drop="onSidebarPlaylistDrop('my', i.id, $event)"
           @click="$router.push(`/playlist/${i.id}`)">
           <div class="sidebar-block">
-            <vue-feather type="disc" />
+            <vue-feather v-if="i.id!=='myplaylist_redheart'" type="disc" />
+            <vue-feather v-if="i.id==='myplaylist_redheart'" type="heart" />
             <a>{{ i.title }}</a>
           </div>
         </DragDropZone>

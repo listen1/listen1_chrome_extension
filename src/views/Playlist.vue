@@ -30,7 +30,7 @@
               </div>
             </div>
             <div
-              v-show="is_mine && !is_local"
+              v-show="is_mine && !is_local && list_id !='myplaylist_redheart'"
               class="playlist-button edit-button"
               @click="showModal('EditPlaylist', { list_id: list_id, playlist_title: playlist_title, cover_img_url: cover_img_url })">
               <div class="play-list">
