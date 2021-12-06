@@ -40,8 +40,8 @@ const player = reactive({
   lastTrackId: '',
   myProgress: 0,
   changingProgress: false,
-  currentDuration: '0:00',
-  currentPosition: '0:00',
+  currentDuration: 0,
+  currentPosition: 0,
   currentPlaying: <NullableTrack>null,
   mute: false,
   // state below is loaded from storage
@@ -60,12 +60,7 @@ function savePlayerSettings() {
 
   saveSettingsToDB({ playerSettings: newPlayerSettings });
 }
-function formatTime(secs: number) {
-  const minutes = Math.floor(secs / 60) || 0;
-  const seconds = Math.round(secs - minutes * 60) || 0;
 
-  return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
-}
 export class PlayerEventListener {
   async onEvent(name: string, params: any) {
     if (name === 'custom:playlist_playing') {
@@ -126,9 +121,11 @@ export class PlayerEventListener {
         await iDB.Tracks.bulkPut(playlist);
       });
     } else if (name === 'timeupdate') {
-      player.currentDuration = formatTime(params.duration);
-      player.currentPosition = formatTime(params.position);
-      player.myProgress = (params.position / params.duration) * 100;
+      if (!player.changingProgress) {
+        player.currentDuration = params.duration;
+        player.currentPosition = params.position;
+        player.myProgress = (params.position / params.duration) * 100;
+      }
       const { overlay } = useOverlay();
       const { settings } = useSettings();
 
