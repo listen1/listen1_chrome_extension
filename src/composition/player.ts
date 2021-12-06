@@ -96,7 +96,6 @@ export class PlayerEventListener {
       // update scroll position in current list
       document.getElementById(`song_${track.id}`)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
     } else if (name === 'custom:nowplaying_loaded') {
-      console.log(name, params);
       if (!player.currentPlaying) {
         return;
       }
