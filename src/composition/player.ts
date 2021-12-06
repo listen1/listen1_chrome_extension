@@ -68,9 +68,9 @@ function formatTime(secs: number) {
 }
 export class PlayerEventListener {
   async onEvent(name: string, params: any) {
-    if (name === 'playing') {
+    if (name === 'custom:playlist_playing') {
       player.isPlaying = true;
-    } else if (name === 'pause') {
+    } else if (name === 'custom:playlist_pause') {
       player.isPlaying = false;
     } else if (name === 'custom:nowplaying') {
       const { track } = params;
