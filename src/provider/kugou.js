@@ -194,28 +194,33 @@ export default class kugou extends MusicResource {
   }
 
   static bootstrapTrack(track, success, failure) {
+    let sound = {};
     const track_id = track.id.slice('kgtrack_'.length);
     const album_id = track.album_id.slice('kgalbum_'.length);
     let target_url = `https://wwwapi.kugou.com/yy/index.php?r=play/getdata&callback=jQuery&hash=${track_id}&dfid=dfid&mid=mid&platid=4`;
     if (album_id !== '') {
       target_url += `&album_id=${album_id}`;
     }
-    axios.get(target_url).then((response) => {
-      const { data } = response;
-      const jsonString = data.slice('jQuery('.length, data.length - 1 - 1);
-      const info = JSON.parse(jsonString);
-      const { play_url } = info.data;
+    axios
+      .get(target_url)
+      .then((response) => {
+        const { data } = response;
+        const jsonString = data.slice('jQuery('.length, data.length - 1 - 1);
+        const info = JSON.parse(jsonString);
+        const { play_url } = info.data;
 
-      if (play_url === '') {
-        return failure({});
-      }
+        if (play_url === '') {
+          return failure(sound);
+        }
+        sound = {
+          url: play_url,
+          bitrate: `${info.data.bitrate}kbps`,
+          platform: 'kugou'
+        };
 
-      return success({
-        url: play_url,
-        bitrate: `${info.data.bitrate}kbps`,
-        platform: 'kugou'
-      });
-    });
+        return success(sound);
+      })
+      .catch(() => failure(sound));
   }
 
   static async lyric(url) {

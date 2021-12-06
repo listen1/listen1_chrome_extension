@@ -345,7 +345,7 @@ export default class migu extends MusicResource {
     const total = response.data.resource[0].musicNum;
     const page = Math.ceil(total / 50);
     const page_array = Array.from({ length: page }, (v, k) => k + 1);
-    const tracks = (await Promise.all(page_array.map(page => this.mg_render_tracks(url, page)))).flat();
+    const tracks = (await Promise.all(page_array.map((page) => this.mg_render_tracks(url, page)))).flat();
     return { tracks, info };
   }
 
@@ -364,7 +364,7 @@ export default class migu extends MusicResource {
     const total = data.resource[0].totalCount;
     const page = Math.ceil(total / 50);
     const page_array = Array.from({ length: page }, (v, k) => k + 1);
-    const tracks = (await Promise.all(page_array.map(page => this.mg_render_tracks(url, page)))).flat();
+    const tracks = (await Promise.all(page_array.map((page) => this.mg_render_tracks(url, page)))).flat();
     return {
       tracks,
       info
@@ -497,7 +497,8 @@ export default class migu extends MusicResource {
         } else {
           failure(sound);
         }
-      });
+      })
+      .catch(() => failure(sound));
   }
 
   static async search(url) {

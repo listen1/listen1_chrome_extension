@@ -376,24 +376,27 @@ export default class qq extends MusicResource {
       format: 'json',
       data: JSON.stringify(reqData)
     };
-    axios.get(target_url, { params }).then((response) => {
-      const { data } = response;
-      const { purl } = data.req_0.data.midurlinfo[0];
+    axios
+      .get(target_url, { params })
+      .then((response) => {
+        const { data } = response;
+        const { purl } = data.req_0.data.midurlinfo[0];
 
-      if (purl === '') {
-        // vip
-        failure(sound);
-        return;
-      }
-      const url = data.req_0.data.sip[0] + purl;
-      sound.url = url;
-      const prefix = purl.slice(0, 4);
-      const found = Object.values(fileConfig).filter((i) => i.s === prefix);
-      sound.bitrate = found.length > 0 ? found[0].bitrate : '';
-      sound.platform = 'qq';
+        if (purl === '') {
+          // vip
+          failure(sound);
+          return;
+        }
+        const url = data.req_0.data.sip[0] + purl;
+        sound.url = url;
+        const prefix = purl.slice(0, 4);
+        const found = Object.values(fileConfig).filter((i) => i.s === prefix);
+        sound.bitrate = found.length > 0 ? found[0].bitrate : '';
+        sound.platform = 'qq';
 
-      success(sound);
-    });
+        success(sound);
+      })
+      .catch(() => failure(sound));
   }
 
   // eslint-disable-next-line no-unused-vars

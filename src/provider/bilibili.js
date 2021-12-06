@@ -123,17 +123,20 @@ export default class bilibili extends MusicResource {
     const sound = {};
     const song_id = track.id.slice('bitrack_'.length);
     const target_url = `https://www.bilibili.com/audio/music-service-c/web/url?sid=${song_id}`;
-    axios.get(target_url).then((response) => {
-      const { data } = response;
-      if (data.code === 0) {
-        [sound.url] = data.data.cdns;
-        sound.platform = 'bilibili';
+    axios
+      .get(target_url)
+      .then((response) => {
+        const { data } = response;
+        if (data.code === 0) {
+          [sound.url] = data.data.cdns;
+          sound.platform = 'bilibili';
 
-        success(sound);
-      } else {
-        failure(sound);
-      }
-    });
+          success(sound);
+        } else {
+          failure(sound);
+        }
+      })
+      .catch(() => failure(sound));
   }
 
   static async search(url) {

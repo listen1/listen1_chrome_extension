@@ -275,19 +275,22 @@ export default class netease extends MusicResource {
         expirationDate: expire
       },
       (cookie) => {
-        axios.post(target_url, new URLSearchParams(data)).then((response) => {
-          const { data: res_data } = response;
-          const { url, br } = res_data.data[0];
-          if (url != null) {
-            sound.url = url;
-            const bitrate = `${(br / 1000).toFixed(0)}kbps`;
-            sound.bitrate = bitrate;
-            sound.platform = 'netease';
-            success(sound);
-          } else {
-            failure(sound);
-          }
-        });
+        axios
+          .post(target_url, new URLSearchParams(data))
+          .then((response) => {
+            const { data: res_data } = response;
+            const { url, br } = res_data.data[0];
+            if (url != null) {
+              sound.url = url;
+              const bitrate = `${(br / 1000).toFixed(0)}kbps`;
+              sound.bitrate = bitrate;
+              sound.platform = 'netease';
+              success(sound);
+            } else {
+              failure(sound);
+            }
+          })
+          .catch(() => failure(sound));
       }
     );
   }

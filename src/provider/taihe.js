@@ -110,7 +110,7 @@ export default class taihe extends MusicResource {
     const total = data.trackCount;
     const page = Math.ceil(total / 100);
     const page_array = Array.from({ length: page }, (v, k) => k + 1);
-    const tracks = (await Promise.all(page_array.map(page => this.th_render_tracks(url, page)))).flat();
+    const tracks = (await Promise.all(page_array.map((page) => this.th_render_tracks(url, page)))).flat();
     return { tracks, info };
   }
 
@@ -161,7 +161,8 @@ export default class taihe extends MusicResource {
         } else {
           failure(sound);
         }
-      });
+      })
+      .catch(() => failure(sound));
   }
 
   static async lyric(url) {
@@ -300,5 +301,5 @@ export default class taihe extends MusicResource {
     return `https://music.taihe.com`;
   }
 
-  static logout() { }
+  static logout() {}
 }

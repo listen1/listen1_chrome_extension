@@ -285,7 +285,7 @@ export default class kuwo extends MusicResource {
         break;
     }
     // axios.get(tracks_url).then((response) => {
-    return new Promise((res)=>{
+    return new Promise((res) => {
       this.kw_cookie_get(tracks_url, (response) => {
         const tracks = response.data.data.musicList.map(kwConvertSong);
         res(tracks);
@@ -352,17 +352,20 @@ export default class kuwo extends MusicResource {
       + `format=mp3&rid=${song_id}&response=url&type=convert_url3&br=128kmp3&from=web`;
     https://m.kuwo.cn/newh5app/api/mobile/v1/music/src/${song_id} */
 
-    axios.get(target_url).then((response) => {
-      const { data } = response;
-      if (data.length > 0) {
-        sound.url = data;
-        sound.platform = 'kuwo';
+    axios
+      .get(target_url)
+      .then((response) => {
+        const { data } = response;
+        if (data.length > 0) {
+          sound.url = data;
+          sound.platform = 'kuwo';
 
-        success(sound);
-      } else {
-        failure(sound);
-      }
-    });
+          success(sound);
+        } else {
+          failure(sound);
+        }
+      })
+      .catch(() => failure(sound));
   }
 
   static kw_get_lrc(arr) {
@@ -502,7 +505,7 @@ export default class kuwo extends MusicResource {
     const total = data.songnum;
     const page = Math.ceil(total / 100);
     const page_array = Array.from({ length: page }, (v, k) => k + 1);
-    const tracks = (await Promise.all(page_array.map(page => this.kw_render_tracks(url, page)))).flat();
+    const tracks = (await Promise.all(page_array.map((page) => this.kw_render_tracks(url, page)))).flat();
     return {
       tracks,
       info
@@ -609,7 +612,7 @@ export default class kuwo extends MusicResource {
     const { total } = data;
     const page = Math.ceil(total / 100);
     const page_array = Array.from({ length: page }, (v, k) => k + 1);
-    const tracks = (await Promise.all(page_array.map(page => this.kw_render_tracks(url, page)))).flat();
+    const tracks = (await Promise.all(page_array.map((page) => this.kw_render_tracks(url, page)))).flat();
     return { tracks, info };
 
     /*

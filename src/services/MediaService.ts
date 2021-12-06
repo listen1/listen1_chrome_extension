@@ -230,7 +230,7 @@ const MediaService = {
     return provider.getPlaylistFilters();
   },
 
-  getLyric(track_id: string, album_id: string, lyric_url: string, tlyric_url: string) {
+  async getLyric(track_id: string, album_id: string, lyric_url: string, tlyric_url: string) {
     const provider = getProviderByItemId(track_id);
     const url = `/lyric?${queryStringify({
       track_id,
@@ -238,7 +238,11 @@ const MediaService = {
       lyric_url,
       tlyric_url
     })}`;
-    return provider.lyric(url);
+    try {
+      return await provider.lyric(url);
+    } catch {
+      return { lyric: '', tlyric: '' };
+    }
   },
 
   showFavPlaylist() {
