@@ -141,7 +141,7 @@ export class PlayerEventListener {
       player._lyricArrayIndex = index;
       if (lineNumber != player.lyricLineNumber) {
         if (player.lyricLineNumber != -1) {
-          const lineElement = document.querySelector(`.page .playsong-detail .detail-songinfo .lyric p[data-line="${player.lyricLineNumber}"]`);
+          const lineElement = document.querySelector(`.page .playsong-detail .detail-songinfo .lyric p[data-line="${lineNumber}"]`);
           if (!lineElement) {
             return;
           }
@@ -153,7 +153,7 @@ export class PlayerEventListener {
 
           const adjustOffset = 30;
           const offset = (lineElement as HTMLElement).offsetTop - windowHeight / 2 + adjustOffset;
-          smoothScrollTo(document.querySelector('.lyric'), offset, 500);
+          smoothScrollTo(windowElement, offset, 500);
 
           if (isElectron()) {
             window.api?.sendLyric({
