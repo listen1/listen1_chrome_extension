@@ -196,20 +196,18 @@ import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 import '../assets/css/common.css';
 import '../assets/css/icon.css';
-import DraggableBar from '../components/DraggableBar.vue';
+import Modal from '../components/Modal.vue';
+import Playerbar from '../components/Playerbar.vue';
+import Sidebar from '../components/Sidebar.vue';
+import useAuth from '../composition/auth';
 import usePlayer from '../composition/player';
 import useSearch from '../composition/search';
-import useAuth from '../composition/auth';
 import useSettings from '../composition/settings';
 import { setLocale } from '../i18n';
-import { l1Player } from '../services/l1_player';
-import Modal from '../components/Modal.vue';
-import DefaultModal from '../components/modals/DefaultModal.vue';
-import Sidebar from '../components/Sidebar.vue';
-import Playerbar from '../components/Playerbar.vue';
-import NowPlaying from '../views/NowPlaying.vue';
+import { isLinux, isWin } from '../provider/lowebutil';
 import EventService from '../services/EventService';
-import { isElectron, isMac, isLinux, isWin } from '../provider/lowebutil';
+import { l1Player } from '../services/l1_player';
+import NowPlaying from '../views/NowPlaying.vue';
 
 
 const { t } = useI18n();

@@ -28,18 +28,29 @@
         </svg>
       </div>
       <div v-if="playlist.length > 0" class="cover" @click="toggleNowPlaying()">
-        <img
-          :src="currentPlaying.img_url"
-          @error="showImage($event, 'images/mycover.jpg')"
-        />
+        <img :src="currentPlaying.img_url" @error="showImage($event, 'images/mycover.jpg')" />
         <div class="mask">
           <vue-feather type="chevrons-up" />
         </div>
       </div>
       <div v-if="playlist.length > 0" class="detail">
         <div class="ctrl">
-          <vue-feather v-if="!isRedHeart(currentPlaying.id)" type="heart" size="14" stroke-width="1" stroke="#666666" @click="setRedHeart(toRaw(currentPlaying), true)" />
-          <vue-feather v-if="isRedHeart(currentPlaying.id)" type="heart" fill="red" stroke="red" size="14" @click="setRedHeart(toRaw(currentPlaying), false)" />
+          <vue-feather
+            class="icon"
+            v-if="!isRedHeart(currentPlaying.id)"
+            type="heart"
+            size="15"
+            stroke-width="1.5"
+            @click="setRedHeart(toRaw(currentPlaying), true)"
+          />
+          <vue-feather
+            v-if="isRedHeart(currentPlaying.id)"
+            type="heart"
+            fill="red"
+            stroke="red"
+            size="15"
+            @click="setRedHeart(toRaw(currentPlaying), false)"
+          />
           <a
             @click="showModal('AddToPlaylist', { tracks: [currentPlaying] })"
             :title="t('_ADD_TO_PLAYLIST')"
@@ -69,11 +80,12 @@
           <div class="total">{{ formatTime(currentDuration) }}</div>
         </div>
         <div class="playbar">
-          <draggable-bar id="progressbar" 
+          <draggable-bar
+            id="progressbar"
             :progress="myProgress"
             @commit-progress="commitProgress"
-            @update-progress="updateProgress">
-          </draggable-bar>
+            @update-progress="updateProgress"
+          ></draggable-bar>
         </div>
       </div>
     </div>
@@ -167,8 +179,8 @@ import DragDropZone from '../components/DragDropZone.vue';
 import DraggableBar from '../components/DraggableBar.vue';
 import useOverlay from '../composition/overlay';
 import usePlayer from '../composition/player';
-import useSettings from '../composition/settings';
 import useRedHeart from '../composition/redheart';
+import useSettings from '../composition/settings';
 import { isElectron } from '../provider/lowebutil';
 import { l1Player } from '../services/l1_player';
 import { formatTime } from '../utils';
@@ -226,7 +238,7 @@ const commitProgress = (progress) => {
   l1Player.seek(progress);
   player.changingProgress = false;
   player.currentPosition = currentDuration * progress;
-  player.myProgress = progress*100;
+  player.myProgress = progress * 100;
   // reset lryic array last search position
   player._lyricArrayIndex = -1;
 };
@@ -308,11 +320,11 @@ const toggleLyricFloatingWindow = () => {
   window.api?.sendControl(message, getCSSStringFromSetting(settings.floatWindowSetting));
 };
 
-const showImage = (e,url) => {
+const showImage = (e, url) => {
   e.target.src = url;
 };
 
-const {isRedHeart, setRedHeart} = useRedHeart();
+const { isRedHeart, setRedHeart } = useRedHeart();
 let playlist = $computed(() => player.playlist.value);
 let isPlaying = $computed(() => player.isPlaying);
 let myProgress = $computed(() => player.myProgress);

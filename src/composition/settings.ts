@@ -101,4 +101,7 @@ export function getSetting(key: settingsKey) {
 function useSettings() {
   return { settings, setSettings, loadSettings, saveSettingsToDB, getSettingsAsync };
 }
+watch(settings, (_, newSetting) => {
+  setSettings(newSetting);
+});
 export default useSettings;
