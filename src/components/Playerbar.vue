@@ -38,6 +38,8 @@
       </div>
       <div v-if="playlist.length > 0" class="detail">
         <div class="ctrl">
+          <vue-feather v-if="!isRedHeart(currentPlaying.id)" type="heart" size="14" stroke-width="1" stroke="#666666" @click="setRedHeart(toRaw(currentPlaying), true)" />
+          <vue-feather v-if="isRedHeart(currentPlaying.id)" type="heart" fill="red" stroke="red" size="14" @click="setRedHeart(toRaw(currentPlaying), false)" />
           <a
             @click="showModal('AddToPlaylist', { tracks: [currentPlaying] })"
             :title="t('_ADD_TO_PLAYLIST')"
@@ -122,6 +124,7 @@
           v-for="(song, index) in playlist"
           :id="'song_' + song.id"
           :key="song.id"
+          :draggable="true"
           :class="{ playing: currentPlaying.id == song.id, 'even': index % 2 === 0, 'odd': index % 2 !== 0 }"
           dragtype="application/listen1-song"
           :dragobject="song"
@@ -165,9 +168,11 @@ import DraggableBar from '../components/DraggableBar.vue';
 import useOverlay from '../composition/overlay';
 import usePlayer from '../composition/player';
 import useSettings from '../composition/settings';
+import useRedHeart from '../composition/redheart';
 import { isElectron } from '../provider/lowebutil';
 import { l1Player } from '../services/l1_player';
 import { formatTime } from '../utils';
+
 
 const { t } = useI18n();
 const { player } = usePlayer();
@@ -307,6 +312,7 @@ const showImage = (e,url) => {
   e.target.src = url;
 };
 
+const {isRedHeart, setRedHeart} = useRedHeart();
 let playlist = $computed(() => player.playlist.value);
 let isPlaying = $computed(() => player.isPlaying);
 let myProgress = $computed(() => player.myProgress);

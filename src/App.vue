@@ -7,6 +7,7 @@ import { onMounted, watch } from 'vue';
 import whiteStyle from './assets/css/iparanoid.css';
 import blackStyle from './assets/css/origin.css';
 import useSettings, { migrateSettings } from './composition/settings';
+import useRedHeart from './composition/redheart';
 
 import Home from './views/Home.vue';
 import iDB, { dbMigrate } from './services/DBService';
@@ -41,7 +42,10 @@ const initPlayer = async () => {
   // load local storage settings
   const currentPlaylist = await iDB.Playlists.get({ id: 'current' });
   const localCurrentPlaying = await iDB.Tracks.where('playlist').equals('current').toArray();
-  const tracks = currentPlaylist.order.map((id) => localCurrentPlaying.find((track) => track.id == id));
+  let tracks = [];
+  if(currentPlaylist !== undefined) {
+    tracks = currentPlaylist.order.map((id) => localCurrentPlaying.find((track) => track.id == id));
+  }
   const dbSettings = await iDB.Settings.where('key').equals('playerSettings').toArray();
 
   tracks.forEach((i) => {
@@ -70,7 +74,12 @@ onMounted(async () => {
   await initPlayer();
   // TODO: diagnose slow loadSetting function
   await loadSettings();
+  
+  const {initRedHeart} = useRedHeart();
+  await initRedHeart();
+
   applyThemeCSS();
+
 });
 watch(settings, applyThemeCSS);
 </script>

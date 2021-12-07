@@ -83,29 +83,39 @@ iDB.tables.forEach((table) => {
   table.hook('updating', updateHook);
 });
 
-// default items
-iDB.Playlists.get({ id: 'current' }).then((playlist) => {
-  if (!playlist) {
-    iDB.Playlists.put({
-      id: 'current',
-      title: 'current',
-      cover_img_url: 'images/mycover.jpg',
-      type: 'current',
-      order: []
-    });
+const defaultPlaylists: { [key: string]: any } = {
+  current: {
+    id: 'current',
+    title: 'current',
+    cover_img_url: 'images/mycover.jpg',
+    type: 'current',
+    order: []
+  },
+  lmplaylist_reserve: {
+    id: 'lmplaylist_reserve',
+    title: '本地音乐',
+    cover_img_url: 'images/mycover.jpg',
+    type: 'local',
+    order: []
+  },
+  myplaylist_redheart: {
+    id: 'myplaylist_redheart',
+    title: '我喜欢的音乐',
+    cover_img_url: 'images/mycover.jpg',
+    type: 'my',
+    order: []
   }
-});
-iDB.Playlists.get({ id: 'lmplaylist_reserve' }).then((playlist) => {
-  if (!playlist) {
-    iDB.Playlists.put({
-      id: 'lmplaylist_reserve',
-      title: '本地音乐',
-      cover_img_url: 'images/mycover.jpg',
-      type: 'local',
-      order: []
-    });
-  }
-});
+};
+
+for (const key in defaultPlaylists) {
+  const value = defaultPlaylists[key];
+  iDB.Playlists.get({ id: key }).then((playlist) => {
+    if (!playlist) {
+      iDB.Playlists.put(value);
+    }
+  });
+}
+
 iDB.Settings.bulkAdd([
   {
     key: 'favorite_playlist_order',
@@ -113,9 +123,26 @@ iDB.Settings.bulkAdd([
   },
   {
     key: 'my_playlist_order',
-    value: []
+    value: ['myplaylist_redheart']
   }
 ]);
+
+// migrate my playlist without redheart entry
+iDB.Settings.get({ key: 'my_playlist_order' }).then((order: any) => {
+  if (!order) {
+    iDB.Settings.put({
+      key: 'my_playlist_order',
+      value: ['myplaylist_redheart']
+    });
+  } else {
+    if (order.value.findIndex((id: string) => id == 'myplaylist_redheart') == -1) {
+      iDB.Settings.put({
+        key: 'my_playlist_order',
+        value: ['myplaylist_redheart', ...order.value]
+      });
+    }
+  }
+});
 
 function migratePlaylist(tracks: any, newId: string, newTitle: string, newType: 'current' | 'favorite' | 'my' | 'local') {
   iDB.Playlists.put({

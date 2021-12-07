@@ -67,7 +67,8 @@ img {
 .l1-button:hover {
   background: var(--button-hover-background-color);
 }
-svg {
+/* this section will cause feather style not working */
+/* svg {
   width: 24px;
   height: 24px;
   stroke: currentColor;
@@ -76,8 +77,9 @@ svg {
   stroke-linejoin: round;
   fill: none;
   cursor: pointer;
-  /*    stroke: var(--icon-default-color);*/
-}
+  stroke: var(--icon-default-color);
+
+} */
 
 /* svg:hover {
   fill: var(--icon-highlight-color);
@@ -214,6 +216,7 @@ svg {
   border-top: solid 2px transparent;
   border-bottom: solid 2px transparent;
   margin-bottom: -2px;
+  user-select: none;
 }
 .sidebar ul li .sidebar-block {
   display: flex;
@@ -849,11 +852,15 @@ ul.detail-songlist li .title {
   flex: 2;
   overflow: hidden;
   text-overflow: ellipsis;
-  display: -webkit-box;
+  display: flex;
   line-height: 17px;
   max-height: 38px;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
+}
+ul.detail-songlist li .title .vue-feather {
+  margin-right: 10px;
+  cursor: pointer;
 }
 ul.detail-songlist li.playlist-result .title {
   max-height: 80px;
@@ -1223,8 +1230,12 @@ svg.searchspinner {
   padding-right: 6px;
   /* background: #eeeeee; */
 }
+.footer .main-info .detail .ctrl i {
+  cursor: pointer;
+  margin-right: 10px;
+}
 .footer .main-info .detail .ctrl:first-of-type .icon {
-  margin-right: 5px;
+  margin-right: 10px;
 }
 .footer .main-info .detail .ctrl .icon {
   color: var(--text-default-color);

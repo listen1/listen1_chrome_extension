@@ -19,29 +19,28 @@
 import DefaultModal from './DefaultModal.vue';
 import { onMounted } from 'vue';
 import MediaService from '../../services/MediaService';
+import useRedHeart from '../../composition/redheart';
 import { useI18n } from 'vue-i18n';
 
 const { t } = useI18n();
 let myplaylist: any[] = $ref<unknown[]>([]);
 const emit = defineEmits(['close']);
 const props = defineProps<{
-    list_id: string,
+  list_id: string;
 }>();
 const mergePlaylist = (playlistId: string) => {
-  MediaService.mergePlaylist(props.list_id, playlistId);
+  const { mergePlaylistByUpdateRedHeart } = useRedHeart();
+  mergePlaylistByUpdateRedHeart(props.list_id, playlistId);
   emit('close');
 };
 
 onMounted(() => {
   MediaService.showMyPlaylist().then((res) => (myplaylist = res));
 });
-
-
 </script>
 
 <script lang="ts">
 export default {};
 </script>
-
 
 <style></style>

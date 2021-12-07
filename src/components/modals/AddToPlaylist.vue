@@ -25,13 +25,15 @@ import { onMounted, inject, toRaw } from 'vue';
 import MediaService from '../../services/MediaService';
 import { useI18n } from 'vue-i18n';
 import notyf from '../../services/notyf';
+import useRedHeart from '../../composition/redheart';
 
 const { t } = useI18n();
 let myplaylist: any = $ref<unknown[]>([]);
 const showModal: any = inject('showModal');
 
 const addToPlaylist = (playlist: string) => {
-  MediaService.addMyPlaylist(playlist, props.tracks.map(toRaw));
+  const { addMyPlaylistByUpdateRedHeart } = useRedHeart();
+  addMyPlaylistByUpdateRedHeart(playlist, props.tracks.map(toRaw));
   notyf.success(t('_ADD_TO_PLAYLIST_SUCCESS'));
   emit('close');
 };
