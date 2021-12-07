@@ -97,6 +97,7 @@
         <DragDropZone
           v-for="(song, index) in songs"
           :key="song.id"
+          :draggable="true"
           :class="{ even: index % 2 === 0, odd: index % 2 !== 0 }"
           :dragobject="song"
           :dragtitle="song.title"

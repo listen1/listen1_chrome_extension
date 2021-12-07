@@ -1,7 +1,7 @@
 <template>
   <li
     ref="root"
-    draggable="true"
+    :draggable="props.draggable"
     @dragstart="dragstart"
     @dragend="dragend"
     @dragenter="dragenter"
@@ -20,6 +20,7 @@ const props = defineProps<{
   dragtype: string;
   ondragleave?: any;
   sortable: boolean;
+  draggable: boolean;
 }>();
 const emits = defineEmits(['drop']);
 let root: any = $ref(null);

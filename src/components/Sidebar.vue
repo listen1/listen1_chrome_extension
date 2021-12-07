@@ -45,6 +45,7 @@
           v-for="(i, index) in myplaylists"
           :key="index"
           :class="{ active: route.path === `/playlist/${i.id}` }"
+          :draggable="i.id !== 'myplaylist_redheart'"
           :dragobject="i"
           :dragtitle="i.title"
           :sortable="i.id !== 'myplaylist_redheart'"
@@ -65,6 +66,7 @@
         <DragDropZone
           v-for="(i, index) in favoriteplaylists"
           :key="index"
+          :draggable="true"
           :class="{ active: route.path === `/playlist/${i.id}` }"
           :dragobject="i"
           :dragtitle="i.title"
@@ -120,6 +122,9 @@ const onSidebarPlaylistDrop = async (playlistType: string, list_id: string, even
     (playlistType === 'my' && dragType === 'application/listen1-myplaylist') ||
     (playlistType === 'favorite' && dragType === 'application/listen1-favoriteplaylist')
   ) {
+    if(list_id === 'myplaylist_redheart' || data.id==='myplaylist_redheart') {
+      return;
+    }
     await MediaService.reorderMyplaylist(playlistType, data.id, list_id, direction);
     if (playlistType === 'my') {
       refreshMy();

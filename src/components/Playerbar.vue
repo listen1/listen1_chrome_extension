@@ -124,6 +124,7 @@
           v-for="(song, index) in playlist"
           :id="'song_' + song.id"
           :key="song.id"
+          :draggable="true"
           :class="{ playing: currentPlaying.id == song.id, 'even': index % 2 === 0, 'odd': index % 2 !== 0 }"
           dragtype="application/listen1-song"
           :dragobject="song"
