@@ -17,31 +17,19 @@
         <div class="title">{{ t('_MY_MUSIC') }}</div>
       </div>
       <ul class="nav masthead-nav">
-        <li
-          v-if="isElectron()"
-          @click="$router.push('/playlist/lmplaylist_reserve')"
-          :class="{ active: route.path === '/playlist/lmplaylist_reserve' }"
-        >
+        <li v-if="isElectron()" @click="$router.push('/playlist/lmplaylist_reserve')" :class="{ active: route.path === '/playlist/lmplaylist_reserve' }">
           <div class="sidebar-block">
             <span class="icon li-featured-list" />
             <a>{{ t('_LOCAL_MUSIC') }}</a>
           </div>
         </li>
-        <li
-          v-if="is_login('netease')"
-          @click="$router.push(`/my_platform/netease`)"
-          :class="{ active: route.path === `/my_platform/netease` }"
-        >
+        <li v-if="is_login('netease')" @click="$router.push(`/my_platform/netease`)" :class="{ active: route.path === `/my_platform/netease` }">
           <div class="sidebar-block">
             <vue-feather type="globe" />
             <a>{{ t('_MY_NETEASE') }}</a>
           </div>
         </li>
-        <li
-          v-if="is_login('qq')"
-          @click="$router.push(`/my_platform/qq`)"
-          :class="{ active: route.path === `/my_platform/qq` }"
-        >
+        <li v-if="is_login('qq')" @click="$router.push(`/my_platform/qq`)" :class="{ active: route.path === `/my_platform/qq` }">
           <div class="sidebar-block">
             <vue-feather type="globe" />
             <a>{{ t('_MY_QQ') }}</a>
@@ -59,13 +47,13 @@
           :class="{ active: route.path === `/playlist/${i.id}` }"
           :dragobject="i"
           :dragtitle="i.title"
-          :sortable="true"
+          :sortable="i.id !== 'myplaylist_redheart'"
           dragtype="application/listen1-myplaylist"
           @drop="onSidebarPlaylistDrop('my', i.id, $event)"
           @click="$router.push(`/playlist/${i.id}`)">
           <div class="sidebar-block">
-            <vue-feather v-if="i.id!=='myplaylist_redheart'" type="disc" />
-            <vue-feather v-if="i.id==='myplaylist_redheart'" type="heart" />
+            <vue-feather v-if="i.id !== 'myplaylist_redheart'" type="disc" />
+            <vue-feather v-if="i.id === 'myplaylist_redheart'" type="heart" />
             <a>{{ i.title }}</a>
           </div>
         </DragDropZone>
@@ -103,13 +91,14 @@ import MediaService from '../services/MediaService';
 import DragDropZone from '../components/DragDropZone.vue';
 import notyf from '../services/notyf';
 import useAuth from '../composition/auth';
+import useRedHeart from '../composition/redheart';
 import { isElectron } from '../provider/lowebutil';
 
 import { useRoute } from 'vue-router';
 const isChrome = true;
 const route = useRoute();
 const { t } = useI18n();
-const {is_login} = useAuth();
+const { is_login } = useAuth();
 
 let favoriteplaylists: any = $ref<Playlist[]>([]);
 let myplaylists: any = $ref<unknown[]>([]);
@@ -124,7 +113,8 @@ const onSidebarPlaylistDrop = async (playlistType: string, list_id: string, even
   const { data, dragType, direction } = event;
 
   if (playlistType === 'my' && dragType === 'application/listen1-song') {
-    await MediaService.addMyPlaylist(list_id, [data]);
+    const { addMyPlaylistByUpdateRedHeart } = useRedHeart();
+    await addMyPlaylistByUpdateRedHeart(list_id, [data]);
     notyf.success(t('_ADD_TO_PLAYLIST_SUCCESS'));
   } else if (
     (playlistType === 'my' && dragType === 'application/listen1-myplaylist') ||

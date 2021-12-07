@@ -156,6 +156,7 @@ import useRedHeart from '../composition/redheart';
 const { t } = useI18n();
 const router = useRouter();
 const route = useRoute();
+const {isRedHeart, setRedHeart, addMyPlaylistByUpdateRedHeart, removeTrackFromMyPlaylistByUpdateRedHeart} = useRedHeart();
 let songs = $ref([]);
 let cover_img_url = $ref('images/loading.svg');
 let playlist_title = $ref('');
@@ -230,7 +231,7 @@ const saveAsMyPlaylist = async (list_id) => {
   notyf.success(t('_ADD_TO_PLAYLIST_SUCCESS'));
 };
 const removeSongFromPlaylist = async (track_id, list_id) => {
-  await MediaService.removeTrackFromMyPlaylist(track_id, list_id);
+  await removeTrackFromMyPlaylistByUpdateRedHeart(track_id, list_id);
   notyf.success(t('_REMOVE_SONG_FROM_PLAYLIST_SUCCESS'));
 };
 const addMylist = async () => {
@@ -247,7 +248,6 @@ const onPlaylistSongDrop = async (list_id, song, event) => {
   }
 };
 const showModal = inject('showModal');
-const {isRedHeart, setRedHeart} = useRedHeart();
 // TODO: avoid to use event bus to refresh state
 // use global ref to keep more clear way to manage state
 $event.on(`playlist:id:${listId}:update`, refreshPlaylist);
@@ -256,7 +256,7 @@ const addLocalMusic = (list_id) => {
   window.api.chooseLocalFile(list_id);
   window.api.ipcOnce('chooseLocalFile')(async (message) => {
     const { tracks } = message;
-    await MediaService.addMyPlaylist(list_id, tracks);
+    await addMyPlaylistByUpdateRedHeart(list_id, tracks);
     await refreshPlaylist();
   });
 };
