@@ -216,6 +216,7 @@ img {
   border-top: solid 2px transparent;
   border-bottom: solid 2px transparent;
   margin-bottom: -2px;
+  user-select: none;
 }
 .sidebar ul li .sidebar-block {
   display: flex;
