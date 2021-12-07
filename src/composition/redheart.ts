@@ -45,7 +45,25 @@ async function removeTrackFromMyPlaylistByUpdateRedHeart(track_id: string, list_
   }
 }
 
+async function mergePlaylistByUpdateRedHeart(masterPlaylistId: string, branchPlaylistId: string) {
+  await MediaService.mergePlaylist(masterPlaylistId, branchPlaylistId);
+  if (masterPlaylistId === 'myplaylist_redheart') {
+    const playlist = await MediaService.getPlaylist(branchPlaylistId);
+    playlist.info.order.forEach((trackId: string) => {
+      redheart.tracks[trackId] = 1;
+    });
+  }
+}
+
 function useRedHeart() {
-  return { redheart, isRedHeart, setRedHeart, initRedHeart, addMyPlaylistByUpdateRedHeart, removeTrackFromMyPlaylistByUpdateRedHeart };
+  return {
+    redheart,
+    isRedHeart,
+    setRedHeart,
+    initRedHeart,
+    addMyPlaylistByUpdateRedHeart,
+    removeTrackFromMyPlaylistByUpdateRedHeart,
+    mergePlaylistByUpdateRedHeart
+  };
 }
 export default useRedHeart;

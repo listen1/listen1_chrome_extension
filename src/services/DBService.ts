@@ -127,7 +127,7 @@ iDB.Settings.bulkAdd([
   }
 ]);
 
-// migrate my playlist without redheart entries
+// migrate my playlist without redheart entry
 iDB.Settings.get({ key: 'my_playlist_order' }).then((order: any) => {
   if (!order) {
     iDB.Settings.put({
