@@ -86,7 +86,11 @@ const dragover = (event: any) => {
     [dragType] = event.dataTransfer.types;
   }
 
-  if (props.dragtype === dragType && props.sortable) {
+  if (props.dragtype === dragType ) {
+    if(!props.sortable) {
+      event.dataTransfer.dropEffect = 'none';
+      return;
+    }
     event.dataTransfer.dropEffect = 'move';
     const bounding = event.target.getBoundingClientRect();
     const offset = bounding.y + bounding.height / 2;
