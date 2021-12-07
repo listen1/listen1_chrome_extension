@@ -127,6 +127,23 @@ iDB.Settings.bulkAdd([
   }
 ]);
 
+// migrate my playlist without redheart entries
+iDB.Settings.get({ key: 'my_playlist_order' }).then((order: any) => {
+  if (!order) {
+    iDB.Settings.put({
+      key: 'my_playlist_order',
+      value: ['myplaylist_redheart']
+    });
+  } else {
+    if (order.value.findIndex((id: string) => id == 'myplaylist_redheart') == -1) {
+      iDB.Settings.put({
+        key: 'my_playlist_order',
+        value: ['myplaylist_redheart', ...order.value]
+      });
+    }
+  }
+});
+
 function migratePlaylist(tracks: any, newId: string, newTitle: string, newType: 'current' | 'favorite' | 'my' | 'local') {
   iDB.Playlists.put({
     id: newId,
