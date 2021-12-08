@@ -117,11 +117,15 @@ export function smoothScrollTo(element, to, duration) {
 }
 
 export function async_process(data_list, handler, handler_extra_param_list) {
-  return Promise.all(data_list.map((item, index) =>
-    new Promise((res, rej) =>
-      handler(index, item, handler_extra_param_list, (err, data) => {
-        if (err) rej(err);
-        res(data);
-      })))
+  return Promise.all(
+    data_list.map(
+      (item, index) =>
+        new Promise((res, rej) =>
+          handler(index, item, handler_extra_param_list, (err, data) => {
+            if (err) rej(err);
+            res(data);
+          })
+        )
+    )
   );
 }

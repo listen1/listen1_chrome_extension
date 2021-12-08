@@ -10,14 +10,13 @@ if (process.argv.includes('-w') || process.argv.includes('--watch')) process.env
 
 const chromeExtPlugin = chromeExtension();
 
-
 // https://vitejs.dev/config/
 export default defineConfig({
   resolve: {
     alias: {
       'vue-i18n': 'vue-i18n/dist/vue-i18n.runtime.esm-bundler.js',
-      'node-forge': 'node-forge/dist/forge.min.js',
-    },
+      'node-forge': 'node-forge/dist/forge.min.js'
+    }
   },
   base: '',
   root: 'src/',
@@ -34,10 +33,10 @@ export default defineConfig({
       name: 'inject-css',
       buildStart() {
         const $ = chromeExtPlugin._plugins.html.cache.html$[0];
-        if($('head link').last().attr('href') !== 'assets/main.css') {
+        if ($('head link').last().attr('href') !== 'assets/main.css') {
           $('head').last().append($('<link rel="stylesheet" href="assets/main.css">'));
         }
-      },
+      }
     },
     // @ts-ignore: Type Mismatch Error
     chromeExtPlugin,

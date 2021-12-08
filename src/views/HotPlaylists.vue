@@ -2,11 +2,7 @@
   <div class="page page-hot-playlist">
     <div class="source-list">
       <template v-for="(source, index) in sourceList" :key="source.name">
-        <div
-          class="source-button"
-          :class="{ active: tab === source.name }"
-          @click="changeTab(source.name)"
-        >{{ t(source.name) }}</div>
+        <div class="source-button" :class="{ active: tab === source.name }" @click="changeTab(source.name)">{{ t(source.name) }}</div>
         <div v-if="index != sourceList.length - 1" class="splitter" />
       </template>
     </div>
@@ -16,20 +12,13 @@
         :key="filter.name"
         class="l1-button filter-item"
         ng-class="{'active':filter.id === currentFilterId}"
-        @click="changeFilter(filter.id)"
-      >{{ filter.name }}</div>
-      <div
-        v-show="playlistFilters[tab] && playlistFilters[tab].length > 0"
-        class="l1-button filter-item"
-        @click="toggleMorePlaylists()"
-      >更多...</div>
+        @click="changeFilter(filter.id)">
+        {{ filter.name }}
+      </div>
+      <div v-show="playlistFilters[tab] && playlistFilters[tab].length > 0" class="l1-button filter-item" @click="toggleMorePlaylists()">更多...</div>
     </div>
     <div v-show="showMore" class="all-playlist-filter">
-      <div
-        v-for="category in allPlaylistFilters[tab] || []"
-        :key="category.category"
-        class="category"
-      >
+      <div v-for="category in allPlaylistFilters[tab] || []" :key="category.category" class="category">
         <div class="category-title">{{ category.category }}</div>
         <div class="category-filters">
           <div v-for="filter in category.filters" :key="filter.name" class="filter-item">
@@ -82,15 +71,14 @@ let allPlaylistFilters = $ref({});
 
 const loadPlaylist = async (isReset) => {
   let offset = 0;
-  if(!isReset){
+  if (!isReset) {
     offset = result.length;
   }
   showMore = false;
   let response = await MediaService.showPlaylistArray(tab, offset, currentFilterId);
-  if(isReset){
+  if (isReset) {
     result = response;
-  }
-  else {
+  } else {
     result = [...result, ...response];
   }
   loading = false;

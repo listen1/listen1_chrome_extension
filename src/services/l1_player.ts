@@ -114,7 +114,7 @@ class l1PlayerProto {
           this._next(0);
         } else if (name === 'durationchange') {
           if (this._startProgress != 0) {
-            // start progress only work once 
+            // start progress only work once
             // set by seek method
             this._audio.currentTime = this._audio.duration * this._startProgress;
             this._startProgress = 0;
@@ -197,10 +197,10 @@ class l1PlayerProto {
       }
       return;
     }
-    if(track.url === undefined) {
+    if (track.url === undefined) {
       const result: unknown = await MediaService.bootstrapTrackAsync(track).catch(async () => {
         this._emit('custom:track_not_playable', { track });
-  
+
         track.disabled = true;
         await new Promise((r) => setTimeout(r, FALI_WAIT_SECOND * 1000));
         if (playDirection === -1) {
@@ -209,7 +209,7 @@ class l1PlayerProto {
           this._next(tryCount + 1);
         }
       });
-  
+
       if (!result) {
         return;
       }
@@ -246,7 +246,7 @@ class l1PlayerProto {
 
     if (!this._audio.src && this.playing) {
       this._startProgress = percent;
-      // set try count to this.playlist.length to disable skip to 
+      // set try count to this.playlist.length to disable skip to
       // other song if this song fail
       this._play(this.playing, 1, this.playlist.length);
       return;

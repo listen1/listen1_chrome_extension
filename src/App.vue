@@ -43,7 +43,7 @@ const initPlayer = async () => {
   const currentPlaylist = await iDB.Playlists.get({ id: 'current' });
   const localCurrentPlaying = await iDB.Tracks.where('playlist').equals('current').toArray();
   let tracks = [];
-  if(currentPlaylist !== undefined) {
+  if (currentPlaylist !== undefined) {
     tracks = currentPlaylist.order.map((id) => localCurrentPlaying.find((track) => track.id == id));
   }
   const dbSettings = await iDB.Settings.where('key').equals('playerSettings').toArray();
@@ -53,7 +53,6 @@ const initPlayer = async () => {
   });
 
   l1Player.addTracks(tracks);
-
 
   let playerSettings = {};
   if (dbSettings.length > 0) {
@@ -74,12 +73,11 @@ onMounted(async () => {
   await initPlayer();
   // TODO: diagnose slow loadSetting function
   await loadSettings();
-  
-  const {initRedHeart} = useRedHeart();
+
+  const { initRedHeart } = useRedHeart();
   await initRedHeart();
 
   applyThemeCSS();
-
 });
 watch(settings, applyThemeCSS);
 </script>

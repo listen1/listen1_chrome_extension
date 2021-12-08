@@ -2,11 +2,7 @@
   <div class="footer">
     <div class="left-control">
       <span class="icon li-previous" @click="prevTrack()" />
-      <span
-        class="icon li-play play"
-        :class="isPlaying ? 'li-pause' : 'li-play'"
-        @click="playPauseToggle()"
-      />
+      <span class="icon li-play play" :class="isPlaying ? 'li-pause' : 'li-play'" @click="playPauseToggle()" />
       <span class="icon li-next" @click="nextTrack()" />
     </div>
     <div class="main-info">
@@ -21,8 +17,7 @@
           stroke="#666666"
           stroke-width="1"
           stroke-linecap="round"
-          stroke-linejoin="round"
-        >
+          stroke-linejoin="round">
           <polygon points="7 4 7 19 16 19 16 16 10 16 10 4" />
           <polygon points="13 4 13 13 16 13 16 4" />
         </svg>
@@ -41,20 +36,9 @@
             type="heart"
             size="15"
             stroke-width="1.5"
-            @click="setRedHeart(toRaw(currentPlaying), true)"
-          />
-          <vue-feather
-            v-if="isRedHeart(currentPlaying.id)"
-            type="heart"
-            fill="red"
-            stroke="red"
-            size="15"
-            @click="setRedHeart(toRaw(currentPlaying), false)"
-          />
-          <a
-            @click="showModal('AddToPlaylist', { tracks: [currentPlaying] })"
-            :title="t('_ADD_TO_PLAYLIST')"
-          >
+            @click="setRedHeart(toRaw(currentPlaying), true)" />
+          <vue-feather v-if="isRedHeart(currentPlaying.id)" type="heart" fill="red" stroke="red" size="15" @click="setRedHeart(toRaw(currentPlaying), false)" />
+          <a @click="showModal('AddToPlaylist', { tracks: [currentPlaying] })" :title="t('_ADD_TO_PLAYLIST')">
             <span class="icon li-songlist" />
           </a>
           <a title @click="changePlaymode()">
@@ -73,19 +57,12 @@
           <div class="singer">
             <a @click="showPlaylist(currentPlaying.artist_id)">{{ currentPlaying.artist }}</a>
             -
-            <a
-              @click="showPlaylist(currentPlaying.album_id)"
-            >{{ currentPlaying.album }}</a>
+            <a @click="showPlaylist(currentPlaying.album_id)">{{ currentPlaying.album }}</a>
           </div>
           <div class="total">{{ formatTime(currentDuration) }}</div>
         </div>
         <div class="playbar">
-          <draggable-bar
-            id="progressbar"
-            :progress="myProgress"
-            @commit-progress="commitProgress"
-            @update-progress="updateProgress"
-          ></draggable-bar>
+          <draggable-bar id="progressbar" :progress="myProgress" @commit-progress="commitProgress" @update-progress="updateProgress"></draggable-bar>
         </div>
       </div>
     </div>
@@ -96,28 +73,17 @@
       <div class="volume-ctrl" volume-wheel>
         <vue-feather class="icon" :type="volumeIcon" size="18px" @click="toggleMuteStatus()" />
         <div class="m-pbar volume">
-          <draggable-bar
-            id="volumebar"
-            :progress="volume * 100"
-            @update-progress="changeVolume"
-            @commit-progress="commitVolume"
-          ></draggable-bar>
+          <draggable-bar id="volumebar" :progress="volume * 100" @update-progress="changeVolume" @commit-progress="commitVolume"></draggable-bar>
         </div>
       </div>
       <div v-if="isElectron()" class="lyric-toggle">
-        <div
-          @click="toggleLyricFloatingWindow()"
-          class="lyric-icon"
-          :class="{ 'selected': settings.enableLyricFloatingWindow }"
-        >词</div>
+        <div @click="toggleLyricFloatingWindow()" class="lyric-icon" :class="{ selected: settings.enableLyricFloatingWindow }">词</div>
       </div>
     </div>
     <div class="menu-modal" :class="{ slideup: !menuHidden }" @click="togglePlaylist()" />
     <div class="menu" :class="{ slideup: !menuHidden }">
       <div class="menu-header">
-        <span
-          class="menu-title"
-        >{{ t('_TOTAL_SONG_PREFIX') }} {{ playlist.length }} {{ t('_TOTAL_SONG_POSTFIX') }}</span>
+        <span class="menu-title">{{ t('_TOTAL_SONG_PREFIX') }} {{ playlist.length }} {{ t('_TOTAL_SONG_POSTFIX') }}</span>
         <a class="add-all" @click="showModal('AddToPlaylist', { tracks: playlist })">
           <span class="icon li-songlist" ng-click="togglePlaylist()" />
           <span>{{ t('_ADD_TO_PLAYLIST') }}</span>
@@ -137,29 +103,31 @@
           :id="'song_' + song.id"
           :key="song.id"
           :draggable="true"
-          :class="{ playing: currentPlaying.id == song.id, 'even': index % 2 === 0, 'odd': index % 2 !== 0 }"
+          :class="{ playing: currentPlaying.id == song.id, even: index % 2 === 0, odd: index % 2 !== 0 }"
           dragtype="application/listen1-song"
           :dragobject="song"
           :dragtitle="song.title"
           :sortable="true"
           @mouseenter="song.highlight = true"
           @mouseleave="song.highlight = undefined"
-          @drop="onCurrentPlayingSongDrop(song, $event)"
-        >
+          @drop="onCurrentPlayingSongDrop(song, $event)">
           <div class="song-status-icon">
             <vue-feather v-show="currentPlaying.id == song.id" type="play"></vue-feather>
           </div>
           <div class="song-title" :class="song.disabled ? 'disabled' : ''">
             <a @click="playFromPlaylist(song)">
-              <span
-                v-if="song.source === 'xiami'"
-                style="color: orange; border-radius: 12px; border: solid 1px; padding: 0 4px"
-              >⚠️ 🦐</span>
+              <span v-if="song.source === 'xiami'" style="color: orange; border-radius: 12px; border: solid 1px; padding: 0 4px">⚠️ 🦐</span>
               {{ song.title }}
             </a>
           </div>
           <div class="song-singer">
-            <a @click="showPlaylist(song.artist_id); togglePlaylist();">{{ song.artist }}</a>
+            <a
+              @click="
+                showPlaylist(song.artist_id);
+                togglePlaylist();
+              ">
+              {{ song.artist }}
+            </a>
           </div>
           <div class="tools">
             <span v-show="song.highlight" @click="removeTrack(song)" class="icon li-del" />
@@ -184,7 +152,6 @@ import useSettings from '../composition/settings';
 import { isElectron } from '../provider/lowebutil';
 import { l1Player } from '../services/l1_player';
 import { formatTime } from '../utils';
-
 
 const { t } = useI18n();
 const { player } = usePlayer();
@@ -232,7 +199,7 @@ const clearPlaylist = () => {
 const updateProgress = (progress) => {
   player.changingProgress = true;
   player.currentPosition = currentDuration * progress;
-}
+};
 
 const commitProgress = (progress) => {
   l1Player.seek(progress);
@@ -287,7 +254,7 @@ const onCurrentPlayingSongDrop = (song, event) => {
     // insert song
     l1Player.insertTrack(data, toRaw(song), direction);
   }
-}
+};
 function getCSSStringFromSetting(setting) {
   let { backgroundAlpha } = setting;
   if (backgroundAlpha === 0) {

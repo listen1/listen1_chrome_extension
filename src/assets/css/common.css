@@ -1293,7 +1293,6 @@ svg.searchspinner {
 }
 
 .footer .main-info .detail .playbar .barbg {
-
   height: 3px;
   background: var(--footer-player-bar-background-color);
 }

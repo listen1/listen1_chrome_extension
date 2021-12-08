@@ -4,8 +4,7 @@
   </transition>
 </template>
 
-<script lang="ts">
-</script>
+<script lang="ts"></script>
 
 <script setup lang="ts">
 import CreatePlaylist from './modals/CreatePlaylist.vue';
