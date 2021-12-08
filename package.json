@@ -9,7 +9,7 @@
     "build:electron": "vue-tsc --noEmit && cross-env BUILD_ELECTRON=1 vite build",
     "start:electron:dev": "cross-env BUILD_ELECTRON=1 vite build -w",
     "prepare": "husky install",
-    "format": "yarn prettier . --write"
+    "format": "prettier . --write"
   },
   "description": "one for all free music in china",
   "devDependencies": {
