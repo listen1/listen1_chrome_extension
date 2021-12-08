@@ -34,7 +34,9 @@
   --footer-main-background-color: transparent;
   --footer-player-bar-background-color: #666666;
   --footer-player-bar-cur-background-color: #e0e0e0;
-  --footer-header-background-color: #333333;
+  --footer-header-background-color: #2d2d2d;
+  --footer-header-border-color: #333333;
+  --footer-menu-odd-background-color: #222222;
   --footer-menu-even-background-color: #2d2d2d;
   --footer-menu-hover-background-color: #333333;
   --search-input-background-color: rgba(255, 255, 255, 0.1);
@@ -60,9 +62,7 @@
   --badge-font-size: 12px;
   --badge-font-color: #c3473a;
   --badge-border-color: #843932;
-  /* --songlist-odd-background-color: #2d2d2d;
-  --songlist-border-color: transparent;
-  --songlist-hover-background-color: #3e3e3e; */
+
   --songlist-odd-background-color: rgba(0, 0, 0, 0.04);
   --songlist-border-color: transparent;
   --songlist-hover-background-color: rgba(0, 0, 0, 0.1);

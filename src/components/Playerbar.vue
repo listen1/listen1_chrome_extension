@@ -38,8 +38,8 @@
       </div>
       <div v-if="playlist.length > 0" class="detail">
         <div class="ctrl">
-          <vue-feather v-if="!isRedHeart(currentPlaying.id)" type="heart" size="14" stroke-width="1" stroke="#666666" @click="setRedHeart(toRaw(currentPlaying), true)" />
-          <vue-feather v-if="isRedHeart(currentPlaying.id)" type="heart" fill="red" stroke="red" size="14" @click="setRedHeart(toRaw(currentPlaying), false)" />
+          <vue-feather v-if="!isRedHeart(currentPlaying.id)" type="heart" size="14" stroke-width="1"  @click="setRedHeart(toRaw(currentPlaying), true)" />
+          <vue-feather class="heart" v-if="isRedHeart(currentPlaying.id)" type="heart" fill="red" stroke="red" size="14" @click="setRedHeart(toRaw(currentPlaying), false)" />
           <a
             @click="showModal('AddToPlaylist', { tracks: [currentPlaying] })"
             :title="t('_ADD_TO_PLAYLIST')"

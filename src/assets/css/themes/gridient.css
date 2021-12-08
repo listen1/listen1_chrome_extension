@@ -32,9 +32,11 @@
   --foot-background-color: transparent;
   --foot-border-color: rgba(255, 255, 255, 0.2);
   --footer-main-background-color: transparent;
-  --footer-player-bar-background-color: #666666;
+  --footer-player-bar-background-color: rgba(255, 255, 255, 0.2);
   --footer-player-bar-cur-background-color: #e0e0e0;
-  --footer-header-background-color: #333333;
+  --footer-header-background-color: #2d2d2d;
+  --footer-header-border-color: #333333;
+  --footer-menu-odd-background-color: #2d2d2d;
   --footer-menu-even-background-color: #2d2d2d;
   --footer-menu-hover-background-color: #333333;
   --search-input-background-color: rgba(255, 255, 255, 0.1);
@@ -67,18 +69,18 @@
   --songlist-border-color: transparent;
   --songlist-hover-background-color: rgba(0, 0, 0, 0.1);
 
-  --player-left-icon-color: #b3b3b3;
-  --player-icon-color: #b3b3b3;
-  --player-icon-hover-color: #eeeeee;
-  --player-right-icon-color: #b3b3b3;
-  --player-right-icon-hover-color: #eeeeee;
-  --player-icon-hightlight-color: #eeeeee;
+  --player-left-icon-color: #eeeeee;
+  --player-icon-color: #eeeeee;
+  --player-icon-hover-color: #ffffff;
+  --player-right-icon-color: #eeeeee;
+  --player-right-icon-hover-color: #ffffff;
+  --player-icon-hightlight-color: #ffffff;
 
   --dialog-highlight-color: #444444;
   --dialog-background-color: #333;
   --dialog-text-color: #ffffff;
 
-  --volume-icon-color: #b3b3b3;
+  --volume-icon-color: #eeeeee;
   --volume-bar-background-color: #333333;
   --volume-bar-current-background-color: #e0e0e0;
 
@@ -88,7 +90,7 @@
   --lyric-line-margin: 20px;
 }
 
-.wrap {
+.background-layer {
   background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
   background-size: 400% 400%;
   animation: gradient 60s ease infinite;

@@ -12,6 +12,14 @@ a {
   text-decoration: none;
 }
 
+.background-layer {
+  position: fixed;
+  top:0;
+  bottom:0;
+  left:0;
+  right:0;
+}
+
 .wrap {
   /* https://stackoverflow.com/questions/28897089/z-index-on-borders */
   outline: solid 1px var(--windows-border-color);
@@ -142,6 +150,7 @@ img {
 
 /* split screen to up/down 2 parts */
 .main {
+  z-index: 1;
   flex: 1;
   display: flex;
   overflow: hidden;
@@ -1251,6 +1260,12 @@ svg.searchspinner {
 .footer .main-info .detail .ctrl .icon:hover {
   opacity: 1;
 }
+.footer .main-info .detail .ctrl svg {
+  stroke: var(--text-default-color);
+}
+.footer .main-info .detail .ctrl .heart svg {
+  stroke: none;
+}
 
 .footer .main-info .detail .title {
   text-align: center;
@@ -1361,7 +1376,8 @@ svg.searchspinner {
 
 .footer .menu .menu-header {
   height: 30px;
-  border-bottom: solid 1px var(--footer-header-background-color);
+  background: var(--footer-header-background-color);
+  border-bottom: solid 1px var(--footer-header-border-color);
   display: flex;
   align-items: center;
   color: #9e9e9e;
@@ -1426,6 +1442,7 @@ svg.searchspinner {
   margin-bottom: -2px;
   border-top: solid 2px var(--songlist-border-color);
   border-bottom: solid 2px var(--songlist-border-color);
+  background: var(--footer-menu-odd-background-color);
 }
 
 .footer .menu ul.menu-list li.even {

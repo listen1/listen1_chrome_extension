@@ -34,7 +34,9 @@
   --footer-main-background-color: transparent;
   --footer-player-bar-background-color: #e0e0e0;
   --footer-player-bar-cur-background-color: #666666;
-  --footer-header-background-color: #e7e7e7;
+  --footer-header-background-color: #ffffff;
+  --footer-header-border-color: #e7e7e7;
+  --footer-menu-odd-background-color: #ffffff;
   --footer-menu-even-background-color: #f7f7f7;
   --footer-menu-hover-background-color: #e5e5e5;
   --search-input-background-color: rgba(0, 0, 0, 0.1);
@@ -131,7 +133,7 @@
   }
 }
 /* Main styles */
-.wrap {
+.background-layer {
   /* img size is 50x50 */
   background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAIAAACRXR/mAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAIGNIUk0AAHolAACAgwAA+f8AAIDpAAB1MAAA6mAAADqYAAAXb5JfxUYAAABnSURBVHja7M5RDYAwDEXRDgmvEocnlrQS2SwUFST9uEfBGWs9c97nbGtDcquqiKhOImLs/UpuzVzWEi1atGjRokWLFi1atGjRokWLFi1atGjRokWLFi1af7Ukz8xWp8z8AAAA//8DAJ4LoEAAlL1nAAAAAElFTkSuQmCC')
     repeat 0 0;
