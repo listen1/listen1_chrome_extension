@@ -103,6 +103,8 @@
   "_THEME": "Theme",
   "_THEME_WHITE": "White Theme",
   "_THEME_BLACK": "Black Theme",
+  "_THEME_INFINITE_GRID": "Infinite Grid",
+  "_THEME_GRIDIENT": "Gridient",
   "_AUTO_CHOOSE_SOURCE": "Auto Choose Source",
   "_AUTO_CHOOSE_SOURCE_NOTICE": "Enable choose source from other music platform after fail.",
   "_AUTO_CHOOSE_SOURCE_LIST": "Music Platform to try after fail",

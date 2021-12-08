@@ -16,6 +16,7 @@ a {
   /* https://stackoverflow.com/questions/28897089/z-index-on-borders */
   outline: solid 1px var(--windows-border-color);
   box-sizing: border-box;
+  background-color: var(--theme-background-color);
 }
 
 /* remove focus highlight */
@@ -42,7 +43,8 @@ button {
   background-color: var(--button-background-color);
   color: var(--text-default-color);
   cursor: pointer;
-  border: solid 1px var(--button-background-color);
+  /* border: solid 1px var(--button-background-color); */
+  border: none;
   border-radius: var(--default-border-radius);
   padding: 5px;
   min-width: 80px;
@@ -319,6 +321,11 @@ https://stackoverflow.com/questions/19889615/can-an-angular-directive-pass-argum
   color: var(--text-default-color);
 }
 
+::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+  color: var(--search-input-placeholder-color);
+  opacity: 1; /* Firefox */
+}
+
 .navigation .window-control {
   flex: 0 0 105px;
   border-left: solid 1px var(--window-control-border-color);
@@ -521,11 +528,11 @@ https://stackoverflow.com/questions/19889615/can-an-angular-directive-pass-argum
   height: 16px;
   flex: 0 0 16px;
   margin-right: 8px;
-  stroke: rgb(102, 102, 102);
+  stroke: var(--text-default-color);
 }
 
 .playlist-button-list .playlist-button.fav-button .play-list.favorited svg {
-  fill: rgb(102, 102, 102);
+  fill: var(--text-default-color);
 }
 
 .page .playlist-detail .detail-head .detail-head-title h2 {
@@ -542,7 +549,7 @@ https://stackoverflow.com/questions/19889615/can-an-angular-directive-pass-argum
   bottom: 60px;
   background: var(--now-playing-page-background-color);
   overflow: hidden;
-  border: solid 1px var(--windows-border-color);
+  /* border: solid 1px var(--windows-border-color); */
   -webkit-app-region: no-drag;
   transition: all 0.3s;
 }
@@ -1334,7 +1341,7 @@ svg.searchspinner {
 }
 
 .footer .menu {
-  background: var(--foot-background-color);
+  background: var(--theme-background-color);
   border: solid 1px var(--foot-border-color);
   border-radius: 3px;
   position: fixed;
@@ -1343,11 +1350,13 @@ svg.searchspinner {
   left: 300px;
   right: 300px;
   -webkit-app-region: no-drag;
-  transition: all 0.3s;
+  /* transition: all 0.3s; */
   overflow: hidden;
+  opacity: 0;
 }
 .footer .menu.slideup {
   bottom: 60px;
+  opacity: 1;
 }
 
 .footer .menu .menu-header {

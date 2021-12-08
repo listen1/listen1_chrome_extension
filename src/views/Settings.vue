@@ -56,6 +56,10 @@
         <div class="settings-content">
           <SettingButton :text="t('_THEME_WHITE')" @click="setTheme('white')" />
           <SettingButton :text="t('_THEME_BLACK')" @click="setTheme('black')" />
+          <!-- <SettingButton :text="t('_THEME_WHITE_TRANSPARENT')" @click="setTheme('white_transparent')" />
+          <SettingButton :text="t('_THEME_BLACK_TRANSPARENT')" @click="setTheme('black_transparent')" /> -->
+          <SettingButton :text="t('_THEME_INFINITE_GRID')" @click="setTheme('infinite_grid')" />
+          <SettingButton :text="t('_THEME_GRIDIENT')" @click="setTheme('gridient')" />
         </div>
         <SettingTitle :text="t('_STYLE')" />
         <div class="settings-content">
