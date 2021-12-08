@@ -157,7 +157,7 @@ import useRedHeart from '../composition/redheart';
 const { t } = useI18n();
 const router = useRouter();
 const route = useRoute();
-const {isRedHeart, setRedHeart, addMyPlaylistByUpdateRedHeart, removeTrackFromMyPlaylistByUpdateRedHeart} = useRedHeart();
+const { isRedHeart, setRedHeart, addMyPlaylistByUpdateRedHeart, removeTrackFromMyPlaylistByUpdateRedHeart } = useRedHeart();
 let songs = $ref([]);
 let cover_img_url = $ref('images/loading.svg');
 let playlist_title = $ref('');

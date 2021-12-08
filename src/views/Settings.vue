@@ -13,42 +13,18 @@
         <SettingTitle :text="t('_NOWPLAYING_DISPLAY')" />
         <div class="settings-content">
           <div class="shortcut">
-            <vue-feather
-              v-show="!settings.enableNowplayingCoverBackground"
-              type="square"
-              @click="toggleCoverBackground"
-            ></vue-feather>
-            <vue-feather
-              v-show="settings.enableNowplayingCoverBackground"
-              type="check-square"
-              @click="toggleCoverBackground"
-            ></vue-feather>
+            <vue-feather v-show="!settings.enableNowplayingCoverBackground" type="square" @click="toggleCoverBackground"></vue-feather>
+            <vue-feather v-show="settings.enableNowplayingCoverBackground" type="check-square" @click="toggleCoverBackground"></vue-feather>
             {{ t('_NOWPLAYING_COVER_BACKGROUND_NOTICE') }}
           </div>
           <div class="shortcut">
-            <vue-feather
-              v-show="!settings.enableNowplayingBitrate"
-              type="square"
-              @click="toggleBitrate"
-            ></vue-feather>
-            <vue-feather
-              v-show="settings.enableNowplayingBitrate"
-              type="check-square"
-              @click="toggleBitrate"
-            ></vue-feather>
+            <vue-feather v-show="!settings.enableNowplayingBitrate" type="square" @click="toggleBitrate"></vue-feather>
+            <vue-feather v-show="settings.enableNowplayingBitrate" type="check-square" @click="toggleBitrate"></vue-feather>
             {{ t('_NOWPLAYING_BITRATE_NOTICE') }}
           </div>
           <div class="shortcut">
-            <vue-feather
-              v-show="!settings.enableNowplayingPlatform"
-              type="square"
-              @click="togglePlayingPlatform"
-            ></vue-feather>
-            <vue-feather
-              v-show="settings.enableNowplayingPlatform"
-              type="check-square"
-              @click="togglePlayingPlatform"
-            ></vue-feather>
+            <vue-feather v-show="!settings.enableNowplayingPlatform" type="square" @click="togglePlayingPlatform"></vue-feather>
+            <vue-feather v-show="settings.enableNowplayingPlatform" type="check-square" @click="togglePlayingPlatform"></vue-feather>
             {{ t('_NOWPLAYING_PLATFORM_NOTICE') }}
           </div>
         </div>
@@ -368,64 +344,64 @@ const disableSource = (source: string) => {
 const fontWeightOptions = [
   {
     text: t('Extra Light'),
-    value: 200,
+    value: 200
   },
   {
     text: t('Light'),
-    value: 300,
+    value: 300
   },
   {
     text: t('Normal'),
-    value: 400,
+    value: 400
   },
   {
     text: t('Medium'),
-    value: 500,
+    value: 500
   },
   {
     text: t('Semi Bold'),
-    value: 600,
+    value: 600
   },
   {
     text: t('Bold'),
-    value: 700,
+    value: 700
   },
   {
     text: t('Extra Bold'),
-    value: 800,
+    value: 800
   }
 ];
 
 const sourceList = [
   {
     name: 'netease',
-    displayId: '_NETEASE_MUSIC',
+    displayId: '_NETEASE_MUSIC'
   },
   {
     name: 'qq',
-    displayId: '_QQ_MUSIC',
+    displayId: '_QQ_MUSIC'
   },
   {
     name: 'kugou',
-    displayId: '_KUGOU_MUSIC',
+    displayId: '_KUGOU_MUSIC'
   },
   {
     name: 'kuwo',
-    displayId: '_KUWO_MUSIC',
+    displayId: '_KUWO_MUSIC'
   },
   {
     name: 'bilibili',
     displayId: '_BILIBILI_MUSIC',
-    searchable: false,
+    searchable: false
   },
   {
     name: 'migu',
-    displayId: '_MIGU_MUSIC',
+    displayId: '_MIGU_MUSIC'
   },
   {
     name: 'taihe',
-    displayId: '_TAIHE_MUSIC',
-  },
+    displayId: '_TAIHE_MUSIC'
+  }
 ];
 </script>
 <style>

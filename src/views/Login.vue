@@ -23,7 +23,10 @@
             </div>
 
             <button
-              @click="openLogin(source);showModal('OpenLogin', {source});">
+              @click="
+                openLogin(source);
+                showModal('OpenLogin', { source });
+              ">
               {{ t('_LOGIN') }}
             </button>
           </div>

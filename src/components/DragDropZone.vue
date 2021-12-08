@@ -86,8 +86,8 @@ const dragover = (event: any) => {
     [dragType] = event.dataTransfer.types;
   }
 
-  if (props.dragtype === dragType ) {
-    if(!props.sortable) {
+  if (props.dragtype === dragType) {
+    if (!props.sortable) {
       event.dataTransfer.dropEffect = 'none';
       return;
     }

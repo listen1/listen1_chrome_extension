@@ -5,19 +5,10 @@
       :class="{
         slidedown: overlay.type !== 'track',
         coverbg: settings.enableNowplayingCoverBackground
-      }"
-    >
+      }">
       <div class="draggable-zone" />
-      <div
-        v-if="settings.enableNowplayingCoverBackground"
-        class="bg"
-        :style="{ backgroundImage: `url(${currentPlaying.img_url}` }"
-      />
-      <div
-        class="translate-switch"
-        @click="toggleLyricTranslation()"
-        :class="{selected: settings.enableLyricTranslation}"
-      >译</div>
+      <div v-if="settings.enableNowplayingCoverBackground" class="bg" :style="{ backgroundImage: `url(${currentPlaying.img_url}` }" />
+      <div class="translate-switch" @click="toggleLyricTranslation()" :class="{ selected: settings.enableLyricTranslation }">译</div>
       <div class="close" :class="isMac ? 'mac' : ''" @click="toggleNowPlaying()">
         <vue-feather type="chevron-down"></vue-feather>
       </div>
@@ -37,10 +28,7 @@
       <div class="playsong-detail">
         <div class="detail-head">
           <div class="detail-head-cover">
-            <img
-              :src="currentPlaying.img_url"
-               @error="showImage($event, 'images/mycover.jpg')"
-            />
+            <img :src="currentPlaying.img_url" @error="showImage($event, 'images/mycover.jpg')" />
           </div>
           <div class="detail-head-title">
             <!--<a title="加入收藏" class="clone" ng-click="showDialog(0, currentPlaying)">收藏</a>
@@ -50,29 +38,33 @@
         <div class="detail-songinfo">
           <div class="title">
             <h2>{{ currentPlaying.title }}</h2>
-            <span
-              v-if="settings.enableNowplayingBitrate && currentPlaying.bitrate !== undefined"
-              class="badge"
-            >{{ currentPlaying.bitrate }}</span>
-            <span
-              v-if="settings.enableNowplayingPlatform && currentPlaying.platform !== undefined"
-              class="badge platform"
-            >{{ t(currentPlaying.platform) }}</span>
+            <span v-if="settings.enableNowplayingBitrate && currentPlaying.bitrate !== undefined" class="badge">{{ currentPlaying.bitrate }}</span>
+            <span v-if="settings.enableNowplayingPlatform && currentPlaying.platform !== undefined" class="badge platform">
+              {{ t(currentPlaying.platform) }}
+            </span>
           </div>
           <div class="info">
             <div class="singer">
               <span>{{ t('_ARTIST') }}：</span>
               <a
-                @click="showPlaylist(currentPlaying.artist_id);setOverlayType('');"
-                :title="currentPlaying.artist"
-              >{{ currentPlaying.artist }}</a>
+                @click="
+                  showPlaylist(currentPlaying.artist_id);
+                  setOverlayType('');
+                "
+                :title="currentPlaying.artist">
+                {{ currentPlaying.artist }}
+              </a>
             </div>
             <div class="album">
               <span>{{ t('_ALBUM') }}：</span>
               <a
-                @click="showPlaylist(currentPlaying.album_id);setOverlayType('');"
-                :title="currentPlaying.album"
-              >{{ currentPlaying.album }}</a>
+                @click="
+                  showPlaylist(currentPlaying.album_id);
+                  setOverlayType('');
+                "
+                :title="currentPlaying.album">
+                {{ currentPlaying.album }}
+              </a>
             </div>
           </div>
           <div class="lyric">
@@ -86,8 +78,9 @@
                 highlight: line.lineNumber == lyricLineNumber || line.lineNumber == lyricLineNumberTrans,
                 hide: line.translationFlag && !settings.enableLyricTranslation,
                 translate: line.translationFlag
-              }"
-            >{{ line.content }}</p>
+              }">
+              {{ line.content }}
+            </p>
             <div class="placeholder" />
           </div>
         </div>
@@ -106,7 +99,7 @@ const { t } = useI18n();
 const { player } = usePlayer();
 let { overlay, setOverlayType } = useOverlay();
 const router = useRouter();
-const { settings, setSettings} = useSettings();
+const { settings, setSettings } = useSettings();
 
 let isMac = $ref(false);
 
@@ -124,7 +117,7 @@ const showPlaylist = (playlistId) => {
 
 const toggleLyricTranslation = () => setSettings({ enableLyricTranslation: !settings.enableLyricTranslation });
 
-const showImage = (e,url) => {
+const showImage = (e, url) => {
   e.target.src = url;
 };
 

@@ -28,8 +28,7 @@
         background: rgba(36, 36, 36, 0.8);
       } */
       body {
-        font-family: "SF Pro Text", "SF Pro Icons", "Helvetica Neue",
-          "Microsoft Yahei", "Helvetica", "Arial", sans-serif;
+        font-family: 'SF Pro Text', 'SF Pro Icons', 'Helvetica Neue', 'Microsoft Yahei', 'Helvetica', 'Arial', sans-serif;
         overflow: hidden;
         margin: 0;
         padding: 0;
@@ -42,7 +41,7 @@
         fill: none;
         stroke: #999999;
         display: inline-block;
-        background-color: rgba(255,255,255,0.01);
+        background-color: rgba(255, 255, 255, 0.01);
       }
       #toolbar {
         user-select: none;
@@ -68,9 +67,7 @@
     </style>
   </head>
   <body>
-    <div
-      style="visibility: hidden; position: absolute; width: 0px; height: 0px"
-    >
+    <div style="visibility: hidden; position: absolute; width: 0px; height: 0px">
       <!-- load feather icon svg sprite -->
       <svg xmlns="http://www.w3.org/2000/svg">
         <defs>
@@ -132,21 +129,13 @@
         </svg>
       </div>
       <div class="unlocked">
-        <svg
-          class="feather icon control-action"
-          id="close-icon"
-          data-msg="float_window_close"
-        >
+        <svg class="feather icon control-action" id="close-icon" data-msg="float_window_close">
           <use href="#x"></use>
         </svg>
         <svg class="feather icon window-action" id="unlock-icon">
           <use href="#unlock"></use>
         </svg>
-        <a
-          class="icon control-action group-first-icon"
-          id="font-small-icon"
-          data-msg="float_window_font_small"
-        >
+        <a class="icon control-action group-first-icon" id="font-small-icon" data-msg="float_window_font_small">
           <svg class="feather">
             <use href="#type"></use>
           </svg>
@@ -154,11 +143,7 @@
             <use href="#minus"></use>
           </svg>
         </a>
-        <a
-          class="icon control-action"
-          id="font-large-icon"
-          data-msg="float_window_font_large"
-        >
+        <a class="icon control-action" id="font-large-icon" data-msg="float_window_font_large">
           <svg class="feather">
             <use href="#type"></use>
           </svg>
@@ -166,10 +151,7 @@
             <use href="#plus"></use>
           </svg>
         </a>
-        <a
-          class="icon control-action group-first-icon"
-          data-msg="float_window_background_dark"
-        >
+        <a class="icon control-action group-first-icon" data-msg="float_window_background_dark">
           <svg class="feather">
             <use href="#sun"></use>
           </svg>
@@ -185,11 +167,7 @@
             <use href="#plus"></use>
           </svg>
         </a>
-        <a
-          class="icon control-action group-first-icon"
-          id="font-large-icon"
-          data-msg="float_window_font_change_color"
-        >
+        <a class="icon control-action group-first-icon" id="font-large-icon" data-msg="float_window_font_change_color">
           <svg class="feather">
             <use href="#aperture"></use>
           </svg>
@@ -197,11 +175,11 @@
       </div>
     </div>
     <script>
-      currentLyric = document.getElementById("currentLyric");
+      currentLyric = document.getElementById('currentLyric');
       window.api.onLyric((arg) => {
         currentLyric.innerHTML = arg;
       });
-      currentLyricTrans = document.getElementById("currentLyricTrans");
+      currentLyricTrans = document.getElementById('currentLyricTrans');
       window.api.onTranslLyric((arg) => {
         currentLyricTrans.innerHTML = arg;
       });
@@ -211,74 +189,63 @@
 
       function renderToolBar() {
         if (IS_WINDOW_LOCKED) {
-          document.getElementsByClassName("locked")[0].style.display = "block";
-          document.getElementsByClassName("unlocked")[0].style.display = "none";
-          document.querySelector("body").classList.remove("unlocked-body");
+          document.getElementsByClassName('locked')[0].style.display = 'block';
+          document.getElementsByClassName('unlocked')[0].style.display = 'none';
+          document.querySelector('body').classList.remove('unlocked-body');
         } else {
-          document.getElementsByClassName("locked")[0].style.display = "none";
-          document.getElementsByClassName("unlocked")[0].style.display =
-            "block";
-          document.querySelector("body").classList.add("unlocked-body");
+          document.getElementsByClassName('locked')[0].style.display = 'none';
+          document.getElementsByClassName('unlocked')[0].style.display = 'block';
+          document.querySelector('body').classList.add('unlocked-body');
         }
       }
 
       // enter lyric window zone, show/hide lock icon
-      document.getElementById("toolbar").style.display = "none";
+      document.getElementById('toolbar').style.display = 'none';
 
-      document.addEventListener("mouseenter", (event) => {
-        document.getElementById("toolbar").style.display = "block";
+      document.addEventListener('mouseenter', (event) => {
+        document.getElementById('toolbar').style.display = 'block';
       });
-      document.addEventListener("mouseleave", (event) => {
-        document.getElementById("toolbar").style.display = "none";
+      document.addEventListener('mouseleave', (event) => {
+        document.getElementById('toolbar').style.display = 'none';
       });
 
       // enter lock icon zone, make window start to receive mouse event
-      document
-        .getElementById("lock-icon")
-        .addEventListener("mouseenter", (event) => {
-          if (!IS_WINDOW_LOCKED) {
-            return;
-          }
-          const message = "float_window_accept_mouse_event";
-          window.api.sendControl(message);
-        });
-
-      document
-        .getElementById("lock-icon")
-        .addEventListener("mouseleave", (event) => {
-          if (!IS_WINDOW_LOCKED) {
-            return;
-          }
-          const message = "float_window_ignore_mouse_event";
-          window.api.sendControl(message);
-        });
-
-      Array.from(document.getElementsByClassName("window-action")).forEach(
-        (elem) => {
-          elem.addEventListener(
-            "click",
-            function () {
-              // toggle floating window lock/unlock status
-              IS_WINDOW_LOCKED = !IS_WINDOW_LOCKED;
-              renderToolBar();
-              const message = IS_WINDOW_LOCKED
-                ? "float_window_ignore_mouse_event"
-                : "float_window_accept_mouse_event";
-              window.api.sendControl(message);
-            },
-            false
-          );
+      document.getElementById('lock-icon').addEventListener('mouseenter', (event) => {
+        if (!IS_WINDOW_LOCKED) {
+          return;
         }
-      );
+        const message = 'float_window_accept_mouse_event';
+        window.api.sendControl(message);
+      });
 
-      Array.from(document.getElementsByClassName("control-action")).forEach(
-        (elem) => {
-          elem.addEventListener("click", (event) => {
-            const message = event.currentTarget.dataset.msg;
+      document.getElementById('lock-icon').addEventListener('mouseleave', (event) => {
+        if (!IS_WINDOW_LOCKED) {
+          return;
+        }
+        const message = 'float_window_ignore_mouse_event';
+        window.api.sendControl(message);
+      });
+
+      Array.from(document.getElementsByClassName('window-action')).forEach((elem) => {
+        elem.addEventListener(
+          'click',
+          function () {
+            // toggle floating window lock/unlock status
+            IS_WINDOW_LOCKED = !IS_WINDOW_LOCKED;
+            renderToolBar();
+            const message = IS_WINDOW_LOCKED ? 'float_window_ignore_mouse_event' : 'float_window_accept_mouse_event';
             window.api.sendControl(message);
-          });
-        }
-      );
+          },
+          false
+        );
+      });
+
+      Array.from(document.getElementsByClassName('control-action')).forEach((elem) => {
+        elem.addEventListener('click', (event) => {
+          const message = event.currentTarget.dataset.msg;
+          window.api.sendControl(message);
+        });
+      });
       // drag can't use webkit-app-region becse mouse enter will not trigger
       // we use custom handle, more details please read link below
       // https://github.com/electron/electron/issues/1354#issuecomment-404348957
@@ -290,28 +257,26 @@
         mouseX = e.clientX;
         mouseY = e.clientY;
 
-        document.addEventListener("mouseup", onMouseUp);
+        document.addEventListener('mouseup', onMouseUp);
         requestAnimationFrame(this.moveWindow);
       }
 
       function onMouseUp(e) {
-        document.removeEventListener("mouseup", onMouseUp);
+        document.removeEventListener('mouseup', onMouseUp);
         cancelAnimationFrame(animationId);
       }
 
       function moveWindow() {
         window.api.sendFloatWindowMoving({
           mouseX,
-          mouseY,
+          mouseY
         });
         animationId = requestAnimationFrame(moveWindow);
       }
 
-      document
-        .getElementById("currentLyricAll")
-        .addEventListener("mousedown", (event) => {
-          onMouseDown(event);
-        });
+      document.getElementById('currentLyricAll').addEventListener('mousedown', (event) => {
+        onMouseDown(event);
+      });
 
       renderToolBar();
     </script>

@@ -122,7 +122,7 @@ const onSidebarPlaylistDrop = async (playlistType: string, list_id: string, even
     (playlistType === 'my' && dragType === 'application/listen1-myplaylist') ||
     (playlistType === 'favorite' && dragType === 'application/listen1-favoriteplaylist')
   ) {
-    if(list_id === 'myplaylist_redheart' || data.id==='myplaylist_redheart') {
+    if (list_id === 'myplaylist_redheart' || data.id === 'myplaylist_redheart') {
       return;
     }
     await MediaService.reorderMyplaylist(playlistType, data.id, list_id, direction);

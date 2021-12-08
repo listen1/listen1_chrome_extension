@@ -32,17 +32,15 @@ const showPlaylist = (playlistId: string) => {
 
 const openUrl = async () => {
   const result = await MediaService.parseURL(url);
-  if(result !== null){
-    showPlaylist(result.id)
+  if (result !== null) {
+    showPlaylist(result.id);
   }
   emit('close');
-}
-
+};
 </script>
 
 <script lang="ts">
 export default {};
 </script>
-
 
 <style></style>

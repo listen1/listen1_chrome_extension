@@ -26,7 +26,7 @@ import DefaultModal from './DefaultModal.vue';
 import { useI18n } from 'vue-i18n';
 import useAuth from '../../composition/auth';
 const props = defineProps<{
-    source: string
+  source: string;
 }>();
 const { openLogin, refreshAuthStatus } = useAuth();
 

@@ -14,14 +14,8 @@
           <p>_OPENING_LASTFM_PAGE</p>
           <p>_CONFIRM_NOTICE_LASTFM</p>
           <div class="buttons">
-            <button
-              class="btn btn-primary confirm-button"
-              ng-click="lastfm.updateStatus();closeDialog();"
-            >_AUTHORIZED_FINISHED</button>
-            <button
-              class="btn btn-warning warning-button"
-              ng-click="lastfm.getAuth();"
-            >_AUTHORIZED_REOPEN</button>
+            <button class="btn btn-primary confirm-button" ng-click="lastfm.updateStatus();closeDialog();">_AUTHORIZED_FINISHED</button>
+            <button class="btn btn-warning warning-button" ng-click="lastfm.getAuth();">_AUTHORIZED_REOPEN</button>
           </div>
         </div>
 
@@ -29,14 +23,8 @@
           <p>_OPENING_GITHUB_PAGE</p>
           <p>_CONFIRM_NOTICE_GITHUB</p>
           <div class="buttons">
-            <button
-              class="btn btn-primary confirm-button"
-              ng-click="updateGithubStatus();closeDialog();"
-            >_AUTHORIZED_FINISHED</button>
-            <button
-              class="btn btn-warning warning-button"
-              ng-click="openGithubAuth();"
-            >_AUTHORIZED_REOPEN</button>
+            <button class="btn btn-primary confirm-button" ng-click="updateGithubStatus();closeDialog();">_AUTHORIZED_FINISHED</button>
+            <button class="btn btn-warning warning-button" ng-click="openGithubAuth();">_AUTHORIZED_REOPEN</button>
           </div>
         </div>
         <ul v-show="dialog_type == 8" class="dialog-backuplist">
@@ -48,25 +36,19 @@
             ng-repeat="backup in myBackup track by $index"
             ng-class-odd="'odd'"
             ng-class-even="'even'"
-            ng-click="backupMySettings2Gist(backup.id, backup.public); closeDialog();"
-          >
+            ng-click="backupMySettings2Gist(backup.id, backup.public); closeDialog();">
             <img ng-src="../images/mycover.jpg" />
             <h2>
               backup.id
-              <br />backup.description
+              <br />
+              backup.description
             </h2>
           </li>
         </ul>
         <!-- create new backup dialog-->
         <div v-show="dialog_type == 9" class="dialog-newbackup">
-          <button
-            class="btn btn-primary confirm-button"
-            ng-click="backupMySettings2Gist(null, true);closeDialog();"
-          >_CREATE_PUBLIC_BACKUP</button>
-          <button
-            class="btn btn-primary confirm-button"
-            ng-click="backupMySettings2Gist(null, false);closeDialog();"
-          >_CREATE_PRIVATE_BACKUP</button>
+          <button class="btn btn-primary confirm-button" ng-click="backupMySettings2Gist(null, true);closeDialog();">_CREATE_PUBLIC_BACKUP</button>
+          <button class="btn btn-primary confirm-button" ng-click="backupMySettings2Gist(null, false);closeDialog();">_CREATE_PRIVATE_BACKUP</button>
           <button class="btn btn-default" ng-click="cancelNewDialog(8)">_CANCEL</button>
         </div>
         <ul v-show="dialog_type == 10" class="dialog-backuplist">
@@ -74,8 +56,7 @@
             ng-repeat="backup in myBackup track by $index"
             ng-class-odd="'odd'"
             ng-class-even="'even'"
-            ng-click="importMySettingsFromGist(backup.id); closeDialog();"
-          >
+            ng-click="importMySettingsFromGist(backup.id); closeDialog();">
             <img ng-src="../images/mycover.jpg" />
             <h2>backup.id backup.description</h2>
           </li>
@@ -83,30 +64,16 @@
         <div v-show="dialog_type == 11" class="dialog-open-login">
           <p>_LOGIN_DIALOG_NOTICE</p>
           <div class="buttons">
-            <button
-              class="btn btn-primary confirm-button"
-              ng-click="closeDialog();refreshAuthStatus();"
-            >_LOGIN_SUCCESS</button>
-            <button
-              class="btn btn-warning warning-button"
-              ng-click="openLogin(dialog_data);"
-            >_LOGIN_FAIL_RETRY</button>
+            <button class="btn btn-primary confirm-button" ng-click="closeDialog();refreshAuthStatus();">_LOGIN_SUCCESS</button>
+            <button class="btn btn-warning warning-button" ng-click="openLogin(dialog_data);">_LOGIN_FAIL_RETRY</button>
           </div>
         </div>
         <div v-show="dialog_type == 12" class="dialog-proxy">
-          <select
-            ng-options="mode.displayText for mode in proxyModes"
-            ng-model="proxyModeInput"
-            ng-change="changeProxyMode(proxyModeInput)"
-          />
+          <select ng-options="mode.displayText for mode in proxyModes" ng-model="proxyModeInput" ng-change="changeProxyMode(proxyModeInput)" />
           <div ng-show="proxyModeInput_name == 'custom'" class="custom-proxy">
             <div class="rule-input">
               <div class="field-name">_PROTOCOL</div>
-              <select
-                ng-options="protocol for protocol in proxyProtocols"
-                ng-model="proxyProtocol"
-                ng-change="changeProxyProtocol(proxyProtocol)"
-              />
+              <select ng-options="protocol for protocol in proxyProtocols" ng-model="proxyProtocol" ng-change="changeProxyProtocol(proxyProtocol)" />
               <div class="field-name">_HOST</div>
               <input id="proxy-rules-host" type="text" />
               <div class="field-name">_PORT</div>
@@ -114,10 +81,7 @@
             </div>
           </div>
           <div class="buttons">
-            <button
-              class="btn btn-primary confirm-button"
-              ng-click="setProxyConfig();closeDialog();"
-            >_CONFIRM</button>
+            <button class="btn btn-primary confirm-button" ng-click="setProxyConfig();closeDialog();">_CONFIRM</button>
             <button class="btn btn-warning warning-button" ng-click="closeDialog();">_CANCEL</button>
           </div>
         </div>
@@ -141,25 +105,16 @@
               class="form-control search-input"
               :placeholder="t('_SEARCH_PLACEHOLDER')"
               ng-model-options="{debounce: 500}"
-              @input="searchTextChanged"
-            />
+              @input="searchTextChanged" />
           </div>
-          <div
-            ng-class="{ 'active': (current_tag==4) && (window_url_stack.length ==0)}"
-            class="settings"
-            :style="platButtonStyle"
-          >
+          <div ng-class="{ 'active': (current_tag==4) && (window_url_stack.length ==0)}" class="settings" :style="platButtonStyle">
             <router-link to="/login">
               <span class="icon">
                 <vue-feather type="users"></vue-feather>
               </span>
             </router-link>
           </div>
-          <div
-            ng-class="{ 'active': (current_tag==4) && (window_url_stack.length ==0)}"
-            class="settings"
-            :style="settingButtonStyle"
-          >
+          <div ng-class="{ 'active': (current_tag==4) && (window_url_stack.length ==0)}" class="settings" :style="settingButtonStyle">
             <router-link to="/settings">
               <span class="icon">
                 <vue-feather type="settings"></vue-feather>
@@ -173,12 +128,7 @@
           </div>
         </div>
 
-        <div
-          class="browser flex-scroll-wrapper"
-          id="browser"
-          v-on:scroll.passive="handleScroll"
-          content-selector="'#playlist-content'"
-        >
+        <div class="browser flex-scroll-wrapper" id="browser" v-on:scroll.passive="handleScroll" content-selector="'#playlist-content'">
           <router-view :key="$route.path" />
           <NowPlaying />
         </div>
@@ -196,21 +146,18 @@ import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 import '../assets/css/common.css';
 import '../assets/css/icon.css';
-import DraggableBar from '../components/DraggableBar.vue';
+import Modal from '../components/Modal.vue';
+import Playerbar from '../components/Playerbar.vue';
+import Sidebar from '../components/Sidebar.vue';
+import useAuth from '../composition/auth';
 import usePlayer from '../composition/player';
 import useSearch from '../composition/search';
-import useAuth from '../composition/auth';
 import useSettings from '../composition/settings';
 import { setLocale } from '../i18n';
-import { l1Player } from '../services/l1_player';
-import Modal from '../components/Modal.vue';
-import DefaultModal from '../components/modals/DefaultModal.vue';
-import Sidebar from '../components/Sidebar.vue';
-import Playerbar from '../components/Playerbar.vue';
-import NowPlaying from '../views/NowPlaying.vue';
+import { isLinux, isWin } from '../provider/lowebutil';
 import EventService from '../services/EventService';
-import { isElectron, isMac, isLinux, isWin } from '../provider/lowebutil';
-
+import { l1Player } from '../services/l1_player';
+import NowPlaying from '../views/NowPlaying.vue';
 
 const { t } = useI18n();
 const { player } = usePlayer();
@@ -354,11 +301,7 @@ let lyricFontWeight = $computed(() => settings.lyricFontWeight);
 let lyricFontSize = $computed(() => settings.lyricFontSize);
 setLocale(settings.language);
 
-
-
-
 const sendControl = (message) => {
   window.api?.sendControl(message);
-}
-
+};
 </script>

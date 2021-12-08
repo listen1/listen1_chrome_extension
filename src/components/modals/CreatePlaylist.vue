@@ -27,10 +27,10 @@ let newlistTitle = $ref('');
 const createAndAddPlaylist = () => {
   MediaService.createMyPlaylist(newlistTitle, props.tracks.map(toRaw));
   emit('close');
-}
+};
 
 const props = defineProps<{
-    tracks: unknown[],
+  tracks: unknown[];
 }>();
 const emit = defineEmits(['close']);
 </script>
@@ -38,6 +38,5 @@ const emit = defineEmits(['close']);
 <script lang="ts">
 export default {};
 </script>
-
 
 <style></style>
