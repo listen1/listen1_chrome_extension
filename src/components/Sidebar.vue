@@ -1,46 +1,35 @@
 <template>
-  <div class="sidebar">
+  <div class="sidebar flex flex-col bg-sidebar flex-none w-56 pl-3">
     <div class="flex-scroll-wrapper">
-      <div class="menu-control" />
-      <div class="menu-title">
-        <div class="title">{{ t('_PLATFORM_UNION') }}</div>
-      </div>
-      <ul class="nav masthead-nav">
-        <li :class="{ active: $route.name === 'HotPlaylists' }" @click="$router.push('/')">
-          <div class="sidebar-block">
-            <span class="icon li-featured-list" />
-            <a>{{ t('_PLAYLISTS') }}</a>
-          </div>
+      <div class="app-region-drag h-12" />
+      <SidebarTitle :text="t('_PLATFORM_UNION')"></SidebarTitle>
+      <ul>
+        <li :class="{ active: $route.name === 'HotPlaylists' }" class="group" @click="$router.push('/')">
+          <SidebarEntry :text="t('_PLAYLISTS')" icon="li-featured-list"></SidebarEntry>
         </li>
       </ul>
-      <div v-if="!isChrome || is_login('netease') || is_login('qq')" class="menu-title">
-        <div class="title">{{ t('_MY_MUSIC') }}</div>
+      <div v-if="!isChrome || is_login('netease') || is_login('qq')" class="group">
+        <SidebarTitle :text="t('_MY_MUSIC')"></SidebarTitle>
       </div>
-      <ul class="nav masthead-nav">
-        <li v-if="isElectron()" @click="$router.push('/playlist/lmplaylist_reserve')" :class="{ active: route.path === '/playlist/lmplaylist_reserve' }">
-          <div class="sidebar-block">
-            <span class="icon li-featured-list" />
-            <a>{{ t('_LOCAL_MUSIC') }}</a>
-          </div>
+      <ul>
+        <li
+          v-if="isElectron()"
+          @click="$router.push('/playlist/lmplaylist_reserve')"
+          :class="{ active: route.path === '/playlist/lmplaylist_reserve' }"
+          class="group">
+          <SidebarEntry :text="t('_LOCAL_MUSIC')" icon="li-featured-list"></SidebarEntry>
         </li>
-        <li v-if="is_login('netease')" @click="$router.push(`/my_platform/netease`)" :class="{ active: route.path === `/my_platform/netease` }">
-          <div class="sidebar-block">
-            <vue-feather type="globe" />
-            <a>{{ t('_MY_NETEASE') }}</a>
-          </div>
+        <li v-if="is_login('netease')" @click="$router.push(`/my_platform/netease`)" :class="{ active: route.path === `/my_platform/netease` }" class="group">
+          <SidebarEntry :text="t('_MY_NETEASE')" icon="vue-feather-globe"></SidebarEntry>
         </li>
-        <li v-if="is_login('qq')" @click="$router.push(`/my_platform/qq`)" :class="{ active: route.path === `/my_platform/qq` }">
-          <div class="sidebar-block">
-            <vue-feather type="globe" />
-            <a>{{ t('_MY_QQ') }}</a>
-          </div>
+        <li v-if="is_login('qq')" @click="$router.push(`/my_platform/qq`)" :class="{ active: route.path === `/my_platform/qq` }" class="group">
+          <SidebarEntry :text="t('_MY_QQ')" icon="vue-feather-globe"></SidebarEntry>
         </li>
       </ul>
-      <div class="menu-title">
-        <div class="title">{{ t('_CREATED_PLAYLIST') }}</div>
-        <vue-feather type="plus-square" @click="showModal('ParseUrl', {})" />
-      </div>
-      <ul class="nav masthead-nav">
+      <SidebarTitle :text="t('_CREATED_PLAYLIST')">
+        <template v-slot:right><vue-feather size="1.25rem" type="plus-square" @click="showModal('ParseUrl', {})" /></template>
+      </SidebarTitle>
+      <ul>
         <DragDropZone
           v-for="(i, index) in myplaylists"
           :key="index"
@@ -52,17 +41,14 @@
           dragtype="application/listen1-myplaylist"
           @drop="onSidebarPlaylistDrop('my', i.id, $event)"
           @click="$router.push(`/playlist/${i.id}`)">
-          <div class="sidebar-block">
-            <vue-feather v-if="i.id !== 'myplaylist_redheart'" type="disc" />
-            <vue-feather v-if="i.id === 'myplaylist_redheart'" type="heart" />
-            <a>{{ i.title }}</a>
-          </div>
+          <SidebarEntry v-if="i.id !== 'myplaylist_redheart'" :text="i.title" icon="vue-feather-disc"></SidebarEntry>
+          <SidebarEntry v-if="i.id === 'myplaylist_redheart'" :text="i.title" icon="vue-feather-heart"></SidebarEntry>
         </DragDropZone>
       </ul>
-      <div class="menu-title">
-        <div class="title">{{ t('_FAVORITED_PLAYLIST') }}</div>
-      </div>
-      <ul class="nav masthead-nav">
+
+      <SidebarTitle :text="t('_FAVORITED_PLAYLIST')"></SidebarTitle>
+
+      <ul>
         <DragDropZone
           v-for="(i, index) in favoriteplaylists"
           :key="index"
@@ -74,10 +60,7 @@
           dragtype="application/listen1-favoriteplaylist"
           @click="$router.push(`/playlist/${i.id}`)"
           @drop="onSidebarPlaylistDrop('favorite', i.id, $event)">
-          <div class="sidebar-block">
-            <vue-feather type="disc" />
-            <a>{{ i.title }}</a>
-          </div>
+          <SidebarEntry :text="i.title" icon="vue-feather-disc"></SidebarEntry>
         </DragDropZone>
       </ul>
     </div>
@@ -95,6 +78,8 @@ import notyf from '../services/notyf';
 import useAuth from '../composition/auth';
 import useRedHeart from '../composition/redheart';
 import { isElectron } from '../provider/lowebutil';
+import SidebarEntry from '../components/SidebarEntry.vue';
+import SidebarTitle from '../components/SidebarTitle.vue';
 
 import { useRoute } from 'vue-router';
 const isChrome = true;
@@ -143,3 +128,18 @@ const showModal: any = inject('showModal');
 $event.on('playlist:favorite:update', refreshFav);
 $event.on('playlist:my:update', refreshMy);
 </script>
+<style>
+.sidebar ul li.active .sidebar-block,
+.sidebar ul li.active:hover .sidebar-block,
+.sidebar ul li.dragover .sidebar-block {
+  background: var(--sidebar-highlight-background-color);
+  color: var(--sidebar-highlight-text-color);
+}
+/*
+avoid hover effect trigger dragleave event
+https://stackoverflow.com/questions/19889615/can-an-angular-directive-pass-arguments-to-functions-in-expressions-specified-in
+*/
+.sidebar ul li * {
+  pointer-events: none;
+}
+</style>

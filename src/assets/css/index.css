@@ -1,3 +1,12 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer utilities {
+  .app-region-drag {
+    -webkit-app-region: drag;
+  }
+  .-mb-2px {
+    margin-bottom: -2px;
+  }
+}

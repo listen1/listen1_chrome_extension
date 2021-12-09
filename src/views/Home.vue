@@ -1,9 +1,9 @@
 <template>
   <Modal ref="modalRef"></Modal>
-  <div class="background-layer"></div>
-  <div class="wrap">
+  <div class="background-layer inset-0 fixed"></div>
+  <div class="wrap flex h-screen flex-col bg-theme">
     <!-- dialog-->
-    <div v-show="is_dialog_hidden !== 1" class="shadow" />
+    <!-- <div v-show="is_dialog_hidden !== 1" class="shadow" />
     <div v-show="is_dialog_hidden !== 1" class="dialog" :style="myStyle">
       <div class="dialog-header">
         <span>{{ dialog_title }}</span>
@@ -45,7 +45,6 @@
             </h2>
           </li>
         </ul>
-        <!-- create new backup dialog-->
         <div v-show="dialog_type == 9" class="dialog-newbackup">
           <button class="btn btn-primary confirm-button" ng-click="backupMySettings2Gist(null, true);closeDialog();">_CREATE_PUBLIC_BACKUP</button>
           <button class="btn btn-primary confirm-button" ng-click="backupMySettings2Gist(null, false);closeDialog();">_CREATE_PRIVATE_BACKUP</button>
@@ -86,13 +85,13 @@
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
 
-    <div class="main" ng-controller="MyPlayListController">
+    <div class="main flex z-10 overflow-hidden flex-1">
       <Sidebar></Sidebar>
 
-      <div class="content" ng-controller="InstantSearchController">
-        <div class="navigation">
+      <div class="content flex flex-col flex-1 bg-content">
+        <div class="navigation flex items-center">
           <div class="backfront">
             <span class="icon li-back" @click="$router.go(-1)" />
             <span class="icon li-advance" @click="$router.go(1)" />
@@ -128,7 +127,7 @@
           </div>
         </div>
 
-        <div class="browser flex-scroll-wrapper" id="browser" v-on:scroll.passive="handleScroll" content-selector="'#playlist-content'">
+        <div class="browser flex-scroll-wrapper flex-1" id="browser" v-on:scroll.passive="handleScroll" content-selector="'#playlist-content'">
           <router-view :key="$route.path" />
           <NowPlaying />
         </div>

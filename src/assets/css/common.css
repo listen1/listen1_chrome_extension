@@ -1,30 +1,13 @@
 html,
 body {
-  margin: 0;
-  padding: 0;
   font-size: var(--text-default-size);
   color: var(--text-default-color);
   font-family: -apple-system, 'Helvetica Neue', Helvetica, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', system-ui, sans-serif;
 }
 
-a {
-  cursor: pointer;
-  text-decoration: none;
-}
-
-.background-layer {
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-}
-
 .wrap {
   /* https://stackoverflow.com/questions/28897089/z-index-on-borders */
   outline: solid 1px var(--windows-border-color);
-  box-sizing: border-box;
-  background-color: var(--theme-background-color);
 }
 
 /* remove focus highlight */
@@ -33,12 +16,6 @@ select:focus,
 textarea:focus,
 button:focus {
   outline: none;
-}
-
-ul {
-  list-style: none;
-  margin: 0;
-  padding: 0;
 }
 
 input,
@@ -50,7 +27,6 @@ svg,
 button {
   background-color: var(--button-background-color);
   color: var(--text-default-color);
-  cursor: pointer;
   /* border: solid 1px var(--button-background-color); */
   border: none;
   border-radius: var(--default-border-radius);
@@ -64,6 +40,7 @@ button:hover {
 img {
   -webkit-user-drag: none;
 }
+
 .l1-button {
   background-color: var(--button-background-color);
   color: var(--text-default-color);
@@ -141,141 +118,26 @@ img {
 }
 
 /* main framework start */
-.wrap {
-  display: flex;
-  height: 100vh;
-  flex-direction: column;
-  margin: auto;
-}
-
 /* split screen to up/down 2 parts */
-.main {
-  z-index: 1;
-  flex: 1;
-  display: flex;
-  overflow: hidden;
-}
 
 .footer {
   background: var(--foot-background-color);
   height: 60px;
   border-top: solid 1px var(--line-default-color);
-  display: flex;
-  position: relative;
-  z-index: 99;
 }
 
 /* split main to left/right 2 parts */
-.main .sidebar {
-  flex: 0 0 200px;
-  display: flex;
-  flex-direction: column;
-  background: var(--sidebar-background-color);
-}
-
-.main .content {
-  background: var(--content-background-color);
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-}
 
 /* split content to up/down 2 parts */
 .main .content .navigation {
   height: 46px;
   flex: 0 0 46px;
   border-bottom: solid 1px var(--line-default-color);
-  display: flex;
-  align-items: center;
   -webkit-app-region: drag;
 }
-
-.main .content .browser {
-  flex: 1;
-}
-
 /* main framework end */
 
 /*****************************************************************/
-
-/* main sidebar start */
-.sidebar .menu-control {
-  height: 43px;
-  width: 125px;
-  -webkit-app-region: drag;
-}
-.sidebar .menu-title {
-  height: 28px;
-  line-height: 28px;
-  margin: 0 12px 4px 12px;
-  color: var(--link-default-color);
-  padding-left: 10px;
-  display: flex;
-  align-items: center;
-  font-size: 12px;
-}
-.sidebar .menu-title .title {
-  flex: 1;
-}
-.sidebar .menu-title svg {
-  flex: 0 0 18px;
-}
-
-.sidebar ul li {
-  cursor: pointer;
-  padding-left: 10px;
-  border-top: solid 2px transparent;
-  border-bottom: solid 2px transparent;
-  margin-bottom: -2px;
-  user-select: none;
-}
-.sidebar ul li .sidebar-block {
-  display: flex;
-  align-items: center;
-  height: 28px;
-  padding-left: 12px;
-  margin: 3px 0;
-  color: var(--text-default-color);
-
-  border-radius: var(--default-border-radius);
-}
-
-.sidebar svg {
-  width: 18px;
-  height: 18px;
-}
-
-.sidebar ul li a {
-  margin-left: 10px;
-  width: 125px;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
-
-.sidebar ul li:hover .sidebar-block {
-  background: var(--sidebar-hover-background-color);
-  color: var(--sidebar-hover-text-color);
-}
-
-.sidebar ul li.active .sidebar-block,
-.sidebar ul li.active:hover .sidebar-block {
-  background: var(--sidebar-highlight-background-color);
-  color: var(--sidebar-highlight-text-color);
-}
-.sidebar ul li.dragover .sidebar-block {
-  background: var(--sidebar-highlight-background-color);
-  color: var(--sidebar-highlight-text-color);
-}
-/*
-avoid hover effect trigger dragleave event
-https://stackoverflow.com/questions/19889615/can-an-angular-directive-pass-arguments-to-functions-in-expressions-specified-in
-*/
-.sidebar ul li * {
-  pointer-events: none;
-}
-/* main sidebar end */
-
 /* widget navigation start */
 .navigation svg {
   width: 18px;
