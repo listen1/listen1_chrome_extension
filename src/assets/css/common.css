@@ -14,10 +14,10 @@ a {
 
 .background-layer {
   position: fixed;
-  top:0;
-  bottom:0;
-  left:0;
-  right:0;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
 }
 
 .wrap {
@@ -286,7 +286,7 @@ https://stackoverflow.com/questions/19889615/can-an-angular-directive-pass-argum
   color: var(--text-default-color);
 }
 .navigation .backfront {
-  flex: 0 0 45px;
+  flex: 0 0 68px;
   line-height: 46px;
   vertical-align: middle;
   padding: 0 13px;
@@ -330,7 +330,8 @@ https://stackoverflow.com/questions/19889615/can-an-angular-directive-pass-argum
   color: var(--text-default-color);
 }
 
-::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+::placeholder {
+  /* Chrome, Firefox, Opera, Safari 10.1+ */
   color: var(--search-input-placeholder-color);
   opacity: 1; /* Firefox */
 }
@@ -441,7 +442,7 @@ https://stackoverflow.com/questions/19889615/can-an-angular-directive-pass-argum
 
 .page .playlist-detail .detail-head .detail-head-cover {
   flex: 0 0 150px;
-  padding: 26px 26px 8px 26px;
+  margin: 26px 26px 8px 26px;
 }
 
 .page .playlist-detail .detail-head .detail-head-title {
@@ -450,6 +451,7 @@ https://stackoverflow.com/questions/19889615/can-an-angular-directive-pass-argum
 
 .page .playlist-detail .detail-head .detail-head-title h2 {
   height: 33px;
+  margin: 20px 0;
 }
 
 .playlist-button-list {
@@ -813,7 +815,7 @@ ul.detail-songlist li {
   display: flex;
   border-top: solid 2px var(--songlist-border-color);
   border-bottom: solid 2px var(--songlist-border-color);
-  height: 37px;
+  height: 41px;
   align-items: center;
   padding: 0 20px;
   font-size: 14px;

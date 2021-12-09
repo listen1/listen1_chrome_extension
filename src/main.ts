@@ -5,7 +5,11 @@ import App from './App.vue';
 import i18n from './i18n';
 import router from './router';
 
-// import "@/assets/main.css"
+import 'notyf/notyf.min.css';
+import './assets/css/icon.css';
+import './assets/css/common.css';
+import './assets/css/index.css';
+
 import { setPrototypeOfLocalStorage } from './utils';
 
 setPrototypeOfLocalStorage();
