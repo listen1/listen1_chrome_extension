@@ -1,0 +1,152 @@
+/* global settings (theme related) */
+:root {
+  --theme-background-color: transparent;
+
+  --icon-default-color: #666666;
+  --icon-highlight-color: #111111;
+
+  --text-default-color: #111111;
+  --text-subtitle-color: #666666;
+  --text-disable-color: #999999;
+
+  --lyric-default-color: #666666;
+  --lyric-on-cover-color: #333333;
+  --lyric-important-color: #ff4444;
+  --lyric-important-on-cover-color: #ffffff;
+
+  --link-default-color: rgba(0, 0, 0, 0.4);
+  --link-highlight-color: #111111;
+  --link-active-color: #323232;
+  --link-inactive-color: #a9a9a9;
+
+  --line-default-color: rgba(0, 0, 0, 0.07);
+
+  --sidebar-background-color: rgba(0, 0, 0, 0.038);
+  --sidebar-highlight-background-color: rgba(0, 0, 0, 0.3);
+  --sidebar-highlight-text-color: #ffffff;
+  --sidebar-hover-background-color: rgba(0, 0, 0, 0.4);
+  --sidebar-hover-text-color: #ffffff;
+
+  --content-background-color: transparent;
+
+  --foot-background-color: transparent;
+  --foot-border-color: rgba(0, 0, 0, 0.07);
+  --footer-main-background-color: transparent;
+  --footer-player-bar-background-color: #e0e0e0;
+  --footer-player-bar-cur-background-color: #666666;
+  --footer-header-background-color: #ffffff;
+  --footer-header-border-color: #e7e7e7;
+  --footer-menu-odd-background-color: #ffffff;
+  --footer-menu-even-background-color: #f7f7f7;
+  --footer-menu-hover-background-color: #e5e5e5;
+  --search-input-background-color: rgba(0, 0, 0, 0.1);
+  --search-input-placeholder-color: rgba(0, 0, 0, 0.3);
+  --footer-player-bar-cur-button-color: #111111;
+  --window-control-border-color: #dddddd;
+
+  --important-color: #ff4444;
+
+  --button-background-color: rgba(0, 0, 0, 0.07);
+  --button-border-color: rgba(0, 0, 0, 0.07);
+  --button-hover-background-color: rgba(0, 0, 0, 0.09);
+
+  --now-playing-page-background-color: #ffffff;
+  --now-playing-close-icon-color: #666666;
+
+  --disable-song-title-color: #b7b7b7;
+  --windows-border-color: #dddddd;
+
+  --default-border-radius: 2px;
+  --text-default-size: 13px;
+  --h2-title-font-size: 24px;
+  --badge-font-size: 12px;
+  --badge-font-color: #c75449;
+  --badge-border-color: #d98e87;
+  --songlist-odd-background-color: rgba(0, 0, 0, 0.04);
+  --songlist-border-color: #f4f4f4;
+  --songlist-hover-background-color: rgba(0, 0, 0, 0.1);
+
+  --player-left-icon-color: #b1b1b1;
+  --player-icon-color: #666666;
+  --player-icon-hover-color: #666666;
+  --player-right-icon-color: #333333;
+  --player-right-icon-hover-color: #000000;
+
+  --dialog-highlight-color: #e3e3e5;
+  --dialog-background-color: #fafafa;
+  --dialog-text-color: #565656;
+
+  --volume-icon-color: #333333;
+  --volume-bar-background-color: #e0e0e0;
+  --volume-bar-current-background-color: #333333;
+
+  --scroll-color: #c2c2c2;
+
+  --lyric-icon-background-color: #ffffff;
+  --lyric-line-margin: 20px;
+}
+
+/* Cool infinite background scrolling animation.
+ * Twitter: @kootoopas
+ */
+
+/* Background data (Original source: https://subtlepatterns.com/grid-me/) */
+/* Animations */
+@-webkit-keyframes bg-scrolling-reverse {
+  100% {
+    background-position: 50px 50px;
+  }
+}
+@-moz-keyframes bg-scrolling-reverse {
+  100% {
+    background-position: 50px 50px;
+  }
+}
+@-o-keyframes bg-scrolling-reverse {
+  100% {
+    background-position: 50px 50px;
+  }
+}
+@keyframes bg-scrolling-reverse {
+  100% {
+    background-position: 50px 50px;
+  }
+}
+@-webkit-keyframes bg-scrolling {
+  0% {
+    background-position: 50px 50px;
+  }
+}
+@-moz-keyframes bg-scrolling {
+  0% {
+    background-position: 50px 50px;
+  }
+}
+@-o-keyframes bg-scrolling {
+  0% {
+    background-position: 50px 50px;
+  }
+}
+@keyframes bg-scrolling {
+  0% {
+    background-position: 50px 50px;
+  }
+}
+/* Main styles */
+.background-layer {
+  /* img size is 50x50 */
+  background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAIAAACRXR/mAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAIGNIUk0AAHolAACAgwAA+f8AAIDpAAB1MAAA6mAAADqYAAAXb5JfxUYAAABnSURBVHja7M5RDYAwDEXRDgmvEocnlrQS2SwUFST9uEfBGWs9c97nbGtDcquqiKhOImLs/UpuzVzWEi1atGjRokWLFi1atGjRokWLFi1atGjRokWLFi1af7Ukz8xWp8z8AAAA//8DAJ4LoEAAlL1nAAAAAElFTkSuQmCC')
+    repeat 0 0;
+  -webkit-animation: bg-scrolling-reverse 0.92s infinite;
+  /* Safari 4+ */
+  -moz-animation: bg-scrolling-reverse 0.92s infinite;
+  /* Fx 5+ */
+  -o-animation: bg-scrolling-reverse 0.92s infinite;
+  /* Opera 12+ */
+  animation: bg-scrolling-reverse 0.92s infinite;
+  /* IE 10+ */
+  -webkit-animation-timing-function: linear;
+  -moz-animation-timing-function: linear;
+  -o-animation-timing-function: linear;
+  animation-timing-function: linear;
+}

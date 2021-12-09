@@ -1,6 +1,6 @@
 <template>
   <Modal ref="modalRef"></Modal>
-
+  <div class="background-layer"></div>
   <div class="wrap">
     <!-- dialog-->
     <div v-show="is_dialog_hidden !== 1" class="shadow" />

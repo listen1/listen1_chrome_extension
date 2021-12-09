@@ -1,5 +1,7 @@
 /* global settings (theme related) */
 :root {
+  --theme-background-color: #ffffff;
+
   --icon-default-color: #666666;
   --icon-highlight-color: #111111;
 
@@ -12,38 +14,40 @@
   --lyric-important-color: #ff4444;
   --lyric-important-on-cover-color: #ffffff;
 
-  --link-default-color: #999999;
+  --link-default-color: rgba(0, 0, 0, 0.4);
   --link-highlight-color: #111111;
   --link-active-color: #323232;
   --link-inactive-color: #a9a9a9;
 
-  --line-default-color: #e5e5e5;
+  --line-default-color: rgba(0, 0, 0, 0.07);
 
-  --sidebar-background-color: rgba(245, 245, 245, 0.7);
-  --sidebar-highlight-background-color: #4d4d4d;
+  --sidebar-background-color: rgba(0, 0, 0, 0.038);
+  --sidebar-highlight-background-color: rgba(0, 0, 0, 0.3);
   --sidebar-highlight-text-color: #ffffff;
-  --sidebar-hover-background-color: #5f5f5f;
+  --sidebar-hover-background-color: rgba(0, 0, 0, 0.4);
   --sidebar-hover-text-color: #ffffff;
 
-  --content-background-color: #ffffff;
+  --content-background-color: transparent;
 
-  --foot-background-color: #ffffff;
-  --foot-border-color: #e5e5e5;
-  --footer-main-background-color: #f2f2f2;
+  --foot-background-color: transparent;
+  --foot-border-color: rgba(0, 0, 0, 0.07);
+  --footer-main-background-color: transparent;
   --footer-player-bar-background-color: #e0e0e0;
   --footer-player-bar-cur-background-color: #666666;
-  --footer-header-background-color: #e7e7e7;
+  --footer-header-background-color: #ffffff;
+  --footer-header-border-color: #e7e7e7;
   --footer-menu-even-background-color: #f7f7f7;
   --footer-menu-hover-background-color: #e5e5e5;
-  --search-input-background-color: #f2f2f2;
+  --search-input-background-color: rgba(0, 0, 0, 0.1);
+  --search-input-placeholder-color: rgba(0, 0, 0, 0.3);
   --footer-player-bar-cur-button-color: #111111;
   --window-control-border-color: #dddddd;
 
   --important-color: #ff4444;
 
-  --button-background-color: #eeeeee;
-  --button-border-color: #bebebe;
-  --button-hover-background-color: #dddddd;
+  --button-background-color: rgba(0, 0, 0, 0.07);
+  --button-border-color: rgba(0, 0, 0, 0.07);
+  --button-hover-background-color: rgba(0, 0, 0, 0.09);
 
   --now-playing-page-background-color: #ffffff;
   --now-playing-close-icon-color: #666666;
@@ -57,9 +61,9 @@
   --badge-font-size: 12px;
   --badge-font-color: #c75449;
   --badge-border-color: #d98e87;
-  --songlist-odd-background-color: #f5f5f5;
+  --songlist-odd-background-color: rgba(0, 0, 0, 0.04);
   --songlist-border-color: #f4f4f4;
-  --songlist-hover-background-color: #eeeeee;
+  --songlist-hover-background-color: rgba(0, 0, 0, 0.1);
 
   --player-left-icon-color: #b1b1b1;
   --player-icon-color: #666666;

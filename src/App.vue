@@ -4,8 +4,16 @@
 
 <script setup>
 import { onMounted, watch } from 'vue';
-import whiteStyle from './assets/css/iparanoid.css';
-import blackStyle from './assets/css/origin.css';
+// NOTICE: without inline postfix, css will inject into html
+// we only use css string here
+
+import whiteStyle from './assets/css/themes/iparanoid.css?inline';
+import whiteTransparentStyle from './assets/css/themes/iparanoid_transparent.css?inline';
+import blackStyle from './assets/css/themes/origin.css?inline';
+import blackTransparentStyle from './assets/css/themes/origin_transparent.css?inline';
+import infiniteGridStyle from './assets/css/themes/infinite_grid.css?inline';
+import gridientStyle from './assets/css/themes/gridient.css?inline';
+
 import useSettings, { migrateSettings } from './composition/settings';
 import useRedHeart from './composition/redheart';
 
@@ -23,12 +31,18 @@ if (!localStorage.getItem('V3_MIGRATED')) {
 const { settings, loadSettings } = useSettings();
 
 function applyThemeCSS() {
-  let cssStyle = '';
-  if (settings.theme == 'white') {
-    cssStyle = whiteStyle;
-  } else if (settings.theme == 'black') {
-    cssStyle = blackStyle;
+
+  const mapping = {
+    'white': whiteStyle,
+    'black': blackStyle,
+    'white_transparent': whiteTransparentStyle,
+    'black_transparent': blackTransparentStyle,
+    'infinite_grid': infiniteGridStyle,
+    'gridient': gridientStyle,
   }
+
+  const cssStyle = mapping[settings.theme] || '';
+  
   window.api?.setTheme(settings.theme);
   document.getElementById('theme').textContent = cssStyle;
 }

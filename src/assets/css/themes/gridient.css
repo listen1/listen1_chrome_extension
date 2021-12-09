@@ -1,0 +1,110 @@
+/* global settings (theme related) */
+:root {
+  --theme-background-color: #333333;
+
+  --icon-default-color: #666666;
+  --icon-highlight-color: #111111;
+
+  --text-default-color: #ffffff;
+  --text-subtitle-color: #cccccc;
+  --text-disable-color: rgba(255, 255, 255, 0.4);
+
+  --lyric-default-color: #666666;
+  --lyric-on-cover-color: #bbbbbb;
+  --lyric-important-color: #ffffff;
+  --lyric-important-on-cover-color: #ffffff;
+
+  --link-default-color: rgba(255, 255, 255, 0.4);
+  --link-highlight-color: #ffffff;
+  --link-active-color: #ffffff;
+  --link-inactive-color: rgba(255, 255, 255, 0.75);
+
+  --line-default-color: rgba(255, 255, 255, 0.2);
+
+  --sidebar-background-color: rgba(0, 0, 0, 0.1);
+  --sidebar-highlight-background-color: rgba(255, 255, 255, 0.1);
+  --sidebar-highlight-text-color: #ffffff;
+  --sidebar-hover-background-color: rgba(255, 255, 255, 0.1);
+  --sidebar-hover-text-color: #ffffff;
+
+  --content-background-color: transparent;
+
+  --foot-background-color: transparent;
+  --foot-border-color: rgba(255, 255, 255, 0.2);
+  --footer-main-background-color: transparent;
+  --footer-player-bar-background-color: rgba(255, 255, 255, 0.2);
+  --footer-player-bar-cur-background-color: #e0e0e0;
+  --footer-header-background-color: #2d2d2d;
+  --footer-header-border-color: #333333;
+  --footer-menu-odd-background-color: #2d2d2d;
+  --footer-menu-even-background-color: #2d2d2d;
+  --footer-menu-hover-background-color: #333333;
+  --search-input-background-color: rgba(255, 255, 255, 0.1);
+  --search-input-placeholder-color: rgba(255, 255, 255, 0.3);
+  --footer-player-bar-cur-button-color: #e0e0e0;
+  --window-control-border-color: #dddddd;
+
+  --important-color: #fff;
+
+  --button-background-color: rgba(255, 255, 255, 0.1);
+  --button-border-color: rgba(0, 0, 0, 0.2);
+  --button-hover-background-color: rgba(255, 255, 255, 0.3);
+
+  --now-playing-page-background-color: #333333;
+  --now-playing-close-icon-color: #b3b3b3;
+
+  --disable-song-title-color: #b7b7b7;
+  --windows-border-color: #333333;
+
+  --default-border-radius: 2px;
+  --text-default-size: 13px;
+  --h2-title-font-size: 24px;
+  --badge-font-size: 12px;
+  --badge-font-color: #c3473a;
+  --badge-border-color: #843932;
+  /* --songlist-odd-background-color: #2d2d2d;
+  --songlist-border-color: transparent;
+  --songlist-hover-background-color: #3e3e3e; */
+  --songlist-odd-background-color: rgba(0, 0, 0, 0.04);
+  --songlist-border-color: transparent;
+  --songlist-hover-background-color: rgba(0, 0, 0, 0.1);
+
+  --player-left-icon-color: #eeeeee;
+  --player-icon-color: #eeeeee;
+  --player-icon-hover-color: #ffffff;
+  --player-right-icon-color: #eeeeee;
+  --player-right-icon-hover-color: #ffffff;
+  --player-icon-hightlight-color: #ffffff;
+
+  --dialog-highlight-color: #444444;
+  --dialog-background-color: #333;
+  --dialog-text-color: #ffffff;
+
+  --volume-icon-color: #eeeeee;
+  --volume-bar-background-color: #333333;
+  --volume-bar-current-background-color: #e0e0e0;
+
+  --scroll-color: #444444;
+
+  --lyric-icon-background-color: #222222;
+  --lyric-line-margin: 20px;
+}
+
+.background-layer {
+  background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+  background-size: 400% 400%;
+  animation: gradient 60s ease infinite;
+  height: 100vh;
+}
+
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
