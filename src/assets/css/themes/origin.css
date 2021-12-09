@@ -1,6 +1,6 @@
 /* global settings (theme related) */
 :root {
-  --theme-background-color: transparent;
+  --theme-background-color: #222222;
   --icon-default-color: #666666;
   --icon-highlight-color: #111111;
 
@@ -28,7 +28,6 @@
 
   --content-background-color: #333333;
 
-  --foot-background-color: #222222;
   --foot-border-color: #222222;
   --footer-main-background-color: #222222;
   --footer-player-bar-background-color: #666666;
