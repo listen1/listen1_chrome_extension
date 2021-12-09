@@ -80,7 +80,7 @@
       <div class="playlist-toggle">
         <span class="icon li-list" @click="togglePlaylist()" />
       </div>
-      <div class="volume-ctrl" volume-wheel>
+      <div class="volume-ctrl flex items-center" volume-wheel>
         <vue-feather class="icon" :type="volumeIcon" size="18px" @click="toggleMuteStatus()" />
         <div class="m-pbar volume">
           <draggable-bar id="volumebar" :progress="volume * 100" @update-progress="changeVolume" @commit-progress="commitVolume"></draggable-bar>
@@ -90,8 +90,8 @@
         <div @click="toggleLyricFloatingWindow()" class="lyric-icon" :class="{ selected: settings.enableLyricFloatingWindow }">词</div>
       </div>
     </div>
-    <div class="menu-modal" :class="{ slideup: !menuHidden }" @click="togglePlaylist()" />
-    <div class="menu" :class="{ slideup: !menuHidden }">
+    <div class="menu-modal fixed top-0 right-0 left-0 bg-white bg-opacity-20" :class="{ slideup: !menuHidden }" @click="togglePlaylist()" />
+    <div class="menu bg-theme fixed overflow-hidden opacity-0 border-default rounded-sm h-96" :class="{ slideup: !menuHidden }">
       <div class="menu-header">
         <span class="menu-title">{{ t('_TOTAL_SONG_PREFIX') }} {{ playlist.length }} {{ t('_TOTAL_SONG_POSTFIX') }}</span>
         <a class="add-all" @click="showModal('AddToPlaylist', { tracks: playlist })">
@@ -365,5 +365,12 @@ if (isElectron()) {
   right: 0;
   left: 0;
   bottom: 0;
+}
+.footer .menu-modal.slideup {
+  bottom: 5rem;
+}
+.footer .menu.slideup {
+  bottom: 5rem;
+  opacity: 1;
 }
 </style>
