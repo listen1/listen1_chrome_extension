@@ -1,6 +1,7 @@
 html,
 body {
   font-size: var(--text-default-size);
+  /* font-size: 14px; */
   color: var(--text-default-color);
   font-family: -apple-system, 'Helvetica Neue', Helvetica, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', system-ui, sans-serif;
 }
@@ -128,91 +129,7 @@ img {
 
 /* split main to left/right 2 parts */
 
-/* split content to up/down 2 parts */
-.main .content .navigation {
-  height: 46px;
-  flex: 0 0 46px;
-  border-bottom: solid 1px var(--line-default-color);
-  -webkit-app-region: drag;
-}
-/* main framework end */
-
 /*****************************************************************/
-/* widget navigation start */
-.navigation svg {
-  width: 18px;
-  height: 18px;
-  color: var(--icon-default-color);
-}
-.navigation .icon svg {
-  color: var(--text-default-color);
-}
-.navigation .backfront {
-  flex: 0 0 68px;
-  line-height: 46px;
-  vertical-align: middle;
-  padding: 0 13px;
-}
-
-.navigation .search {
-  flex: 1;
-}
-
-.navigation .settings {
-  flex: 0 0 32px;
-}
-
-.navigation .icon {
-  color: var(--text-default-color);
-  opacity: 0.5;
-}
-
-.navigation .icon:hover {
-  opacity: 1;
-}
-
-.navigation .backfront .icon {
-  display: inline-block;
-  vertical-align: middle;
-  margin-bottom: 4px;
-}
-
-.navigation .backfront .icon:nth-of-type(1) {
-  margin-right: 8px;
-}
-
-.navigation .search-input {
-  width: 270px;
-  height: 23px;
-  background: var(--search-input-background-color);
-  border-style: none;
-  border-radius: var(--default-border-radius);
-  padding-left: 10px;
-  font-size: 12px;
-  color: var(--text-default-color);
-}
-
-::placeholder {
-  /* Chrome, Firefox, Opera, Safari 10.1+ */
-  color: var(--search-input-placeholder-color);
-  opacity: 1; /* Firefox */
-}
-
-.navigation .window-control {
-  flex: 0 0 105px;
-  border-left: solid 1px var(--window-control-border-color);
-  margin: 0 15px;
-}
-
-.navigation .window-control svg {
-  margin-left: 8px;
-}
-
-.navigation .window-control svg:first-of-type {
-  margin-left: 15px;
-}
-
-/* navigation end */
 
 /* page hot-playlist start */
 .page-hot-playlist {

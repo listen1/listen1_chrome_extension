@@ -90,40 +90,37 @@
     <div class="main flex z-10 overflow-hidden flex-1">
       <Sidebar></Sidebar>
 
-      <div class="content flex flex-col flex-1 bg-content">
-        <div class="navigation flex items-center">
-          <div class="backfront">
-            <span class="icon li-back" @click="$router.go(-1)" />
-            <span class="icon li-advance" @click="$router.go(1)" />
-          </div>
-          <div class="search">
+      <div class="flex flex-col flex-1 bg-content">
+        <div class="flex flex-none items-center h-14 app-region-drag border-b border-default">
+          <div class="flex flex-1 items-center">
+            <span class="icon opacity-50 hover:opacity-100 text-xl text-icon li-back ml-4" @click="$router.go(-1)" />
+            <span class="icon opacity-50 hover:opacity-100 text-xl text-icon li-advance ml-2 mr-4" @click="$router.go(1)" />
             <input
               id="search-input"
               v-model="input_keywords"
               type="text"
-              class="form-control search-input"
+              class="form-control search-input h-10 w-80 pl-3 rounded-sm border-none bg-search-input text-default"
               :placeholder="t('_SEARCH_PLACEHOLDER')"
-              ng-model-options="{debounce: 500}"
               @input="searchTextChanged" />
           </div>
-          <div ng-class="{ 'active': (current_tag==4) && (window_url_stack.length ==0)}" class="settings" :style="platButtonStyle">
+          <div :class="{ active: route.path === '/login' }" :style="platButtonStyle">
             <router-link to="/login">
-              <span class="icon">
-                <vue-feather type="users"></vue-feather>
+              <span class="icon opacity-50 hover:opacity-100 mr-4">
+                <vue-feather size="1.25rem" type="users"></vue-feather>
               </span>
             </router-link>
           </div>
-          <div ng-class="{ 'active': (current_tag==4) && (window_url_stack.length ==0)}" class="settings" :style="settingButtonStyle">
+          <div :class="{ active: route.path === '/settings' }" :style="settingButtonStyle">
             <router-link to="/settings">
-              <span class="icon">
-                <vue-feather type="settings"></vue-feather>
+              <span class="icon opacity-50 hover:opacity-100 mr-4">
+                <vue-feather size="1.25rem" type="settings"></vue-feather>
               </span>
             </router-link>
           </div>
-          <div v-if="isWin() || isLinux()" class="window-control">
-            <vue-feather class="icon" type="minimize-2" @click="sendControl('window_min')" />
-            <vue-feather class="icon" type="maximize" @click="sendControl('window_max')" />
-            <vue-feather class="icon" type="x" @click="sendControl('window_close')" />
+          <div v-if="isWin() || isLinux()" class="border-l border-default">
+            <vue-feather class="icon opacity-50 hover:opacity-100 ml-4" type="minimize-2" @click="sendControl('window_min')" />
+            <vue-feather class="icon opacity-50 hover:opacity-100 ml-4" type="maximize" @click="sendControl('window_max')" />
+            <vue-feather class="icon opacity-50 hover:opacity-100 ml-4 mr-4" type="x" @click="sendControl('window_close')" />
           </div>
         </div>
 
@@ -157,6 +154,7 @@ import { isLinux, isWin } from '../provider/lowebutil';
 import EventService from '../services/EventService';
 import { l1Player } from '../services/l1_player';
 import NowPlaying from '../views/NowPlaying.vue';
+import { useRoute } from 'vue-router';
 
 const { t } = useI18n();
 const { player } = usePlayer();
@@ -187,6 +185,7 @@ let input_keywords = $ref('');
 let settingButtonStyle = $ref({});
 let platButtonStyle = $ref({});
 const { settings } = useSettings();
+const route = useRoute();
 
 const searchTextChanged = () => {
   condition.keywords = input_keywords;
@@ -304,3 +303,10 @@ const sendControl = (message) => {
   window.api?.sendControl(message);
 };
 </script>
+<style>
+::placeholder {
+  /* Chrome, Firefox, Opera, Safari 10.1+ */
+  color: var(--search-input-placeholder-color);
+  opacity: 1; /* Firefox */
+}
+</style>
