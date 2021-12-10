@@ -932,82 +932,7 @@ svg.searchspinner {
   top: -3px;
 }
 
-.footer .menu {
-  /* height: 370px; */
-  bottom: -311px;
-  left: 300px;
-  right: 300px;
-  -webkit-app-region: no-drag;
-}
-
-.footer .menu .menu-header {
-  height: 30px;
-  background: var(--footer-header-background-color);
-  border-bottom: solid 1px var(--footer-header-border-color);
-  display: flex;
-  align-items: center;
-  color: #9e9e9e;
-  font-size: 12px;
-}
-
-.footer .menu .menu-header .menu-title {
-  flex: 1;
-  padding: 20px;
-}
-
-.footer .menu .menu-header .add-all {
-  border-right: solid 1px #e5e5e5;
-  flex: 0 0 auto;
-  display: flex;
-  align-items: center;
-  padding-right: 10px;
-}
-
-.footer .menu .menu-header .remove-all {
-  margin-left: 10px;
-  flex: 0 0 auto;
-  display: flex;
-  align-items: center;
-}
-
-.footer .menu .menu-header .close {
-  margin-left: 10px;
-  flex: 0 0 25px;
-  align-items: center;
-  cursor: pointer;
-}
-.footer .menu .menu-header .add-all span,
-.footer .menu .menu-header .remove-all span {
-  cursor: pointer;
-}
-
-.footer .menu .menu-header .add-all .icon,
-.footer .menu .menu-header .remove-all .icon {
-  margin-right: 7px;
-}
-
-.footer .menu .menu-header .close svg {
-  margin-right: 3px;
-  height: 16px;
-  width: 16px;
-  cursor: pointer;
-}
-
-.footer .menu ul.menu-list {
-  overflow-y: scroll;
-  height: 340px;
-  font-size: 12px;
-}
-
 .footer .menu ul.menu-list li {
-  display: flex;
-  align-items: center;
-  height: 30px;
-  padding-right: 20px;
-  position: relative;
-  margin-bottom: -2px;
-  border-top: solid 2px var(--songlist-border-color);
-  border-bottom: solid 2px var(--songlist-border-color);
   background: var(--footer-menu-odd-background-color);
 }
 
@@ -1022,77 +947,6 @@ svg.searchspinner {
 .footer .menu ul.menu-list li.playing {
   color: var(--important-color);
 }
-.footer .menu ul.menu-list li .song-status-icon {
-  flex: 0 0 20px;
-  width: 20px;
-  height: 30px;
-  text-align: center;
-  display: flex;
-  align-items: center;
-}
-.footer .menu ul.menu-list li .song-status-icon svg {
-  width: 10px;
-  height: 10px;
-  fill: var(--important-color);
-  stroke: var(--important-color);
-  flex: 1;
-}
-.footer .menu ul.menu-list li .song-title {
-  flex: 2;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
-.footer .menu ul.menu-list li .song-title.disabled {
-  color: #777777;
-}
-.footer .menu ul.menu-list li .song-title a {
-  cursor: pointer;
-}
-
-.footer .menu ul.menu-list li .song-singer {
-  flex: 1;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  cursor: pointer;
-}
-
-/* div.visited{
-  color: green;
-} */
-
-.footer .menu ul.menu-list li .tools {
-  flex: 0 0 42px;
-  width: 42px;
-}
-.footer .menu ul.menu-list li .tools .icon {
-  color: #666666;
-  cursor: pointer;
-  opacity: 0.5;
-}
-.footer .menu ul.menu-list li .tools .icon:first-of-type {
-  margin-right: 5px;
-}
-.footer .menu ul.menu-list li .tools .icon:hover {
-  opacity: 1;
-}
-
-.footer .menu ul.menu-list li .song-time {
-  flex: 1;
-  text-align: right;
-}
-
-.footer .right-control {
-  flex: 0 0 300px;
-  display: flex;
-  align-items: center;
-}
-
-.footer .right-control .playlist-toggle {
-  margin-left: 29px;
-  cursor: pointer;
-}
 
 .footer .right-control .playlist-toggle .icon {
   color: var(--player-right-icon-color);
@@ -1100,11 +954,6 @@ svg.searchspinner {
 
 .footer .right-control .playlist-toggle .icon:hover {
   color: var(--player-right-icon-hover-color);
-}
-
-.footer .right-control .lyric-toggle {
-  margin-right: 30px;
-  cursor: pointer;
 }
 
 .footer .right-control .lyric-toggle .lyric-icon,
@@ -1124,36 +973,6 @@ svg.searchspinner {
   color: #fff;
 }
 
-.footer .right-control .volume-ctrl {
-  flex: 1;
-  display: flex;
-}
-
-.footer .right-control .volume-ctrl .icon {
-  flex: 0 0 24px;
-  color: var(--volume-icon-color);
-  cursor: pointer;
-  margin-left: 21px;
-}
-.footer .right-control .volume-ctrl .m-pbar {
-  flex: 1;
-}
-
-.footer .right-control .volume-ctrl .m-pbar .playbar-clickable {
-  width: 140px;
-}
-
-.footer .right-control .volume-ctrl .barbg {
-  height: 3px;
-  background: var(--volume-bar-background-color);
-}
-
-.footer .right-control .volume-ctrl .barbg .cur {
-  height: 100%;
-  background: var(--volume-bar-current-background-color);
-  position: relative;
-}
-
 .footer .right-control .volume-ctrl .barbg .cur .btn {
   background: #ffffff;
   height: 13px;
@@ -1166,80 +985,6 @@ svg.searchspinner {
 }
 
 /* footer end */
-
-/* dialog start */
-.dialog .detail-songlist li:hover {
-  background-color: #e3e3e5;
-  cursor: pointer;
-}
-
-.dialog-playlist,
-.dialog-backuplist,
-.dialog-merge-playlist {
-  padding-left: 0px;
-  text-align: left;
-}
-
-.dialog-playlist li,
-.dialog-backuplist li,
-.dialog-merge-playlist li {
-  cursor: pointer;
-  height: 48px;
-  padding: 6px;
-}
-.dialog-backuplist li {
-  height: 96px;
-  padding: 6px;
-}
-
-.dialog-playlist li:hover,
-.dialog-backuplist li:hover,
-.dialog-merge-playlist li:hover {
-  background-color: var(--dialog-highlight-color);
-}
-
-.dialog-playlist li img,
-.dialog-backuplist li img,
-.dialog-merge-playlist li img {
-  float: left;
-  height: 48px;
-  width: 48px;
-}
-
-.dialog-playlist li h2,
-.dialog-backuplist li h2,
-.dialog-merge-playlist li h2 {
-  margin: 0 0 0 58px;
-  font-size: 13px;
-  font-weight: inherit;
-}
-.dialog-backuplist li h2 {
-  margin-top: 0;
-}
-.dialog-newplaylist {
-  padding: 10px;
-}
-
-.dialog-newbackup {
-  text-align: center;
-}
-
-.dialog-editplaylist label,
-.dialog-open-url label {
-  display: block;
-  height: 30px;
-  line-height: 30px;
-}
-
-.dialog-editplaylist .dialog-footer {
-  position: absolute;
-  bottom: 20px;
-}
-.dialog-body .field-name {
-  margin: 10px 0 5px 0;
-}
-
-/* dialog end */
 
 /* widget source-list start */
 .source-list {

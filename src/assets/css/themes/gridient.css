@@ -1,6 +1,7 @@
 /* global settings (theme related) */
 :root {
   --theme-background-color: #333333;
+  --disabled-color: #777777;
 
   --icon-default-color: #666666;
   --icon-highlight-color: #111111;

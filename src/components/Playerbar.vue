@@ -77,84 +77,28 @@
       </div>
     </div>
     <div class="right-control flex flex-none items-center w-80">
-      <div class="playlist-toggle">
+      <div class="playlist-toggle cursor-pointer ml-8">
         <span class="icon li-list" @click="togglePlaylist()" />
       </div>
-      <div class="volume-ctrl flex items-center" volume-wheel>
-        <vue-feather class="icon" :type="volumeIcon" size="18px" @click="toggleMuteStatus()" />
-        <div class="m-pbar volume">
+      <div class="volume-ctrl flex flex-1 items-center" volume-wheel>
+        <vue-feather class="icon cursor-pointer ml-6" :type="volumeIcon" size="1.25rem" @click="toggleMuteStatus()" />
+        <div class="m-pbar volume flex-1 mr-4">
           <draggable-bar id="volumebar" :progress="volume * 100" @update-progress="changeVolume" @commit-progress="commitVolume"></draggable-bar>
         </div>
       </div>
-      <div v-if="isElectron()" class="lyric-toggle">
+      <div v-if="isElectron()" class="lyric-toggle cursor-pointer mx-6">
         <div @click="toggleLyricFloatingWindow()" class="lyric-icon" :class="{ selected: settings.enableLyricFloatingWindow }">词</div>
       </div>
     </div>
-    <div class="menu-modal fixed top-0 right-0 left-0 bg-white bg-opacity-20" :class="{ slideup: !menuHidden }" @click="togglePlaylist()" />
-    <div class="menu bg-theme fixed overflow-hidden opacity-0 border-default rounded-sm h-96" :class="{ slideup: !menuHidden }">
-      <div class="menu-header">
-        <span class="menu-title">{{ t('_TOTAL_SONG_PREFIX') }} {{ playlist.length }} {{ t('_TOTAL_SONG_POSTFIX') }}</span>
-        <a class="add-all" @click="showModal('AddToPlaylist', { tracks: playlist })">
-          <span class="icon li-songlist" ng-click="togglePlaylist()" />
-          <span>{{ t('_ADD_TO_PLAYLIST') }}</span>
-        </a>
-        <a class="remove-all" @click="clearPlaylist()">
-          <span class="icon li-del" ng-click="togglePlaylist()" />
-          <span>{{ t('_CLEAR_ALL') }}</span>
-        </a>
-
-        <a class="close" @click="togglePlaylist()">
-          <vue-feather type="x"></vue-feather>
-        </a>
-      </div>
-      <ul class="menu-list">
-        <DragDropZone
-          v-for="(song, index) in playlist"
-          :id="'song_' + song.id"
-          :key="song.id"
-          :draggable="true"
-          :class="{ playing: currentPlaying.id == song.id, even: index % 2 === 0, odd: index % 2 !== 0 }"
-          dragtype="application/listen1-song"
-          :dragobject="song"
-          :dragtitle="song.title"
-          :sortable="true"
-          @mouseenter="song.highlight = true"
-          @mouseleave="song.highlight = undefined"
-          @drop="onCurrentPlayingSongDrop(song, $event)">
-          <div class="song-status-icon">
-            <vue-feather v-show="currentPlaying.id == song.id" type="play"></vue-feather>
-          </div>
-          <div class="song-title" :class="song.disabled ? 'disabled' : ''">
-            <a @click="playFromPlaylist(song)">
-              <span v-if="song.source === 'xiami'" style="color: orange; border-radius: 12px; border: solid 1px; padding: 0 4px">⚠️ 🦐</span>
-              {{ song.title }}
-            </a>
-          </div>
-          <div class="song-singer">
-            <a
-              @click="
-                showPlaylist(song.artist_id);
-                togglePlaylist();
-              ">
-              {{ song.artist }}
-            </a>
-          </div>
-          <div class="tools">
-            <span v-show="song.highlight" @click="removeTrack(song)" class="icon li-del" />
-            <span v-show="song.highlight" @click="openUrl(song.source_url)" class="icon li-link" />
-          </div>
-          <!-- <div class="song-time">00:00</div> -->
-        </DragDropZone>
-      </ul>
-    </div>
+    <PlayerbarPopup @close="togglePlaylist()" :hidden="menuHidden"></PlayerbarPopup>
   </div>
 </template>
 <script setup>
 import { inject, toRaw } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
-import DragDropZone from '../components/DragDropZone.vue';
 import DraggableBar from '../components/DraggableBar.vue';
+import PlayerbarPopup from '../components/PlayerbarPopup.vue';
 import useOverlay from '../composition/overlay';
 import usePlayer from '../composition/player';
 import useRedHeart from '../composition/redheart';
@@ -203,9 +147,7 @@ const toggleNowPlaying = () => {
 const togglePlaylist = () => {
   menuHidden = !menuHidden;
 };
-const clearPlaylist = () => {
-  l1Player.clearPlaylist();
-};
+
 const updateProgress = (progress) => {
   player.changingProgress = true;
   player.currentPosition = currentDuration * progress;
@@ -249,22 +191,7 @@ let volumeIcon = $computed(() => {
     return 'volume';
   }
 });
-const playFromPlaylist = (song) => {
-  l1Player.playById(song.id);
-};
-const removeTrack = (track) => {
-  l1Player.removeTrack(track);
-};
-const openUrl = (url) => {
-  window.open(url, '_blank')?.focus();
-};
-const onCurrentPlayingSongDrop = (song, event) => {
-  const { data, dragType, direction } = event;
-  if (dragType === 'application/listen1-song') {
-    // insert song
-    l1Player.insertTrack(data, toRaw(song), direction);
-  }
-};
+
 function getCSSStringFromSetting(setting) {
   let { backgroundAlpha } = setting;
   if (backgroundAlpha === 0) {
@@ -365,12 +292,5 @@ if (isElectron()) {
   right: 0;
   left: 0;
   bottom: 0;
-}
-.footer .menu-modal.slideup {
-  bottom: 5rem;
-}
-.footer .menu.slideup {
-  bottom: 5rem;
-  opacity: 1;
 }
 </style>
