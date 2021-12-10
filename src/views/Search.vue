@@ -55,34 +55,7 @@
                 :class="{ even: index % 2 === 0, odd: index % 2 !== 0 }"
                 @mouseenter="song.options = true"
                 @mouseleave="song.options = undefined">
-                <div class="title">
-                  <!-- <a ng-if="song.disabled" class="disabled" ng-click="copyrightNotice()"> song.title |limitTo:30</a> -->
-                  <a add-and-play="song" @click="play(song)">
-                    <!-- <span ng-if="isActiveTab('allmusic')" class="source">{{ song.sourceName }}</span> -->
-                    {{ song.title }}
-                  </a>
-                </div>
-                <div class="artist">
-                  <a @click="$router.push(`/playlist/${song.artist_id}`)">{{ song.artist }}</a>
-                </div>
-                <div class="album">
-                  <a @click="$router.push(`/playlist/${song.album_id}`)">{{ song.album }}</a>
-                </div>
-
-                <div class="tools">
-                  <a v-show="song.options" :title="t('_ADD_TO_QUEUE')" class="detail-add-button" add-without-play="song"><span class="icon li-add" /></a>
-                  <a v-show="song.options" :title="t('_ADD_TO_PLAYLIST')" class="detail-fav-button" @click="showModal('AddToPlaylist', { tracks: [song] })">
-                    <span class="icon li-songlist" />
-                  </a>
-                  <a
-                    v-show="song.options && is_mine == '1'"
-                    title="_REMOVE_FROM_PLAYLIST"
-                    class="detail-delete-button"
-                    ng-click="removeSongFromPlaylist(song, list_id)">
-                    <span class="icon li-del" />
-                  </a>
-                  <a v-show="song.options" :title="t('_ORIGIN_LINK')" class="source-button" @click="openUrl(song.source_url)"><span class="icon li-link" /></a>
-                </div>
+                <TrackRow :song="song"></TrackRow>
               </li>
             </template>
             <template v-if="condition.searchType === 1">
@@ -113,14 +86,13 @@
 </template>
 
 <script setup>
-import { computed, inject, toRaw } from 'vue';
+import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import useSearch from '../composition/search';
-import { l1Player } from '../services/l1_player';
+
 import MediaService from '../services/MediaService';
 import SourceTab from '../components/SourceTab.vue';
-
-const showModal = inject('showModal');
+import TrackRow from '../components/TrackRow.vue';
 
 const { t } = useI18n();
 const { condition, result } = useSearch();
@@ -136,13 +108,7 @@ const changeSourceTab = (newValue) => {
 const changeSearchPage = (offset) => {
   condition.curpage += offset;
 };
-const play = (song) => {
-  l1Player.addTrack(toRaw(song));
-  l1Player.playById(song.id);
-};
-const openUrl = (url) => {
-  window.open(url, '_blank').focus();
-};
+
 const sourceList = computed(() => [{ name: 'allmusic', displayId: '_ALL_MUSIC' }, ...MediaService.getSourceList()]);
 </script>
 
