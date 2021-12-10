@@ -319,7 +319,7 @@ img {
   color: var(--lyric-important-on-cover-color);
 }
 
-ul.detail-songlist {
+/* ul.detail-songlist {
   padding: 0 25px;
   position: relative;
 }
@@ -356,7 +356,7 @@ ul.detail-songlist .playlist-search .playlist-search-input:hover {
 }
 ul.detail-songlist .playlist-search .playlist-search-input::placeholder {
   color: #bbbbbb;
-}
+} */
 
 ul.detail-songlist li {
   /* https://stackoverflow.com/questions/4157005/css-positioning-z-index-negative-margins */
@@ -483,100 +483,7 @@ ul.detail-songlist li .tools .icon {
 
 /* page login start */
 .page .login {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
   min-height: calc(100vh - 192px);
-}
-.page .login .login-logo {
-  margin-bottom: 16px;
-  display: flex;
-  align-items: center;
-}
-.page .login .login-logo img {
-  height: 64px;
-  margin: 20px;
-}
-.page .login .login-title {
-  font-size: 18px;
-  margin-bottom: 10px;
-}
-.page .login .login-form .login-form_field {
-  display: flex;
-  align-items: center;
-  height: 40px;
-  margin: 24px;
-  width: 270px;
-  border: solid 1px var(--button-background-color);
-}
-.page .login .login-form .login-form_field input {
-  background: var(--content-background-color);
-  color: var(--text-default-color);
-}
-.page .login .login-form .login-form_field input.login-form_field_countrycode {
-  flex: 0 0 40px;
-  width: 40px;
-}
-.page .login .login-form .login-form_field svg {
-  margin-left: 12px;
-  margin-right: 12px;
-  color: var(--icon-default-color);
-  width: 18px;
-  height: 18px;
-}
-.page .login .login-form .login-form_field input {
-  border: none;
-  flex: 1;
-  font-size: 16px;
-}
-.page .login .login-submit_button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 14px;
-  margin-top: 24px;
-  padding: 8px;
-  width: 270px;
-  cursor: pointer;
-  border: solid 1px var(--button-border-color);
-}
-.page .login .login-switcher {
-  margin-top: 24px;
-  cursor: pointer;
-}
-.page .login .login-notice {
-  width: 270px;
-  border-top: 1px solid var(--button-border-color);
-  margin-top: 30px;
-  padding-top: 12px;
-  font-size: 12px;
-  color: var(--text-subtitle-color);
-}
-.page .login .usercard {
-  display: flex;
-  align-items: center;
-  width: 400px;
-  border: solid 1px var(--button-border-color);
-  margin-bottom: 20px;
-}
-.page .login .usercard img {
-  width: 60px;
-  height: 60px;
-  margin: 10px;
-}
-.page .login .usercard .usercard-title {
-  flex: 1;
-  height: 50px;
-  font-size: 16px;
-  font-weight: 700;
-}
-.page .login .usercard .usercard-title .usercard-info {
-  color: var(--link-inactive-color);
-  font-size: 12px;
-}
-.page .login .usercard button {
-  margin: 10px;
 }
 /* page login end */
 
@@ -683,9 +590,3 @@ ul.detail-songlist li .tools .icon {
   margin-right: 4px;
 }
 /* page setting end */
-
-/* .loading_bottom {
-  display: block;
-  width: 40px;
-  margin: 0 auto;
-} */
