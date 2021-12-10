@@ -32,7 +32,8 @@ module.exports = {
         'draggable-bar': 'var(--footer-player-bar-background-color)',
         'draggable-bar-current': 'var(--footer-player-bar-cur-background-color)',
         'draggable-bar-button': 'var(--footer-player-bar-cur-button-color)',
-        menu: 'var(--footer-header-background-color)'
+        menu: 'var(--footer-header-background-color)',
+        button: 'var(--button-background-color)'
       },
       borderColor: {
         default: 'var(--line-default-color)',

@@ -1,23 +1,23 @@
 <template>
   <div class="page page-hot-playlist max-w-5xl my-0 mx-auto">
     <SourceTab :sources="sourceList" :tab="tab" @click="changeTab"></SourceTab>
-    <div class="playlist-filter">
+    <div class="playlist-filter mx-4 mb-4 leading-8">
       <div
         v-for="filter in playlistFilters[tab] || []"
         :key="filter.name"
-        class="l1-button filter-item"
-        ng-class="{'active':filter.id === currentFilterId}"
+        class="l1-button filter-item mr-3 px-4 py-1"
+        :class="{ 'font-semibold': filter.id === currentFilterId }"
         @click="changeFilter(filter.id)">
         {{ filter.name }}
       </div>
-      <div v-show="playlistFilters[tab] && playlistFilters[tab].length > 0" class="l1-button filter-item" @click="toggleMorePlaylists()">更多...</div>
+      <div v-show="playlistFilters[tab] && playlistFilters[tab].length > 0" class="l1-button filter-item px-4 py-1" @click="toggleMorePlaylists()">更多...</div>
     </div>
-    <div v-show="showMore" class="all-playlist-filter">
-      <div v-for="category in allPlaylistFilters[tab] || []" :key="category.category" class="category">
-        <div class="category-title">{{ category.category }}</div>
-        <div class="category-filters">
-          <div v-for="filter in category.filters" :key="filter.name" class="filter-item">
-            <span @click="changeFilter(filter.id)">{{ filter.name }}</span>
+    <div v-show="showMore" class="all-playlist-filter px-4">
+      <div v-for="category in allPlaylistFilters[tab] || []" :key="category.category" class="category flex mb-4">
+        <div class="category-title w-16 text-lg flex-none pl-4 font-semibold">{{ category.category }}</div>
+        <div class="category-filters flex flex-wrap ml-4">
+          <div v-for="filter in category.filters" :key="filter.name" class="filter-item flex min-w-24 rounded-sm hover:bg-button">
+            <span class="flex items-center justify-center cursor-pointer px-4 py-1" @click="changeFilter(filter.id)">{{ filter.name }}</span>
           </div>
         </div>
       </div>
