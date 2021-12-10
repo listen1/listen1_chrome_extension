@@ -2,7 +2,7 @@
   <div :id="id" class="playbar-clickable cursor-pointer h-3 pt-1" @mousedown="onMyMouseDown">
     <div class="barbg h-1 bg-draggable-bar">
       <div class="cur bg-draggable-bar-current relative h-full" :style="{ width: changingProgress ? cprogress * 100 + '%' : progress + '%' }">
-        <span class="btn bg-draggable-bar-button absolute">
+        <span :class="'btn absolute rounded-full ' + (props['btnClass'] ? props['btnClass'] : '')">
           <i />
         </span>
       </div>
@@ -13,6 +13,7 @@
 const props = defineProps<{
   id: string;
   progress: number;
+  btnClass?: string;
 }>();
 
 const emits = defineEmits(['update-progress', 'commit-progress']);
@@ -26,8 +27,14 @@ const onMyMouseDown = (event: MouseEvent) => {
   // Prevent default dragging of selected content
   event.preventDefault();
   const x = event.clientX - container.left;
-  cprogress = x / (container.right - container.left);
-
+  let offset = x / (container.right - container.left);
+  if (offset > 1) {
+    offset = 1;
+  }
+  if (offset < 0) {
+    offset = 0;
+  }
+  cprogress = offset;
   emits('update-progress', cprogress);
   const sync = (event: MouseEvent) => {
     const container = document.getElementById(props.id)?.getBoundingClientRect() as DOMRect;

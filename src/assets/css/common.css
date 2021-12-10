@@ -973,17 +973,6 @@ svg.searchspinner {
   color: #fff;
 }
 
-.footer .right-control .volume-ctrl .barbg .cur .btn {
-  background: #ffffff;
-  height: 13px;
-  width: 13px;
-  border: solid 1px #e4e4e4;
-  border-radius: 13px;
-  position: absolute;
-  right: -13px;
-  top: -6px;
-}
-
 /* footer end */
 
 /* widget source-list start */

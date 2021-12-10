@@ -72,7 +72,12 @@
           <div class="total">{{ formatTime(currentDuration) }}</div>
         </div>
         <div class="playbar mx-3">
-          <draggable-bar id="progressbar" :progress="myProgress" @commit-progress="commitProgress" @update-progress="updateProgress"></draggable-bar>
+          <draggable-bar
+            id="progressbar"
+            btn-class="bg-draggable-bar-button"
+            :progress="myProgress"
+            @commit-progress="commitProgress"
+            @update-progress="updateProgress"></draggable-bar>
         </div>
       </div>
     </div>
@@ -80,15 +85,11 @@
       <div class="playlist-toggle cursor-pointer ml-8">
         <span class="icon li-list" @click="togglePlaylist()" />
       </div>
-      <div class="volume-ctrl flex flex-1 items-center" volume-wheel>
-        <vue-feather class="icon cursor-pointer ml-6" :type="volumeIcon" size="1.25rem" @click="toggleMuteStatus()" />
-        <div class="m-pbar volume flex-1 mr-4">
-          <draggable-bar id="volumebar" :progress="volume * 100" @update-progress="changeVolume" @commit-progress="commitVolume"></draggable-bar>
-        </div>
-      </div>
+      <Volumebar></Volumebar>
       <div v-if="isElectron()" class="lyric-toggle cursor-pointer mx-6">
         <div @click="toggleLyricFloatingWindow()" class="lyric-icon" :class="{ selected: settings.enableLyricFloatingWindow }">词</div>
       </div>
+      <div v-if="!isElectron()" class="mx-6"></div>
     </div>
     <PlayerbarPopup @close="togglePlaylist()" :hidden="menuHidden"></PlayerbarPopup>
   </div>
@@ -99,6 +100,7 @@ import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 import DraggableBar from '../components/DraggableBar.vue';
 import PlayerbarPopup from '../components/PlayerbarPopup.vue';
+import Volumebar from '../components/Volumebar.vue';
 import useOverlay from '../composition/overlay';
 import usePlayer from '../composition/player';
 import useRedHeart from '../composition/redheart';
@@ -111,7 +113,7 @@ const { t } = useI18n();
 const { player } = usePlayer();
 const router = useRouter();
 const showModal = inject('showModal');
-const { settings, setSettings, saveSettingsToDB, getSettingsAsync } = useSettings();
+const { settings, setSettings } = useSettings();
 
 let { overlay, setOverlayType } = useOverlay();
 let menuHidden = $ref(true);
@@ -162,36 +164,6 @@ const commitProgress = (progress) => {
   player._lyricArrayIndex = -1;
 };
 
-const changeVolume = (progress) => {
-  l1Player.setVolume(progress);
-  l1Player.unmute();
-};
-const commitVolume = (progress) => {
-  changeVolume(progress);
-  // TODO: use settings.playerSettings will get old init value
-  // must use getSettings to fetch recent value
-  const task = async () => {
-    const settings = await getSettingsAsync();
-    saveSettingsToDB({ playerSettings: { ...settings.playerSettings, volume: progress * 100 } });
-  };
-  task();
-};
-const toggleMuteStatus = () => {
-  player.mute = !player.mute;
-  l1Player.toggleMute();
-};
-let volumeIcon = $computed(() => {
-  if (player.mute) {
-    return 'volume-x';
-  } else if (volume > 0.5) {
-    return 'volume-2';
-  } else if (volume > 0) {
-    return 'volume-1';
-  } else {
-    return 'volume';
-  }
-});
-
 function getCSSStringFromSetting(setting) {
   let { backgroundAlpha } = setting;
   if (backgroundAlpha === 0) {
@@ -235,7 +207,6 @@ let myProgress = $computed(() => player.myProgress);
 let currentDuration = $computed(() => player.currentDuration);
 let currentPosition = $computed(() => player.currentPosition);
 let currentPlaying = $computed(() => player.currentPlaying || {});
-let volume = $computed(() => player.volume);
 
 if (isElectron()) {
   window.api?.onLyricWindow((arg) => {
