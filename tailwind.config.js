@@ -21,7 +21,8 @@ module.exports = {
         prevnext: 'var(--player-left-icon-color)',
         disabled: 'var(--disabled-color)',
         inactive: 'var(--link-inactive-color)',
-        important: 'var(--important-color)'
+        important: 'var(--important-color)',
+        badge: 'var(--badge-font-color)'
       },
       backgroundColor: {
         theme: 'var(--theme-background-color)',
@@ -35,12 +36,14 @@ module.exports = {
         'draggable-bar-button': 'var(--footer-player-bar-cur-button-color)',
         menu: 'var(--footer-header-background-color)',
         button: 'var(--button-background-color)',
-        'button-hover': 'var(--button-hover-background-color)'
+        'button-hover': 'var(--button-hover-background-color)',
+        'now-playing': 'var(--now-playing-page-background-color)'
       },
       borderColor: {
         default: 'var(--line-default-color)',
         active: 'var(--link-active-color)',
-        button: 'var(--button-border-color)'
+        button: 'var(--button-border-color)',
+        badge: 'var(--badge-border-color)'
       }
     }
   },

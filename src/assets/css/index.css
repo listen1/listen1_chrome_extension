@@ -6,6 +6,9 @@
   .app-region-drag {
     -webkit-app-region: drag;
   }
+  .app-region-nodrag {
+    -webkit-app-region: no-drag;
+  }
   .-mb-2px {
     margin-bottom: -2px;
   }
