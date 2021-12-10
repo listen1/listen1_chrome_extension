@@ -915,65 +915,6 @@ svg.searchspinner {
   vertical-align: top;
   margin-left: 15px;
 }
-/* footer start */
-
-.footer .main-info .detail .playbar .barbg .cur .btn {
-  /* background: var(--footer-player-bar-cur-button-color); */
-  height: 8px;
-  width: 2px;
-  right: -2px;
-  top: -5px;
-}
-
-.footer .main-info .detail .playbar .playbar-clickable:hover .barbg .cur .btn {
-  width: 10px;
-  height: 10px;
-  border-radius: 5px;
-  top: -3px;
-}
-
-.footer .menu ul.menu-list li {
-  background: var(--footer-menu-odd-background-color);
-}
-
-.footer .menu ul.menu-list li.even {
-  background: var(--footer-menu-even-background-color);
-}
-
-.footer .menu ul.menu-list li:hover {
-  background: var(--footer-menu-hover-background-color);
-}
-
-.footer .menu ul.menu-list li.playing {
-  color: var(--important-color);
-}
-
-.footer .right-control .playlist-toggle .icon {
-  color: var(--player-right-icon-color);
-}
-
-.footer .right-control .playlist-toggle .icon:hover {
-  color: var(--player-right-icon-hover-color);
-}
-
-.footer .right-control .lyric-toggle .lyric-icon,
-.footer .right-control .lyric-toggle .lyric-icon.selected:hover {
-  border: solid 1px #7f7f7f;
-  height: 16px;
-  line-height: 16px;
-  font-size: 14px;
-  color: #7f7f7f;
-  background-color: var(--lyric-icon-background-color);
-  user-select: none;
-}
-
-.footer .right-control .lyric-toggle .lyric-icon.selected {
-  border: solid 1px #7f7f7f;
-  background-color: #7f7f7f;
-  color: #fff;
-}
-
-/* footer end */
 
 /* widget source-list start */
 .source-list {
