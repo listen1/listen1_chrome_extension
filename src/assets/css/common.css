@@ -481,16 +481,10 @@ ul.detail-songlist li .tools .icon {
 }
 /* page song detail end */
 
-/* page login start */
-.page .login {
-  min-height: calc(100vh - 192px);
-}
-/* page login end */
-
-.page .settings-content {
+/* .page .settings-content {
   margin: 0 25px 25px 25px;
-}
-.page .settings-content label.upload-button {
+} */
+/* .page .settings-content label.upload-button {
   padding: 5px;
   background: var(--button-background-color);
   margin-right: 4px;
@@ -500,9 +494,9 @@ ul.detail-songlist li .tools .icon {
 
 .page .settings-content label.upload-button:hover {
   background: var(--button-hover-background-color);
-}
+} */
 
-.page .settings-content .shortcut {
+/* .page .settings-content .shortcut {
   display: flex;
   margin-top: 10px;
 }
@@ -569,8 +563,8 @@ ul.detail-songlist li .tools .icon {
   margin-right: 15px;
   height: 24px;
   width: 200px;
-}
-.page .settings-content .search-description {
+} */
+/* .page .settings-content .search-description {
   margin: 10px 0 5px 0;
 }
 .page .settings-content .search-source-list {
@@ -588,5 +582,5 @@ ul.detail-songlist li .tools .icon {
   width: 18px;
   height: 18px;
   margin-right: 4px;
-}
+} */
 /* page setting end */
