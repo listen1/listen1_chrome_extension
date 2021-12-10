@@ -808,19 +808,8 @@ ul.detail-songlist li .tools .icon {
 }
 /* page setting end */
 
-.loading_bottom {
+/* .loading_bottom {
   display: block;
   width: 40px;
   margin: 0 auto;
-}
-
-svg.searchspinner {
-  width: 20px;
-  height: 20px;
-  vertical-align: top;
-  margin-left: 15px;
-}
-
-.source-list .search-type {
-  float: right;
-}
+} */
