@@ -124,7 +124,7 @@
           </div>
         </div>
 
-        <div class="browser flex-scroll-wrapper flex-1" id="browser" v-on:scroll.passive="handleScroll" content-selector="'#playlist-content'">
+        <div class="flex-scroll-wrapper flex-1 overflow-y-scroll" id="browser" v-on:scroll.passive="handleScroll" content-selector="'#playlist-content'">
           <router-view :key="$route.path" />
           <NowPlaying />
         </div>

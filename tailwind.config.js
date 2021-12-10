@@ -19,7 +19,8 @@ module.exports = {
         play: 'var(--player-icon-color)',
         'play-hover': 'var(--player-icon-hover-color)',
         prevnext: 'var(--player-left-icon-color)',
-        disabled: 'var(--disabled-color)'
+        disabled: 'var(--disabled-color)',
+        inactive: 'var(--link-inactive-color)'
       },
       backgroundColor: {
         theme: 'var(--theme-background-color)',
@@ -34,7 +35,8 @@ module.exports = {
         menu: 'var(--footer-header-background-color)'
       },
       borderColor: {
-        default: 'var(--line-default-color)'
+        default: 'var(--line-default-color)',
+        active: 'var(--link-active-color)'
       }
     }
   },

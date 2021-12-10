@@ -2,7 +2,7 @@
   <div class="menu-modal fixed top-0 right-0 left-0 bg-white bg-opacity-20" :class="{ 'bottom-20': !props.hidden }" @click="close()" />
   <div
     class="menu bg-theme fixed overflow-hidden border-default rounded-sm h-96"
-    :class="{ 'bottom-20 opacity-100': !props.hidden, '-bottom-20 opacity-0': props.hidden }">
+    :class="{ 'bottom-20 opacity-100': !props.hidden, '-bottom-80 opacity-0': props.hidden }">
     <div class="menu-header text-sm h-10 border-b border-default flex items-center bg-menu">
       <span class="menu-title flex-1 px-4 border-default border-r">{{ t('_TOTAL_SONG_PREFIX') }} {{ playlist.length }} {{ t('_TOTAL_SONG_POSTFIX') }}</span>
       <a class="add-all pr-4 flex items-center cursor-pointer" @click="showModal('AddToPlaylist', { tracks: playlist })">

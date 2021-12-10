@@ -55,24 +55,6 @@ img {
 .l1-button:hover {
   background: var(--button-hover-background-color);
 }
-/* this section will cause feather style not working */
-/* svg {
-  width: 24px;
-  height: 24px;
-  stroke: currentColor;
-  stroke-width: 1;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  fill: none;
-  cursor: pointer;
-  stroke: var(--icon-default-color);
-
-} */
-
-/* svg:hover {
-  fill: var(--icon-highlight-color);
-  stroke: var(--icon-highlight-color);
-} */
 
 .icon {
   /* default icon settings */
@@ -82,9 +64,7 @@ img {
 
 /* tools utils */
 .flex-scroll-wrapper {
-  flex: 1;
   height: 100px;
-  overflow-y: scroll;
   scrollbar-width: thin;
   scrollbar-color: var(--scroll-color) var(--content-background-color);
 }
@@ -119,81 +99,6 @@ img {
 }
 
 /*****************************************************************/
-
-/* page hot-playlist start */
-.page-hot-playlist {
-  max-width: 850px;
-  margin: 0 auto;
-}
-
-.playlist-covers {
-  margin: 0;
-  padding: 0 13px;
-  display: flex;
-  flex-flow: row wrap;
-  position: relative;
-}
-
-.playlist-covers li {
-  flex: 0 1 calc(20% - 26px);
-  min-height: 156px;
-  color: var(--text-default-color);
-  margin: 0 13px;
-}
-
-.playlist-covers .u-cover {
-  display: flex;
-  position: relative;
-}
-
-.playlist-covers .u-cover img {
-  height: 136px;
-  min-width: 136px;
-  max-width: 100%;
-  object-fit: cover;
-  margin: auto;
-  border: solid 1px var(--line-default-color);
-  margin-bottom: 2px;
-  cursor: pointer;
-}
-
-.playlist-covers .u-cover .bottom {
-  position: absolute;
-  right: 5px;
-  bottom: 10px;
-  height: 30px;
-  width: 30px;
-  cursor: pointer;
-  opacity: 0;
-  transition: opacity 0.2s linear;
-}
-
-.playlist-covers .u-cover:hover .bottom {
-  opacity: 1;
-}
-
-.playlist-covers .u-cover .bottom svg {
-  height: 30px;
-  width: 30px;
-  fill: rgba(200, 200, 200, 0.5);
-  stroke-width: 1;
-  stroke: #ffffff;
-}
-
-.playlist-covers .u-cover .bottom svg:hover {
-  fill: rgba(100, 100, 100, 0.5);
-}
-
-.playlist-covers .desc {
-  cursor: pointer;
-}
-
-.playlist-covers .desc .title {
-  display: flex;
-  min-height: 32px;
-  margin: 0 0 5px;
-}
-/* page hot-playlist end */
 
 /* page playlist-detail start */
 .page .playlist-detail {
@@ -916,33 +821,6 @@ svg.searchspinner {
   margin-left: 15px;
 }
 
-/* widget source-list start */
-.source-list {
-  margin: 20px 26px 10px 26px;
-}
-
-.source-list .source-button {
-  display: inline-block;
-  color: var(--link-inactive-color);
-  cursor: pointer;
-  padding-bottom: 4px;
-  font-size: 14px;
-}
-
-.source-list .source-button.active,
-.source-list .source-button:hover {
-  color: var(--link-active-color);
-  border-bottom: solid 1px var(--link-active-color);
-}
-
-.source-list .splitter {
-  display: inline-block;
-  background: #a9a9a9;
-  margin-top: 1px;
-  height: 12px;
-  width: 1px;
-  margin: 0 10px;
-}
 .source-list .search-type {
   float: right;
 }
