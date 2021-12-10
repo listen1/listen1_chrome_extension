@@ -20,7 +20,8 @@ module.exports = {
         'play-hover': 'var(--player-icon-hover-color)',
         prevnext: 'var(--player-left-icon-color)',
         disabled: 'var(--disabled-color)',
-        inactive: 'var(--link-inactive-color)'
+        inactive: 'var(--link-inactive-color)',
+        important: 'var(--important-color)'
       },
       backgroundColor: {
         theme: 'var(--theme-background-color)',
@@ -33,11 +34,13 @@ module.exports = {
         'draggable-bar-current': 'var(--footer-player-bar-cur-background-color)',
         'draggable-bar-button': 'var(--footer-player-bar-cur-button-color)',
         menu: 'var(--footer-header-background-color)',
-        button: 'var(--button-background-color)'
+        button: 'var(--button-background-color)',
+        'button-hover': 'var(--button-hover-background-color)'
       },
       borderColor: {
         default: 'var(--line-default-color)',
-        active: 'var(--link-active-color)'
+        active: 'var(--link-active-color)',
+        button: 'var(--button-border-color)'
       }
     }
   },
