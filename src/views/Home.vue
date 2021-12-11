@@ -136,12 +136,9 @@
 
 <script setup>
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import 'notyf/notyf.min.css';
 import { onMounted, provide } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
-import '../assets/css/common.css';
-import '../assets/css/icon.css';
 import Modal from '../components/Modal.vue';
 import Playerbar from '../components/Playerbar.vue';
 import Sidebar from '../components/Sidebar.vue';
@@ -308,5 +305,88 @@ const sendControl = (message) => {
   /* Chrome, Firefox, Opera, Safari 10.1+ */
   color: var(--search-input-placeholder-color);
   opacity: 1; /* Firefox */
+}
+.wrap {
+  /* https://stackoverflow.com/questions/28897089/z-index-on-borders */
+  outline: solid 1px var(--windows-border-color);
+}
+html,
+body {
+  font-size: var(--text-default-size);
+  /* font-size: 14px; */
+  color: var(--text-default-color);
+  font-family: -apple-system, 'Helvetica Neue', Helvetica, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', system-ui, sans-serif;
+}
+
+/* remove focus highlight */
+input:focus,
+select:focus,
+textarea:focus,
+button:focus {
+  outline: none;
+}
+
+input,
+svg,
+.icon {
+  -webkit-app-region: no-drag;
+}
+
+button {
+  background-color: var(--button-background-color);
+  color: var(--text-default-color);
+  /* border: solid 1px var(--button-background-color); */
+  border: none;
+  border-radius: var(--default-border-radius);
+  padding: 5px;
+  min-width: 80px;
+  min-height: 32px;
+}
+button:hover {
+  background-color: var(--button-hover-background-color);
+}
+img {
+  -webkit-user-drag: none;
+}
+.icon {
+  /* default icon settings */
+  font-size: 16px;
+  cursor: pointer;
+}
+
+/* tools utils */
+.flex-scroll-wrapper {
+  height: 100px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--scroll-color) var(--content-background-color);
+}
+
+/* scroll bar style */
+::-webkit-scrollbar {
+  width: 14px;
+  height: 18px;
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  height: 49px;
+  border: 5px solid rgba(0, 0, 0, 0);
+  background-clip: padding-box;
+  border-radius: 7px;
+  -webkit-border-radius: 7px;
+  background-color: var(--scroll-color);
+  /*rgba(151, 151, 151, 0.4);*/
+
+  /*    -webkit-box-shadow: inset -1px -1px 0px rgba(0, 0, 0, 0.05), inset 1px 1px 0px rgba(0, 0, 0, 0.05);*/
+}
+
+::-webkit-scrollbar-button {
+  width: 0;
+  height: 0;
+  display: none;
+}
+
+::-webkit-scrollbar-corner {
+  background-color: transparent;
 }
 </style>

@@ -134,4 +134,17 @@ const sourceList = computed(() => MediaService.getSourceList());
 .playlist-covers .u-cover .bottom svg:hover {
   fill: rgba(100, 100, 100, 0.5);
 }
+.l1-button {
+  background-color: var(--button-background-color);
+  color: var(--text-default-color);
+  border-radius: var(--default-border-radius);
+  padding: 5px;
+  margin-right: 4px;
+  color: var(--text-default-color);
+  cursor: pointer;
+  display: inline-block;
+}
+.l1-button:hover {
+  background: var(--button-hover-background-color);
+}
 </style>

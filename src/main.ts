@@ -7,7 +7,6 @@ import router from './router';
 
 import 'notyf/notyf.min.css';
 import './assets/css/icon.css';
-import './assets/css/common.css';
 import './assets/css/index.css';
 
 import { setPrototypeOfLocalStorage } from './utils';
