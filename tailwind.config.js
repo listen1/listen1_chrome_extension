@@ -37,7 +37,10 @@ module.exports = {
         menu: 'var(--footer-header-background-color)',
         button: 'var(--button-background-color)',
         'button-hover': 'var(--button-hover-background-color)',
-        'now-playing': 'var(--now-playing-page-background-color)'
+        'now-playing': 'var(--now-playing-page-background-color)',
+        odd: 'var(--songlist-odd-background-color)',
+        even: 'var(--songlist-even-background-color)',
+        'row-hover': 'var(--songlist-hover-background-color)'
       },
       borderColor: {
         default: 'var(--line-default-color)',

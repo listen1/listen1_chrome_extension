@@ -468,4 +468,105 @@ const sourceList = [
   height: 40px;
   overflow: hidden;
 }
+
+/* .page .settings-content {
+  margin: 0 25px 25px 25px;
+} */
+/* .page .settings-content label.upload-button {
+  padding: 5px;
+  background: var(--button-background-color);
+  margin-right: 4px;
+  color: var(--text-default-color);
+  cursor: pointer;
+}
+
+.page .settings-content label.upload-button:hover {
+  background: var(--button-hover-background-color);
+} */
+
+/* .page .settings-content .shortcut {
+  display: flex;
+  margin-top: 10px;
+}
+.page .settings-content .shortcut svg {
+  width: 18px;
+  height: 18px;
+  margin-right: 10px;
+}
+
+.page .settings-content .shortcut_table .shortcut_table-header,
+.page .settings-content .shortcut_table .shortcut_table-line {
+  display: flex;
+  color: var(--text-default-color);
+  box-sizing: border-box;
+  align-items: center;
+  height: 40px;
+}
+.page .settings-content .shortcut_table .shortcut_table-header {
+  color: var(--link-default-color);
+  height: 30px;
+}
+.page .settings-content .shortcut_table .shortcut_table-function {
+  flex: 0 140px;
+  padding: 0 10px;
+  box-sizing: border-box;
+}
+.page .settings-content .shortcut_table .shortcut_table-key {
+  flex: 0 200px;
+  margin-right: 20px;
+  box-sizing: border-box;
+}
+.page .settings-content .shortcut_table .shortcut_table-globalkey {
+  flex: 0 240px;
+  box-sizing: border-box;
+}
+.page .settings-content .shortcut_table .shortcut_table-line .shortcut_table-key {
+  border: solid 1px var(--button-border-color);
+  border-radius: 5px;
+  padding: 0 10px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+}
+.page .settings-content .shortcut_table .shortcut_table-line .shortcut_table-globalkey {
+  border: solid 1px var(--button-border-color);
+  border-radius: 5px;
+  height: 30px;
+  padding: 0 10px;
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+.page .settings-content .custom-proxy {
+  margin-top: 10px;
+}
+.page .settings-content .custom-proxy .rule-input {
+  margin-top: 8px;
+}
+.page .settings-content .custom-proxy input {
+  margin-right: 15px;
+  height: 24px;
+  width: 200px;
+} */
+/* .page .settings-content .search-description {
+  margin: 10px 0 5px 0;
+}
+.page .settings-content .search-source-list {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  line-height: 30px;
+}
+.page .settings-content .search-source-list .search-source {
+  display: flex;
+  align-items: center;
+  width: 130px;
+}
+.page .settings-content .search-source-list .search-source svg {
+  width: 18px;
+  height: 18px;
+  margin-right: 4px;
+} */
+/* page setting end */
 </style>

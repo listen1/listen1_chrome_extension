@@ -180,4 +180,22 @@ let lyricFontSize = $computed(() => settings.lyricFontSize);
 .page .coverbg .playsong-detail .detail-songinfo .lyric p.highlight {
   color: var(--lyric-important-on-cover-color);
 }
+/* .page .songdetail-wrapper .window-control {
+  position: absolute;
+  top: 24px;
+  left: 55px;
+  height: 24px;
+  cursor: pointer;
+  -webkit-app-region: no-drag;
+  z-index: 99;
+}
+
+.page .songdetail-wrapper .window-control svg {
+  margin-left: 8px;
+  stroke: var(--now-playing-close-icon-color);
+}
+
+.page .songdetail-wrapper .close svg {
+  stroke: var(--now-playing-close-icon-color);
+} */
 </style>

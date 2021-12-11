@@ -4,7 +4,7 @@
       <div class="app-region-drag h-12" />
       <SidebarTitle :text="t('_PLATFORM_UNION')"></SidebarTitle>
       <ul>
-        <li :class="{ active: $route.name === 'HotPlaylists' }" class="group" @click="$router.push('/')">
+        <li :class="{ active: $route.name === 'HotPlaylists' }" class="group cursor-pointer" @click="$router.push('/')">
           <SidebarEntry :text="t('_PLAYLISTS')" icon="li-featured-list"></SidebarEntry>
         </li>
       </ul>
@@ -34,6 +34,7 @@
           v-for="(i, index) in myplaylists"
           :key="index"
           :class="{ active: route.path === `/playlist/${i.id}` }"
+          class="cursor-pointer"
           :draggable="i.id !== 'myplaylist_redheart'"
           :dragobject="i"
           :dragtitle="i.title"

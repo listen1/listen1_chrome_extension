@@ -54,23 +54,24 @@
           </svg>
           <input class="playlist-search-input" type="text" ng-model="playlistFilter.key" :placeholder="$t('_SEARCH_PLAYLIST')" />
         </div>-->
-        <li class="head">
-          <div class="title">
+        <li class="head border-t-2 border-b-2 border-transparent text-inactive -mb-2px group flex relative items-center px-10 h-12">
+          <div class="title flex-2 truncate flex">
             <a>{{ t('_SONGS') + '(' + songs.length + ')' }}</a>
           </div>
-          <div class="artist">
+          <div class="artist flex-1 truncate">
             <a>{{ t('_ARTISTS') }}</a>
           </div>
-          <div class="album">
+          <div class="album flex-1 truncate">
             <a>{{ t('_ALBUMS') }}</a>
           </div>
-          <div class="tools">{{ t('_OPERATION') }}</div>
+          <div class="tools flex items-center w-28">{{ t('_OPERATION') }}</div>
         </li>
         <DragDropZone
           v-for="(song, index) in songs"
           :key="song.id"
           :draggable="true"
-          :class="{ even: index % 2 === 0, odd: index % 2 !== 0 }"
+          :class="{ 'bg-even': index % 2 === 0, 'bg-odd': index % 2 !== 0 }"
+          class="flex relative items-center px-10 h-12 hover:bg-row-hover"
           :dragobject="song"
           :dragtitle="song.title"
           :sortable="is_mine || is_local"
@@ -186,3 +187,40 @@ const addLocalMusic = (list_id) => {
   });
 };
 </script>
+<style>
+/* 
+
+ul.detail-songlist .playlist-search {
+  position: absolute;
+  right: 0;
+  top: -30px;
+}
+ul.detail-songlist .playlist-search .playlist-search-icon {
+  width: 14px;
+  position: absolute;
+  left: 7px;
+  top: 1px;
+}
+ul.detail-songlist .playlist-search .playlist-clear-icon {
+  width: 14px;
+  position: absolute;
+  left: 158px;
+}
+ul.detail-songlist .playlist-search .playlist-search-input {
+  margin-right: 28px;
+  margin-bottom: 10px;
+  border: none;
+  height: 24px;
+  border-radius: 12px;
+  padding: 0 30px;
+  background: var(--content-background-color);
+  color: #bbbbbb;
+  width: 120px;
+}
+ul.detail-songlist .playlist-search .playlist-search-input:hover {
+  background-color: var(--songlist-odd-background-color);
+}
+ul.detail-songlist .playlist-search .playlist-search-input::placeholder {
+  color: #bbbbbb;
+} */
+</style>

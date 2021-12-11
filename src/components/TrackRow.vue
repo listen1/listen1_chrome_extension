@@ -1,30 +1,41 @@
 <template>
-  <div class="title">
+  <div class="title flex-2 truncate flex max-h-12">
     <!-- <a class="disabled" ng-if="song.disabled" ng-click="copyrightNotice()"> song.title </a> -->
-    <vue-feather v-if="!isRedHeart(song.id)" type="heart" size="18" stroke-width="1" stroke="#666666" @click="setRedHeart(toRaw(song), true)" />
-    <vue-feather v-if="isRedHeart(song.id)" type="heart" fill="red" stroke="red" size="18" @click="setRedHeart(toRaw(song), false)" />
+    <vue-feather
+      class="cursor-pointer"
+      v-if="!isRedHeart(song.id)"
+      type="heart"
+      size="18"
+      stroke-width="1"
+      stroke="#666666"
+      @click="setRedHeart(toRaw(song), true)" />
+    <vue-feather class="cursor-pointer" v-if="isRedHeart(song.id)" type="heart" fill="red" stroke="red" size="18" @click="setRedHeart(toRaw(song), false)" />
 
-    <a @click="play(song)">{{ song.title }}</a>
+    <a @click="play(song)" class="cursor-pointer ml-3 flex items-center">{{ song.title }}</a>
   </div>
-  <div class="artist">
-    <a @click="$router.push(`/playlist/${props.song.artist_id}`)">{{ props.song.artist }}</a>
+  <div class="artist flex-1 truncate">
+    <a class="cursor-pointer" @click="$router.push(`/playlist/${props.song.artist_id}`)">{{ props.song.artist }}</a>
   </div>
-  <div class="album">
-    <a @click="$router.push(`/playlist/${props.song.album_id}`)">{{ props.song.album }}</a>
+  <div class="album flex-1 truncate">
+    <a class="cursor-pointer" @click="$router.push(`/playlist/${props.song.album_id}`)">{{ props.song.album }}</a>
   </div>
-  <div class="tools">
-    <a v-show="song.options" :title="t('_ADD_TO_QUEUE')" class="detail-add-button" @click="addToPlay(song)"><span class="icon li-add" /></a>
-    <a v-show="song.options" :title="t('_ADD_TO_PLAYLIST')" class="detail-fav-button" @click="showModal('AddToPlaylist', { tracks: [song] })">
+  <div class="tools w-28 flex items-center">
+    <a v-show="song.options" :title="t('_ADD_TO_QUEUE')" class="detail-add-button cursor-pointer mr-3" @click="addToPlay(song)"><span class="icon li-add" /></a>
+    <a
+      v-show="song.options"
+      :title="t('_ADD_TO_PLAYLIST')"
+      class="detail-fav-button cursor-pointer mr-3"
+      @click="showModal('AddToPlaylist', { tracks: [song] })">
       <span class="icon li-songlist" />
     </a>
     <a
       v-show="song.options && (is_mine == '1' || is_local)"
       :title="t('_REMOVE_FROM_PLAYLIST')"
-      class="detail-delete-button"
+      class="detail-delete-button cursor-pointer mr-3"
       @click="removeSongFromPlaylist(song.id, list_id)">
       <span class="icon li-del" />
     </a>
-    <a v-show="song.options && !is_local" :title="t('_ORIGIN_LINK')" class="source-button" @click="openUrl(song.source_url)">
+    <a v-show="song.options && !is_local" :title="t('_ORIGIN_LINK')" class="source-button cursor-pointer mr-3" @click="openUrl(song.source_url)">
       <span class="icon li-link" />
     </a>
   </div>

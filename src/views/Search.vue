@@ -25,26 +25,30 @@
           </SourceTab>
 
           <ul class="detail-songlist">
-            <li v-if="condition.searchType === 0" class="head">
-              <div class="title">
+            <li
+              v-if="condition.searchType === 0"
+              class="head border-t-2 border-b-2 border-transparent bg-inactive -mb-2px group flex relative items-center px-10 h-12">
+              <div class="title flex-2 truncate flex">
                 <a>{{ t('_SONGS') }}</a>
               </div>
-              <div class="artist">
+              <div class="artist flex-1">
                 <a>{{ t('_ARTISTS') }}</a>
               </div>
-              <div class="album">
+              <div class="album flex-1">
                 <a>{{ t('_ALBUMS') }}</a>
               </div>
-              <div class="tools">{{ t('_OPERATION') }}</div>
+              <div class="tools w-60">{{ t('_OPERATION') }}</div>
             </li>
-            <li v-if="condition.searchType === 1" class="head">
-              <div class="title">
+            <li
+              v-if="condition.searchType === 1"
+              class="head border-t-2 border-b-2 border-transparent bg-inactive -mb-2px group flex relative items-center px-10 h-12">
+              <div class="title flex-2 truncate flex">
                 <a>{{ t('_PLAYLIST_TITLE') }}</a>
               </div>
-              <div class="artist">
+              <div class="artist flex-1">
                 <a>{{ t('_PLAYLIST_AUTHOR') }}</a>
               </div>
-              <div class="album">
+              <div class="album flex-1">
                 <a>{{ t('_PLAYLIST_SONG_COUNT') }}</a>
               </div>
             </li>
@@ -52,32 +56,37 @@
               <li
                 v-for="(song, index) in result.tracks"
                 :key="song.id"
-                :class="{ even: index % 2 === 0, odd: index % 2 !== 0 }"
+                :class="{ 'bg-even': index % 2 === 0, 'bg-odd': index % 2 !== 0 }"
+                class="flex relative items-center px-10 h-12 hover:bg-row-hover"
                 @mouseenter="song.options = true"
                 @mouseleave="song.options = undefined">
                 <TrackRow :song="song"></TrackRow>
               </li>
             </template>
             <template v-if="condition.searchType === 1">
-              <li v-for="playlist in result.tracks" :key="playlist.id" ng-class-odd="'odd'" ng-class-even="'even'" class="playlist-result">
-                <div class="title">
-                  <a @click="$router.push(`/playlist/${playlist.id}`)">
-                    <img :src="playlist.img_url" err-src="https://y.gtimg.cn/mediastyle/global/img/playlist_300.png" />
+              <li
+                v-for="playlist in result.tracks"
+                :key="playlist.id"
+                :class="{ 'bg-even': index % 2 === 0, 'bg-odd': index % 2 !== 0 }"
+                class="playlist-result flex relative items-center px-10 h-20 hover:bg-row-hover">
+                <div class="title flex-2 truncate">
+                  <a @click="$router.push(`/playlist/${playlist.id}`)" class="cursor-pointer flex">
+                    <img class="h-16 w-16 block mr-3" :src="playlist.img_url" err-src="https://y.gtimg.cn/mediastyle/global/img/playlist_300.png" />
                     <div>
                       {{ playlist.title }}
                       <!-- <span ng-if="isActiveTab('allmusic')" class="source playlist">{{playlist.sourceName}}</span> -->
                     </div>
                   </a>
                 </div>
-                <div class="artist">{{ playlist.author }}</div>
-                <div class="album">{{ playlist.count }}</div>
+                <div class="artist flex-1 truncate">{{ playlist.author }}</div>
+                <div class="album flex-1 truncate">{{ playlist.count }}</div>
               </li>
             </template>
           </ul>
-          <div v-show="result.totalpage > 1" class="search-pagination">
-            <button class="btn btn-sm btn-pagination" :disabled="condition.curpage == 1" @click="changeSearchPage(-1)">上一页</button>
-            <label>{{ condition.curpage }}/{{ result.totalpage }} 页</label>
-            <button class="btn btn-sm btn-pagination" :disabled="condition.curpage == result.totalpage" @click="changeSearchPage(1)">下一页</button>
+          <div v-show="result.totalpage > 1" class="search-pagination text-center p-4">
+            <button class="btn btn-sm btn-pagination bg-button" :disabled="condition.curpage == 1" @click="changeSearchPage(-1)">上一页</button>
+            <label class="mx-4">{{ condition.curpage }}/{{ result.totalpage }} 页</label>
+            <button class="btn btn-sm btn-pagination bg-button" :disabled="condition.curpage == result.totalpage" @click="changeSearchPage(1)">下一页</button>
           </div>
         </div>
       </div>
@@ -112,4 +121,20 @@ const changeSearchPage = (offset) => {
 const sourceList = computed(() => [{ name: 'allmusic', displayId: '_ALL_MUSIC' }, ...MediaService.getSourceList()]);
 </script>
 
-<style></style>
+<style>
+ul.detail-songlist li a span.source {
+  border: solid 1px #ccc;
+  border-radius: 4px;
+  margin-right: 10px;
+  display: inline-block;
+  padding: 0 4px;
+  color: #ccc;
+  font-size: 12px;
+  width: 24px;
+  text-align: center;
+}
+ul.detail-songlist li a span.source.playlist {
+  margin-left: 10px;
+  margin-right: 0;
+}
+</style>
