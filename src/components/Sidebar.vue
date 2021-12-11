@@ -27,7 +27,7 @@
         </li>
       </ul>
       <SidebarTitle :text="t('_CREATED_PLAYLIST')">
-        <template v-slot:right><vue-feather size="1.25rem" type="plus-square" @click="showModal('ParseUrl', {})" /></template>
+        <template v-slot:right><vue-feather class="cursor-pointer" size="1.25rem" type="plus-square" @click="showModal('ParseUrl', {})" /></template>
       </SidebarTitle>
       <ul>
         <DragDropZone
@@ -55,6 +55,7 @@
           :key="index"
           :draggable="true"
           :class="{ active: route.path === `/playlist/${i.id}` }"
+          class="cursor-pointer"
           :dragobject="i"
           :dragtitle="i.title"
           :sortable="true"

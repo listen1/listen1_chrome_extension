@@ -2,7 +2,7 @@
   <div class="page">
     <div class="playlist-detail">
       <div class="detail-head flex">
-        <div class="detail-head-cover w-40 m-8">
+        <div class="detail-head-cover w-40 mx-8 mt-8 mb-1">
           <img :src="cover_img_url" class="h-40 w-40" err-src="https://y.gtimg.cn/mediastyle/global/img/singer_300.png" />
         </div>
         <div class="detail-head-title flex-1">

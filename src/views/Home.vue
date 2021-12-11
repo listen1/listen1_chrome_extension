@@ -90,7 +90,7 @@
     <div class="main flex z-10 overflow-hidden flex-1">
       <Sidebar></Sidebar>
 
-      <div class="flex flex-col flex-1 bg-content">
+      <div class="flex flex-col flex-1 bg-content overflow-hidden">
         <div class="flex flex-none items-center h-14 app-region-drag border-b border-default">
           <div class="flex flex-1 items-center">
             <span class="icon opacity-50 hover:opacity-100 text-xl text-icon li-back ml-4" @click="$router.go(-1)" />
