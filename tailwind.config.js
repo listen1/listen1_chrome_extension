@@ -40,7 +40,8 @@ module.exports = {
         'now-playing': 'var(--now-playing-page-background-color)',
         odd: 'var(--songlist-odd-background-color)',
         even: 'var(--songlist-even-background-color)',
-        'row-hover': 'var(--songlist-hover-background-color)'
+        'row-hover': 'var(--songlist-hover-background-color)',
+        'dialog-hover': 'var(--dialog-highlight-color)'
       },
       borderColor: {
         default: 'var(--line-default-color)',

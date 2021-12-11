@@ -71,7 +71,7 @@
 }
 
 .modal-body {
-  padding: 0 20px;
+  /* padding: 0 20px; */
   height: 370px;
   overflow-y: auto;
   background-color: var(--dialog-background-color);

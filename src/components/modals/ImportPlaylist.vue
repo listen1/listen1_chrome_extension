@@ -4,9 +4,9 @@
       <h3>{{ t('_IMPORT_PLAYLIST') }}</h3>
     </template>
     <template #body>
-      <ul class="dialog-playlist">
-        <li v-for="(playlist, index) in myplaylist" :key="index" ng-class-odd="'odd'" ng-class-even="'even'" @click="mergePlaylist(playlist.id)">
-          <img :src="playlist.cover_img_url" />
+      <ul class="dialog-playlist text-left">
+        <li class="cursor-pointer h-14 p-2 hover:bg-dialog-hover" v-for="(playlist, index) in myplaylist" :key="index" @click="mergePlaylist(playlist.id)">
+          <img class="float-left h-10 w-10 mr-4" :src="playlist.cover_img_url" />
           <h2>{{ playlist.title }}</h2>
         </li>
       </ul>

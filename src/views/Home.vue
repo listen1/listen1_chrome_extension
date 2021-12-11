@@ -356,7 +356,6 @@ img {
 
 /* tools utils */
 .flex-scroll-wrapper {
-  height: 100px;
   scrollbar-width: thin;
   scrollbar-color: var(--scroll-color) var(--content-background-color);
 }

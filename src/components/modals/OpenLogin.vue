@@ -10,7 +10,7 @@
     </template>
     <template #footer>
       <button
-        class="btn btn-primary confirm-button"
+        class="btn btn-primary confirm-button bg-button"
         @click="
           $emit('close');
           refreshAuthStatus();
