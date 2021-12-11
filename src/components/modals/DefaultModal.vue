@@ -1,9 +1,9 @@
 <template>
   <div class="modal-mask">
     <div class="modal-wrapper" @click.self="$parent?.$emit('close')">
-      <div class="modal-container">
-        <div class="modal-header">
-          <div class="modal-header-slot">
+      <div class="modal-container px-8 py-2">
+        <div class="modal-header mb-4">
+          <div class="modal-header-slot flex items-center">
             <slot name="header">default header</slot>
           </div>
           <span class="modal-close" @click="$parent?.$emit('close')">×</span>
@@ -45,7 +45,6 @@
   width: 400px;
   height: 500px;
   margin: 0px auto;
-  padding: 20px 30px;
   background-color: var(--dialog-background-color);
   color: var(--dialog-text-color);
   border-radius: 4px;

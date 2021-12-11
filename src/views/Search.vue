@@ -24,10 +24,10 @@
             </template>
           </SourceTab>
 
-          <ul class="detail-songlist">
+          <ul class="detail-songlist px-8">
             <li
               v-if="condition.searchType === 0"
-              class="head border-t-2 border-b-2 border-transparent bg-inactive -mb-2px group flex relative items-center px-10 h-12">
+              class="head border-t-2 border-b-2 border-transparent bg-inactive -mb-2px group flex relative items-center px-6 h-12">
               <div class="title flex-2 truncate flex">
                 <a>{{ t('_SONGS') }}</a>
               </div>
@@ -41,7 +41,7 @@
             </li>
             <li
               v-if="condition.searchType === 1"
-              class="head border-t-2 border-b-2 border-transparent bg-inactive -mb-2px group flex relative items-center px-10 h-12">
+              class="head border-t-2 border-b-2 border-transparent bg-inactive -mb-2px group flex relative items-center px-6 h-12">
               <div class="title flex-2 truncate flex">
                 <a>{{ t('_PLAYLIST_TITLE') }}</a>
               </div>
@@ -57,7 +57,7 @@
                 v-for="(song, index) in result.tracks"
                 :key="song.id"
                 :class="{ 'bg-even': index % 2 === 0, 'bg-odd': index % 2 !== 0 }"
-                class="flex relative items-center px-10 h-12 hover:bg-row-hover"
+                class="flex relative items-center px-6 h-12 hover:bg-row-hover"
                 @mouseenter="song.options = true"
                 @mouseleave="song.options = undefined">
                 <TrackRow :song="song"></TrackRow>

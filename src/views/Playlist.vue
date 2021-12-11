@@ -44,7 +44,7 @@
         </div>
       </div>
 
-      <ul class="detail-songlist">
+      <ul class="detail-songlist px-8">
         <!-- <div class="playlist-search">
           <svg class="feather playlist-search-icon">
             <use href="#search" />
@@ -54,7 +54,7 @@
           </svg>
           <input class="playlist-search-input" type="text" ng-model="playlistFilter.key" :placeholder="$t('_SEARCH_PLAYLIST')" />
         </div>-->
-        <li class="head border-t-2 border-b-2 border-transparent text-inactive -mb-2px group flex relative items-center px-10 h-12">
+        <li class="head border-t-2 border-b-2 border-transparent text-inactive -mb-2px group flex relative items-center px-6 h-12">
           <div class="title flex-2 truncate flex">
             <a>{{ t('_SONGS') + '(' + songs.length + ')' }}</a>
           </div>
@@ -71,7 +71,7 @@
           :key="song.id"
           :draggable="true"
           :class="{ 'bg-even': index % 2 === 0, 'bg-odd': index % 2 !== 0 }"
-          class="flex relative items-center px-10 h-12 hover:bg-row-hover"
+          class="flex relative items-center px-6 h-12 hover:bg-row-hover"
           :dragobject="song"
           :dragtitle="song.title"
           :sortable="is_mine || is_local"
