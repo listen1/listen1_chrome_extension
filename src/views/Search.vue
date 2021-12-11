@@ -37,7 +37,7 @@
               <div class="album flex-1">
                 <a>{{ t('_ALBUMS') }}</a>
               </div>
-              <div class="tools w-60">{{ t('_OPERATION') }}</div>
+              <div class="tool flex items-center w-28">{{ t('_OPERATION') }}</div>
             </li>
             <li
               v-if="condition.searchType === 1"
