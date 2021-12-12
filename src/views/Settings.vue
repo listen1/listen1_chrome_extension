@@ -4,14 +4,14 @@
     <div class="site-wrapper-innerd">
       <div class="cover-container leading-normal">
         <SettingTitle :text="t('_LANGUAGE')" />
-        <div class="settings-content mx-7 mb-7">
+        <div class="settings-content mx-7 mb-7 leading-8">
           <SettingButton text="简体中文" @click="setLocale('zh-CN')" />
           <SettingButton text="繁体中文" @click="setLocale('zh-TC')" />
           <SettingButton text="English" @click="setLocale('en-US')" />
           <SettingButton text="French" @click="setLocale('fr-FR')" />
         </div>
         <SettingTitle :text="t('_NOWPLAYING_DISPLAY')" />
-        <div class="settings-content mx-7 mb-7">
+        <div class="settings-content mx-7 mb-7 leading-8">
           <div class="shortcut flex items-center">
             <vue-feather
               v-show="!settings.enableNowplayingCoverBackground"
@@ -59,7 +59,7 @@
           </div>
         </div>
         <SettingTitle :text="t('_THEME')" />
-        <div class="settings-content mx-7 mb-7">
+        <div class="settings-content mx-7 mb-7 leading-8">
           <SettingButton :text="t('_THEME_WHITE')" @click="setTheme('white')" />
           <SettingButton :text="t('_THEME_BLACK')" @click="setTheme('black')" />
           <!-- <SettingButton :text="t('_THEME_WHITE_TRANSPARENT')" @click="setTheme('white_transparent')" />
@@ -68,7 +68,7 @@
           <SettingButton :text="t('_THEME_GRIDIENT')" @click="setTheme('gridient')" />
         </div>
         <SettingTitle :text="t('_STYLE')" />
-        <div class="settings-content mx-7 mb-7">
+        <div class="settings-content mx-7 mb-7 leading-8">
           <p>
             {{ `${t('_LYRIC_SIZE')}` }}
             <input class="settings-input w-16" v-model.lazy="settings.lyricFontSize" type="number" min="10" max="40" />
@@ -87,7 +87,7 @@
           </div>
         </div>
         <SettingTitle :text="t('_AUTO_CHOOSE_SOURCE')" />
-        <div class="settings-content mx-7 mb-7">
+        <div class="settings-content mx-7 mb-7 leading-8">
           <div class="shortcut btn btn-primary confirm-button flex items-center">
             <vue-feather
               v-show="!settings.enableAutoChooseSource"
@@ -125,7 +125,7 @@
         <!-- <div ng-if="isChrome" class="settings-title">
           <span>{{ $t('_CLOSE_TAB_ACTION') }}({{ $t('_VALID_AFTER_RESTART') }})</span>
         </div>
-        <div ng-if="isChrome" class="settings-content mx-7 mb-7">
+        <div ng-if="isChrome" class="settings-content mx-7 mb-7 leading-8">
           <div class="shortcut flex items-center">
             <vue-feather v-show="!enableStopWhenClose" type="square" ng-click="setStopWhenClose(true)"></vue-feather>
             <vue-feather v-show="enableStopWhenClose" type="check-square" ng-click="setStopWhenClose(false)"></vue-feather>
@@ -138,7 +138,7 @@
         <div class="settings-title">
           <span>{{ $t('_NOWPLAYING_DISPLAY') }}</span>
         </div>
-        <div class="settings-content mx-7 mb-7">
+        <div class="settings-content mx-7 mb-7 leading-8">
           <div class="shortcut flex items-center">
             <vue-feather v-show="!enableNowplayingCoverBackground" type="square" ng-click="setNowplayingCoverBackground(true)"></vue-feather>
             <vue-feather v-show="enableNowplayingCoverBackground" type="check-square" ng-click="setNowplayingCoverBackground(true)"></vue-feather>
@@ -158,7 +158,7 @@
         <div class="settings-title">
           <span>{{ $t('_LYRIC_DISPLAY') }}</span>
         </div>
-        <div class="settings-content mx-7 mb-7">
+        <div class="settings-content mx-7 mb-7 leading-8">
           <div class="shortcut flex items-center" ng-if="!isChrome">
             <vue-feather v-show="!enableLyricFloatingWindow" type="square" ng-click="openLyricFloatingWindow(true)"></vue-feather>
             <vue-feather v-show="enableLyricFloatingWindow" type="check-square" ng-click="openLyricFloatingWindow(true)"></vue-feather>
@@ -181,7 +181,7 @@
         <div class="settings-title">
           <span>{{ $t('_BACKUP_PLAYLIST') }}</span>
         </div>
-        <div class="settings-content mx-7 mb-7">
+        <div class="settings-content mx-7 mb-7 leading-8">
           <p>{{ $t('_BACKUP_WARNING') }}</p>
           <div>
             <button class="btn btn-primary confirm-button" ng-click="backupMySettings()">{{ $t('_EXPORT_TO_LOCAL_FILE') }}</button>
@@ -191,7 +191,7 @@
         <div class="settings-title">
           <span>{{ $t('_RECOVER_PLAYLIST') }}</span>
         </div>
-        <div class="settings-content mx-7 mb-7">
+        <div class="settings-content mx-7 mb-7 leading-8">
           <p>{{ $t('_RECOVER_WARNING') }}</p>
           <label class="upload-button" for="my-file-selector">
             <input id="my-file-selector" type="file" style="display: none" ng-model="myuploadfiles" custom-on-change="importMySettings" />
@@ -203,7 +203,7 @@
         <div class="settings-title">
           <span>{{ $t('_CONNECT_TO_GITHUB') }}</span>
         </div>
-        <div class="settings-content mx-7 mb-7">
+        <div class="settings-content mx-7 mb-7 leading-8">
           <div>
             <p>{{ $t('_STATUS') }}： githubStatusText</p>
             <button v-show="githubStatus == 0" class="btn btn-primary confirm-button" ng-click="openGithubAuth(); showDialog(7);">
@@ -217,7 +217,7 @@
         <div class="settings-title">
           <span>{{ $t('_CONNECT_TO_LASTFM') }}</span>
         </div>
-        <div class="settings-content mx-7 mb-7">
+        <div class="settings-content mx-7 mb-7 leading-8">
           <div>
             <p>{{ $t('_STATUS') }}： lastfm.getStatusText()</p>
             <button class="btn btn-primary confirm-button" ng-show="!lastfm.isAuthRequested()" ng-click="lastfm.getAuth(); showDialog(4);">
@@ -238,7 +238,7 @@
         <div class="settings-title">
           <span>{{ $t('_SHORTCUTS') }}</span>
         </div>
-        <div class="settings-content mx-7 mb-7">
+        <div class="settings-content mx-7 mb-7 leading-8">
           <div class="shortcut_table">
             <div class="shortcut_table-header">
               <div class="shortcut_table-function">{{ $t('_SHORTCUTS_FUNCTION') }}</div>
@@ -317,7 +317,7 @@
         <div class="settings-title" ng-if="!isChrome">
           <span>{{ $t('_PROXY_CONFIG') }}</span>
         </div>
-        <div class="settings-content mx-7 mb-7" ng-if="!isChrome">
+        <div class="settings-content mx-7 mb-7 leading-8" ng-if="!isChrome">
           <span>{{ $t('_PROXY_CONFIG') }}:</span>
           proxyMode.displayText
           <span v-show="proxyMode_name == 'custom'">proxyRules</span>
