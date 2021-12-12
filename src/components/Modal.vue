@@ -14,6 +14,7 @@ import EditPlaylist from './modals/EditPlaylist.vue';
 import ParseUrl from './modals/ParseUrl.vue';
 import ImportPlaylist from './modals/ImportPlaylist.vue';
 import OpenLogin from './modals/OpenLogin.vue';
+import GithubAuth from './modals/GithubAuth.vue';
 import { provide } from 'vue';
 
 let show = $ref(false);
@@ -27,7 +28,8 @@ const components: Record<string, any> = {
   EditPlaylist,
   ParseUrl,
   ImportPlaylist,
-  OpenLogin
+  OpenLogin,
+  GithubAuth,
 };
 
 const showModal = (type = 'DefaultModal', opt: Record<string, unknown> = {}) => {

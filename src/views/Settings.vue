@@ -1,6 +1,6 @@
 <template>
   <!-- content page: 设置 -->
-  <div class="page" ng-init="lastfm.updateStatus(); updateGithubStatus();">
+  <div class="page" ng-init="lastfm.updateStatus()">
     <div class="site-wrapper-innerd">
       <div class="cover-container">
         <SettingTitle :text="t('_LANGUAGE')" />
@@ -80,6 +80,15 @@
             </div>
           </div>
         </div>
+        <SettingTitle :text="t('_CONNECT_TO_GITHUB')" />
+        <div class="settings-content">
+          <div>
+            <p>{{ t('_STATUS') }}: {{ githubStatusText }}</p>
+            <SettingButton v-show="githubStatus == 0" :text="t('_CONNECT_TO_GITHUB')" @click="openGithubAuth()" />
+            <SettingButton v-show="githubStatus == 1" :text="t('_RECONNECT')" @click="'showDialog(7)'" />
+            <SettingButton v-show="githubStatus == 2" :text="t('_CANCEL_CONNECT')" @click="GithubLogout()" />
+          </div>
+        </div>
         <!-- <div ng-if="isChrome" class="settings-title">
           <span>{{ $t('_CLOSE_TAB_ACTION') }}({{ $t('_VALID_AFTER_RESTART') }})</span>
         </div>
@@ -156,20 +165,6 @@
             {{ $t('_RECOVER_FROM_LOCAL_FILE') }}
           </label>
           <button v-show="githubStatus == 2" class="btn btn-warning confirm-button" ng-click="showDialog(10)">_{{ $t('RECOVER_FROM_GITHUB_GIST') }}</button>
-        </div>
-
-        <div class="settings-title">
-          <span>{{ $t('_CONNECT_TO_GITHUB') }}</span>
-        </div>
-        <div class="settings-content">
-          <div>
-            <p>{{ $t('_STATUS') }}： githubStatusText</p>
-            <button v-show="githubStatus == 0" class="btn btn-primary confirm-button" ng-click="openGithubAuth(); showDialog(7);">
-              {{ $t('_CONNECT_TO_GITHUB') }}
-            </button>
-            <button v-show="githubStatus == 1" class="btn btn-warning confirm-button" ng-click="showDialog(7);">{{ $t('_RECONNECT') }}</button>
-            <button v-show="githubStatus == 2" class="btn btn-primary confirm-button" ng-click="GithubLogout();">{{ $t('_CANCEL_CONNECT') }}</button>
-          </div>
         </div>
 
         <div class="settings-title">
@@ -315,9 +310,18 @@ import { setLocale } from '../i18n';
 import { isElectron } from '../provider/lowebutil';
 import SettingButton from '../components/SettingButton.vue';
 import SettingTitle from '../components/SettingTitle.vue';
+import GithubClient from '../services/GithubService';
+import { inject } from '@vue/runtime-core';
+import EventService from '../services/EventService';
 const { t } = useI18n();
 const { settings, setSettings } = useSettings();
 const isChrome = !isElectron();
+
+let githubStatus = $ref(GithubClient.github.getStatus());
+let githubStatusText = $ref(GithubClient.github.getStatusText());
+githubStatusText = 'Test';
+
+const showModal = <CallableFunction>inject('showModal');
 
 const toggleCoverBackground = () => setSettings({ enableNowplayingCoverBackground: !settings.enableNowplayingCoverBackground });
 const toggleBitrate = () => setSettings({ enableNowplayingBitrate: !settings.enableNowplayingBitrate });
@@ -333,6 +337,16 @@ const enableSource = (source: string) => {
   const newList = [...settings.autoChooseSourceList, source];
   setAutoChooseSourceList(newList);
 };
+
+const openGithubAuth = () => {
+  showModal('GithubAuth');
+  GithubClient.github.openAuthUrl();
+}
+
+const updateGithubStatus = async () => {
+  githubStatus = await GithubClient.github.updateStatus();
+  githubStatusText = GithubClient.github.getStatusText();
+}
 
 const disableSource = (source: string) => {
   if (settings.autoChooseSourceList.indexOf(source) === -1) {
@@ -403,6 +417,8 @@ const sourceList = [
     displayId: '_TAIHE_MUSIC'
   }
 ];
+
+EventService.on('github:status', updateGithubStatus);
 </script>
 <style>
 .settings-input {
