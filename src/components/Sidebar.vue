@@ -9,7 +9,7 @@
         </li>
       </ul>
       <div v-if="!isChrome || is_login('netease') || is_login('qq')" class="group">
-        <SidebarTitle :text="t('_MY_MUSIC')"></SidebarTitle>
+        <SidebarTitle class="mt-4" :text="t('_MY_MUSIC')"></SidebarTitle>
       </div>
       <ul>
         <li
@@ -26,7 +26,7 @@
           <SidebarEntry :text="t('_MY_QQ')" icon="vue-feather-globe"></SidebarEntry>
         </li>
       </ul>
-      <SidebarTitle :text="t('_CREATED_PLAYLIST')">
+      <SidebarTitle class="mt-4" :text="t('_CREATED_PLAYLIST')">
         <template v-slot:right><vue-feather class="cursor-pointer" size="1.25rem" type="plus-square" @click="showModal('ParseUrl', {})" /></template>
       </SidebarTitle>
       <ul>
@@ -47,7 +47,7 @@
         </DragDropZone>
       </ul>
 
-      <SidebarTitle :text="t('_FAVORITED_PLAYLIST')"></SidebarTitle>
+      <SidebarTitle class="mt-4" :text="t('_FAVORITED_PLAYLIST')"></SidebarTitle>
 
       <ul>
         <DragDropZone
