@@ -1,27 +1,10 @@
 <template>
   <!-- my platform window-->
-  <div class="page page-hot-playlist">
-    <div class="source-list">
-      <template v-for="(source, index) in platformSourceList" :key="source.name">
-        <div class="source-button" :class="{ active: tab === source.name }" @click="changeTab(source.name)">{{ t(source.displayId) }}</div>
-        <div v-if="index != platformSourceList.length - 1" class="splitter" />
-      </template>
-    </div>
+  <div class="page page-hot-playlist max-w-5xl my-0 mx-auto">
+    <SourceTab :sources="platformSourceList" :tab="tab" @click="changeTab" :loading="false"></SourceTab>
     <div id="hotplaylist" class="site-wrapper-innerd">
       <div id="playlist-content" class="cover-container">
-        <ul class="playlist-covers">
-          <li v-for="i in myPlatformPlaylists" :key="i">
-            <div class="u-cover">
-              <img :src="i.cover_img_url" @click="showPlaylist(i.id)" />
-              <div class="bottom" @click="directplaylist(i.id)">
-                <vue-feather type="play-circle"></vue-feather>
-              </div>
-            </div>
-            <div class="desc">
-              <span class="title" @click="showPlaylist(i.id)">{{ i.title }}</span>
-            </div>
-          </li>
-        </ul>
+        <PlaylistGrid :playlists="myPlatformPlaylists"></PlaylistGrid>
       </div>
     </div>
   </div>
@@ -29,15 +12,13 @@
 
 <script setup>
 import { onMounted } from 'vue';
-import { l1Player } from '../services/l1_player';
-import { useRouter, useRoute } from 'vue-router';
+import { useRoute } from 'vue-router';
 import MediaService from '../services/MediaService';
 import useAuth from '../composition/auth';
-import { useI18n } from 'vue-i18n';
+import SourceTab from '../components/SourceTab.vue';
+import PlaylistGrid from '../components/PlaylistGrid.vue';
 
-const { t } = useI18n();
 const route = useRoute();
-const router = useRouter();
 const { getMusicAuth } = useAuth();
 const { platformId } = route.params;
 
@@ -61,14 +42,7 @@ let myPlatformPlaylists = $ref([]);
 onMounted(async () => {
   await loadPlatformPlaylists();
 });
-const showPlaylist = (playlistId) => {
-  router.push('/playlist/' + playlistId);
-};
-const directplaylist = async (list_id) => {
-  const data = await MediaService.getPlaylist(list_id);
-  const songs = data.tracks;
-  l1Player.playTracks(songs);
-};
+
 const loadPlatformPlaylists = async () => {
   if (myPlatformUser.platform === undefined) {
     return;
