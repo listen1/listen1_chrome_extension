@@ -19,10 +19,14 @@
           class="group">
           <SidebarEntry :text="t('_LOCAL_MUSIC')" icon="li-featured-list"></SidebarEntry>
         </li>
-        <li v-if="is_login('netease')" @click="$router.push(`/my_platform/netease`)" :class="{ active: route.path === `/my_platform/netease` }" class="group">
+        <li
+          v-if="is_login('netease')"
+          @click="$router.push(`/my_platform/netease`)"
+          :class="{ active: route.path === `/my_platform/netease` }"
+          class="group cursor-pointer">
           <SidebarEntry :text="t('_MY_NETEASE')" icon="vue-feather-globe"></SidebarEntry>
         </li>
-        <li v-if="is_login('qq')" @click="$router.push(`/my_platform/qq`)" :class="{ active: route.path === `/my_platform/qq` }" class="group">
+        <li v-if="is_login('qq')" @click="$router.push(`/my_platform/qq`)" :class="{ active: route.path === `/my_platform/qq` }" class="group cursor-pointer">
           <SidebarEntry :text="t('_MY_QQ')" icon="vue-feather-globe"></SidebarEntry>
         </li>
       </ul>
