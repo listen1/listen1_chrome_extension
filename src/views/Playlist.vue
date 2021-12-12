@@ -2,11 +2,11 @@
   <div class="page">
     <div class="playlist-detail">
       <div class="detail-head flex">
-        <div class="detail-head-cover w-40 mx-8 mt-8 mb-1">
-          <img :src="cover_img_url" class="h-40 w-40" err-src="https://y.gtimg.cn/mediastyle/global/img/singer_300.png" />
+        <div class="detail-head-cover w-48 mx-8 mt-8 mb-1">
+          <img :src="cover_img_url" class="h-48 w-48" err-src="https://y.gtimg.cn/mediastyle/global/img/singer_300.png" />
         </div>
         <div class="detail-head-title flex-1">
-          <h2 class="h-10 my-6 text-3xl font-semibold">{{ playlist_title }}</h2>
+          <h2 class="h-10 my-7 text-3xl font-semibold">{{ playlist_title }}</h2>
           <div class="playlist-button-list flex flex-wrap">
             <IconButton @click="playMylist(list_id)" icon="li-play-s" icon-class="text-important">
               <template v-slot:main>
@@ -44,7 +44,7 @@
         </div>
       </div>
 
-      <ul class="detail-songlist px-8">
+      <ul class="detail-songlist px-8 pb-10">
         <!-- <div class="playlist-search">
           <svg class="feather playlist-search-icon">
             <use href="#search" />
