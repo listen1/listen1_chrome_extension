@@ -128,6 +128,7 @@ const drop = (event: any) => {
     const target = root;
     target.style['border-top'] = 'solid 2px transparent';
     target.style['border-bottom'] = 'solid 2px transparent';
+    target.style['z-index'] = '0';
   }
 };
 </script>
