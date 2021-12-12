@@ -47,7 +47,7 @@
         </div>
         <div class="detail-songinfo flex app-region-nodrag overflow-hidden mt-28 flex-col flex-1">
           <div class="title flex items-center">
-            <h2 class="font-semibold text-3xl mr-4 mb-4">{{ currentPlaying.title }}</h2>
+            <h2 class="font-normal text-3xl mr-4 mb-4">{{ currentPlaying.title }}</h2>
             <span
               v-if="settings.enableNowplayingBitrate && currentPlaying.bitrate !== undefined"
               class="badge text-badge text-sm border border-badge px-2 ml-2 mt-2 rounded h-6 flex items-center justify-center whitespace-nowrap">
