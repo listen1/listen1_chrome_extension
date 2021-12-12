@@ -61,7 +61,7 @@
   --badge-font-size: 12px;
   --badge-font-color: #c75449;
   --badge-border-color: #d98e87;
-  --songlist-odd-background-color: rgba(0, 0, 0, 0.04);
+  --songlist-even-background-color: rgba(0, 0, 0, 0.04);
   --songlist-border-color: #f4f4f4;
   --songlist-hover-background-color: rgba(0, 0, 0, 0.1);
 
