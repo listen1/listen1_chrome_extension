@@ -2,7 +2,7 @@
   <!-- content page: 设置 -->
   <div class="page" ng-init="lastfm.updateStatus(); updateGithubStatus();">
     <div class="site-wrapper-innerd">
-      <div class="cover-container">
+      <div class="cover-container leading-normal">
         <SettingTitle :text="t('_LANGUAGE')" />
         <div class="settings-content mx-7 mb-7">
           <SettingButton text="简体中文" @click="setLocale('zh-CN')" />

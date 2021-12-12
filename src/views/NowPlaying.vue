@@ -11,7 +11,7 @@
         class="absolute top-0 left-0 right-0 h-24" />
       <div
         v-if="settings.enableNowplayingCoverBackground"
-        class="bg opacity-50 h-full text-center float-left w-full"
+        class="bg opacity-50 h-full text-center float-left w-full brightness-[0.8] blur-[90px]"
         :style="{ backgroundImage: `url(${currentPlaying.img_url}` }" />
       <div
         class="translate-switch app-region-nodrag h-6 w-6 border flex items-center justify-center absolute bottom-10 right-10 cursor-pointer text-neutral-400 hover:text-default"
@@ -50,12 +50,12 @@
             <h2 class="font-semibold text-3xl mr-4 mb-4">{{ currentPlaying.title }}</h2>
             <span
               v-if="settings.enableNowplayingBitrate && currentPlaying.bitrate !== undefined"
-              class="badge text-badge text-sm border border-badge px-2 ml-2 mt-2 rounded-sm h-6 flex items-center justify-center whitespace-nowrap">
+              class="badge text-badge text-sm border border-badge px-2 ml-2 mt-2 rounded h-6 flex items-center justify-center whitespace-nowrap">
               {{ currentPlaying.bitrate }}
             </span>
             <span
               v-if="settings.enableNowplayingPlatform && currentPlaying.platform !== undefined"
-              class="badge text-badge text-sm border border-badge px-2 ml-2 mt-2 rounded-sm h-6 flex items-center justify-center whitespace-nowrap platform">
+              class="badge text-badge text-sm border border-badge px-2 ml-2 mt-2 rounded h-6 flex items-center justify-center whitespace-nowrap platform">
               {{ t(currentPlaying.platform) }}
             </span>
           </div>
@@ -156,7 +156,6 @@ let lyricFontSize = $computed(() => settings.lyricFontSize);
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
-  filter: blur(90px) brightness(0.8);
   transition: background ease-in-out 1.5s;
 }
 .page .playsong-detail .detail-songinfo .info span {

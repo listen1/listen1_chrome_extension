@@ -99,7 +99,7 @@
               id="search-input"
               v-model="input_keywords"
               type="text"
-              class="form-control search-input h-10 w-80 pl-3 rounded-sm border-none bg-search-input text-default"
+              class="form-control search-input h-10 w-80 pl-3 rounded border-none bg-search-input text-default"
               :placeholder="t('_SEARCH_PLACEHOLDER')"
               @input="searchTextChanged" />
           </div>
@@ -337,7 +337,7 @@ button {
   color: var(--text-default-color);
   /* border: solid 1px var(--button-background-color); */
   border: none;
-  border-radius: var(--default-border-radius);
+  border-radius: 4px;
   padding: 5px;
   min-width: 80px;
   min-height: 32px;
