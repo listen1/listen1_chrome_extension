@@ -11,7 +11,7 @@
         class="absolute top-0 left-0 right-0 h-24" />
       <div
         v-if="settings.enableNowplayingCoverBackground"
-        class="bg opacity-50 h-full text-center float-left w-full brightness-[0.8] blur-[90px]"
+        class="bg opacity-50 h-full text-center float-left w-full brightness-[0.8] blur-[90px] duration-1000 ease-in-out"
         :style="{ backgroundImage: `url(${currentPlaying.img_url}` }" />
       <div
         class="translate-switch app-region-nodrag h-6 w-6 border flex items-center justify-center absolute bottom-10 right-10 cursor-pointer text-neutral-400 hover:text-default"
