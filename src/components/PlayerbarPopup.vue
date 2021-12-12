@@ -1,7 +1,7 @@
 <template>
   <div class="menu-modal fixed top-0 right-0 left-0 bg-white bg-opacity-20" :class="{ 'bottom-20': !props.hidden }" @click="close()" />
   <div
-    class="menu bg-theme fixed overflow-hidden border-default rounded-sm h-96"
+    class="menu bg-theme fixed overflow-hidden border-default rounded-t-lg h-96"
     :class="{ 'bottom-20 opacity-100': !props.hidden, '-bottom-80 opacity-0': props.hidden }">
     <div class="menu-header text-sm h-10 border-b border-default flex items-center bg-menu">
       <span class="menu-title flex-1 px-4 border-default border-r">{{ t('_TOTAL_SONG_PREFIX') }} {{ playlist.length }} {{ t('_TOTAL_SONG_POSTFIX') }}</span>
@@ -66,9 +66,9 @@ const props = defineProps<{
 import { inject, toRaw } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
-import DragDropZone from './DragDropZone.vue';
 import usePlayer from '../composition/player';
 import { l1Player } from '../services/l1_player';
+import DragDropZone from './DragDropZone.vue';
 
 const { t } = useI18n();
 const { player } = usePlayer();
