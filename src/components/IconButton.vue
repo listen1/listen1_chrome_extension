@@ -6,6 +6,7 @@
         :class="'mr-4 ' + (iconClass ? iconClass : '')"
         v-if="icon.startsWith('vue-feather-')"
         size="1.25rem"
+        stroke-width="1"
         :type="icon.substring('vue-feather-'.length)" />
       <span>
         <slot></slot>

@@ -1,6 +1,6 @@
 <template>
   <div class="volume-ctrl flex flex-1 items-center">
-    <vue-feather class="icon cursor-pointer ml-6 mr-2" :type="volumeIcon" size="1.5rem" @click="toggleMuteStatus()" />
+    <vue-feather class="icon cursor-pointer ml-6 mr-2" :type="volumeIcon" size="1.5rem" stroke-width="1" @click="toggleMuteStatus()" />
     <div class="m-pbar volume flex-1">
       <DraggableBar
         id="volumebar"
