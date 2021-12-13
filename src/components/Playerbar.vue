@@ -27,8 +27,8 @@
       </div>
       <div v-if="playlist.length > 0" class="cover flex-none cursor-pointer h-20 w-20 relative group" @click="toggleNowPlaying()">
         <img class="object-cover h-20 w-20" :src="currentPlaying.img_url" @error="showImage($event, 'images/mycover.jpg')" />
-        <div class="mask hidden group-hover:bg-black group-hover:bg-opacity-60">
-          <vue-feather type="chevrons-up" />
+        <div class="mask items-center justify-center absolute inset-0 hidden group-hover:bg-black group-hover:bg-opacity-60 group-hover:flex">
+          <vue-feather type="chevrons-up" stroke="#cccccc" />
         </div>
       </div>
       <div v-if="playlist.length > 0" class="detail flex-1 relative overflow-hidden">
@@ -58,7 +58,7 @@
           </a>
         </div>
 
-        <div class="title text-center truncate h-8 flex items-end justify-center">
+        <div class="title text-center truncate h-8 flex items-end justify-center text-lg">
           <span v-if="currentPlaying.source === 'xiami'" style="color: orange; font-size: medium">⚠️</span>
           {{ currentPlaying.title }}
         </div>
@@ -254,16 +254,7 @@ if (isElectron()) {
   stroke: #666666;
   margin: 0 auto;
 }
-.footer .main-info .cover:hover .mask {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: absolute;
-  top: 0;
-  right: 0;
-  left: 0;
-  bottom: 0;
-}
+
 .footer .main-info .detail .playbar .barbg .cur .btn {
   height: 8px;
   width: 2px;
