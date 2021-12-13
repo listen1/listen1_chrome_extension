@@ -69,8 +69,9 @@ export function cookieSetPromise(cookie) {
         res(arg1, arg2);
       });
     }
-    await window.api.setCookie(cookie);
-    res(null);
+    window.api.setCookie(cookie).then(() => {
+      res(null);
+    });
   });
 }
 
