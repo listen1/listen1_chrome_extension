@@ -11,7 +11,7 @@
           <SettingButton text="French" @click="setLocale('fr-FR')" />
         </div>
         <SettingTitle :text="t('_BACKUP_PLAYLIST')" />
-        <div class="settings-content">
+        <div class="settings-content mx-7 mb-7 leading-8">
           <p>{{ t('_BACKUP_WARNING') }}</p>
           <div>
             <SettingButton v-show="githubStatus == 2" :text="t('_EXPORT_TO_LOCAL_FILE')" @click="backupMySettings()" />
@@ -19,12 +19,10 @@
           </div>
         </div>
         <SettingTitle :text="t('_RECOVER_PLAYLIST')" />
-        <div class="settings-content">
+        <div class="settings-content mx-7 mb-7 leading-8">
           <p>{{ t('_RECOVER_WARNING') }}</p>
-          <label class="upload-button" for="my-file-selector">
-            <input type="file" style="display: none" @change="importMySettings" />
-            {{ t('_RECOVER_FROM_LOCAL_FILE') }}
-          </label>
+          <input ref="upload" type="file" style="display: none" @change="importMySettings" />
+          <SettingButton v-show="githubStatus == 2" :text="t('_RECOVER_FROM_LOCAL_FILE')" @click="$refs.upload.click()" />
           <SettingButton v-show="githubStatus == 2" :text="t('_RECOVER_FROM_GITHUB_GIST')" @click="showModal('GistImport')" />
         </div>
         <SettingTitle :text="t('_NOWPLAYING_DISPLAY')" />
@@ -140,7 +138,7 @@
           </div>
         </div>
         <SettingTitle :text="t('_CONNECT_TO_GITHUB')" />
-        <div class="settings-content">
+        <div class="settings-content mx-7 mb-7 leading-8">
           <div>
             <p>{{ t('_STATUS') }}: {{ githubStatusText }}</p>
             <SettingButton v-show="githubStatus == 0" :text="t('_CONNECT_TO_GITHUB')" @click="openGithubAuth()" />

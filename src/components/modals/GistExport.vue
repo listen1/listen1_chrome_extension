@@ -4,26 +4,21 @@
       <h3>{{ t('_EXPORT_TO_GITHUB_GIST') }}</h3>
     </template>
     <template #body>
-      <ul class="dialog-backuplist">
-        <li class="detail-add" @click="backup(null, true)">
-          <img src="/images/mycover.jpg" />
+      <ul class="text-left">
+        <li class="cursor-pointer h-24 p-2 hover:bg-dialog-hover" @click="backup(null, true)">
+          <img class="float-left h-20 w-20 mr-4" src="/images/mycover.jpg" />
           <h2>{{ t('_CREATE_PUBLIC_BACKUP') }}</h2>
         </li>
-        <li class="detail-add" @click="backup(null, false)">
-          <img src="/images/mycover.jpg" />
+        <li class="cursor-pointer h-24 p-2 hover:bg-dialog-hover" @click="backup(null, false)">
+          <img class="float-left h-20 w-20 mr-4" src="/images/mycover.jpg" />
           <h2>{{ t('_CREATE_PRIVATE_BACKUP') }}</h2>
         </li>
         <li
           v-for="(backup, index) in myBackup" :key="index"
-          ng-class-odd="'odd'"
-          ng-class-even="'even'"
+          class="cursor-pointer h-24 p-2 hover:bg-dialog-hover"
           @click="backup(backup.id, backup.public)">
-          <img src="/images/mycover.jpg" />
-          <h2>
-            {{ backup.id }}
-            <br />
-            {{ backup.description }}
-          </h2>
+          <img class="float-left h-20 w-20 mr-4" src="/images/mycover.jpg" />
+          <h2 class="flex">{{ backup.id + '\n' + new Date(backup.updated_at).toLocaleString() }}</h2>
         </li>
       </ul>
     </template>
