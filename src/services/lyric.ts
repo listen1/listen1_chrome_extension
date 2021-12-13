@@ -31,7 +31,7 @@ export function parseLyric(lyric: string, tlyric: string): LyricLine[] {
       return;
     }
 
-    const timeReg = /\[(\d{2,})\:(\d{2})(?:\.(\d{1,3}))?\]/g; // eslint-disable-line no-useless-escape
+    const timeReg = /\[(\d{2,}):(\d{2})(?:\.(\d{1,3}))?\]/g;
 
     let timeRegResult = null;
     // eslint-disable-next-line no-cond-assign
@@ -45,7 +45,9 @@ export function parseLyric(lyric: string, tlyric: string): LyricLine[] {
         '&apos;': "'"
       };
       timeResult.push(<LyricLine>{
-        content: line.replace(timeRegResult[0], '').replace(/&(?:amp|lt|gt|quot|#39|apos);/g, (match: string) => htmlUnescapes[match] || ''),
+        content: line
+          .replace(/\[(\d{2,}):(\d{2})(?:\.(\d{1,3}))?\]/g, '')
+          .replace(/&(?:amp|lt|gt|quot|#39|apos);/g, (match: string) => htmlUnescapes[match] || ''),
         seconds:
           parseInt(timeRegResult[1], 10) * 60 * 1000 + // min
           parseInt(timeRegResult[2], 10) * 1000 + // sec
