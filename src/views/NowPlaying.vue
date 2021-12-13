@@ -93,7 +93,7 @@
               :data-line="line.lineNumber"
               :style="{ fontWeight: lyricFontWeight, fontSize: `${lyricFontSize}px` }"
               :class="{
-                highlight: line.lineNumber == lyricLineNumber || line.lineNumber == lyricLineNumberTrans,
+                highlight: (!line.translationFlag && line.lineNumber == lyricLineNumber) || (line.translationFlag && line.lineNumber == lyricLineNumberTrans),
                 hidden: line.translationFlag && !settings.enableLyricTranslation,
                 'mt-1': line.translationFlag,
                 'mt-4': !line.translationFlag
