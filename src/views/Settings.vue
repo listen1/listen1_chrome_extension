@@ -10,6 +10,23 @@
           <SettingButton text="English" @click="setLocale('en-US')" />
           <SettingButton text="French" @click="setLocale('fr-FR')" />
         </div>
+        <SettingTitle :text="t('_BACKUP_PLAYLIST')" />
+        <div class="settings-content">
+          <p>{{ t('_BACKUP_WARNING') }}</p>
+          <div>
+            <SettingButton v-show="githubStatus == 2" :text="t('_EXPORT_TO_LOCAL_FILE')" @click="backupMySettings()" />
+            <SettingButton v-show="githubStatus == 2" :text="t('_EXPORT_TO_GITHUB_GIST')" @click="showModal('GistExport')" />
+          </div>
+        </div>
+        <SettingTitle :text="t('_RECOVER_PLAYLIST')" />
+        <div class="settings-content">
+          <p>{{ t('_RECOVER_WARNING') }}</p>
+          <label class="upload-button" for="my-file-selector">
+            <input type="file" style="display: none" @change="importMySettings" />
+            {{ t('_RECOVER_FROM_LOCAL_FILE') }}
+          </label>
+          <SettingButton v-show="githubStatus == 2" :text="t('_RECOVER_FROM_GITHUB_GIST')" @click="showModal('GistImport')" />
+        </div>
         <SettingTitle :text="t('_NOWPLAYING_DISPLAY')" />
         <div class="settings-content">
           <div class="shortcut">
@@ -144,27 +161,6 @@
             <span v-show="enableLyricFloatingWindowTranslation" />
             {{ $t('_SHOW_DESKTOP_LYRIC_TRANSLATION') }}
           </div>
-        </div>
-        <div class="settings-title">
-          <span>{{ $t('_BACKUP_PLAYLIST') }}</span>
-        </div>
-        <div class="settings-content">
-          <p>{{ $t('_BACKUP_WARNING') }}</p>
-          <div>
-            <button class="btn btn-primary confirm-button" ng-click="backupMySettings()">{{ $t('_EXPORT_TO_LOCAL_FILE') }}</button>
-            <button v-show="githubStatus == 2" class="btn btn-primary confirm-button" ng-click="showDialog(8)">{{ $t('_EXPORT_TO_GITHUB_GIST') }}</button>
-          </div>
-        </div>
-        <div class="settings-title">
-          <span>{{ $t('_RECOVER_PLAYLIST') }}</span>
-        </div>
-        <div class="settings-content">
-          <p>{{ $t('_RECOVER_WARNING') }}</p>
-          <label class="upload-button" for="my-file-selector">
-            <input id="my-file-selector" type="file" style="display: none" ng-model="myuploadfiles" custom-on-change="importMySettings" />
-            {{ $t('_RECOVER_FROM_LOCAL_FILE') }}
-          </label>
-          <button v-show="githubStatus == 2" class="btn btn-warning confirm-button" ng-click="showDialog(10)">_{{ $t('RECOVER_FROM_GITHUB_GIST') }}</button>
         </div>
 
         <div class="settings-title">
@@ -317,9 +313,13 @@ const { t } = useI18n();
 const { settings, setSettings } = useSettings();
 const isChrome = !isElectron();
 
-let githubStatus = $ref(GithubClient.github.getStatus());
-let githubStatusText = $ref(GithubClient.github.getStatusText());
-githubStatusText = 'Test';
+GithubClient.github.updateStatus().then(() => {
+  githubStatus = GithubClient.github.getStatus();
+  githubStatusText = GithubClient.github.getStatusText();
+})
+
+let githubStatus = $ref(0);
+let githubStatusText = $ref('???');
 
 const showModal = <CallableFunction>inject('showModal');
 
@@ -346,6 +346,11 @@ const openGithubAuth = () => {
 const updateGithubStatus = async () => {
   githubStatus = await GithubClient.github.updateStatus();
   githubStatusText = GithubClient.github.getStatusText();
+}
+
+const importMySettings = (event: Event) => {
+  const target = <HTMLInputElement>event.target;
+  console.log(target.value);
 }
 
 const disableSource = (source: string) => {

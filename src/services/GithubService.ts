@@ -121,26 +121,25 @@ const GithubClient = {
         content: JSON.stringify(jsonObject),
       };
       // const markdown = '# My Listen1 Playlists\n';
-      const playlistIds = jsonObject.playerlists;
-      const songsCount = playlistIds.reduce((count: number, playlistId: string) => {
-        const playlist = jsonObject[playlistId];
-        const cover = `<img src="${playlist.info.cover_img_url}" width="140" height="140"><br/>`;
-        const { title } = playlist.info;
+      const songsCount = jsonObject.Playlists.reduce((count: number, playlist: any) => {
+        const cover = `<img src="${playlist.cover_img_url}" width="140" height="140"><br/>`;
+        const { title } = playlist;
         let tableHeader = '\n| 音乐标题 | 歌手 | 专辑 |\n';
         tableHeader += '| --- | --- | --- |\n';
-        const tableBody = playlist.tracks.reduce(
+        const tracks = jsonObject.Tracks.filter((track: any) => track.playlist === playlist.id);
+        const tableBody = tracks.reduce(
           (r: string, track: any) =>
             `${r} | ${track.title} | ${track.artist} | ${track.album} | \n`,
           ''
         );
         const content = `<details>\n  <summary>${cover}   ${title}</summary><p>\n${tableHeader}${tableBody}</p></details>`;
-        const filename = `listen1_${playlistId}.md`;
+        const filename = `listen1_${playlist.id}.md`;
         result[filename] = {
           content,
         };
-        return count + playlist.tracks.length;
+        return count + tracks.length;
       }, 0);
-      const summary = `本歌单由[Listen1](https://listen1.github.io/listen1/)创建, 歌曲数：${songsCount}，歌单数：${playlistIds.length}，点击查看更多`;
+      const summary = `本歌单由[Listen1](https://listen1.github.io/listen1/)创建, 歌曲数：${songsCount}，歌单数：${jsonObject.Playlists.length}，点击查看更多`;
       result['listen1_aha_playlist.md'] = {
         content: summary,
       };
