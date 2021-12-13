@@ -37,7 +37,7 @@
             <IconButton v-show="!is_mine && !is_local" @click="openUrl(playlist_source_url)" icon="li-link">
               {{ t('_ORIGIN_LINK') }}
             </IconButton>
-            <IconButton v-show="!is_mine && !is_local" @click="showModal('ImportPlaylist', { list_id })" icon="vue-feather-git-merge">
+            <IconButton v-show="is_mine" @click="showModal('ImportPlaylist', { list_id })" icon="vue-feather-git-merge">
               {{ t('_IMPORT') }}
             </IconButton>
           </div>
