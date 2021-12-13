@@ -9,9 +9,9 @@
       <span class="icon text-3xl mr-4 li-next text-prevnext" @click="nextTrack()" />
     </div>
     <div class="main-info flex flex-1 overflow-hidden bg-footer-main z-30">
-      <div v-if="playlist.length == 0" class="logo-banner text-center flex-1 flex items-center h-16 w-16">
+      <div v-if="playlist.length == 0" class="logo-banner text-center flex-1 flex items-center h-20 w-20">
         <svg
-          class="logo"
+          class="logo h-12 w-12"
           xmlns="http://www.w3.org/2000/svg"
           width="24"
           height="24"
