@@ -110,7 +110,12 @@ export function calculateLine(currentSeconds: number, lyricArray: LyricLine[], l
   let newTransLineNumber = lyricLineNumberTrans;
   if (lastObject && lastObject.lineNumber !== lyricLineNumber) {
     newLineNumber = lastObject.lineNumber;
-    if (lastObjectTrans && lastObjectTrans.lineNumber !== lyricLineNumberTrans) {
+    if (lastObject && lastObject.content === '') {
+      // empty line will not have translate line
+      // so to avoid translate highlight, set current translate line
+      // to empty line
+      newTransLineNumber = lastObject.lineNumber;
+    } else if (lastObjectTrans && lastObjectTrans.lineNumber !== lyricLineNumberTrans) {
       newTransLineNumber = lastObjectTrans.lineNumber;
     }
   }

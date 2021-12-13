@@ -347,5 +347,7 @@ export default class kugou extends MusicResource {
     return `https://www.kugou.com`;
   }
 
-  static logout() {}
+  static logout() {
+    // empty block
+  }
 }

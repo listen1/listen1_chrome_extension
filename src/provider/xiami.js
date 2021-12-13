@@ -1,4 +1,5 @@
 import MusicResource from './music_resource';
+import { getParameterByName } from './lowebutil';
 
 export default class xiami extends MusicResource {
   static showPlaylist() {
@@ -100,5 +101,7 @@ export default class xiami extends MusicResource {
     return `https://www.xiami.com`;
   }
 
-  static logout() {}
+  static logout() {
+    // empty block
+  }
 }

@@ -63,7 +63,7 @@ export default class bilibili extends MusicResource {
     };
   }
 
-  static async bi_album(url) {
+  static async bi_album() {
     return {
       tracks: [],
       info: {}
@@ -141,7 +141,6 @@ export default class bilibili extends MusicResource {
 
   static async search(url) {
     const keyword = getParameterByName('keywords', url);
-    const curpage = getParameterByName('curpage', url);
     const au = /\d+$/.exec(keyword);
     if (au != null) {
       const target_url = `https://www.bilibili.com/audio/music-service-c/web/song/info?sid=${au}`;
@@ -207,5 +206,7 @@ export default class bilibili extends MusicResource {
     return `https://www.bilibili.com`;
   }
 
-  static logout() {}
+  static logout() {
+    // empty block
+  }
 }

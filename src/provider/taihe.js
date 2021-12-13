@@ -301,5 +301,7 @@ export default class taihe extends MusicResource {
     return `https://music.taihe.com`;
   }
 
-  static logout() {}
+  static logout() {
+    // empty block
+  }
 }

@@ -36,7 +36,7 @@ export function cookieGet(cookieRequest, callback) {
   });
 }
 export async function cookieGetPromise(cookieRequest) {
-  return new Promise((res, rej) => {
+  return new Promise((res) => {
     if (!isElectron()) {
       chrome.cookies.get(cookieRequest, (cookie) => {
         res(cookie);
@@ -63,14 +63,15 @@ export function cookieSet(cookie, callback) {
   callback(null);
 }
 export function cookieSetPromise(cookie) {
-  return new Promise(async (res, rej) => {
+  return new Promise((res) => {
     if (!isElectron()) {
       return chrome.cookies.set(cookie, (arg1, arg2) => {
         res(arg1, arg2);
       });
     }
-    await window.api.setCookie(cookie);
-    res(null);
+    window.api.setCookie(cookie).then(() => {
+      res(null);
+    });
   });
 }
 

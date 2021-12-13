@@ -35,7 +35,7 @@
                 </svg>
       </div>-->
 
-      <div class="playsong-detail absolute left-11 right-11 my-0 mx-auto flex h-full max-w-5xl">
+      <div class="playsong-detail absolute left-11 right-11 my-0 mx-auto flex h-full max-w-4xl">
         <div class="detail-head overflow-hidden flex-none w-96">
           <div class="detail-head-cover w-72 h-72 mt-32">
             <img class="w-72 h-72 object-cover" :src="currentPlaying.img_url" @error="showImage($event, 'images/mycover.jpg')" />
@@ -46,7 +46,7 @@
           </div>
         </div>
         <div class="detail-songinfo flex app-region-nodrag overflow-hidden mt-28 flex-col flex-1">
-          <div class="title flex items-center">
+          <div class="title flex items-start">
             <h2 class="font-normal text-3xl mr-4 mb-4">{{ currentPlaying.title }}</h2>
             <span
               v-if="settings.enableNowplayingBitrate && currentPlaying.bitrate !== undefined"
@@ -93,7 +93,7 @@
               :data-line="line.lineNumber"
               :style="{ fontWeight: lyricFontWeight, fontSize: `${lyricFontSize}px` }"
               :class="{
-                highlight: line.lineNumber == lyricLineNumber || line.lineNumber == lyricLineNumberTrans,
+                highlight: (!line.translationFlag && line.lineNumber == lyricLineNumber) || (line.translationFlag && line.lineNumber == lyricLineNumberTrans),
                 hidden: line.translationFlag && !settings.enableLyricTranslation,
                 'mt-1': line.translationFlag,
                 'mt-4': !line.translationFlag

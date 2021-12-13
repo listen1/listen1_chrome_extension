@@ -159,7 +159,7 @@ export default class kuwo extends MusicResource {
     }
     const domain = 'https://www.kuwo.cn';
     const name = 'kw_token';
-    return new Promise((res, rej) => {
+    return new Promise((res) => {
       cookieGet(
         {
           url: domain,

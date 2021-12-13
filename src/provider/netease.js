@@ -1,6 +1,6 @@
 import axios from 'axios';
 import forge from 'node-forge';
-import { getParameterByName, cookieSet, cookieRemove, cookieGetPromise, cookieSetPromise } from './lowebutil';
+import { getParameterByName, cookieSet, cookieRemove, cookieGetPromise } from './lowebutil';
 import MusicResource from './music_resource';
 export default class netease extends MusicResource {
   static _create_secret_key(size) {
@@ -216,7 +216,7 @@ export default class netease extends MusicResource {
   static ne_get_playlist(url) {
     // special thanks for @Binaryify
     // https://github.com/Binaryify/NeteaseCloudMusicApi
-    return new Promise((res, rej) => {
+    return new Promise((res) => {
       const list_id = getParameterByName('list_id', url).split('_').pop();
       const target_url = 'https://music.163.com/weapi/v3/playlist/detail';
       const d = {
@@ -274,7 +274,7 @@ export default class netease extends MusicResource {
         value: 'pc',
         expirationDate: expire
       },
-      (cookie) => {
+      () => {
         axios
           .post(target_url, new URLSearchParams(data))
           .then((response) => {
@@ -654,7 +654,9 @@ export default class netease extends MusicResource {
         value: 'pc',
         expirationDate: expire
       },
-      (cookie) => {}
+      () => {
+        // empty block
+      }
     );
     try {
       const { data } = await axios.post(target_url, new URLSearchParams(encrypt_req_data));
@@ -787,7 +789,9 @@ export default class netease extends MusicResource {
         url: 'https://music.163.com',
         name: 'MUSIC_U'
       },
-      (cookie) => {}
+      () => {
+        // empty block
+      }
     );
   }
 }

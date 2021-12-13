@@ -48,7 +48,7 @@ const dragstart = (ev: any) => {
   document.body.appendChild(elem);
   ev.dataTransfer.setDragImage(elem, 0, 40);
 };
-const dragend = (ev: any) => {
+const dragend = () => {
   const ghost = document.getElementById('drag-ghost');
   if (ghost === null) {
     return;
@@ -66,7 +66,7 @@ const dragenter = (event: any) => {
     root.classList.add('dragover');
   }
 };
-const dragleave = (event: any) => {
+const dragleave = () => {
   root.classList.remove('dragover');
   if (ondragleave !== undefined) {
     ondragleave();
