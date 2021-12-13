@@ -31,18 +31,17 @@ if (!localStorage.getItem('V3_MIGRATED')) {
 const { settings, loadSettings } = useSettings();
 
 function applyThemeCSS() {
-
   const mapping = {
-    'white': whiteStyle,
-    'black': blackStyle,
-    'white_transparent': whiteTransparentStyle,
-    'black_transparent': blackTransparentStyle,
-    'infinite_grid': infiniteGridStyle,
-    'gridient': gridientStyle,
-  }
+    white: whiteStyle,
+    black: blackStyle,
+    white_transparent: whiteTransparentStyle,
+    black_transparent: blackTransparentStyle,
+    infinite_grid: infiniteGridStyle,
+    gridient: gridientStyle
+  };
 
   const cssStyle = mapping[settings.theme] || '';
-  
+
   window.api?.setTheme(settings.theme);
   document.getElementById('theme').textContent = cssStyle;
 }

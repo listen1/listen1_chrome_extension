@@ -1,78 +1,50 @@
 <template>
   <div class="page">
     <div class="playlist-detail">
-      <div class="detail-head">
-        <div class="detail-head-cover">
-          <img :src="cover_img_url" err-src="https://y.gtimg.cn/mediastyle/global/img/singer_300.png" />
+      <div class="detail-head flex">
+        <div class="detail-head-cover w-48 mx-8 mt-8 mb-1">
+          <img :src="cover_img_url" class="h-48 w-48" err-src="https://y.gtimg.cn/mediastyle/global/img/singer_300.png" />
         </div>
-        <div class="detail-head-title">
-          <h2>{{ playlist_title }}</h2>
-          <div class="playlist-button-list">
-            <div class="playlist-button playadd-button">
-              <div class="play-list" @click="playMylist(list_id)">
-                <span class="icon li-play-s" />
+        <div class="detail-head-title flex-1">
+          <h2 class="h-10 my-7 text-3xl font-semibold">{{ playlist_title }}</h2>
+          <div class="playlist-button-list flex flex-wrap">
+            <IconButton @click="playMylist(list_id)" icon="li-play-s" icon-class="text-important">
+              <template v-slot:main>
                 {{ t('_PLAY_ALL') }}
-              </div>
-              <div class="add-list" @click="addMylist(list_id)">
-                <span class="icon li-add" />
-              </div>
-            </div>
-            <div v-if="is_local" class="playlist-button clone-button" @click="addLocalMusic(list_id)">
-              <div class="play-list">
-                <span class="icon li-songlist" />
-                <span>{{ t('_ADD_LOCAL_SONGS') }}</span>
-              </div>
-            </div>
-            <div v-show="!is_mine && !is_local" class="playlist-button clone-button" @click="saveAsMyPlaylist(list_id)">
-              <div class="play-list">
-                <span class="icon li-songlist" />
-                <span>{{ t('_ADD_TO_PLAYLIST') }}</span>
-              </div>
-            </div>
-            <div
+              </template>
+              <template v-slot:right>
+                <div class="add-list border-l border-button flex items-center justify-center w-8 hover:bg-button-hover" @click="addMylist(list_id)">
+                  <span class="icon li-add" />
+                </div>
+              </template>
+            </IconButton>
+            <IconButton v-show="is_local" @click="addLocalMusic(list_id)" icon="li-songlist">{{ t('_ADD_LOCAL_SONGS') }}</IconButton>
+            <IconButton v-show="!is_mine && !is_local" @click="saveAsMyPlaylist(list_id)" icon="li-songlist">{{ t('_ADD_TO_PLAYLIST') }}</IconButton>
+            <IconButton
               v-show="is_mine && !is_local && list_id != 'myplaylist_redheart'"
-              class="playlist-button edit-button"
-              @click="showModal('EditPlaylist', { list_id: list_id, playlist_title: playlist_title, cover_img_url: cover_img_url })">
-              <div class="play-list">
-                <vue-feather type="edit" />
-                <span>{{ t('_EDIT') }}</span>
-              </div>
-            </div>
-            <div v-show="!is_mine && !is_local" class="playlist-button fav-button" @click="favoritePlaylist(list_id)">
-              <div class="play-list" :class="{ favorited: is_favorite, notfavorite: !is_favorite }">
-                <vue-feather type="star"></vue-feather>
-                <span>{{ t(is_favorite ? '_FAVORITED' : '_FAVORITE') }}</span>
-              </div>
-            </div>
-            <div
-              v-show="isChrome && is_favorite && !is_local"
-              class="playlist-button edit-button"
-              @click="
-                closeWindow();
-                showPlaylist(list_id);
-              ">
-              <div class="play-list">
-                <span class="icon li-loop" />
-                <span>{{ t('_REFRESH_PLAYLIST') }}</span>
-              </div>
-            </div>
-            <div v-show="!is_mine && !is_local" class="playlist-button edit-button" @click="openUrl(playlist_source_url)">
-              <div class="play-list">
-                <span class="icon li-link" />
-                <span>{{ t('_ORIGIN_LINK') }}</span>
-              </div>
-            </div>
-            <div v-show="is_mine && !is_local" class="playlist-button edit-button" @click="showModal('ImportPlaylist', { list_id })">
-              <div class="play-list">
-                <vue-feather type="git-merge" />
-                <span>{{ t('_IMPORT') }}</span>
-              </div>
-            </div>
+              @click="showModal('EditPlaylist', { list_id: list_id, playlist_title: playlist_title, cover_img_url: cover_img_url })"
+              icon="vue-feather-edit">
+              {{ t('_EDIT') }}
+            </IconButton>
+            <IconButton
+              v-show="!is_mine && !is_local"
+              :icon-class="is_favorite ? 'filled-yellow' : ''"
+              @click="favoritePlaylist(list_id)"
+              icon="vue-feather-star">
+              {{ t(is_favorite ? '_FAVORITED' : '_FAVORITE') }}
+            </IconButton>
+
+            <IconButton v-show="!is_mine && !is_local" @click="openUrl(playlist_source_url)" icon="li-link">
+              {{ t('_ORIGIN_LINK') }}
+            </IconButton>
+            <IconButton v-show="!is_mine && !is_local" @click="showModal('ImportPlaylist', { list_id })" icon="vue-feather-git-merge">
+              {{ t('_IMPORT') }}
+            </IconButton>
           </div>
         </div>
       </div>
 
-      <ul class="detail-songlist">
+      <ul class="detail-songlist px-8 pb-10">
         <!-- <div class="playlist-search">
           <svg class="feather playlist-search-icon">
             <use href="#search" />
@@ -82,23 +54,24 @@
           </svg>
           <input class="playlist-search-input" type="text" ng-model="playlistFilter.key" :placeholder="$t('_SEARCH_PLAYLIST')" />
         </div>-->
-        <li class="head">
-          <div class="title">
+        <li class="head border-t-2 border-b-2 border-transparent text-inactive -mb-2px group flex relative items-center px-6 h-12">
+          <div class="title flex-2 truncate flex">
             <a>{{ t('_SONGS') + '(' + songs.length + ')' }}</a>
           </div>
-          <div class="artist">
+          <div class="artist flex-1 truncate">
             <a>{{ t('_ARTISTS') }}</a>
           </div>
-          <div class="album">
+          <div class="album flex-1 truncate">
             <a>{{ t('_ALBUMS') }}</a>
           </div>
-          <div class="tools">{{ t('_OPERATION') }}</div>
+          <div class="tools flex items-center w-28">{{ t('_OPERATION') }}</div>
         </li>
         <DragDropZone
           v-for="(song, index) in songs"
           :key="song.id"
           :draggable="true"
-          :class="{ even: index % 2 === 0, odd: index % 2 !== 0 }"
+          :class="{ 'bg-even': index % 2 === 0, 'bg-odd': index % 2 !== 0 }"
+          class="flex relative items-center px-6 h-12 hover:bg-row-hover"
           :dragobject="song"
           :dragtitle="song.title"
           :sortable="is_mine || is_local"
@@ -106,35 +79,7 @@
           @drop="onPlaylistSongDrop(list_id, song, $event)"
           @mouseenter="song.options = true"
           @mouseleave="song.options = undefined">
-          <div class="title">
-            <!-- <a class="disabled" ng-if="song.disabled" ng-click="copyrightNotice()"> song.title </a> -->
-            <vue-feather v-if="!isRedHeart(song.id)" type="heart" size="18" stroke-width="1" stroke="#666666" @click="setRedHeart(toRaw(song), true)" />
-            <vue-feather v-if="isRedHeart(song.id)" type="heart" fill="red" stroke="red" size="18" @click="setRedHeart(toRaw(song), false)" />
-
-            <a add-and-play="song" @click="play(song)">{{ song.title }}</a>
-          </div>
-          <div class="artist">
-            <a @click="showPlaylist(song.artist_id)">{{ song.artist }}</a>
-          </div>
-          <div class="album">
-            <a @click="showPlaylist(song.album_id)">{{ song.album }}</a>
-          </div>
-          <div class="tools">
-            <a v-show="song.options" :title="t('_ADD_TO_QUEUE')" class="detail-add-button" @click="addToPlay(song)"><span class="icon li-add" /></a>
-            <a v-show="song.options" :title="t('_ADD_TO_PLAYLIST')" class="detail-fav-button" @click="showModal('AddToPlaylist', { tracks: [song] })">
-              <span class="icon li-songlist" />
-            </a>
-            <a
-              v-show="song.options && (is_mine == '1' || is_local)"
-              :title="t('_REMOVE_FROM_PLAYLIST')"
-              class="detail-delete-button"
-              @click="removeSongFromPlaylist(song.id, list_id)">
-              <span class="icon li-del" />
-            </a>
-            <a v-show="song.options && !is_local" :title="t('_ORIGIN_LINK')" class="source-button" @click="openUrl(song.source_url)">
-              <span class="icon li-link" />
-            </a>
-          </div>
+          <TrackRow :song="song" :is_local="is_local" :is_mine="is_mine" :list_id="list_id"></TrackRow>
         </DragDropZone>
       </ul>
     </div>
@@ -142,22 +87,22 @@
 </template>
 
 <script setup>
-/* eslint-disable @typescript-eslint/no-unused-vars */
-
 import { l1Player } from '../services/l1_player';
 import { onMounted, inject, toRaw } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { useRoute, useRouter } from 'vue-router';
+import { useRoute } from 'vue-router';
 import MediaService from '../services/MediaService';
 import notyf from '../services/notyf';
 import $event from '../services/EventService';
 import DragDropZone from '../components/DragDropZone.vue';
 import useRedHeart from '../composition/redheart';
+import TrackRow from '../components/TrackRow.vue';
+import IconButton from '../components/IconButton.vue';
 
 const { t } = useI18n();
-const router = useRouter();
+
 const route = useRoute();
-const { isRedHeart, setRedHeart, addMyPlaylistByUpdateRedHeart, removeTrackFromMyPlaylistByUpdateRedHeart } = useRedHeart();
+const { addMyPlaylistByUpdateRedHeart } = useRedHeart();
 let songs = $ref([]);
 let cover_img_url = $ref('images/loading.svg');
 let playlist_title = $ref('');
@@ -165,8 +110,7 @@ let playlist_source_url = $ref('');
 let is_mine = $ref(false);
 let is_local = $ref(false);
 let list_id = $ref('');
-let window_type = $ref('list');
-const isChrome = true;
+
 let is_favorite = $ref(false);
 const { listId } = route.params;
 
@@ -186,26 +130,14 @@ const refreshPlaylist = async () => {
   is_local = data.info.id.slice(0, 2) === 'lm';
 
   is_favorite = await MediaService.isMyPlaylist(data.info.id);
-
-  window_type = 'list';
 };
 onMounted(async () => {
   await refreshPlaylist();
 });
-const play = (song) => {
-  l1Player.addTrack(toRaw(song));
-  l1Player.playById(song.id);
-};
-const addToPlay = (song) => {
-  l1Player.addTrack(toRaw(song));
-  notyf.success(t('_ADD_TO_QUEUE_SUCCESS'));
-};
+
 const playMylist = (listId) => {
   l1Player.playTracks(toRaw(songs));
   list_id = listId;
-};
-const showPlaylist = (playlistId) => {
-  router.push('/playlist/' + playlistId);
 };
 const openUrl = (url) => {
   window.open(url, '_blank').focus();
@@ -231,14 +163,7 @@ const saveAsMyPlaylist = async (list_id) => {
   await MediaService.clonePlaylist(list_id, 'my');
   notyf.success(t('_ADD_TO_PLAYLIST_SUCCESS'));
 };
-const removeSongFromPlaylist = async (track_id, list_id) => {
-  await removeTrackFromMyPlaylistByUpdateRedHeart(track_id, list_id);
-  notyf.success(t('_REMOVE_SONG_FROM_PLAYLIST_SUCCESS'));
-};
-const addMylist = async () => {
-  await l1Player.addTracks(toRaw(songs));
-  notyf.success(t('_ADD_TO_QUEUE_SUCCESS'));
-};
+
 const onPlaylistSongDrop = async (list_id, song, event) => {
   const { data, dragType, direction } = event;
 
@@ -262,3 +187,40 @@ const addLocalMusic = (list_id) => {
   });
 };
 </script>
+<style>
+/* 
+
+ul.detail-songlist .playlist-search {
+  position: absolute;
+  right: 0;
+  top: -30px;
+}
+ul.detail-songlist .playlist-search .playlist-search-icon {
+  width: 14px;
+  position: absolute;
+  left: 7px;
+  top: 1px;
+}
+ul.detail-songlist .playlist-search .playlist-clear-icon {
+  width: 14px;
+  position: absolute;
+  left: 158px;
+}
+ul.detail-songlist .playlist-search .playlist-search-input {
+  margin-right: 28px;
+  margin-bottom: 10px;
+  border: none;
+  height: 24px;
+  border-radius: 12px;
+  padding: 0 30px;
+  background: var(--content-background-color);
+  color: #bbbbbb;
+  width: 120px;
+}
+ul.detail-songlist .playlist-search .playlist-search-input:hover {
+  background-color: var(--songlist-odd-background-color);
+}
+ul.detail-songlist .playlist-search .playlist-search-input::placeholder {
+  color: #bbbbbb;
+} */
+</style>

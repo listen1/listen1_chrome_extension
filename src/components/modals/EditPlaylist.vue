@@ -7,18 +7,26 @@
       <div class="dialog-editplaylist">
         <div class="form-group">
           <label>{{ t('_PLAYLIST_TITLE') }}</label>
-          <input class="form-control" type="text" :placeholder="t('_INPUT_PLAYLIST_TITLE')" v-model="title" />
+          <input
+            class="form-control h-10 w-80 pl-3 rounded-sm border-none bg-search-input text-default"
+            type="text"
+            :placeholder="t('_INPUT_PLAYLIST_TITLE')"
+            v-model="title" />
         </div>
         <div class="form-group">
           <label>{{ t('_PLAYLIST_COVER_IMAGE_URL') }}</label>
-          <input class="form-control" type="text" :placeholder="t('_INPUT_PLAYLIST_COVER_IMAGE_URL')" v-model="imageUrl" />
+          <input
+            class="form-control h-10 w-80 pl-3 rounded-sm border-none bg-search-input text-default"
+            type="text"
+            :placeholder="t('_INPUT_PLAYLIST_COVER_IMAGE_URL')"
+            v-model="imageUrl" />
         </div>
       </div>
     </template>
     <template #footer>
-      <button class="btn btn-danger remove-button" @click="removeMyPlaylist()">{{ t('_REMOVE_PLAYLIST') }}</button>
-      <button class="btn btn-primary confirm-button" @click="editPlaylist()">{{ t('_CONFIRM') }}</button>
-      <button class="btn btn-default" @click="$emit('close')">{{ t('_CANCEL') }}</button>
+      <button class="btn btn-danger remove-button bg-button" @click="removeMyPlaylist()">{{ t('_REMOVE_PLAYLIST') }}</button>
+      <button class="btn btn-primary confirm-button bg-button" @click="editPlaylist()">{{ t('_CONFIRM') }}</button>
+      <button class="btn btn-default bg-button" @click="$emit('close')">{{ t('_CANCEL') }}</button>
     </template>
   </DefaultModal>
 </template>

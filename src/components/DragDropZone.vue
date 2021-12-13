@@ -1,5 +1,6 @@
 <template>
   <li
+    class="border-t-2 border-b-2 border-transparent -mb-2px group"
     ref="root"
     :draggable="props.draggable"
     @dragstart="dragstart"
@@ -127,6 +128,7 @@ const drop = (event: any) => {
     const target = root;
     target.style['border-top'] = 'solid 2px transparent';
     target.style['border-bottom'] = 'solid 2px transparent';
+    target.style['z-index'] = '0';
   }
 };
 </script>

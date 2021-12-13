@@ -9,8 +9,8 @@
       </div>
     </template>
     <template #footer>
-      <button class="btn btn-primary confirm-button" @click="createAndAddPlaylist()">{{ t('_CONFIRM') }}</button>
-      <button class="btn btn-default" @click="$emit('close')">{{ t('_CANCEL') }}</button>
+      <button class="btn btn-primary confirm-button bg-button" @click="createAndAddPlaylist()">{{ t('_CONFIRM') }}</button>
+      <button class="btn btn-default bg-button" @click="$emit('close')">{{ t('_CANCEL') }}</button>
     </template>
   </DefaultModal>
 </template>

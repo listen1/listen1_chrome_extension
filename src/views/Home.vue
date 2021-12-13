@@ -1,9 +1,9 @@
 <template>
   <Modal ref="modalRef"></Modal>
-  <div class="background-layer"></div>
-  <div class="wrap">
+  <div class="background-layer inset-0 fixed"></div>
+  <div class="wrap flex h-screen flex-col bg-theme">
     <!-- dialog-->
-    <div v-show="is_dialog_hidden !== 1" class="shadow" />
+    <!-- <div v-show="is_dialog_hidden !== 1" class="shadow" />
     <div v-show="is_dialog_hidden !== 1" class="dialog" :style="myStyle">
       <div class="dialog-header">
         <span>{{ dialog_title }}</span>
@@ -45,7 +45,6 @@
             </h2>
           </li>
         </ul>
-        <!-- create new backup dialog-->
         <div v-show="dialog_type == 9" class="dialog-newbackup">
           <button class="btn btn-primary confirm-button" ng-click="backupMySettings2Gist(null, true);closeDialog();">_CREATE_PUBLIC_BACKUP</button>
           <button class="btn btn-primary confirm-button" ng-click="backupMySettings2Gist(null, false);closeDialog();">_CREATE_PRIVATE_BACKUP</button>
@@ -86,49 +85,46 @@
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
 
-    <div class="main" ng-controller="MyPlayListController">
+    <div class="main flex z-10 overflow-hidden flex-1">
       <Sidebar></Sidebar>
 
-      <div class="content" ng-controller="InstantSearchController">
-        <div class="navigation">
-          <div class="backfront">
-            <span class="icon li-back" @click="$router.go(-1)" />
-            <span class="icon li-advance" @click="$router.go(1)" />
-          </div>
-          <div class="search">
+      <div class="flex flex-col flex-1 bg-content overflow-hidden">
+        <div class="flex flex-none items-center h-14 app-region-drag border-b border-default">
+          <div class="flex flex-1 items-center">
+            <span class="icon opacity-50 hover:opacity-100 text-xl text-icon li-back ml-4" @click="$router.go(-1)" />
+            <span class="icon opacity-50 hover:opacity-100 text-xl text-icon li-advance ml-2 mr-4" @click="$router.go(1)" />
             <input
               id="search-input"
               v-model="input_keywords"
               type="text"
-              class="form-control search-input"
+              class="form-control search-input h-10 w-80 pl-3 rounded border-none bg-search-input text-default"
               :placeholder="t('_SEARCH_PLACEHOLDER')"
-              ng-model-options="{debounce: 500}"
               @input="searchTextChanged" />
           </div>
-          <div ng-class="{ 'active': (current_tag==4) && (window_url_stack.length ==0)}" class="settings" :style="platButtonStyle">
+          <div :class="{ active: route.path === '/login' }" :style="platButtonStyle">
             <router-link to="/login">
-              <span class="icon">
-                <vue-feather type="users"></vue-feather>
+              <span class="icon opacity-50 hover:opacity-100 mr-4">
+                <vue-feather size="1.25rem" type="users"></vue-feather>
               </span>
             </router-link>
           </div>
-          <div ng-class="{ 'active': (current_tag==4) && (window_url_stack.length ==0)}" class="settings" :style="settingButtonStyle">
+          <div :class="{ active: route.path === '/settings' }" :style="settingButtonStyle">
             <router-link to="/settings">
-              <span class="icon">
-                <vue-feather type="settings"></vue-feather>
+              <span class="icon opacity-50 hover:opacity-100 mr-4">
+                <vue-feather size="1.25rem" type="settings"></vue-feather>
               </span>
             </router-link>
           </div>
-          <div v-if="isWin() || isLinux()" class="window-control">
-            <vue-feather class="icon" type="minimize-2" @click="sendControl('window_min')" />
-            <vue-feather class="icon" type="maximize" @click="sendControl('window_max')" />
-            <vue-feather class="icon" type="x" @click="sendControl('window_close')" />
+          <div v-if="isWin() || isLinux()" class="border-l border-default">
+            <vue-feather class="icon opacity-50 hover:opacity-100 ml-4" type="minimize-2" @click="sendControl('window_min')" />
+            <vue-feather class="icon opacity-50 hover:opacity-100 ml-4" type="maximize" @click="sendControl('window_max')" />
+            <vue-feather class="icon opacity-50 hover:opacity-100 ml-4 mr-4" type="x" @click="sendControl('window_close')" />
           </div>
         </div>
 
-        <div class="browser flex-scroll-wrapper" id="browser" v-on:scroll.passive="handleScroll" content-selector="'#playlist-content'">
+        <div class="flex-scroll-wrapper flex-1 overflow-y-scroll" id="browser" v-on:scroll.passive="handleScroll" content-selector="'#playlist-content'">
           <router-view :key="$route.path" />
           <NowPlaying />
         </div>
@@ -140,12 +136,9 @@
 
 <script setup>
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import 'notyf/notyf.min.css';
 import { onMounted, provide } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
-import '../assets/css/common.css';
-import '../assets/css/icon.css';
 import Modal from '../components/Modal.vue';
 import Playerbar from '../components/Playerbar.vue';
 import Sidebar from '../components/Sidebar.vue';
@@ -158,6 +151,7 @@ import { isLinux, isWin } from '../provider/lowebutil';
 import EventService from '../services/EventService';
 import { l1Player } from '../services/l1_player';
 import NowPlaying from '../views/NowPlaying.vue';
+import { useRoute } from 'vue-router';
 
 const { t } = useI18n();
 const { player } = usePlayer();
@@ -188,6 +182,7 @@ let input_keywords = $ref('');
 let settingButtonStyle = $ref({});
 let platButtonStyle = $ref({});
 const { settings } = useSettings();
+const route = useRoute();
 
 const searchTextChanged = () => {
   condition.keywords = input_keywords;
@@ -305,3 +300,92 @@ const sendControl = (message) => {
   window.api?.sendControl(message);
 };
 </script>
+<style>
+::placeholder {
+  /* Chrome, Firefox, Opera, Safari 10.1+ */
+  color: var(--search-input-placeholder-color);
+  opacity: 1; /* Firefox */
+}
+.wrap {
+  /* https://stackoverflow.com/questions/28897089/z-index-on-borders */
+  outline: solid 1px var(--windows-border-color);
+}
+html,
+body {
+  font-size: var(--text-default-size);
+  /* font-size: 14px; */
+  color: var(--text-default-color);
+  font-family: -apple-system, 'Helvetica Neue', Helvetica, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', system-ui, sans-serif;
+}
+
+/* remove focus highlight */
+input:focus,
+select:focus,
+textarea:focus,
+button:focus {
+  outline: none;
+}
+
+input,
+svg,
+.icon {
+  -webkit-app-region: no-drag;
+}
+
+button {
+  background-color: var(--button-background-color);
+  color: var(--text-default-color);
+  /* border: solid 1px var(--button-background-color); */
+  border: none;
+  border-radius: 4px;
+  padding: 5px;
+  min-width: 80px;
+  min-height: 32px;
+}
+button:hover {
+  background-color: var(--button-hover-background-color);
+}
+img {
+  -webkit-user-drag: none;
+}
+.icon {
+  /* default icon settings */
+  font-size: 16px;
+  cursor: pointer;
+}
+
+/* tools utils */
+.flex-scroll-wrapper {
+  scrollbar-width: thin;
+  scrollbar-color: var(--scroll-color) var(--content-background-color);
+}
+
+/* scroll bar style */
+::-webkit-scrollbar {
+  width: 14px;
+  height: 18px;
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  height: 49px;
+  border: 5px solid rgba(0, 0, 0, 0);
+  background-clip: padding-box;
+  border-radius: 7px;
+  -webkit-border-radius: 7px;
+  background-color: var(--scroll-color);
+  /*rgba(151, 151, 151, 0.4);*/
+
+  /*    -webkit-box-shadow: inset -1px -1px 0px rgba(0, 0, 0, 0.05), inset 1px 1px 0px rgba(0, 0, 0, 0.05);*/
+}
+
+::-webkit-scrollbar-button {
+  width: 0;
+  height: 0;
+  display: none;
+}
+
+::-webkit-scrollbar-corner {
+  background-color: transparent;
+}
+</style>

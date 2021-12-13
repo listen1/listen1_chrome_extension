@@ -5,12 +5,16 @@
     </template>
     <template #body>
       <div class="dialog-open-url">
-        <input class="form-control" type="text" :placeholder="t('_EXAMPLE') + 'https://www.xiami.com/collect/198267231'" v-model="url" />
+        <input
+          class="form-control h-10 w-80 pl-3 rounded-sm border-none bg-search-input text-default"
+          type="text"
+          :placeholder="t('_EXAMPLE') + 'https://www.xiami.com/collect/198267231'"
+          v-model="url" />
       </div>
     </template>
     <template #footer>
-      <button class="btn btn-primary confirm-button" @click="openUrl()">{{ t('_CONFIRM') }}</button>
-      <button class="btn btn-default" @click="$emit('close')">{{ t('_CANCEL') }}</button>
+      <button class="btn btn-primary confirm-button bg-button" @click="openUrl()">{{ t('_CONFIRM') }}</button>
+      <button class="btn btn-default bg-button" @click="$emit('close')">{{ t('_CANCEL') }}</button>
     </template>
   </DefaultModal>
 </template>

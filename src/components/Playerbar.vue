@@ -1,14 +1,17 @@
 <template>
-  <div class="footer">
-    <div class="left-control">
-      <span class="icon li-previous" @click="prevTrack()" />
-      <span class="icon li-play play" :class="isPlaying ? 'li-pause' : 'li-play'" @click="playPauseToggle()" />
-      <span class="icon li-next" @click="nextTrack()" />
+  <div class="footer flex relative z-20 h-20 border-t border-default">
+    <div class="flex flex-none items-center w-80">
+      <span class="icon text-3xl ml-12 li-previous text-prevnext" @click="prevTrack()" />
+      <span
+        class="icon text-3xl ml-6 mr-6 li-play play text-play hover:text-play-hover"
+        :class="isPlaying ? 'li-pause' : 'li-play'"
+        @click="playPauseToggle()" />
+      <span class="icon text-3xl mr-4 li-next text-prevnext" @click="nextTrack()" />
     </div>
-    <div class="main-info">
-      <div v-if="playlist.length == 0" class="logo-banner">
+    <div class="main-info flex flex-1 overflow-hidden bg-footer-main z-30">
+      <div v-if="playlist.length == 0" class="logo-banner text-center flex-1 flex items-center h-20 w-20">
         <svg
-          class="logo"
+          class="logo h-12 w-12"
           xmlns="http://www.w3.org/2000/svg"
           width="24"
           height="24"
@@ -22,129 +25,82 @@
           <polygon points="13 4 13 13 16 13 16 4" />
         </svg>
       </div>
-      <div v-if="playlist.length > 0" class="cover" @click="toggleNowPlaying()">
-        <img :src="currentPlaying.img_url" @error="showImage($event, 'images/mycover.jpg')" />
-        <div class="mask">
-          <vue-feather type="chevrons-up" />
+      <div v-if="playlist.length > 0" class="cover flex-none cursor-pointer h-20 w-20 relative group" @click="toggleNowPlaying()">
+        <img class="object-cover h-20 w-20" :src="currentPlaying.img_url" @error="showImage($event, 'images/mycover.jpg')" />
+        <div class="mask items-center justify-center absolute inset-0 hidden group-hover:bg-black group-hover:bg-opacity-60 group-hover:flex">
+          <vue-feather type="chevrons-up" stroke="#cccccc" />
         </div>
       </div>
-      <div v-if="playlist.length > 0" class="detail">
-        <div class="ctrl">
+      <div v-if="playlist.length > 0" class="detail flex-1 relative overflow-hidden">
+        <div class="ctrl absolute top-1 right-2">
           <vue-feather
-            class="icon"
+            class="icon opacity-50 hover:opacity-100 cursor-pointer"
             v-if="!isRedHeart(currentPlaying.id)"
             type="heart"
-            size="15"
+            size="1.125rem"
             stroke-width="1.5"
             @click="setRedHeart(toRaw(currentPlaying), true)" />
-          <vue-feather class="heart" v-if="isRedHeart(currentPlaying.id)" type="heart" fill="red" stroke="red" size="15" @click="setRedHeart(toRaw(currentPlaying), false)" />
+          <vue-feather
+            class="heart cursor-pointer"
+            v-if="isRedHeart(currentPlaying.id)"
+            type="heart"
+            fill="red"
+            stroke="red"
+            size="1.125rem"
+            @click="setRedHeart(toRaw(currentPlaying), false)" />
           <a @click="showModal('AddToPlaylist', { tracks: [currentPlaying] })" :title="t('_ADD_TO_PLAYLIST')">
-            <span class="icon li-songlist" />
+            <span class="icon opacity-50 hover:opacity-100 li-songlist ml-3" />
           </a>
-          <a title @click="changePlaymode()">
+          <a title @click="changePlaymode()" class="mx-2 opacity-50 hover:opacity-100 text-lg ml-3">
             <span v-show="playmode == 0" class="icon li-loop" />
             <span v-show="playmode == 1" class="icon li-single-cycle" />
             <span v-show="playmode == 2" class="icon li-random-loop" />
           </a>
         </div>
 
-        <div class="title">
+        <div class="title text-center truncate h-8 flex items-end justify-center text-lg">
           <span v-if="currentPlaying.source === 'xiami'" style="color: orange; font-size: medium">⚠️</span>
           {{ currentPlaying.title }}
         </div>
-        <div class="more-info">
+        <div class="more-info h-6 text-sm flex text-subtitle px-3">
           <div class="current">{{ formatTime(currentPosition) }}</div>
-          <div class="singer">
-            <a @click="showPlaylist(currentPlaying.artist_id)">{{ currentPlaying.artist }}</a>
+          <div class="singer flex-1 tuncate text-center">
+            <a class="cursor-pointer" @click="showPlaylist(currentPlaying.artist_id)">{{ currentPlaying.artist }}</a>
             -
-            <a @click="showPlaylist(currentPlaying.album_id)">{{ currentPlaying.album }}</a>
+            <a class="cursor-pointer" @click="showPlaylist(currentPlaying.album_id)">{{ currentPlaying.album }}</a>
           </div>
           <div class="total">{{ formatTime(currentDuration) }}</div>
         </div>
-        <div class="playbar">
-          <draggable-bar id="progressbar" :progress="myProgress" @commit-progress="commitProgress" @update-progress="updateProgress"></draggable-bar>
+        <div class="playbar mx-3">
+          <draggable-bar
+            id="progressbar"
+            btn-class="bg-draggable-bar-button"
+            :progress="myProgress"
+            @commit-progress="commitProgress"
+            @update-progress="updateProgress"></draggable-bar>
         </div>
       </div>
     </div>
-    <div class="right-control">
-      <div class="playlist-toggle">
+    <div class="right-control flex flex-none items-center w-80">
+      <div class="playlist-toggle cursor-pointer ml-8">
         <span class="icon li-list" @click="togglePlaylist()" />
       </div>
-      <div class="volume-ctrl" volume-wheel>
-        <vue-feather class="icon" :type="volumeIcon" size="18px" @click="toggleMuteStatus()" />
-        <div class="m-pbar volume">
-          <draggable-bar id="volumebar" :progress="volume * 100" @update-progress="changeVolume" @commit-progress="commitVolume"></draggable-bar>
-        </div>
-      </div>
-      <div v-if="isElectron()" class="lyric-toggle">
+      <Volumebar></Volumebar>
+      <div v-if="isElectron()" class="lyric-toggle cursor-pointer mx-6">
         <div @click="toggleLyricFloatingWindow()" class="lyric-icon" :class="{ selected: settings.enableLyricFloatingWindow }">词</div>
       </div>
+      <div v-if="!isElectron()" class="mx-6"></div>
     </div>
-    <div class="menu-modal" :class="{ slideup: !menuHidden }" @click="togglePlaylist()" />
-    <div class="menu" :class="{ slideup: !menuHidden }">
-      <div class="menu-header">
-        <span class="menu-title">{{ t('_TOTAL_SONG_PREFIX') }} {{ playlist.length }} {{ t('_TOTAL_SONG_POSTFIX') }}</span>
-        <a class="add-all" @click="showModal('AddToPlaylist', { tracks: playlist })">
-          <span class="icon li-songlist" ng-click="togglePlaylist()" />
-          <span>{{ t('_ADD_TO_PLAYLIST') }}</span>
-        </a>
-        <a class="remove-all" @click="clearPlaylist()">
-          <span class="icon li-del" ng-click="togglePlaylist()" />
-          <span>{{ t('_CLEAR_ALL') }}</span>
-        </a>
-
-        <a class="close" @click="togglePlaylist()">
-          <vue-feather type="x"></vue-feather>
-        </a>
-      </div>
-      <ul class="menu-list">
-        <DragDropZone
-          v-for="(song, index) in playlist"
-          :id="'song_' + song.id"
-          :key="song.id"
-          :draggable="true"
-          :class="{ playing: currentPlaying.id == song.id, even: index % 2 === 0, odd: index % 2 !== 0 }"
-          dragtype="application/listen1-song"
-          :dragobject="song"
-          :dragtitle="song.title"
-          :sortable="true"
-          @mouseenter="song.highlight = true"
-          @mouseleave="song.highlight = undefined"
-          @drop="onCurrentPlayingSongDrop(song, $event)">
-          <div class="song-status-icon">
-            <vue-feather v-show="currentPlaying.id == song.id" type="play"></vue-feather>
-          </div>
-          <div class="song-title" :class="song.disabled ? 'disabled' : ''">
-            <a @click="playFromPlaylist(song)">
-              <span v-if="song.source === 'xiami'" style="color: orange; border-radius: 12px; border: solid 1px; padding: 0 4px">⚠️ 🦐</span>
-              {{ song.title }}
-            </a>
-          </div>
-          <div class="song-singer">
-            <a
-              @click="
-                showPlaylist(song.artist_id);
-                togglePlaylist();
-              ">
-              {{ song.artist }}
-            </a>
-          </div>
-          <div class="tools">
-            <span v-show="song.highlight" @click="removeTrack(song)" class="icon li-del" />
-            <span v-show="song.highlight" @click="openUrl(song.source_url)" class="icon li-link" />
-          </div>
-          <!-- <div class="song-time">00:00</div> -->
-        </DragDropZone>
-      </ul>
-    </div>
+    <PlayerbarPopup @close="togglePlaylist()" :hidden="menuHidden"></PlayerbarPopup>
   </div>
 </template>
 <script setup>
 import { inject, toRaw } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
-import DragDropZone from '../components/DragDropZone.vue';
 import DraggableBar from '../components/DraggableBar.vue';
+import PlayerbarPopup from '../components/PlayerbarPopup.vue';
+import Volumebar from '../components/Volumebar.vue';
 import useOverlay from '../composition/overlay';
 import usePlayer from '../composition/player';
 import useRedHeart from '../composition/redheart';
@@ -157,7 +113,7 @@ const { t } = useI18n();
 const { player } = usePlayer();
 const router = useRouter();
 const showModal = inject('showModal');
-const { settings, setSettings, saveSettingsToDB, getSettingsAsync } = useSettings();
+const { settings, setSettings } = useSettings();
 
 let { overlay, setOverlayType } = useOverlay();
 let menuHidden = $ref(true);
@@ -193,9 +149,7 @@ const toggleNowPlaying = () => {
 const togglePlaylist = () => {
   menuHidden = !menuHidden;
 };
-const clearPlaylist = () => {
-  l1Player.clearPlaylist();
-};
+
 const updateProgress = (progress) => {
   player.changingProgress = true;
   player.currentPosition = currentDuration * progress;
@@ -210,51 +164,6 @@ const commitProgress = (progress) => {
   player._lyricArrayIndex = -1;
 };
 
-const changeVolume = (progress) => {
-  l1Player.setVolume(progress);
-  l1Player.unmute();
-};
-const commitVolume = (progress) => {
-  changeVolume(progress);
-  // TODO: use settings.playerSettings will get old init value
-  // must use getSettings to fetch recent value
-  const task = async () => {
-    const settings = await getSettingsAsync();
-    saveSettingsToDB({ playerSettings: { ...settings.playerSettings, volume: progress * 100 } });
-  };
-  task();
-};
-const toggleMuteStatus = () => {
-  player.mute = !player.mute;
-  l1Player.toggleMute();
-};
-let volumeIcon = $computed(() => {
-  if (player.mute) {
-    return 'volume-x';
-  } else if (volume > 0.5) {
-    return 'volume-2';
-  } else if (volume > 0) {
-    return 'volume-1';
-  } else {
-    return 'volume';
-  }
-});
-const playFromPlaylist = (song) => {
-  l1Player.playById(song.id);
-};
-const removeTrack = (track) => {
-  l1Player.removeTrack(track);
-};
-const openUrl = (url) => {
-  window.open(url, '_blank')?.focus();
-};
-const onCurrentPlayingSongDrop = (song, event) => {
-  const { data, dragType, direction } = event;
-  if (dragType === 'application/listen1-song') {
-    // insert song
-    l1Player.insertTrack(data, toRaw(song), direction);
-  }
-};
 function getCSSStringFromSetting(setting) {
   let { backgroundAlpha } = setting;
   if (backgroundAlpha === 0) {
@@ -298,7 +207,6 @@ let myProgress = $computed(() => player.myProgress);
 let currentDuration = $computed(() => player.currentDuration);
 let currentPosition = $computed(() => player.currentPosition);
 let currentPlaying = $computed(() => player.currentPlaying || {});
-let volume = $computed(() => player.volume);
 
 if (isElectron()) {
   window.api?.onLyricWindow((arg) => {
@@ -340,3 +248,65 @@ if (isElectron()) {
   });
 }
 </script>
+<style>
+.footer .main-info .logo-banner svg.logo {
+  fill: #666666;
+  stroke: #666666;
+  margin: 0 auto;
+}
+
+.footer .main-info .detail .playbar .barbg .cur .btn {
+  height: 8px;
+  width: 2px;
+  right: -2px;
+  top: -5px;
+}
+
+.footer .main-info .detail .playbar .playbar-clickable:hover .barbg .cur .btn {
+  width: 10px;
+  height: 10px;
+  border-radius: 5px;
+  top: -3px;
+}
+
+.footer .menu ul.menu-list li {
+  background: var(--footer-menu-odd-background-color);
+}
+
+.footer .menu ul.menu-list li.even {
+  background: var(--footer-menu-even-background-color);
+}
+
+.footer .menu ul.menu-list li:hover {
+  background: var(--footer-menu-hover-background-color);
+}
+
+.footer .menu ul.menu-list li.playing {
+  color: var(--important-color);
+}
+
+.footer .right-control .playlist-toggle .icon {
+  color: var(--player-right-icon-color);
+}
+
+.footer .right-control .playlist-toggle .icon:hover {
+  color: var(--player-right-icon-hover-color);
+}
+
+.footer .right-control .lyric-toggle .lyric-icon,
+.footer .right-control .lyric-toggle .lyric-icon.selected:hover {
+  border: solid 1px #7f7f7f;
+  height: 16px;
+  line-height: 16px;
+  font-size: 14px;
+  color: #7f7f7f;
+  background-color: var(--lyric-icon-background-color);
+  user-select: none;
+}
+
+.footer .right-control .lyric-toggle .lyric-icon.selected {
+  border: solid 1px #7f7f7f;
+  background-color: #7f7f7f;
+  color: #fff;
+}
+</style>

@@ -10,14 +10,14 @@
     </template>
     <template #footer>
       <button
-        class="btn btn-primary confirm-button"
+        class="btn btn-primary confirm-button bg-button"
         @click="
           $emit('close');
           refreshAuthStatus();
         ">
         {{ t('_LOGIN_SUCCESS') }}
       </button>
-      <button class="btn btn-warning warning-button" @click="openLogin(props.source)">{{ t('_LOGIN_FAIL_RETRY') }}</button>
+      <button class="btn btn-warning warning-button bg-button" @click="openLogin(props.source)">{{ t('_LOGIN_FAIL_RETRY') }}</button>
     </template>
   </DefaultModal>
 </template>
