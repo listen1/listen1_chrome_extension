@@ -10,7 +10,7 @@
     "start:electron:dev": "cross-env BUILD_ELECTRON=1 vite build -w",
     "prepare": "husky install",
     "format": "prettier . --write",
-    "lint": "eslint --ext .js,.vue --ignore-path .gitignore --fix src"
+    "lint": "eslint --ext .ts,.js,.vue --ignore-path .gitignore --fix src"
   },
   "description": "one for all free music in china",
   "devDependencies": {
