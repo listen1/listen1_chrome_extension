@@ -95,7 +95,8 @@ function easeInOutQuad(t, b, c, d) {
   t -= 1;
   return (-c / 2) * (t * (t - 2) - 1) + b;
 }
-
+let animationID = null;
+const getAnimationID = () => animationID;
 export function smoothScrollTo(element, to, duration) {
   if (element == undefined || element === null) {
     return;
@@ -105,16 +106,17 @@ export function smoothScrollTo(element, to, duration) {
   const change = to - start;
   let currentTime = 0;
   const increment = 20;
+  animationID = +new Date();
 
-  const animateScroll = () => {
+  const animateScroll = (myID) => () => {
     currentTime += increment;
     const val = easeInOutQuad(currentTime, start, change, duration);
     element.scrollTop = val;
-    if (currentTime < duration) {
-      setTimeout(animateScroll, increment);
+    if (currentTime < duration && getAnimationID() === myID) {
+      setTimeout(animateScroll(myID), increment);
     }
   };
-  animateScroll();
+  animateScroll(animationID)();
 }
 
 export function async_process(data_list, handler, handler_extra_param_list) {
