@@ -19,8 +19,8 @@
   </ul>
 </template>
 <script setup lang="ts">
-import { l1Player } from '../services/l1_player';
 import { useRouter } from 'vue-router';
+import { l1Player } from '../services/l1_player';
 import MediaService from '../services/MediaService';
 
 const router = useRouter();

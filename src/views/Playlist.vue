@@ -87,17 +87,17 @@
 </template>
 
 <script setup>
-import { l1Player } from '../services/l1_player';
-import { onMounted, inject, toRaw } from 'vue';
+import { inject, onMounted, toRaw } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
+import DragDropZone from '../components/DragDropZone.vue';
+import IconButton from '../components/IconButton.vue';
+import TrackRow from '../components/TrackRow.vue';
+import useRedHeart from '../composition/redheart';
+import $event from '../services/EventService';
+import { l1Player } from '../services/l1_player';
 import MediaService from '../services/MediaService';
 import notyf from '../services/notyf';
-import $event from '../services/EventService';
-import DragDropZone from '../components/DragDropZone.vue';
-import useRedHeart from '../composition/redheart';
-import TrackRow from '../components/TrackRow.vue';
-import IconButton from '../components/IconButton.vue';
 
 const { t } = useI18n();
 

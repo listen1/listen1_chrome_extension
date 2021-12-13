@@ -17,7 +17,7 @@
         ">
         {{ t('_LOGIN_SUCCESS') }}
       </button>
-      <button class="btn btn-warning warning-button bg-button" @click="openLogin(props.source)">{{ t('_LOGIN_FAIL_RETRY') }}</button>
+      <button class="btn btn-warning warning-button bg-button" @click="openLogin(source)">{{ t('_LOGIN_FAIL_RETRY') }}</button>
     </template>
   </DefaultModal>
 </template>
@@ -25,7 +25,7 @@
 import DefaultModal from './DefaultModal.vue';
 import { useI18n } from 'vue-i18n';
 import useAuth from '../../composition/auth';
-const props = defineProps<{
+const { source } = defineProps<{
   source: string;
 }>();
 const { openLogin, refreshAuthStatus } = useAuth();

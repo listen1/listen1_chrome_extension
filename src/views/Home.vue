@@ -138,7 +138,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { onMounted, provide } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { useRouter } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import Modal from '../components/Modal.vue';
 import Playerbar from '../components/Playerbar.vue';
 import Sidebar from '../components/Sidebar.vue';
@@ -151,7 +151,6 @@ import { isLinux, isWin } from '../provider/lowebutil';
 import EventService from '../services/EventService';
 import { l1Player } from '../services/l1_player';
 import NowPlaying from '../views/NowPlaying.vue';
-import { useRoute } from 'vue-router';
 
 const { t } = useI18n();
 const { player } = usePlayer();

@@ -7,14 +7,14 @@
 <script lang="ts"></script>
 
 <script setup lang="ts">
-import CreatePlaylist from './modals/CreatePlaylist.vue';
+import { provide } from 'vue';
 import AddToPlaylist from './modals/AddToPlaylist.vue';
+import CreatePlaylist from './modals/CreatePlaylist.vue';
 import DefaultModal from './modals/DefaultModal.vue';
 import EditPlaylist from './modals/EditPlaylist.vue';
-import ParseUrl from './modals/ParseUrl.vue';
 import ImportPlaylist from './modals/ImportPlaylist.vue';
 import OpenLogin from './modals/OpenLogin.vue';
-import { provide } from 'vue';
+import ParseUrl from './modals/ParseUrl.vue';
 
 let show = $ref(false);
 let modalType = $ref(DefaultModal);

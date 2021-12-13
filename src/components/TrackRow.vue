@@ -21,10 +21,10 @@
     <a @click="play(song)" class="cursor-pointer ml-3 truncate flex-1 min-w-0">{{ song.title }}</a>
   </div>
   <div class="artist flex-1 truncate">
-    <a class="cursor-pointer" @click="$router.push(`/playlist/${props.song.artist_id}`)">{{ props.song.artist }}</a>
+    <a class="cursor-pointer" @click="$router.push(`/playlist/${song.artist_id}`)">{{ song.artist }}</a>
   </div>
   <div class="album flex-1 truncate">
-    <a class="cursor-pointer" @click="$router.push(`/playlist/${props.song.album_id}`)">{{ props.song.album }}</a>
+    <a class="cursor-pointer" @click="$router.push(`/playlist/${song.album_id}`)">{{ song.album }}</a>
   </div>
   <div class="tools w-28 flex items-center">
     <a v-show="song.options" :title="t('_ADD_TO_QUEUE')" class="detail-add-button cursor-pointer mr-3" @click="addToPlay(song)"><span class="icon li-add" /></a>
@@ -48,7 +48,7 @@
   </div>
 </template>
 <script setup lang="ts">
-const props = defineProps<{
+const { song, is_mine, is_local, list_id } = defineProps<{
   song: any;
   is_mine?: string;
   is_local?: string;
@@ -56,10 +56,10 @@ const props = defineProps<{
 }>();
 import { inject, toRaw } from 'vue';
 import { useI18n } from 'vue-i18n';
-import notyf from '../services/notyf';
 import useRedHeart from '../composition/redheart';
-
 import { l1Player } from '../services/l1_player';
+import notyf from '../services/notyf';
+
 const { isRedHeart, setRedHeart, removeTrackFromMyPlaylistByUpdateRedHeart } = useRedHeart();
 
 const showModal = inject('showModal');

@@ -1,10 +1,10 @@
 <template>
   <div class="settings-title">
-    <span>{{ props.text }}</span>
+    <span>{{ text }}</span>
   </div>
 </template>
 <script setup lang="ts">
-const props = defineProps<{
+const { text } = defineProps<{
   text: string;
 }>();
 </script>

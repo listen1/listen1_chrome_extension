@@ -71,12 +71,12 @@
         <div class="settings-content mx-7 mb-7 leading-8">
           <p>
             {{ `${t('_LYRIC_SIZE')}` }}
-            <input class="settings-input w-16" v-model.lazy="settings.lyricFontSize" type="number" min="10" max="40" />
+            <input class="settings-input w-16 pl-[6px] py-0" v-model.lazy="settings.lyricFontSize" type="number" min="10" max="40" />
             px
           </p>
           <p>
             {{ `${t('_LYRIC_WEIGHT')}` }}
-            <select class="settings-input" v-model="settings.lyricFontWeight">
+            <select class="settings-input p-1" v-model="settings.lyricFontWeight">
               <option v-for="option in fontWeightOptions" :value="option.value" :key="option.text">
                 {{ option.text }}
               </option>
@@ -352,11 +352,11 @@
 import { useI18n } from 'vue-i18n';
 import { version } from '../../package.json';
 import Href from '../components/Href.vue';
+import SettingButton from '../components/SettingButton.vue';
+import SettingTitle from '../components/SettingTitle.vue';
 import useSettings from '../composition/settings';
 import { setLocale } from '../i18n';
 import { isElectron } from '../provider/lowebutil';
-import SettingButton from '../components/SettingButton.vue';
-import SettingTitle from '../components/SettingTitle.vue';
 const { t } = useI18n();
 const { settings, setSettings } = useSettings();
 const isChrome = !isElectron();
@@ -449,7 +449,6 @@ const sourceList = [
 <style>
 .settings-input {
   margin-left: 10px;
-  padding: 5px;
   text-align: left;
   background-color: var(--content-background-color);
   border: 1px solid var(--search-input-background-color);

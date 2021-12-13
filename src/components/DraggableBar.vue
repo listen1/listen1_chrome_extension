@@ -2,7 +2,7 @@
   <div :id="id" class="playbar-clickable cursor-pointer h-3 pt-1" @mousedown="onMyMouseDown">
     <div class="barbg h-1 bg-draggable-bar">
       <div class="cur bg-draggable-bar-current relative h-full" :style="{ width: changingProgress ? cprogress * 100 + '%' : progress + '%' }">
-        <span :class="'btn absolute rounded-full ' + (props['btnClass'] ? props['btnClass'] : '')">
+        <span :class="'btn absolute rounded-full ' + (btnClass ? btnClass : '')">
           <i />
         </span>
       </div>
@@ -10,7 +10,7 @@
   </div>
 </template>
 <script setup lang="ts">
-const props = defineProps<{
+const { id, progress, btnClass } = defineProps<{
   id: string;
   progress: number;
   btnClass?: string;
@@ -21,7 +21,7 @@ let changingProgress = $ref(false);
 let cprogress = $ref(0);
 const onMyMouseDown = (event: MouseEvent) => {
   changingProgress = true;
-  const containerElem = document.getElementById(props.id) as HTMLElement;
+  const containerElem = document.getElementById(id) as HTMLElement;
 
   const container = containerElem.getBoundingClientRect();
   // Prevent default dragging of selected content
@@ -37,7 +37,7 @@ const onMyMouseDown = (event: MouseEvent) => {
   cprogress = offset;
   emits('update-progress', cprogress);
   const sync = (event: MouseEvent) => {
-    const container = document.getElementById(props.id)?.getBoundingClientRect() as DOMRect;
+    const container = document.getElementById(id)?.getBoundingClientRect() as DOMRect;
     let x = event.clientX - container.left;
 
     if (container) {

@@ -23,6 +23,7 @@
   "ignorePatterns": "dist/",
   "plugins": ["vue", "@typescript-eslint"],
   "rules": {
-    "@typescript-eslint/ban-ts-comment": ["error", { "ts-ignore": "allow-with-description" }]
+    "@typescript-eslint/ban-ts-comment": ["error", { "ts-ignore": "allow-with-description" }],
+    "vue/no-setup-props-destructure": "off"
   }
 }
