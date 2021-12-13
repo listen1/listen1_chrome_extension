@@ -1,6 +1,6 @@
 import GithubClient from "./services/GithubService";
 
-chrome.browserAction.onClicked.addListener((tab) => {
+chrome.browserAction.onClicked.addListener(() => {
   const url = chrome.extension.getURL('index.html');
   chrome.tabs.query({ url }, (tabs) => {
     if (tabs.length === 0) {

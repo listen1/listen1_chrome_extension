@@ -36,7 +36,7 @@ export function cookieGet(cookieRequest, callback) {
   });
 }
 export async function cookieGetPromise(cookieRequest) {
-  return new Promise((res, rej) => {
+  return new Promise((res) => {
     if (!isElectron()) {
       chrome.cookies.get(cookieRequest, (cookie) => {
         res(cookie);
@@ -63,14 +63,15 @@ export function cookieSet(cookie, callback) {
   callback(null);
 }
 export function cookieSetPromise(cookie) {
-  return new Promise(async (res, rej) => {
+  return new Promise((res) => {
     if (!isElectron()) {
       return chrome.cookies.set(cookie, (arg1, arg2) => {
         res(arg1, arg2);
       });
     }
-    await window.api.setCookie(cookie);
-    res(null);
+    window.api.setCookie(cookie).then(() => {
+      res(null);
+    });
   });
 }
 
@@ -94,7 +95,8 @@ function easeInOutQuad(t, b, c, d) {
   t -= 1;
   return (-c / 2) * (t * (t - 2) - 1) + b;
 }
-
+let animationID = null;
+const getAnimationID = () => animationID;
 export function smoothScrollTo(element, to, duration) {
   if (element == undefined || element === null) {
     return;
@@ -104,16 +106,17 @@ export function smoothScrollTo(element, to, duration) {
   const change = to - start;
   let currentTime = 0;
   const increment = 20;
+  animationID = +new Date();
 
-  const animateScroll = () => {
+  const animateScroll = (myID) => () => {
     currentTime += increment;
     const val = easeInOutQuad(currentTime, start, change, duration);
     element.scrollTop = val;
-    if (currentTime < duration) {
-      setTimeout(animateScroll, increment);
+    if (currentTime < duration && getAnimationID() === myID) {
+      setTimeout(animateScroll(myID), increment);
     }
   };
-  animateScroll();
+  animateScroll(animationID)();
 }
 
 export function async_process(data_list, handler, handler_extra_param_list) {

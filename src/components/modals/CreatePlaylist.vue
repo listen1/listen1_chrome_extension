@@ -9,27 +9,27 @@
       </div>
     </template>
     <template #footer>
-      <button class="btn btn-primary confirm-button" @click="createAndAddPlaylist()">{{ t('_CONFIRM') }}</button>
-      <button class="btn btn-default" @click="$emit('close')">{{ t('_CANCEL') }}</button>
+      <button class="btn btn-primary confirm-button bg-button" @click="createAndAddPlaylist()">{{ t('_CONFIRM') }}</button>
+      <button class="btn btn-default bg-button" @click="$emit('close')">{{ t('_CANCEL') }}</button>
     </template>
   </DefaultModal>
 </template>
 
 <script setup lang="ts">
-import DefaultModal from './DefaultModal.vue';
+import { toRaw } from 'vue';
 import { useI18n } from 'vue-i18n';
 import MediaService from '../../services/MediaService';
-import { toRaw } from 'vue';
+import DefaultModal from './DefaultModal.vue';
 
 const { t } = useI18n();
 let newlistTitle = $ref('');
 
 const createAndAddPlaylist = () => {
-  MediaService.createMyPlaylist(newlistTitle, props.tracks.map(toRaw));
+  MediaService.createMyPlaylist(newlistTitle, tracks.map(toRaw));
   emit('close');
 };
 
-const props = defineProps<{
+const { tracks } = defineProps<{
   tracks: unknown[];
 }>();
 const emit = defineEmits(['close']);

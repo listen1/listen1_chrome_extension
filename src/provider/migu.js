@@ -772,7 +772,9 @@ export default class migu extends MusicResource {
           url,
           name
         },
-        () => {}
+        () => {
+          // empty block
+        }
       );
     const musicCookieList = [
       'migu_music_sid',

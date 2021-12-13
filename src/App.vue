@@ -6,22 +6,19 @@
 import { onMounted, watch } from 'vue';
 // NOTICE: without inline postfix, css will inject into html
 // we only use css string here
-
+import gridientStyle from './assets/css/themes/gridient.css?inline';
+import infiniteGridStyle from './assets/css/themes/infinite_grid.css?inline';
 import whiteStyle from './assets/css/themes/iparanoid.css?inline';
 import whiteTransparentStyle from './assets/css/themes/iparanoid_transparent.css?inline';
 import blackStyle from './assets/css/themes/origin.css?inline';
 import blackTransparentStyle from './assets/css/themes/origin_transparent.css?inline';
-import infiniteGridStyle from './assets/css/themes/infinite_grid.css?inline';
-import gridientStyle from './assets/css/themes/gridient.css?inline';
-
-import useSettings, { migrateSettings } from './composition/settings';
-import useRedHeart from './composition/redheart';
-
-import Home from './views/Home.vue';
-import iDB, { dbMigrate } from './services/DBService';
 import { PlayerEventListener } from './composition/player';
+import useRedHeart from './composition/redheart';
+import useSettings, { migrateSettings } from './composition/settings';
+import iDB, { dbMigrate } from './services/DBService';
 import { l1Player } from './services/l1_player';
 import { initMediaSession, MediaSessionEventListener } from './services/media_session';
+import Home from './views/Home.vue';
 
 if (!localStorage.getItem('V3_MIGRATED')) {
   migrateSettings();
@@ -31,18 +28,17 @@ if (!localStorage.getItem('V3_MIGRATED')) {
 const { settings, loadSettings } = useSettings();
 
 function applyThemeCSS() {
-
   const mapping = {
-    'white': whiteStyle,
-    'black': blackStyle,
-    'white_transparent': whiteTransparentStyle,
-    'black_transparent': blackTransparentStyle,
-    'infinite_grid': infiniteGridStyle,
-    'gridient': gridientStyle,
-  }
+    white: whiteStyle,
+    black: blackStyle,
+    white_transparent: whiteTransparentStyle,
+    black_transparent: blackTransparentStyle,
+    infinite_grid: infiniteGridStyle,
+    gridient: gridientStyle
+  };
 
   const cssStyle = mapping[settings.theme] || '';
-  
+
   window.api?.setTheme(settings.theme);
   document.getElementById('theme').textContent = cssStyle;
 }

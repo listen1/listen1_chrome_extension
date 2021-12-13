@@ -41,7 +41,7 @@ export default defineConfig({
     // @ts-ignore: Type Mismatch Error
     chromeExtPlugin,
     vueI18n({ include: 'src/i18n/*.json', runtimeOnly: true }),
-    vue({ refTransform: true }),
+    vue({ reactivityTransform: true }),
     // @ts-ignore: Type Mismatch Error
     simpleReloader(),
     // @ts-ignore: Type Mismatch Error
@@ -52,8 +52,8 @@ export default defineConfig({
     minify: false,
     emptyOutDir: true,
     rollupOptions: {
-      external: ['src/assets/main.css'],
-      input: ['src/manifest.ts'],
+      external: ['./assets/main.css'],
+      input: ['./manifest.ts'],
       output: {
         dir: BUILD_ELECTRON ? 'electron_src/dist' : 'dist',
         format: 'esm',

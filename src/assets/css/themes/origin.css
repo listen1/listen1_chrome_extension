@@ -1,9 +1,9 @@
 /* global settings (theme related) */
 :root {
-  --theme-background-color: transparent;
+  --theme-background-color: #222222;
   --icon-default-color: #666666;
   --icon-highlight-color: #111111;
-
+  --disabled-color: #777777;
   --text-default-color: #ffffff;
   --text-subtitle-color: #666666;
   --text-disable-color: #999999;
@@ -28,7 +28,6 @@
 
   --content-background-color: #333333;
 
-  --foot-background-color: #222222;
   --foot-border-color: #222222;
   --footer-main-background-color: #222222;
   --footer-player-bar-background-color: #666666;
@@ -41,7 +40,6 @@
   --search-input-placeholder-color: #666666;
 
   --footer-player-bar-cur-button-color: #e0e0e0;
-  --window-control-border-color: #dddddd;
 
   --important-color: #fff;
 
@@ -56,12 +54,12 @@
   --windows-border-color: #333333;
 
   --default-border-radius: 2px;
-  --text-default-size: 13px;
+  --text-default-size: 14px;
   --h2-title-font-size: 24px;
   --badge-font-size: 12px;
   --badge-font-color: #c3473a;
   --badge-border-color: #843932;
-  --songlist-odd-background-color: #2d2d2d;
+  --songlist-even-background-color: #2d2d2d;
   --songlist-border-color: transparent;
   --songlist-hover-background-color: #3e3e3e;
 

@@ -9,7 +9,9 @@
     "build:electron": "vue-tsc --noEmit && cross-env BUILD_ELECTRON=1 vite build",
     "start:electron:dev": "cross-env BUILD_ELECTRON=1 vite build -w",
     "prepare": "husky install",
-    "format": "prettier . --write"
+    "format": "prettier . --write",
+    "format:check": "prettier . --check",
+    "lint": "eslint --ext .ts,.js,.vue --ignore-path .gitignore --fix src"
   },
   "description": "one for all free music in china",
   "devDependencies": {
@@ -20,7 +22,8 @@
     "@types/node-forge": "^0.10.9",
     "@typescript-eslint/eslint-plugin": "^5.6.0",
     "@typescript-eslint/parser": "^5.6.0",
-    "@vitejs/plugin-vue": "^1.10.1",
+    "@vitejs/plugin-vue": "^2.0.0",
+    "autoprefixer": "^10.4.0",
     "axios": "^0.24.0",
     "browserslist": "^4.17.6",
     "cross-env": "^7.0.3",
@@ -29,21 +32,23 @@
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-vue": "^8.2.0",
     "feather-icons": "^4.28.0",
+    "husky": "^7.0.0",
     "mitt": "^3.0.0",
     "node-forge": "^0.10.0",
     "notyf": "^3.10.0",
+    "postcss": "^8.4.4",
     "prettier": "^2.5.1",
     "rollup-plugin-chrome-extension": "^3.6.6",
     "rollup-plugin-copy": "^3.4.0",
     "rollup-plugin-zip": "^1.0.3",
+    "tailwindcss": "^3.0.1",
     "typescript": "^4.5.2",
-    "vite": "^2.6.14",
-    "vue": "^3.2.24",
+    "vite": "^2.7.1",
+    "vue": "^3.2.26",
     "vue-feather": "^2.0.0-rc.1",
     "vue-i18n": "^9.2.0-beta.23",
     "vue-router": "^4.0.12",
-    "vue-tsc": "^0.29.8",
-    "husky": "^7.0.0"
+    "vue-tsc": "^0.29.8"
   },
   "browserslist": [
     "last 8 chrome versions",

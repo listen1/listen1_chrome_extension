@@ -1,6 +1,7 @@
 /* global settings (theme related) */
 :root {
   --theme-background-color: #333333;
+  --disabled-color: #777777;
 
   --icon-default-color: #666666;
   --icon-highlight-color: #111111;
@@ -29,7 +30,6 @@
 
   --content-background-color: transparent;
 
-  --foot-background-color: transparent;
   --foot-border-color: rgba(255, 255, 255, 0.2);
   --footer-main-background-color: transparent;
   --footer-player-bar-background-color: rgba(255, 255, 255, 0.2);
@@ -42,7 +42,6 @@
   --search-input-background-color: rgba(255, 255, 255, 0.1);
   --search-input-placeholder-color: rgba(255, 255, 255, 0.3);
   --footer-player-bar-cur-button-color: #e0e0e0;
-  --window-control-border-color: #dddddd;
 
   --important-color: #fff;
 
@@ -57,7 +56,7 @@
   --windows-border-color: #333333;
 
   --default-border-radius: 2px;
-  --text-default-size: 13px;
+  --text-default-size: 14px;
   --h2-title-font-size: 24px;
   --badge-font-size: 12px;
   --badge-font-color: #c3473a;
