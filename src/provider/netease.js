@@ -2,6 +2,7 @@ import axios from 'axios';
 import forge from 'node-forge';
 import { getParameterByName, cookieSet, cookieRemove, cookieGetPromise } from './lowebutil';
 import MusicResource from './music_resource';
+
 export default class netease extends MusicResource {
   static _create_secret_key(size) {
     const result = [];
@@ -793,5 +794,52 @@ export default class netease extends MusicResource {
         // empty block
       }
     );
+  }
+
+  static async getCommentList(trackId, offset, limit) {
+    const url = 'https://music.163.com/weapi/comment/resource/comments/get';
+    const neteaseId = 'R_SO_4_' + trackId.split('_')[1];
+
+    const data = this.weapi({
+      cursor: Date.now().toString(),
+      offset: 0,
+      orderType: 1,
+      pageNo: offset / limit + 1,
+      pageSize: limit,
+      rid: neteaseId,
+      threadId: neteaseId
+    });
+
+    const response = await axios.post(url, new URLSearchParams(data));
+    let comments = [];
+    if (response.data.data.hotComments) {
+      comments = response.data.data.hotComments.map((item) => {
+        let data = {
+          id: item.commentId,
+          content: item.content,
+          time: item.time,
+          nickname: item.user.nickname,
+          avatar: item.user.avatarUrl,
+          user_id: item.user.userId,
+          like: item.likedCount,
+          reply: []
+        };
+
+        let replyData = item.beReplied && item.beReplied[0];
+        if (!replyData) {
+          return data;
+        }
+        const reply = {
+          id: item.beRepliedCommentId,
+          content: replyData.content,
+          nickname: replyData.user.nickname,
+          avatar: replyData.user.avatarUrl,
+          user_id: replyData.user.userId
+        };
+        data['reply'] = [reply];
+        return data;
+      });
+    }
+    return { comments, total: comments.length, offset, limit };
   }
 }

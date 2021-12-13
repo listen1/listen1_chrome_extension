@@ -28,7 +28,15 @@ interface TrackRecord {
   playlist: string;
 }
 
+interface TrackMeta {
+  bitrate: string;
+  url: string;
+  platform: string;
+}
+
 type NullableTrack = Track | null;
+
+type NullabeTrackMeta = TrackMeta | null;
 
 const player = reactive({
   playlist: { value: <Track[]>[] }, // array is not reactive
@@ -43,6 +51,7 @@ const player = reactive({
   currentDuration: 0,
   currentPosition: 0,
   currentPlaying: <NullableTrack>null,
+  currentTrackMeta: <NullabeTrackMeta>null,
   mute: false,
   // state below is loaded from storage
   playmode: 0,
@@ -100,7 +109,7 @@ export class PlayerEventListener {
         return;
       }
       const { bitrate, platform, url } = params;
-      player.currentPlaying = { ...player.currentPlaying, bitrate, platform, url };
+      player.currentTrackMeta = { bitrate, platform, url };
     } else if (name === 'custom:playlist') {
       const { playlist } = params;
       player.playlist = { value: playlist };

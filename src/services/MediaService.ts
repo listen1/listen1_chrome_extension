@@ -429,6 +429,11 @@ const MediaService = {
     const provider = getProviderByName(source);
 
     return provider.logout();
+  },
+  async getCommentList(trackId: string, offset: number, limit: number) {
+    const provider = getProviderByName(getProviderNameByItemId(trackId));
+
+    return provider.getCommentList(trackId, offset, limit);
   }
 };
 
