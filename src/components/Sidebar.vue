@@ -16,8 +16,8 @@
           v-if="isElectron()"
           @click="$router.push('/playlist/lmplaylist_reserve')"
           :class="{ active: route.path === '/playlist/lmplaylist_reserve' }"
-          class="group">
-          <SidebarEntry :text="t('_LOCAL_MUSIC')" icon="li-featured-list"></SidebarEntry>
+          class="group cursor-pointer">
+          <SidebarEntry :text="t('_LOCAL_MUSIC')" icon="vue-feather-monitor"></SidebarEntry>
         </li>
         <li
           v-if="is_login('netease')"
