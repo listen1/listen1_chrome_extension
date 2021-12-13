@@ -1,17 +1,24 @@
 <template>
-  <div class="title flex-2 truncate flex max-h-12">
+  <div class="title flex-2 flex overflow-hidden items-center max-h-12">
     <!-- <a class="disabled" ng-if="song.disabled" ng-click="copyrightNotice()"> song.title </a> -->
     <vue-feather
-      class="cursor-pointer"
+      class="cursor-pointer flex-none"
       v-if="!isRedHeart(song.id)"
       type="heart"
       size="18"
       stroke-width="1"
       stroke="#666666"
       @click="setRedHeart(toRaw(song), true)" />
-    <vue-feather class="cursor-pointer" v-if="isRedHeart(song.id)" type="heart" fill="red" stroke="red" size="18" @click="setRedHeart(toRaw(song), false)" />
+    <vue-feather
+      class="cursor-pointer flex-none"
+      v-if="isRedHeart(song.id)"
+      type="heart"
+      fill="red"
+      stroke="red"
+      size="18"
+      @click="setRedHeart(toRaw(song), false)" />
 
-    <a @click="play(song)" class="cursor-pointer ml-3 flex items-center">{{ song.title }}</a>
+    <a @click="play(song)" class="cursor-pointer ml-3 truncate flex-1 min-w-0">{{ song.title }}</a>
   </div>
   <div class="artist flex-1 truncate">
     <a class="cursor-pointer" @click="$router.push(`/playlist/${props.song.artist_id}`)">{{ props.song.artist }}</a>
