@@ -41,7 +41,7 @@ export default defineConfig({
     // @ts-ignore: Type Mismatch Error
     chromeExtPlugin,
     vueI18n({ include: 'src/i18n/*.json', runtimeOnly: true }),
-    vue({ refTransform: true }),
+    vue({ reactivityTransform: true }),
     // @ts-ignore: Type Mismatch Error
     simpleReloader(),
     // @ts-ignore: Type Mismatch Error

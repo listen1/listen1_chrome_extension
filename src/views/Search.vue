@@ -97,11 +97,10 @@
 <script setup>
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
-import useSearch from '../composition/search';
-
-import MediaService from '../services/MediaService';
 import SourceTab from '../components/SourceTab.vue';
 import TrackRow from '../components/TrackRow.vue';
+import useSearch from '../composition/search';
+import MediaService from '../services/MediaService';
 
 const { t } = useI18n();
 const { condition, result } = useSearch();

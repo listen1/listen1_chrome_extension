@@ -16,21 +16,21 @@
 </template>
 
 <script setup lang="ts">
-import DefaultModal from './DefaultModal.vue';
 import { onMounted } from 'vue';
-import MediaService from '../../services/MediaService';
-import useRedHeart from '../../composition/redheart';
 import { useI18n } from 'vue-i18n';
+import useRedHeart from '../../composition/redheart';
+import MediaService from '../../services/MediaService';
+import DefaultModal from './DefaultModal.vue';
 
 const { t } = useI18n();
 let myplaylist: any[] = $ref<unknown[]>([]);
 const emit = defineEmits(['close']);
-const props = defineProps<{
+const { list_id } = defineProps<{
   list_id: string;
 }>();
 const mergePlaylist = (playlistId: string) => {
   const { mergePlaylistByUpdateRedHeart } = useRedHeart();
-  mergePlaylistByUpdateRedHeart(props.list_id, playlistId);
+  mergePlaylistByUpdateRedHeart(list_id, playlistId);
   emit('close');
 };
 

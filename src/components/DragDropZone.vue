@@ -2,7 +2,7 @@
   <li
     class="border-t-2 border-b-2 border-transparent -mb-[2px] group"
     ref="root"
-    :draggable="props.draggable"
+    :draggable="draggable"
     @dragstart="dragstart"
     @dragend="dragend"
     @dragenter="dragenter"
@@ -15,7 +15,7 @@
   </li>
 </template>
 <script setup lang="ts">
-const props = defineProps<{
+const { dragobject, dragtitle, dragtype, ondragleave, sortable, draggable } = defineProps<{
   dragobject: any;
   dragtitle: string;
   dragtype: string;
@@ -28,16 +28,16 @@ let root: any = $ref(null);
 
 // https://stackoverflow.com/questions/34200023/drag-drop-set-custom-html-as-drag-image
 const dragstart = (ev: any) => {
-  if (props.dragobject === undefined) {
+  if (dragobject === undefined) {
     return;
   }
-  if (props.dragtype === undefined) {
+  if (dragtype === undefined) {
     return;
   }
-  ev.dataTransfer.setData(props.dragtype, JSON.stringify(props.dragobject));
+  ev.dataTransfer.setData(dragtype, JSON.stringify(dragobject));
   const elem: any = document.createElement('div');
   elem.id = 'drag-ghost';
-  elem.innerHTML = props.dragtitle;
+  elem.innerHTML = dragtitle;
   elem.style.position = 'absolute';
   elem.style.top = '-1000px';
   elem.style.padding = '3px';
@@ -62,16 +62,16 @@ const dragenter = (event: any) => {
   if (event.dataTransfer.types.length > 0) {
     [dragType] = event.dataTransfer.types;
   }
-  if (props.dragtype === 'application/listen1-myplaylist' && dragType === 'application/listen1-song') {
+  if (dragtype === 'application/listen1-myplaylist' && dragType === 'application/listen1-song') {
     root.classList.add('dragover');
   }
 };
 const dragleave = (event: any) => {
   root.classList.remove('dragover');
-  if (props.ondragleave !== undefined) {
-    props.ondragleave();
+  if (ondragleave !== undefined) {
+    ondragleave();
   }
-  if (props.sortable) {
+  if (sortable) {
     const target = root;
     target.style['z-index'] = '0';
     target.style['border-bottom'] = 'solid 2px transparent';
@@ -87,8 +87,8 @@ const dragover = (event: any) => {
     [dragType] = event.dataTransfer.types;
   }
 
-  if (props.dragtype === dragType) {
-    if (!props.sortable) {
+  if (dragtype === dragType) {
+    if (!sortable) {
       event.dataTransfer.dropEffect = 'none';
       return;
     }
@@ -107,7 +107,7 @@ const dragover = (event: any) => {
       target.style['border-bottom'] = 'solid 2px transparent';
       target.style['z-index'] = '9';
     }
-  } else if (props.dragtype === 'application/listen1-myplaylist' && dragType === 'application/listen1-song') {
+  } else if (dragtype === 'application/listen1-myplaylist' && dragType === 'application/listen1-song') {
     event.dataTransfer.dropEffect = 'copy';
   }
 };
@@ -124,7 +124,7 @@ const drop = (event: any) => {
   emits('drop', { data, dragType, direction });
 
   root.classList.remove('dragover');
-  if (props.sortable) {
+  if (sortable) {
     const target = root;
     target.style['border-top'] = 'solid 2px transparent';
     target.style['border-bottom'] = 'solid 2px transparent';

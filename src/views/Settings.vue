@@ -352,11 +352,11 @@
 import { useI18n } from 'vue-i18n';
 import { version } from '../../package.json';
 import Href from '../components/Href.vue';
+import SettingButton from '../components/SettingButton.vue';
+import SettingTitle from '../components/SettingTitle.vue';
 import useSettings from '../composition/settings';
 import { setLocale } from '../i18n';
 import { isElectron } from '../provider/lowebutil';
-import SettingButton from '../components/SettingButton.vue';
-import SettingTitle from '../components/SettingTitle.vue';
 const { t } = useI18n();
 const { settings, setSettings } = useSettings();
 const isChrome = !isElectron();

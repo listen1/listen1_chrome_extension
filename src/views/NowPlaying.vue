@@ -109,10 +109,10 @@
 </template>
 <script setup>
 import { useI18n } from 'vue-i18n';
+import { useRouter } from 'vue-router';
+import useOverlay from '../composition/overlay';
 import usePlayer from '../composition/player';
 import useSettings from '../composition/settings';
-import useOverlay from '../composition/overlay';
-import { useRouter } from 'vue-router';
 
 const { t } = useI18n();
 const { player } = usePlayer();

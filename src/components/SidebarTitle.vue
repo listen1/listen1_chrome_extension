@@ -1,11 +1,11 @@
 <template>
   <div class="flex items-center h-8 text-sm text-link pl-3 select-none">
-    <div class="title flex-1">{{ props.text }}</div>
+    <div class="title flex-1">{{ text }}</div>
     <slot name="right"></slot>
   </div>
 </template>
 <script setup lang="ts">
-const props = defineProps<{
+const { text } = defineProps<{
   text: string;
 }>();
 </script>

@@ -9,7 +9,8 @@
     "build:electron": "vue-tsc --noEmit && cross-env BUILD_ELECTRON=1 vite build",
     "start:electron:dev": "cross-env BUILD_ELECTRON=1 vite build -w",
     "prepare": "husky install",
-    "format": "prettier . --write"
+    "format": "prettier . --write",
+    "format:check": "prettier . --check"
   },
   "description": "one for all free music in china",
   "devDependencies": {
@@ -20,7 +21,7 @@
     "@types/node-forge": "^0.10.9",
     "@typescript-eslint/eslint-plugin": "^5.6.0",
     "@typescript-eslint/parser": "^5.6.0",
-    "@vitejs/plugin-vue": "^1.10.1",
+    "@vitejs/plugin-vue": "^2.0.0",
     "autoprefixer": "^10.4.0",
     "axios": "^0.24.0",
     "browserslist": "^4.17.6",
@@ -41,8 +42,8 @@
     "rollup-plugin-zip": "^1.0.3",
     "tailwindcss": "^3.0.1",
     "typescript": "^4.5.2",
-    "vite": "^2.6.14",
-    "vue": "^3.2.24",
+    "vite": "^2.7.1",
+    "vue": "^3.2.26",
     "vue-feather": "^2.0.0-rc.1",
     "vue-i18n": "^9.2.0-beta.23",
     "vue-router": "^4.0.12",

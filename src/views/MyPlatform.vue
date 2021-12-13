@@ -13,10 +13,10 @@
 <script setup>
 import { onMounted } from 'vue';
 import { useRoute } from 'vue-router';
-import MediaService from '../services/MediaService';
-import useAuth from '../composition/auth';
-import SourceTab from '../components/SourceTab.vue';
 import PlaylistGrid from '../components/PlaylistGrid.vue';
+import SourceTab from '../components/SourceTab.vue';
+import useAuth from '../composition/auth';
+import MediaService from '../services/MediaService';
 
 const route = useRoute();
 const { getMusicAuth } = useAuth();

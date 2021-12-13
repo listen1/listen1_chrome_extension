@@ -32,28 +32,28 @@
 </template>
 
 <script setup lang="ts">
-import DefaultModal from './DefaultModal.vue';
 import { useI18n } from 'vue-i18n';
 import MediaService from '../../services/MediaService';
+import DefaultModal from './DefaultModal.vue';
 
 const { t } = useI18n();
 const emit = defineEmits(['close']);
 
-const props = defineProps<{
+const { list_id, playlist_title, cover_img_url } = defineProps<{
   list_id: string;
   playlist_title: string;
   cover_img_url: string;
 }>();
 
-let title = $ref(props.playlist_title);
-let imageUrl = $ref(props.cover_img_url);
+let title = $ref(playlist_title);
+let imageUrl = $ref(cover_img_url);
 
 const editPlaylist = () => {
-  MediaService.editMyPlaylist(props.list_id, title, imageUrl);
+  MediaService.editMyPlaylist(list_id, title, imageUrl);
   emit('close');
 };
 const removeMyPlaylist = () => {
-  MediaService.removeMyPlaylist(props.list_id, 'my');
+  MediaService.removeMyPlaylist(list_id, 'my');
   emit('close');
 };
 </script>

@@ -20,10 +20,10 @@
 </template>
 
 <script setup lang="ts">
-import DefaultModal from './DefaultModal.vue';
 import { useI18n } from 'vue-i18n';
-import MediaService from '../../services/MediaService';
 import { useRouter } from 'vue-router';
+import MediaService from '../../services/MediaService';
+import DefaultModal from './DefaultModal.vue';
 
 const router = useRouter();
 const { t } = useI18n();

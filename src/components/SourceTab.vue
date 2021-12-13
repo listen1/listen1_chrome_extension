@@ -1,16 +1,16 @@
 <template>
   <div class="source-list m-4">
-    <template v-for="(source, index) in props.sources" :key="source.name">
+    <template v-for="(source, index) in sources" :key="source.name">
       <div
         class="source-button inline-block cursor-pointer border-b hover:border-active hover:text-default"
         :class="{ 'border-active': tab === source.name, 'border-transparent text-inactive': tab !== source.name }"
         @click="changeTab(source.name)">
         {{ t(source.displayId) }}
       </div>
-      <div v-if="index != props.sources.length - 1" class="splitter inline-block mx-3 -mb-0.5 w-px h-4 bg-neutral-400" />
+      <div v-if="index != sources.length - 1" class="splitter inline-block mx-3 -mb-0.5 w-px h-4 bg-neutral-400" />
     </template>
     <svg
-      v-show="props.loading"
+      v-show="loading"
       id="loader-1"
       class="searchspinner inline-block w-6 h-6 ml-4 -mt-1"
       version="1.1"
@@ -38,7 +38,7 @@
 import { useI18n } from 'vue-i18n';
 const { t } = useI18n();
 
-const props = defineProps<{
+const { sources, tab, loading } = defineProps<{
   sources: any[];
   tab: string;
   loading: boolean;

@@ -1,9 +1,9 @@
 <template>
-  <button class="setting-button p-[5px] mr-1 rounded cursor-pointer leading-[1.4]" @click="emit('click')">{{ props.text }}</button>
+  <button class="setting-button p-[5px] mr-1 rounded cursor-pointer leading-[1.4]" @click="emit('click')">{{ text }}</button>
 </template>
 <script setup lang="ts">
 const emit = defineEmits(['click']);
-const props = defineProps<{
+const { text } = defineProps<{
   text: string;
 }>();
 </script>

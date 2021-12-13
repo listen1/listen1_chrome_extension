@@ -31,12 +31,11 @@
 </template>
 <script setup>
 /* eslint-disable @typescript-eslint/no-unused-vars */
-
 import { computed, onMounted, onUnmounted } from 'vue';
-import MediaService from '../services/MediaService';
-import EventService from '../services/EventService';
-import SourceTab from '../components/SourceTab.vue';
 import PlaylistGrid from '../components/PlaylistGrid.vue';
+import SourceTab from '../components/SourceTab.vue';
+import EventService from '../services/EventService';
+import MediaService from '../services/MediaService';
 
 let currentFilterId = $ref('');
 let result = $ref([]);
