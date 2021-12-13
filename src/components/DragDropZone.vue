@@ -1,6 +1,6 @@
 <template>
   <li
-    class="border-t-2 border-b-2 border-transparent -mb-2px group"
+    class="border-t-2 border-b-2 border-transparent -mb-[2px] group"
     ref="root"
     :draggable="props.draggable"
     @dragstart="dragstart"
