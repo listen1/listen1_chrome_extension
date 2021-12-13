@@ -1,6 +1,6 @@
 <template>
   <ul class="playlist-covers m-0 py-0 flex relative flex-wrap">
-    <li v-for="i in playlists" :key="i.id" class="group w-1/3 md:w-1/5 min-h-40 px-4 sm:w-1/4">
+    <li v-for="i in playlists" :key="i.id" class="group w-1/3 md:w-1/5 min-h-40 px-4 sm:w-1/4 mb-3">
       <div class="u-cover flex relative">
         <img :src="i.cover_img_url" @click="showPlaylist(i.id)" class="m-auto border border-default cursor-pointer w-full object-cover" />
         <div
@@ -10,7 +10,7 @@
         </div>
       </div>
       <div class="desc cursor-pointer">
-        <span class="title flex min-h-8" @click="showPlaylist(i.id)">{{ i.title }}</span>
+        <span class="title flex min-h-8 mt-1" @click="showPlaylist(i.id)">{{ i.title }}</span>
       </div>
     </li>
     <!-- <div class="loading_bottom">
