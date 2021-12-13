@@ -48,7 +48,7 @@ export default class localmusic extends MusicResource {
     return playlist;
   }
 
-  static bootstrapTrack(track, success, failure) {
+  static bootstrapTrack(track, success) {
     const sound = {};
     sound.url = track.sound_url;
     sound.platform = 'localmusic';
@@ -81,7 +81,7 @@ export default class localmusic extends MusicResource {
     };
   }
 
-  static async parseUrl(url) {
+  static async parseUrl() {
     let result;
     return result;
   }
