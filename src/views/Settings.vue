@@ -14,16 +14,13 @@
         <div class="settings-content mx-7 mb-7 leading-8">
           <p>{{ t('_BACKUP_WARNING') }}</p>
           <div>
-            <SettingButton v-show="githubStatus == 2" :text="t('_EXPORT_TO_LOCAL_FILE')" @click="backupMySettings()" />
-            <SettingButton v-show="githubStatus == 2" :text="t('_EXPORT_TO_GITHUB_GIST')" @click="showModal('GistExport')" />
+            <SettingButton v-show="githubStatus == 2" :text="t('_BACKUP_PLAYLIST')" @click="showModal('GistExport')" />
           </div>
         </div>
         <SettingTitle :text="t('_RECOVER_PLAYLIST')" />
         <div class="settings-content mx-7 mb-7 leading-8">
           <p>{{ t('_RECOVER_WARNING') }}</p>
-          <input ref="upload" type="file" style="display: none" @change="importMySettings" />
-          <SettingButton v-show="githubStatus == 2" :text="t('_RECOVER_FROM_LOCAL_FILE')" @click="$refs.upload.click()" />
-          <SettingButton v-show="githubStatus == 2" :text="t('_RECOVER_FROM_GITHUB_GIST')" @click="showModal('GistImport')" />
+          <SettingButton v-show="githubStatus == 2" :text="t('_RECOVER_PLAYLIST')" @click="showModal('GistImport')" />
         </div>
         <SettingTitle :text="t('_NOWPLAYING_DISPLAY')" />
         <div class="settings-content mx-7 mb-7 leading-8">
