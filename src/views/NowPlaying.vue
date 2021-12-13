@@ -46,7 +46,7 @@
           </div>
         </div>
         <div class="detail-songinfo flex app-region-nodrag overflow-hidden mt-28 flex-col flex-1">
-          <div class="title flex items-center">
+          <div class="title flex items-start">
             <h2 class="font-normal text-3xl mr-4 mb-4">{{ currentPlaying.title }}</h2>
             <span
               v-if="settings.enableNowplayingBitrate && currentPlaying.bitrate !== undefined"
