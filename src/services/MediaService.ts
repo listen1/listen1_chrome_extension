@@ -430,7 +430,12 @@ const MediaService = {
 
     return provider.logout();
   },
-  async getCommentList(trackId: string, offset: number, limit: number) {
+  async getCommentList(track: any, offset: number, limit: number) {
+    const {id, id2} = track;
+    let trackId = id2;
+    if(!trackId){
+      trackId = id;
+    }
     const provider = getProviderByName(getProviderNameByItemId(trackId));
 
     return provider.getCommentList(trackId, offset, limit);

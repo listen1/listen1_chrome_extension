@@ -115,7 +115,9 @@
             <div class="flex-1">
               <div>
                 <span class="text-blue-500 mr-1">{{ comment.nickname }}:</span>
-                {{ comment.content }}
+                <span v-for="line,index in comment.content.split('\n')" :key=index>
+                {{ line }} <br v-if="line != ''"/>
+                </span>
               </div>
               <div v-if="comment.reply.length > 0" class="mt-2 p-2 bg-even">
                 <span class="text-blue-500 mr-1">{{ comment.reply[0].nickname }}:</span>
@@ -189,7 +191,7 @@ watchEffect(async () => {
     return;
   }
 
-  const result = await MediaService.getCommentList(player.currentPlaying.id, 0, 100);
+  const result = await MediaService.getCommentList(player.currentPlaying, 0, 100);
   commentList = result['comments'];
   document.getElementsByClassName('songdetail-wrapper')[0].scrollTop = 0;
 });
