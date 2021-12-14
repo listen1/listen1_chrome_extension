@@ -209,4 +209,9 @@ export default class bilibili extends MusicResource {
   static logout() {
     // empty block
   }
+  
+  static async getCommentList(trackId, offset, limit) {
+    const comments = [];
+    return { comments, total: comments.length, offset, limit };
+  }
 }
