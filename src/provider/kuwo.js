@@ -692,4 +692,43 @@ export default class kuwo extends MusicResource {
   static logout() {
     // empty block
   }
+  static async getCommentList(trackId, offset, limit) {
+    limit = 20;
+    const page = offset / limit + 1;
+    const kuwoId = trackId.split('_')[1];
+    const target_url = `http://comment.kuwo.cn/com.s?type=get_rec_comment&uid=0&digest=15&sid=${kuwoId}&page=${page}&rows=${limit}&f=web&devid=0`;
+
+    const response = await axios.get(target_url);
+
+    let comments = [];
+    if(response.data.rows) {
+      comments = response.data.rows.map((item) => {
+        let data = {
+          id: item.id,
+          content: item.msg,
+          time: item.time,
+          nickname: decodeURIComponent(item.u_name),
+          avatar: item.u_pic,
+          user_id: item.u_id,
+          like: item.like_num,
+          reply: []
+        };
+        return item.reply
+          ? {
+              id: item.id,
+              content: item.reply.msg,
+              time: item.reply.time,
+              nickname: decodeURIComponent(item.reply.u_name),
+              avatar: item.reply.u_pic,
+              user_id: item.reply.u_id,
+              like: item.reply.like_num,
+              reply: [data]
+            }
+          : data;
+      });
+    }
+
+    return { comments, total: comments.length, offset, limit };
+
+  }
 }
