@@ -36,8 +36,8 @@
                 </svg>
       </div>-->
 
-      <div class="playsong-detail my-0 mx-auto flex w-[56rem] z-10">
-        <div class="detail-head overflow-hidden flex-none w-96">
+      <div class="playsong-detail my-0 mx-auto flex w-[60rem] z-10">
+        <div class="detail-head overflow-hidden flex-none w-[30rem] flex justify-center">
           <div class="detail-head-cover w-72 h-72 mt-32">
             <img class="w-72 h-72 object-cover" :src="currentPlaying.img_url" @error="showImage($event, 'images/mycover.jpg')" />
           </div>
