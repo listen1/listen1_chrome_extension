@@ -22,7 +22,7 @@
             <IconButton v-show="!is_mine && !is_local" @click="saveAsMyPlaylist(listId)" icon="li-songlist">{{ t('_ADD_TO_PLAYLIST') }}</IconButton>
             <IconButton
               v-show="is_mine && !is_local && listId != 'myplaylist_redheart'"
-              @click="showModal('EditPlaylist', { listId: listId, playlist_title: playlist_title, cover_img_url: cover_img_url })"
+              @click="showModal('EditPlaylist', { list_id: listId, playlist_title: playlist_title, cover_img_url: cover_img_url })"
               icon="vue-feather-edit">
               {{ t('_EDIT') }}
             </IconButton>
@@ -37,7 +37,7 @@
             <IconButton v-show="!is_mine && !is_local" @click="openUrl(playlist_source_url)" icon="li-link">
               {{ t('_ORIGIN_LINK') }}
             </IconButton>
-            <IconButton v-show="is_mine" @click="showModal('ImportPlaylist', { listId })" icon="vue-feather-git-merge">
+            <IconButton v-show="is_mine" @click="showModal('ImportPlaylist', { list_id: listId })" icon="vue-feather-git-merge">
               {{ t('_IMPORT') }}
             </IconButton>
           </div>
