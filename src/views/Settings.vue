@@ -14,13 +14,13 @@
         <div class="settings-content mx-7 mb-7 leading-8">
           <p>{{ t('_BACKUP_WARNING') }}</p>
           <div>
-            <SettingButton v-show="githubStatus == 2" :text="t('_BACKUP_PLAYLIST')" @click="showModal('GistExport')" />
+            <SettingButton :text="t('_BACKUP_PLAYLIST')" @click="showModal('GistExport')" />
           </div>
         </div>
         <SettingTitle :text="t('_RECOVER_PLAYLIST')" />
         <div class="settings-content mx-7 mb-7 leading-8">
           <p>{{ t('_RECOVER_WARNING') }}</p>
-          <SettingButton v-show="githubStatus == 2" :text="t('_RECOVER_PLAYLIST')" @click="showModal('GistImport')" />
+          <SettingButton :text="t('_RECOVER_PLAYLIST')" @click="showModal('GistImport')" />
         </div>
         <SettingTitle :text="t('_NOWPLAYING_DISPLAY')" />
         <div class="settings-content mx-7 mb-7 leading-8">
@@ -139,7 +139,7 @@
           <div>
             <p>{{ t('_STATUS') }}: {{ githubStatusText }}</p>
             <SettingButton v-show="githubStatus == 0" :text="t('_CONNECT_TO_GITHUB')" @click="openGithubAuth()" />
-            <SettingButton v-show="githubStatus == 1" :text="t('_RECONNECT')" @click="'showDialog(7)'" />
+            <SettingButton v-show="githubStatus == 1" :text="t('_RECONNECT')" @click="showModal('GithubAuth')" />
             <SettingButton v-show="githubStatus == 2" :text="t('_CANCEL_CONNECT')" @click="GithubLogout()" />
           </div>
         </div>

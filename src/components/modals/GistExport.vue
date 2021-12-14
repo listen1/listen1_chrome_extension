@@ -9,12 +9,12 @@
           <img class="float-left h-20 w-20 mr-4" src="/images/mycover.jpg" />
           <h2>{{ t('_EXPORT_TO_LOCAL_FILE') }}</h2>
         </li>
-        <p>{{ t('_EXPORT_TO_GITHUB_GIST') }}</p>
-        <li class="cursor-pointer h-24 p-2 hover:bg-dialog-hover" @click="backup(null, true)">
+        <p v-show="githubStatus == 2" >{{ t('_EXPORT_TO_GITHUB_GIST') }}</p>
+        <li v-show="githubStatus == 2" class="cursor-pointer h-24 p-2 hover:bg-dialog-hover" @click="backup(null, true)">
           <img class="float-left h-20 w-20 mr-4" src="/images/mycover.jpg" />
           <h2>{{ t('_CREATE_PUBLIC_BACKUP') }}</h2>
         </li>
-        <li class="cursor-pointer h-24 p-2 hover:bg-dialog-hover" @click="backup(null, false)">
+        <li v-show="githubStatus == 2" class="cursor-pointer h-24 p-2 hover:bg-dialog-hover" @click="backup(null, false)">
           <img class="float-left h-20 w-20 mr-4" src="/images/mycover.jpg" />
           <h2>{{ t('_CREATE_PRIVATE_BACKUP') }}</h2>
         </li>
@@ -55,6 +55,8 @@ const getData = async () => {
   dbJson.version = '3';
   return dbJson;
 };
+
+const githubStatus = GithubClient.github.getStatus();
 
 const download = async () => {
   const content = JSON.stringify(await getData());
