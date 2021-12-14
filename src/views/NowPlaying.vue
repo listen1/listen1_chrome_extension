@@ -115,8 +115,9 @@
             <div class="flex-1 overflow-hidden">
               <div>
                 <span class="text-blue-500 mr-1">{{ comment.nickname }}:</span>
-                <span v-for="line,index in comment.content.split('\n')" :key=index>
-                {{ line }} <br v-if="line != ''"/>
+                <span v-for="(line, index) in comment.content.split('\n')" :key="index">
+                  {{ line }}
+                  <br v-if="line != ''" />
                 </span>
               </div>
               <div v-if="comment.reply.length > 0" class="mt-2 p-2 bg-even">
@@ -124,7 +125,7 @@
                 {{ comment.reply[0].content }}
               </div>
               <div class="flex text-neutral-500 mt-1">
-                <div class="flex-1 text-left">{{ d(new Date(comment.time)) }}</div>
+                <div class="flex-1 text-left">{{ d(new Date(comment.time), 'long') }}</div>
                 <div class="flex-1 text-right mr-2 flex items-center justify-end">
                   <vue-feather class="mr-1" type="thumbs-up" size="1rem"></vue-feather>
                   {{ comment.like }}
@@ -140,13 +141,16 @@
 <script setup>
 import { watchEffect } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { datetimeFormats } from '../i18n/index';
 import { useRouter } from 'vue-router';
 import useOverlay from '../composition/overlay';
 import usePlayer from '../composition/player';
 import useSettings from '../composition/settings';
 import MediaService from '../services/MediaService';
 
-const { t, d } = useI18n();
+const { t, d } = useI18n({
+  datetimeFormats
+});
 const { player } = usePlayer();
 let { overlay, setOverlayType } = useOverlay();
 const router = useRouter();
