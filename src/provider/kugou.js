@@ -2,6 +2,21 @@ import axios from 'axios';
 import { getParameterByName, async_process } from './lowebutil';
 import MusicResource from './music_resource';
 
+// https://www.cnblogs.com/willingtolove/p/11059325.html
+function html2Escape(sHtml) {
+  return sHtml.replace(/[<>&"]/g, function (c) {
+    return { '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;' }[c];
+  });
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function escape2Html(str) {
+  var arrEntities = { lt: '<', gt: '>', nbsp: ' ', amp: '&', quot: '"' };
+  return str.replace(/&(lt|gt|nbsp|amp|quot);/gi, function (all, t) {
+    return arrEntities[t];
+  });
+}
+
 export default class kugou extends MusicResource {
   static kg_convert_song(song) {
     const track = {
@@ -349,5 +364,45 @@ export default class kugou extends MusicResource {
 
   static logout() {
     // empty block
+  }
+
+  static async getCommentList(trackId, offset, limit) {
+    limit = 20;
+    const page = offset / limit + 1;
+    const kugouId = trackId.split('_')[1];
+
+    // https://github.com/lyswhut/lx-music-desktop/blob/master/src/renderer/utils/music/kg/comment.js
+    // code is magic string and do not modify
+    const target_url = `http://comment.service.kugou.com/index.php?r=commentsv2/getCommentWithLike&code=fc4be23b4e972707f36b8a828a93ba8a&extdata=${kugouId}&p=${page}&pagesize=${limit}`;
+
+    const response = await axios.get(target_url);
+
+    let comments = [];
+    if (response.data.weightList) {
+      comments = response.data.weightList.map((item) => {
+        let data = {
+          id: item.id,
+          content: html2Escape(item.content || ''),
+          time: item.addtime,
+          nickname: item.user_name,
+          avatar: item.user_pic,
+          user_id: item.user_id,
+          like: item.like.likenum,
+          reply: []
+        };
+
+        return item.pcontent
+          ? {
+              id: item.id,
+              content: html2Escape(item.pcontent),
+              nickname: item.puser,
+              avatar: null,
+              user_id: item.puser_id,
+              reply: [data]
+            }
+          : data;
+      });
+    }
+    return { comments, total: comments.length, offset, limit };
   }
 }
