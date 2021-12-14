@@ -689,6 +689,9 @@ export default class qq extends MusicResource {
     );
   }
   static async getCommentList(trackId, offset, limit) {
+    if (trackId === undefined) {
+      return { comments: [], total: 0, offset, limit };
+    }
     const qqId = trackId.split('_')[1];
     const url = 'http://c.y.qq.com/base/fcgi-bin/fcg_global_comment_h5.fcg';
     const req = {
@@ -713,9 +716,9 @@ export default class qq extends MusicResource {
     const comments = response.data.comment.commentlist.map((item) => {
       let data = {
         id: `${item.rootcommentid}_${item.commentid}`,
-        content: item.rootcommentcontent?item.rootcommentcontent:'',
+        content: item.rootcommentcontent ? item.rootcommentcontent : '',
         time: parseInt(item.time + '000'),
-        nickname: item.rootcommentnick?item.rootcommentnick:'',
+        nickname: item.rootcommentnick ? item.rootcommentnick : '',
         avatar: item.avatarurl,
         user_id: item.encrypt_rootcommentuin,
         like: item.praisenum,

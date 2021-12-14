@@ -431,13 +431,13 @@ const MediaService = {
     return provider.logout();
   },
   async getCommentList(track: any, offset: number, limit: number) {
-    const {id, id2} = track;
-    let trackId = id2;
-    if(!trackId){
-      trackId = id;
-    }
-    const provider = getProviderByName(getProviderNameByItemId(trackId));
+    const id2PlatformNames = ['qq', 'migu'];
 
+    let trackId = track.id;
+    const provider = getProviderByName(getProviderNameByItemId(track.id));
+    if (id2PlatformNames.indexOf(provider.name) > -1) {
+      trackId = track.id2;
+    }
     return provider.getCommentList(trackId, offset, limit);
   }
 };

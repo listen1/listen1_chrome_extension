@@ -798,6 +798,9 @@ export default class migu extends MusicResource {
   }
 
   static async getCommentList(trackId, offset, limit) {
+    if (trackId === undefined) {
+      return { comments: [], total: 0, offset, limit };
+    }
     limit = 5;
     const page = offset / limit + 1;
     const miguId = trackId.split('_')[1];
