@@ -112,7 +112,7 @@
             <div class="flex-none w-16 justify-center">
               <img :src="comment.avatar" class="w-12 h-12 object-cover rounded-full" />
             </div>
-            <div class="flex-1">
+            <div class="flex-1 overflow-hidden">
               <div>
                 <span class="text-blue-500 mr-1">{{ comment.nickname }}:</span>
                 <span v-for="line,index in comment.content.split('\n')" :key=index>
