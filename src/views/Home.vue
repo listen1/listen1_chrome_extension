@@ -117,11 +117,7 @@
               </span>
             </router-link>
           </div>
-          <div v-if="isWin() || isLinux()" class="border-l border-default">
-            <vue-feather class="icon opacity-50 hover:opacity-100 ml-4" type="minimize-2" @click="sendControl('window_min')" />
-            <vue-feather class="icon opacity-50 hover:opacity-100 ml-4" type="maximize" @click="sendControl('window_max')" />
-            <vue-feather class="icon opacity-50 hover:opacity-100 ml-4 mr-4" type="x" @click="sendControl('window_close')" />
-          </div>
+          <WindowControl></WindowControl>
         </div>
 
         <div class="flex-scroll-wrapper flex-1 overflow-y-scroll" id="browser" v-on:scroll.passive="handleScroll" content-selector="'#playlist-content'">
@@ -147,10 +143,10 @@ import usePlayer from '../composition/player';
 import useSearch from '../composition/search';
 import useSettings from '../composition/settings';
 import { setLocale } from '../i18n';
-import { isLinux, isWin } from '../provider/lowebutil';
 import EventService from '../services/EventService';
 import { l1Player } from '../services/l1_player';
 import NowPlaying from '../views/NowPlaying.vue';
+import WindowControl from '../components/WindowControl.vue';
 
 const { t } = useI18n();
 const { player } = usePlayer();
@@ -294,10 +290,6 @@ let mute = $computed(() => player.mute);
 let lyricFontWeight = $computed(() => settings.lyricFontWeight);
 let lyricFontSize = $computed(() => settings.lyricFontSize);
 setLocale(settings.language);
-
-const sendControl = (message) => {
-  window.api?.sendControl(message);
-};
 </script>
 <style>
 ::placeholder {
