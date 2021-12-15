@@ -91,7 +91,7 @@
       <Sidebar></Sidebar>
 
       <div class="flex flex-col flex-1 bg-content overflow-hidden">
-        <div class="flex flex-none items-center h-14 app-region-drag border-b border-default">
+        <div class="flex flex-none items-center h-14 app-region-drag border-b border-default pr-2" :class="{ 'pt-1': isElectron() }">
           <div class="flex flex-1 items-center">
             <span class="icon opacity-50 hover:opacity-100 text-xl text-icon li-back ml-4" @click="$router.go(-1)" />
             <span class="icon opacity-50 hover:opacity-100 text-xl text-icon li-advance ml-2 mr-4" @click="$router.go(1)" />
@@ -147,6 +147,7 @@ import EventService from '../services/EventService';
 import { l1Player } from '../services/l1_player';
 import NowPlaying from '../views/NowPlaying.vue';
 import WindowControl from '../components/WindowControl.vue';
+import { isElectron } from '../provider/lowebutil';
 
 const { t } = useI18n();
 const { player } = usePlayer();
