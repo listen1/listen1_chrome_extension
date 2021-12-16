@@ -8,6 +8,7 @@ export default class migu extends MusicResource {
   static mg_convert_song(song) {
     return {
       id: `mgtrack_${song.copyrightId}`,
+      id2: `mgtrack_${song.songId}`,
       title: song.songName,
       artist: song.artists ? song.artists[0].name : song.singer,
       artist_id: `mgartist_${song.artists ? song.artists[0].id : song.singerId}`,
@@ -263,6 +264,7 @@ export default class migu extends MusicResource {
       tracks = result.songs.items.map((song) => {
         const track = {
           id: `mgtrack_${song.copyrightId}`,
+          id2: `mgtrack_${song.songId}`,
           title: song.name,
           artist: song.singers[0].name,
           artist_id: `mgartist_${song.singers[0].id}`,
@@ -290,6 +292,7 @@ export default class migu extends MusicResource {
       //  MV榜
       tracks = data.data.columnInfo.dataList.map((song) => ({
         id: `mgtrack_${song.copyrightId}`,
+        id2: `mgtrack_${song.songId}`,
         title: song.songName,
         artist: song.singer,
         artist_id: `mgartist_${song.singerId}`,
@@ -792,5 +795,40 @@ export default class migu extends MusicResource {
     const passportCookieList = ['USessionID', 'LTToken'];
     musicCookieList.map((name) => removeFn('https://music.migu.cn', name));
     passportCookieList.map((name) => removeFn('https://passport.migu.cn', name));
+  }
+
+  static async getCommentList(trackId, offset, limit) {
+    if (trackId === undefined) {
+      return { comments: [], total: 0, offset, limit };
+    }
+    limit = 5;
+    const page = offset / limit + 1;
+    const miguId = trackId.split('_')[1];
+    const target_url = `https://music.migu.cn/v3/api/comment/listTopComments?targetId=${miguId}&pageSize=${limit}&pageNo=${page}`;
+    const response = await axios.get(target_url);
+
+    let comments = [];
+    if (response.data.data.items) {
+      comments = response.data.data.items.map((item) => ({
+        id: item.commentId,
+        content: item.body,
+        time: item.createTime,
+        nickname: item.author.name,
+        avatar: item.author.avatar && item.author.avatar.startsWith('//') ? `http:${item.author.avatar}` : item.author.avatar,
+        user_id: item.author.id,
+        like: item.praiseCount,
+        reply: item.replyCommentList.map((c) => ({
+          id: c.commentId,
+          content: c.body,
+          time: c.createTime,
+          nickname: c.author.name,
+          avatar: c.author.avatar,
+          user_id: c.author.id,
+          like: c.praiseCount
+        }))
+      }));
+    }
+
+    return { comments, total: comments.length, offset, limit };
   }
 }

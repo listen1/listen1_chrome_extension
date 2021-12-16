@@ -47,4 +47,7 @@ export default class MusicResource {
   static getRecommendPlaylist() {
     throw new NotImplementedError('');
   }
+  static getCommentList(trackId: string, offset: number, limit: number) {
+    throw new NotImplementedError('');
+  }
 }

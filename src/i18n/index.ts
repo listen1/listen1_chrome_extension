@@ -11,6 +11,47 @@ const messages = {
   'zh-CN': zh_CN,
   'zh-TC': zh_TC
 };
+
+export const datetimeFormats = {
+  'en-US': {
+    long: {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: 'numeric'
+    }
+  },
+  'fr-FR': {
+    long: {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: 'numeric'
+    }
+  },
+  'zh-CN': {
+    long: {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: 'numeric',
+      hour12: false
+    }
+  },
+  'zh-TC': {
+    long: {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: 'numeric',
+      hour12: false
+    }
+  }
+};
 export type Language = keyof typeof messages;
 const i18n = createI18n({
   legacy: false,

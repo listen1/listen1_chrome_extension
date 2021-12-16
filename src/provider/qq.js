@@ -84,6 +84,7 @@ export default class qq extends MusicResource {
   static qq_convert_song(song) {
     const d = {
       id: `qqtrack_${song.songmid}`,
+      id2: `qqtrack_${song.songid}`,
       title: this.htmlDecode(song.songname),
       artist: this.htmlDecode(song.singer[0].name),
       artist_id: `qqartist_${song.singer[0].mid}`,
@@ -156,6 +157,7 @@ export default class qq extends MusicResource {
     const tracks = data.toplist.data.songInfoList.map((song) => {
       const d = {
         id: `qqtrack_${song.mid}`,
+        id2: `qqtrack_${song.id}`,
         title: this.htmlDecode(song.name),
         artist: this.htmlDecode(song.singer[0].name),
         artist_id: `qqartist_${song.singer[0].mid}`,
@@ -685,5 +687,45 @@ export default class qq extends MusicResource {
         );
       }
     );
+  }
+  static async getCommentList(trackId, offset, limit) {
+    if (trackId === undefined) {
+      return { comments: [], total: 0, offset, limit };
+    }
+    const qqId = trackId.split('_')[1];
+    const url = 'http://c.y.qq.com/base/fcgi-bin/fcg_global_comment_h5.fcg';
+    const req = {
+      uin: '0',
+      format: 'json',
+      cid: '0',
+      reqtype: '2',
+      biztype: '1',
+      topid: qqId,
+      cmd: '9',
+      needmusiccrit: '1',
+      pagenum: offset / limit,
+      pagesize: limit
+    };
+    const formData = new FormData();
+    Object.keys(req).forEach((key) => {
+      formData.append(key, req[key]);
+    });
+
+    const response = await axios.post(url, formData);
+
+    const comments = response.data.comment.commentlist.map((item) => {
+      let data = {
+        id: `${item.rootcommentid}_${item.commentid}`,
+        content: item.rootcommentcontent ? item.rootcommentcontent : '',
+        time: parseInt(item.time + '000'),
+        nickname: item.rootcommentnick ? item.rootcommentnick : '',
+        avatar: item.avatarurl,
+        user_id: item.encrypt_rootcommentuin,
+        like: item.praisenum,
+        reply: []
+      };
+      return data;
+    });
+    return { comments, total: comments.length, offset, limit };
   }
 }

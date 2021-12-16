@@ -429,6 +429,16 @@ const MediaService = {
     const provider = getProviderByName(source);
 
     return provider.logout();
+  },
+  async getCommentList(track: any, offset: number, limit: number) {
+    const id2PlatformNames = ['qq', 'migu'];
+
+    let trackId = track.id;
+    const provider = getProviderByName(getProviderNameByItemId(track.id));
+    if (id2PlatformNames.indexOf(provider.name) > -1) {
+      trackId = track.id2;
+    }
+    return provider.getCommentList(trackId, offset, limit);
   }
 };
 

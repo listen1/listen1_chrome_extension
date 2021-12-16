@@ -1,7 +1,7 @@
 <template>
   <div class="page">
     <div
-      class="songdetail-wrapper absolute top-0 left-0 right-0 bottom-20 overflow-hidden duration-300 app-region-nodrag bg-now-playing"
+      class="songdetail-wrapper absolute flex flex-col top-0 left-0 right-0 bottom-20 overflow-y-scroll duration-300 app-region-nodrag bg-now-playing"
       :class="{
         slidedown: overlay.type !== 'track',
         coverbg: settings.enableNowplayingCoverBackground
@@ -11,8 +11,9 @@
         class="absolute top-0 left-0 right-0 h-24" />
       <div
         v-if="settings.enableNowplayingCoverBackground"
-        class="bg opacity-50 h-full text-center float-left w-full brightness-[0.8] blur-[90px] duration-1000 ease-in-out"
+        class="bg absolute opacity-50 h-full text-center w-full brightness-[0.8] blur-[90px] duration-1000 ease-in-out"
         :style="{ backgroundImage: `url(${currentPlaying.img_url}` }" />
+
       <div
         class="translate-switch app-region-nodrag h-6 w-6 border flex items-center justify-center absolute bottom-10 right-10 cursor-pointer text-neutral-400 hover:text-default"
         @click="toggleLyricTranslation()"
@@ -35,8 +36,8 @@
                 </svg>
       </div>-->
 
-      <div class="playsong-detail absolute left-11 right-11 my-0 mx-auto flex h-full max-w-4xl">
-        <div class="detail-head overflow-hidden flex-none w-96">
+      <div class="playsong-detail my-0 mx-auto flex w-[60rem] z-10">
+        <div class="detail-head overflow-hidden flex-none w-[30rem] flex justify-center">
           <div class="detail-head-cover w-72 h-72 mt-32">
             <img class="w-72 h-72 object-cover" :src="currentPlaying.img_url" @error="showImage($event, 'images/mycover.jpg')" />
           </div>
@@ -49,14 +50,14 @@
           <div class="title flex items-start">
             <h2 class="font-normal text-3xl mr-4 mb-4">{{ currentPlaying.title }}</h2>
             <span
-              v-if="settings.enableNowplayingBitrate && currentPlaying.bitrate !== undefined"
+              v-if="settings.enableNowplayingBitrate && currentTrackMeta.bitrate !== undefined"
               class="badge text-badge text-sm border border-badge px-2 ml-2 mt-2 rounded h-6 flex items-center justify-center whitespace-nowrap">
-              {{ currentPlaying.bitrate }}
+              {{ currentTrackMeta.bitrate }}
             </span>
             <span
-              v-if="settings.enableNowplayingPlatform && currentPlaying.platform !== undefined"
+              v-if="settings.enableNowplayingPlatform && currentTrackMeta.platform !== undefined"
               class="badge text-badge text-sm border border-badge px-2 ml-2 mt-2 rounded h-6 flex items-center justify-center whitespace-nowrap platform">
-              {{ t(currentPlaying.platform) }}
+              {{ t(currentTrackMeta.platform) }}
             </span>
           </div>
           <div class="info border-b border-default pb-2 flex">
@@ -104,24 +105,59 @@
           </div>
         </div>
       </div>
+      <div v-if="commentList.length > 0" class="mt-20 mb-8 mx-auto w-[42rem] z-10">
+        <div>热门评论</div>
+        <ul>
+          <li v-for="comment in commentList" :key="comment.id" class="flex py-4 border-b border-default">
+            <div class="flex-none w-16 justify-center">
+              <img :src="comment.avatar" class="w-12 h-12 object-cover rounded-full" />
+            </div>
+            <div class="flex-1 overflow-hidden">
+              <div>
+                <span class="text-blue-500 mr-1">{{ comment.nickname }}:</span>
+                <span v-for="(line, index) in comment.content.split('\n')" :key="index">
+                  {{ line }}
+                  <br v-if="line != ''" />
+                </span>
+              </div>
+              <div v-if="comment.reply.length > 0" class="mt-2 p-2 bg-even">
+                <span class="text-blue-500 mr-1">{{ comment.reply[0].nickname }}:</span>
+                {{ comment.reply[0].content }}
+              </div>
+              <div class="flex text-neutral-500 mt-1">
+                <div class="flex-1 text-left">{{ d(new Date(comment.time), 'long') }}</div>
+                <div class="flex-1 text-right mr-2 flex items-center justify-end">
+                  <vue-feather class="mr-1" type="thumbs-up" size="1rem"></vue-feather>
+                  {{ comment.like }}
+                </div>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
     </div>
   </div>
 </template>
 <script setup>
+import { watchEffect } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { datetimeFormats } from '../i18n/index';
 import { useRouter } from 'vue-router';
 import useOverlay from '../composition/overlay';
 import usePlayer from '../composition/player';
 import useSettings from '../composition/settings';
+import MediaService from '../services/MediaService';
 
-const { t } = useI18n();
+const { t, d } = useI18n({
+  datetimeFormats
+});
 const { player } = usePlayer();
 let { overlay, setOverlayType } = useOverlay();
 const router = useRouter();
 const { settings, setSettings } = useSettings();
 
 let isMac = $ref(false);
-
+let commentList = $ref([]);
 const toggleNowPlaying = () => {
   if (overlay.type != 'track') {
     setOverlayType('track');
@@ -145,8 +181,24 @@ let lyricLineNumber = $computed(() => player.lyricLineNumber);
 let lyricLineNumberTrans = $computed(() => player.lyricLineNumberTrans);
 
 let currentPlaying = $computed(() => player.currentPlaying || {});
+let currentTrackMeta = $computed(() => player.currentTrackMeta || {});
 let lyricFontWeight = $computed(() => settings.lyricFontWeight);
 let lyricFontSize = $computed(() => settings.lyricFontSize);
+
+watchEffect(async () => {
+  let trackId = '';
+
+  if (player.currentPlaying && player.currentPlaying.id) {
+    trackId = player.currentPlaying.id;
+  }
+  if (!trackId) {
+    return;
+  }
+
+  const result = await MediaService.getCommentList(player.currentPlaying, 0, 100);
+  commentList = result['comments'];
+  document.getElementsByClassName('songdetail-wrapper')[0].scrollTop = 0;
+});
 </script>
 <style>
 .page .songdetail-wrapper.slidedown {
