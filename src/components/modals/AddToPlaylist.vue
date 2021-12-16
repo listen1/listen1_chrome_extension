@@ -4,8 +4,8 @@
       <h3>{{ t('_ADD_TO_PLAYLIST') }}</h3>
     </template>
     <template #body>
-      <ul class="dialog-playlist text-left">
-        <li class="detail-add cursor-pointer h-14 p-2 hover:bg-dialog-hover" @click="showModal('CreatePlaylist', { tracks: [...tracks] })">
+      <ul class="text-left">
+        <li class="cursor-pointer h-14 p-2 hover:bg-dialog-hover" @click="showModal('CreatePlaylist', { tracks: [...tracks] })">
           <img class="float-left h-10 w-10 mr-4" src="../../images/mycover.jpg" />
           <h2>{{ t('_CREATE_PLAYLIST') }}</h2>
         </li>

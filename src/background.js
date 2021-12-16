@@ -1,5 +1,5 @@
-/* eslint-disable no-unused-vars */
-/* global GithubClient */
+import GithubClient from "./services/GithubService";
+
 chrome.browserAction.onClicked.addListener(() => {
   const url = chrome.extension.getURL('index.html');
   chrome.tabs.query({ url }, (tabs) => {

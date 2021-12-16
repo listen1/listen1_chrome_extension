@@ -37,6 +37,10 @@ const mv2: ManifestV2 = {
     default_icon: 'images/logo.png',
     default_title: 'Listen1 Next'
   },
-  web_accessible_resources: ['assets/fonts/*', 'images/*', 'index.html']
+  content_scripts: [{
+    "matches": ["https://listen1.github.io/listen1/*"],
+    "js": ["oauth_callback.ts"]
+  }],
+  web_accessible_resources: ['assets/fonts/*', 'images/*', 'index.html'],
 };
 export default mv2;
