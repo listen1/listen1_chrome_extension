@@ -85,18 +85,6 @@ export default class migu extends MusicResource {
         title: '尖叫原创榜',
         id: 'mgtoplist_27553408',
         source_url: ''
-      },
-      {
-        cover_img_url: 'https://cdnmusic.migu.cn/tycms_picture/20/05/136/200515161733982_360x360_1523.png',
-        title: '音乐榜',
-        id: 'mgtoplist_1',
-        source_url: ''
-      },
-      {
-        cover_img_url: 'https://cdnmusic.migu.cn/tycms_picture/20/05/136/200515161848938_360x360_673.png',
-        title: '影视榜',
-        id: 'mgtoplist_2',
-        source_url: ''
       }
     ];
     const result = chart_board.concat(migu_board, global_board);
@@ -155,16 +143,6 @@ export default class migu extends MusicResource {
         name: '尖叫原创榜',
         url: 'jianjiao_original',
         img: '/20/04/99/200408163702795_360x360_1614.png'
-      },
-      1: {
-        name: '音乐榜',
-        url: 'migumusic',
-        img: '/20/05/136/200515161733982_360x360_1523.png'
-      },
-      2: {
-        name: '影视榜',
-        url: 'movies',
-        img: '/20/05/136/200515161848938_360x360_673.png'
       },
       23189399: {
         name: '内地榜',
@@ -243,11 +221,8 @@ export default class migu extends MusicResource {
       }
     };
     let target_url = '';
-    if (list_id === 1 || list_id === 2) {
-      target_url = `https://music.migu.cn/v3/music/top/${board_list[list_id].url}`;
-    } else {
-      target_url = `https://app.c.nf.migu.cn/MIGUM3.0/v1.0/template/rank-detail/release?columnId=${list_id}&needAll=0&resourceType=2009`;
-    }
+    target_url = `https://app.c.nf.migu.cn/MIGUM2.0/v1.0/content/querycontentbyId.do?columnId=${list_id}&needAll=0`;
+
     const { data } = await axios.get(target_url);
 
     const info = {
@@ -256,77 +231,8 @@ export default class migu extends MusicResource {
       title: data.data ? data.data.columnInfo.title : board_list[list_id].name,
       source_url: `https://music.migu.cn/v3/music/top/${board_list[list_id].url}`
     };
-    let tracks = {};
-    if (list_id === 1 || list_id === 2) {
-      // 音乐榜及影视榜
-      const list_elements = new DOMParser().parseFromString(data, 'text/html').getElementsByTagName('script');
-      const result = JSON.parse(list_elements[1].innerText.split('=').pop());
-      tracks = result.songs.items.map((song) => {
-        const track = {
-          id: `mgtrack_${song.copyrightId}`,
-          id2: `mgtrack_${song.songId}`,
-          title: song.name,
-          artist: song.singers[0].name,
-          artist_id: `mgartist_${song.singers[0].id}`,
-          album: song.album.albumId !== 1 ? song.album.albumName : '',
-          album_id: song.album.albumId !== 1 ? `mgalbum_${song.album.albumId}` : 'mgalbum_',
-          source: 'migu',
-          source_url: `https://music.migu.cn/v3/music/song/${song.copyrightId}`,
-          img_url: `https:${song.mediumPic}`,
-          // url: `mgtrack_${song.copyrightId}`,
-          lyric_url: 'null',
-          tlyric_url: '',
-          song_id: song.id,
-          url: undefined
-        };
-        if (song.bit24) {
-          track.quality = '111111';
-        } else if (song.sq) {
-          track.quality = '111100';
-        } else {
-          track.quality = '110000';
-        }
-        return track;
-      });
-    } else if (list_id === 23217754) {
-      //  MV榜
-      tracks = data.data.columnInfo.dataList.map((song) => ({
-        id: `mgtrack_${song.copyrightId}`,
-        id2: `mgtrack_${song.songId}`,
-        title: song.songName,
-        artist: song.singer,
-        artist_id: `mgartist_${song.singerId}`,
-        album: '',
-        album_id: 'mgalbum_',
-        source: 'migu',
-        source_url: `https://music.migu.cn/v3/music/song/${song.copyrightId}`,
-        img_url: song.imgs[1].img,
-        // url: `mgtrack_${song.copyrightId}`,
-        lyric_url: null,
-        tlyric_url: '',
-        song_id: song.songId,
-        url: song.copyright === 0 ? '' : undefined
-      }));
-    } else if (list_id === 23218151 || list_id === 33683712) {
-      //  新专辑榜及数字专辑畅销榜
-      tracks = data.data.columnInfo.dataList.map((item) => ({
-        id: `mgtrack_`,
-        title: '',
-        artist: item.singer,
-        artist_id: `mgartist_${item.singerId}`,
-        album: item.title,
-        album_id: item.albumId ? `mgalbum_${item.albumId}` : 'mgalbum_',
-        source: 'migu',
-        source_url: `https://music.migu.cn/v3/music/album/${item.albumId || ''}`,
-        img_url: item.imgItems[1].img,
-        // url: `mgtrack_${song.copyrightId}`,
-        lyric_url: '',
-        tlyric_url: '',
-        url: ''
-      }));
-    } else {
-      tracks = data.data.columnInfo.dataList.map((item) => this.mg_convert_song(item));
-    }
+
+    const tracks = data.columnInfo.contents.map((item) => this.mg_convert_song(item.objectInfo));
     return {
       tracks,
       info
