@@ -87,7 +87,7 @@
 </template>
 
 <script setup>
-import { inject, onMounted, toRaw } from 'vue';
+import { inject, onMounted, toRaw, watch, computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
 import DragDropZone from '../components/DragDropZone.vue';
@@ -103,9 +103,9 @@ const { t } = useI18n();
 const route = useRoute();
 const { addMyPlaylistByUpdateRedHeart } = useRedHeart();
 
-const { listId: listId } = route.params;
-const is_mine = listId.slice(0, 2) === 'my';
-const is_local = listId.slice(0, 2) === 'lm';
+let listId = $ref('');
+let is_mine = computed(() => listId && listId.slice(0, 2) === 'my');
+let is_local = computed(() => listId && listId.slice(0, 2) === 'lm');
 
 let songs = $ref([]);
 let cover_img_url = $ref('images/loading.svg');
@@ -126,6 +126,7 @@ const refreshPlaylist = async () => {
 };
 
 onMounted(async () => {
+  listId = route.params.listId;
   is_favorite = await MediaService.isMyPlaylist(listId);
   await refreshPlaylist();
 });
@@ -186,6 +187,15 @@ const addLocalMusic = (listId) => {
     await refreshPlaylist();
   });
 };
+
+watch(
+  () => route.path,
+  async () => {
+    listId = route.params.listId;
+    is_favorite = await MediaService.isMyPlaylist(listId);
+    await refreshPlaylist();
+  }
+);
 </script>
 <style>
 /* 

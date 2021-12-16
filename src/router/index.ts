@@ -9,7 +9,10 @@ const routes = [
   {
     path: '/',
     name: 'HotPlaylists',
-    component: HotPlaylists
+    component: HotPlaylists,
+    meta: {
+      keepAlive: true
+    }
   },
   {
     path: '/settings',

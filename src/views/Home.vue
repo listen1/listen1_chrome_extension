@@ -121,7 +121,13 @@
         </div>
 
         <div class="flex-scroll-wrapper flex-1 overflow-y-scroll" id="browser" v-on:scroll.passive="handleScroll" content-selector="'#playlist-content'">
-          <router-view :key="$route.path" />
+          <router-view v-slot="{ Component }">
+            <keep-alive>
+              <component :is="Component" v-if="$route.meta.keepAlive" />
+            </keep-alive>
+            <component :is="Component" v-if="!$route.meta.keepAlive" />
+          </router-view>
+
           <NowPlaying />
         </div>
       </div>
