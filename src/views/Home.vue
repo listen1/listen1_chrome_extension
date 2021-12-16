@@ -91,7 +91,7 @@
       <Sidebar></Sidebar>
 
       <div class="flex flex-col flex-1 bg-content overflow-hidden">
-        <div class="flex flex-none items-center h-14 app-region-drag border-b border-default">
+        <div class="flex flex-none items-center h-14 app-region-drag border-b border-default pr-2" :class="{ 'pt-1': isElectron() }">
           <div class="flex flex-1 items-center">
             <span class="icon opacity-50 hover:opacity-100 text-xl text-icon li-back ml-4" @click="$router.go(-1)" />
             <span class="icon opacity-50 hover:opacity-100 text-xl text-icon li-advance ml-2 mr-4" @click="$router.go(1)" />
@@ -117,11 +117,7 @@
               </span>
             </router-link>
           </div>
-          <div v-if="isWin() || isLinux()" class="border-l border-default">
-            <vue-feather class="icon opacity-50 hover:opacity-100 ml-4" type="minimize-2" @click="sendControl('window_min')" />
-            <vue-feather class="icon opacity-50 hover:opacity-100 ml-4" type="maximize" @click="sendControl('window_max')" />
-            <vue-feather class="icon opacity-50 hover:opacity-100 ml-4 mr-4" type="x" @click="sendControl('window_close')" />
-          </div>
+          <WindowControl></WindowControl>
         </div>
 
         <div class="flex-scroll-wrapper flex-1 overflow-y-scroll" id="browser" v-on:scroll.passive="handleScroll" content-selector="'#playlist-content'">
@@ -147,10 +143,11 @@ import usePlayer from '../composition/player';
 import useSearch from '../composition/search';
 import useSettings from '../composition/settings';
 import { setLocale } from '../i18n';
-import { isLinux, isWin } from '../provider/lowebutil';
 import EventService from '../services/EventService';
 import { l1Player } from '../services/l1_player';
 import NowPlaying from '../views/NowPlaying.vue';
+import WindowControl from '../components/WindowControl.vue';
+import { isElectron } from '../provider/lowebutil';
 
 const { t } = useI18n();
 const { player } = usePlayer();
@@ -294,10 +291,6 @@ let mute = $computed(() => player.mute);
 let lyricFontWeight = $computed(() => settings.lyricFontWeight);
 let lyricFontSize = $computed(() => settings.lyricFontSize);
 setLocale(settings.language);
-
-const sendControl = (message) => {
-  window.api?.sendControl(message);
-};
 </script>
 <style>
 ::placeholder {
