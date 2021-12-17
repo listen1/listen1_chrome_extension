@@ -171,7 +171,7 @@ const GithubClient = {
     backupMySettings2Gist(files: any, gistId: string, isPublic: boolean) {
       let method: 'post' | 'patch' = 'post';
       let url = '/gists';
-      if (gistId != null) {
+      if (gistId) {
         method = 'patch';
         url = `/gists/${gistId}`;
       }

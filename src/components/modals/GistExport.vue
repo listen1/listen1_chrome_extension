@@ -10,11 +10,11 @@
           <h2>{{ t('_EXPORT_TO_LOCAL_FILE') }}</h2>
         </li>
         <p v-show="githubStatus == 2" >{{ t('_EXPORT_TO_GITHUB_GIST') }}</p>
-        <li v-show="githubStatus == 2" class="cursor-pointer h-24 p-2 hover:bg-dialog-hover" @click="backup(null, true)">
+        <li v-show="githubStatus == 2" class="cursor-pointer h-24 p-2 hover:bg-dialog-hover" @click="backup('', true)">
           <img class="float-left h-20 w-20 mr-4" src="/images/mycover.jpg" />
           <h2>{{ t('_CREATE_PUBLIC_BACKUP') }}</h2>
         </li>
-        <li v-show="githubStatus == 2" class="cursor-pointer h-24 p-2 hover:bg-dialog-hover" @click="backup(null, false)">
+        <li v-show="githubStatus == 2" class="cursor-pointer h-24 p-2 hover:bg-dialog-hover" @click="backup('', false)">
           <img class="float-left h-20 w-20 mr-4" src="/images/mycover.jpg" />
           <h2>{{ t('_CREATE_PRIVATE_BACKUP') }}</h2>
         </li>
@@ -42,7 +42,7 @@ const emit = defineEmits<{
 const { t } = useI18n();
 const { backupMySettings2Gist, json2gist, listExistBackup } = GithubClient.gist;
 
-let myBackup = $ref([]);
+let myBackup = $ref(<any>[]);
 listExistBackup().then((list) => (myBackup = list));
 
 const getData = async () => {
