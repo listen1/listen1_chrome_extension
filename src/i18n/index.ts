@@ -1,3 +1,4 @@
+import { Ref } from 'vue';
 import { createI18n } from 'vue-i18n';
 import useSettings from '../composition/settings';
 import en_US from './en_US.json';
@@ -62,7 +63,7 @@ const i18n = createI18n({
   // ...
 });
 export const setLocale = (language: Language): void => {
-  i18n.global.locale.value = language;
+  (<unknown>i18n.global.locale as Ref<string>).value = language;
   settings.language = language;
   const langMap: { [code: string]: string } = {
     'zh-CN': 'zh-Hans',

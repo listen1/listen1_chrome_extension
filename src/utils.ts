@@ -126,7 +126,7 @@ function easeInOutQuad(t: number, b: number, c: number, d: number) {
 }
 let animationID = 0;
 const getAnimationID = () => animationID;
-export function smoothScrollTo(element: HTMLElement, to: number, duration: number) {
+export function smoothScrollTo(element: Element, to: number, duration: number) {
   if (element == undefined || element === null) {
     return;
   }

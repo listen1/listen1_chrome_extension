@@ -73,7 +73,7 @@ import DragDropZone from './DragDropZone.vue';
 const { t } = useI18n();
 const { player } = usePlayer();
 const router = useRouter();
-const showModal = inject('showModal');
+const showModal = inject('showModal') as CallableFunction;
 
 const showPlaylist = (playlistId: string) => {
   router.push(`/playlist/${playlistId}`);
