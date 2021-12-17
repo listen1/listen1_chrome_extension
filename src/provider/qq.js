@@ -1,5 +1,6 @@
 import axios from 'axios';
-import { getParameterByName, cookieRemove, cookieGetPromise } from './lowebutil';
+import { cookieRemove, cookieGetPromise } from '../utils';
+import { getParameterByName } from "../utils";
 import MusicResource from './music_resource';
 
 export default class qq extends MusicResource {

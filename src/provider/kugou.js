@@ -1,5 +1,6 @@
 import axios from 'axios';
-import { getParameterByName, async_process } from './lowebutil';
+import { async_process } from '../utils';
+import { getParameterByName } from "../utils";
 import MusicResource from './music_resource';
 
 // https://www.cnblogs.com/willingtolove/p/11059325.html

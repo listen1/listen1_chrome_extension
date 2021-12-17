@@ -87,7 +87,7 @@ import DragDropZone from '../components/DragDropZone.vue';
 import notyf from '../services/notyf';
 import useAuth from '../composition/auth';
 import useRedHeart from '../composition/redheart';
-import { isElectron } from '../provider/lowebutil';
+import { isElectron } from '../utils';
 import SidebarEntry from '../components/SidebarEntry.vue';
 import SidebarTitle from '../components/SidebarTitle.vue';
 

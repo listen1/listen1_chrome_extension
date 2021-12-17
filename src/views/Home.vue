@@ -153,7 +153,7 @@ import EventService from '../services/EventService';
 import { l1Player } from '../services/l1_player';
 import NowPlaying from '../views/NowPlaying.vue';
 import WindowControl from '../components/WindowControl.vue';
-import { isElectron } from '../provider/lowebutil';
+import { isElectron } from '../utils';
 
 const { t } = useI18n();
 const { player } = usePlayer();

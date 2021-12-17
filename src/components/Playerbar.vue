@@ -105,9 +105,8 @@ import useOverlay from '../composition/overlay';
 import usePlayer from '../composition/player';
 import useRedHeart from '../composition/redheart';
 import useSettings from '../composition/settings';
-import { isElectron } from '../provider/lowebutil';
 import { l1Player } from '../services/l1_player';
-import { formatTime } from '../utils';
+import { formatTime, isElectron } from '../utils';
 
 const { t } = useI18n();
 const { player } = usePlayer();

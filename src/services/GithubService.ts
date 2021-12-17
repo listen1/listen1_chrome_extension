@@ -1,5 +1,5 @@
 import axios from "axios";
-import { isElectron } from "../provider/lowebutil";
+import { isElectron } from "../utils";
 import iDB from "./DBService";
 
 const OAUTH_URL = 'https://github.com/login/oauth';

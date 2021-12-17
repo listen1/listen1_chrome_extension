@@ -1,4 +1,4 @@
-import { getParameterByName } from './lowebutil';
+import { getParameterByName } from "../utils";
 import MusicResource from './music_resource';
 import iDB from '../services/DBService';
 

@@ -1,5 +1,5 @@
 import MusicResource from './music_resource';
-import { getParameterByName } from './lowebutil';
+import { getParameterByName } from '../utils';
 
 export default class xiami extends MusicResource {
   static showPlaylist() {

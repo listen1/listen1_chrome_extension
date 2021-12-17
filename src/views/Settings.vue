@@ -377,7 +377,7 @@ import SettingButton from '../components/SettingButton.vue';
 import SettingTitle from '../components/SettingTitle.vue';
 import useSettings from '../composition/settings';
 import { setLocale } from '../i18n';
-import { isElectron } from '../provider/lowebutil';
+import { isElectron } from '../utils';
 import GithubClient from '../services/GithubService';
 import { inject } from 'vue';
 import EventService from '../services/EventService';

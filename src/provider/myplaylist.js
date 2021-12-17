@@ -1,4 +1,4 @@
-import { getParameterByName } from './lowebutil';
+import { getParameterByName } from "../utils";
 import iDB from '../services/DBService';
 import EventService from '../services/EventService';
 import { arrayMove } from '../utils';

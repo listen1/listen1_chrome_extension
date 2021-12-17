@@ -1,8 +1,8 @@
 import axios from 'axios';
 import forge from 'node-forge';
-import { getParameterByName } from './lowebutil';
+import { getParameterByName } from "../utils";
 import MusicResource from './music_resource';
-import { cookieRemove } from './lowebutil';
+import { cookieRemove } from '../utils';
 
 export default class migu extends MusicResource {
   static mg_convert_song(song) {

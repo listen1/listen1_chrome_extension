@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { getParameterByName } from './lowebutil';
+import { getParameterByName } from '../utils';
 import MusicResource from './music_resource';
 
 export default class bilibili extends MusicResource {

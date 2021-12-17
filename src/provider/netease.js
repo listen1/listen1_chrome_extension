@@ -1,6 +1,7 @@
 import axios from 'axios';
 import forge from 'node-forge';
-import { getParameterByName, cookieSet, cookieRemove, cookieGetPromise } from './lowebutil';
+import { cookieSet, cookieRemove, cookieGetPromise } from '../utils';
+import { getParameterByName } from "../utils";
 import MusicResource from './music_resource';
 
 export default class netease extends MusicResource {

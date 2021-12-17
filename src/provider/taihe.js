@@ -1,6 +1,6 @@
 import axios from 'axios';
 import forge from 'node-forge';
-import { getParameterByName } from './lowebutil';
+import { getParameterByName } from "../utils";
 import MusicResource from './music_resource';
 
 const axiosTH = axios.create({

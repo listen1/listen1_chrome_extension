@@ -1,7 +1,7 @@
 import { reactive } from 'vue';
 import MediaService from '../services/MediaService';
 import { parseLyric, calculateLine, LyricLine } from '../services/lyric';
-import { isElectron, smoothScrollTo } from '../provider/lowebutil';
+import { isElectron, smoothScrollTo } from '../utils';
 import iDB from '../services/DBService';
 import useSettings, { getSetting } from './settings';
 import useOverlay from './overlay';
