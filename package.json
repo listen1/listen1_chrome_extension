@@ -3,15 +3,17 @@
   "version": "3.0.0",
   "private": false,
   "scripts": {
-    "build": "vue-tsc --noEmit && vite build",
+    "build": "vite build",
     "dev": "vite",
     "start": "vite build -w",
-    "build:electron": "vue-tsc --noEmit && cross-env BUILD_ELECTRON=1 vite build",
+    "build:electron": "cross-env BUILD_ELECTRON=1 vite build",
     "start:electron:dev": "cross-env BUILD_ELECTRON=1 vite build -w",
     "prepare": "husky install",
     "format": "prettier . --write",
     "format:check": "prettier . --check",
-    "lint": "eslint --ext .ts,.js,.vue --ignore-path .gitignore --fix src"
+    "precompile": "vue-tsc --noEmit",
+    "lint": "eslint --ext .ts,.js,.vue --ignore-path .gitignore",
+    "lint:fix": "eslint --ext .ts,.js,.vue --ignore-path .gitignore --fix src"
   },
   "description": "one for all free music in china",
   "devDependencies": {
