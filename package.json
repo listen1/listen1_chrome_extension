@@ -12,7 +12,7 @@
     "format": "prettier . --write",
     "format:check": "prettier . --check",
     "precompile": "vue-tsc --noEmit",
-    "lint": "eslint --ext .ts,.js,.vue --ignore-path .gitignore",
+    "lint": "eslint --ext .ts,.js,.vue --ignore-path .gitignore src",
     "lint:fix": "eslint --ext .ts,.js,.vue --ignore-path .gitignore --fix src"
   },
   "description": "one for all free music in china",
