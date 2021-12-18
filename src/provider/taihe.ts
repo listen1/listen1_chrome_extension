@@ -19,11 +19,12 @@ axiosTH.interceptors.request.use(
     return { ...config, params };
   },
   null,
-  { synchronous: true }
+  // @ts-ignore: Known Usage
+  { synchronous: true } 
 );
 
 export default class taihe extends MusicResource {
-  static th_convert_song(song) {
+  static th_convert_song(song: any) {
     const track = {
       id: `thtrack_${song.id}`,
       title: song.title,
@@ -33,7 +34,7 @@ export default class taihe extends MusicResource {
       source_url: `https://music.taihe.com/song/${song.id}`,
       img_url: song.pic,
       lyric_url: song.lyric || ''
-    };
+    } as any;
     if (song.artist && song.artist.length) {
       track.artist = song.artist[0].name;
       track.artist_id = `thartist_${song.artist[0].artistCode}`;
@@ -41,8 +42,8 @@ export default class taihe extends MusicResource {
     return track;
   }
 
-  static async th_render_tracks(url, page) {
-    const list_id = getParameterByName('list_id', url).split('_').pop();
+  static async th_render_tracks(url: string, page: number) {
+    const list_id = getParameterByName('list_id', url)?.split('_').pop();
     const response = await axiosTH.get('/tracklist/info', {
       params: {
         id: list_id,
@@ -55,7 +56,7 @@ export default class taihe extends MusicResource {
     return tracks;
   }
 
-  static async search(url) {
+  static async search(url: string) {
     const keyword = getParameterByName('keywords', url);
     const curpage = getParameterByName('curpage', url);
     const searchType = getParameterByName('type', url);
@@ -90,8 +91,8 @@ export default class taihe extends MusicResource {
     }
   }
 
-  static async th_get_playlist(url) {
-    const list_id = getParameterByName('list_id', url).split('_').pop();
+  static async th_get_playlist(url: string) {
+    const list_id = getParameterByName('list_id', url)?.split('_').pop();
     const response = await axiosTH.get('/tracklist/info', {
       params: {
         id: list_id
@@ -114,8 +115,8 @@ export default class taihe extends MusicResource {
     return { tracks, info };
   }
 
-  static async th_artist(url) {
-    const artist_id = getParameterByName('list_id', url).split('_').pop();
+  static async th_artist(url: string) {
+    const artist_id = getParameterByName('list_id', url)?.split('_').pop();
     const response = await axiosTH.get('/artist/info', {
       params: {
         artistCode: artist_id
@@ -141,8 +142,8 @@ export default class taihe extends MusicResource {
     };
   }
 
-  static bootstrapTrack(track, success, failure) {
-    const sound = {};
+  static bootstrapTrack(track: any, success: CallableFunction, failure: CallableFunction) {
+    const sound = {} as any;
     const song_id = track.id.slice('thtrack_'.length);
     axiosTH
       .get('/song/tracklink', {
@@ -165,13 +166,13 @@ export default class taihe extends MusicResource {
       .catch(() => failure(sound));
   }
 
-  static async lyric(url) {
+  static async lyric(url: string) {
     const lyric_url = getParameterByName('lyric_url', url);
     if (lyric_url) {
       const { data } = await axios.get(lyric_url);
       return { lyric: data };
     } else {
-      const track_id = getParameterByName('track_id', url).split('_').pop();
+      const track_id = getParameterByName('track_id', url)?.split('_').pop();
       const { data } = await axiosTH.get('/song/tracklink', {
         params: {
           TSID: track_id
@@ -182,8 +183,8 @@ export default class taihe extends MusicResource {
     }
   }
 
-  static async th_album(url) {
-    const album_id = getParameterByName('list_id', url).split('_').pop();
+  static async th_album(url: string) {
+    const album_id = getParameterByName('list_id', url)?.split('_').pop();
     const response = await axiosTH.get('/album/info', {
       params: {
         albumAssetCode: album_id
@@ -198,7 +199,7 @@ export default class taihe extends MusicResource {
       source_url: `https://music.taihe.com/album/${album_id}`
     };
 
-    const tracks = data.trackList.map((song) => ({
+    const tracks = data.trackList.map((song: any) => ({
       id: `thtrack_${song.assetId}`,
       title: song.title,
       artist: song.artist ? song.artist[0].name : '',
@@ -216,7 +217,7 @@ export default class taihe extends MusicResource {
     };
   }
 
-  static async showPlaylist(url) {
+  static async showPlaylist(url: string) {
     const offset = Number(getParameterByName('offset', url));
     const subCate = getParameterByName('filter_id', url);
     const { data } = await axiosTH.get('/tracklist/list', {
@@ -227,7 +228,7 @@ export default class taihe extends MusicResource {
       }
     });
     /** @type {{cover_img_url:string;id:string;source_url:string;title:string}[]}*/
-    const result = data.data.result.map((item) => ({
+    const result = data.data.result.map((item: any) => ({
       cover_img_url: item.pic,
       title: item.title,
       id: `thplaylist_${item.id}`,
@@ -236,7 +237,7 @@ export default class taihe extends MusicResource {
     return result;
   }
 
-  static async parseUrl(url) {
+  static async parseUrl(url: string) {
     let result;
     let id = '';
     let match = /\/\/music.taihe.com\/([a-z]+)\//.exec(url);
@@ -265,8 +266,8 @@ export default class taihe extends MusicResource {
     return result;
   }
 
-  static getPlaylist(url) {
-    const list_id = getParameterByName('list_id', url).split('_')[0];
+  static getPlaylist(url: string) {
+    const list_id = getParameterByName('list_id', url)?.split('_')[0];
     switch (list_id) {
       case 'thplaylist':
         return this.th_get_playlist(url);
@@ -283,9 +284,9 @@ export default class taihe extends MusicResource {
     const res = await axiosTH.get('/tracklist/category');
     return {
       recommend: [{ id: '', name: '推荐歌单' }],
-      all: res.data.data.map((sub) => ({
+      all: res.data.data.map((sub: any) => ({
         category: sub.categoryName,
-        filters: sub.subCate.map((i) => ({
+        filters: sub.subCate.map((i: any) => ({
           id: i.id,
           name: i.categoryName
         }))
@@ -305,8 +306,8 @@ export default class taihe extends MusicResource {
     // empty block
   }
 
-  static async getCommentList(trackId, offset, limit) {
-    const comments = [];
+  static async getCommentList(trackId: string, offset: number, limit: number) {
+    const comments = <any>[];
     return { comments, total: comments.length, offset, limit };
   }
 }
