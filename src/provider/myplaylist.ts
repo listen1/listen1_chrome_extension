@@ -35,7 +35,7 @@ export default class MyPlaylist {
   }
 
   static async getPlaylistById(list_id: string) {
-    const playlistInfo = await iDB.Playlists.get([list_id]);
+    const playlistInfo = await iDB.Playlists.get({id: list_id});
     let playlist = {
       info: playlistInfo,
       tracks: <any>[]
