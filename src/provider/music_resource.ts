@@ -5,49 +5,50 @@ class NotImplementedError extends Error {
     super(message);
   }
 }
+type PromiseLike<T> = Promise<T> | T;
 
 export default class MusicResource {
-  static async showPlaylist(url: string) {
+  static showPlaylist(url: string): PromiseLike<any> {
     throw new NotImplementedError('');
   }
-  static async getPlaylistFilters() {
+  static getPlaylistFilters(): PromiseLike<any> {
     throw new NotImplementedError('');
   }
-  static getPlaylist(url: string) {
+  static getPlaylist(url: string): PromiseLike<any> {
     throw new NotImplementedError('');
   }
-  static parseUrl(url: string) {
+  static parseUrl(url: string): PromiseLike<any> {
     throw new NotImplementedError('');
   }
-  static bootstrapTrack(track: any, success: any, failure: any) {
+  static bootstrapTrack(track: any, success: any, failure: any): PromiseLike<any> {
     throw new NotImplementedError('');
   }
-  static async search(url: string) {
+  static search(url: string): PromiseLike<any> {
     throw new NotImplementedError('');
   }
 
-  static async lyric(url: string) {
+  static lyric(url: string): PromiseLike<any> {
     throw new NotImplementedError('');
   }
-  static async getUser() {
+  static getUser(): PromiseLike<any> {
     throw new NotImplementedError('');
   }
-  static getLoginUrl() {
+  static getLoginUrl(): PromiseLike<any> {
     throw new NotImplementedError('');
   }
-  static logout() {
+  static logout(): PromiseLike<any> {
     throw new NotImplementedError('');
   }
-  static getUserCreatedPlaylist(url: string) {
+  static getUserCreatedPlaylist(url: string): PromiseLike<any> {
     throw new NotImplementedError('');
   }
-  static getUserFavoritePlaylist(url: string) {
+  static getUserFavoritePlaylist(url: string): PromiseLike<any> {
     throw new NotImplementedError('');
   }
-  static getRecommendPlaylist() {
+  static getRecommendPlaylist(): PromiseLike<any> {
     throw new NotImplementedError('');
   }
-  static getCommentList(trackId: string, offset: number, limit: number) {
+  static getCommentList(trackId: string, offset: number, limit: number): PromiseLike<any> {
     throw new NotImplementedError('');
   }
 }
