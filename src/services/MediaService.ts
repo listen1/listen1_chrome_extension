@@ -9,6 +9,8 @@ import taihe from '../provider/taihe';
 import localmusic from '../provider/localmusic';
 import myplaylist from '../provider/myplaylist';
 import useSettings from '../composition/settings';
+
+import * as providers from '../provider';
 interface Provider {
   getPlaylist: (url: string) => any;
   search: (url: string) => any;
