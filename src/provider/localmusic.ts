@@ -3,12 +3,12 @@ import MusicResource from './music_resource';
 import iDB from '../services/DBService';
 
 export default class localmusic extends MusicResource {
-  static async getPlaylistById(list_id) {
-    const playlistInfo = await iDB.Playlists.get(list_id);
+  static async getPlaylistById(list_id: string) {
+    const playlistInfo = await iDB.Playlists.get([list_id]);
     let playlist = {
       info: playlistInfo,
-      tracks: []
-    };
+      tracks: <any>[]
+    } as any;
     // clear url field when load old playlist
     if (playlistInfo) {
       playlist.tracks = await iDB.Tracks.where('playlist')
@@ -20,43 +20,43 @@ export default class localmusic extends MusicResource {
     }
     return playlist;
   }
-  static async lm_get_playlist(url) {
-    const list_id = getParameterByName('list_id', url);
+  static async lm_get_playlist(url: string) {
+    const list_id = getParameterByName('list_id', url) || '';
     return await this.getPlaylistById(list_id);
   }
 
-  static async lm_album(url) {
-    const album = getParameterByName('list_id', url).split('_').pop();
+  static async lm_album(url: string) {
+    const album = getParameterByName('list_id', url)?.split('_').pop();
 
     const list_id = 'lmplaylist_reserve';
     const playlist = await this.getPlaylistById(list_id);
 
     playlist.info.title = album;
-    playlist.tracks = playlist.tracks.filter((tr) => tr.album === album);
+    playlist.tracks = playlist.tracks.filter((tr: any) => tr.album === album);
 
     return playlist;
   }
 
-  static async lm_artist(url) {
-    const artist = getParameterByName('list_id', url).split('_').pop();
+  static async lm_artist(url: string) {
+    const artist = getParameterByName('list_id', url)?.split('_').pop();
     const list_id = 'lmplaylist_reserve';
     const playlist = await this.getPlaylistById(list_id);
 
     playlist.info.title = artist;
-    playlist.tracks = playlist.tracks.filter((tr) => tr.artist === artist);
+    playlist.tracks = playlist.tracks.filter((tr: any) => tr.artist === artist);
 
     return playlist;
   }
 
-  static bootstrapTrack(track, success) {
-    const sound = {};
+  static bootstrapTrack(track: any, success: CallableFunction) {
+    const sound = {} as any;
     sound.url = track.sound_url;
     sound.platform = 'localmusic';
 
     success(sound);
   }
 
-  static async search(url) {
+  static async search(url: string) {
     const searchType = getParameterByName('type', url);
     return {
       result: [],
@@ -65,12 +65,12 @@ export default class localmusic extends MusicResource {
     };
   }
 
-  static async lyric(url) {
+  static async lyric(url: string) {
     const track_id = getParameterByName('track_id', url);
     const list_id = 'lmplaylist_reserve';
     const playlist = await this.getPlaylistById(list_id);
 
-    const track = playlist.tracks.find((item) => item.id === track_id);
+    const track = playlist.tracks.find((item: any) => item.id === track_id);
     let lyric = '';
     if (track.lyrics !== undefined) {
       [lyric] = track.lyrics;
@@ -86,8 +86,8 @@ export default class localmusic extends MusicResource {
     return result;
   }
 
-  static getPlaylist(url) {
-    const list_id = getParameterByName('list_id', url).split('_')[0];
+  static getPlaylist(url: string) {
+    const list_id = getParameterByName('list_id', url)?.split('_')[0];
     switch (list_id) {
       case 'lmplaylist':
         return this.lm_get_playlist(url);
