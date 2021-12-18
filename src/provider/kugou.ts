@@ -4,22 +4,21 @@ import { getParameterByName } from "../utils";
 import MusicResource from './music_resource';
 
 // https://www.cnblogs.com/willingtolove/p/11059325.html
-function html2Escape(sHtml) {
-  return sHtml.replace(/[<>&"]/g, function (c) {
-    return { '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;' }[c];
+function html2Escape(sHtml: string) {
+  return sHtml.replace(/[<>&"]/g, (c: string) => {
+    return { '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;' }[c] || '';
   });
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function escape2Html(str) {
-  var arrEntities = { lt: '<', gt: '>', nbsp: ' ', amp: '&', quot: '"' };
-  return str.replace(/&(lt|gt|nbsp|amp|quot);/gi, function (all, t) {
-    return arrEntities[t];
+function escape2Html(str: string) {
+  return str.replace(/&(lt|gt|nbsp|amp|quot);/gi, (all, t: string) => {
+    return { lt: '<', gt: '>', nbsp: ' ', amp: '&', quot: '"' }[t] || '';
   });
 }
 
 export default class kugou extends MusicResource {
-  static kg_convert_song(song) {
+  static kg_convert_song(song: any) {
     const track = {
       id: `kgtrack_${song.FileHash}`,
       title: song.SongName,
@@ -44,7 +43,7 @@ export default class kugou extends MusicResource {
     return track;
   }
 
-  static kg_render_search_result_item(index, item, params, callback) {
+  static kg_render_search_result_item(index: any, item: any, params: any, callback: CallableFunction) {
     const track = kugou.kg_convert_song(item);
     // Add singer img
     const url = `${'https://www.kugou.com/yy/index.php?r=play/getdata&hash='}${track.lyric_url}`;
@@ -55,7 +54,7 @@ export default class kugou extends MusicResource {
     });
   }
 
-  static async search(url) {
+  static async search(url: string) {
     const keyword = getParameterByName('keywords', url);
     const curpage = getParameterByName('curpage', url);
     const searchType = getParameterByName('type', url);
@@ -85,7 +84,7 @@ export default class kugou extends MusicResource {
     }
   }
 
-  static kg_render_playlist_result_item(index, item, params, callback) {
+  static kg_render_playlist_result_item(index: any, item: any, params: any, callback: CallableFunction) {
     const { hash } = item;
 
     let target_url = `${'http://m.kugou.com/app/i/getSongInfo.php?cmd=playInfo&hash='}${hash}`;
@@ -126,8 +125,8 @@ export default class kugou extends MusicResource {
     });
   }
 
-  static async kg_get_playlist(url) {
-    const list_id = getParameterByName('list_id', url).split('_').pop();
+  static async kg_get_playlist(url: string) {
+    const list_id = getParameterByName('list_id', url)?.split('_').pop();
     const target_url = `http://m.kugou.com/plist/list/${list_id}?json=true`;
     const { data } = await axios.get(target_url);
 
@@ -141,7 +140,7 @@ export default class kugou extends MusicResource {
     return { tracks, info };
   }
 
-  static kg_render_artist_result_item(index, item, params, callback) {
+  static kg_render_artist_result_item(index: any, item: any, params: any, callback: CallableFunction) {
     const info = params[0];
     const track = {
       id: `kgtrack_${item.hash}`,
@@ -175,8 +174,8 @@ export default class kugou extends MusicResource {
     });
   }
 
-  static async kg_artist(url) {
-    const artist_id = getParameterByName('list_id', url).split('_').pop();
+  static async kg_artist(url: string) {
+    const artist_id = getParameterByName('list_id', url)?.split('_').pop();
     let target_url = `http://mobilecdnbj.kugou.com/api/v3/singer/info?singerid=${artist_id}`;
     const { data } = await axios.get(target_url);
 
@@ -184,7 +183,7 @@ export default class kugou extends MusicResource {
       cover_img_url: data.data.imgurl.replace('{size}', '400'),
       title: data.data.singername,
       id: `kgartist_${artist_id}`,
-      source_url: 'https://www.kugou.com/singer/{id}.html'.replace('{id}', artist_id)
+      source_url: 'https://www.kugou.com/singer/{id}.html'.replace('{id}', artist_id || '')
     };
     target_url = `http://mobilecdnbj.kugou.com/api/v3/singer/song?singerid=${artist_id}&page=1&pagesize=30`;
     const res = await axios.get(target_url);
@@ -209,7 +208,7 @@ export default class kugou extends MusicResource {
     return result;
   }
 
-  static bootstrapTrack(track, success, failure) {
+  static bootstrapTrack(track: any, success: CallableFunction, failure: CallableFunction) {
     let sound = {};
     const track_id = track.id.slice('kgtrack_'.length);
     const album_id = track.album_id.slice('kgalbum_'.length);
@@ -239,9 +238,9 @@ export default class kugou extends MusicResource {
       .catch(() => failure(sound));
   }
 
-  static async lyric(url) {
-    const track_id = getParameterByName('track_id', url).split('_').pop();
-    const album_id = getParameterByName('album_id', url).split('_').pop();
+  static async lyric(url: string) {
+    const track_id = getParameterByName('track_id', url)?.split('_').pop();
+    const album_id = getParameterByName('album_id', url)?.split('_').pop();
     const lyric_url = `https://wwwapi.kugou.com/yy/index.php?r=play/getdata&callback=jQuery&hash=${track_id}&dfid=dfid&mid=mid&platid=4&album_id=${album_id}`;
     const { data } = await axios.get(lyric_url);
     const jsonString = data.slice('jQuery('.length, data.length - 1 - 1);
@@ -251,7 +250,7 @@ export default class kugou extends MusicResource {
     };
   }
 
-  static kg_render_album_result_item(index, item, params, callback) {
+  static kg_render_album_result_item(index: any, item: any, params: any, callback: CallableFunction) {
     const info = params[0];
     const album_id = params[1];
     const track = {
@@ -279,15 +278,14 @@ export default class kugou extends MusicResource {
     });
   }
 
-  static async kg_album(url) {
-    const album_id = getParameterByName('list_id', url).split('_').pop();
+  static async kg_album(url: string) {
+    const album_id = getParameterByName('list_id', url)?.split('_').pop();
     let target_url = `${'http://mobilecdnbj.kugou.com/api/v3/album/info?albumid='}${album_id}`;
 
-    let info;
     // info
     const response = await axios.get(target_url);
     const { data } = response;
-    info = {
+    const info = {
       cover_img_url: data.data.imgurl.replace('{size}', '400'),
       title: data.data.albumname,
       id: `kgalbum_${data.data.albumid}`,
@@ -300,8 +298,8 @@ export default class kugou extends MusicResource {
     return { tracks, info };
   }
 
-  static async showPlaylist(url) {
-    let offset = getParameterByName('offset', url);
+  static async showPlaylist(url: string) {
+    let offset = Number(getParameterByName('offset', url));
     if (offset === undefined) {
       offset = 0;
     }
@@ -311,7 +309,7 @@ export default class kugou extends MusicResource {
     const { data } = await axios.get(target_url);
     // const total = data.plist.total;
     /** @type {{cover_img_url:string;id:string;source_url:string;title:string}[]}*/
-    const result = data.plist.list.info.map((item) => ({
+    const result = data.plist.list.info.map((item: any) => ({
       cover_img_url: item.imgurl ? item.imgurl.replace('{size}', '400') : '',
       title: item.specialname,
       id: `kgplaylist_${item.specialid}`,
@@ -320,7 +318,7 @@ export default class kugou extends MusicResource {
     return result;
   }
 
-  static async parseUrl(url) {
+  static async parseUrl(url: string) {
     let result;
     const match = /\/\/www.kugou.com\/yy\/special\/single\/([0-9]+).html/.exec(url);
     if (match != null) {
@@ -333,9 +331,9 @@ export default class kugou extends MusicResource {
     return result;
   }
 
-  static getPlaylist(url) {
+  static getPlaylist(url: string) {
     // eslint-disable-line no-unused-vars
-    const list_id = getParameterByName('list_id', url).split('_')[0];
+    const list_id = getParameterByName('list_id', url)?.split('_')[0];
     switch (list_id) {
       case 'kgplaylist':
         return this.kg_get_playlist(url);
@@ -367,7 +365,7 @@ export default class kugou extends MusicResource {
     // empty block
   }
 
-  static async getCommentList(trackId, offset, limit) {
+  static async getCommentList(trackId: string, offset: number, limit: number) {
     limit = 20;
     const page = offset / limit + 1;
     const kugouId = trackId.split('_')[1];
@@ -380,8 +378,8 @@ export default class kugou extends MusicResource {
 
     let comments = [];
     if (response.data.weightList) {
-      comments = response.data.weightList.map((item) => {
-        let data = {
+      comments = response.data.weightList.map((item: any) => {
+        const data = {
           id: item.id,
           content: html2Escape(item.content || ''),
           time: item.addtime,
