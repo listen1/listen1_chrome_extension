@@ -62,7 +62,7 @@ import notyf from '../services/notyf';
 
 const { isRedHeart, setRedHeart, removeTrackFromMyPlaylistByUpdateRedHeart } = useRedHeart();
 
-const showModal = inject('showModal');
+const showModal = inject('showModal') as CallableFunction;
 
 const { t } = useI18n();
 

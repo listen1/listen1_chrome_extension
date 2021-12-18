@@ -2,9 +2,6 @@ module.exports = {
   globals: {
     $ref: 'readonly',
     $computed: 'readonly',
-    module: 'readonly',
-    process: 'readonly',
-    MediaMetadata: 'readonly'
   },
   env: {
     browser: true,
@@ -13,7 +10,7 @@ module.exports = {
     webextensions: true,
     'vue/setup-compiler-macros': true
   },
-  extends: ['eslint:recommended', 'plugin:vue/vue3-essential', 'plugin:@typescript-eslint/recommended', 'prettier'],
+  extends: ['eslint:recommended', 'plugin:vue/vue3-recommended', 'plugin:@typescript-eslint/recommended', 'prettier'],
   parser: 'vue-eslint-parser',
   parserOptions: {
     ecmaVersion: 12,

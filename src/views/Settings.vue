@@ -140,7 +140,7 @@
             <p>{{ t('_STATUS') }}: {{ githubStatusText }}</p>
             <SettingButton v-show="githubStatus == 0" :text="t('_CONNECT_TO_GITHUB')" @click="openGithubAuth()" />
             <SettingButton v-show="githubStatus == 1" :text="t('_RECONNECT')" @click="showModal('GithubAuth')" />
-            <SettingButton v-show="githubStatus == 2" :text="t('_CANCEL_CONNECT')" @click="GithubLogout()" />
+            <SettingButton v-show="githubStatus == 2" :text="t('_CANCEL_CONNECT')" @click="logoutGithub()" />
           </div>
         </div>
         <!-- <div ng-if="isChrome" class="settings-title">
@@ -197,41 +197,6 @@
             <vue-feather v-show="enableLyricFloatingWindowTranslation" type="check-square" ng-click="toggleLyricFloatingWindowTranslation()"></vue-feather>
             <span v-show="enableLyricFloatingWindowTranslation" />
             {{ $t('_SHOW_DESKTOP_LYRIC_TRANSLATION') }}
-          </div>
-        </div>
-        <div class="settings-title">
-          <span>{{ $t('_BACKUP_PLAYLIST') }}</span>
-        </div>
-        <div class="settings-content mx-7 mb-7 leading-8">
-          <p>{{ $t('_BACKUP_WARNING') }}</p>
-          <div>
-            <button class="btn btn-primary confirm-button" ng-click="backupMySettings()">{{ $t('_EXPORT_TO_LOCAL_FILE') }}</button>
-            <button v-show="githubStatus == 2" class="btn btn-primary confirm-button" ng-click="showDialog(8)">{{ $t('_EXPORT_TO_GITHUB_GIST') }}</button>
-          </div>
-        </div>
-        <div class="settings-title">
-          <span>{{ $t('_RECOVER_PLAYLIST') }}</span>
-        </div>
-        <div class="settings-content mx-7 mb-7 leading-8">
-          <p>{{ $t('_RECOVER_WARNING') }}</p>
-          <label class="upload-button" for="my-file-selector">
-            <input id="my-file-selector" type="file" style="display: none" ng-model="myuploadfiles" custom-on-change="importMySettings" />
-            {{ $t('_RECOVER_FROM_LOCAL_FILE') }}
-          </label>
-          <button v-show="githubStatus == 2" class="btn btn-warning confirm-button" ng-click="showDialog(10)">_{{ $t('RECOVER_FROM_GITHUB_GIST') }}</button>
-        </div>
-
-        <div class="settings-title">
-          <span>{{ $t('_CONNECT_TO_GITHUB') }}</span>
-        </div>
-        <div class="settings-content mx-7 mb-7 leading-8">
-          <div>
-            <p>{{ $t('_STATUS') }}： githubStatusText</p>
-            <button v-show="githubStatus == 0" class="btn btn-primary confirm-button" ng-click="openGithubAuth(); showDialog(7);">
-              {{ $t('_CONNECT_TO_GITHUB') }}
-            </button>
-            <button v-show="githubStatus == 1" class="btn btn-warning confirm-button" ng-click="showDialog(7);">{{ $t('_RECONNECT') }}</button>
-            <button v-show="githubStatus == 2" class="btn btn-primary confirm-button" ng-click="GithubLogout();">{{ $t('_CANCEL_CONNECT') }}</button>
           </div>
         </div>
 
@@ -377,7 +342,7 @@ import SettingButton from '../components/SettingButton.vue';
 import SettingTitle from '../components/SettingTitle.vue';
 import useSettings from '../composition/settings';
 import { setLocale } from '../i18n';
-import { isElectron } from '../provider/lowebutil';
+import { isElectron } from '../utils';
 import GithubClient from '../services/GithubService';
 import { inject } from 'vue';
 import EventService from '../services/EventService';
@@ -420,10 +385,7 @@ const updateGithubStatus = async () => {
   githubStatusText = GithubClient.github.getStatusText();
 }
 
-const importMySettings = (event: Event) => {
-  const target = <HTMLInputElement>event.target;
-  console.log(target.value);
-}
+const logoutGithub = GithubClient.github.logout;
 
 const disableSource = (source: string) => {
   if (settings.autoChooseSourceList.indexOf(source) === -1) {

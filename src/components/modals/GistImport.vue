@@ -5,8 +5,8 @@
     </template>
     <template #body>
       <ul class="text-left">
-        <input ref="upload" type="file" style="display: none" @change="upload" />
-        <li class="cursor-pointer h-24 p-2 hover:bg-dialog-hover" @click="$refs.upload.click()">
+        <input ref="uploadInput" type="file" style="display: none" @change="upload" />
+        <li class="cursor-pointer h-24 p-2 hover:bg-dialog-hover" @click="uploadInput.click()">
           <img class="float-left h-20 w-20 mr-4" src="/images/mycover.jpg" />
           <h2>{{ t('_RECOVER_FROM_LOCAL_FILE') }}</h2>
         </li>
@@ -29,6 +29,7 @@ import GithubClient from '../../services/GithubService';
 import notyf from '../../services/notyf';
 import iDB from '../../services/DBService';
 import EventService from '../../services/EventService';
+import { ref } from 'vue';
 
 const emit = defineEmits<{
   (e: 'close'): void;
@@ -37,7 +38,9 @@ const emit = defineEmits<{
 const { t } = useI18n();
 const { importMySettingsFromGist, gist2json, listExistBackup } = GithubClient.gist;
 
-let myBackup = $ref([]);
+const uploadInput = ref({} as HTMLInputElement);
+
+let myBackup = $ref(<any>[]);
 listExistBackup().then((list) => (myBackup = list));
 
 const replaceDB = async (jsonData: any) => {
@@ -55,7 +58,11 @@ const replaceDB = async (jsonData: any) => {
   }
 };
 
-const upload = async (event: InputEvent) => {
+// const selectFile = () => {
+//   $refs.
+// }
+
+const upload = async (event: Event) => {
   const target = <HTMLInputElement>event.target;
   if (!target.files) return;
   const fileObject = target.files[0];

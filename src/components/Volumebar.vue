@@ -18,7 +18,6 @@ import usePlayer from '../composition/player';
 import useSettings from '../composition/settings';
 
 import { l1Player } from '../services/l1_player';
-
 const { player } = usePlayer();
 
 const { saveSettingsToDB, getSettingsAsync } = useSettings();
@@ -35,7 +34,7 @@ const commitVolume = (progress: number) => {
   // must use getSettings to fetch recent value
   const task = async () => {
     const settings = await getSettingsAsync();
-    saveSettingsToDB({ playerSettings: { ...settings.playerSettings, volume: progress * 100 } });
+    saveSettingsToDB({ playerSettings: { ...settings.playerSettings as Record<string, unknown>, volume: progress * 100 } });
   };
   task();
 };

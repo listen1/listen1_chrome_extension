@@ -8,7 +8,7 @@
   </div>
 </template>
 <script setup>
-import { isLinux, isWin } from '../provider/lowebutil';
+import { isLinux, isWin } from '../utils';
 
 const sendControl = (message) => {
   window.api?.sendControl(message);

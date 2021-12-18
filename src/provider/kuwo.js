@@ -1,5 +1,6 @@
 import axios from 'axios';
-import { cookieGet, getParameterByName } from './lowebutil';
+import { cookieGet } from '../utils';
+import { getParameterByName } from "../utils";
 import MusicResource from './music_resource';
 
 const kwConvertSong = (item) => ({

@@ -1,5 +1,5 @@
 import axios from "axios";
-import { isElectron } from "../provider/lowebutil";
+import { isElectron } from "../utils";
 import iDB from "./DBService";
 
 const OAUTH_URL = 'https://github.com/login/oauth';
@@ -171,7 +171,7 @@ const GithubClient = {
     backupMySettings2Gist(files: any, gistId: string, isPublic: boolean) {
       let method: 'post' | 'patch' = 'post';
       let url = '/gists';
-      if (gistId != null) {
+      if (gistId) {
         method = 'patch';
         url = `/gists/${gistId}`;
       }
