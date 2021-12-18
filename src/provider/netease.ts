@@ -5,7 +5,7 @@ import { getParameterByName } from "../utils";
 import MusicResource from './music_resource';
 
 export default class netease extends MusicResource {
-  static _create_secret_key(size) {
+  static _create_secret_key(size: number) {
     const result = [];
     const choice = '012345679abcdef'.split('');
     for (let i = 0; i < size; i += 1) {
@@ -15,7 +15,7 @@ export default class netease extends MusicResource {
     return result.join('');
   }
 
-  static _aes_encrypt(text, sec_key, algo) {
+  static _aes_encrypt(text: string, sec_key: any, algo: any) {
     const cipher = forge.cipher.createCipher(algo, sec_key);
     cipher.start({ iv: '0102030405060708' });
     cipher.update(forge.util.createBuffer(text));
@@ -24,7 +24,7 @@ export default class netease extends MusicResource {
     return cipher.output;
   }
 
-  static _rsa_encrypt(text, pubKey, modulus) {
+  static _rsa_encrypt(text: string, pubKey: string, modulus: string) {
     text = text.split('').reverse().join(''); // eslint-disable-line no-param-reassign
     const n = new forge.jsbn.BigInteger(modulus, 16);
     const e = new forge.jsbn.BigInteger(pubKey, 16);
@@ -33,7 +33,7 @@ export default class netease extends MusicResource {
     return enc;
   }
 
-  static weapi(text) {
+  static weapi(text: any) {
     const modulus =
       '00e0b509f6259df8642dbc35662901477df22677ec152b5ff68ace615bb7b72' +
       '5152b3ab17a876aea8a5aa76d2e417629ec4ee341f56135fccf695280104e0312ecbd' +
@@ -53,7 +53,7 @@ export default class netease extends MusicResource {
   }
 
   // refer to https://github.com/Binaryify/NeteaseCloudMusicApi/blob/master/util/crypto.js
-  static eapi(url, object) {
+  static eapi(url: string, object: any) {
     const eapiKey = 'e82ckenh8dichen8';
 
     const text = typeof object === 'object' ? JSON.stringify(object) : object;
@@ -66,7 +66,7 @@ export default class netease extends MusicResource {
     };
   }
 
-  static async ne_show_toplist(offset) {
+  static async ne_show_toplist(offset: number) {
     if (offset !== undefined && offset > 0) {
       return [];
     }
@@ -75,7 +75,7 @@ export default class netease extends MusicResource {
 
     const response = await axios.post(url, new URLSearchParams(data));
     /** @type {{cover_img_url:string;id:string;source_url:string;title:string}[]}*/
-    const result = response.data.list.map((item) => ({
+    const result = response.data.list.map((item: any) => ({
       cover_img_url: item.coverImgUrl,
       id: `neplaylist_${item.id}`,
       source_url: `https://music.163.com/#/playlist?id=${item.id}`,
@@ -84,9 +84,9 @@ export default class netease extends MusicResource {
     return result;
   }
 
-  static async showPlaylist(url) {
+  static async showPlaylist(url: string) {
     const order = 'hot';
-    const offset = getParameterByName('offset', url);
+    const offset = Number(getParameterByName('offset', url));
     const filterId = getParameterByName('filter_id', url);
 
     if (filterId === 'toplist') {
@@ -115,7 +115,7 @@ export default class netease extends MusicResource {
     return result;
   }
 
-  static ne_ensure_cookie(callback) {
+  static ne_ensure_cookie(callback: CallableFunction) {
     const domain = 'https://music.163.com';
     const nuidName = '_ntes_nuid';
     const nnidName = '_ntes_nnid';
@@ -135,7 +135,7 @@ export default class netease extends MusicResource {
             name: nuidName,
             value: nuidValue,
             expirationDate: expire
-          },
+          } as any,
           () => {
             cookieSet(
               {
@@ -143,7 +143,7 @@ export default class netease extends MusicResource {
                 name: nnidName,
                 value: nnidValue,
                 expirationDate: expire
-              },
+              } as any,
               () => {
                 callback(null);
               }
@@ -156,7 +156,7 @@ export default class netease extends MusicResource {
     });
   }
 
-  static ng_render_playlist_result_item(index, item, callback) {
+  static ng_render_playlist_result_item(index: any, item: any, callback: CallableFunction) {
     const target_url = 'https://music.163.com/weapi/v3/song/detail';
     const queryIds = [item.id];
     const d = {
@@ -182,7 +182,7 @@ export default class netease extends MusicResource {
     });
   }
 
-  static async ng_parse_playlist_tracks(playlist_tracks) {
+  static async ng_parse_playlist_tracks(playlist_tracks: any[]) {
     const target_url = 'https://music.163.com/weapi/v3/song/detail';
     const track_ids = playlist_tracks.map((i) => i.id);
     const d = {
@@ -191,7 +191,7 @@ export default class netease extends MusicResource {
     };
     const data = this.weapi(d);
     const response = await axios.post(target_url, new URLSearchParams(data));
-    const tracks = response.data.songs.map((track_json) => ({
+    const tracks = response.data.songs.map((track_json: any) => ({
       id: `netrack_${track_json.id}`,
       title: track_json.name,
       artist: track_json.ar[0].name,
@@ -206,7 +206,7 @@ export default class netease extends MusicResource {
     return tracks;
   }
 
-  static split_array(myarray, size) {
+  static split_array(myarray: any[], size: number) {
     const count = Math.ceil(myarray.length / size);
     const result = [];
     for (let i = 0; i < count; i += 1) {
@@ -215,11 +215,11 @@ export default class netease extends MusicResource {
     return result;
   }
 
-  static ne_get_playlist(url) {
+  static ne_get_playlist(url: string) {
     // special thanks for @Binaryify
     // https://github.com/Binaryify/NeteaseCloudMusicApi
     return new Promise((res) => {
-      const list_id = getParameterByName('list_id', url).split('_').pop();
+      const list_id = getParameterByName('list_id', url)?.split('_').pop();
       const target_url = 'https://music.163.com/weapi/v3/playlist/detail';
       const d = {
         id: list_id,
@@ -254,8 +254,8 @@ export default class netease extends MusicResource {
       });
     });
   }
-  static bootstrapTrack(track, success, failure) {
-    const sound = {};
+  static bootstrapTrack(track: any, success: CallableFunction, failure: CallableFunction) {
+    const sound = {} as any;
     const target_url = `https://interface3.music.163.com/eapi/song/enhance/player/url`;
     let song_id = track.id;
     const eapiUrl = '/api/song/enhance/player/url';
@@ -275,7 +275,7 @@ export default class netease extends MusicResource {
         name: 'os',
         value: 'pc',
         expirationDate: expire
-      },
+      } as any,
       () => {
         axios
           .post(target_url, new URLSearchParams(data))
@@ -297,15 +297,15 @@ export default class netease extends MusicResource {
     );
   }
 
-  static is_playable(song) {
+  static is_playable(song: any) {
     return song.fee !== 4 && song.fee !== 1;
   }
 
-  static async search(url) {
+  static async search(url: any) {
     // use chrome extension to modify referer.
     const target_url = 'https://music.163.com/api/search/pc';
     const keyword = getParameterByName('keywords', url);
-    const curpage = getParameterByName('curpage', url);
+    const curpage = Number(getParameterByName('curpage', url));
     const searchType = getParameterByName('type', url);
     let ne_search_type = '1';
     if (searchType === '1') {
@@ -316,14 +316,14 @@ export default class netease extends MusicResource {
       offset: 20 * (curpage - 1),
       limit: 20,
       type: ne_search_type
-    };
+    } as any;
     try {
       const response = await axios.post(target_url, new URLSearchParams(req_data));
       let result = [];
       let total = 0;
       const { data } = response;
       if (searchType === '0') {
-        result = data.result.songs.map((song_info) => ({
+        result = data.result.songs.map((song_info: any) => ({
           id: `netrack_${song_info.id}`,
           title: song_info.name,
           artist: song_info.artists[0].name,
@@ -338,7 +338,7 @@ export default class netease extends MusicResource {
         }));
         total = data.result.songCount;
       } else if (searchType === '1') {
-        result = data.result.playlists.map((info) => ({
+        result = data.result.playlists.map((info: any) => ({
           id: `neplaylist_${info.id}`,
           title: info.name,
           source: 'netease',
@@ -364,8 +364,8 @@ export default class netease extends MusicResource {
     }
   }
 
-  static async ne_album(url) {
-    const album_id = getParameterByName('list_id', url).split('_').pop();
+  static async ne_album(url: string) {
+    const album_id = getParameterByName('list_id', url)?.split('_').pop();
     // use chrome extension to modify referer.
     const target_url = `https://music.163.com/api/album/${album_id}`;
 
@@ -377,7 +377,7 @@ export default class netease extends MusicResource {
       source_url: `https://music.163.com/#/album?id=${data.album.id}`
     };
 
-    const tracks = data.album.songs.map((song_info) => ({
+    const tracks = data.album.songs.map((song_info: any) => ({
       id: `netrack_${song_info.id}`,
       title: song_info.name,
       artist: song_info.artists[0].name,
@@ -395,8 +395,8 @@ export default class netease extends MusicResource {
     };
   }
 
-  static async ne_artist(url) {
-    const artist_id = getParameterByName('list_id', url).split('_').pop();
+  static async ne_artist(url: string) {
+    const artist_id = getParameterByName('list_id', url)?.split('_').pop();
     // use chrome extension to modify referer.
     const target_url = `https://music.163.com/api/artist/${artist_id}`;
 
@@ -409,7 +409,7 @@ export default class netease extends MusicResource {
       source_url: `https://music.163.com/#/artist?id=${data.artist.id}`
     };
 
-    const tracks = data.hotSongs.map((song_info) => ({
+    const tracks = data.hotSongs.map((song_info: any) => ({
       id: `netrack_${song_info.id}`,
       title: song_info.name,
       artist: song_info.artists[0].name,
@@ -428,8 +428,8 @@ export default class netease extends MusicResource {
     };
   }
 
-  static async lyric(url) {
-    const track_id = getParameterByName('track_id', url).split('_').pop();
+  static async lyric(url: string) {
+    const track_id = getParameterByName('track_id', url)?.split('_').pop();
     // use chrome extension to modify referer.
     const target_url = 'https://music.163.com/weapi/song/lyric?csrf_token=';
     const csrf = '';
@@ -457,7 +457,7 @@ export default class netease extends MusicResource {
     };
   }
 
-  static async parseUrl(url) {
+  static async parseUrl(url: string) {
     let result;
     let id = '';
     // eslint-disable-next-line no-param-reassign
@@ -467,7 +467,7 @@ export default class netease extends MusicResource {
     url = url.replace('music.163.com/#/', 'music.163.com/'); // eslint-disable-line no-param-reassign
     if (url.search('//music.163.com/playlist') !== -1) {
       const match = /\/\/music.163.com\/playlist\/([0-9]+)/.exec(url);
-      id = match ? match[1] : getParameterByName('id', url);
+      id = match ? match[1] : getParameterByName('id', url) || '';
       result = {
         type: 'playlist',
         id: `neplaylist_${id}`
@@ -479,7 +479,7 @@ export default class netease extends MusicResource {
       };
     } else if (url.search('//music.163.com/album') !== -1) {
       const match = /\/\/music.163.com\/album\/([0-9]+)/.exec(url);
-      id = match ? match[1] : getParameterByName('id', url);
+      id = match ? match[1] : getParameterByName('id', url) || '';
       result = {
         type: 'playlist',
         id: `nealbum_${id}`
@@ -488,8 +488,8 @@ export default class netease extends MusicResource {
     return result;
   }
 
-  static getPlaylist(url) {
-    const list_id = getParameterByName('list_id', url).split('_')[0];
+  static getPlaylist(url: string) {
+    const list_id = getParameterByName('list_id', url)?.split('_')[0];
     switch (list_id) {
       case 'neplaylist':
         return this.ne_get_playlist(url);
@@ -618,12 +618,12 @@ export default class netease extends MusicResource {
     };
   }
 
-  static async login(url) {
+  static async login(url: string) {
     // use chrome extension to modify referer.
     let target_url = 'https://music.163.com/weapi/login';
     const loginType = getParameterByName('type', url);
 
-    const password = getParameterByName('password', url);
+    const password = getParameterByName('password', url) || '';
 
     let req_data = {};
     if (loginType === 'email') {
@@ -655,7 +655,7 @@ export default class netease extends MusicResource {
         name: 'os',
         value: 'pc',
         expirationDate: expire
-      },
+      } as any,
       () => {
         // empty block
       }
@@ -683,7 +683,7 @@ export default class netease extends MusicResource {
     }
   }
 
-  static async get_user_playlist(url, playlistType) {
+  static async get_user_playlist(url: string, playlistType: string) {
     const user_id = getParameterByName('user_id', url);
     const target_url = 'https://music.163.com/api/user/playlist';
 
@@ -692,10 +692,10 @@ export default class netease extends MusicResource {
       limit: 1000,
       offset: 0,
       includeVideo: true
-    };
+    } as any;
     const response = await axios.post(target_url, new URLSearchParams(req_data));
-    const playlists = [];
-    response.data.playlist.forEach((item) => {
+    const playlists = <any>[];
+    response.data.playlist.forEach((item: any) => {
       if (playlistType === 'created' && item.subscribed !== false) {
         return;
       }
@@ -718,11 +718,11 @@ export default class netease extends MusicResource {
     };
   }
 
-  static getUserCreatedPlaylist(url) {
+  static getUserCreatedPlaylist(url: string) {
     return this.get_user_playlist(url, 'created');
   }
 
-  static getUserFavoritePlaylist(url) {
+  static getUserFavoritePlaylist(url: string) {
     return this.get_user_playlist(url, 'favorite');
   }
 
@@ -737,8 +737,8 @@ export default class netease extends MusicResource {
 
     const encrypt_req_data = this.weapi(req_data);
     const response = await axios.post(target_url, new URLSearchParams(encrypt_req_data));
-    const playlists = [];
-    response.data.result.forEach((item) => {
+    const playlists = <any>[];
+    response.data.result.forEach((item: any) => {
       const playlist = {
         cover_img_url: item.picUrl,
         id: `neplaylist_${item.id}`,
@@ -760,7 +760,7 @@ export default class netease extends MusicResource {
 
     const encrypt_req_data = this.weapi({});
     const res = await axios.post(url, new URLSearchParams(encrypt_req_data));
-    let result = { is_login: false };
+    let result = { is_login: false } as any;
     let status = 'fail';
     if (res.data.account !== null) {
       status = 'success';
@@ -797,7 +797,7 @@ export default class netease extends MusicResource {
     );
   }
 
-  static async getCommentList(trackId, offset, limit) {
+  static async getCommentList(trackId: string, offset: number, limit: number) {
     const url = 'https://music.163.com/weapi/comment/resource/comments/get';
     const neteaseId = 'R_SO_4_' + trackId.split('_')[1];
 
@@ -814,8 +814,8 @@ export default class netease extends MusicResource {
     const response = await axios.post(url, new URLSearchParams(data));
     let comments = [];
     if (response.data.data.hotComments) {
-      comments = response.data.data.hotComments.map((item) => {
-        let data = {
+      comments = response.data.data.hotComments.map((item: any) => {
+        const data = {
           id: item.commentId,
           content: item.content,
           time: item.time,
@@ -824,9 +824,9 @@ export default class netease extends MusicResource {
           user_id: item.user.userId,
           like: item.likedCount,
           reply: []
-        };
+        } as any;
 
-        let replyData = item.beReplied && item.beReplied[0];
+        const replyData = item.beReplied && item.beReplied[0];
         if (!replyData) {
           return data;
         }
