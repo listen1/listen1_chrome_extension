@@ -1,7 +1,7 @@
 import axios from 'axios';
 import forge from 'node-forge';
 import { getParameterByName } from "../utils";
-import MusicResource from './music_resource';
+import { MusicResource, MusicProvider } from './types';
 
 const axiosTH = axios.create({
   baseURL: 'https://music.taihe.com/v1'
@@ -23,7 +23,7 @@ axiosTH.interceptors.request.use(
   { synchronous: true } 
 );
 
-export default class taihe extends MusicResource {
+const provider: MusicProvider = class taihe extends MusicResource {
   static th_convert_song(song: any) {
     const track = {
       id: `thtrack_${song.id}`,
@@ -311,3 +311,5 @@ export default class taihe extends MusicResource {
     return { comments, total: comments.length, offset, limit };
   }
 }
+
+export default provider;

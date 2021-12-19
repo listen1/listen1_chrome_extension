@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { async_process } from '../utils';
 import { getParameterByName } from "../utils";
-import MusicResource from './music_resource';
+import { MusicResource, MusicProvider } from './types';
 
 // https://www.cnblogs.com/willingtolove/p/11059325.html
 function html2Escape(sHtml: string) {
@@ -17,7 +17,7 @@ function escape2Html(str: string) {
   });
 }
 
-export default class kugou extends MusicResource {
+const provider: MusicProvider = class kugou extends MusicResource {
   static kg_convert_song(song: any) {
     const track = {
       id: `kgtrack_${song.FileHash}`,
@@ -392,16 +392,18 @@ export default class kugou extends MusicResource {
 
         return item.pcontent
           ? {
-              id: item.id,
-              content: html2Escape(item.pcontent),
-              nickname: item.puser,
-              avatar: null,
-              user_id: item.puser_id,
-              reply: [data]
-            }
+            id: item.id,
+            content: html2Escape(item.pcontent),
+            nickname: item.puser,
+            avatar: null,
+            user_id: item.puser_id,
+            reply: [data]
+          }
           : data;
       });
     }
     return { comments, total: comments.length, offset, limit };
   }
 }
+
+export default provider;

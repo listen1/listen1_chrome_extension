@@ -1,9 +1,9 @@
 import axios from 'axios';
 import { cookieRemove, cookieGetPromise } from '../utils';
 import { getParameterByName } from "../utils";
-import MusicResource from './music_resource';
+import { MusicResource, MusicProvider } from './types';
 
-export default class qq extends MusicResource {
+const provider: MusicProvider = class qq extends MusicResource {
   static htmlDecode(value: string) {
     const parser = new DOMParser();
     return parser.parseFromString(value, 'text/html').body.textContent;
@@ -730,3 +730,5 @@ export default class qq extends MusicResource {
     return { comments, total: comments.length, offset, limit };
   }
 }
+
+export default provider;

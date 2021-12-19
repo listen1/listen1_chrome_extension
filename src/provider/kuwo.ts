@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { cookieGet } from '../utils';
 import { getParameterByName } from "../utils";
-import MusicResource from './music_resource';
+import { MusicResource, MusicProvider } from './types';
 
 const kwConvertSong = (item: any) => ({
   id: `kwtrack_${item.rid}`,
@@ -36,7 +36,7 @@ function html_decode(str: string) {
   }
   return text;
 }
-export default class kuwo extends MusicResource {
+const provider: MusicProvider = class kuwo extends MusicResource {
   // Fix single quote in json
   static fix_json(data: any) {
     return data.replace(/(')/g, '"');
@@ -721,3 +721,5 @@ export default class kuwo extends MusicResource {
 
   }
 }
+
+export default provider;

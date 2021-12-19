@@ -1,139 +1,7 @@
-import netease from '../provider/netease';
-// import xiami from "@/provider/xiami";
-import qq from '../provider/qq';
-import kugou from '../provider/kugou';
-import kuwo from '../provider/kuwo';
-import bilibili from '../provider/bilibili';
-import migu from '../provider/migu';
-import taihe from '../provider/taihe';
-import localmusic from '../provider/localmusic';
 import myplaylist from '../provider/myplaylist';
+import PROVIDERS from '../provider';
+import { MusicProvider } from '../provider/types';
 import useSettings from '../composition/settings';
-
-import * as providers from '../provider';
-interface Provider {
-  getPlaylist: (url: string) => any;
-  search: (url: string) => any;
-  lyric: (url: string) => any;
-}
-
-const sourceList: {
-  name: string;
-  displayId: string;
-  searchable?: boolean;
-}[] = [
-  {
-    name: 'netease',
-    displayId: '_NETEASE_MUSIC'
-  },
-  {
-    name: 'qq',
-    displayId: '_QQ_MUSIC'
-  },
-  {
-    name: 'kugou',
-    displayId: '_KUGOU_MUSIC'
-  },
-  {
-    name: 'kuwo',
-    displayId: '_KUWO_MUSIC'
-  },
-  {
-    name: 'bilibili',
-    displayId: '_BILIBILI_MUSIC',
-    searchable: false
-  },
-  {
-    name: 'migu',
-    displayId: '_MIGU_MUSIC'
-  },
-  {
-    name: 'taihe',
-    displayId: '_TAIHE_MUSIC'
-  }
-];
-const PROVIDERS: {
-  id: string;
-  name: string;
-  instance: any;
-  searchable: boolean;
-  support_login: boolean;
-  hidden?: boolean;
-}[] = [
-  {
-    name: 'netease',
-    instance: netease,
-    searchable: true,
-    support_login: true,
-    id: 'ne'
-  },
-  //   {
-  //     name: "xiami",
-  //     instance: xiami,
-  //     searchable: false,
-  //     hidden: true,
-  //     support_login: false,
-  //     id: "xm",
-  //   },
-  {
-    name: 'qq',
-    instance: qq,
-    searchable: true,
-    support_login: true,
-    id: 'qq'
-  },
-  {
-    name: 'kugou',
-    instance: kugou,
-    searchable: true,
-    support_login: false,
-    id: 'kg'
-  },
-  {
-    name: 'kuwo',
-    instance: kuwo,
-    searchable: true,
-    support_login: false,
-    id: 'kw'
-  },
-  {
-    name: 'bilibili',
-    instance: bilibili,
-    searchable: false,
-    support_login: false,
-    id: 'bi'
-  },
-  {
-    name: 'migu',
-    instance: migu,
-    searchable: true,
-    support_login: true,
-    id: 'mg'
-  },
-  {
-    name: 'taihe',
-    instance: taihe,
-    searchable: true,
-    support_login: false,
-    id: 'th'
-  },
-  {
-    name: 'localmusic',
-    instance: localmusic,
-    searchable: false,
-    hidden: true,
-    support_login: false,
-    id: 'lm'
-  },
-  {
-    name: 'myplaylist',
-    instance: myplaylist,
-    searchable: false,
-    hidden: true,
-    support_login: false,
-    id: 'my'
-  }
-];
 
 function getProviderByName(sourceName: string) {
   const provider = PROVIDERS.find((i) => i.name === sourceName)?.instance;
@@ -162,7 +30,7 @@ function getProviderNameByItemId(itemId: string) {
 
 function getProviderByItemId(itemId: string) {
   const prefix = itemId.slice(0, 2);
-  const provider: Provider | undefined = PROVIDERS.find((i) => i.id === prefix)?.instance;
+  const provider: MusicProvider | undefined = PROVIDERS.find((i) => i.id === prefix)?.instance;
   if (!provider) {
     throw Error('Unknown Provider');
   }
@@ -182,7 +50,12 @@ function queryStringify(options: unknown) {
 
 const MediaService = {
   getSourceList() {
-    return sourceList;
+    return PROVIDERS.filter((p)=> !p.hidden).map((p)=>({
+      id: p.id,
+      name: p.name,
+      searchable: p.searchable,
+      displayId: p.displayId,
+    }));
   },
   getLoginProviders() {
     const result = PROVIDERS.filter((i) => !i.hidden && i.support_login);
@@ -436,8 +309,9 @@ const MediaService = {
     const id2PlatformNames = ['qq', 'migu'];
 
     let trackId = track.id;
-    const provider = getProviderByName(getProviderNameByItemId(track.id));
-    if (id2PlatformNames.indexOf(provider.name) > -1) {
+    const providerName = getProviderNameByItemId(track.id);
+    const provider =  getProviderByName(providerName);
+    if (id2PlatformNames.indexOf(providerName) > -1) {
       trackId = track.id2;
     }
     return provider.getCommentList(trackId, offset, limit);

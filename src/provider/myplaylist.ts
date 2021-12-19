@@ -2,7 +2,9 @@ import { getParameterByName } from "../utils";
 import iDB from '../services/DBService';
 import EventService from '../services/EventService';
 import { arrayMove } from '../utils';
-export default class MyPlaylist {
+import { MusicResource, MusicProvider } from "./types";
+
+const provider = class MyPlaylist extends MusicResource {
   static getPlaylistObjectKey(playlist_type: string) {
     let key = '';
     if (playlist_type === 'my') {
@@ -35,7 +37,7 @@ export default class MyPlaylist {
   }
 
   static async getPlaylistById(list_id: string) {
-    const playlistInfo = await iDB.Playlists.get({id: list_id});
+    const playlistInfo = await iDB.Playlists.get({ id: list_id });
     let playlist = {
       info: playlistInfo,
       tracks: <any>[]
@@ -218,3 +220,5 @@ export default class MyPlaylist {
     return playlist !== null && playlist.is_fav;
   }
 }
+
+export default provider;

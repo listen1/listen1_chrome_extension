@@ -2,9 +2,9 @@ import axios from 'axios';
 import forge from 'node-forge';
 import { cookieSet, cookieRemove, cookieGetPromise } from '../utils';
 import { getParameterByName } from "../utils";
-import MusicResource from './music_resource';
+import { MusicResource, MusicProvider } from './types';
 
-export default class netease extends MusicResource {
+const provider: MusicProvider = class netease extends MusicResource {
   static _create_secret_key(size: number) {
     const result = [];
     const choice = '012345679abcdef'.split('');
@@ -844,3 +844,5 @@ export default class netease extends MusicResource {
     return { comments, total: comments.length, offset, limit };
   }
 }
+
+export default provider;

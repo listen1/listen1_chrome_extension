@@ -1,8 +1,8 @@
 import axios from 'axios';
 import { getParameterByName } from '../utils';
-import MusicResource from './music_resource';
+import { MusicProvider, MusicResource } from './types';
 
-export default class bilibili extends MusicResource {
+const provider: MusicProvider = class bilibili extends MusicResource {
   static bi_convert_song(song_info: any) {
     const track = {
       id: `bitrack_${song_info.id}`,
@@ -35,7 +35,7 @@ export default class bilibili extends MusicResource {
     return result;
   }
 
-  static async bi_get_playlist(url:string) {
+  static async bi_get_playlist(url: string) {
     const list_id = getParameterByName('list_id', url)?.split('_').pop();
     const target_url = `https://www.bilibili.com/audio/music-service-c/web/menu/info?sid=${list_id}`;
     const target = `https://www.bilibili.com/audio/music-service-c/web/song/of-menu?pn=1&ps=100&sid=${list_id}`;
@@ -206,9 +206,11 @@ export default class bilibili extends MusicResource {
   static logout() {
     // empty block
   }
-  
+
   static async getCommentList(trackId: string, offset: number, limit: number) {
     const comments = <any>[];
     return { comments, total: comments.length, offset, limit };
   }
 }
+
+export default provider;
