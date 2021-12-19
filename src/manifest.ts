@@ -30,7 +30,7 @@ const mv2: ManifestV2 = {
     '48': 'images/logo_48.png'
   },
   background: {
-    scripts: ['background.js'],
+    scripts: ['background.ts'],
     persistent: true
   },
   browser_action: {

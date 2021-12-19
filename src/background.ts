@@ -6,12 +6,12 @@ chrome.browserAction.onClicked.addListener(() => {
     if (tabs.length === 0) {
       chrome.tabs.create({ url });
     } else {
-      chrome.tabs.update(tabs[0].id, { active: true });
+      chrome.tabs.update(tabs[0].id || 0, { active: true });
     }
   });
 });
 
-function hack_referer_header(details) {
+function hack_referer_header(details: chrome.webRequest.WebRequestHeadersDetails) {
   const replace_referer = true;
   let replace_origin = true;
   let add_referer = true;
@@ -86,8 +86,8 @@ function hack_referer_header(details) {
   let isRefererSet = false;
   let isOriginSet = false;
   let isUASet = false;
-  const headers = details.requestHeaders;
-  const blockingResponse = {};
+  const headers = details.requestHeaders || [];
+  const blockingResponse = {} as chrome.webRequest.BlockingResponse;
 
   for (let i = 0, l = headers.length; i < l; i += 1) {
     if (replace_referer && headers[i].name === 'Referer' && referer_value !== '') {
