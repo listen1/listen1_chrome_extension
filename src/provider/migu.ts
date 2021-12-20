@@ -1,11 +1,11 @@
 import axios from 'axios';
 import forge from 'node-forge';
 import { getParameterByName } from "../utils";
-import MusicResource from './music_resource';
+import { MusicResource, MusicProvider } from './types';
 import { cookieRemove } from '../utils';
 
-export default class migu extends MusicResource {
-  static mg_convert_song(song) {
+const provider: MusicProvider = class migu extends MusicResource {
+  static mg_convert_song(song: any) {
     return {
       id: `mgtrack_${song.copyrightId}`,
       id2: `mgtrack_${song.songId}`,
@@ -26,9 +26,9 @@ export default class migu extends MusicResource {
     };
   }
 
-  static async mg_render_tracks(url, page) {
-    const list_id = getParameterByName('list_id', url).split('_').pop();
-    const playlist_type = getParameterByName('list_id', url).split('_')[0];
+  static async mg_render_tracks(url: string, page: number) {
+    const list_id = getParameterByName('list_id', url)?.split('_').pop();
+    const playlist_type = getParameterByName('list_id', url)?.split('_')[0];
     let tracks_url = '';
     switch (playlist_type) {
       case 'mgplaylist':
@@ -42,11 +42,11 @@ export default class migu extends MusicResource {
     }
     const response = await axios.get(tracks_url);
     const data = playlist_type === 'mgplaylist' ? response.data.list : response.data.songList;
-    const tracks = data.map((item) => this.mg_convert_song(item));
+    const tracks = data.map((item: any) => this.mg_convert_song(item));
     return tracks;
   }
 
-  static async mg_show_toplist(offset) {
+  static async mg_show_toplist(offset: number) {
     if (offset !== undefined && offset > 0) {
       return [];
     }
@@ -54,14 +54,14 @@ export default class migu extends MusicResource {
     const url = 'https://app.c.nf.migu.cn/MIGUM3.0/v1.0/template/rank-list/release?dataVersion=1616469593718&templateVersion=9';
 
     const response = await axios.get(url);
-    const migu_board = response.data.data.contentItemList[4].itemList.map((item) => ({
+    const migu_board = response.data.data.contentItemList[4].itemList.map((item: any) => ({
       cover_img_url: item.imageUrl,
       title: item.displayLogId.param.rankName,
       id: `mgtoplist_${item.displayLogId.param.rankId}`,
       source_url: ''
     }));
     migu_board.splice(0, 2);
-    const global_board = response.data.data.contentItemList[7].itemList.map((item) => ({
+    const global_board = response.data.data.contentItemList[7].itemList.map((item: any) => ({
       cover_img_url: item.imageUrl,
       title: item.displayLogId.param.rankName,
       id: `mgtoplist_${item.displayLogId.param.rankId}`,
@@ -91,7 +91,7 @@ export default class migu extends MusicResource {
     return result;
   }
 
-  static async showPlaylist(url) {
+  static async showPlaylist(url: string) {
     const offset = Number(getParameterByName('offset', url));
     const filterId = getParameterByName('filter_id', url);
     if (filterId === 'toplist') {
@@ -102,9 +102,8 @@ export default class migu extends MusicResource {
     if (!filterId) {
       target_url = `https://app.c.nf.migu.cn/MIGUM2.0/v2.0/content/getMusicData.do?count=${pageSize}&start=${offset / pageSize + 1}&templateVersion=5&type=1`;
     } else {
-      target_url = `https://app.c.nf.migu.cn/MIGUM3.0/v1.0/template/musiclistplaza-listbytag?pageNumber=${
-        offset / pageSize + 1
-      }&tagId=${filterId}&templateVersion=1`;
+      target_url = `https://app.c.nf.migu.cn/MIGUM3.0/v1.0/template/musiclistplaza-listbytag?pageNumber=${offset / pageSize + 1
+        }&tagId=${filterId}&templateVersion=1`;
       // const target_url = `https://m.music.migu.cn/migu/remoting/playlist_bycolumnid_tag?playListType=2&type=1&columnId=15127315&tagId=&startIndex=${offset}`;
       // columnId=15127315为推荐，15127272为最新
     }
@@ -112,7 +111,7 @@ export default class migu extends MusicResource {
     const response = await axios.get(target_url);
     const data = !filterId ? response.data.data.contentItemList[0].itemList : response.data.data.contentItemList.itemList;
     /** @type {{cover_img_url:string;id:string;source_url:string;title:string}[]}*/
-    const result = data.map((item) => {
+    const result = data.map((item: any) => {
       const match = /id=([0-9]+)&/.exec(item.actionUrl);
       const id = match ? match[1] : '';
       return {
@@ -125,10 +124,10 @@ export default class migu extends MusicResource {
     return result;
   }
 
-  static async mg_toplist(url) {
-    const list_id = Number(getParameterByName('list_id', url).split('_').pop());
+  static async mg_toplist(url: string) {
+    const list_id = Number(getParameterByName('list_id', url)?.split('_').pop());
 
-    const board_list = {
+    const board_list: Record<number, any> = {
       27553319: {
         name: '尖叫新歌榜',
         url: 'jianjiao_newsong',
@@ -232,15 +231,15 @@ export default class migu extends MusicResource {
       source_url: `https://music.migu.cn/v3/music/top/${board_list[list_id].url}`
     };
 
-    const tracks = data.columnInfo.contents.map((item) => this.mg_convert_song(item.objectInfo));
+    const tracks = data.columnInfo.contents.map((item: any) => this.mg_convert_song(item.objectInfo));
     return {
       tracks,
       info
     };
   }
 
-  static async mg_get_playlist(url) {
-    const list_id = getParameterByName('list_id', url).split('_').pop();
+  static async mg_get_playlist(url: string) {
+    const list_id = getParameterByName('list_id', url)?.split('_').pop();
 
     const info_url = `https://app.c.nf.migu.cn/MIGUM2.0/v1.0/content/resourceinfo.do?needSimple=00&resourceType=2021&resourceId=${list_id}`;
     const response = await axios.get(info_url);
@@ -258,8 +257,8 @@ export default class migu extends MusicResource {
     return { tracks, info };
   }
 
-  static async mg_album(url) {
-    const album_id = getParameterByName('list_id', url).split('_').pop();
+  static async mg_album(url: string) {
+    const album_id = getParameterByName('list_id', url)?.split('_').pop();
 
     const info_url = `https://app.c.nf.migu.cn/MIGUM2.0/v1.0/content/resourceinfo.do?needSimple=00&resourceType=2003&resourceId=${album_id}`;
     const { data } = await axios.get(info_url);
@@ -280,8 +279,8 @@ export default class migu extends MusicResource {
     };
   }
 
-  static async mg_artist(url) {
-    const artist_id = getParameterByName('list_id', url).split('_').pop();
+  static async mg_artist(url: string) {
+    const artist_id = getParameterByName('list_id', url)?.split('_').pop();
     const offset = Number(getParameterByName('offset', url));
     const pageSize = 50;
     const page = offset / pageSize + 1;
@@ -295,15 +294,15 @@ export default class migu extends MusicResource {
       source_url: `https://music.migu.cn/v3/music/artist/${artist_id}/song`
     };
 
-    const tracks = data.songlist.map((item) => this.mg_convert_song(item));
+    const tracks = data.songlist.map((item: any) => this.mg_convert_song(item));
     return {
       tracks,
       info
     };
   }
 
-  static bootstrapTrack(track, success, failure) {
-    const sound = {};
+  static bootstrapTrack(track: any, success: CallableFunction, failure: CallableFunction) {
+    const sound = {} as any;
     const songId = track.song_id;
     /*
     const copyrightId = track.id.slice('mgtrack_'.length);
@@ -357,7 +356,7 @@ export default class migu extends MusicResource {
       aesResult
     )}&secKey=${encodeURIComponent(secKey)}`;
     */
-    let toneFlag;
+    let toneFlag = 'PQ';
     switch (track.quality) {
       case '110000':
         toneFlag = 'HQ';
@@ -376,7 +375,7 @@ export default class migu extends MusicResource {
       .get(target_url, {
         headers: {
           channel: '0146951',
-          uid: 1234
+          uid: '1234'
         }
       })
       .then((response) => {
@@ -410,8 +409,8 @@ export default class migu extends MusicResource {
       .catch(() => failure(sound));
   }
 
-  static async search(url) {
-    const keyword = getParameterByName('keywords', url);
+  static async search(url: string) {
+    const keyword = getParameterByName('keywords', url) || '';
     const curpage = getParameterByName('curpage', url);
     const searchType = getParameterByName('type', url);
     const sid = (this.uuid() + this.uuid()).replace(/-/g, '');
@@ -446,10 +445,10 @@ export default class migu extends MusicResource {
     // const target_url = `https://m.music.migu.cn/migu/remoting/scr_search_tag?rows=20&type=${type}&keyword=${keyword}'&pgc=${curpage}`;
 
     const deviceId = forge.md.md5.create().update(this.uuid().replace(/-/g, '')).digest().toHex().toLocaleUpperCase(); // 设备的UUID
-    const timestamp = new Date().getTime();
+    const timestamp = Date.now().toString();
     const signature_md5 = '6cdc72a439cef99a3418d2a78aa28c73'; // app签名证书的md5
     const text = `${keyword + signature_md5}yyapp2d16148780a1dcc7408e06336b98cfd50${deviceId}${timestamp}`;
-    const sign = forge.md.md5.create(text).update(forge.util.encodeUtf8(text)).digest().toHex();
+    const sign = forge.md.md5.create().update(forge.util.encodeUtf8(text)).digest().toHex();
     const headers = {
       // android_id: 'db2cd8c4cdc1345f',
       appId: 'yyapp2',
@@ -484,12 +483,12 @@ export default class migu extends MusicResource {
     let total = 0;
     if (searchType === '0') {
       if (data.songResultData.result) {
-        result = data.songResultData.result.map((item) => this.mg_convert_song(item));
+        result = data.songResultData.result.map((item: any) => this.mg_convert_song(item));
         total = data.songResultData.totalCount;
       }
     } else if (searchType === '1') {
       if (data.songListResultData.result) {
-        result = data.songListResultData.result.map((item) => ({
+        result = data.songListResultData.result.map((item: any) => ({
           // result = data.songLists.map(item => ({
           id: `mgplaylist_${item.id}`,
           title: item.name,
@@ -519,8 +518,8 @@ export default class migu extends MusicResource {
     return strTemp.substr(strTemp.lastIndexOf('/') + 1); // remove prefix (e.g. blob:null/, blob:www.test.com/, ...)
   }
 
-  static async lyric(url) {
-    const lyric_url = getParameterByName('lyric_url', url);
+  static async lyric(url: string) {
+    const lyric_url = getParameterByName('lyric_url', url) as string;
     const tlyric_url = getParameterByName('tlyric_url', url);
     if (lyric_url !== 'null') {
       const p1 = async () => {
@@ -541,7 +540,7 @@ export default class migu extends MusicResource {
       const data = this.mg_generate_translation(lyric, tlyric);
       return { lyric: data.lrc, tlyric: data.tlrc };
     } else {
-      const song_id = getParameterByName('track_id', url).split('_').pop();
+      const song_id = getParameterByName('track_id', url)?.split('_').pop();
       const target_url = `https://music.migu.cn/v3/api/music/audioPlayer/getLyric?copyrightId=${song_id}`;
       const { lyric, translatedLyric } = (await axios.get(target_url)).data;
       const data = this.mg_generate_translation(lyric, translatedLyric);
@@ -549,7 +548,7 @@ export default class migu extends MusicResource {
     }
   }
 
-  static mg_generate_translation(plain, translation) {
+  static mg_generate_translation(plain: string, translation: string) {
     if (!translation) {
       return {
         lrc: plain,
@@ -588,7 +587,7 @@ export default class migu extends MusicResource {
     };
   }
 
-  static async parseUrl(url) {
+  static async parseUrl(url: string) {
     let result;
     // eslint-disable-next-line no-param-reassign
     url = url.replace('music.migu.cn/v3/my/playlist/', 'music.migu.cn/v3/music/playlist/');
@@ -603,8 +602,8 @@ export default class migu extends MusicResource {
     return result;
   }
 
-  static getPlaylist(url) {
-    const list_id = getParameterByName('list_id', url).split('_')[0];
+  static getPlaylist(url: string) {
+    const list_id = getParameterByName('list_id', url)?.split('_')[0];
     switch (list_id) {
       case 'mgplaylist':
         return this.mg_get_playlist(url);
@@ -622,16 +621,16 @@ export default class migu extends MusicResource {
   static async getPlaylistFilters() {
     let target_url = 'https://app.c.nf.migu.cn/MIGUM3.0/v1.0/template/musiclistplaza-hottaglist/release';
     const response = await axios.get(target_url);
-    const recommend = response.data.data.contentItemList.map((item) => ({
+    const recommend = response.data.data.contentItemList.map((item: any) => ({
       id: item.tagId,
       name: item.tagName
     }));
     recommend.unshift({ id: '', name: '推荐' }, { id: 'toplist', name: '排行榜' });
     target_url = 'https://app.c.nf.migu.cn/MIGUM3.0/v1.0/template/musiclistplaza-taglist/release?templateVersion=1';
     const res = await axios.get(target_url);
-    const all = res.data.data.map((cate) => {
-      const result = { category: cate.header.title };
-      result.filters = cate.content.map((item) => ({
+    const all = res.data.data.map((cate: any) => {
+      const result = { category: cate.header.title } as any;
+      result.filters = cate.content.map((item: any) => ({
         id: item.texts[1],
         name: item.texts[0]
       }));
@@ -647,7 +646,7 @@ export default class migu extends MusicResource {
     const ts = +new Date();
     const url = `https://music.migu.cn/v3/api/user/getUserInfo?_=${ts}`;
     const res = await axios.get(url);
-    let result = { is_login: false };
+    let result = { is_login: false } as any;
     let status = 'fail';
 
     if (res.data.success) {
@@ -675,7 +674,7 @@ export default class migu extends MusicResource {
   }
 
   static logout() {
-    const removeFn = (url, name) =>
+    const removeFn = (url: string, name: string) =>
       cookieRemove(
         {
           url,
@@ -703,7 +702,7 @@ export default class migu extends MusicResource {
     passportCookieList.map((name) => removeFn('https://passport.migu.cn', name));
   }
 
-  static async getCommentList(trackId, offset, limit) {
+  static async getCommentList(trackId: string, offset: number, limit: number) {
     if (trackId === undefined) {
       return { comments: [], total: 0, offset, limit };
     }
@@ -715,7 +714,7 @@ export default class migu extends MusicResource {
 
     let comments = [];
     if (response.data.data.items) {
-      comments = response.data.data.items.map((item) => ({
+      comments = response.data.data.items.map((item: any) => ({
         id: item.commentId,
         content: item.body,
         time: item.createTime,
@@ -723,7 +722,7 @@ export default class migu extends MusicResource {
         avatar: item.author.avatar && item.author.avatar.startsWith('//') ? `http:${item.author.avatar}` : item.author.avatar,
         user_id: item.author.id,
         like: item.praiseCount,
-        reply: item.replyCommentList.map((c) => ({
+        reply: item.replyCommentList.map((c: any) => ({
           id: c.commentId,
           content: c.body,
           time: c.createTime,
@@ -738,3 +737,5 @@ export default class migu extends MusicResource {
     return { comments, total: comments.length, offset, limit };
   }
 }
+
+export default provider;

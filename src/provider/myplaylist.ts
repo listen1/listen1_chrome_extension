@@ -2,8 +2,10 @@ import { getParameterByName } from "../utils";
 import iDB from '../services/DBService';
 import EventService from '../services/EventService';
 import { arrayMove } from '../utils';
-export default class MyPlaylist {
-  static getPlaylistObjectKey(playlist_type) {
+import { MusicResource, MusicProvider } from "./types";
+
+const provider = class MyPlaylist extends MusicResource {
+  static getPlaylistObjectKey(playlist_type: string) {
     let key = '';
     if (playlist_type === 'my') {
       key = 'c';
@@ -12,13 +14,13 @@ export default class MyPlaylist {
     }
     return key;
   }
-  static async getMyplaylistsList(playlist_type) {
-    let order = await iDB.Settings.get({ key: playlist_type + '_playlist_order' });
+  static async getMyplaylistsList(playlist_type: string) {
+    let order = await iDB.Settings.get({ key: playlist_type + '_playlist_order' }) as any;
     let playlists = await iDB.Playlists.where('type').equals(playlist_type).toArray();
     if (playlist_type === 'my' && (order === undefined || order.value.length == 0)) {
       order = { value: ['redheart'] };
     }
-    playlists = order.value.map((id) => playlists.find((playlist) => playlist.id === id));
+    playlists = order.value.map((id: string) => playlists.find((playlist) => playlist.id === id));
     // const resultPromise = playlists.map(async (res, id) => {
     //   //const playlist = localStorage.getObject(id);
     //   const playlist = await iDB.Tracks.where('playlist').equals(id).toArray();
@@ -29,17 +31,17 @@ export default class MyPlaylist {
     return playlists;
   }
 
-  static async getPlaylist(url) {
-    const list_id = getParameterByName('list_id', url);
+  static async getPlaylist(url: string) {
+    const list_id = getParameterByName('list_id', url) || '';
     return await this.getPlaylistById(list_id);
   }
 
-  static async getPlaylistById(list_id) {
-    const playlistInfo = await iDB.Playlists.get(list_id);
+  static async getPlaylistById(list_id: string) {
+    const playlistInfo = await iDB.Playlists.get({ id: list_id });
     let playlist = {
       info: playlistInfo,
-      tracks: []
-    };
+      tracks: <any>[]
+    } as any;
     // clear url field when load old playlist
     if (playlistInfo) {
       playlist.tracks = await iDB.Tracks.where('playlist')
@@ -60,12 +62,12 @@ export default class MyPlaylist {
     return `${s4() + s4()}-${s4()}-${s4()}-${s4()}-${s4()}${s4()}${s4()}`;
   }
 
-  static async reorderMyplaylist(playlist_type, playlist_id, to_playlist_id, direction) {
+  static async reorderMyplaylist(playlist_type: string, playlist_id: string, to_playlist_id: string, direction: string) {
     await iDB.Settings.where('key')
       .equals(playlist_type + '_playlist_order')
-      .modify((order) => {
-        const index = order.value.findIndex((i) => i === playlist_id);
-        let insertIndex = order.value.findIndex((i) => i === to_playlist_id);
+      .modify((order: any) => {
+        const index = order.value.findIndex((i: string) => i === playlist_id);
+        let insertIndex = order.value.findIndex((i: string) => i === to_playlist_id);
         if (index === insertIndex) {
           return order;
         }
@@ -78,7 +80,7 @@ export default class MyPlaylist {
       });
   }
 
-  static async saveMyplaylist(playlist_type, playlistObj) {
+  static async saveMyplaylist(playlist_type: string, playlistObj: any) {
     const playlist = await playlistObj;
 
     const playlistInfo = { ...playlist.info };
@@ -89,12 +91,12 @@ export default class MyPlaylist {
       playlist_id = `myplaylist_${this.guid()}`;
       playlistInfo.id = playlist_id;
       playlistInfo.type = 'my';
-      playlistInfo.order = playlist.tracks.map((track) => track.id);
-      playlist.tracks.forEach((track) => (track.playlist = playlist_id));
+      playlistInfo.order = playlist.tracks.map((track: any) => track.id);
+      playlist.tracks.forEach((track: any) => (track.playlist = playlist_id));
       await iDB.transaction('rw', [iDB.Settings, iDB.Tracks, iDB.Playlists], async () => {
         await iDB.Settings.where('key')
           .equals('my_playlist_order')
-          .modify((order) => order.value.push(playlist_id));
+          .modify((order: any) => order.value.push(playlist_id));
         await iDB.Playlists.put(playlistInfo);
         await iDB.Tracks.where('playlist').equals(playlist_id).delete();
         await iDB.Tracks.bulkAdd(playlist.tracks);
@@ -104,7 +106,7 @@ export default class MyPlaylist {
       playlistInfo.type = 'favorite';
       await iDB.Settings.where('key')
         .equals('favorite_playlist_order')
-        .modify((order) => {
+        .modify((order: any) => {
           if (!order.value.includes(playlist_id)) {
             order.value.push(playlist_id);
           }
@@ -118,11 +120,11 @@ export default class MyPlaylist {
     return playlist_id;
   }
 
-  static async removeMyplaylist(playlist_type, playlist_id) {
+  static async removeMyplaylist(playlist_type: string, playlist_id: string) {
     await iDB.transaction('rw', [iDB.Settings, iDB.Tracks, iDB.Playlists], async () => {
       await iDB.Settings.where('key')
         .equals(playlist_type + '_playlist_order')
-        .modify((order) => {
+        .modify((order: any) => {
           if (order.value.includes(playlist_id)) order.value.splice(order.value.indexOf(playlist_id), 1);
         });
       await iDB.Playlists.where('id').equals(playlist_id).delete();
@@ -131,7 +133,7 @@ export default class MyPlaylist {
     EventService.emit(`playlist:${playlist_type}:update`);
   }
 
-  static async addTracksToMyplaylist(playlist_id, tracks) {
+  static async addTracksToMyplaylist(playlist_id: string, tracks: any[]) {
     const playlist = await iDB.Playlists.get({ id: playlist_id });
     if (!playlist) {
       return null;
@@ -151,7 +153,7 @@ export default class MyPlaylist {
     return playlist;
   }
 
-  static async insertTrackToMyplaylist(playlist_id, track, to_track, direction) {
+  static async insertTrackToMyplaylist(playlist_id: string, track: any, to_track: any, direction: string) {
     const playlist = await iDB.Playlists.get({ id: playlist_id });
     if (playlist == null) {
       return null;
@@ -170,7 +172,7 @@ export default class MyPlaylist {
     return playlist;
   }
 
-  static async removeTrackFromMyplaylist(track_id, playlist_id) {
+  static async removeTrackFromMyplaylist(track_id: string, playlist_id: string) {
     const playlist = await iDB.Playlists.get({ id: playlist_id });
     if (!playlist) {
       return null;
@@ -188,7 +190,7 @@ export default class MyPlaylist {
     return playlist;
   }
 
-  static createMyplaylist(playlist_title, tracks) {
+  static createMyplaylist(playlist_title: string, tracks: any[]) {
     const playlist = {
       info: {
         cover_img_url: 'images/mycover.jpg',
@@ -203,13 +205,13 @@ export default class MyPlaylist {
     this.saveMyplaylist('my', playlist);
   }
 
-  static async editMyplaylist(playlist_id, title, cover_img_url) {
+  static async editMyplaylist(playlist_id: string, title: string, cover_img_url: string) {
     await iDB.Playlists.where({ id: playlist_id }).modify({ title, cover_img_url });
     EventService.emit(`playlist:id:${playlist_id}:update`);
     EventService.emit(`playlist:my:update`);
   }
 
-  static myplaylistContainers(playlist_type, list_id) {
+  static myplaylistContainers(playlist_type: string, list_id: string) {
     const key = this.getPlaylistObjectKey(playlist_type);
     if (key === '') {
       return false;
@@ -218,3 +220,5 @@ export default class MyPlaylist {
     return playlist !== null && playlist.is_fav;
   }
 }
+
+export default provider;

@@ -1,9 +1,9 @@
 import axios from 'axios';
 import { cookieGet } from '../utils';
 import { getParameterByName } from "../utils";
-import MusicResource from './music_resource';
+import { MusicResource, MusicProvider } from './types';
 
-const kwConvertSong = (item) => ({
+const kwConvertSong = (item: any) => ({
   id: `kwtrack_${item.rid}`,
   title: html_decode(item.name),
   artist: html_decode(item.artist),
@@ -17,7 +17,7 @@ const kwConvertSong = (item) => ({
   lyric_url: item.rid
 });
 
-function html_decode(str) {
+function html_decode(str: string) {
   let text = str;
   const entities = [
     ['amp', '&'],
@@ -36,15 +36,15 @@ function html_decode(str) {
   }
   return text;
 }
-export default class kuwo extends MusicResource {
+const provider: MusicProvider = class kuwo extends MusicResource {
   // Fix single quote in json
-  static fix_json(data) {
+  static fix_json(data: any) {
     return data.replace(/(')/g, '"');
   }
 
-  static num2str(num) {
+  static num2str(num: number) {
     // const t = parseInt(num, 10);
-    return parseInt(num / 10, 10).toString() + (num % 10).toString();
+    return Math.floor(num).toString();
   }
 
   /*
@@ -151,13 +151,7 @@ export default class kuwo extends MusicResource {
     kw_add_song_pic_in_track(track, params, callback);
   }
   */
-  static getToken(isRetry) {
-    let isRetryValue = true;
-    if (isRetry === undefined) {
-      isRetryValue = false;
-    } else {
-      isRetryValue = isRetry;
-    }
+  static getToken(isRetry = false): Promise<string> {
     const domain = 'https://www.kuwo.cn';
     const name = 'kw_token';
     return new Promise((res) => {
@@ -166,9 +160,9 @@ export default class kuwo extends MusicResource {
           url: domain,
           name
         },
-        async (cookie) => {
+        async (cookie: any) => {
           if (cookie == null) {
-            if (isRetryValue) {
+            if (isRetry) {
               res('');
             }
             await axios.get('https://www.kuwo.cn/');
@@ -181,13 +175,7 @@ export default class kuwo extends MusicResource {
     });
   }
 
-  static kw_get_token(callback, isRetry) {
-    let isRetryValue = true;
-    if (isRetry === undefined) {
-      isRetryValue = false;
-    } else {
-      isRetryValue = isRetry;
-    }
+  static kw_get_token(callback: CallableFunction, isRetry = false) {
     const domain = 'https://www.kuwo.cn';
     const name = 'kw_token';
 
@@ -196,9 +184,9 @@ export default class kuwo extends MusicResource {
         url: domain,
         name
       },
-      (cookie) => {
+      (cookie: any) => {
         if (cookie == null) {
-          if (isRetryValue) {
+          if (isRetry) {
             return callback('');
           }
           return axios.get('https://www.kuwo.cn/').then(() => {
@@ -209,7 +197,7 @@ export default class kuwo extends MusicResource {
       }
     );
   }
-  static async getCookie(url) {
+  static async getCookie(url: string) {
     const token = await this.getToken();
     const response = await axios
       .get(url, {
@@ -237,8 +225,8 @@ export default class kuwo extends MusicResource {
       return response;
     }
   }
-  static kw_cookie_get(url, callback) {
-    this.kw_get_token((token) => {
+  static kw_cookie_get(url: string, callback: CallableFunction) {
+    this.kw_get_token((token: string) => {
       axios
         .get(url, {
           headers: {
@@ -248,7 +236,7 @@ export default class kuwo extends MusicResource {
         .then((response) => {
           if (response.data.success === false) {
             // token expire, refetch token and start get url
-            this.kw_get_token((token2) => {
+            this.kw_get_token((token2: string) => {
               axios
                 .get(url, {
                   headers: {
@@ -269,9 +257,9 @@ export default class kuwo extends MusicResource {
     });
   }
 
-  static kw_render_tracks(url, page) {
-    const list_id = getParameterByName('list_id', url).split('_').pop();
-    const playlist_type = getParameterByName('list_id', url).split('_')[0];
+  static kw_render_tracks(url: string, page: number) {
+    const list_id = getParameterByName('list_id', url)?.split('_').pop();
+    const playlist_type = getParameterByName('list_id', url)?.split('_')[0];
     let tracks_url = '';
     switch (playlist_type) {
       case 'kwplaylist':
@@ -287,14 +275,14 @@ export default class kuwo extends MusicResource {
     }
     // axios.get(tracks_url).then((response) => {
     return new Promise((res) => {
-      this.kw_cookie_get(tracks_url, (response) => {
+      this.kw_cookie_get(tracks_url, (response: any) => {
         const tracks = response.data.data.musicList.map(kwConvertSong);
         res(tracks);
       });
     });
   }
 
-  static async search(url) {
+  static async search(url: any) {
     // eslint-disable-line no-unused-vars
     const keyword = getParameterByName('keywords', url);
     const curpage = getParameterByName('curpage', url);
@@ -312,7 +300,7 @@ export default class kuwo extends MusicResource {
     }
     const target_url = `https://www.kuwo.cn/api/www/search/${api}?key=${keyword}&pn=${curpage}&rn=20`;
     const response = await this.getCookie(target_url);
-    let result = [];
+    let result = <any>[];
     let total = 0;
     if (response === undefined) {
       return {
@@ -325,7 +313,7 @@ export default class kuwo extends MusicResource {
       result = response.data.data.list.map(kwConvertSong);
       total = response.data.data.total;
     } else if (searchType === '1' && response.data.data !== undefined) {
-      result = response.data.data.list.map((item) => ({
+      result = response.data.data.list.map((item: any) => ({
         id: `kwplaylist_${item.id}`,
         title: html_decode(item.name),
         source: 'kuwo',
@@ -345,8 +333,8 @@ export default class kuwo extends MusicResource {
   }
 
   // eslint-disable-next-line no-unused-vars
-  static bootstrapTrack(track, success, failure) {
-    const sound = {};
+  static bootstrapTrack(track: any, success: CallableFunction, failure: CallableFunction) {
+    const sound = {} as any;
     const song_id = track.id.slice('kwtrack_'.length);
     const target_url = 'https://antiserver.kuwo.cn/anti.s?' + `type=convert_url&format=mp3&response=url&rid=${song_id}`;
     /* const target_url = 'https://www.kuwo.cn/url?'
@@ -369,20 +357,20 @@ export default class kuwo extends MusicResource {
       .catch(() => failure(sound));
   }
 
-  static kw_get_lrc(arr) {
+  static kw_get_lrc(arr: any[]) {
     const lyric = arr.reduce((str, item) => {
       const t = parseFloat(item.time);
-      const m = parseInt(t / 60, 10);
-      const s = parseInt(t - m * 60, 10);
-      const ms = parseInt((t - m * 60 - s) * 100, 10);
-      return `${str}[${this.num2str(m)}:${this.num2str(parseInt(s, 10))}.${this.num2str(ms)}]${item.lineLyric}\n`;
+      const m = Math.floor(t / 60);
+      const s = Math.floor(t - m * 60);
+      const ms = Math.floor((t - m * 60 - s) * 100);
+      return `${str}[${this.num2str(m)}:${this.num2str(s)}.${this.num2str(ms)}]${item.lineLyric}\n`;
     }, '');
     return lyric;
   }
 
-  static kw_generate_translation(lrclist) {
+  static kw_generate_translation(lrclist: any[]) {
     if (lrclist) {
-      lrclist.filter((e) => e && e.lineLyric !== '//');
+      lrclist.filter((e: any) => e && e.lineLyric !== '//');
 
       // 暂时原歌词和翻译都在原歌词显示
       // 酷我的歌词格式中没区分，查看了几个歌词文件发现，翻译歌词也存在和原来歌词的时间轴不一致的情况
@@ -429,7 +417,7 @@ export default class kuwo extends MusicResource {
     };
   }
 
-  static async lyric(url) {
+  static async lyric(url: string) {
     // eslint-disable-line no-unused-vars
     const track_id = getParameterByName('lyric_url', url);
     const target_url = `https://m.kuwo.cn/newh5/singles/songinfoandlrc?musicId=${track_id}`;
@@ -441,13 +429,13 @@ export default class kuwo extends MusicResource {
     };
   }
 
-  static async kw_artist(url) {
+  static async kw_artist(url: string) {
     // eslint-disable-line no-unused-vars
-    const artist_id = getParameterByName('list_id', url).split('_').pop();
+    const artist_id = getParameterByName('list_id', url)?.split('_').pop();
 
     const getInfo = async () => {
       const target_url = `https://www.kuwo.cn/api/www/artist/artist?artistid=${artist_id}`;
-      const response = await this.getCookie(target_url);
+      const response = await this.getCookie(target_url) as any;
       const { data } = response.data;
       return {
         cover_img_url: data.pic300,
@@ -460,7 +448,7 @@ export default class kuwo extends MusicResource {
     // Get songs
     const getSongs = async () => {
       const target_url = `https://www.kuwo.cn/api/www/artist/artistMusic?artistid=${artist_id}&pn=1&rn=50`;
-      const res = await this.getCookie(target_url);
+      const res = await this.getCookie(target_url) as any;
       return res.data.data.list.map(kwConvertSong);
     };
 
@@ -486,9 +474,9 @@ export default class kuwo extends MusicResource {
             */
   }
 
-  static async kw_album(url) {
+  static async kw_album(url: string) {
     // eslint-disable-line no-unused-vars
-    const album_id = getParameterByName('list_id', url).split('_').pop();
+    const album_id = getParameterByName('list_id', url)?.split('_').pop();
 
     const target_url =
       'https://search.kuwo.cn/r.s?pn=0&rn=0&stype=albuminfo' + `&albumid=${album_id}&alflac=1&pcmp4=1&encoding=utf8` + '&vipver=MUSIC_8.7.7.0_W4';
@@ -520,7 +508,7 @@ export default class kuwo extends MusicResource {
           */
   }
 
-  static async showPlaylist(url) {
+  static async showPlaylist(url: string) {
     const offset = Number(getParameterByName('offset', url));
 
     /* const id_available = {
@@ -588,7 +576,7 @@ export default class kuwo extends MusicResource {
       return [];
     }
     /** @type {{cover_img_url:string;id:string;source_url:string;title:string}[]}*/
-    const result = data.data.map((item) => ({
+    const result = data.data.map((item: any) => ({
       cover_img_url: item.img,
       title: item.name,
       id: `kwplaylist_${item.id}`,
@@ -597,9 +585,9 @@ export default class kuwo extends MusicResource {
     return result;
   }
 
-  static async kw_get_playlist(url) {
+  static async kw_get_playlist(url: string) {
     // eslint-disable-line no-unused-vars
-    const list_id = getParameterByName('list_id', url).split('_').pop();
+    const list_id = getParameterByName('list_id', url)?.split('_').pop();
     const target_url = `https://nplserver.kuwo.cn/pl.svc?op=getlistinfo&pn=0&rn=0&encode=utf-8&keyset=pl2012&pcmp4=1&pid=${list_id}&vipver=MUSIC_9.0.2.0_W1&newver=1`;
     // https://www.kuwo.cn/api/www/playlist/playListInfo?pid=3134372426&pn=1&rn=30
     const { data } = await axios.get(target_url);
@@ -625,7 +613,7 @@ export default class kuwo extends MusicResource {
           */
   }
 
-  static async parseUrl(myurl) {
+  static async parseUrl(myurl: string) {
     let result;
     let id;
     let url = myurl;
@@ -661,8 +649,8 @@ export default class kuwo extends MusicResource {
     return result;
   }
 
-  static getPlaylist(url) {
-    const list_id = getParameterByName('list_id', url).split('_')[0];
+  static getPlaylist(url: string) {
+    const list_id = getParameterByName('list_id', url)?.split('_')[0];
     switch (list_id) {
       case 'kwplaylist':
         return this.kw_get_playlist(url);
@@ -693,7 +681,7 @@ export default class kuwo extends MusicResource {
   static logout() {
     // empty block
   }
-  static async getCommentList(trackId, offset, limit) {
+  static async getCommentList(trackId: string, offset: number, limit: number) {
     limit = 20;
     const page = offset / limit + 1;
     const kuwoId = trackId.split('_')[1];
@@ -703,8 +691,8 @@ export default class kuwo extends MusicResource {
 
     let comments = [];
     if(response.data.rows) {
-      comments = response.data.rows.map((item) => {
-        let data = {
+      comments = response.data.rows.map((item: any) => {
+        const data = {
           id: item.id,
           content: item.msg,
           time: item.time,
@@ -733,3 +721,5 @@ export default class kuwo extends MusicResource {
 
   }
 }
+
+export default provider;
