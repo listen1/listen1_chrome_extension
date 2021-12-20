@@ -136,7 +136,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { onMounted, provide } from 'vue';
 import { useI18n } from 'vue-i18n';
@@ -196,7 +196,7 @@ const changePlaymode = () => {
   player.playmode = newPlaymode;
   l1Player.setLoopMode(newPlaymode);
 };
-const showPlaylist = (playlistId) => {
+const showPlaylist = (playlistId: string) => {
   router.push('/playlist/' + playlistId);
 };
 const playPauseToggle = () => {

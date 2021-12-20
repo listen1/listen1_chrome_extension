@@ -4,8 +4,8 @@
     <div class="site-wrapper-innerd">
       <div class="cover-container">
         <div class="searchbox">
-          <SourceTab :tab="condition.tab" :sources="sourceList" @click="changeSourceTab" :loading="result.loading">
-            <template v-slot:right>
+          <SourceTab :tab="condition.tab" :sources="sourceList" :loading="result.loading" @click="changeSourceTab">
+            <template #right>
               <div class="search-type float-right">
                 <li
                   class="source-button inline-block cursor-pointer border-b hover:border-active hover:text-default"
@@ -70,7 +70,7 @@
                 :class="{ 'bg-even': index % 2 === 0, 'bg-odd': index % 2 !== 0 }"
                 class="playlist-result flex relative items-center px-10 h-20 hover:bg-row-hover">
                 <div class="title flex-2 truncate">
-                  <a @click="$router.push(`/playlist/${playlist.id}`)" class="cursor-pointer flex">
+                  <a class="cursor-pointer flex" @click="$router.push(`/playlist/${playlist.id}`)">
                     <img class="h-16 w-16 block mr-3" :src="playlist.img_url" err-src="https://y.gtimg.cn/mediastyle/global/img/playlist_300.png" />
                     <div>
                       {{ playlist.title }}
@@ -94,7 +94,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import SourceTab from '../components/SourceTab.vue';

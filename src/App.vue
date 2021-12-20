@@ -2,7 +2,7 @@
   <Home />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onMounted, watch } from 'vue';
 // NOTICE: without inline postfix, css will inject into html
 // we only use css string here
@@ -17,6 +17,7 @@ import useRedHeart from './composition/redheart';
 import useSettings, { migrateSettings } from './composition/settings';
 import iDB, { dbMigrate } from './services/DBService';
 import { l1Player } from './services/l1_player';
+import type { Track } from './services/l1_player';
 import { initMediaSession, MediaSessionEventListener } from './services/media_session';
 import Home from './views/Home.vue';
 
@@ -40,7 +41,7 @@ function applyThemeCSS() {
   const cssStyle = mapping[settings.theme] || '';
 
   window.api?.setTheme(settings.theme);
-  document.getElementById('theme').textContent = cssStyle;
+  (document.getElementById('theme') as HTMLElement).textContent = cssStyle;
 }
 
 const initPlayer = async () => {
@@ -52,7 +53,7 @@ const initPlayer = async () => {
   // load local storage settings
   const currentPlaylist = await iDB.Playlists.get({ id: 'current' });
   const localCurrentPlaying = await iDB.Tracks.where('playlist').equals('current').toArray();
-  let tracks = [];
+  let tracks: Track[] = [];
   if (currentPlaylist !== undefined) {
     tracks = currentPlaylist.order.map((id) => localCurrentPlaying.find((track) => track.id == id));
   }
@@ -64,9 +65,9 @@ const initPlayer = async () => {
 
   l1Player.addTracks(tracks);
 
-  let playerSettings = {};
+  let playerSettings = {} as { playmode: number; volume: number; nowplaying_track_id?: string };
   if (dbSettings.length > 0) {
-    playerSettings = dbSettings[0].value;
+    playerSettings = dbSettings[0].value as { playmode: number; volume: number };
   } else {
     playerSettings = settings.playerSettings;
   }

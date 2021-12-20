@@ -8,36 +8,36 @@
         <div class="detail-head-title flex-1">
           <h2 class="h-10 my-7 text-3xl font-semibold">{{ playlist_title }}</h2>
           <div class="playlist-button-list flex flex-wrap">
-            <IconButton @click="playMylist(listId)" icon="li-play-s" icon-class="text-important">
-              <template v-slot:main>
+            <IconButton icon="li-play-s" icon-class="text-important" @click="playMylist(listId)">
+              <template #main>
                 {{ t('_PLAY_ALL') }}
               </template>
-              <template v-slot:right>
+              <template #right>
                 <div class="add-list border-l border-button flex items-center justify-center w-8 hover:bg-button-hover" @click="addMylist(listId)">
                   <span class="icon li-add" />
                 </div>
               </template>
             </IconButton>
-            <IconButton v-show="is_local" @click="addLocalMusic(listId)" icon="li-songlist">{{ t('_ADD_LOCAL_SONGS') }}</IconButton>
-            <IconButton v-show="!is_mine && !is_local" @click="saveAsMyPlaylist(listId)" icon="li-songlist">{{ t('_ADD_TO_PLAYLIST') }}</IconButton>
+            <IconButton v-show="is_local" icon="li-songlist" @click="addLocalMusic(listId)">{{ t('_ADD_LOCAL_SONGS') }}</IconButton>
+            <IconButton v-show="!is_mine && !is_local" icon="li-songlist" @click="saveAsMyPlaylist(listId)">{{ t('_ADD_TO_PLAYLIST') }}</IconButton>
             <IconButton
               v-show="is_mine && !is_local && listId != 'myplaylist_redheart'"
-              @click="showModal('EditPlaylist', { list_id: listId, playlist_title: playlist_title, cover_img_url: cover_img_url })"
-              icon="vue-feather-edit">
+              icon="vue-feather-edit"
+              @click="showModal('EditPlaylist', { list_id: listId, playlist_title: playlist_title, cover_img_url: cover_img_url })">
               {{ t('_EDIT') }}
             </IconButton>
             <IconButton
               v-show="!is_mine && !is_local"
               :icon-class="is_favorite ? 'filled-yellow' : ''"
-              @click="favoritePlaylist(listId)"
-              icon="vue-feather-star">
+              icon="vue-feather-star"
+              @click="favoritePlaylist(listId)">
               {{ t(is_favorite ? '_FAVORITED' : '_FAVORITE') }}
             </IconButton>
 
-            <IconButton v-show="!is_mine && !is_local" @click="openUrl(playlist_source_url)" icon="li-link">
+            <IconButton v-show="!is_mine && !is_local" icon="li-link" @click="openUrl(playlist_source_url)">
               {{ t('_ORIGIN_LINK') }}
             </IconButton>
-            <IconButton v-show="is_mine" @click="showModal('ImportPlaylist', { list_id: listId })" icon="vue-feather-git-merge">
+            <IconButton v-show="is_mine" icon="vue-feather-git-merge" @click="showModal('ImportPlaylist', { list_id: listId })">
               {{ t('_IMPORT') }}
             </IconButton>
           </div>
@@ -79,15 +79,15 @@
           @drop="onPlaylistSongDrop(listId, song, $event)"
           @mouseenter="song.options = true"
           @mouseleave="song.options = undefined">
-          <TrackRow :song="song" :is_local="is_local" :is_mine="is_mine" :listId="listId"></TrackRow>
+          <TrackRow :song="song" :is-local="is_local" :is-mine="is_mine" :list-id="listId"></TrackRow>
         </DragDropZone>
       </ul>
     </div>
   </div>
 </template>
 
-<script setup>
-import { inject, onMounted, toRaw, watch, computed } from 'vue';
+<script setup lang="ts">
+import { computed, inject, onMounted, toRaw, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
 import DragDropZone from '../components/DragDropZone.vue';
@@ -135,11 +135,11 @@ const playMylist = () => {
   l1Player.playTracks(toRaw(songs));
 };
 
-const openUrl = (url) => {
-  window.open(url, '_blank').focus();
+const openUrl = (url?: string | URL) => {
+  window.open(url, '_blank')?.focus();
 };
 
-const favoritePlaylist = async (listId) => {
+const favoritePlaylist = async (listId: any) => {
   if (is_favorite) {
     await removeFavoritePlaylist(listId);
     is_favorite = false;
@@ -149,22 +149,22 @@ const favoritePlaylist = async (listId) => {
   }
 };
 
-const addFavoritePlaylist = async (listId) => {
+const addFavoritePlaylist = async (listId: string) => {
   await MediaService.clonePlaylist(listId, 'favorite');
   notyf.success(t('_FAVORITE_PLAYLIST_SUCCESS'));
 };
 
-const removeFavoritePlaylist = async (listId) => {
+const removeFavoritePlaylist = async (listId: string) => {
   await MediaService.removeMyPlaylist(listId, 'favorite');
   notyf.success(t('_UNFAVORITE_PLAYLIST_SUCCESS'));
 };
 
-const saveAsMyPlaylist = async (listId) => {
+const saveAsMyPlaylist = async (listId: string) => {
   await MediaService.clonePlaylist(listId, 'my');
   notyf.success(t('_ADD_TO_PLAYLIST_SUCCESS'));
 };
 
-const onPlaylistSongDrop = async (listId, song, event) => {
+const onPlaylistSongDrop = async (listId: string, song: any, event: any) => {
   const { data, dragType, direction } = event;
 
   if (dragType === 'application/listen1-song') {
@@ -179,7 +179,7 @@ const showModal = inject('showModal');
 // use global ref to keep more clear way to manage state
 $event.on(`playlist:id:${listId}:update`, refreshPlaylist);
 
-const addLocalMusic = (listId) => {
+const addLocalMusic = (listId: string) => {
   window.api.chooseLocalFile(listId);
   window.api.ipcOnce('chooseLocalFile')(async (message) => {
     const { tracks } = message;
@@ -191,7 +191,7 @@ const addLocalMusic = (listId) => {
 watch(
   () => route.path,
   async () => {
-    listId = route.params.listId;
+    listId = route.params.listId as string;
     is_favorite = await MediaService.isMyPlaylist(listId);
     await refreshPlaylist();
   }

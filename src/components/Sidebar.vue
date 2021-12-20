@@ -14,28 +14,28 @@
       <ul>
         <li
           v-if="isElectron()"
-          @click="$router.push('/playlist/lmplaylist_reserve')"
           :class="{ active: route.path === '/playlist/lmplaylist_reserve' }"
-          class="group cursor-pointer pb-[2px]">
+          class="group cursor-pointer pb-[2px]"
+          @click="$router.push('/playlist/lmplaylist_reserve')">
           <SidebarEntry :text="t('_LOCAL_MUSIC')" icon="vue-feather-monitor"></SidebarEntry>
         </li>
         <li
           v-if="is_login('netease')"
-          @click="$router.push(`/my_platform/netease`)"
+          class="group cursor-pointer pb-[2px]"
           :class="{ active: route.path === `/my_platform/netease` }"
-          class="group cursor-pointer pb-[2px]">
+          @click="$router.push(`/my_platform/netease`)">
           <SidebarEntry :text="t('_MY_NETEASE')" icon="vue-feather-globe"></SidebarEntry>
         </li>
         <li
           v-if="is_login('qq')"
-          @click="$router.push(`/my_platform/qq`)"
+          class="group cursor-pointer pb-[2px]"
           :class="{ active: route.path === `/my_platform/qq` }"
-          class="group cursor-pointer pb-[2px]">
+          @click="$router.push(`/my_platform/qq`)">
           <SidebarEntry :text="t('_MY_QQ')" icon="vue-feather-globe"></SidebarEntry>
         </li>
       </ul>
       <SidebarTitle class="mt-4" :text="t('_CREATED_PLAYLIST')">
-        <template v-slot:right><vue-feather class="cursor-pointer" size="1.25rem" type="plus-square" @click="showModal('ParseUrl', {})" /></template>
+        <template #right><vue-feather class="cursor-pointer" size="1.25rem" type="plus-square" @click="showModal('ParseUrl', {})" /></template>
       </SidebarTitle>
       <ul>
         <DragDropZone
@@ -70,7 +70,7 @@
           dragtype="application/listen1-favoriteplaylist"
           @click="$router.push(`/playlist/${i.id}`)"
           @drop="onSidebarPlaylistDrop('favorite', i.id, $event)">
-          <SidebarEntry :text="i.title" icon="vue-feather-disc"></SidebarEntry>
+          <Entry :text="i.title" />
         </DragDropZone>
       </ul>
     </div>
@@ -78,20 +78,21 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, inject } from 'vue';
+import { inject, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { useRoute } from 'vue-router';
+import DragDropZone from '../components/DragDropZone.vue';
+import SidebarEntry from '../components/SidebarEntry.vue';
+import SidebarTitle from '../components/SidebarTitle.vue';
+import useAuth from '../composition/auth';
+import useRedHeart from '../composition/redheart';
 import type { Playlist } from '../services/DBService';
 import $event from '../services/EventService';
 import MediaService from '../services/MediaService';
-import DragDropZone from '../components/DragDropZone.vue';
 import notyf from '../services/notyf';
-import useAuth from '../composition/auth';
-import useRedHeart from '../composition/redheart';
 import { isElectron } from '../utils';
-import SidebarEntry from '../components/SidebarEntry.vue';
-import SidebarTitle from '../components/SidebarTitle.vue';
+import Entry from './Entry.vue';
 
-import { useRoute } from 'vue-router';
 const isChrome = true;
 const route = useRoute();
 const { t } = useI18n();

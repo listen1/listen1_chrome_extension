@@ -2,23 +2,23 @@
   <div class="title flex-2 flex overflow-hidden items-center max-h-12">
     <!-- <a class="disabled" ng-if="song.disabled" ng-click="copyrightNotice()"> song.title </a> -->
     <vue-feather
-      class="cursor-pointer flex-none"
       v-if="!isRedHeart(song.id)"
+      class="cursor-pointer flex-none"
       type="heart"
       size="18"
       stroke-width="1"
       stroke="#666666"
       @click="setRedHeart(toRaw(song), true)" />
     <vue-feather
-      class="cursor-pointer flex-none"
       v-if="isRedHeart(song.id)"
+      class="cursor-pointer flex-none"
       type="heart"
       fill="red"
       stroke="red"
       size="18"
       @click="setRedHeart(toRaw(song), false)" />
 
-    <a @click="play(song)" class="cursor-pointer ml-3 truncate min-w-0">{{ song.title }}</a>
+    <a class="cursor-pointer ml-3 truncate min-w-0" @click="play(song)">{{ song.title }}</a>
   </div>
   <div class="artist flex-1 truncate">
     <a class="cursor-pointer" @click="$router.push(`/playlist/${song.artist_id}`)">{{ song.artist }}</a>
@@ -36,23 +36,23 @@
       <span class="icon li-songlist" />
     </a>
     <a
-      v-show="song.options && (is_mine == '1' || is_local)"
+      v-show="song.options && (isMine == '1' || isLocal)"
       :title="t('_REMOVE_FROM_PLAYLIST')"
       class="detail-delete-button cursor-pointer mr-3"
-      @click="removeSongFromPlaylist(song.id, list_id)">
+      @click="removeSongFromPlaylist(song.id, listId)">
       <span class="icon li-del" />
     </a>
-    <a v-show="song.options && !is_local" :title="t('_ORIGIN_LINK')" class="source-button cursor-pointer mr-3" @click="openUrl(song.source_url)">
+    <a v-show="song.options && !isLocal" :title="t('_ORIGIN_LINK')" class="source-button cursor-pointer mr-3" @click="openUrl(song.source_url)">
       <span class="icon li-link" />
     </a>
   </div>
 </template>
 <script setup lang="ts">
-const { song, is_mine, is_local, list_id } = defineProps<{
+const { song, isMine, isLocal, listId } = defineProps<{
   song: any;
-  is_mine?: string;
-  is_local?: string;
-  list_id?: string;
+  isMine?: string;
+  isLocal?: string;
+  listId?: string;
 }>();
 import { inject, toRaw } from 'vue';
 import { useI18n } from 'vue-i18n';

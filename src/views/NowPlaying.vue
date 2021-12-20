@@ -1,8 +1,10 @@
 <template>
   <div class="page">
     <div
-      class="songdetail-wrapper absolute flex flex-col top-0 left-0 right-0 bottom-20 overflow-y-scroll duration-300 app-region-nodrag bg-now-playing"
+      class="songdetail-wrapper absolute flex flex-col top-0 left-0 right-0 bottom-20 duration-300 app-region-nodrag bg-now-playing"
       :class="{
+        'overflow-y-scroll': commentActive,
+        'overflow-hidden': !commentActive,
         slidedown: overlay.type !== 'track',
         coverbg: settings.enableNowplayingCoverBackground
       }">
@@ -16,8 +18,8 @@
 
       <div
         class="translate-switch app-region-nodrag h-6 w-6 border flex items-center justify-center absolute bottom-10 right-10 cursor-pointer text-neutral-400 hover:text-default"
-        @click="toggleLyricTranslation()"
-        :class="{ 'text-default': settings.enableLyricTranslation }">
+        :class="{ 'text-default': settings.enableLyricTranslation }"
+        @click="toggleLyricTranslation()">
         译
       </div>
       <div class="close app-region-nodrag cursor-pointer absolute left-8 right-8 w-8 h-8" :class="isMac ? 'mac top-16' : 'top-8 '" @click="toggleNowPlaying()">
@@ -65,11 +67,11 @@
               <span>{{ t('_ARTIST') }}：</span>
               <a
                 class="cursor-pointer"
+                :title="currentPlaying.artist"
                 @click="
                   showPlaylist(currentPlaying.artist_id);
                   setOverlayType('');
-                "
-                :title="currentPlaying.artist">
+                ">
                 {{ currentPlaying.artist }}
               </a>
             </div>
@@ -77,11 +79,11 @@
               <span>{{ t('_ALBUM') }}：</span>
               <a
                 class="cursor-pointer"
+                :title="currentPlaying.album"
                 @click="
                   showPlaylist(currentPlaying.album_id);
                   setOverlayType('');
-                "
-                :title="currentPlaying.album">
+                ">
                 {{ currentPlaying.album }}
               </a>
             </div>
@@ -105,7 +107,7 @@
           </div>
         </div>
       </div>
-      <div v-if="commentList.length > 0" class="mt-20 mb-8 mx-auto w-[42rem] z-10">
+      <div v-if="commentActive" class="mt-20 mb-8 mx-auto w-[42rem] z-10">
         <div>热门评论</div>
         <ul>
           <li v-for="comment in commentList" :key="comment.id" class="flex py-4 border-b border-default">
@@ -138,14 +140,14 @@
     </div>
   </div>
 </template>
-<script setup>
+<script setup lang="ts">
 import { watchEffect } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { datetimeFormats } from '../i18n/index';
 import { useRouter } from 'vue-router';
 import useOverlay from '../composition/overlay';
 import usePlayer from '../composition/player';
 import useSettings from '../composition/settings';
+import { datetimeFormats } from '../i18n/index';
 import MediaService from '../services/MediaService';
 
 const { t, d } = useI18n({
@@ -158,6 +160,7 @@ const { settings, setSettings } = useSettings();
 
 let isMac = $ref(false);
 let commentList = $ref([]);
+let commentActive = $computed(() => settings.enableNowplayingComment && commentList.length > 0);
 const toggleNowPlaying = () => {
   if (overlay.type != 'track') {
     setOverlayType('track');
@@ -166,13 +169,13 @@ const toggleNowPlaying = () => {
   }
 };
 
-const showPlaylist = (playlistId) => {
+const showPlaylist = (playlistId: string) => {
   router.push('/playlist/' + playlistId);
 };
 
 const toggleLyricTranslation = () => setSettings({ enableLyricTranslation: !settings.enableLyricTranslation });
 
-const showImage = (e, url) => {
+const showImage = (e: any, url: any) => {
   e.target.src = url;
 };
 
