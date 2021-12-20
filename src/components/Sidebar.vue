@@ -21,15 +21,15 @@
         </li>
         <li
           v-if="is_login('netease')"
-          class="group cursor-pointer pb-[2px]"
           :class="{ active: route.path === `/my_platform/netease` }"
+          class="group cursor-pointer pb-[2px]"
           @click="$router.push(`/my_platform/netease`)">
           <SidebarEntry :text="t('_MY_NETEASE')" icon="vue-feather-globe"></SidebarEntry>
         </li>
         <li
           v-if="is_login('qq')"
-          class="group cursor-pointer pb-[2px]"
           :class="{ active: route.path === `/my_platform/qq` }"
+          class="group cursor-pointer pb-[2px]"
           @click="$router.push(`/my_platform/qq`)">
           <SidebarEntry :text="t('_MY_QQ')" icon="vue-feather-globe"></SidebarEntry>
         </li>

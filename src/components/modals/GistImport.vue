@@ -11,7 +11,7 @@
           <h2>{{ t('_RECOVER_FROM_LOCAL_FILE') }}</h2>
         </li>
         <p>{{ t('_RECOVER_FROM_GITHUB_GIST') }}</p>
-        <li class="cursor-pointer h-24 p-2 hover:bg-dialog-hover" v-for="(backup, index) in myBackup" :key="index" @click="recover(backup.id)">
+        <li v-for="(backup, index) in myBackup" :key="index" class="cursor-pointer h-24 p-2 hover:bg-dialog-hover" @click="recover(backup.id)">
           <img class="float-left h-20 w-20 mr-4" src="/images/mycover.jpg" />
           <h2 class="flex">{{ backup.id + '\n' + new Date(backup.updated_at).toLocaleString() }}</h2>
         </li>
