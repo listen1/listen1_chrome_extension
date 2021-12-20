@@ -117,7 +117,7 @@ const changeSearchPage = (offset) => {
   condition.curpage += offset;
 };
 
-const sourceList = computed(() => [{ name: 'allmusic', displayId: '_ALL_MUSIC' }, ...MediaService.getSourceList()]);
+const sourceList = computed(() => [{ name: 'allmusic', displayId: '_ALL_MUSIC' }, ...MediaService.getSourceList().filter((source) => source.searchable)]);
 </script>
 
 <style>
