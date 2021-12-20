@@ -39,9 +39,9 @@
       </div>-->
 
       <div class="playsong-detail my-0 mx-auto flex w-[60rem] z-10">
-        <div class="detail-head overflow-hidden flex-none w-[30rem] flex justify-center">
-          <div class="detail-head-cover w-72 h-72 mt-32">
-            <img class="w-72 h-72 object-cover" :src="currentPlaying.img_url" @error="showImage($event, 'images/mycover.jpg')" />
+        <div class="detail-head overflow-hidden flex-none w-[30rem] 2xl:w-[500px] flex justify-center">
+          <div class="detail-head-cover w-72 2xl:w-[450px] mt-32 2xl:mr-36 transition-all ease-linear">
+            <img class="w-full aspect-square object-cover rounded" :src="currentPlaying.img_url" @error="showImage($event, 'images/mycover.jpg')" />
           </div>
           <div class="detail-head-title">
             <!--<a title="加入收藏" class="clone" ng-click="showDialog(0, currentPlaying)">收藏</a>
@@ -64,7 +64,7 @@
           </div>
           <div class="info border-b border-default pb-2 flex">
             <div class="singer flex-1 overflow-hidden whitespace-nowrap text-ellipsis">
-              <span>{{ t('_ARTIST') }}：</span>
+              <span>{{ t('_ARTIST') }}:</span>
               <a
                 class="cursor-pointer"
                 :title="currentPlaying.artist"
@@ -76,7 +76,7 @@
               </a>
             </div>
             <div class="album flex-2 overflow-hidden whitespace-nowrap text-ellipsis">
-              <span>{{ t('_ALBUM') }}：</span>
+              <span>{{ t('_ALBUM') }}:</span>
               <a
                 class="cursor-pointer"
                 :title="currentPlaying.album"
