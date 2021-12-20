@@ -1,10 +1,10 @@
-import { getParameterByName } from "../utils";
+import { getParameterByName } from '../utils';
 import { MusicResource, MusicProvider } from './types';
 import iDB from '../services/DBService';
 
 const provider: MusicProvider = class localmusic extends MusicResource {
   static async getPlaylistById(list_id: string) {
-    const playlistInfo = await iDB.Playlists.get({id: list_id});
+    const playlistInfo = await iDB.Playlists.get({ id: list_id });
     let playlist = {
       info: playlistInfo,
       tracks: <any>[]
@@ -106,6 +106,6 @@ const provider: MusicProvider = class localmusic extends MusicResource {
       all: []
     };
   }
-}
+};
 
 export default provider;

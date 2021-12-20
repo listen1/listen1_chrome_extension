@@ -9,7 +9,7 @@
           <img class="float-left h-20 w-20 mr-4" src="/images/mycover.jpg" />
           <h2>{{ t('_EXPORT_TO_LOCAL_FILE') }}</h2>
         </li>
-        <p v-show="githubStatus == 2" >{{ t('_EXPORT_TO_GITHUB_GIST') }}</p>
+        <p v-show="githubStatus == 2">{{ t('_EXPORT_TO_GITHUB_GIST') }}</p>
         <li v-show="githubStatus == 2" class="cursor-pointer h-24 p-2 hover:bg-dialog-hover" @click="backup('', true)">
           <img class="float-left h-20 w-20 mr-4" src="/images/mycover.jpg" />
           <h2>{{ t('_CREATE_PUBLIC_BACKUP') }}</h2>

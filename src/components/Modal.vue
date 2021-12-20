@@ -33,7 +33,7 @@ const components: Record<string, any> = {
   OpenLogin,
   GithubAuth,
   GistExport,
-  GistImport,
+  GistImport
 };
 
 const showModal = (type = 'DefaultModal', opt: Record<string, unknown> = {}) => {

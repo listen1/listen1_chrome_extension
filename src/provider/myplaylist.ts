@@ -1,8 +1,8 @@
-import { getParameterByName } from "../utils";
+import { getParameterByName } from '../utils';
 import iDB from '../services/DBService';
 import EventService from '../services/EventService';
 import { arrayMove } from '../utils';
-import { MusicResource, MusicProvider } from "./types";
+import { MusicResource, MusicProvider } from './types';
 
 const provider = class MyPlaylist extends MusicResource {
   static getPlaylistObjectKey(playlist_type: string) {
@@ -15,7 +15,7 @@ const provider = class MyPlaylist extends MusicResource {
     return key;
   }
   static async getMyplaylistsList(playlist_type: string) {
-    let order = await iDB.Settings.get({ key: playlist_type + '_playlist_order' }) as any;
+    let order = (await iDB.Settings.get({ key: playlist_type + '_playlist_order' })) as any;
     let playlists = await iDB.Playlists.where('type').equals(playlist_type).toArray();
     if (playlist_type === 'my' && (order === undefined || order.value.length == 0)) {
       order = { value: ['redheart'] };
@@ -219,6 +219,6 @@ const provider = class MyPlaylist extends MusicResource {
     const playlist = localStorage.getObject(list_id);
     return playlist !== null && playlist.is_fav;
   }
-}
+};
 
 export default provider;

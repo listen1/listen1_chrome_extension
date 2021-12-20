@@ -47,11 +47,10 @@ export function isWin() {
 }
 
 type CookieRequest = chrome.cookies.Details;
-interface Cookie extends chrome.cookies.Details, Electron.Cookie {};
+interface Cookie extends chrome.cookies.Details, Electron.Cookie {}
 
 export function cookieGet(cookieRequest: CookieRequest, callback: CallableFunction) {
   if (!isElectron()) {
-
     return chrome.cookies.get(cookieRequest, (cookie) => {
       callback(cookie);
     });

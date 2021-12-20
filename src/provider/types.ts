@@ -57,19 +57,19 @@ export class MusicResource {
 }
 
 export interface MusicProvider {
-  showPlaylist(url: string): PromiseLike<any>,
-  getPlaylistFilters(): PromiseLike<any>,
-  getPlaylist(url: string): PromiseLike<any>,
-  parseUrl(url: string): PromiseLike<any>,
-  bootstrapTrack(track: any, success: any, failure: any): PromiseLike<any>,
-  search(url: string): PromiseLike<any>
-  lyric(url: string): PromiseLike<any>
-  getUser(): PromiseLike<any>
-  getLoginUrl(): PromiseLike<any>
-  login(url: string): PromiseLike<any>
-  logout(): PromiseLike<any>
-  getUserCreatedPlaylist(url: string): PromiseLike<any>
-  getUserFavoritePlaylist(url: string): PromiseLike<any>
-  getRecommendPlaylist(): PromiseLike<any>
-  getCommentList(trackId: string, offset: number, limit: number): PromiseLike<any>
+  showPlaylist(url: string): PromiseLike<any>;
+  getPlaylistFilters(): PromiseLike<any>;
+  getPlaylist(url: string): PromiseLike<any>;
+  parseUrl(url: string): PromiseLike<any>;
+  bootstrapTrack(track: any, success: any, failure: any): PromiseLike<any>;
+  search(url: string): PromiseLike<any>;
+  lyric(url: string): PromiseLike<any>;
+  getUser(): PromiseLike<any>;
+  getLoginUrl(): PromiseLike<any>;
+  login(url: string): PromiseLike<any>;
+  logout(): PromiseLike<any>;
+  getUserCreatedPlaylist(url: string): PromiseLike<any>;
+  getUserFavoritePlaylist(url: string): PromiseLike<any>;
+  getRecommendPlaylist(): PromiseLike<any>;
+  getCommentList(trackId: string, offset: number, limit: number): PromiseLike<any>;
 }

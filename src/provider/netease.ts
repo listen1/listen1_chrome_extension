@@ -1,7 +1,7 @@
 import axios from 'axios';
 import forge from 'node-forge';
 import { cookieSet, cookieRemove, cookieGetPromise } from '../utils';
-import { getParameterByName } from "../utils";
+import { getParameterByName } from '../utils';
 import { MusicResource, MusicProvider } from './types';
 
 const provider: MusicProvider = class netease extends MusicResource {
@@ -843,6 +843,6 @@ const provider: MusicProvider = class netease extends MusicResource {
     }
     return { comments, total: comments.length, offset, limit };
   }
-}
+};
 
 export default provider;

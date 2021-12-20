@@ -34,7 +34,7 @@ const commitVolume = (progress: number) => {
   // must use getSettings to fetch recent value
   const task = async () => {
     const settings = await getSettingsAsync();
-    saveSettingsToDB({ playerSettings: { ...settings.playerSettings as Record<string, unknown>, volume: progress * 100 } });
+    saveSettingsToDB({ playerSettings: { ...(settings.playerSettings as Record<string, unknown>), volume: progress * 100 } });
   };
   task();
 };

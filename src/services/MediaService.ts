@@ -50,11 +50,11 @@ function queryStringify(options: unknown) {
 
 const MediaService = {
   getSourceList() {
-    return PROVIDERS.filter((p)=> !p.hidden).map((p)=>({
+    return PROVIDERS.filter((p) => !p.hidden).map((p) => ({
       id: p.id,
       name: p.name,
       searchable: p.searchable,
-      displayId: p.displayId,
+      displayId: p.displayId
     }));
   },
   getLoginProviders() {
@@ -310,7 +310,7 @@ const MediaService = {
 
     let trackId = track.id;
     const providerName = getProviderNameByItemId(track.id);
-    const provider =  getProviderByName(providerName);
+    const provider = getProviderByName(providerName);
     if (id2PlatformNames.indexOf(providerName) > -1) {
       trackId = track.id2;
     }

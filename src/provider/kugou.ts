@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { async_process } from '../utils';
-import { getParameterByName } from "../utils";
+import { getParameterByName } from '../utils';
 import { MusicResource, MusicProvider } from './types';
 
 // https://www.cnblogs.com/willingtolove/p/11059325.html
@@ -392,18 +392,18 @@ const provider: MusicProvider = class kugou extends MusicResource {
 
         return item.pcontent
           ? {
-            id: item.id,
-            content: html2Escape(item.pcontent),
-            nickname: item.puser,
-            avatar: null,
-            user_id: item.puser_id,
-            reply: [data]
-          }
+              id: item.id,
+              content: html2Escape(item.pcontent),
+              nickname: item.puser,
+              avatar: null,
+              user_id: item.puser_id,
+              reply: [data]
+            }
           : data;
       });
     }
     return { comments, total: comments.length, offset, limit };
   }
-}
+};
 
 export default provider;

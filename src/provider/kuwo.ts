@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { cookieGet } from '../utils';
-import { getParameterByName } from "../utils";
+import { getParameterByName } from '../utils';
 import { MusicResource, MusicProvider } from './types';
 
 const kwConvertSong = (item: any) => ({
@@ -435,7 +435,7 @@ const provider: MusicProvider = class kuwo extends MusicResource {
 
     const getInfo = async () => {
       const target_url = `https://www.kuwo.cn/api/www/artist/artist?artistid=${artist_id}`;
-      const response = await this.getCookie(target_url) as any;
+      const response = (await this.getCookie(target_url)) as any;
       const { data } = response.data;
       return {
         cover_img_url: data.pic300,
@@ -448,7 +448,7 @@ const provider: MusicProvider = class kuwo extends MusicResource {
     // Get songs
     const getSongs = async () => {
       const target_url = `https://www.kuwo.cn/api/www/artist/artistMusic?artistid=${artist_id}&pn=1&rn=50`;
-      const res = await this.getCookie(target_url) as any;
+      const res = (await this.getCookie(target_url)) as any;
       return res.data.data.list.map(kwConvertSong);
     };
 
@@ -690,7 +690,7 @@ const provider: MusicProvider = class kuwo extends MusicResource {
     const response = await axios.get(target_url);
 
     let comments = [];
-    if(response.data.rows) {
+    if (response.data.rows) {
       comments = response.data.rows.map((item: any) => {
         const data = {
           id: item.id,
@@ -718,8 +718,7 @@ const provider: MusicProvider = class kuwo extends MusicResource {
     }
 
     return { comments, total: comments.length, offset, limit };
-
   }
-}
+};
 
 export default provider;

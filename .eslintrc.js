@@ -1,7 +1,7 @@
 module.exports = {
   globals: {
     $ref: 'readonly',
-    $computed: 'readonly',
+    $computed: 'readonly'
   },
   env: {
     browser: true,

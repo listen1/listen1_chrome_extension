@@ -353,7 +353,7 @@ const isChrome = !isElectron();
 GithubClient.github.updateStatus().then(() => {
   githubStatus = GithubClient.github.getStatus();
   githubStatusText = GithubClient.github.getStatusText();
-})
+});
 
 let githubStatus = $ref(0);
 let githubStatusText = $ref('???');
@@ -378,12 +378,12 @@ const enableSource = (source: string) => {
 const openGithubAuth = () => {
   showModal('GithubAuth');
   GithubClient.github.openAuthUrl();
-}
+};
 
 const updateGithubStatus = async () => {
   githubStatus = await GithubClient.github.updateStatus();
   githubStatusText = GithubClient.github.getStatusText();
-}
+};
 
 const logoutGithub = GithubClient.github.logout;
 

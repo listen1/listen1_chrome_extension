@@ -1,6 +1,6 @@
-import axios from "axios";
-import { isElectron } from "../utils";
-import iDB from "./DBService";
+import axios from 'axios';
+import { isElectron } from '../utils';
+import iDB from './DBService';
 
 const OAUTH_URL = 'https://github.com/login/oauth';
 const API_URL = 'https://api.github.com';
@@ -10,21 +10,20 @@ const client_secret = '81fbfc45c65af8c0fbf2b4dae6f23f22e656cfb8';
 
 const GithubAPI = axios.create({
   baseURL: API_URL,
-  headers: { accept: 'application/json' },
+  headers: { accept: 'application/json' }
 });
 GithubAPI.interceptors.request.use(async (config) => {
   const dbRes = await iDB.Settings.get({
-    key: 'GITHUB_ACCESS_TOKEN',
+    key: 'GITHUB_ACCESS_TOKEN'
   });
   const accessToken = dbRes?.value;
-  if (config.headers)
-    config.headers.Authorization = `token ${accessToken}`;
+  if (config.headers) config.headers.Authorization = `token ${accessToken}`;
   return config;
 });
 
 const Github = {
   status: 0,
-  username: '',
+  username: ''
 };
 const GithubClient = {
   github: {
@@ -33,18 +32,18 @@ const GithubClient = {
       const params = {
         client_id,
         client_secret,
-        code,
+        code
       };
       const res = await axios.post(url, '', {
         params,
-        headers: { accept: 'application/json' },
+        headers: { accept: 'application/json' }
       });
       const ak = res.data.access_token;
       if (ak)
         iDB.Settings.put({
           key: 'GITHUB_ACCESS_TOKEN',
-          value: ak,
-        })
+          value: ak
+        });
       return ak;
     },
     _openAuthUrl: () => {
@@ -54,10 +53,10 @@ const GithubClient = {
         // normal window for link
         // @ts-ignore: eletron only
         // eslint-disable-next-line @typescript-eslint/no-var-requires
-        const { BrowserWindow } = require('electron').remote; // TODO: Use 
+        const { BrowserWindow } = require('electron').remote; // TODO: Use
         let win = new BrowserWindow({
           width: 1000,
-          height: 670,
+          height: 670
         });
         win.on('closed', () => {
           win = null;
@@ -88,7 +87,7 @@ const GithubClient = {
     },
     updateStatus: async () => {
       const dbRes = await iDB.Settings.get({
-        key: 'GITHUB_ACCESS_TOKEN',
+        key: 'GITHUB_ACCESS_TOKEN'
       });
       const accessToken = dbRes?.value;
       if (!accessToken) {
@@ -110,7 +109,7 @@ const GithubClient = {
         value: null
       });
       Github.status = 0;
-    },
+    }
   },
 
   gist: {
@@ -118,7 +117,7 @@ const GithubClient = {
       const result: Record<string, unknown> = {};
 
       result['listen1_backup.json'] = {
-        content: JSON.stringify(jsonObject),
+        content: JSON.stringify(jsonObject)
       };
       // const markdown = '# My Listen1 Playlists\n';
       const songsCount = jsonObject.Playlists.reduce((count: number, playlist: any) => {
@@ -127,21 +126,17 @@ const GithubClient = {
         let tableHeader = '\n| 音乐标题 | 歌手 | 专辑 |\n';
         tableHeader += '| --- | --- | --- |\n';
         const tracks = jsonObject.Tracks.filter((track: any) => track.playlist === playlist.id);
-        const tableBody = tracks.reduce(
-          (r: string, track: any) =>
-            `${r} | ${track.title} | ${track.artist} | ${track.album} | \n`,
-          ''
-        );
+        const tableBody = tracks.reduce((r: string, track: any) => `${r} | ${track.title} | ${track.artist} | ${track.album} | \n`, '');
         const content = `<details>\n  <summary>${cover}   ${title}</summary><p>\n${tableHeader}${tableBody}</p></details>`;
         const filename = `listen1_${playlist.id}.md`;
         result[filename] = {
-          content,
+          content
         };
         return count + tracks.length;
       }, 0);
       const summary = `本歌单由[Listen1](https://listen1.github.io/listen1/)创建, 歌曲数：${songsCount}，歌单数：${jsonObject.Playlists.length}，点击查看更多`;
       result['listen1_aha_playlist.md'] = {
-        content: summary,
+        content: summary
       };
 
       return result;
@@ -162,9 +157,7 @@ const GithubClient = {
     listExistBackup() {
       return GithubAPI.get('/gists').then((res) => {
         const result = res.data;
-        return result.filter((backupObject: Record<string, any>) =>
-          backupObject.description.startsWith('updated by Listen1')
-        );
+        return result.filter((backupObject: Record<string, any>) => backupObject.description.startsWith('updated by Listen1'));
       });
     },
 
@@ -181,15 +174,15 @@ const GithubClient = {
         data: {
           description: `updated by Listen1(https://listen1.github.io/listen1/) at ${new Date().toLocaleString()}`,
           public: isPublic,
-          files,
-        },
+          files
+        }
       });
     },
 
     importMySettingsFromGist(gistId: string) {
       return GithubAPI.get(`/gists/${gistId}`).then((res) => res.data.files);
-    },
-  },
+    }
+  }
 };
 
 export default GithubClient;

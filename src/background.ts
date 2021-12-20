@@ -1,4 +1,4 @@
-import GithubClient from "./services/GithubService";
+import GithubClient from './services/GithubService';
 
 chrome.browserAction.onClicked.addListener(() => {
   const url = chrome.extension.getURL('index.html');

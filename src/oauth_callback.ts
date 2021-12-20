@@ -5,7 +5,7 @@
 chrome.runtime.sendMessage(
   {
     type: 'code',
-    code: (new URLSearchParams(window.location.search)).get('code'),
+    code: new URLSearchParams(window.location.search).get('code')
   },
   (response) => {
     // window.open('', '_self', '');

@@ -1,6 +1,6 @@
 import axios from 'axios';
 import forge from 'node-forge';
-import { getParameterByName } from "../utils";
+import { getParameterByName } from '../utils';
 import { MusicResource, MusicProvider } from './types';
 
 const axiosTH = axios.create({
@@ -20,7 +20,7 @@ axiosTH.interceptors.request.use(
   },
   null,
   // @ts-ignore: Known Usage
-  { synchronous: true } 
+  { synchronous: true }
 );
 
 const provider: MusicProvider = class taihe extends MusicResource {
@@ -310,6 +310,6 @@ const provider: MusicProvider = class taihe extends MusicResource {
     const comments = <any>[];
     return { comments, total: comments.length, offset, limit };
   }
-}
+};
 
 export default provider;

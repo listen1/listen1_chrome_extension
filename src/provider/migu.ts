@@ -1,6 +1,6 @@
 import axios from 'axios';
 import forge from 'node-forge';
-import { getParameterByName } from "../utils";
+import { getParameterByName } from '../utils';
 import { MusicResource, MusicProvider } from './types';
 import { cookieRemove } from '../utils';
 
@@ -102,8 +102,9 @@ const provider: MusicProvider = class migu extends MusicResource {
     if (!filterId) {
       target_url = `https://app.c.nf.migu.cn/MIGUM2.0/v2.0/content/getMusicData.do?count=${pageSize}&start=${offset / pageSize + 1}&templateVersion=5&type=1`;
     } else {
-      target_url = `https://app.c.nf.migu.cn/MIGUM3.0/v1.0/template/musiclistplaza-listbytag?pageNumber=${offset / pageSize + 1
-        }&tagId=${filterId}&templateVersion=1`;
+      target_url = `https://app.c.nf.migu.cn/MIGUM3.0/v1.0/template/musiclistplaza-listbytag?pageNumber=${
+        offset / pageSize + 1
+      }&tagId=${filterId}&templateVersion=1`;
       // const target_url = `https://m.music.migu.cn/migu/remoting/playlist_bycolumnid_tag?playListType=2&type=1&columnId=15127315&tagId=&startIndex=${offset}`;
       // columnId=15127315为推荐，15127272为最新
     }
@@ -736,6 +737,6 @@ const provider: MusicProvider = class migu extends MusicResource {
 
     return { comments, total: comments.length, offset, limit };
   }
-}
+};
 
 export default provider;

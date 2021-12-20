@@ -211,6 +211,6 @@ const provider: MusicProvider = class bilibili extends MusicResource {
     const comments = <any>[];
     return { comments, total: comments.length, offset, limit };
   }
-}
+};
 
 export default provider;
