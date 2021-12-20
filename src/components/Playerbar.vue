@@ -34,24 +34,24 @@
       <div v-if="playlist.length > 0" class="detail flex-1 relative overflow-hidden">
         <div class="ctrl absolute top-1 right-2">
           <vue-feather
-            class="icon opacity-50 hover:opacity-100 cursor-pointer"
             v-if="!isRedHeart(currentPlaying.id)"
+            class="icon opacity-50 hover:opacity-100 cursor-pointer"
             type="heart"
             size="1.125rem"
             stroke-width="1.5"
             @click="setRedHeart(toRaw(currentPlaying), true)" />
           <vue-feather
-            class="heart cursor-pointer"
             v-if="isRedHeart(currentPlaying.id)"
+            class="heart cursor-pointer"
             type="heart"
             fill="red"
             stroke="red"
             size="1.125rem"
             @click="setRedHeart(toRaw(currentPlaying), false)" />
-          <a @click="showModal('AddToPlaylist', { tracks: [currentPlaying] })" :title="t('_ADD_TO_PLAYLIST')">
+          <a :title="t('_ADD_TO_PLAYLIST')" @click="showModal('AddToPlaylist', { tracks: [currentPlaying] })">
             <span class="icon opacity-50 hover:opacity-100 li-songlist ml-3" />
           </a>
-          <a title @click="changePlaymode()" class="mx-2 opacity-50 hover:opacity-100 text-lg ml-3">
+          <a title class="mx-2 opacity-50 hover:opacity-100 text-lg ml-3" @click="changePlaymode()">
             <span v-show="playmode == 0" class="icon li-loop" />
             <span v-show="playmode == 1" class="icon li-single-cycle" />
             <span v-show="playmode == 2" class="icon li-random-loop" />
@@ -87,11 +87,11 @@
       </div>
       <Volumebar></Volumebar>
       <div v-if="isElectron()" class="lyric-toggle cursor-pointer mx-6">
-        <div @click="toggleLyricFloatingWindow()" class="lyric-icon" :class="{ selected: settings.enableLyricFloatingWindow }">词</div>
+        <div class="lyric-icon" :class="{ selected: settings.enableLyricFloatingWindow }" @click="toggleLyricFloatingWindow()">词</div>
       </div>
       <div v-if="!isElectron()" class="mx-6"></div>
     </div>
-    <PlayerbarPopup @close="togglePlaylist()" :hidden="menuHidden"></PlayerbarPopup>
+    <PlayerbarPopup :hidden="menuHidden" @close="togglePlaylist()"></PlayerbarPopup>
   </div>
 </template>
 <script setup>

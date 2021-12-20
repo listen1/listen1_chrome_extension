@@ -33,10 +33,10 @@
         @mouseleave="song.highlight = undefined"
         @drop="onCurrentPlayingSongDrop(song, $event)">
         <div class="song-status-icon w-8">
-          <vue-feather size="1rem" v-show="currentPlaying.id == song.id" type="play"></vue-feather>
+          <vue-feather v-show="currentPlaying.id == song.id" size="1rem" type="play"></vue-feather>
         </div>
         <div class="song-title flex-2" :class="song.disabled ? 'text-disabled' : ''">
-          <a @click="playFromPlaylist(song)" class="cursor-pointer">
+          <a class="cursor-pointer" @click="playFromPlaylist(song)">
             <span v-if="song.source === 'xiami'" style="color: orange; border-radius: 12px; border: solid 1px; padding: 0 4px">⚠️ 🦐</span>
             {{ song.title }}
           </a>
@@ -51,8 +51,8 @@
           </a>
         </div>
         <div class="tools w-12 mr-4">
-          <span v-show="song.highlight" @click="removeTrack(song)" class="icon li-del opacity-50 hover:opacity-100 mr-2" />
-          <span v-show="song.highlight" @click="openUrl(song.source_url)" class="icon li-link opacity-50 hover:opacity-100" />
+          <span v-show="song.highlight" class="icon li-del opacity-50 hover:opacity-100 mr-2" @click="removeTrack(song)" />
+          <span v-show="song.highlight" class="icon li-link opacity-50 hover:opacity-100" @click="openUrl(song.source_url)" />
         </div>
         <!-- <div class="song-time">00:00</div> -->
       </DragDropZone>

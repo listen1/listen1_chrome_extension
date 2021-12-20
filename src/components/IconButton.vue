@@ -3,8 +3,8 @@
     <div class="play-list flex px-6 flex-1 items-center hover:bg-button-hover">
       <span v-if="!icon.startsWith('vue-feather-')" :class="'icon mr-4 ' + icon + ' ' + (iconClass ? iconClass : '')" />
       <vue-feather
-        :class="'mr-4 ' + (iconClass ? iconClass : '')"
         v-if="icon.startsWith('vue-feather-')"
+        :class="'mr-4 ' + (iconClass ? iconClass : '')"
         size="1.25rem"
         stroke-width="1"
         :type="icon.substring('vue-feather-'.length)" />

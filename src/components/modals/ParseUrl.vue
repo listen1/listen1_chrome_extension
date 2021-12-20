@@ -6,10 +6,10 @@
     <template #body>
       <div class="dialog-open-url">
         <input
+          v-model="url"
           class="form-control h-10 w-80 pl-3 rounded-sm border-none bg-search-input text-default"
           type="text"
-          :placeholder="t('_EXAMPLE') + 'https://www.xiami.com/collect/198267231'"
-          v-model="url" />
+          :placeholder="t('_EXAMPLE') + 'https://www.xiami.com/collect/198267231'" />
       </div>
     </template>
     <template #footer>

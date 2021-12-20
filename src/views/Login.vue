@@ -10,7 +10,7 @@
               <div class="usercard-nickname">{{ musicAuth[source].nickname }}</div>
               <div class="usercard-info text-subtitle">{{ t(source) }}</div>
             </div>
-            <button @click="logout(source)" class="m-3 bg-button">{{ t('_LOGOUT') }}</button>
+            <button class="m-3 bg-button" @click="logout(source)">{{ t('_LOGOUT') }}</button>
           </div>
         </div>
         <div v-if="!is_login(source)">
