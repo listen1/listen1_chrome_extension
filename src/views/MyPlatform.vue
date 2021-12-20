@@ -1,7 +1,7 @@
 <template>
   <!-- my platform window-->
   <div class="page page-hot-playlist max-w-5xl my-0 mx-auto">
-    <SourceTab :sources="platformSourceList" :tab="tab" @click="changeTab" :loading="false"></SourceTab>
+    <SourceTab :sources="platformSourceList" :tab="tab" :loading="false" @click="changeTab"></SourceTab>
     <div id="hotplaylist" class="site-wrapper-innerd">
       <div id="playlist-content" class="cover-container">
         <PlaylistGrid :playlists="myPlatformPlaylists"></PlaylistGrid>

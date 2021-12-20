@@ -1,6 +1,6 @@
 <template>
   <div class="page page-hot-playlist max-w-5xl my-0 mx-auto">
-    <SourceTab :sources="sourceList" :tab="tab" @click="changeTab" :loading="false"></SourceTab>
+    <SourceTab :sources="sourceList" :tab="tab" :loading="false" @click="changeTab"></SourceTab>
     <div class="playlist-filter mx-4 mb-4 leading-8">
       <div
         v-for="filter in playlistFilters[tab] || []"

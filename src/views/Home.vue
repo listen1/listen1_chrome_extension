@@ -120,7 +120,7 @@
           <WindowControl></WindowControl>
         </div>
 
-        <div class="flex-scroll-wrapper flex-1 overflow-y-scroll" id="browser" v-on:scroll.passive="handleScroll" content-selector="'#playlist-content'">
+        <div id="browser" class="flex-scroll-wrapper flex-1 overflow-y-scroll" content-selector="'#playlist-content'" @scroll.passive="handleScroll">
           <router-view v-slot="{ Component }">
             <keep-alive>
               <component :is="Component" v-if="$route.meta.keepAlive" />

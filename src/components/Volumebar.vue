@@ -5,9 +5,9 @@
       <DraggableBar
         id="volumebar"
         :progress="volume * 100"
+        btn-class="h-4 w-4 bg-white border border-gray-200"
         @update-progress="changeVolume"
-        @commit-progress="commitVolume"
-        btn-class="h-4 w-4 bg-white border border-gray-200"></DraggableBar>
+        @commit-progress="commitVolume"></DraggableBar>
     </div>
   </div>
 </template>

@@ -1,6 +1,6 @@
 <template>
   <transition name="modal">
-    <component v-if="show" :is="modalType" @close="show = false" v-bind="options"></component>
+    <component :is="modalType" v-if="show" v-bind="options" @close="show = false"></component>
   </transition>
 </template>
 

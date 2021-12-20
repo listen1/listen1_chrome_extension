@@ -8,18 +8,18 @@
         <div class="form-group">
           <label>{{ t('_PLAYLIST_TITLE') }}</label>
           <input
+            v-model="title"
             class="form-control h-10 w-80 pl-3 rounded-sm border-none bg-search-input text-default"
             type="text"
-            :placeholder="t('_INPUT_PLAYLIST_TITLE')"
-            v-model="title" />
+            :placeholder="t('_INPUT_PLAYLIST_TITLE')" />
         </div>
         <div class="form-group">
           <label>{{ t('_PLAYLIST_COVER_IMAGE_URL') }}</label>
           <input
+            v-model="imageUrl"
             class="form-control h-10 w-80 pl-3 rounded-sm border-none bg-search-input text-default"
             type="text"
-            :placeholder="t('_INPUT_PLAYLIST_COVER_IMAGE_URL')"
-            v-model="imageUrl" />
+            :placeholder="t('_INPUT_PLAYLIST_COVER_IMAGE_URL')" />
         </div>
       </div>
     </template>

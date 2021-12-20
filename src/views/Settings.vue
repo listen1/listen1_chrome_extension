@@ -83,13 +83,13 @@
         <div class="settings-content mx-7 mb-7 leading-8">
           <p>
             {{ `${t('_LYRIC_SIZE')}` }}
-            <input class="settings-input w-16 pl-[6px] py-0" v-model.lazy="settings.lyricFontSize" type="number" min="10" max="40" />
+            <input v-model.lazy="settings.lyricFontSize" class="settings-input w-16 pl-[6px] py-0" type="number" min="10" max="40" />
             px
           </p>
           <p>
             {{ `${t('_LYRIC_WEIGHT')}` }}
-            <select class="settings-input p-1" v-model="settings.lyricFontWeight">
-              <option v-for="option in fontWeightOptions" :value="option.value" :key="option.text">
+            <select v-model="settings.lyricFontWeight" class="settings-input p-1">
+              <option v-for="option in fontWeightOptions" :key="option.text" :value="option.value">
                 {{ option.text }}
               </option>
             </select>
@@ -119,16 +119,16 @@
           <div v-show="settings.enableAutoChooseSource" class="search-source-list flex items-center flex-wrap leading-10">
             <div v-for="item in sourceList" :key="item.name" class="search-source w-32 flex items-center">
               <vue-feather
+                v-show="settings.autoChooseSourceList.indexOf(item.name) === -1"
                 type="square"
                 class="cursor-pointer mr-2"
                 size="1.25rem"
-                v-show="settings.autoChooseSourceList.indexOf(item.name) === -1"
                 @click="enableSource(item.name)"></vue-feather>
               <vue-feather
+                v-show="settings.autoChooseSourceList.indexOf(item.name) > -1"
                 type="check-square"
                 class="cursor-pointer mr-2"
                 size="1.25rem"
-                v-show="settings.autoChooseSourceList.indexOf(item.name) > -1"
                 @click="disableSource(item.name)"></vue-feather>
               {{ t(item.displayId) }}
             </div>

@@ -16,8 +16,8 @@
 
       <div
         class="translate-switch app-region-nodrag h-6 w-6 border flex items-center justify-center absolute bottom-10 right-10 cursor-pointer text-neutral-400 hover:text-default"
-        @click="toggleLyricTranslation()"
-        :class="{ 'text-default': settings.enableLyricTranslation }">
+        :class="{ 'text-default': settings.enableLyricTranslation }"
+        @click="toggleLyricTranslation()">
         译
       </div>
       <div class="close app-region-nodrag cursor-pointer absolute left-8 right-8 w-8 h-8" :class="isMac ? 'mac top-16' : 'top-8 '" @click="toggleNowPlaying()">
@@ -65,11 +65,11 @@
               <span>{{ t('_ARTIST') }}：</span>
               <a
                 class="cursor-pointer"
+                :title="currentPlaying.artist"
                 @click="
                   showPlaylist(currentPlaying.artist_id);
                   setOverlayType('');
-                "
-                :title="currentPlaying.artist">
+                ">
                 {{ currentPlaying.artist }}
               </a>
             </div>
@@ -77,11 +77,11 @@
               <span>{{ t('_ALBUM') }}：</span>
               <a
                 class="cursor-pointer"
+                :title="currentPlaying.album"
                 @click="
                   showPlaylist(currentPlaying.album_id);
                   setOverlayType('');
-                "
-                :title="currentPlaying.album">
+                ">
                 {{ currentPlaying.album }}
               </a>
             </div>

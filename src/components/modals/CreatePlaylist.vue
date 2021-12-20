@@ -5,7 +5,7 @@
     </template>
     <template #body>
       <div class="dialog-newplaylist">
-        <input class="form-control" type="text" :placeholder="t('_INPUT_NEW_PLAYLIST_TITLE')" v-model="newlistTitle" />
+        <input v-model="newlistTitle" class="form-control" type="text" :placeholder="t('_INPUT_NEW_PLAYLIST_TITLE')" />
       </div>
     </template>
     <template #footer>
