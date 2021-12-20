@@ -18,7 +18,7 @@
       size="18"
       @click="setRedHeart(toRaw(song), false)" />
 
-    <a @click="play(song)" class="cursor-pointer ml-3 truncate flex-1 min-w-0">{{ song.title }}</a>
+    <a @click="play(song)" class="cursor-pointer ml-3 truncate min-w-0">{{ song.title }}</a>
   </div>
   <div class="artist flex-1 truncate">
     <a class="cursor-pointer" @click="$router.push(`/playlist/${song.artist_id}`)">{{ song.artist }}</a>
