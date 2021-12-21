@@ -40,7 +40,7 @@
 
       <div class="playsong-detail my-0 mx-auto flex w-[60rem] z-10">
         <div class="detail-head overflow-hidden flex-none w-[30rem] 2xl:w-[500px] flex justify-center">
-          <div class="detail-head-cover w-72 2xl:w-[450px] mt-32 2xl:mr-36 transition-all ease-linear">
+          <div class="detail-head-cover w-72 2xl:w-96 mt-32 2xl:mr-28 transition-all ease-in-out">
             <img class="w-full aspect-square object-cover rounded" :src="currentPlaying.img_url" @error="showImage($event, 'images/mycover.jpg')" />
           </div>
           <div class="detail-head-title">
