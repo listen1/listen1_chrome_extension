@@ -231,7 +231,7 @@ const MediaService = {
             const curpage = 1;
             const url = `/search?keywords=${keyword}&curpage=${curpage}&type=0`;
             const provider = getProviderByName(source);
-            //@ts-ignore TODO: use await to work with awaitable function  
+            //@ts-ignore TODO: use await to work with awaitable function
             provider.search(url).then((data: any) => {
               for (let i = 0; i < data.result.length; i += 1) {
                 const searchTrack = data.result[i];
