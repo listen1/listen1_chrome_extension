@@ -138,7 +138,7 @@
 
 <script setup lang="ts">
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { onMounted, provide } from 'vue';
+import { CSSProperties, onMounted, provide } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 import Modal from '../components/Modal.vue';
@@ -164,7 +164,7 @@ let is_dialog_hidden = $ref(1);
 let dialog_title = $ref('');
 let dialog_type = $ref(0);
 let dialog_data = $ref({});
-let myStyle = $ref({});
+let myStyle = $ref(<CSSProperties>{});
 let current_tag = $ref(2);
 let is_window_hidden = $ref(1);
 let window_type = $ref('');
@@ -181,8 +181,8 @@ let playlist_highlight = $ref(false);
 let menuHidden = $ref(true);
 let playmode = $computed(() => player.playmode);
 let input_keywords = $ref('');
-let settingButtonStyle = $ref({});
-let platButtonStyle = $ref({});
+let settingButtonStyle = $ref(<CSSProperties>{});
+let platButtonStyle = $ref(<CSSProperties>{});
 const { settings } = useSettings();
 const route = useRoute();
 
@@ -215,10 +215,10 @@ const toggleNowPlaying = () => {
     window_type = '';
   }
 };
-const newDialogOption = (option) => {
+const newDialogOption = (option: number) => {
   dialog_type = option;
 };
-const showDialog = (dialogType, dialogData) => {
+const showDialog = (dialogType: any, dialogData: any) => {
   is_dialog_hidden = 0;
   dialog_data = dialogData;
   const dialogWidth = 400;
@@ -245,23 +245,21 @@ const togglePlaylist = () => {
 const clearPlaylist = () => {
   l1Player.clearPlaylist();
 };
-const changeProgress = (progress) => {
+const changeProgress = (progress: number) => {
   l1Player.seek(progress);
 };
 
 const toggleMuteStatus = () => {
   l1Player.toggleMute();
 };
-const playFromPlaylist = (song) => {
-  l1Player.playById(song.id);
-};
-
 let modalRef = $ref(null);
-provide('showModal', (type, opt) => {
+provide('showModal', (type: any, opt: any) => {
+  //@ts-ignore modalRef exists
   modalRef.showModal(type, opt);
 });
 onMounted(() => {
   if ('windowControlsOverlay' in navigator) {
+    // @ts-ignore windowControlsOverlay is not in builtin dom
     const { x } = navigator.windowControlsOverlay.getBoundingClientRect();
     //windows
     if (x === 0) {
@@ -281,7 +279,7 @@ onMounted(() => {
   refreshAuthStatus();
 });
 const handleScroll = () => {
-  const element = document.getElementById('browser');
+  const element = document.getElementById('browser') as HTMLElement;
   if (element.scrollHeight - element.scrollTop === element.clientHeight) {
     EventService.emit(`scroll:bottom`);
   }

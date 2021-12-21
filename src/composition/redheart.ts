@@ -6,7 +6,8 @@ const redheart = reactive({
   tracks: <{ [key: string]: any }>{} // array is not reactive
 });
 
-function isRedHeart(trackId: string) {
+function isRedHeart(trackId?: string) {
+  //@ts-ignore always a valid id
   return redheart.tracks[trackId] !== undefined;
 }
 

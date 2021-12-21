@@ -8,7 +8,7 @@
         <div class="detail-head-title flex-1">
           <h2 class="h-10 my-7 text-3xl font-semibold">{{ playlist_title }}</h2>
           <div class="playlist-button-list flex flex-wrap">
-            <IconButton icon="li-play-s" icon-class="text-important" @click="playMylist(listId)">
+            <IconButton icon="li-play-s" icon-class="text-important" @click="playMylist()">
               <template #main>
                 {{ t('_PLAY_ALL') }}
               </template>
@@ -86,7 +86,7 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup>
 import { computed, inject, onMounted, toRaw, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
@@ -94,6 +94,7 @@ import DragDropZone from '../components/DragDropZone.vue';
 import IconButton from '../components/IconButton.vue';
 import TrackRow from '../components/TrackRow.vue';
 import useRedHeart from '../composition/redheart';
+import { Track } from '../provider/types';
 import $event from '../services/EventService';
 import { l1Player } from '../services/l1_player';
 import MediaService from '../services/MediaService';
@@ -132,14 +133,15 @@ onMounted(async () => {
 });
 
 const playMylist = () => {
+  //@ts-ignore not assignable error?
   l1Player.playTracks(toRaw(songs));
 };
 
-const openUrl = (url?: string | URL) => {
+const openUrl = (url) => {
   window.open(url, '_blank')?.focus();
 };
 
-const favoritePlaylist = async (listId: any) => {
+const favoritePlaylist = async (listId) => {
   if (is_favorite) {
     await removeFavoritePlaylist(listId);
     is_favorite = false;
@@ -149,22 +151,22 @@ const favoritePlaylist = async (listId: any) => {
   }
 };
 
-const addFavoritePlaylist = async (listId: string) => {
+const addFavoritePlaylist = async (listId) => {
   await MediaService.clonePlaylist(listId, 'favorite');
   notyf.success(t('_FAVORITE_PLAYLIST_SUCCESS'));
 };
 
-const removeFavoritePlaylist = async (listId: string) => {
+const removeFavoritePlaylist = async (listId) => {
   await MediaService.removeMyPlaylist(listId, 'favorite');
   notyf.success(t('_UNFAVORITE_PLAYLIST_SUCCESS'));
 };
 
-const saveAsMyPlaylist = async (listId: string) => {
+const saveAsMyPlaylist = async (listId) => {
   await MediaService.clonePlaylist(listId, 'my');
   notyf.success(t('_ADD_TO_PLAYLIST_SUCCESS'));
 };
 
-const onPlaylistSongDrop = async (listId: string, song: any, event: any) => {
+const onPlaylistSongDrop = async (listId, song, event) => {
   const { data, dragType, direction } = event;
 
   if (dragType === 'application/listen1-song') {
@@ -179,7 +181,7 @@ const showModal = inject('showModal');
 // use global ref to keep more clear way to manage state
 $event.on(`playlist:id:${listId}:update`, refreshPlaylist);
 
-const addLocalMusic = (listId: string) => {
+const addLocalMusic = (listId) => {
   window.api.chooseLocalFile(listId);
   window.api.ipcOnce('chooseLocalFile')(async (message) => {
     const { tracks } = message;
@@ -191,7 +193,7 @@ const addLocalMusic = (listId: string) => {
 watch(
   () => route.path,
   async () => {
-    listId = route.params.listId as string;
+    listId = route.params.listId;
     is_favorite = await MediaService.isMyPlaylist(listId);
     await refreshPlaylist();
   }

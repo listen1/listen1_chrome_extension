@@ -65,7 +65,7 @@
             </template>
             <template v-if="condition.searchType === 1">
               <li
-                v-for="playlist in result.tracks"
+                v-for="(playlist, index) in result.tracks"
                 :key="playlist.id"
                 :class="{ 'bg-even': index % 2 === 0, 'bg-odd': index % 2 !== 0 }"
                 class="playlist-result flex relative items-center px-10 h-20 hover:bg-row-hover">
@@ -105,15 +105,15 @@ import MediaService from '../services/MediaService';
 const { t } = useI18n();
 const { condition, result } = useSearch();
 
-const changeSearchType = (newValue) => {
+const changeSearchType = (newValue: number) => {
   condition.searchType = newValue;
   condition.curpage = 1;
 };
-const changeSourceTab = (newValue) => {
+const changeSourceTab = (newValue: string) => {
   condition.tab = newValue;
   condition.curpage = 1;
 };
-const changeSearchPage = (offset) => {
+const changeSearchPage = (offset: number) => {
   condition.curpage += offset;
 };
 

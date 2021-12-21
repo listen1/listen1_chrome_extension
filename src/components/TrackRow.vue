@@ -50,8 +50,8 @@
 <script setup lang="ts">
 const { song, isMine, isLocal, listId } = defineProps<{
   song: any;
-  isMine?: string;
-  isLocal?: string;
+  isMine?: boolean | string;
+  isLocal?: boolean;
   listId?: string;
 }>();
 import { inject, toRaw } from 'vue';

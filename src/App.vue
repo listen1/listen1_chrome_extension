@@ -16,8 +16,8 @@ import { PlayerEventListener } from './composition/player';
 import useRedHeart from './composition/redheart';
 import useSettings, { migrateSettings } from './composition/settings';
 import iDB, { dbMigrate } from './services/DBService';
-import { l1Player } from './services/l1_player';
 import type { Track } from './services/l1_player';
+import { l1Player } from './services/l1_player';
 import { initMediaSession, MediaSessionEventListener } from './services/media_session';
 import Home from './views/Home.vue';
 
@@ -55,6 +55,7 @@ const initPlayer = async () => {
   const localCurrentPlaying = await iDB.Tracks.where('playlist').equals('current').toArray();
   let tracks: Track[] = [];
   if (currentPlaylist !== undefined) {
+    //@ts-ignore not null
     tracks = currentPlaylist.order.map((id) => localCurrentPlaying.find((track) => track.id == id));
   }
   const dbSettings = await iDB.Settings.where('key').equals('playerSettings').toArray();

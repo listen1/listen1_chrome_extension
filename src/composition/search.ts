@@ -1,4 +1,5 @@
 import { reactive, watch } from 'vue';
+import { Track } from '../provider/types';
 import MediaService from '../services/MediaService';
 
 const condition = reactive({
@@ -8,7 +9,7 @@ const condition = reactive({
   tab: 'netease'
 });
 const result = reactive({
-  tracks: [],
+  tracks: [] as any[],
   totalpage: 0,
   loading: false
 });

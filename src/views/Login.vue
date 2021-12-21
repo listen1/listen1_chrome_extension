@@ -43,7 +43,7 @@ import { useI18n } from 'vue-i18n';
 import useAuth from '../composition/auth';
 
 const { t } = useI18n();
-const showModal = inject('showModal');
+const showModal = inject<any>('showModal');
 
 const { musicAuth, is_login, openLogin, loginSourceList, logout } = useAuth();
 </script>

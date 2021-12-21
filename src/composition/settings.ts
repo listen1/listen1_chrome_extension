@@ -1,7 +1,7 @@
 import { reactive, watch } from 'vue';
+import type { Language } from '../i18n';
 import iDB from '../services/DBService';
 import { setPrototypeOfLocalStorage } from '../utils';
-
 setPrototypeOfLocalStorage();
 
 const nameMapping = {
@@ -23,7 +23,7 @@ const nameMapping = {
 type nameMapping = typeof nameMapping;
 type mappingKey = keyof nameMapping;
 const settings = reactive({
-  language: 'zh-CN',
+  language: 'zh-CN' as Language,
   enableAutoChooseSource: false,
   enableStopWhenClose: true,
   enableNowplayingCoverBackground: false,
