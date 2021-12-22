@@ -93,12 +93,12 @@ import notyf from '../services/notyf';
 import { isElectron } from '../utils';
 import Entry from './Entry.vue';
 
-const isChrome = true;
+const isChrome = !isElectron();
 const route = useRoute();
 const { t } = useI18n();
 const { is_login } = useAuth();
 
-let favoriteplaylists: any = $ref<Playlist[]>([]);
+let favoriteplaylists = $ref<Playlist[]>([]);
 let myplaylists: any = $ref<unknown[]>([]);
 
 const refreshFav = () => {

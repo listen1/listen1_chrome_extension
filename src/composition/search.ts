@@ -1,5 +1,4 @@
 import { reactive, watch } from 'vue';
-import { Track } from '../provider/types';
 import MediaService from '../services/MediaService';
 
 const condition = reactive({
