@@ -70,7 +70,7 @@
           dragtype="application/listen1-favoriteplaylist"
           @click="$router.push(`/playlist/${i.id}`)"
           @drop="onSidebarPlaylistDrop('favorite', i.id, $event)">
-          <Entry :text="i.title" />
+          <SidebarEntry :text="i.title" icon="vue-feather-disc"></SidebarEntry>
         </DragDropZone>
       </ul>
     </div>
