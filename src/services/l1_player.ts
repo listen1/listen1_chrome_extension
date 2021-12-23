@@ -3,7 +3,7 @@ import MediaService from './MediaService';
 import { arrayMove } from '../utils';
 
 const FALI_WAIT_SECOND = 1;
-interface Track {
+export interface Track {
   id: string;
   album: string;
   album_id: string;
@@ -56,7 +56,7 @@ function posMod(m: number, n: number) {
   return ((m % n) + n) % n;
 }
 
-/*
+/**
 l1PlayerProto
 Wrap html audio element to provide playlist management.
 

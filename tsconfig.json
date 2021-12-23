@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     "noEmit": true,
+    "allowJs": true,
     "target": "es2019",
     "useDefineForClassFields": true,
     "module": "es2015",

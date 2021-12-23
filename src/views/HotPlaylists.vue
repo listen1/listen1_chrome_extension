@@ -58,7 +58,6 @@ const loadPlaylist = async (isReset) => {
     result = [...result, ...response];
   }
   loading = false;
-
   if (playlistFilters[tab] === undefined && allPlaylistFilters[tab] === undefined) {
     const { recommend, all } = await MediaService.getPlaylistFilters(tab);
     playlistFilters[tab] = recommend;

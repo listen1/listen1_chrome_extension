@@ -8,7 +8,7 @@ const condition = reactive({
   tab: 'netease'
 });
 const result = reactive({
-  tracks: [],
+  tracks: [] as any[],
   totalpage: 0,
   loading: false
 });

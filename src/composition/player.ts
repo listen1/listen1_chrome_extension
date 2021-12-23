@@ -1,10 +1,10 @@
 import { reactive } from 'vue';
-import MediaService from '../services/MediaService';
-import { parseLyric, calculateLine, LyricLine } from '../services/lyric';
-import { isElectron, smoothScrollTo } from '../utils';
 import iDB from '../services/DBService';
-import useSettings, { getSetting } from './settings';
+import { calculateLine, LyricLine, parseLyric } from '../services/lyric';
+import MediaService from '../services/MediaService';
+import { isElectron, smoothScrollTo } from '../utils';
 import useOverlay from './overlay';
+import useSettings, { getSetting } from './settings';
 
 interface Track {
   id: string;

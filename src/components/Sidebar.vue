@@ -78,26 +78,27 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, inject } from 'vue';
+import { inject, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { useRoute } from 'vue-router';
+import DragDropZone from '../components/DragDropZone.vue';
+import SidebarEntry from '../components/SidebarEntry.vue';
+import SidebarTitle from '../components/SidebarTitle.vue';
+import useAuth from '../composition/auth';
+import useRedHeart from '../composition/redheart';
 import type { Playlist } from '../services/DBService';
 import $event from '../services/EventService';
 import MediaService from '../services/MediaService';
-import DragDropZone from '../components/DragDropZone.vue';
 import notyf from '../services/notyf';
-import useAuth from '../composition/auth';
-import useRedHeart from '../composition/redheart';
 import { isElectron } from '../utils';
-import SidebarEntry from '../components/SidebarEntry.vue';
-import SidebarTitle from '../components/SidebarTitle.vue';
+import Entry from './Entry.vue';
 
-import { useRoute } from 'vue-router';
-const isChrome = true;
+const isChrome = !isElectron();
 const route = useRoute();
 const { t } = useI18n();
 const { is_login } = useAuth();
 
-let favoriteplaylists: any = $ref<Playlist[]>([]);
+let favoriteplaylists = $ref<Playlist[]>([]);
 let myplaylists: any = $ref<unknown[]>([]);
 
 const refreshFav = () => {

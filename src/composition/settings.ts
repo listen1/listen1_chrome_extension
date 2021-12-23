@@ -1,7 +1,7 @@
 import { reactive, watch } from 'vue';
+import type { Language } from '../i18n';
 import iDB from '../services/DBService';
 import { setPrototypeOfLocalStorage } from '../utils';
-
 setPrototypeOfLocalStorage();
 
 const nameMapping = {
@@ -23,18 +23,19 @@ const nameMapping = {
 type nameMapping = typeof nameMapping;
 type mappingKey = keyof nameMapping;
 const settings = reactive({
-  language: 'zh-CN',
+  language: 'zh-CN' as Language,
   enableAutoChooseSource: false,
   enableStopWhenClose: true,
   enableNowplayingCoverBackground: false,
   enableNowplayingBitrate: false,
+  enableNowplayingComment: false,
   enableLyricFloatingWindow: false,
   enableLyricFloatingWindowTranslation: false,
   enableGlobalShortCut: false,
   enableNowplayingPlatform: false,
   enableLyricTranslation: false,
   floatWindowSetting: { backgroundAlpha: 0.6, fontSize: 22, color: '#ffffff' },
-  theme: 'black',
+  theme: 'black' as Theme,
   playerSettings: { playmode: 0, volume: 100 },
   //lyric settings
   lyricFontSize: 15,

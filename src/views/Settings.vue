@@ -69,6 +69,21 @@
               @click="togglePlayingPlatform"></vue-feather>
             {{ t('_NOWPLAYING_PLATFORM_NOTICE') }}
           </div>
+          <div class="shortcut flex items-center">
+            <vue-feather
+              v-show="!settings.enableNowplayingComment"
+              class="cursor-pointer mr-2"
+              size="1.25rem"
+              type="square"
+              @click="togglePlayingComment"></vue-feather>
+            <vue-feather
+              v-show="settings.enableNowplayingComment"
+              class="cursor-pointer mr-2"
+              size="1.25rem"
+              type="check-square"
+              @click="togglePlayingComment"></vue-feather>
+            {{ t('_NOWPLAYING_COMMENT') }}
+          </div>
         </div>
         <SettingTitle :text="t('_THEME')" />
         <div class="settings-content mx-7 mb-7 leading-8">
@@ -335,6 +350,7 @@
 </template>
 
 <script setup lang="ts">
+import { inject } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { version } from '../../package.json';
 import Href from '../components/Href.vue';
@@ -342,10 +358,9 @@ import SettingButton from '../components/SettingButton.vue';
 import SettingTitle from '../components/SettingTitle.vue';
 import useSettings from '../composition/settings';
 import { setLocale } from '../i18n';
-import { isElectron } from '../utils';
-import GithubClient from '../services/GithubService';
-import { inject } from 'vue';
 import EventService from '../services/EventService';
+import GithubClient from '../services/GithubService';
+import { isElectron } from '../utils';
 const { t } = useI18n();
 const { settings, setSettings } = useSettings();
 const isChrome = !isElectron();
@@ -363,6 +378,7 @@ const showModal = <CallableFunction>inject('showModal');
 const toggleCoverBackground = () => setSettings({ enableNowplayingCoverBackground: !settings.enableNowplayingCoverBackground });
 const toggleBitrate = () => setSettings({ enableNowplayingBitrate: !settings.enableNowplayingBitrate });
 const togglePlayingPlatform = () => setSettings({ enableNowplayingPlatform: !settings.enableNowplayingPlatform });
+const togglePlayingComment = () => setSettings({ enableNowplayingComment: !settings.enableNowplayingComment });
 const setTheme = (theme: string) => setSettings({ theme });
 const setAutoChooseSource = (enabled: boolean) => setSettings({ enableAutoChooseSource: enabled });
 const setAutoChooseSourceList = (newList: string[]) => setSettings({ autoChooseSourceList: newList });

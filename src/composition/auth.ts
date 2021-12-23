@@ -1,5 +1,5 @@
-import MediaService from '../services/MediaService';
 import { reactive } from 'vue';
+import MediaService from '../services/MediaService';
 
 const musicAuth: any = reactive({});
 

@@ -26,7 +26,7 @@
         </svg>
       </div>
       <div v-if="playlist.length > 0" class="cover flex-none cursor-pointer h-20 w-20 relative group" @click="toggleNowPlaying()">
-        <img class="object-cover h-20 w-20" :src="currentPlaying.img_url" @error="showImage($event, 'images/mycover.jpg')" />
+        <img class="object-cover h-20 w-20" :src="currentPlaying?.img_url" @error="showImage($event, 'images/mycover.jpg')" />
         <div class="mask items-center justify-center absolute inset-0 hidden group-hover:bg-black group-hover:bg-opacity-60 group-hover:flex">
           <vue-feather type="chevrons-up" stroke="#cccccc" />
         </div>
@@ -34,14 +34,14 @@
       <div v-if="playlist.length > 0" class="detail flex-1 relative overflow-hidden">
         <div class="ctrl absolute top-1 right-2">
           <vue-feather
-            v-if="!isRedHeart(currentPlaying.id)"
+            v-if="!isRedHeart(currentPlaying?.id)"
             class="icon opacity-50 hover:opacity-100 cursor-pointer"
             type="heart"
             size="1.125rem"
             stroke-width="1.5"
             @click="setRedHeart(toRaw(currentPlaying), true)" />
           <vue-feather
-            v-if="isRedHeart(currentPlaying.id)"
+            v-if="isRedHeart(currentPlaying?.id)"
             class="heart cursor-pointer"
             type="heart"
             fill="red"
@@ -51,7 +51,7 @@
           <a :title="t('_ADD_TO_PLAYLIST')" @click="showModal('AddToPlaylist', { tracks: [currentPlaying] })">
             <span class="icon opacity-50 hover:opacity-100 li-songlist ml-3" />
           </a>
-          <a title class="mx-2 opacity-50 hover:opacity-100 text-lg ml-3" @click="changePlaymode()">
+          <a class="mx-2 opacity-50 hover:opacity-100 text-lg ml-3" @click="changePlaymode()">
             <span v-show="playmode == 0" class="icon li-loop" />
             <span v-show="playmode == 1" class="icon li-single-cycle" />
             <span v-show="playmode == 2" class="icon li-random-loop" />
@@ -59,15 +59,15 @@
         </div>
 
         <div class="title text-center truncate h-8 flex items-end justify-center text-lg">
-          <span v-if="currentPlaying.source === 'xiami'" style="color: orange; font-size: medium">⚠️</span>
-          {{ currentPlaying.title }}
+          <span v-if="currentPlaying?.source === 'xiami'" style="color: orange; font-size: medium">⚠️</span>
+          {{ currentPlaying?.title }}
         </div>
         <div class="more-info h-6 text-sm flex text-subtitle px-3">
           <div class="current">{{ formatTime(currentPosition) }}</div>
           <div class="singer flex-1 tuncate text-center">
-            <a class="cursor-pointer" @click="showPlaylist(currentPlaying.artist_id)">{{ currentPlaying.artist }}</a>
+            <a class="cursor-pointer" @click="showPlaylist(currentPlaying?.artist_id)">{{ currentPlaying?.artist }}</a>
             -
-            <a class="cursor-pointer" @click="showPlaylist(currentPlaying.album_id)">{{ currentPlaying.album }}</a>
+            <a class="cursor-pointer" @click="showPlaylist(currentPlaying?.album_id)">{{ currentPlaying?.album }}</a>
           </div>
           <div class="total">{{ formatTime(currentDuration) }}</div>
         </div>
@@ -94,8 +94,8 @@
     <PlayerbarPopup :hidden="menuHidden" @close="togglePlaylist()"></PlayerbarPopup>
   </div>
 </template>
-<script setup>
-import { inject, toRaw } from 'vue';
+<script setup lang="ts">
+import { ImgHTMLAttributes, inject, toRaw } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 import DraggableBar from '../components/DraggableBar.vue';
@@ -111,7 +111,7 @@ import { formatTime, isElectron } from '../utils';
 const { t } = useI18n();
 const { player } = usePlayer();
 const router = useRouter();
-const showModal = inject('showModal');
+const showModal = inject<any>('showModal');
 const { settings, setSettings } = useSettings();
 
 let { overlay, setOverlayType } = useOverlay();
@@ -125,7 +125,7 @@ const changePlaymode = () => {
   l1Player.setLoopMode(newPlaymode);
 };
 
-const showPlaylist = (playlistId) => {
+const showPlaylist = (playlistId?: string) => {
   router.push(`/playlist/${playlistId}`);
 };
 const playPauseToggle = () => {
@@ -149,12 +149,12 @@ const togglePlaylist = () => {
   menuHidden = !menuHidden;
 };
 
-const updateProgress = (progress) => {
+const updateProgress = (progress: number) => {
   player.changingProgress = true;
   player.currentPosition = currentDuration * progress;
 };
 
-const commitProgress = (progress) => {
+const commitProgress = (progress: number) => {
   l1Player.seek(progress);
   player.changingProgress = false;
   player.currentPosition = currentDuration * progress;
@@ -163,7 +163,7 @@ const commitProgress = (progress) => {
   player._lyricArrayIndex = -1;
 };
 
-function getCSSStringFromSetting(setting) {
+function getCSSStringFromSetting(setting: { backgroundAlpha: number; fontSize: number; color: string }) {
   let { backgroundAlpha } = setting;
   if (backgroundAlpha === 0) {
     // NOTE: background alpha 0 results total transparent
@@ -195,8 +195,10 @@ const toggleLyricFloatingWindow = () => {
   window.api?.sendControl(message, getCSSStringFromSetting(settings.floatWindowSetting));
 };
 
-const showImage = (e, url) => {
-  e.target.src = url;
+const showImage = (e?: any, url?: string) => {
+  if (e?.target) {
+    e.target.src = url;
+  }
 };
 
 const { isRedHeart, setRedHeart } = useRedHeart();
@@ -205,10 +207,10 @@ let isPlaying = $computed(() => player.isPlaying);
 let myProgress = $computed(() => player.myProgress);
 let currentDuration = $computed(() => player.currentDuration);
 let currentPosition = $computed(() => player.currentPosition);
-let currentPlaying = $computed(() => player.currentPlaying || {});
+let currentPlaying = $computed(() => player.currentPlaying);
 
 if (isElectron()) {
-  window.api?.onLyricWindow((arg) => {
+  window.api?.onLyricWindow((arg: string) => {
     if (arg === 'float_window_close') {
       return toggleLyricFloatingWindow();
     }

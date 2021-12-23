@@ -8,7 +8,7 @@
         <div class="detail-head-title flex-1">
           <h2 class="h-10 my-7 text-3xl font-semibold">{{ playlist_title }}</h2>
           <div class="playlist-button-list flex flex-wrap">
-            <IconButton icon="li-play-s" icon-class="text-important" @click="playMylist(listId)">
+            <IconButton icon="li-play-s" icon-class="text-important" @click="playMylist()">
               <template #main>
                 {{ t('_PLAY_ALL') }}
               </template>
@@ -79,7 +79,7 @@
           @drop="onPlaylistSongDrop(listId, song, $event)"
           @mouseenter="song.options = true"
           @mouseleave="song.options = undefined">
-          <TrackRow :song="song" :is_local="is_local" :is_mine="is_mine" :list-id="listId"></TrackRow>
+          <TrackRow :song="song" :is-local="is_local" :is-mine="is_mine" :list-id="listId"></TrackRow>
         </DragDropZone>
       </ul>
     </div>
@@ -87,13 +87,14 @@
 </template>
 
 <script setup>
-import { inject, onMounted, toRaw, watch, computed } from 'vue';
+import { computed, inject, onMounted, toRaw, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
 import DragDropZone from '../components/DragDropZone.vue';
 import IconButton from '../components/IconButton.vue';
 import TrackRow from '../components/TrackRow.vue';
 import useRedHeart from '../composition/redheart';
+import { Track } from '../provider/types';
 import $event from '../services/EventService';
 import { l1Player } from '../services/l1_player';
 import MediaService from '../services/MediaService';
@@ -132,11 +133,12 @@ onMounted(async () => {
 });
 
 const playMylist = () => {
+  //@ts-ignore not assignable error?
   l1Player.playTracks(toRaw(songs));
 };
 
 const openUrl = (url) => {
-  window.open(url, '_blank').focus();
+  window.open(url, '_blank')?.focus();
 };
 
 const favoritePlaylist = async (listId) => {

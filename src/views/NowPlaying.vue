@@ -1,8 +1,10 @@
 <template>
   <div class="page">
     <div
-      class="songdetail-wrapper absolute flex flex-col top-0 left-0 right-0 bottom-20 overflow-y-scroll duration-300 app-region-nodrag bg-now-playing"
+      class="songdetail-wrapper absolute flex flex-col top-0 left-0 right-0 bottom-20 duration-300 app-region-nodrag bg-now-playing"
       :class="{
+        'overflow-y-scroll': commentActive,
+        'overflow-hidden': !commentActive,
         slidedown: overlay.type !== 'track',
         coverbg: settings.enableNowplayingCoverBackground
       }">
@@ -12,7 +14,7 @@
       <div
         v-if="settings.enableNowplayingCoverBackground"
         class="bg absolute opacity-50 h-full text-center w-full brightness-[0.8] blur-[90px] duration-1000 ease-in-out"
-        :style="{ backgroundImage: `url(${currentPlaying.img_url}` }" />
+        :style="{ backgroundImage: `url(${currentPlaying?.img_url}` }" />
 
       <div
         class="translate-switch app-region-nodrag h-6 w-6 border flex items-center justify-center absolute bottom-10 right-10 cursor-pointer text-neutral-400 hover:text-default"
@@ -37,9 +39,9 @@
       </div>-->
 
       <div class="playsong-detail my-0 mx-auto flex w-[60rem] z-10">
-        <div class="detail-head overflow-hidden flex-none w-[30rem] flex justify-center">
-          <div class="detail-head-cover w-72 h-72 mt-32">
-            <img class="w-72 h-72 object-cover" :src="currentPlaying.img_url" @error="showImage($event, 'images/mycover.jpg')" />
+        <div class="detail-head overflow-hidden flex-none w-[30rem] 2xl:w-[500px] flex justify-center">
+          <div class="detail-head-cover w-72 2xl:w-96 mt-32 2xl:mr-28 transition-all ease-in-out">
+            <img class="w-full aspect-square object-cover rounded" :src="currentPlaying?.img_url" @error="showImage($event, 'images/mycover.jpg')" />
           </div>
           <div class="detail-head-title">
             <!--<a title="加入收藏" class="clone" ng-click="showDialog(0, currentPlaying)">收藏</a>
@@ -48,41 +50,41 @@
         </div>
         <div class="detail-songinfo flex app-region-nodrag overflow-hidden mt-28 flex-col flex-1">
           <div class="title flex items-start">
-            <h2 class="font-normal text-3xl mr-4 mb-4">{{ currentPlaying.title }}</h2>
+            <h2 class="font-normal text-3xl mr-4 mb-4">{{ currentPlaying?.title }}</h2>
             <span
-              v-if="settings.enableNowplayingBitrate && currentTrackMeta.bitrate !== undefined"
+              v-if="settings.enableNowplayingBitrate && currentTrackMeta?.bitrate !== undefined"
               class="badge text-badge text-sm border border-badge px-2 ml-2 mt-2 rounded h-6 flex items-center justify-center whitespace-nowrap">
               {{ currentTrackMeta.bitrate }}
             </span>
             <span
-              v-if="settings.enableNowplayingPlatform && currentTrackMeta.platform !== undefined"
+              v-if="settings.enableNowplayingPlatform && currentTrackMeta?.platform !== undefined"
               class="badge text-badge text-sm border border-badge px-2 ml-2 mt-2 rounded h-6 flex items-center justify-center whitespace-nowrap platform">
               {{ t(currentTrackMeta.platform) }}
             </span>
           </div>
           <div class="info border-b border-default pb-2 flex">
             <div class="singer flex-1 overflow-hidden whitespace-nowrap text-ellipsis">
-              <span>{{ t('_ARTIST') }}：</span>
+              <span>{{ t('_ARTIST') }}:</span>
               <a
                 class="cursor-pointer"
-                :title="currentPlaying.artist"
+                :title="currentPlaying?.artist"
                 @click="
-                  showPlaylist(currentPlaying.artist_id);
+                  showPlaylist(currentPlaying?.artist_id);
                   setOverlayType('');
                 ">
-                {{ currentPlaying.artist }}
+                {{ currentPlaying?.artist }}
               </a>
             </div>
             <div class="album flex-2 overflow-hidden whitespace-nowrap text-ellipsis">
-              <span>{{ t('_ALBUM') }}：</span>
+              <span>{{ t('_ALBUM') }}:</span>
               <a
                 class="cursor-pointer"
-                :title="currentPlaying.album"
+                :title="currentPlaying?.album"
                 @click="
-                  showPlaylist(currentPlaying.album_id);
+                  showPlaylist(currentPlaying?.album_id);
                   setOverlayType('');
                 ">
-                {{ currentPlaying.album }}
+                {{ currentPlaying?.album }}
               </a>
             </div>
           </div>
@@ -105,7 +107,7 @@
           </div>
         </div>
       </div>
-      <div v-if="commentList.length > 0" class="mt-20 mb-8 mx-auto w-[42rem] z-10">
+      <div v-if="commentActive" class="mt-20 mb-8 mx-auto w-[42rem] z-10">
         <div>热门评论</div>
         <ul>
           <li v-for="comment in commentList" :key="comment.id" class="flex py-4 border-b border-default">
@@ -138,17 +140,18 @@
     </div>
   </div>
 </template>
-<script setup>
+<script setup lang="ts">
 import { watchEffect } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { datetimeFormats } from '../i18n/index';
 import { useRouter } from 'vue-router';
 import useOverlay from '../composition/overlay';
 import usePlayer from '../composition/player';
 import useSettings from '../composition/settings';
+import { datetimeFormats } from '../i18n/index';
 import MediaService from '../services/MediaService';
-
+import type { Comment } from '../provider/types';
 const { t, d } = useI18n({
+  //@ts-ignore mismatch arg num
   datetimeFormats
 });
 const { player } = usePlayer();
@@ -157,7 +160,8 @@ const router = useRouter();
 const { settings, setSettings } = useSettings();
 
 let isMac = $ref(false);
-let commentList = $ref([]);
+let commentList = $ref(<Comment[]>[]);
+let commentActive = $computed(() => settings.enableNowplayingComment && commentList.length > 0);
 const toggleNowPlaying = () => {
   if (overlay.type != 'track') {
     setOverlayType('track');
@@ -166,13 +170,13 @@ const toggleNowPlaying = () => {
   }
 };
 
-const showPlaylist = (playlistId) => {
+const showPlaylist = (playlistId?: string) => {
   router.push('/playlist/' + playlistId);
 };
 
 const toggleLyricTranslation = () => setSettings({ enableLyricTranslation: !settings.enableLyricTranslation });
 
-const showImage = (e, url) => {
+const showImage = (e: any, url: any) => {
   e.target.src = url;
 };
 
@@ -180,8 +184,8 @@ let lyricArray = $computed(() => player.lyricArray.value);
 let lyricLineNumber = $computed(() => player.lyricLineNumber);
 let lyricLineNumberTrans = $computed(() => player.lyricLineNumberTrans);
 
-let currentPlaying = $computed(() => player.currentPlaying || {});
-let currentTrackMeta = $computed(() => player.currentTrackMeta || {});
+let currentPlaying = $computed(() => player.currentPlaying);
+let currentTrackMeta = $computed(() => player.currentTrackMeta);
 let lyricFontWeight = $computed(() => settings.lyricFontWeight);
 let lyricFontSize = $computed(() => settings.lyricFontSize);
 

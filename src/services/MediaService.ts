@@ -73,6 +73,7 @@ const MediaService = {
       } = {
         result: [],
         total: 1000,
+        //@ts-ignore no null
         type: platformResultArray[0].type
       };
       const maxLength = Math.max(...platformResultArray.map((elem) => elem.result.length));
@@ -94,7 +95,7 @@ const MediaService = {
     return myplaylist.getMyplaylistsList('my');
   },
 
-  showPlaylistArray(source: string, offset: string, filter_id: string) {
+  showPlaylistArray(source: string, offset: number, filter_id: string) {
     const provider = getProviderByName(source);
     const url = `/show_playlist?${queryStringify({ offset, filter_id })}`;
     return provider.showPlaylist(url);
@@ -230,6 +231,7 @@ const MediaService = {
             const curpage = 1;
             const url = `/search?keywords=${keyword}&curpage=${curpage}&type=0`;
             const provider = getProviderByName(source);
+            //@ts-ignore TODO: use await to work with awaitable function
             provider.search(url).then((data: any) => {
               for (let i = 0; i < data.result.length; i += 1) {
                 const searchTrack = data.result[i];

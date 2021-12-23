@@ -1,5 +1,5 @@
 import { Ref } from 'vue';
-import { createI18n } from 'vue-i18n';
+import { createI18n, DateTimeFormatResult } from 'vue-i18n';
 import useSettings from '../composition/settings';
 import en_US from './en_US.json';
 import fr_FR from './fr_FR.json';

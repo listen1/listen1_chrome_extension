@@ -20,7 +20,7 @@ declare module 'global' {
         removeCookie: (url: string, name: string) => void;
         sendLyric: (params: any) => void;
         sendTrackPlayingNow: (params: any) => void;
-
+        chooseLocalFile: (params: any) => void;
         session: Session;
         ipcRenderer: IpcRenderer;
         platform: NodeJS.Platform;

@@ -54,7 +54,7 @@
   "_CREATE_PUBLIC_BACKUP": "創建公開備份",
   "_CREATE_PRIVATE_BACKUP": "創建私有備份",
   "_BACKUP_PLAYLIST": "備份歌單",
-  "_BACKUP_WARNING": "重建應用程式或清除緩存檔案會導致我的歌單數據丟失，強烈 建議在做這件事，備份我的歌單。",
+  "_BACKUP_WARNING": "重建應用程式或清除緩存檔案會導致我的歌單數據丟失，強烈建議在做這件事，備份我的歌單。",
   "_EXPORT_TO_LOCAL_FILE": "匯出到本地檔案",
   "_EXPORT_TO_GITHUB_GIST": "匯出到Github Gist",
   "_RECOVER_PLAYLIST": "從備份恢復",

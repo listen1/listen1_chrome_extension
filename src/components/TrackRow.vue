@@ -36,23 +36,23 @@
       <span class="icon li-songlist" />
     </a>
     <a
-      v-show="song.options && (is_mine == '1' || is_local)"
+      v-show="song.options && (isMine == '1' || isLocal)"
       :title="t('_REMOVE_FROM_PLAYLIST')"
       class="detail-delete-button cursor-pointer mr-3"
-      @click="removeSongFromPlaylist(song.id, list_id)">
+      @click="removeSongFromPlaylist(song.id, listId)">
       <span class="icon li-del" />
     </a>
-    <a v-show="song.options && !is_local" :title="t('_ORIGIN_LINK')" class="source-button cursor-pointer mr-3" @click="openUrl(song.source_url)">
+    <a v-show="song.options && !isLocal" :title="t('_ORIGIN_LINK')" class="source-button cursor-pointer mr-3" @click="openUrl(song.source_url)">
       <span class="icon li-link" />
     </a>
   </div>
 </template>
 <script setup lang="ts">
-const { song, is_mine, is_local, list_id } = defineProps<{
+const { song, isMine, isLocal, listId } = defineProps<{
   song: any;
-  is_mine?: string;
-  is_local?: string;
-  list_id?: string;
+  isMine?: boolean | string;
+  isLocal?: boolean;
+  listId?: string;
 }>();
 import { inject, toRaw } from 'vue';
 import { useI18n } from 'vue-i18n';
