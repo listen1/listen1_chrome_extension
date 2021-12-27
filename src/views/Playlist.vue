@@ -55,6 +55,9 @@
           <input class="playlist-search-input" type="text" ng-model="playlistFilter.key" :placeholder="$t('_SEARCH_PLAYLIST')" />
         </div>-->
         <li class="head border-t-2 border-b-2 border-transparent text-inactive -mb-2px group flex relative items-center px-6 h-12">
+          <div class="flex-none w-8">
+            <span> No. </span>
+          </div>
           <div class="title flex-2 truncate flex">
             <a>{{ t('_SONGS') + '(' + songs.length + ')' }}</a>
           </div>
@@ -79,7 +82,7 @@
           @drop="onPlaylistSongDrop(listId, song, $event)"
           @mouseenter="song.options = true"
           @mouseleave="song.options = undefined">
-          <TrackRow :song="song" :is-local="is_local" :is-mine="is_mine" :list-id="listId"></TrackRow>
+          <TrackRow :index="index" :song="song" :is-local="is_local" :is-mine="is_mine" :list-id="listId"></TrackRow>
         </DragDropZone>
       </ul>
     </div>

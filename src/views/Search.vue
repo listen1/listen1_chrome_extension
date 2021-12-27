@@ -60,7 +60,7 @@
                 class="flex relative items-center px-6 h-12 hover:bg-row-hover"
                 @mouseenter="song.options = true"
                 @mouseleave="song.options = undefined">
-                <TrackRow :song="song"></TrackRow>
+                <TrackRow :index="index" :song="song"></TrackRow>
               </li>
             </template>
             <template v-if="condition.searchType === 1">

@@ -1,4 +1,7 @@
 <template>
+  <div class="flex-none w-8 text-cneter">
+    <span>{{ index + 1 }}</span>
+  </div>
   <div class="title flex-2 flex overflow-hidden items-center max-h-12">
     <!-- <a class="disabled" ng-if="song.disabled" ng-click="copyrightNotice()"> song.title </a> -->
     <vue-feather
@@ -48,11 +51,12 @@
   </div>
 </template>
 <script setup lang="ts">
-const { song, isMine, isLocal, listId } = defineProps<{
+const { song, isMine, isLocal, listId, index } = defineProps<{
   song: any;
   isMine?: boolean | string;
   isLocal?: boolean;
   listId?: string;
+  index?: string;
 }>();
 import { inject, toRaw } from 'vue';
 import { useI18n } from 'vue-i18n';
