@@ -1,12 +1,12 @@
 <template>
   <div class="footer flex flex-wrap gap-y-4 relative z-20 border-t border-default">
     <div class="flex flex-none justify-center gap-4 items-center w-screen md:w-80 h-24 text-4xl">
-      <span class="li-previous text-prevnext" @click="prevTrack()" />
+      <span class="li-previous text-prevnext cursor-pointer" @click="prevTrack()" />
       <span
-        class="li-play play text-play hover:text-play-hover"
+        class="li-play play text-play hover:text-play-hover cursor-pointer"
         :class="isPlaying ? 'li-pause' : 'li-play'"
         @click="playPauseToggle()" />
-      <span class="li-next text-prevnext" @click="nextTrack()" />
+      <span class="li-next text-prevnext cursor-pointer" @click="nextTrack()" />
     </div>
     <div class="main-info w-screen md:flex-1 flex overflow-hidden bg-footer-main z-30">
       <div v-if="playlist.length == 0" class="logo-banner text-center flex-1 flex items-center h-20 w-20">
