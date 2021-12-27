@@ -1,6 +1,6 @@
 <template>
   <!-- my platform window-->
-  <div class="page page-hot-playlist max-w-5xl my-0 mx-auto">
+  <div class="page page-hot-playlist max-w-5xl 2xl:max-w-7xl my-0 mx-auto">
     <SourceTab :sources="platformSourceList" :tab="tab" :loading="false" @click="changeTab"></SourceTab>
     <div id="hotplaylist" class="site-wrapper-innerd">
       <div id="playlist-content" class="cover-container">
@@ -10,7 +10,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import PlaylistGrid from '../components/PlaylistGrid.vue';
@@ -37,7 +37,7 @@ const platformSourceList = [
   }
 ];
 let tab = $ref(platformSourceList[0].name);
-let myPlatformUser = getMusicAuth(platformId);
+let myPlatformUser = getMusicAuth(platformId as string);
 let myPlatformPlaylists = $ref([]);
 onMounted(async () => {
   await loadPlatformPlaylists();
@@ -60,7 +60,7 @@ const loadPlatformPlaylists = async () => {
   const { data } = response;
   myPlatformPlaylists = data.playlists;
 };
-const changeTab = (newTab) => {
+const changeTab = (newTab: string) => {
   tab = newTab;
   loadPlatformPlaylists();
 };
