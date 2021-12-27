@@ -1,7 +1,7 @@
 <template>
   <div class="page">
     <div
-      class="songdetail-wrapper absolute flex flex-col top-0 left-0 right-0 bottom-20 duration-300 app-region-nodrag bg-now-playing"
+      class="songdetail-wrapper absolute flex flex-col top-0 left-0 right-0 bottom-24 duration-300 app-region-nodrag bg-now-playing"
       :class="{
         'overflow-y-scroll': commentActive,
         'overflow-hidden': !commentActive,

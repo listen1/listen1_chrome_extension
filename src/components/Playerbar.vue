@@ -1,6 +1,6 @@
 <template>
   <div class="footer flex flex-wrap gap-y-4 relative z-20 border-t border-default">
-    <div class="flex flex-none justify-center gap-4 items-center w-screen md:w-80 h-20 text-4xl">
+    <div class="flex flex-none justify-center gap-4 items-center w-screen md:w-80 h-24 text-4xl">
       <span class="li-previous text-prevnext" @click="prevTrack()" />
       <span
         class="li-play play text-play hover:text-play-hover"
@@ -73,7 +73,7 @@
         </div>
       </div>
     </div>
-    <div class="right-control flex flex-none items-center w-screen md:w-80 h-20">
+    <div class="right-control flex flex-none items-center w-screen md:w-80 h-24">
       <div class="playlist-toggle cursor-pointer ml-8">
         <span class="icon li-list" @click="togglePlaylist()" />
       </div>
