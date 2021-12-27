@@ -18,7 +18,7 @@
         <vue-feather size="1.25rem" type="x"></vue-feather>
       </a>
     </div>
-    <ul class="menu-list overflow-y-scroll text-sm">
+    <ul class="menu-list overflow-y-scroll text-sm align-middle">
       <DragDropZone
         v-for="(song, index) in playlist"
         :id="'song_' + song.id"
@@ -32,6 +32,9 @@
         @mouseenter="song.highlight = true"
         @mouseleave="song.highlight = undefined"
         @drop="onCurrentPlayingSongDrop(song, $event)">
+        <div class="w-8">
+          <span> {{ index + 1 }}</span>
+        </div>
         <div class="song-status-icon w-8">
           <vue-feather v-show="currentPlaying.id == song.id" size="1rem" type="play"></vue-feather>
         </div>
