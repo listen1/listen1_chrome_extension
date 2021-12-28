@@ -56,7 +56,7 @@
         </div>-->
         <li class="head border-t-2 border-b-2 border-transparent text-inactive -mb-2px group flex relative items-center px-6 h-12">
           <div class="flex-none w-8">
-            <span> No. </span>
+            <span>No.</span>
           </div>
           <div class="title flex-2 truncate flex">
             <a>{{ t('_SONGS') + '(' + songs.length + ')' }}</a>

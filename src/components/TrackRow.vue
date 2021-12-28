@@ -1,5 +1,5 @@
 <template>
-  <div class="flex-none w-8 text-cneter">
+  <div v-if="index !== undefined" class="flex-none w-8 text-cneter">
     <span>{{ index + 1 }}</span>
   </div>
   <div class="title flex-2 flex overflow-hidden items-center max-h-12">
@@ -56,7 +56,7 @@ const { song, isMine, isLocal, listId, index } = defineProps<{
   isMine?: boolean | string;
   isLocal?: boolean;
   listId?: string;
-  index?: string;
+  index?: number;
 }>();
 import { inject, toRaw } from 'vue';
 import { useI18n } from 'vue-i18n';

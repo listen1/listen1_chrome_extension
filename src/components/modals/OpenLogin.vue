@@ -33,5 +33,5 @@ const { openLogin, refreshAuthStatus } = useAuth();
 const { t } = useI18n();
 </script>
 <script lang="ts">
-export default {}
+export default {};
 </script>
