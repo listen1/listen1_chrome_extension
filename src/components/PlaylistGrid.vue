@@ -1,8 +1,8 @@
 <template>
   <ul class="playlist-covers m-0 py-0 flex relative flex-wrap">
     <li v-for="i in playlists" :key="i.id" class="group w-1/3 md:w-1/5 min-h-40 px-4 sm:w-1/4 mb-3">
-      <div class="u-cover flex relative">
-        <img :src="i.cover_img_url" class="m-auto border border-default cursor-pointer w-full object-cover" @click="showPlaylist(i.id)" />
+      <div class="u-cover flex relative shadow-lg">
+        <img :src="i.cover_img_url" class="m-auto cursor-pointer w-full object-cover rounded" @click="showPlaylist(i.id)" />
         <div
           class="bottom opacity-0 group-hover:opacity-100 cursor-pointer absolute w-8 h-8 bottom-3 right-3 ease-linear duration-200"
           @click="directplaylist(i.id)">

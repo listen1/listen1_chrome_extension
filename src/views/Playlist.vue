@@ -3,7 +3,7 @@
     <div class="playlist-detail">
       <div class="detail-head flex">
         <div class="detail-head-cover w-48 mx-8 mt-8 mb-1">
-          <img :src="cover_img_url" class="h-48 w-48" err-src="https://y.gtimg.cn/mediastyle/global/img/singer_300.png" />
+          <img :src="cover_img_url" class="h-48 aspect-square rounded" err-src="https://y.gtimg.cn/mediastyle/global/img/singer_300.png" />
         </div>
         <div class="detail-head-title flex-1">
           <h2 class="h-10 my-7 text-3xl font-semibold">{{ playlist_title }}</h2>
@@ -94,7 +94,6 @@ import DragDropZone from '../components/DragDropZone.vue';
 import IconButton from '../components/IconButton.vue';
 import TrackRow from '../components/TrackRow.vue';
 import useRedHeart from '../composition/redheart';
-import { Track } from '../provider/types';
 import $event from '../services/EventService';
 import { l1Player } from '../services/l1_player';
 import MediaService from '../services/MediaService';
