@@ -74,7 +74,9 @@
                     <img class="h-16 w-16 block mr-3" :src="playlist.img_url" err-src="https://y.gtimg.cn/mediastyle/global/img/playlist_300.png" />
                     <div>
                       {{ playlist.title }}
-                      <span v-if="isAllMusic" class="w-6 px-1 mr-3 text-gray-500 text-ms text-center border border-solid rounded border-gray-500">{{playlist.source}}</span>
+                      <span v-if="isAllMusic" class="w-6 px-1 mr-3 text-gray-500 text-ms text-center border border-solid rounded border-gray-500">
+                        {{ playlist.source }}
+                      </span>
                     </div>
                   </a>
                 </div>
@@ -121,5 +123,4 @@ const sourceList = computed(() => [{ name: 'allmusic', displayId: '_ALL_MUSIC' }
 const isAllMusic = computed(() => condition.tab === 'allmusic');
 </script>
 
-<style>
-</style>
+<style></style>
