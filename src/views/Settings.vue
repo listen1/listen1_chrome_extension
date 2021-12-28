@@ -5,7 +5,7 @@
       <div class="cover-container leading-normal">
         <SettingTitle :text="t('_LANGUAGE')" />
         <div class="settings-content mx-7 mb-7 leading-8">
-          <ToggleButtons :options="locales" @change="setLocale($event)"/>
+          <ToggleButtons :options="locales" :selected="locales.findIndex((i) => i.value === settings.language)" @change="setLocale($event)" />
         </div>
         <SettingTitle :text="t('_BACKUP_PLAYLIST')" />
         <div class="settings-content mx-7 mb-7 leading-8">
@@ -84,7 +84,7 @@
         </div>
         <SettingTitle :text="t('_THEME')" />
         <div class="settings-content mx-7 mb-7 leading-8">
-          <ToggleButtons :options="themes" @change="setTheme($event)"/>
+          <ToggleButtons :options="themes" :selected="themes.findIndex((i) => i.value === settings.theme)" @change="setTheme($event)" />
         </div>
         <SettingTitle :text="t('_STYLE')" />
         <div class="settings-content mx-7 mb-7 leading-8">
@@ -466,39 +466,49 @@ const sourceList = [
   }
 ];
 
-const locales = [{
-  text: '简体中文',
-  value: 'zh-CN',
-},{
-  text: '繁体中文',
-  value: 'zh-TC',
-},{
-  text: 'English',
-  value: 'en-US',
-},{
-  text: 'French',
-  value: 'fr-FR',
-}];
+const locales = [
+  {
+    text: '简体中文',
+    value: 'zh-CN'
+  },
+  {
+    text: '繁体中文',
+    value: 'zh-TC'
+  },
+  {
+    text: 'English',
+    value: 'en-US'
+  },
+  {
+    text: 'French',
+    value: 'fr-FR'
+  }
+];
 
-const themes = [{
-  text: t('_THEME_WHITE'),
-  value: 'white',
-},{
-  text: t('_THEME_BLACK'),
-  value: 'black',
-},{
-//   text: t('_THEME_WHITE_TRANSPARENT'),
-//   value: 'white_transparent',
-// },{
-//   text: t('_THEME_BLACK_TRANSPARENT'),
-//   value: 'black_transparent',
-// },{
-  text: t('_THEME_INFINITE_GRID'),
-  value: 'infinite_grid',
-},{
-  text: t('_THEME_GRIDIENT'),
-  value: 'gridient',
-}];
+const themes = [
+  {
+    text: t('_THEME_WHITE'),
+    value: 'white'
+  },
+  {
+    text: t('_THEME_BLACK'),
+    value: 'black'
+  },
+  {
+    //   text: t('_THEME_WHITE_TRANSPARENT'),
+    //   value: 'white_transparent',
+    // },{
+    //   text: t('_THEME_BLACK_TRANSPARENT'),
+    //   value: 'black_transparent',
+    // },{
+    text: t('_THEME_INFINITE_GRID'),
+    value: 'infinite_grid'
+  },
+  {
+    text: t('_THEME_GRIDIENT'),
+    value: 'gridient'
+  }
+];
 
 EventService.on('github:status', updateGithubStatus);
 </script>
