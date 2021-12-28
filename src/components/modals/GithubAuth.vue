@@ -9,16 +9,17 @@
       </div>
     </template>
     <template #footer>
-      <button class="btn btn-primary confirm-button" @click="updateAuthStatus()">{{ t('_AUTHORIZED_FINISHED') }}</button>
-      <button class="btn btn-warning warning-button" @click="openAuthUrl()">{{ t('_AUTHORIZED_REOPEN') }}</button>
+      <SettingButton :text="t('_AUTHORIZED_FINISHED')" @click="updateAuthStatus()" />
+      <SettingButton :text="t('_AUTHORIZED_REOPEN')" @click="openAuthUrl()" />
     </template>
   </DefaultModal>
 </template>
-<script lang="ts" setup>
-import DefaultModal from './DefaultModal.vue';
+<script setup lang="ts">
 import { useI18n } from 'vue-i18n';
-import GithubClient from '../../services/GithubService';
 import EventService from '../../services/EventService';
+import GithubClient from '../../services/GithubService';
+import SettingButton from '../SettingButton.vue';
+import DefaultModal from './DefaultModal.vue';
 
 const emit = defineEmits<{
   (e: 'close'): void;
@@ -32,8 +33,4 @@ const updateAuthStatus = () => {
 };
 
 const { t } = useI18n();
-</script>
-
-<script lang="ts">
-export default {};
 </script>

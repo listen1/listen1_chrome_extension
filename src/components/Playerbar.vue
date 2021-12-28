@@ -95,7 +95,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { ImgHTMLAttributes, inject, toRaw } from 'vue';
+import { inject, toRaw } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 import DraggableBar from '../components/DraggableBar.vue';
