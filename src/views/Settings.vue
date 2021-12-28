@@ -5,10 +5,7 @@
       <div class="cover-container leading-normal">
         <SettingTitle :text="t('_LANGUAGE')" />
         <div class="settings-content mx-7 mb-7 leading-8">
-          <SettingButton text="简体中文" @click="setLocale('zh-CN')" />
-          <SettingButton text="繁体中文" @click="setLocale('zh-TC')" />
-          <SettingButton text="English" @click="setLocale('en-US')" />
-          <SettingButton text="French" @click="setLocale('fr-FR')" />
+          <ToggleButtons :options="locales" @change="setLocale($event)"/>
         </div>
         <SettingTitle :text="t('_BACKUP_PLAYLIST')" />
         <div class="settings-content mx-7 mb-7 leading-8">
@@ -87,12 +84,7 @@
         </div>
         <SettingTitle :text="t('_THEME')" />
         <div class="settings-content mx-7 mb-7 leading-8">
-          <SettingButton :text="t('_THEME_WHITE')" @click="setTheme('white')" />
-          <SettingButton :text="t('_THEME_BLACK')" @click="setTheme('black')" />
-          <!-- <SettingButton :text="t('_THEME_WHITE_TRANSPARENT')" @click="setTheme('white_transparent')" />
-          <SettingButton :text="t('_THEME_BLACK_TRANSPARENT')" @click="setTheme('black_transparent')" /> -->
-          <SettingButton :text="t('_THEME_INFINITE_GRID')" @click="setTheme('infinite_grid')" />
-          <SettingButton :text="t('_THEME_GRIDIENT')" @click="setTheme('gridient')" />
+          <ToggleButtons :options="themes" @change="setTheme($event)"/>
         </div>
         <SettingTitle :text="t('_STYLE')" />
         <div class="settings-content mx-7 mb-7 leading-8">
@@ -355,6 +347,7 @@ import { useI18n } from 'vue-i18n';
 import { version } from '../../package.json';
 import Href from '../components/Href.vue';
 import SettingButton from '../components/SettingButton.vue';
+import ToggleButtons from '../components/ToggleButtons.vue';
 import SettingTitle from '../components/SettingTitle.vue';
 import useSettings from '../composition/settings';
 import { setLocale } from '../i18n';
@@ -472,6 +465,40 @@ const sourceList = [
     displayId: '_TAIHE_MUSIC'
   }
 ];
+
+const locales = [{
+  text: '简体中文',
+  value: 'zh-CN',
+},{
+  text: '繁体中文',
+  value: 'zh-TC',
+},{
+  text: 'English',
+  value: 'en-US',
+},{
+  text: 'French',
+  value: 'fr-FR',
+}];
+
+const themes = [{
+  text: t('_THEME_WHITE'),
+  value: 'white',
+},{
+  text: t('_THEME_BLACK'),
+  value: 'black',
+},{
+//   text: t('_THEME_WHITE_TRANSPARENT'),
+//   value: 'white_transparent',
+// },{
+//   text: t('_THEME_BLACK_TRANSPARENT'),
+//   value: 'black_transparent',
+// },{
+  text: t('_THEME_INFINITE_GRID'),
+  value: 'infinite_grid',
+},{
+  text: t('_THEME_GRIDIENT'),
+  value: 'gridient',
+}];
 
 EventService.on('github:status', updateGithubStatus);
 </script>
