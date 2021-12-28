@@ -38,7 +38,7 @@
             type="heart"
             :fill="isRedHearted ? 'red' : 'transparent'"
             :stroke="isRedHearted ? 'red' : 'white'"
-            size="16px"
+            size="1rem"
             @click="setRedHeart(toRaw(currentPlaying), !isRedHearted)" />
           <a :title="t('_ADD_TO_PLAYLIST')" @click="showModal('AddToPlaylist', { tracks: [currentPlaying] })">
             <span class="icon opacity-50 hover:opacity-100 li-songlist ml-3" />
