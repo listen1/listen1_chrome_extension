@@ -477,12 +477,12 @@ EventService.on('github:status', updateGithubStatus);
 </script>
 <style>
 .settings-input {
-  margin-left: 10px;
+  margin-left: 0.5rem;
   text-align: left;
   background-color: var(--content-background-color);
   border: 1px solid var(--search-input-background-color);
-  border-radius: 4px;
-  margin-right: 4px;
+  border-radius: 0.25rem;
+  margin-right: 0.25rem;
   color: var(--text-default-color);
   transition: background-color 0.2s;
 }
@@ -493,24 +493,9 @@ EventService.on('github:status', updateGithubStatus);
   color: var(--lyric-default-color);
   display: flex;
   align-items: center;
-  height: 40px;
+  height: 2.5rem;
   overflow: hidden;
 }
-
-/* .page .settings-content {
-  margin: 0 25px 25px 25px;
-} */
-/* .page .settings-content label.upload-button {
-  padding: 5px;
-  background: var(--button-background-color);
-  margin-right: 4px;
-  color: var(--text-default-color);
-  cursor: pointer;
-}
-
-.page .settings-content label.upload-button:hover {
-  background: var(--button-hover-background-color);
-} */
 
 /* .page .settings-content .shortcut {
   display: flex;
