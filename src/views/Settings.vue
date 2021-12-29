@@ -2,25 +2,23 @@
   <!-- content page: 设置 -->
   <div class="page" ng-init="lastfm.updateStatus()">
     <div class="site-wrapper-innerd">
-      <div class="cover-container leading-normal">
-        <SettingTitle :text="t('_LANGUAGE')" />
-        <div class="settings-content mx-7 mb-7 leading-8">
+      <div class="cover-container leading-normal flex flex-col flex-wrap content-evenly	 2xl:h-[calc(100vh-10rem)]">
+        <SettingBlock :title="t('_LANGUAGE')">
           <ToggleButtons :options="locales" :selected="locales.findIndex((i) => i.value === settings.language)" @change="setLocale($event)" />
-        </div>
-        <SettingTitle :text="t('_BACKUP_PLAYLIST')" />
-        <div class="settings-content mx-7 mb-7 leading-8">
+        </SettingBlock>
+        <SettingBlock :title="t('_BACKUP_PLAYLIST')">
           <p>{{ t('_BACKUP_WARNING') }}</p>
           <div>
             <SettingButton :text="t('_BACKUP_PLAYLIST')" @click="showModal('GistExport')" />
           </div>
-        </div>
-        <SettingTitle :text="t('_RECOVER_PLAYLIST')" />
-        <div class="settings-content mx-7 mb-7 leading-8">
+        </SettingBlock>
+
+        <SettingBlock :title="t('_RECOVER_PLAYLIST')">
           <p>{{ t('_RECOVER_WARNING') }}</p>
           <SettingButton :text="t('_RECOVER_PLAYLIST')" @click="showModal('GistImport')" />
-        </div>
-        <SettingTitle :text="t('_NOWPLAYING_DISPLAY')" />
-        <div class="settings-content mx-7 mb-7 leading-8">
+        </SettingBlock>
+
+        <SettingBlock :title="t('_NOWPLAYING_DISPLAY')">
           <label class="shortcut flex items-center mt-4">
             {{ t('_NOWPLAYING_COVER_BACKGROUND_NOTICE') }}
           </label>
@@ -51,13 +49,13 @@
             :options="singleSwitch"
             :selected="singleSwitch.findIndex((i) => i.value === settings.enableNowplayingComment)"
             @change="setSettings({ enableNowplayingComment: $event })" />
-        </div>
-        <SettingTitle :text="t('_THEME')" />
-        <div class="settings-content mx-7 mb-7 leading-8">
+        </SettingBlock>
+
+        <SettingBlock :title="t('_THEME')">
           <ToggleButtons :options="themes" :selected="themes.findIndex((i) => i.value === settings.theme)" @change="setTheme($event)" />
-        </div>
-        <SettingTitle :text="t('_STYLE')" />
-        <div class="settings-content mx-7 mb-7 leading-8">
+        </SettingBlock>
+
+        <SettingBlock :title="t('_STYLE')">
           <p>
             {{ `${t('_LYRIC_SIZE')}` }}
             <input v-model.lazy="settings.lyricFontSize" class="settings-input w-16 pl-[6px] py-0" type="number" min="10" max="40" />
@@ -74,9 +72,9 @@
           <div class="setting-font-preview">
             <p :style="{ fontWeight: settings.lyricFontWeight, fontSize: `${settings.lyricFontSize}px` }">Listen1，自由的享受音乐的乐趣</p>
           </div>
-        </div>
-        <SettingTitle :text="t('_AUTO_CHOOSE_SOURCE')" />
-        <div class="settings-content mx-7 mb-7 leading-8">
+        </SettingBlock>
+
+        <SettingBlock :title="t('_AUTO_CHOOSE_SOURCE')">
           <label class="shortcut btn btn-primary confirm-button flex items-center">
             {{ t('_AUTO_CHOOSE_SOURCE_NOTICE') }}
           </label>
@@ -94,20 +92,18 @@
                 @change="($event ? enableSource : disableSource)(item.name)" />
             </div>
           </div>
-        </div>
-        <SettingTitle :text="t('_CONNECT_TO_GITHUB')" />
-        <div class="settings-content mx-7 mb-7 leading-8">
-          <div>
-            <p>{{ t('_STATUS') }}: {{ githubStatusText }}</p>
-            <SettingButton v-show="githubStatus == 0" :text="t('_CONNECT_TO_GITHUB')" @click="openGithubAuth()" />
-            <SettingButton v-show="githubStatus == 1" :text="t('_RECONNECT')" @click="showModal('GithubAuth')" />
-            <SettingButton v-show="githubStatus == 2" :text="t('_CANCEL_CONNECT')" @click="logoutGithub()" />
-          </div>
-        </div>
+        </SettingBlock>
+
+        <SettingBlock :title="t('_CONNECT_TO_GITHUB')">
+          <p>{{ t('_STATUS') }}: {{ githubStatusText }}</p>
+          <SettingButton v-show="githubStatus == 0" :text="t('_CONNECT_TO_GITHUB')" @click="openGithubAuth()" />
+          <SettingButton v-show="githubStatus == 1" :text="t('_RECONNECT')" @click="showModal('GithubAuth')" />
+          <SettingButton v-show="githubStatus == 2" :text="t('_CANCEL_CONNECT')" @click="logoutGithub()" />
+        </SettingBlock>
         <!-- <div ng-if="isChrome" class="settings-title">
           <span>{{ $t('_CLOSE_TAB_ACTION') }}({{ $t('_VALID_AFTER_RESTART') }})</span>
         </div>
-        <div ng-if="isChrome" class="settings-content mx-7 mb-7 leading-8">
+        <div ng-if="isChrome" class="settings-content">
           <div class="shortcut flex items-center">
             <vue-feather v-show="!enableStopWhenClose" type="square" ng-click="setStopWhenClose(true)"></vue-feather>
             <vue-feather v-show="enableStopWhenClose" type="check-square" ng-click="setStopWhenClose(false)"></vue-feather>
@@ -120,7 +116,7 @@
         <div class="settings-title">
           <span>{{ $t('_NOWPLAYING_DISPLAY') }}</span>
         </div>
-        <div class="settings-content mx-7 mb-7 leading-8">
+        <div class="settings-content">
           <div class="shortcut flex items-center">
             <vue-feather v-show="!enableNowplayingCoverBackground" type="square" ng-click="setNowplayingCoverBackground(true)"></vue-feather>
             <vue-feather v-show="enableNowplayingCoverBackground" type="check-square" ng-click="setNowplayingCoverBackground(true)"></vue-feather>
@@ -140,7 +136,7 @@
         <div class="settings-title">
           <span>{{ $t('_LYRIC_DISPLAY') }}</span>
         </div>
-        <div class="settings-content mx-7 mb-7 leading-8">
+        <div class="settings-content">
           <div class="shortcut flex items-center" ng-if="!isChrome">
             <vue-feather v-show="!enableLyricFloatingWindow" type="square" ng-click="openLyricFloatingWindow(true)"></vue-feather>
             <vue-feather v-show="enableLyricFloatingWindow" type="check-square" ng-click="openLyricFloatingWindow(true)"></vue-feather>
@@ -164,7 +160,7 @@
         <div class="settings-title">
           <span>{{ $t('_CONNECT_TO_LASTFM') }}</span>
         </div>
-        <div class="settings-content mx-7 mb-7 leading-8">
+        <div class="settings-content">
           <div>
             <p>{{ $t('_STATUS') }}： lastfm.getStatusText()</p>
             <button class="btn btn-primary confirm-button" ng-show="!lastfm.isAuthRequested()" ng-click="lastfm.getAuth(); showDialog(4);">
@@ -185,7 +181,7 @@
         <div class="settings-title">
           <span>{{ $t('_SHORTCUTS') }}</span>
         </div>
-        <div class="settings-content mx-7 mb-7 leading-8">
+        <div class="settings-content">
           <div class="shortcut_table">
             <div class="shortcut_table-header">
               <div class="shortcut_table-function">{{ $t('_SHORTCUTS_FUNCTION') }}</div>
@@ -264,14 +260,13 @@
         <div class="settings-title" ng-if="!isChrome">
           <span>{{ $t('_PROXY_CONFIG') }}</span>
         </div>
-        <div class="settings-content mx-7 mb-7 leading-8" ng-if="!isChrome">
+        <div class="settings-content" ng-if="!isChrome">
           <span>{{ $t('_PROXY_CONFIG') }}:</span>
           proxyMode.displayText
           <span v-show="proxyMode_name == 'custom'">proxyRules</span>
           <button ng-click="showDialog(12)">{{ $t('_MODIFY') }}</button>
         </div>-->
-        <SettingTitle :text="t('_ABOUT')" />
-        <div class="settings-content mx-7 mb-7 leading-8">
+        <SettingBlock :title="t('_ABOUT')">
           <p>
             Listen 1 {{ t('_HOMEPAGE') }}:
             <Href to="https://listen1.github.io/listen1/" />
@@ -289,7 +284,7 @@
           <p>{{ `${t('_VERSION')}: v${version}` }} (DEVELOPER VERSION)</p>
           <p>LICENSE: {{ t('_LICENSE_NOTICE') }}</p>
           <!-- <p v-show="lastestVersion != ''">{{ $t('_LATEST_VERSION') }}: lastestVersion</p> -->
-        </div>
+        </SettingBlock>
       </div>
     </div>
   </div>
@@ -302,7 +297,7 @@ import { version } from '../../package.json';
 import Href from '../components/Href.vue';
 import SettingButton from '../components/SettingButton.vue';
 import ToggleButtons from '../components/ToggleButtons.vue';
-import SettingTitle from '../components/SettingTitle.vue';
+import SettingBlock from '../components/SettingBlock.vue';
 import useSettings from '../composition/settings';
 import { setLocale } from '../i18n';
 import EventService from '../services/EventService';
