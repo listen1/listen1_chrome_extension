@@ -17,22 +17,7 @@
         :style="{ backgroundImage: `url(${currentPlaying?.img_url}` }" />
 
       <div
-        class="
-          translate-switch
-          app-region-nodrag
-          h-6
-          w-6
-          border
-          flex
-          items-center
-          justify-center
-          absolute
-          bottom-10
-          right-10
-          cursor-pointer
-          text-neutral-400
-          hover:text-default
-        "
+        class="translate-switch app-region-nodrag h-6 w-6 border flex items-center justify-center absolute bottom-10 right-10 cursor-pointer text-neutral-400 hover:text-default"
         :class="{ 'text-default': settings.enableLyricTranslation }"
         @click="toggleLyricTranslation()">
         译
