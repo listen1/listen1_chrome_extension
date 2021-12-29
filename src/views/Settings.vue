@@ -2,7 +2,7 @@
   <!-- content page: 设置 -->
   <div class="page" ng-init="lastfm.updateStatus()">
     <div class="site-wrapper-innerd">
-      <div class="cover-container leading-normal flex flex-col flex-wrap content-evenly	 2xl:h-[calc(100vh-10rem)]">
+      <div class="cover-container leading-normal flex flex-col flex-wrap content-evenly 2xl:h-[calc(100vh-10rem)]">
         <SettingBlock :title="t('_LANGUAGE')">
           <ToggleButtons :options="locales" :selected="locales.findIndex((i) => i.value === settings.language)" @change="setLocale($event)" />
         </SettingBlock>
