@@ -6,13 +6,13 @@
     <template #body>
       <ul class="text-left">
         <input ref="uploadInput" type="file" style="display: none" @change="upload" />
-        <li class="cursor-pointer h-24 p-2 hover:bg-dialog-hover" @click="uploadInput.click()">
-          <img class="float-left h-20 w-20 mr-4" src="../../images/mycover.jpg" />
+        <li class="cursor-pointer h-24 p-2 rounded hover:bg-dialog-hover" @click="uploadInput.click()">
+          <img class="float-left h-20 w-20 mr-4 rounded" src="../../images/mycover.jpg" />
           <h2>{{ t('_RECOVER_FROM_LOCAL_FILE') }}</h2>
         </li>
-        <p>{{ t('_RECOVER_FROM_GITHUB_GIST') }}</p>
-        <li v-for="(backup, index) in myBackup" :key="index" class="cursor-pointer h-24 p-2 hover:bg-dialog-hover" @click="recover(backup.id)">
-          <img class="float-left h-20 w-20 mr-4" src="../../images/mycover.jpg" />
+        <p class="font-semibold mb-3">{{ t('_RECOVER_FROM_GITHUB_GIST') }}</p>
+        <li v-for="(backup, index) in myBackup" :key="index" class="cursor-pointer h-24 p-2 rounded hover:bg-dialog-hover" @click="recover(backup.id)">
+          <img class="float-left h-20 w-20 mr-4 rounded" src="../../images/mycover.jpg" />
           <h2 class="flex">{{ backup.id + '\n' + new Date(backup.updated_at).toLocaleString() }}</h2>
         </li>
       </ul>
