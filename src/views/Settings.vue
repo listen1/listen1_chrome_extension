@@ -21,66 +21,36 @@
         </div>
         <SettingTitle :text="t('_NOWPLAYING_DISPLAY')" />
         <div class="settings-content mx-7 mb-7 leading-8">
-          <div class="shortcut flex items-center">
-            <vue-feather
-              v-show="!settings.enableNowplayingCoverBackground"
-              class="cursor-pointer mr-2"
-              size="1.25rem"
-              type="square"
-              @click="toggleCoverBackground"></vue-feather>
-            <vue-feather
-              v-show="settings.enableNowplayingCoverBackground"
-              class="cursor-pointer mr-2"
-              size="1.25rem"
-              type="check-square"
-              @click="toggleCoverBackground"></vue-feather>
+          <label class="shortcut flex items-center mt-4">
             {{ t('_NOWPLAYING_COVER_BACKGROUND_NOTICE') }}
-          </div>
-          <div class="shortcut flex items-center">
-            <vue-feather
-              v-show="!settings.enableNowplayingBitrate"
-              class="cursor-pointer mr-2"
-              size="1.25rem"
-              type="square"
-              @click="toggleBitrate"></vue-feather>
-            <vue-feather
-              v-show="settings.enableNowplayingBitrate"
-              class="cursor-pointer mr-2"
-              size="1.25rem"
-              type="check-square"
-              @click="toggleBitrate"></vue-feather>
+          </label>
+          <ToggleButtons
+            :options="singleSwitch"
+            :selected="singleSwitch.findIndex((i) => i.value === settings.enableNowplayingCoverBackground)"
+            @change="setSettings({ enableNowplayingCoverBackground: $event })" />
+          <label class="shortcut flex items-center mt-4">
             {{ t('_NOWPLAYING_BITRATE_NOTICE') }}
-          </div>
-          <div class="shortcut flex items-center">
-            <vue-feather
-              v-show="!settings.enableNowplayingPlatform"
-              class="cursor-pointer mr-2"
-              size="1.25rem"
-              type="square"
-              @click="togglePlayingPlatform"></vue-feather>
-            <vue-feather
-              v-show="settings.enableNowplayingPlatform"
-              class="cursor-pointer mr-2"
-              size="1.25rem"
-              type="check-square"
-              @click="togglePlayingPlatform"></vue-feather>
+          </label>
+          <ToggleButtons
+            :options="singleSwitch"
+            :selected="singleSwitch.findIndex((i) => i.value === settings.enableNowplayingBitrate)"
+            @change="setSettings({ enableNowplayingBitrate: $event })" />
+
+          <label class="shortcut flex items-center mt-4">
             {{ t('_NOWPLAYING_PLATFORM_NOTICE') }}
-          </div>
-          <div class="shortcut flex items-center">
-            <vue-feather
-              v-show="!settings.enableNowplayingComment"
-              class="cursor-pointer mr-2"
-              size="1.25rem"
-              type="square"
-              @click="togglePlayingComment"></vue-feather>
-            <vue-feather
-              v-show="settings.enableNowplayingComment"
-              class="cursor-pointer mr-2"
-              size="1.25rem"
-              type="check-square"
-              @click="togglePlayingComment"></vue-feather>
+          </label>
+          <ToggleButtons
+            :options="singleSwitch"
+            :selected="singleSwitch.findIndex((i) => i.value === settings.enableNowplayingPlatform)"
+            @change="setSettings({ enableNowplayingPlatform: $event })" />
+
+          <label class="shortcut flex items-center mt-4">
             {{ t('_NOWPLAYING_COMMENT') }}
-          </div>
+          </label>
+          <ToggleButtons
+            :options="singleSwitch"
+            :selected="singleSwitch.findIndex((i) => i.value === settings.enableNowplayingComment)"
+            @change="setSettings({ enableNowplayingComment: $event })" />
         </div>
         <SettingTitle :text="t('_THEME')" />
         <div class="settings-content mx-7 mb-7 leading-8">
@@ -107,37 +77,21 @@
         </div>
         <SettingTitle :text="t('_AUTO_CHOOSE_SOURCE')" />
         <div class="settings-content mx-7 mb-7 leading-8">
-          <div class="shortcut btn btn-primary confirm-button flex items-center">
-            <vue-feather
-              v-show="!settings.enableAutoChooseSource"
-              class="cursor-pointer mr-2"
-              size="1.25rem"
-              type="square"
-              @click="setAutoChooseSource(true)"></vue-feather>
-            <vue-feather
-              v-show="settings.enableAutoChooseSource"
-              class="cursor-pointer mr-2"
-              size="1.25rem"
-              type="check-square"
-              @click="setAutoChooseSource(false)"></vue-feather>
+          <label class="shortcut btn btn-primary confirm-button flex items-center">
             {{ t('_AUTO_CHOOSE_SOURCE_NOTICE') }}
-          </div>
+          </label>
+          <ToggleButtons
+            :options="singleSwitch"
+            :selected="singleSwitch.findIndex((i) => i.value === settings.enableAutoChooseSource)"
+            @change="setAutoChooseSource($event)" />
           <div v-show="settings.enableAutoChooseSource" class="search-description mt-8">{{ t('_AUTO_CHOOSE_SOURCE_LIST') }}</div>
-          <div v-show="settings.enableAutoChooseSource" class="search-source-list flex items-center flex-wrap leading-10">
-            <div v-for="item in sourceList" :key="item.name" class="search-source w-32 flex items-center">
-              <vue-feather
-                v-show="settings.autoChooseSourceList.indexOf(item.name) === -1"
-                type="square"
-                class="cursor-pointer mr-2"
-                size="1.25rem"
-                @click="enableSource(item.name)"></vue-feather>
-              <vue-feather
-                v-show="settings.autoChooseSourceList.indexOf(item.name) > -1"
-                type="check-square"
-                class="cursor-pointer mr-2"
-                size="1.25rem"
-                @click="disableSource(item.name)"></vue-feather>
-              {{ t(item.displayId) }}
+          <div v-show="settings.enableAutoChooseSource" class="search-source-list flex items-center flex-wrap leading-10 gap-4">
+            <div v-for="item in sourceList" :key="item.name" class="search-source flex">
+              <label class="w-32 text-center">{{ t(item.displayId) }}</label>
+              <ToggleButtons
+                :options="singleSwitch"
+                :selected="settings.autoChooseSourceList.includes(item.name) ? 0 : 1"
+                @change="($event ? enableSource : disableSource)(item.name)" />
             </div>
           </div>
         </div>
@@ -507,6 +461,17 @@ const themes = [
   {
     text: t('_THEME_GRIDIENT'),
     value: 'gridient'
+  }
+];
+
+const singleSwitch = [
+  {
+    text: '  ✔  ',
+    value: true
+  },
+  {
+    text: '  ✖  ',
+    value: false
   }
 ];
 
