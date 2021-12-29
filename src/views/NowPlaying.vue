@@ -41,7 +41,7 @@
       <div class="playsong-detail my-0 mx-auto flex w-[60rem] z-10 justify-center">
         <div class="detail-head overflow-hidden flex-none w-[30rem] 2xl:w-[500px] flex justify-center">
           <div class="detail-head-cover w-72 2xl:w-96 2xl:mr-28 transition-all ease-in-out">
-            <img class="w-full aspect-square object-cover rounded" :src="currentPlaying?.img_url" @error="showImage($event, 'images/mycover.jpg')" />
+            <img class="w-full aspect-square object-cover rounded" :src="currentPlaying?.img_url" @error="showImage($event, coverImg)" />
           </div>
           <div class="detail-head-title">
             <!--<a title="加入收藏" class="clone" ng-click="showDialog(0, currentPlaying)">收藏</a>
@@ -154,6 +154,8 @@ import useSettings from '../composition/settings';
 import { datetimeFormats } from '../i18n/index';
 import MediaService from '../services/MediaService';
 import type { Comment } from '../provider/types';
+import coverImg from '../images/mycover.jpg';
+
 const { t, d } = useI18n({
   //@ts-ignore mismatch arg num
   datetimeFormats

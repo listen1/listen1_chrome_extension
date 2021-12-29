@@ -101,6 +101,7 @@ import $event from '../services/EventService';
 import { l1Player } from '../services/l1_player';
 import MediaService from '../services/MediaService';
 import notyf from '../services/notyf';
+import coverImg from '../images/loading.svg';
 
 const { t } = useI18n();
 const route = useRoute();
@@ -111,7 +112,7 @@ let is_mine = computed(() => listId && listId.slice(0, 2) === 'my');
 let is_local = computed(() => listId && listId.slice(0, 2) === 'lm');
 
 let songs = $ref([]);
-let cover_img_url = $ref('images/loading.svg');
+let cover_img_url = $ref(coverImg);
 let playlist_title = $ref('');
 let playlist_source_url = $ref('');
 let is_favorite = $ref(false);

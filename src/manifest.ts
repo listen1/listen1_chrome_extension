@@ -43,6 +43,6 @@ const mv2: ManifestV2 = {
       js: ['oauth_callback.ts']
     }
   ],
-  web_accessible_resources: ['assets/fonts/*', 'images/*', 'index.html']
+  web_accessible_resources: ['assets/fonts/*', 'index.html']
 };
 export default mv2;

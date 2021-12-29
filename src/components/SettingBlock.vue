@@ -1,7 +1,7 @@
 <template>
   <div class="m-2">
     <div class="settings-title pb-2 mb-2 mx-8">
-      <span>{{ title }}</span>
+      <span>{{ titleText }}</span>
     </div>
     <div class="settings-content mx-7 mb-7 leading-8">
       <slot></slot>
@@ -9,7 +9,7 @@
   </div>
 </template>
 <script setup lang="ts">
-const { title } = defineProps<{
+const { title: titleText } = defineProps<{
   title: string;
 }>();
 </script>

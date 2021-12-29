@@ -2,7 +2,7 @@
   <ul class="playlist-covers m-0 py-0 relative grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-5">
     <li v-for="i in playlists" :key="i.id" class="group min-h-40">
       <div class="relative shadow-lg">
-        <div class="aspect-square bg-cover" style="background-image: url('/assets/mycover.jpg')">
+        <div class="aspect-square bg-cover" :style="`background-image: url('${bgImage}')`">
           <img :src="i.cover_img_url" class="m-auto cursor-pointer rounded object-cover w-full" @click="showPlaylist(i.id)" />
         </div>
         <div
@@ -24,6 +24,7 @@
 import { useRouter } from 'vue-router';
 import { l1Player } from '../services/l1_player';
 import MediaService from '../services/MediaService';
+import bgImage from '../images/placeholder.png';
 
 const router = useRouter();
 

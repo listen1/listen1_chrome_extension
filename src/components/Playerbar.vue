@@ -23,7 +23,7 @@
         </svg>
       </div>
       <div v-if="playlist.length > 0" class="cover flex-none cursor-pointer h-24 w-24 relative group" @click="toggleNowPlaying()">
-        <img class="object-cover h-24 w-24" :src="currentPlaying?.img_url" @error="showImage($event, 'images/mycover.jpg')" />
+        <img class="object-cover h-24 w-24" :src="currentPlaying?.img_url" @error="showImage($event, coverImg)" />
         <div class="mask items-center justify-center absolute inset-0 hidden group-hover:bg-black group-hover:bg-opacity-60 group-hover:flex">
           <vue-feather type="chevrons-up" stroke="#cccccc" />
         </div>
@@ -84,7 +84,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { ImgHTMLAttributes, inject, toRaw } from 'vue';
+import { inject, toRaw } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 import DraggableBar from '../components/DraggableBar.vue';
@@ -96,6 +96,7 @@ import useRedHeart from '../composition/redheart';
 import useSettings from '../composition/settings';
 import { l1Player } from '../services/l1_player';
 import { formatTime, isElectron } from '../utils';
+import coverImg from '../images/mycover.jpg';
 
 const { t } = useI18n();
 const { player } = usePlayer();
