@@ -1,7 +1,7 @@
 <template>
   <div class="page">
     <div
-      class="songdetail-wrapper absolute flex flex-col top-0 left-0 right-0 bottom-24 duration-300 app-region-nodrag bg-now-playing"
+      class="songdetail-wrapper absolute flex flex-col top-0 left-0 right-0 bottom-24 duration-300 app-region-nodrag bg-now-playing justify-center"
       :class="{
         'overflow-y-scroll': commentActive,
         'overflow-hidden': !commentActive,
@@ -17,7 +17,22 @@
         :style="{ backgroundImage: `url(${currentPlaying?.img_url}` }" />
 
       <div
-        class="translate-switch app-region-nodrag h-6 w-6 border flex items-center justify-center absolute bottom-10 right-10 cursor-pointer text-neutral-400 hover:text-default"
+        class="
+          translate-switch
+          app-region-nodrag
+          h-6
+          w-6
+          border
+          flex
+          items-center
+          justify-center
+          absolute
+          bottom-10
+          right-10
+          cursor-pointer
+          text-neutral-400
+          hover:text-default
+        "
         :class="{ 'text-default': settings.enableLyricTranslation }"
         @click="toggleLyricTranslation()">
         译
@@ -38,9 +53,9 @@
                 </svg>
       </div>-->
 
-      <div class="playsong-detail my-0 mx-auto flex w-[60rem] z-10">
+      <div class="playsong-detail my-0 mx-auto flex w-[60rem] z-10 justify-center">
         <div class="detail-head overflow-hidden flex-none w-[30rem] 2xl:w-[500px] flex justify-center">
-          <div class="detail-head-cover w-72 2xl:w-96 mt-32 2xl:mr-28 transition-all ease-in-out">
+          <div class="detail-head-cover w-72 2xl:w-96 2xl:mr-28 transition-all ease-in-out">
             <img class="w-full aspect-square object-cover rounded" :src="currentPlaying?.img_url" @error="showImage($event, 'images/mycover.jpg')" />
           </div>
           <div class="detail-head-title">
@@ -48,7 +63,7 @@
             <a open-url="currentPlaying.source_url" title="原始链接" class="link">原始链接</a>-->
           </div>
         </div>
-        <div class="detail-songinfo flex app-region-nodrag overflow-hidden mt-28 flex-col flex-1">
+        <div class="detail-songinfo flex app-region-nodrag overflow-hidden flex-col flex-1">
           <div class="title flex items-start">
             <h2 class="font-normal text-3xl mr-4 mb-4">{{ currentPlaying?.title }}</h2>
             <span
