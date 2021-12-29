@@ -94,9 +94,13 @@
               v-for="line in lyricArray"
               :key="line.lineNumber"
               :data-line="line.lineNumber"
-              :style="{ fontWeight: lyricFontWeight, fontSize: `${lyricFontSize}px` }"
+              :style="{
+                fontWeight: lyricFontWeight,
+                fontSize: `${lyricFontSize * (isHighlighted(line.lineNumber, line.translationFlag) ? 1.2 : 1)}px`,
+                filter: `blur(${Math.min(Math.abs(line.lineNumber - (line.translationFlag ? lyricLineNumberTrans : lyricLineNumber)) * 0.25, 1)}px)`
+              }"
               :class="{
-                highlight: (!line.translationFlag && line.lineNumber == lyricLineNumber) || (line.translationFlag && line.lineNumber == lyricLineNumberTrans),
+                highlight: isHighlighted(line.lineNumber, line.translationFlag),
                 hidden: line.translationFlag && !settings.enableLyricTranslation,
                 'mt-1': line.translationFlag,
                 'mt-4': !line.translationFlag
@@ -175,6 +179,7 @@ const showPlaylist = (playlistId?: string) => {
 };
 
 const toggleLyricTranslation = () => setSettings({ enableLyricTranslation: !settings.enableLyricTranslation });
+const isHighlighted = (n: number, flag: boolean) => n == (flag ? lyricLineNumberTrans : lyricLineNumber);
 
 const showImage = (e: any, url: any) => {
   e.target.src = url;
