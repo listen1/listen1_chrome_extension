@@ -401,7 +401,10 @@ const updateGithubStatus = async () => {
   githubStatusText = GithubClient.github.getStatusText();
 };
 
-const logoutGithub = GithubClient.github.logout;
+const logoutGithub = () => {
+  GithubClient.github.logout();
+  EventService.emit('github:status');
+};
 
 const disableSource = (source: string) => {
   if (settings.autoChooseSourceList.indexOf(source) === -1) {
