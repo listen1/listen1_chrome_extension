@@ -55,10 +55,11 @@
           <input class="playlist-search-input" type="text" ng-model="playlistFilter.key" :placeholder="$t('_SEARCH_PLAYLIST')" />
         </div>-->
         <li class="head border-t-2 border-b-2 border-transparent text-inactive -mb-2px group flex relative items-center px-6 h-12">
-          <div class="flex-none w-8">
-            <span> No. </span>
+          <div class="flex w-8 justify-end">
+            <span>No.</span>
           </div>
           <div class="title flex-2 truncate flex">
+            <div class="flex-none w-5 mx-4"></div>
             <a>{{ t('_SONGS') + '(' + songs.length + ')' }}</a>
           </div>
           <div class="artist flex-1 truncate">
