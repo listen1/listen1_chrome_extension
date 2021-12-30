@@ -70,7 +70,7 @@
         </div>
       </div>
     </div>
-    <div class="right-control flex flex-none items-center w-screen md:w-80 h-24">
+    <div class="right-control flex flex-none items-center w-screen md:w-80 h-24 z-30">
       <div class="playlist-toggle cursor-pointer ml-8">
         <span class="icon li-list" @click="togglePlaylist()" />
       </div>
