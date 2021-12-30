@@ -56,25 +56,23 @@
               <li
                 v-for="(song, index) in result.tracks"
                 :key="song.id"
-                :class="{ 'bg-even': index % 2 === 0, 'bg-odd': index % 2 !== 0 }"
-                class="flex relative items-center px-6 h-12 hover:bg-row-hover"
+                class="flex relative items-center px-6 h-12 hover:bg-row-hover even:bg-even odd:bg-odd"
                 @mouseenter="song.options = true"
                 @mouseleave="song.options = undefined">
-                <TrackRow :index="index" :song="song"></TrackRow>
+                <TrackRow :index="index" :song="song" :show-source="isAllMusic"></TrackRow>
               </li>
             </template>
             <template v-if="condition.searchType === 1">
               <li
-                v-for="(playlist, index) in result.tracks"
+                v-for="playlist in result.tracks"
                 :key="playlist.id"
-                :class="{ 'bg-even': index % 2 === 0, 'bg-odd': index % 2 !== 0 }"
-                class="playlist-result flex relative items-center px-10 h-20 hover:bg-row-hover">
+                class="playlist-result flex relative items-center px-10 h-20 hover:bg-row-hover even:bg-even odd:bg-odd">
                 <div class="title flex-2 truncate">
                   <a class="cursor-pointer flex" @click="$router.push(`/playlist/${playlist.id}`)">
                     <img class="h-16 w-16 block mr-3" :src="playlist.img_url" err-src="https://y.gtimg.cn/mediastyle/global/img/playlist_300.png" />
                     <div>
                       {{ playlist.title }}
-                      <span v-if="isAllMusic" class="w-6 px-1 mr-3 text-gray-500 text-ms text-center border border-solid rounded border-gray-500">
+                      <span v-if="isAllMusic" class="px-1 mx-4 text-gray-500 text-ms text-center border border-solid rounded border-gray-500">
                         {{ playlist.source }}
                       </span>
                     </div>

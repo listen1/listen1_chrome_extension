@@ -14,6 +14,9 @@
       @click="setRedHeart(toRaw(song), !isRedHeart(song.id))" />
 
     <a class="cursor-pointer truncate min-w-0" @click="play(song)">{{ song.title }}</a>
+    <span v-if="showSource" class="px-1 mx-4 text-gray-500 text-ms text-center border border-solid rounded border-gray-500">
+      {{ song.source }}
+    </span>
   </div>
   <div class="artist flex-1 truncate">
     <a class="cursor-pointer" @click="$router.push(`/playlist/${song.artist_id}`)">{{ song.artist }}</a>
