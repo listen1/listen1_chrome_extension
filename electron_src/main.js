@@ -70,7 +70,7 @@ function createWindow() {
   if (windowState.maximized) {
     mainWindow.maximize();
   }
-  mainWindow.on('ready-to-show', () => {
+  mainWindow.once('ready-to-show', () => {
     mainWindow.webContents.setZoomLevel(windowState.zoomLevel);
     mainWindow.show();
   });
@@ -162,7 +162,21 @@ function createWindow() {
     }
   });
 }
+const gotTheLock = app.requestSingleInstanceLock();
 
+if (!gotTheLock) {
+  app.quit();
+} else {
+  app.on('second-instance', (event, commandLine, workingDirectory) => {
+    // Someone tried to run a second instance, we should focus our window.
+    if (mainWindow) {
+      if (mainWindow.isMinimized()) mainWindow.restore();
+      mainWindow.focus();
+      // When start a new instance, show the main window and active in taskbar.
+      mainWindow.show();
+    }
+  });
+}
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
