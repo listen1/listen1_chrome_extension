@@ -71,7 +71,6 @@ function createWindow() {
     mainWindow.maximize();
   }
   mainWindow.once('ready-to-show', () => {
-    mainWindow.webContents.setZoomLevel(windowState.zoomLevel);
     mainWindow.show();
   });
   const menu = Menu.buildFromTemplate([
