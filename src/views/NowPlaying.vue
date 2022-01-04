@@ -1,11 +1,11 @@
 <template>
   <div class="page">
     <div
-      class="songdetail-wrapper absolute flex flex-col top-0 left-0 right-0 bottom-24 duration-300 app-region-nodrag bg-now-playing justify-center"
+      class="songdetail-wrapper absolute flex flex-col top-0 left-0 right-0 bottom-24 duration-500 app-region-nodrag bg-now-playing"
       :class="{
         'overflow-y-scroll': commentActive,
-        'overflow-hidden': !commentActive,
-        slidedown: overlay.type !== 'track',
+        'overflow-hidden justify-center': !commentActive,
+        'slidedown': overlay.type !== 'track',
         coverbg: settings.enableNowplayingCoverBackground
       }">
       <div
@@ -13,7 +13,7 @@
         class="absolute top-0 left-0 right-0 h-24" />
       <div
         v-if="settings.enableNowplayingCoverBackground"
-        class="bg absolute opacity-50 h-full text-center w-full brightness-[0.8] blur-[90px] duration-1000 ease-in-out"
+        class="bg absolute opacity-50 h-full w-full text-center brightness-[0.8] blur-[90px] duration-1000 ease-in-out"
         :style="{ backgroundImage: `url(${currentPlaying?.img_url}` }" />
 
       <div
@@ -38,7 +38,7 @@
                 </svg>
       </div>-->
 
-      <div class="playsong-detail my-0 mx-auto flex w-[60rem] z-10 justify-center">
+      <div class="playsong-detail my-0 mx-auto flex w-[60rem] z-10 justify-center" :class="{'mt-48': commentActive}">
         <div class="detail-head overflow-hidden flex-none w-[30rem] 2xl:w-[500px] flex justify-center">
           <div class="detail-head-cover w-72 2xl:w-96 2xl:mr-28 transition-all ease-in-out">
             <img class="w-full aspect-square object-cover rounded" :src="currentPlaying?.img_url" @error="showImage($event, coverImg)" />
@@ -88,8 +88,8 @@
               </a>
             </div>
           </div>
-          <div class="lyric relative flex-none h-96 overflow-y-scroll">
-            <div class="placeholder" />
+          <div class="lyric blur-mask relative flex-none h-96 overflow-y-scroll">
+            <div class="placeholder h-1/2" />
             <p
               v-for="line in lyricArray"
               :key="line.lineNumber"
@@ -97,7 +97,7 @@
               :style="{
                 fontWeight: lyricFontWeight,
                 fontSize: `${lyricFontSize * (isHighlighted(line.lineNumber, line.translationFlag) ? 1.2 : 1)}px`,
-                filter: `blur(${Math.min(Math.abs(line.lineNumber - (line.translationFlag ? lyricLineNumberTrans : lyricLineNumber)) * 0.25, 1)}px)`
+                filter: `blur(${line.lineNumber === (line.translationFlag ? lyricLineNumberTrans : lyricLineNumber) ? 0.25 : 0}px)`
               }"
               :class="{
                 highlight: isHighlighted(line.lineNumber, line.translationFlag),
@@ -107,7 +107,7 @@
               }">
               {{ line.content }}
             </p>
-            <div class="placeholder" />
+            <div class="placeholder h-1/2" />
           </div>
         </div>
       </div>
@@ -213,7 +213,7 @@ watchEffect(async () => {
 </script>
 <style>
 .page .songdetail-wrapper.slidedown {
-  top: calc(100% - 5rem);
+  top: calc(100% - 6rem);
 }
 .page .bg {
   background-repeat: no-repeat;
@@ -260,4 +260,9 @@ watchEffect(async () => {
 .page .songdetail-wrapper .close svg {
   stroke: var(--now-playing-close-icon-color);
 } */
+
+.blur-mask {
+  mask: linear-gradient(transparent 5%, black 20%, black 80% , transparent 95%);
+  -webkit-mask: linear-gradient(transparent 5%, black 20%, black 80% , transparent 95%);
+}
 </style>

@@ -46,12 +46,13 @@
   </div>
 </template>
 <script setup lang="ts">
-const { song, isMine, isLocal, listId, index } = defineProps<{
+const { song, isMine, isLocal, listId, index, showSource } = defineProps<{
   song: any;
   isMine?: boolean | string;
   isLocal?: boolean;
   listId?: string;
   index?: number;
+  showSource?: boolean;
 }>();
 import { inject, toRaw } from 'vue';
 import { useI18n } from 'vue-i18n';
