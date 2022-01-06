@@ -803,7 +803,7 @@ ejs@^3.1.6:
   dependencies:
     jake "^10.6.1"
 
-electron-builder@^22.13.1:
+electron-builder@^22.14.5:
   version "22.14.5"
   resolved "https://registry.yarnpkg.com/electron-builder/-/electron-builder-22.14.5.tgz#3a25547bd4fe3728d4704da80956a794c5c31496"
   integrity sha512-N73hSbXFz6Mz5Z6h6C5ly6CB+dUN6k1LuCDJjI8VF47bMXv/QE0HE+Kkb0GPKqTqM7Hsk/yIYX+kHCfSkR5FGg==
@@ -870,10 +870,10 @@ electron-store@^8.0.1:
     conf "^10.0.3"
     type-fest "^1.0.2"
 
-electron@^14.2.1:
-  version "14.2.1"
-  resolved "https://registry.yarnpkg.com/electron/-/electron-14.2.1.tgz#ee8b9cfa8c04ad4d9456daa5bbac562c2c2517a1"
-  integrity sha512-20cLOVpmjIgYMgsDLpI36VQhv0bIy54sSBAP3rLFtrs/kVVHLu0educMVZkkMm5GJPd2vvU4mcK7f43JgVRcNg==
+electron@14.2.3:
+  version "14.2.3"
+  resolved "https://registry.yarnpkg.com/electron/-/electron-14.2.3.tgz#3facf572c57cefe8ce80154ad3e63f937784644b"
+  integrity sha512-7wBqvzUKhK1tw544w3+F8J7NajnqURGC4pH3VFTiBHU5ayiI/oaTTXJxyFLZ54zsR7xwon/3dYEVjIm2i68+Zg==
   dependencies:
     "@electron/get" "^1.0.1"
     "@types/node" "^14.6.2"
