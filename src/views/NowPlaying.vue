@@ -38,17 +38,17 @@
                 </svg>
       </div>-->
 
-      <div class="playsong-detail my-0 mx-auto flex w-[60rem] z-10 justify-center" :class="{ 'mt-48': commentActive }">
-        <div class="detail-head overflow-hidden flex-none w-[30rem] 2xl:w-[500px] flex justify-center">
-          <div class="detail-head-cover w-72 2xl:w-96 mt-32 2xl:mr-28 transition-all ease-in-out">
-            <img class="w-full aspect-square object-cover rounded shadow-2xl" :src="currentPlaying?.img_url" @error="showImage($event, coverImg)" />
+      <div class="playsong-detail flex self-center place-content-between w-[60rem] z-10" :class="{ 'mt-48': commentActive }">
+        <div class="detail-head overflow-hiddene flex items-center">
+          <div class="detail-head-cover w-72 2xl:w-96 transition-all ease-in-out">
+            <img class="w-full aspect-square object-cover rounded-lg shadow-2xl" :src="currentPlaying?.img_url" @error="showImage($event, coverImg)" />
           </div>
           <div class="detail-head-title">
             <!--<a title="加入收藏" class="clone" ng-click="showDialog(0, currentPlaying)">收藏</a>
             <a open-url="currentPlaying.source_url" title="原始链接" class="link">原始链接</a>-->
           </div>
         </div>
-        <div class="detail-songinfo flex app-region-nodrag overflow-hidden flex-col flex-1">
+        <div class="detail-songinfo flex w-96 app-region-nodrag overflow-hidden flex-col">
           <div class="title flex items-start">
             <h2 class="font-normal text-3xl mr-4 mb-4">{{ currentPlaying?.title }}</h2>
             <span
@@ -111,7 +111,7 @@
           </div>
         </div>
       </div>
-      <div v-if="commentActive" class="mt-20 mb-8 mx-auto w-[42rem] z-10">
+      <div v-if="commentActive" class="mt-20 mb-8 self-center w-[42rem] z-10">
         <div>热门评论</div>
         <ul>
           <li v-for="comment in commentList" :key="comment.id" class="flex py-4 border-b border-default">
