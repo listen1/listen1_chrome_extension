@@ -6,6 +6,7 @@
         id="volumebar"
         :progress="volume * 100"
         btn-class="h-4 w-4 bg-white border border-gray-200"
+        :tooltips="(volume * 100).toFixed(0)"
         @update-progress="changeVolume"
         @commit-progress="commitVolume"></DraggableBar>
     </div>

@@ -193,7 +193,7 @@ const provider = class MyPlaylist extends MusicResource {
   static createMyplaylist(playlist_title: string, tracks: any[]) {
     const playlist = {
       info: {
-        cover_img_url: 'images/mycover.jpg',
+        cover_img_url: '',
         title: playlist_title,
         id: '',
         source_url: ''

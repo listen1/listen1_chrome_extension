@@ -3,7 +3,7 @@
     <div class="playlist-detail">
       <div class="detail-head flex">
         <div class="detail-head-cover w-48 mx-8 mt-8 mb-1">
-          <img :src="cover_img_url" class="h-48 aspect-square rounded" err-src="https://y.gtimg.cn/mediastyle/global/img/singer_300.png" />
+          <img :src="cover_img_url || coverImg" class="h-48 aspect-square rounded" err-src="https://y.gtimg.cn/mediastyle/global/img/singer_300.png" />
         </div>
         <div class="detail-head-title flex-1">
           <h2 class="h-10 my-7 text-3xl font-semibold">{{ playlist_title }}</h2>
@@ -55,7 +55,11 @@
           <input class="playlist-search-input" type="text" ng-model="playlistFilter.key" :placeholder="$t('_SEARCH_PLAYLIST')" />
         </div>-->
         <li class="head border-t-2 border-b-2 border-transparent text-inactive -mb-2px group flex relative items-center px-6 h-12">
+          <div class="flex w-8 justify-end">
+            <span>No.</span>
+          </div>
           <div class="title flex-2 truncate flex">
+            <div class="flex-none w-5 mx-4"></div>
             <a>{{ t('_SONGS') + '(' + songs.length + ')' }}</a>
           </div>
           <div class="artist flex-1 truncate">
@@ -79,7 +83,7 @@
           @drop="onPlaylistSongDrop(listId, song, $event)"
           @mouseenter="song.options = true"
           @mouseleave="song.options = undefined">
-          <TrackRow :song="song" :is-local="is_local" :is-mine="is_mine" :list-id="listId"></TrackRow>
+          <TrackRow :index="index" :song="song" :is-local="is_local" :is-mine="is_mine" :list-id="listId"></TrackRow>
         </DragDropZone>
       </ul>
     </div>
@@ -98,6 +102,8 @@ import $event from '../services/EventService';
 import { l1Player } from '../services/l1_player';
 import MediaService from '../services/MediaService';
 import notyf from '../services/notyf';
+import loadingImg from '../images/loading.svg';
+import coverImg from '../images/mycover.jpg';
 
 const { t } = useI18n();
 const route = useRoute();
@@ -108,7 +114,7 @@ let is_mine = computed(() => listId && listId.slice(0, 2) === 'my');
 let is_local = computed(() => listId && listId.slice(0, 2) === 'lm');
 
 let songs = $ref([]);
-let cover_img_url = $ref('images/loading.svg');
+let cover_img_url = $ref(loadingImg);
 let playlist_title = $ref('');
 let playlist_source_url = $ref('');
 let is_favorite = $ref(false);

@@ -1,8 +1,8 @@
 <template>
-  <div class="menu-modal fixed top-0 right-0 left-0 bg-white bg-opacity-20" :class="{ 'bottom-20': !hidden }" @click="close()" />
+  <div class="menu-modal fixed top-0 right-0 left-0 bg-white bg-opacity-20" :class="{ 'bottom-24': !hidden }" @click="close()" />
   <div
     class="menu bg-theme fixed overflow-hidden border-default rounded-t-lg h-96"
-    :class="{ 'bottom-20 opacity-100': !hidden, '-bottom-80 opacity-0': hidden }">
+    :class="{ 'bottom-24 opacity-100': !hidden, '-bottom-80 opacity-0': hidden }">
     <div class="menu-header text-sm h-10 border-b border-default flex items-center bg-menu">
       <span class="menu-title flex-1 px-4 border-default border-r">{{ t('_TOTAL_SONG_PREFIX') }} {{ playlist.length }} {{ t('_TOTAL_SONG_POSTFIX') }}</span>
       <a class="add-all pr-4 flex items-center cursor-pointer" @click="showModal('AddToPlaylist', { tracks: playlist })">
@@ -18,7 +18,7 @@
         <vue-feather size="1.25rem" type="x"></vue-feather>
       </a>
     </div>
-    <ul class="menu-list overflow-y-scroll text-sm">
+    <ul class="menu-list overflow-y-auto text-sm align-middle h-80">
       <DragDropZone
         v-for="(song, index) in playlist"
         :id="'song_' + song.id"
@@ -32,12 +32,14 @@
         @mouseenter="song.highlight = true"
         @mouseleave="song.highlight = undefined"
         @drop="onCurrentPlayingSongDrop(song, $event)">
-        <div class="song-status-icon w-8">
+        <div class="w-8 flex justify-end">
+          <span>{{ index + 1 }}</span>
+        </div>
+        <div class="song-status-icon w-8 flex justify-center">
           <vue-feather v-show="currentPlaying.id == song.id" size="1rem" type="play"></vue-feather>
         </div>
         <div class="song-title flex-2" :class="song.disabled ? 'text-disabled' : ''">
           <a class="cursor-pointer" @click="playFromPlaylist(song)">
-            <span v-if="song.source === 'xiami'" style="color: orange; border-radius: 12px; border: solid 1px; padding: 0 4px">⚠️ 🦐</span>
             {{ song.title }}
           </a>
         </div>
@@ -109,16 +111,14 @@ let playlist: any = $computed(() => player.playlist.value);
 let currentPlaying: any = $computed(() => player.currentPlaying || {});
 </script>
 <style>
-.footer .menu ul.menu-list {
-  height: 21.5rem;
-}
-.footer .menu {
-  left: 300px;
-  right: 300px;
+.menu {
+  --menu-width: 60rem;
+  width: var(--menu-width);
+  left: calc((100% - var(--menu-width)) / 2);
   -webkit-app-region: no-drag;
 }
 
-.footer .menu ul.menu-list li .song-status-icon svg {
+.song-status-icon svg {
   fill: var(--important-color);
   stroke: var(--important-color);
 }

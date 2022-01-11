@@ -21,7 +21,7 @@ let show = $ref(false);
 let modalType = $ref(DefaultModal);
 let options = $ref({});
 
-const components: Record<string, any> = {
+const components: Record<string, typeof DefaultModal> = {
   DefaultModal,
   CreatePlaylist,
   AddToPlaylist,

@@ -87,21 +87,21 @@ const defaultPlaylists: { [key: string]: any } = {
   current: {
     id: 'current',
     title: 'current',
-    cover_img_url: 'images/mycover.jpg',
+    cover_img_url: '',
     type: 'current',
     order: []
   },
   lmplaylist_reserve: {
     id: 'lmplaylist_reserve',
     title: '本地音乐',
-    cover_img_url: 'images/mycover.jpg',
+    cover_img_url: '',
     type: 'local',
     order: []
   },
   myplaylist_redheart: {
     id: 'myplaylist_redheart',
     title: '我喜欢的音乐',
-    cover_img_url: 'images/mycover.jpg',
+    cover_img_url: '',
     type: 'my',
     order: []
   }
@@ -148,7 +148,7 @@ function migratePlaylist(tracks: any, newId: string, newTitle: string, newType: 
   iDB.Playlists.put({
     id: newId,
     title: newTitle,
-    cover_img_url: 'images/mycover.jpg',
+    cover_img_url: '',
     type: newType,
     order: tracks.map((i: Record<string, unknown>) => i.id)
   });

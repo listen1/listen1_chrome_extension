@@ -10,7 +10,7 @@
           <h2>{{ t('_CREATE_PLAYLIST') }}</h2>
         </li>
         <li v-for="(playlist, index) in myplaylist" :key="index" class="cursor-pointer h-14 p-2 hover:bg-dialog-hover" @click="addToPlaylist(playlist.id)">
-          <img class="float-left h-10 w-10 mr-4" :src="playlist.cover_img_url" />
+          <img class="float-left h-10 w-10 mr-4" :src="playlist.cover_img_url || coverImg" />
           <h2>{{ playlist.title }}</h2>
         </li>
       </ul>
@@ -26,6 +26,7 @@ import useRedHeart from '../../composition/redheart';
 import MediaService from '../../services/MediaService';
 import notyf from '../../services/notyf';
 import DefaultModal from './DefaultModal.vue';
+import coverImg from '../../images/mycover.jpg';
 
 const { t } = useI18n();
 let myplaylist: any = $ref<unknown[]>([]);
