@@ -25,7 +25,7 @@
       <div class="close app-region-nodrag cursor-pointer absolute left-8 right-8 w-8 h-8" :class="isMac ? 'mac top-16' : 'top-8 '" @click="toggleNowPlaying()">
         <vue-feather type="chevron-down"></vue-feather>
       </div>
-
+      <WindowControl class="absolute right-2 top-4" />
       <!-- <div v-if="!isChrome && !isMac" class="window-control">
                 <svg class="icon" window-control="window_min">
                   <use href="#minimize-2" />
@@ -150,6 +150,7 @@ import useSettings from '../composition/settings';
 import { datetimeFormats } from '../i18n/index';
 import MediaService from '../services/MediaService';
 import type { Comment } from '../provider/types';
+import WindowControl from '../components/WindowControl.vue';
 const { t, d } = useI18n({
   //@ts-ignore mismatch arg num
   datetimeFormats
