@@ -144,13 +144,13 @@
 import { watchEffect } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
+import WindowControl from '../components/WindowControl.vue';
 import useOverlay from '../composition/overlay';
 import usePlayer from '../composition/player';
 import useSettings from '../composition/settings';
 import { datetimeFormats } from '../i18n/index';
-import MediaService from '../services/MediaService';
 import type { Comment } from '../provider/types';
-import WindowControl from '../components/WindowControl.vue';
+import MediaService from '../services/MediaService';
 const { t, d } = useI18n({
   //@ts-ignore mismatch arg num
   datetimeFormats
