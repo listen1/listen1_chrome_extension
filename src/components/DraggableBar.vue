@@ -2,7 +2,7 @@
   <div :id="id" class="playbar-clickable cursor-pointer h-3 pt-1" @mousedown="onMyMouseDown">
     <div class="barbg h-1 bg-draggable-bar">
       <div class="cur bg-draggable-bar-current relative h-full" :style="{ width: changingProgress ? cprogress * 100 + '%' : progress + '%' }">
-        <span :class="'btn absolute rounded-full ' + (btnClass ? btnClass : '')">
+        <span class="btn absolute rounded-full" :class="btnClass ? btnClass : ''" :tooltips="tooltips">
           <i />
         </span>
       </div>
@@ -10,10 +10,11 @@
   </div>
 </template>
 <script setup lang="ts">
-const { id, progress, btnClass } = defineProps<{
+const { id, progress, btnClass, tooltips } = defineProps<{
   id: string;
   progress: number;
   btnClass?: string;
+  tooltips?: string;
 }>();
 
 const emits = defineEmits(['update-progress', 'commit-progress']);
@@ -68,4 +69,21 @@ const onMyMouseDown = (event: MouseEvent) => {
 };
 </script>
 
-<style></style>
+<script lang="ts">
+export default {};
+</script>
+
+<style>
+[tooltips]:hover:after {
+  position: absolute;
+  bottom: calc(100% + 10px);
+  left: 50%;
+  transform: translateX(-50%);
+  content: attr(tooltips);
+  color: #fff;
+  background: #1b2735;
+  max-width: 100vw;
+  padding: 0.3rem 0.5rem;
+  border-radius: 1rem;
+}
+</style>
