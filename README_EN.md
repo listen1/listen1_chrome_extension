@@ -1,6 +1,6 @@
-# Listen 1 (Chrome Extension) V2.21.6
+# Listen 1 (Chrome Extension) V2.21.7
 
-（Last Update July 21st, 2021)
+（Last Update Jan 23rd, 2022)
 
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE)
 
@@ -46,6 +46,18 @@ Making your own playlist is also supported.
 2. Click Add to Firefox button
 
 ## Changelog
+
+`2021-08 ~ 2022-01`
+
+Fix bugs：
+
+- fix music category line height （thanks @yinzhenyu-su）
+- fix bilibili play issue in firefox (thanks @ktmzcpl)
+- fix UI crash in electron environment
+
+Optimaze：
+
+- More fluent effect for current playing switching (thanks @mikelxk)
 
 `2021-07`
 

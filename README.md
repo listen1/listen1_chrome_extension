@@ -1,6 +1,6 @@
-# Listen 1 (Chrome Extension) V2.21.6
+# Listen 1 (Chrome Extension) V2.21.7
 
-（最后更新于 2021 年 07 月 21 日）
+（最后更新于 2022 年 01 月 23 日）
 
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE)
 
@@ -71,6 +71,17 @@ Listen1 诞生的初衷从不是和大公司的争夺版权利益，而是为了
 在这个关系项目生死存亡的时刻，我寻求项目因为 DMCA 被 github 关闭的援助。如果有对这个比较了解如何解决的人，或者你想对这个事情发表看法和建议，可以在[issue](https://github.com/listen1/listen1_chrome_extension/issues/113)留言，或者发送邮件到 githublisten1@gmail.com。我们会尽最大努力，来守护 Listen1，即使可能它即将成为历史。
 
 ## 更新日志
+
+`2021-08 ~ 2022-01`
+修复：
+
+- 修复音乐分类按钮显示没有间距的问题 （感谢 @yinzhenyu-su 的提交）
+- 修复在 firefox 无法打开 bilibili 音乐的问题 (感谢 @ktmzcpl 的提交)
+- 修复在 electron 环境启动时的 UI 崩溃问题
+
+优化：
+
+- 更平滑的当前播放切换效果 (感谢 @mikelxk 的提交)
 
 `2021-07`
 
