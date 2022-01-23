@@ -2,7 +2,7 @@
   <div class="modal-mask">
     <div class="modal-wrapper" @click.self="$parent?.$emit('close')">
       <div class="modal-container px-8 py-2">
-        <div class="modal-header mb-4">
+        <div class="modal-header mb-3">
           <div class="modal-header-slot flex items-center">
             <slot name="header">default header</slot>
           </div>
@@ -47,7 +47,7 @@
   margin: 0px auto;
   background-color: var(--dialog-background-color);
   color: var(--dialog-text-color);
-  border-radius: 4px;
+  border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
   font-family: Helvetica, Arial, sans-serif;
 }

@@ -91,8 +91,8 @@
     }
   },
   "devDependencies": {
-    "electron": "^14.2.1",
-    "electron-builder": "^22.13.1",
+    "electron": "14.2.4",
+    "electron-builder": "^22.14.5",
     "electron-reloader": "^1.2.1"
   },
   "dependencies": {

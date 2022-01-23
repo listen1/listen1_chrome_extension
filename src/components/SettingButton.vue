@@ -3,7 +3,7 @@
 </template>
 <script setup lang="ts">
 const emit = defineEmits(['click']);
-const { text } = defineProps<{
+defineProps<{
   text: string;
 }>();
 </script>
