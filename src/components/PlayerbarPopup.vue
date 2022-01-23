@@ -33,7 +33,7 @@
         @mouseleave="song.highlight = undefined"
         @drop="onCurrentPlayingSongDrop(song, $event)">
         <div class="w-8">
-          <span> {{ index + 1 }}</span>
+          <span>{{ index + 1 }}</span>
         </div>
         <div class="song-status-icon w-8">
           <vue-feather v-show="currentPlaying.id == song.id" size="1rem" type="play"></vue-feather>
