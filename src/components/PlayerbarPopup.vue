@@ -32,10 +32,10 @@
         @mouseenter="song.highlight = true"
         @mouseleave="song.highlight = undefined"
         @drop="onCurrentPlayingSongDrop(song, $event)">
-        <div class="w-8">
+        <div class="w-8 text-right">
           <span>{{ index + 1 }}</span>
         </div>
-        <div class="song-status-icon w-8">
+        <div class="song-status-icon w-8 text-center">
           <vue-feather v-show="currentPlaying.id == song.id" size="1rem" type="play"></vue-feather>
         </div>
         <div class="song-title flex-2" :class="song.disabled ? 'text-disabled' : ''">
