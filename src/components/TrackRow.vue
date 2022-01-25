@@ -1,24 +1,19 @@
 <template>
+  <div v-if="index !== undefined" class="flex-none w-8 text-cneter">
+    <span>{{ index + 1 }}</span>
+  </div>
   <div class="title flex-2 flex overflow-hidden items-center max-h-12">
     <!-- <a class="disabled" ng-if="song.disabled" ng-click="copyrightNotice()"> song.title </a> -->
     <vue-feather
-      v-if="!isRedHeart(song.id)"
-      class="cursor-pointer flex-none"
+      class="cursor-pointer flex-none mx-4"
       type="heart"
       size="18"
       stroke-width="1"
-      stroke="#666666"
-      @click="setRedHeart(toRaw(song), true)" />
-    <vue-feather
-      v-if="isRedHeart(song.id)"
-      class="cursor-pointer flex-none"
-      type="heart"
-      fill="red"
-      stroke="red"
-      size="18"
-      @click="setRedHeart(toRaw(song), false)" />
+      :stroke="isRedHeart(song.id) ? 'red' : '#666666'"
+      :fill="isRedHeart(song.id) ? 'red' : 'none'"
+      @click="setRedHeart(toRaw(song), !isRedHeart(song.id))" />
 
-    <a class="cursor-pointer ml-3 truncate min-w-0" @click="play(song)">{{ song.title }}</a>
+    <a class="cursor-pointer truncate min-w-0" @click="play(song)">{{ song.title }}</a>
   </div>
   <div class="artist flex-1 truncate">
     <a class="cursor-pointer" @click="$router.push(`/playlist/${song.artist_id}`)">{{ song.artist }}</a>
@@ -48,11 +43,12 @@
   </div>
 </template>
 <script setup lang="ts">
-const { song, isMine, isLocal, listId } = defineProps<{
+const { song, isMine, isLocal, listId, index } = defineProps<{
   song: any;
   isMine?: boolean | string;
   isLocal?: boolean;
   listId?: string;
+  index?: number;
 }>();
 import { inject, toRaw } from 'vue';
 import { useI18n } from 'vue-i18n';

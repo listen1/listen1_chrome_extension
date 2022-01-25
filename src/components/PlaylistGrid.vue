@@ -1,8 +1,10 @@
 <template>
-  <ul class="playlist-covers m-0 py-0 flex relative flex-wrap">
-    <li v-for="i in playlists" :key="i.id" class="group w-1/3 md:w-1/5 min-h-40 px-4 sm:w-1/4 mb-3">
-      <div class="u-cover flex relative shadow-lg">
-        <img :src="i.cover_img_url" class="m-auto cursor-pointer w-full object-cover rounded" @click="showPlaylist(i.id)" />
+  <ul class="playlist-covers m-0 py-0 relative grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-5">
+    <li v-for="i in playlists" :key="i.id" class="group min-h-40">
+      <div class="relative shadow-lg">
+        <div class="aspect-square bg-cover" style="background-image: url('/images/mycover.jpg')">
+          <img :src="i.cover_img_url" class="m-auto cursor-pointer rounded object-cover w-full" @click="showPlaylist(i.id)" />
+        </div>
         <div
           class="bottom opacity-0 group-hover:opacity-100 cursor-pointer absolute w-8 h-8 bottom-3 right-3 ease-linear duration-200"
           @click="directplaylist(i.id)">
@@ -10,7 +12,7 @@
         </div>
       </div>
       <div class="desc cursor-pointer">
-        <span class="title flex min-h-8 mt-1" @click="showPlaylist(i.id)">{{ i.title }}</span>
+        <div class="min-h-8 mt-1 px-2" @click="showPlaylist(i.id)">{{ i.title }}</div>
       </div>
     </li>
     <!-- <div class="loading_bottom">
