@@ -2,106 +2,59 @@
   <!-- content page: 设置 -->
   <div class="page" ng-init="lastfm.updateStatus()">
     <div class="site-wrapper-innerd">
-      <div class="cover-container leading-normal">
-        <SettingTitle :text="t('_LANGUAGE')" />
-        <div class="settings-content mx-7 mb-7 leading-8">
-          <SettingButton text="简体中文" @click="setLocale('zh-CN')" />
-          <SettingButton text="繁体中文" @click="setLocale('zh-TC')" />
-          <SettingButton text="English" @click="setLocale('en-US')" />
-          <SettingButton text="French" @click="setLocale('fr-FR')" />
-        </div>
-        <SettingTitle :text="t('_BACKUP_PLAYLIST')" />
-        <div class="settings-content mx-7 mb-7 leading-8">
+      <div class="cover-container leading-normal flex content-left flex-col flex-wrap gap-4 2xl:h-[calc(100vh-10rem)] pt-6">
+        <SettingBlock :title="t('_LANGUAGE')">
+          <ToggleButtons :options="locales" :selected="locales.findIndex((i) => i.value === settings.language)" @change="setLocale($event)" />
+        </SettingBlock>
+        <SettingBlock :title="t('_BACKUP_PLAYLIST')">
           <p>{{ t('_BACKUP_WARNING') }}</p>
           <div>
             <SettingButton :text="t('_BACKUP_PLAYLIST')" @click="showModal('GistExport')" />
           </div>
-        </div>
-        <SettingTitle :text="t('_RECOVER_PLAYLIST')" />
-        <div class="settings-content mx-7 mb-7 leading-8">
+        </SettingBlock>
+
+        <SettingBlock :title="t('_RECOVER_PLAYLIST')">
           <p>{{ t('_RECOVER_WARNING') }}</p>
           <SettingButton :text="t('_RECOVER_PLAYLIST')" @click="showModal('GistImport')" />
-        </div>
-        <SettingTitle :text="t('_NOWPLAYING_DISPLAY')" />
-        <div class="settings-content mx-7 mb-7 leading-8">
-          <div class="shortcut flex items-center">
-            <vue-feather
-              v-show="!settings.enableNowplayingCoverBackground"
-              class="cursor-pointer mr-2"
-              size="1.25rem"
-              type="square"
-              @click="toggleCoverBackground"></vue-feather>
-            <vue-feather
-              v-show="settings.enableNowplayingCoverBackground"
-              class="cursor-pointer mr-2"
-              size="1.25rem"
-              type="check-square"
-              @click="toggleCoverBackground"></vue-feather>
-            {{ t('_NOWPLAYING_COVER_BACKGROUND_NOTICE') }}
-          </div>
-          <div class="shortcut flex items-center">
-            <vue-feather
-              v-show="!settings.enableNowplayingBitrate"
-              class="cursor-pointer mr-2"
-              size="1.25rem"
-              type="square"
-              @click="toggleBitrate"></vue-feather>
-            <vue-feather
-              v-show="settings.enableNowplayingBitrate"
-              class="cursor-pointer mr-2"
-              size="1.25rem"
-              type="check-square"
-              @click="toggleBitrate"></vue-feather>
-            {{ t('_NOWPLAYING_BITRATE_NOTICE') }}
-          </div>
-          <div class="shortcut flex items-center">
-            <vue-feather
-              v-show="!settings.enableNowplayingPlatform"
-              class="cursor-pointer mr-2"
-              size="1.25rem"
-              type="square"
-              @click="togglePlayingPlatform"></vue-feather>
-            <vue-feather
-              v-show="settings.enableNowplayingPlatform"
-              class="cursor-pointer mr-2"
-              size="1.25rem"
-              type="check-square"
-              @click="togglePlayingPlatform"></vue-feather>
-            {{ t('_NOWPLAYING_PLATFORM_NOTICE') }}
-          </div>
-          <div class="shortcut flex items-center">
-            <vue-feather
-              v-show="!settings.enableNowplayingComment"
-              class="cursor-pointer mr-2"
-              size="1.25rem"
-              type="square"
-              @click="togglePlayingComment"></vue-feather>
-            <vue-feather
-              v-show="settings.enableNowplayingComment"
-              class="cursor-pointer mr-2"
-              size="1.25rem"
-              type="check-square"
-              @click="togglePlayingComment"></vue-feather>
-            {{ t('_NOWPLAYING_COMMENT') }}
-          </div>
-        </div>
-        <SettingTitle :text="t('_THEME')" />
-        <div class="settings-content mx-7 mb-7 leading-8">
-          <SettingButton :text="t('_THEME_WHITE')" @click="setTheme('white')" />
-          <SettingButton :text="t('_THEME_BLACK')" @click="setTheme('black')" />
-          <!-- <SettingButton :text="t('_THEME_WHITE_TRANSPARENT')" @click="setTheme('white_transparent')" />
-          <SettingButton :text="t('_THEME_BLACK_TRANSPARENT')" @click="setTheme('black_transparent')" /> -->
-          <SettingButton :text="t('_THEME_INFINITE_GRID')" @click="setTheme('infinite_grid')" />
-          <SettingButton :text="t('_THEME_GRIDIENT')" @click="setTheme('gridient')" />
-        </div>
-        <SettingTitle :text="t('_STYLE')" />
-        <div class="settings-content mx-7 mb-7 leading-8">
-          <p>
+        </SettingBlock>
+
+        <SettingBlock :title="t('_NOWPLAYING_DISPLAY')">
+          <label class="shortcut flex items-center mb-1">
+            <Checkbox
+              :checked="settings.enableNowplayingCoverBackground"
+              :text="t('_NOWPLAYING_COVER_BACKGROUND_NOTICE')"
+              @change="setSettings({ enableNowplayingCoverBackground: $event })" />
+          </label>
+          <label class="shortcut flex items-center mb-1">
+            <Checkbox
+              :checked="settings.enableNowplayingBitrate"
+              :text="t('_NOWPLAYING_BITRATE_NOTICE')"
+              @change="setSettings({ enableNowplayingBitrate: $event })" />
+          </label>
+
+          <label class="shortcut flex items-center mb-1">
+            <Checkbox
+              :checked="settings.enableNowplayingPlatform"
+              :text="t('_NOWPLAYING_PLATFORM_NOTICE')"
+              @change="setSettings({ enableNowplayingPlatform: $event })" />
+          </label>
+
+          <label class="shortcut flex items-center mb-1">
+            <Checkbox :checked="settings.enableNowplayingComment" :text="t('_NOWPLAYING_COMMENT')" @change="setSettings({ enableNowplayingComment: $event })" />
+          </label>
+        </SettingBlock>
+
+        <SettingBlock :title="t('_THEME')">
+          <ToggleButtons :options="themes" :selected="themes.findIndex((i) => i.value === settings.theme)" @change="setTheme($event)" />
+        </SettingBlock>
+
+        <SettingBlock :title="t('_STYLE')">
+          <p class="mb-1">
             {{ `${t('_LYRIC_SIZE')}` }}
             <input v-model.lazy="settings.lyricFontSize" class="settings-input w-16 pl-[6px] py-0" type="number" min="10" max="40" />
             px
           </p>
-          <p>
+          <p class="mb-1">
             {{ `${t('_LYRIC_WEIGHT')}` }}
             <select v-model="settings.lyricFontWeight" class="settings-input p-1">
               <option v-for="option in fontWeightOptions" :key="option.text" :value="option.value">
@@ -112,56 +65,36 @@
           <div class="setting-font-preview">
             <p :style="{ fontWeight: settings.lyricFontWeight, fontSize: `${settings.lyricFontSize}px` }">Listen1，自由的享受音乐的乐趣</p>
           </div>
-        </div>
-        <SettingTitle :text="t('_AUTO_CHOOSE_SOURCE')" />
-        <div class="settings-content mx-7 mb-7 leading-8">
-          <div class="shortcut btn btn-primary confirm-button flex items-center">
-            <vue-feather
-              v-show="!settings.enableAutoChooseSource"
-              class="cursor-pointer mr-2"
-              size="1.25rem"
-              type="square"
-              @click="setAutoChooseSource(true)"></vue-feather>
-            <vue-feather
-              v-show="settings.enableAutoChooseSource"
-              class="cursor-pointer mr-2"
-              size="1.25rem"
-              type="check-square"
-              @click="setAutoChooseSource(false)"></vue-feather>
+        </SettingBlock>
+
+        <SettingBlock :title="t('_AUTO_CHOOSE_SOURCE')">
+          <label class="shortcut btn btn-primary confirm-button flex items-center">
             {{ t('_AUTO_CHOOSE_SOURCE_NOTICE') }}
-          </div>
+          </label>
+
+          <Checkbox :checked="settings.enableAutoChooseSource" :text="t('_AUTO_CHOOSE_SOURCE_NOTICE')" @change="setAutoChooseSource($event)" />
+
           <div v-show="settings.enableAutoChooseSource" class="search-description mt-8">{{ t('_AUTO_CHOOSE_SOURCE_LIST') }}</div>
-          <div v-show="settings.enableAutoChooseSource" class="search-source-list flex items-center flex-wrap leading-10">
-            <div v-for="item in sourceList" :key="item.name" class="search-source w-32 flex items-center">
-              <vue-feather
-                v-show="settings.autoChooseSourceList.indexOf(item.name) === -1"
-                type="square"
-                class="cursor-pointer mr-2"
-                size="1.25rem"
-                @click="enableSource(item.name)"></vue-feather>
-              <vue-feather
-                v-show="settings.autoChooseSourceList.indexOf(item.name) > -1"
-                type="check-square"
-                class="cursor-pointer mr-2"
-                size="1.25rem"
-                @click="disableSource(item.name)"></vue-feather>
-              {{ t(item.displayId) }}
+          <div v-show="settings.enableAutoChooseSource">
+            <div v-for="item in sourceList" :key="item.name" class="mb-1">
+              <Checkbox
+                :checked="settings.autoChooseSourceList.includes(item.name)"
+                :text="t(item.displayId)"
+                @change="($event ? enableSource : disableSource)(item.name)" />
             </div>
           </div>
-        </div>
-        <SettingTitle :text="t('_CONNECT_TO_GITHUB')" />
-        <div class="settings-content mx-7 mb-7 leading-8">
-          <div>
-            <p>{{ t('_STATUS') }}: {{ githubStatusText }}</p>
-            <SettingButton v-show="githubStatus == 0" :text="t('_CONNECT_TO_GITHUB')" @click="openGithubAuth()" />
-            <SettingButton v-show="githubStatus == 1" :text="t('_RECONNECT')" @click="showModal('GithubAuth')" />
-            <SettingButton v-show="githubStatus == 2" :text="t('_CANCEL_CONNECT')" @click="logoutGithub()" />
-          </div>
-        </div>
+        </SettingBlock>
+
+        <SettingBlock :title="t('_CONNECT_TO_GITHUB')">
+          <p>{{ t('_STATUS') }}: {{ githubStatusText }}</p>
+          <SettingButton v-show="githubStatus == 0" :text="t('_CONNECT_TO_GITHUB')" @click="openGithubAuth()" />
+          <SettingButton v-show="githubStatus == 1" :text="t('_RECONNECT')" @click="showModal('GithubAuth')" />
+          <SettingButton v-show="githubStatus == 2" :text="t('_CANCEL_CONNECT')" @click="logoutGithub()" />
+        </SettingBlock>
         <!-- <div ng-if="isChrome" class="settings-title">
           <span>{{ $t('_CLOSE_TAB_ACTION') }}({{ $t('_VALID_AFTER_RESTART') }})</span>
         </div>
-        <div ng-if="isChrome" class="settings-content mx-7 mb-7 leading-8">
+        <div ng-if="isChrome" class="settings-content">
           <div class="shortcut flex items-center">
             <vue-feather v-show="!enableStopWhenClose" type="square" ng-click="setStopWhenClose(true)"></vue-feather>
             <vue-feather v-show="enableStopWhenClose" type="check-square" ng-click="setStopWhenClose(false)"></vue-feather>
@@ -174,7 +107,7 @@
         <div class="settings-title">
           <span>{{ $t('_NOWPLAYING_DISPLAY') }}</span>
         </div>
-        <div class="settings-content mx-7 mb-7 leading-8">
+        <div class="settings-content">
           <div class="shortcut flex items-center">
             <vue-feather v-show="!enableNowplayingCoverBackground" type="square" ng-click="setNowplayingCoverBackground(true)"></vue-feather>
             <vue-feather v-show="enableNowplayingCoverBackground" type="check-square" ng-click="setNowplayingCoverBackground(true)"></vue-feather>
@@ -194,7 +127,7 @@
         <div class="settings-title">
           <span>{{ $t('_LYRIC_DISPLAY') }}</span>
         </div>
-        <div class="settings-content mx-7 mb-7 leading-8">
+        <div class="settings-content">
           <div class="shortcut flex items-center" ng-if="!isChrome">
             <vue-feather v-show="!enableLyricFloatingWindow" type="square" ng-click="openLyricFloatingWindow(true)"></vue-feather>
             <vue-feather v-show="enableLyricFloatingWindow" type="check-square" ng-click="openLyricFloatingWindow(true)"></vue-feather>
@@ -218,7 +151,7 @@
         <div class="settings-title">
           <span>{{ $t('_CONNECT_TO_LASTFM') }}</span>
         </div>
-        <div class="settings-content mx-7 mb-7 leading-8">
+        <div class="settings-content">
           <div>
             <p>{{ $t('_STATUS') }}： lastfm.getStatusText()</p>
             <button class="btn btn-primary confirm-button" ng-show="!lastfm.isAuthRequested()" ng-click="lastfm.getAuth(); showDialog(4);">
@@ -239,7 +172,7 @@
         <div class="settings-title">
           <span>{{ $t('_SHORTCUTS') }}</span>
         </div>
-        <div class="settings-content mx-7 mb-7 leading-8">
+        <div class="settings-content">
           <div class="shortcut_table">
             <div class="shortcut_table-header">
               <div class="shortcut_table-function">{{ $t('_SHORTCUTS_FUNCTION') }}</div>
@@ -318,14 +251,13 @@
         <div class="settings-title" ng-if="!isChrome">
           <span>{{ $t('_PROXY_CONFIG') }}</span>
         </div>
-        <div class="settings-content mx-7 mb-7 leading-8" ng-if="!isChrome">
+        <div class="settings-content" ng-if="!isChrome">
           <span>{{ $t('_PROXY_CONFIG') }}:</span>
           proxyMode.displayText
           <span v-show="proxyMode_name == 'custom'">proxyRules</span>
           <button ng-click="showDialog(12)">{{ $t('_MODIFY') }}</button>
         </div>-->
-        <SettingTitle :text="t('_ABOUT')" />
-        <div class="settings-content mx-7 mb-7 leading-8">
+        <SettingBlock :title="t('_ABOUT')">
           <p>
             Listen 1 {{ t('_HOMEPAGE') }}:
             <Href to="https://listen1.github.io/listen1/" />
@@ -343,7 +275,7 @@
           <p>{{ `${t('_VERSION')}: v${version}` }} (DEVELOPER VERSION)</p>
           <p>LICENSE: {{ t('_LICENSE_NOTICE') }}</p>
           <!-- <p v-show="lastestVersion != ''">{{ $t('_LATEST_VERSION') }}: lastestVersion</p> -->
-        </div>
+        </SettingBlock>
       </div>
     </div>
   </div>
@@ -355,7 +287,9 @@ import { useI18n } from 'vue-i18n';
 import { version } from '../../package.json';
 import Href from '../components/Href.vue';
 import SettingButton from '../components/SettingButton.vue';
-import SettingTitle from '../components/SettingTitle.vue';
+import ToggleButtons from '../components/ToggleButtons.vue';
+import Checkbox from '../components/Checkbox.vue';
+import SettingBlock from '../components/SettingBlock.vue';
 import useSettings from '../composition/settings';
 import { setLocale } from '../i18n';
 import EventService from '../services/EventService';
@@ -375,10 +309,6 @@ let githubStatusText = $ref('???');
 
 const showModal = <CallableFunction>inject('showModal');
 
-const toggleCoverBackground = () => setSettings({ enableNowplayingCoverBackground: !settings.enableNowplayingCoverBackground });
-const toggleBitrate = () => setSettings({ enableNowplayingBitrate: !settings.enableNowplayingBitrate });
-const togglePlayingPlatform = () => setSettings({ enableNowplayingPlatform: !settings.enableNowplayingPlatform });
-const togglePlayingComment = () => setSettings({ enableNowplayingComment: !settings.enableNowplayingComment });
 const setTheme = (theme: string) => setSettings({ theme });
 const setAutoChooseSource = (enabled: boolean) => setSettings({ enableAutoChooseSource: enabled });
 const setAutoChooseSourceList = (newList: string[]) => setSettings({ autoChooseSourceList: newList });
@@ -476,16 +406,60 @@ const sourceList = [
   }
 ];
 
+const locales = [
+  {
+    text: '简体中文',
+    value: 'zh-CN'
+  },
+  {
+    text: '繁体中文',
+    value: 'zh-TC'
+  },
+  {
+    text: 'English',
+    value: 'en-US'
+  },
+  {
+    text: 'French',
+    value: 'fr-FR'
+  }
+];
+
+const themes = [
+  {
+    text: t('_THEME_WHITE'),
+    value: 'white'
+  },
+  {
+    text: t('_THEME_BLACK'),
+    value: 'black'
+  },
+  {
+    //   text: t('_THEME_WHITE_TRANSPARENT'),
+    //   value: 'white_transparent',
+    // },{
+    //   text: t('_THEME_BLACK_TRANSPARENT'),
+    //   value: 'black_transparent',
+    // },{
+    text: t('_THEME_INFINITE_GRID'),
+    value: 'infinite_grid'
+  },
+  {
+    text: t('_THEME_GRIDIENT'),
+    value: 'gridient'
+  }
+];
+
 EventService.on('github:status', updateGithubStatus);
 </script>
 <style>
 .settings-input {
-  margin-left: 10px;
+  margin-left: 0.5rem;
   text-align: left;
   background-color: var(--content-background-color);
   border: 1px solid var(--search-input-background-color);
-  border-radius: 4px;
-  margin-right: 4px;
+  border-radius: 0.25rem;
+  margin-right: 0.25rem;
   color: var(--text-default-color);
   transition: background-color 0.2s;
 }
@@ -496,24 +470,9 @@ EventService.on('github:status', updateGithubStatus);
   color: var(--lyric-default-color);
   display: flex;
   align-items: center;
-  height: 40px;
+  height: 2.5rem;
   overflow: hidden;
 }
-
-/* .page .settings-content {
-  margin: 0 25px 25px 25px;
-} */
-/* .page .settings-content label.upload-button {
-  padding: 5px;
-  background: var(--button-background-color);
-  margin-right: 4px;
-  color: var(--text-default-color);
-  cursor: pointer;
-}
-
-.page .settings-content label.upload-button:hover {
-  background: var(--button-hover-background-color);
-} */
 
 /* .page .settings-content .shortcut {
   display: flex;

@@ -333,10 +333,10 @@ button {
   color: var(--text-default-color);
   /* border: solid 1px var(--button-background-color); */
   border: none;
-  border-radius: 4px;
-  padding: 5px;
-  min-width: 80px;
-  min-height: 32px;
+  border-radius: 0.25rem;
+  padding: 0.3rem;
+  min-width: 5rem;
+  min-height: 2rem;
 }
 button:hover {
   background-color: var(--button-hover-background-color);
