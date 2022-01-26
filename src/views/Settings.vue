@@ -49,12 +49,12 @@
         </SettingBlock>
 
         <SettingBlock :title="t('_STYLE')">
-          <p>
+          <p class="mb-1">
             {{ `${t('_LYRIC_SIZE')}` }}
             <input v-model.lazy="settings.lyricFontSize" class="settings-input w-16 pl-[6px] py-0" type="number" min="10" max="40" />
             px
           </p>
-          <p>
+          <p class="mb-1">
             {{ `${t('_LYRIC_WEIGHT')}` }}
             <select v-model="settings.lyricFontWeight" class="settings-input p-1">
               <option v-for="option in fontWeightOptions" :key="option.text" :value="option.value">
