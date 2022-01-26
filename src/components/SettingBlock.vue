@@ -1,9 +1,9 @@
 <template>
   <div class="m-2">
-    <div class="settings-title pb-2 mb-2 mx-8">
-      <span>{{ title }}</span>
+    <div class="settings-title pb-2 mb-3 mx-8">
+      <span class="text-xl">{{ title }}</span>
     </div>
-    <div class="settings-content mx-7 mb-7 leading-8">
+    <div class="settings-content mx-7 leading-8">
       <slot></slot>
     </div>
   </div>
@@ -16,11 +16,6 @@ const { title } = defineProps<{
 <style>
 .settings-title {
   border-bottom: solid 1px var(--line-default-color);
-  font-size: 1.25rem;
-  max-width: 48rem;
-}
-.settings-title:first-of-type {
-  margin-top: 1.25rem;
 }
 .settings-content {
   max-width: 48rem;

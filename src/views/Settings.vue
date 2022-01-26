@@ -2,7 +2,7 @@
   <!-- content page: 设置 -->
   <div class="page" ng-init="lastfm.updateStatus()">
     <div class="site-wrapper-innerd">
-      <div class="cover-container leading-normal flex content-left flex-col flex-wrap gap-4 2xl:h-[calc(100vh-10rem)]">
+      <div class="cover-container leading-normal flex content-left flex-col flex-wrap gap-4 2xl:h-[calc(100vh-10rem)] pt-6">
         <SettingBlock :title="t('_LANGUAGE')">
           <ToggleButtons :options="locales" :selected="locales.findIndex((i) => i.value === settings.language)" @change="setLocale($event)" />
         </SettingBlock>
@@ -19,36 +19,29 @@
         </SettingBlock>
 
         <SettingBlock :title="t('_NOWPLAYING_DISPLAY')">
-          <label class="shortcut flex items-center mt-4">
-            {{ t('_NOWPLAYING_COVER_BACKGROUND_NOTICE') }}
+          <label class="shortcut flex items-center mb-1">
+            <Checkbox
+              :checked="settings.enableNowplayingCoverBackground"
+              :text="t('_NOWPLAYING_COVER_BACKGROUND_NOTICE')"
+              @change="setSettings({ enableNowplayingCoverBackground: $event })" />
           </label>
-          <ToggleButtons
-            :options="singleSwitch"
-            :selected="singleSwitch.findIndex((i) => i.value === settings.enableNowplayingCoverBackground)"
-            @change="setSettings({ enableNowplayingCoverBackground: $event })" />
-          <label class="shortcut flex items-center mt-4">
-            {{ t('_NOWPLAYING_BITRATE_NOTICE') }}
+          <label class="shortcut flex items-center mb-1">
+            <Checkbox
+              :checked="settings.enableNowplayingBitrate"
+              :text="t('_NOWPLAYING_BITRATE_NOTICE')"
+              @change="setSettings({ enableNowplayingBitrate: $event })" />
           </label>
-          <ToggleButtons
-            :options="singleSwitch"
-            :selected="singleSwitch.findIndex((i) => i.value === settings.enableNowplayingBitrate)"
-            @change="setSettings({ enableNowplayingBitrate: $event })" />
 
-          <label class="shortcut flex items-center mt-4">
-            {{ t('_NOWPLAYING_PLATFORM_NOTICE') }}
+          <label class="shortcut flex items-center mb-1">
+            <Checkbox
+              :checked="settings.enableNowplayingPlatform"
+              :text="t('_NOWPLAYING_PLATFORM_NOTICE')"
+              @change="setSettings({ enableNowplayingPlatform: $event })" />
           </label>
-          <ToggleButtons
-            :options="singleSwitch"
-            :selected="singleSwitch.findIndex((i) => i.value === settings.enableNowplayingPlatform)"
-            @change="setSettings({ enableNowplayingPlatform: $event })" />
 
-          <label class="shortcut flex items-center mt-4">
-            {{ t('_NOWPLAYING_COMMENT') }}
+          <label class="shortcut flex items-center mb-1">
+            <Checkbox :checked="settings.enableNowplayingComment" :text="t('_NOWPLAYING_COMMENT')" @change="setSettings({ enableNowplayingComment: $event })" />
           </label>
-          <ToggleButtons
-            :options="singleSwitch"
-            :selected="singleSwitch.findIndex((i) => i.value === settings.enableNowplayingComment)"
-            @change="setSettings({ enableNowplayingComment: $event })" />
         </SettingBlock>
 
         <SettingBlock :title="t('_THEME')">
@@ -78,17 +71,15 @@
           <label class="shortcut btn btn-primary confirm-button flex items-center">
             {{ t('_AUTO_CHOOSE_SOURCE_NOTICE') }}
           </label>
-          <ToggleButtons
-            :options="singleSwitch"
-            :selected="singleSwitch.findIndex((i) => i.value === settings.enableAutoChooseSource)"
-            @change="setAutoChooseSource($event)" />
+
+          <Checkbox :checked="settings.enableAutoChooseSource" :text="t('_AUTO_CHOOSE_SOURCE_NOTICE')" @change="setAutoChooseSource($event)" />
+
           <div v-show="settings.enableAutoChooseSource" class="search-description mt-8">{{ t('_AUTO_CHOOSE_SOURCE_LIST') }}</div>
-          <div v-show="settings.enableAutoChooseSource" class="search-source-list flex items-center flex-wrap leading-10 gap-4">
-            <div v-for="item in sourceList" :key="item.name" class="search-source flex">
-              <label class="w-32 text-center">{{ t(item.displayId) }}</label>
-              <ToggleButtons
-                :options="singleSwitch"
-                :selected="settings.autoChooseSourceList.includes(item.name) ? 0 : 1"
+          <div v-show="settings.enableAutoChooseSource">
+            <div v-for="item in sourceList" :key="item.name" class="mb-1">
+              <Checkbox
+                :checked="settings.autoChooseSourceList.includes(item.name)"
+                :text="t(item.displayId)"
                 @change="($event ? enableSource : disableSource)(item.name)" />
             </div>
           </div>
@@ -297,6 +288,7 @@ import { version } from '../../package.json';
 import Href from '../components/Href.vue';
 import SettingButton from '../components/SettingButton.vue';
 import ToggleButtons from '../components/ToggleButtons.vue';
+import Checkbox from '../components/Checkbox.vue';
 import SettingBlock from '../components/SettingBlock.vue';
 import useSettings from '../composition/settings';
 import { setLocale } from '../i18n';
@@ -317,10 +309,6 @@ let githubStatusText = $ref('???');
 
 const showModal = <CallableFunction>inject('showModal');
 
-const toggleCoverBackground = () => setSettings({ enableNowplayingCoverBackground: !settings.enableNowplayingCoverBackground });
-const toggleBitrate = () => setSettings({ enableNowplayingBitrate: !settings.enableNowplayingBitrate });
-const togglePlayingPlatform = () => setSettings({ enableNowplayingPlatform: !settings.enableNowplayingPlatform });
-const togglePlayingComment = () => setSettings({ enableNowplayingComment: !settings.enableNowplayingComment });
 const setTheme = (theme: string) => setSettings({ theme });
 const setAutoChooseSource = (enabled: boolean) => setSettings({ enableAutoChooseSource: enabled });
 const setAutoChooseSourceList = (newList: string[]) => setSettings({ autoChooseSourceList: newList });
@@ -456,17 +444,6 @@ const themes = [
   {
     text: t('_THEME_GRIDIENT'),
     value: 'gridient'
-  }
-];
-
-const singleSwitch = [
-  {
-    text: '  ✔  ',
-    value: true
-  },
-  {
-    text: '  ✖  ',
-    value: false
   }
 ];
 
