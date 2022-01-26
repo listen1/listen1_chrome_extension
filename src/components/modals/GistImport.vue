@@ -91,7 +91,7 @@ const upload = async (event: Event) => {
 };
 
 const recover = async (id: string) => {
-  const files = importMySettingsFromGist(id);
+  const files = await importMySettingsFromGist(id);
   const jsonData = await gist2json(files);
   replaceDB(jsonData);
   emit('close');
