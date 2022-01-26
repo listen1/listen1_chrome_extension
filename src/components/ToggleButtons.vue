@@ -4,11 +4,9 @@
       v-for="(button, index) in options"
       :key="index"
       class="rounded-none mr-auto decoration-2 underline-offset-4 whitespace-pre"
-      :class="{ underline: selected === index }"
       :text="button.text"
       :selected="selected === index"
       @click="emit('change', button.value)" />
-    <!-- <SettingButton text="No" /> -->
   </div>
 </template>
 <script setup lang="ts">
