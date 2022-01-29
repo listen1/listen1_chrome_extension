@@ -24,6 +24,12 @@ axiosTH.interceptors.request.use(
 );
 
 const provider: MusicProvider = class taihe extends MusicResource {
+  static _name = 'taihe';
+  static id = 'th';
+  static searchable = true;
+  static support_login = false;
+  static hidden = false;
+  static displayId = '_TAIHE_MUSIC';
   static th_convert_song(song: any) {
     const track = {
       id: `thtrack_${song.id}`,

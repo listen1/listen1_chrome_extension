@@ -82,6 +82,12 @@ export type Track = {
   url?: string;
 };
 export interface MusicProvider {
+  id: string;
+  _name: string;
+  searchable: boolean;
+  displayId: string;
+  support_login: boolean;
+  hidden: boolean;
   showPlaylist(url: string): PromiseLike<any>;
   getPlaylistFilters(): PromiseLike<any>;
   getPlaylist(url: string): PromiseLike<any>;

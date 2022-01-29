@@ -18,6 +18,12 @@ function escape2Html(str: string) {
 }
 
 const provider: MusicProvider = class kugou extends MusicResource {
+  static _name = 'kugou';
+  static id = 'kg';
+  static searchable = true;
+  static support_login = false;
+  static hidden = false;
+  static displayId = '_KUGOU_MUSIC';
   static kg_convert_song(song: any) {
     const track = {
       id: `kgtrack_${song.FileHash}`,

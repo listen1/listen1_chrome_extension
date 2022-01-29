@@ -3,6 +3,12 @@ import { MusicResource, MusicProvider } from './types';
 import iDB from '../services/DBService';
 
 const provider: MusicProvider = class localmusic extends MusicResource {
+  static _name = 'localmusic';
+  static id = 'lm';
+  static searchable = false;
+  static support_login = false;
+  static hidden = true;
+  static displayId = '_LOCAL_MUSIC';
   static async getPlaylistById(list_id: string) {
     const playlistInfo = await iDB.Playlists.get({ id: list_id });
     let playlist = {
@@ -22,7 +28,7 @@ const provider: MusicProvider = class localmusic extends MusicResource {
   }
   static async lm_get_playlist(url: string) {
     const list_id = getParameterByName('list_id', url) || '';
-    return await this.getPlaylistById(list_id);
+    return this.getPlaylistById(list_id);
   }
 
   static async lm_album(url: string) {

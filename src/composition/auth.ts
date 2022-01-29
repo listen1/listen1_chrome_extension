@@ -24,7 +24,7 @@ const openLogin = (source: string) => {
   return window.open(url, '_blank');
 };
 
-const loginSourceList = MediaService.getLoginProviders().map((i) => i.name);
+const loginSourceList = MediaService.getLoginProviders().map((i) => i._name);
 
 const refreshAuthStatus = async () => {
   loginSourceList.map(async (source) => {
