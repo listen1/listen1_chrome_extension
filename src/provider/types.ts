@@ -5,8 +5,17 @@ class NotImplementedError extends Error {
     super(message);
   }
 }
-type PromiseLike<T> = Promise<T> | T;
 
+type PromiseLike<T> = Promise<T> | T;
+type SearchResult = {
+  result: any;
+  total: number;
+  type?: string | null;
+};
+type LyricResult = {
+  lyric: string;
+  tlyric?: string;
+};
 export class MusicResource {
   static showPlaylist(url: string): PromiseLike<any> {
     throw new NotImplementedError('');
@@ -23,11 +32,11 @@ export class MusicResource {
   static bootstrapTrack(track: any, success: any, failure: any): PromiseLike<any> {
     throw new NotImplementedError('');
   }
-  static search(url: string): PromiseLike<any> {
+  static search(url: string): PromiseLike<SearchResult> {
     throw new NotImplementedError('');
   }
 
-  static lyric(url: string): PromiseLike<any> {
+  static lyric(url: string): PromiseLike<LyricResult> {
     throw new NotImplementedError('');
   }
   static getUser(): PromiseLike<any> {
@@ -93,12 +102,8 @@ export interface MusicProvider {
   getPlaylist(url: string): PromiseLike<any>;
   parseUrl(url: string): PromiseLike<any>;
   bootstrapTrack(track: any, success: any, failure: any): PromiseLike<any>;
-  search(url: string): PromiseLike<{
-    result: any;
-    total: number;
-    type?: string | null;
-  }>;
-  lyric(url: string): PromiseLike<any>;
+  search(url: string): PromiseLike<SearchResult>;
+  lyric(url: string): PromiseLike<LyricResult>;
   getUser(): PromiseLike<any>;
   getLoginUrl(): PromiseLike<any>;
   login(url: string): PromiseLike<any>;
