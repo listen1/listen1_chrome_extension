@@ -4,7 +4,7 @@ import { MusicProvider } from '../provider/types';
 import useSettings from '../composition/settings';
 
 function getProviderByName(sourceName: string) {
-  const provider = providers.find((i) => i._name === sourceName);
+  const provider = providers.find((i) => i.Name === sourceName);
   if (!provider) {
     throw Error('Unknown Provider');
   }
@@ -21,7 +21,7 @@ function getAllSearchProviders() {
 
 function getProviderNameByItemId(itemId: string) {
   const prefix = itemId.slice(0, 2);
-  const name = providers.find((i) => i.id === prefix)?._name;
+  const name = providers.find((i) => i.id === prefix)?.Name;
   if (!name) {
     throw Error('Unknown Provider');
   }
@@ -54,7 +54,7 @@ const MediaService = {
       .filter((p) => !p.hidden)
       .map((p) => ({
         id: p.id,
-        name: p._name,
+        name: p.Name,
         searchable: p.searchable,
         displayId: p.displayId
       }));

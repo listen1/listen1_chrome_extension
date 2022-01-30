@@ -5,7 +5,7 @@ import { arrayMove } from '../utils';
 import { MusicResource, MusicProvider } from './types';
 
 const provider = class MyPlaylist extends MusicResource {
-  static _name = 'myplaylist';
+  static Name = 'myplaylist';
   static id = 'my';
   static searchable = false;
   static support_login = false;

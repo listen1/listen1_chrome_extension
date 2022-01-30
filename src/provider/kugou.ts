@@ -18,7 +18,7 @@ function escape2Html(str: string) {
 }
 
 const provider: MusicProvider = class kugou extends MusicResource {
-  static _name = 'kugou';
+  static Name = 'kugou';
   static id = 'kg';
   static searchable = true;
   static support_login = false;

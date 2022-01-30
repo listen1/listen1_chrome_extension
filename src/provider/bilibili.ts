@@ -3,7 +3,7 @@ import { getParameterByName } from '../utils';
 import { MusicProvider, MusicResource } from './types';
 
 const provider: MusicProvider = class bilibili extends MusicResource {
-  static _name = 'bilibili';
+  static Name = 'bilibili';
   static id = 'bi';
   static searchable = false;
   static support_login = false;

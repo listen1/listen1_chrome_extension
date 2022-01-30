@@ -4,7 +4,7 @@ import { getParameterByName } from '../utils';
 import { MusicResource, MusicProvider } from './types';
 
 const provider: MusicProvider = class qq extends MusicResource {
-  static _name = 'qq';
+  static Name = 'qq';
   static id = 'qq';
   static searchable = true;
   static support_login = true;

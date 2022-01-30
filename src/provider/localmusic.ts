@@ -3,7 +3,7 @@ import { MusicResource, MusicProvider } from './types';
 import iDB from '../services/DBService';
 
 const provider: MusicProvider = class localmusic extends MusicResource {
-  static _name = 'localmusic';
+  static Name = 'localmusic';
   static id = 'lm';
   static searchable = false;
   static support_login = false;

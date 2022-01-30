@@ -24,7 +24,7 @@ axiosTH.interceptors.request.use(
 );
 
 const provider: MusicProvider = class taihe extends MusicResource {
-  static _name = 'taihe';
+  static Name = 'taihe';
   static id = 'th';
   static searchable = true;
   static support_login = false;

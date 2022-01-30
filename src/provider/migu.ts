@@ -5,7 +5,7 @@ import { MusicResource, MusicProvider } from './types';
 import { cookieRemove } from '../utils';
 
 const provider: MusicProvider = class migu extends MusicResource {
-  static _name = 'migu';
+  static Name = 'migu';
   static id = 'mg';
   static searchable = true;
   static support_login = true;

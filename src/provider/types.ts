@@ -92,7 +92,7 @@ export type Track = {
 };
 export interface MusicProvider {
   id: string;
-  _name: string;
+  Name: string;
   searchable: boolean;
   displayId: string;
   support_login: boolean;

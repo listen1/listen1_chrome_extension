@@ -5,7 +5,7 @@ import { getParameterByName } from '../utils';
 import { MusicResource, MusicProvider } from './types';
 
 const provider: MusicProvider = class netease extends MusicResource {
-  static _name = 'netease';
+  static Name = 'netease';
   static id = 'ne';
   static searchable = true;
   static support_login = true;

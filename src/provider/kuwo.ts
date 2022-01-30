@@ -37,7 +37,7 @@ function html_decode(str: string) {
   return text;
 }
 const provider: MusicProvider = class kuwo extends MusicResource {
-  static _name = 'kuwo';
+  static Name = 'kuwo';
   static id = 'kw';
   static searchable = true;
   static support_login = false;
