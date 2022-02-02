@@ -39,7 +39,7 @@
       </div>-->
 
       <div class="playsong-detail flex self-center place-content-between w-[60rem] z-10" :class="{ 'mt-48': commentActive }">
-        <div class="detail-head overflow-hiddene flex items-center">
+        <div class="detail-head overflow-hidden flex items-center">
           <div class="detail-head-cover w-80 2xl:w-96 transition-all ease-in-out">
             <img class="w-full aspect-square object-cover rounded-lg shadow-2xl" :src="currentPlaying?.img_url" @error="showImage($event, coverImg)" />
           </div>
