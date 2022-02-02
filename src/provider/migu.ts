@@ -5,6 +5,12 @@ import { MusicResource, MusicProvider } from './types';
 import { cookieRemove } from '../utils';
 
 const provider: MusicProvider = class migu extends MusicResource {
+  static Name = 'migu';
+  static id = 'mg';
+  static searchable = true;
+  static support_login = true;
+  static hidden = false;
+  static displayId = '_MIGU_MUSIC';
   static mg_convert_song(song: any) {
     return {
       id: `mgtrack_${song.copyrightId}`,

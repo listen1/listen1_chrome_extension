@@ -1,10 +1,10 @@
 import myplaylist from '../provider/myplaylist';
-import PROVIDERS from '../provider';
+import providers from '../provider';
 import { MusicProvider } from '../provider/types';
 import useSettings from '../composition/settings';
 
 function getProviderByName(sourceName: string) {
-  const provider = PROVIDERS.find((i) => i.name === sourceName)?.instance;
+  const provider = providers.find((i) => i.Name === sourceName);
   if (!provider) {
     throw Error('Unknown Provider');
   }
@@ -12,16 +12,16 @@ function getProviderByName(sourceName: string) {
 }
 
 function getAllProviders() {
-  return PROVIDERS.filter((i) => !i.hidden).map((i) => i.instance);
+  return providers.filter((i) => !i.hidden);
 }
 
 function getAllSearchProviders() {
-  return PROVIDERS.filter((i) => i.searchable).map((i) => i.instance);
+  return providers.filter((i) => i.searchable);
 }
 
 function getProviderNameByItemId(itemId: string) {
   const prefix = itemId.slice(0, 2);
-  const name = PROVIDERS.find((i) => i.id === prefix)?.name;
+  const name = providers.find((i) => i.id === prefix)?.Name;
   if (!name) {
     throw Error('Unknown Provider');
   }
@@ -30,7 +30,7 @@ function getProviderNameByItemId(itemId: string) {
 
 function getProviderByItemId(itemId: string) {
   const prefix = itemId.slice(0, 2);
-  const provider: MusicProvider | undefined = PROVIDERS.find((i) => i.id === prefix)?.instance;
+  const provider: MusicProvider | undefined = providers.find((i) => i.id === prefix);
   if (!provider) {
     throw Error('Unknown Provider');
   }
@@ -50,15 +50,17 @@ function queryStringify(options: unknown) {
 
 const MediaService = {
   getSourceList() {
-    return PROVIDERS.filter((p) => !p.hidden).map((p) => ({
-      id: p.id,
-      name: p.name,
-      searchable: p.searchable,
-      displayId: p.displayId
-    }));
+    return providers
+      .filter((p) => !p.hidden)
+      .map((p) => ({
+        id: p.id,
+        name: p.Name,
+        searchable: p.searchable,
+        displayId: p.displayId
+      }));
   },
   getLoginProviders() {
-    const result = PROVIDERS.filter((i) => !i.hidden && i.support_login);
+    const result = providers.filter((i) => !i.hidden && i.support_login);
     return result;
   },
   async search(source: string, options: unknown) {
@@ -115,7 +117,7 @@ const MediaService = {
       tlyric_url
     })}`;
     try {
-      return await provider.lyric(url);
+      return provider.lyric(url);
     } catch {
       return { lyric: '', tlyric: '' };
     }
@@ -161,7 +163,7 @@ const MediaService = {
     return myplaylist.addTracksToMyplaylist(id, tracks);
   },
   async insertTrackToMyPlaylist(id: string, track: any, to_track: any, direction: string) {
-    return await myplaylist.insertTrackToMyplaylist(id, track, to_track, direction);
+    return myplaylist.insertTrackToMyplaylist(id, track, to_track, direction);
   },
   // addPlaylist(id, tracks) {
   //   const provider = getProviderByItemId(id);
@@ -181,7 +183,7 @@ const MediaService = {
     myplaylist.createMyplaylist(title, track);
   },
   async reorderMyplaylist(playlistType: string, playlistId: string, toPlaylistId: string, direction: string) {
-    return await myplaylist.reorderMyplaylist(playlistType, playlistId, toPlaylistId, direction);
+    return myplaylist.reorderMyplaylist(playlistType, playlistId, toPlaylistId, direction);
   },
   editMyPlaylist(id: string, title: string, coverImgUrl: string) {
     myplaylist.editMyplaylist(id, title, coverImgUrl);
@@ -275,11 +277,11 @@ const MediaService = {
     const url = `/login?${queryStringify(options)}`;
     const provider = getProviderByName(source);
 
-    return await provider.login(url);
+    return provider.login(url);
   },
   async getUser(source: string) {
     const provider = getProviderByName(source);
-    return await provider.getUser();
+    return provider.getUser();
   },
   getLoginUrl(source: string) {
     const provider = getProviderByName(source);
@@ -288,23 +290,19 @@ const MediaService = {
   async getUserCreatedPlaylist(source: string, options: any) {
     const provider = getProviderByName(source);
     const url = `/get_user_create_playlist?${queryStringify(options)}`;
-
-    return await provider.getUserCreatedPlaylist(url);
+    return provider.getUserCreatedPlaylist(url);
   },
   async getUserFavoritePlaylist(source: string, options: any) {
     const provider = getProviderByName(source);
     const url = `/get_user_favorite_playlist?${queryStringify(options)}`;
-
-    return await provider.getUserFavoritePlaylist(url);
+    return provider.getUserFavoritePlaylist(url);
   },
   async getRecommendPlaylist(source: string) {
     const provider = getProviderByName(source);
-
-    return await provider.getRecommendPlaylist();
+    return provider.getRecommendPlaylist();
   },
   async logout(source: string) {
     const provider = getProviderByName(source);
-
     return provider.logout();
   },
   async getCommentList(track: any, offset: number, limit: number) {
@@ -313,7 +311,7 @@ const MediaService = {
     let trackId = track.id;
     const providerName = getProviderNameByItemId(track.id);
     const provider = getProviderByName(providerName);
-    if (id2PlatformNames.indexOf(providerName) > -1) {
+    if (id2PlatformNames.includes(providerName)) {
       trackId = track.id2;
     }
     return provider.getCommentList(trackId, offset, limit);

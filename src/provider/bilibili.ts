@@ -3,6 +3,12 @@ import { getParameterByName } from '../utils';
 import { MusicProvider, MusicResource } from './types';
 
 const provider: MusicProvider = class bilibili extends MusicResource {
+  static Name = 'bilibili';
+  static id = 'bi';
+  static searchable = false;
+  static support_login = false;
+  static hidden = false;
+  static displayId = '_BILIBILI_MUSIC';
   static bi_convert_song(song_info: any) {
     const track = {
       id: `bitrack_${song_info.id}`,

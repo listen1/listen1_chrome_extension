@@ -4,6 +4,12 @@ import { getParameterByName } from '../utils';
 import { MusicResource, MusicProvider } from './types';
 
 const provider: MusicProvider = class qq extends MusicResource {
+  static Name = 'qq';
+  static id = 'qq';
+  static searchable = true;
+  static support_login = true;
+  static hidden = false;
+  static displayId = '_QQ_MUSIC';
   static htmlDecode(value: string) {
     const parser = new DOMParser();
     return parser.parseFromString(value, 'text/html').body.textContent;

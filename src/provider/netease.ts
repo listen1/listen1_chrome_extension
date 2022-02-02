@@ -5,6 +5,12 @@ import { getParameterByName } from '../utils';
 import { MusicResource, MusicProvider } from './types';
 
 const provider: MusicProvider = class netease extends MusicResource {
+  static Name = 'netease';
+  static id = 'ne';
+  static searchable = true;
+  static support_login = true;
+  static hidden = false;
+  static displayId = '_NETEASE_MUSIC';
   static _create_secret_key(size: number) {
     const result = [];
     const choice = '012345679abcdef'.split('');

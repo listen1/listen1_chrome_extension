@@ -37,6 +37,12 @@ function html_decode(str: string) {
   return text;
 }
 const provider: MusicProvider = class kuwo extends MusicResource {
+  static Name = 'kuwo';
+  static id = 'kw';
+  static searchable = true;
+  static support_login = false;
+  static hidden = false;
+  static displayId = '_KUWO_MUSIC';
   // Fix single quote in json
   static fix_json(data: any) {
     return data.replace(/(')/g, '"');

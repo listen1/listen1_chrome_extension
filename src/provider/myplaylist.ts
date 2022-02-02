@@ -5,6 +5,12 @@ import { arrayMove } from '../utils';
 import { MusicResource, MusicProvider } from './types';
 
 const provider = class MyPlaylist extends MusicResource {
+  static Name = 'myplaylist';
+  static id = 'my';
+  static searchable = false;
+  static support_login = false;
+  static hidden = true;
+  static displayId = '_MY_MUSIC';
   static getPlaylistObjectKey(playlist_type: string) {
     let key = '';
     if (playlist_type === 'my') {
@@ -33,7 +39,7 @@ const provider = class MyPlaylist extends MusicResource {
 
   static async getPlaylist(url: string) {
     const list_id = getParameterByName('list_id', url) || '';
-    return await this.getPlaylistById(list_id);
+    return this.getPlaylistById(list_id);
   }
 
   static async getPlaylistById(list_id: string) {

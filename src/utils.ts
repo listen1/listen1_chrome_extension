@@ -63,11 +63,11 @@ export function cookieGet(cookieRequest: CookieRequest, callback: CallableFuncti
     callback(cookie);
   });
 }
-export async function cookieGetPromise(cookieRequest: CookieRequest) {
+export function cookieGetPromise(cookieRequest: CookieRequest): Promise<Cookie> {
   return new Promise((res) => {
     if (!isElectron()) {
       chrome.cookies.get(cookieRequest, (cookie) => {
-        res(cookie);
+        res(cookie as Cookie);
       });
     } else {
       window.api.getCookie(cookieRequest).then((cookieArray) => {
@@ -75,7 +75,7 @@ export async function cookieGetPromise(cookieRequest: CookieRequest) {
         if (cookieArray.length > 0) {
           [cookie] = cookieArray;
         }
-        res(cookie);
+        res(cookie as Cookie);
       });
     }
   });
