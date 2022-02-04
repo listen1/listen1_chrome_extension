@@ -1,7 +1,7 @@
 <template>
   <div class="page">
     <div
-      class="songdetail-wrapper absolute flex flex-col top-0 left-0 right-0 bottom-24 duration-500 app-region-nodrag bg-now-playing"
+      class="songdetail-wrapper absolute flex flex-col top-0 left-0 right-0 bottom-20 duration-500 app-region-nodrag bg-now-playing"
       :class="{
         'overflow-y-scroll': commentActive,
         'overflow-hidden justify-center': !commentActive,
@@ -213,7 +213,7 @@ watchEffect(async () => {
 </script>
 <style>
 .page .songdetail-wrapper.slidedown {
-  top: calc(100% - 6rem);
+  top: calc(100% - 5rem);
 }
 .page .bg {
   background-repeat: no-repeat;
