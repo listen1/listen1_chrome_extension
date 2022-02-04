@@ -66,7 +66,7 @@
             <div class="singer flex-1 overflow-hidden whitespace-nowrap text-ellipsis">
               <span>{{ t('_ARTIST') }}:</span>
               <a
-                class="cursor-pointer"
+                class="cursor-pointer ml-2"
                 :title="currentPlaying?.artist"
                 @click="
                   showPlaylist(currentPlaying?.artist_id);
@@ -78,7 +78,7 @@
             <div class="album flex-2 overflow-hidden whitespace-nowrap text-ellipsis">
               <span>{{ t('_ALBUM') }}:</span>
               <a
-                class="cursor-pointer"
+                class="cursor-pointer ml-2"
                 :title="currentPlaying?.album"
                 @click="
                   showPlaylist(currentPlaying?.album_id);
