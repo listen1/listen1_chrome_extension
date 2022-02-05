@@ -4,7 +4,7 @@
       class="songdetail-wrapper absolute flex flex-col top-0 left-0 right-0 bottom-20 duration-300 app-region-nodrag bg-now-playing"
       :class="{
         'overflow-y-scroll': commentActive,
-        'overflow-hidden': !commentActive,
+        'overflow-hidden justify-center': !commentActive,
         slidedown: overlay.type !== 'track',
         coverbg: settings.enableNowplayingCoverBackground
       }">
@@ -38,17 +38,17 @@
                 </svg>
       </div>-->
 
-      <div class="playsong-detail my-0 mx-auto flex w-[60rem] z-10">
-        <div class="detail-head overflow-hidden flex-none w-[30rem] 2xl:w-[500px] flex justify-center">
-          <div class="detail-head-cover w-72 2xl:w-96 mt-32 2xl:mr-28 transition-all ease-in-out">
-            <img class="w-full aspect-square object-cover rounded shadow-2xl" :src="currentPlaying?.img_url" @error="showImage($event, 'images/mycover.jpg')" />
+      <div class="playsong-detail flex self-center w-[60rem] z-10 justify-center" :class="{ 'mt-24': commentActive }">
+        <div class="detail-head overflow-hidden flex items-center mr-20">
+          <div class="detail-head-cover w-80 2xl:w-96 transition-all ease-in-out">
+            <img class="w-full aspect-square object-cover rounded-lg shadow-2xl" :src="currentPlaying?.img_url" @error="showImage($event, coverImg)" />
           </div>
           <div class="detail-head-title">
             <!--<a title="加入收藏" class="clone" ng-click="showDialog(0, currentPlaying)">收藏</a>
             <a open-url="currentPlaying.source_url" title="原始链接" class="link">原始链接</a>-->
           </div>
         </div>
-        <div class="detail-songinfo flex app-region-nodrag overflow-hidden mt-28 flex-col flex-1">
+        <div class="detail-songinfo flex w-96 app-region-nodrag overflow-hidden flex-col ml-8">
           <div class="title flex items-start">
             <h2 class="font-normal text-3xl mr-4 mb-4">{{ currentPlaying?.title }}</h2>
             <span
@@ -88,26 +88,30 @@
               </a>
             </div>
           </div>
-          <div class="lyric relative flex-none h-96 overflow-y-scroll">
-            <div class="placeholder" />
+          <div class="lyric blur-mask relative flex-none h-[30rem] overflow-y-scroll">
+            <div class="placeholder h-1/3" />
             <p
               v-for="line in lyricArray"
               :key="line.lineNumber"
               :data-line="line.lineNumber"
-              :style="{ fontWeight: lyricFontWeight, fontSize: `${lyricFontSize}px` }"
+              :style="{
+                fontWeight: lyricFontWeight,
+                fontSize: `${lyricFontSize * (isHighlighted(line.lineNumber, line.translationFlag) ? 1.2 : 1)}px`,
+                filter: `blur(${line.lineNumber === (line.translationFlag ? lyricLineNumberTrans : lyricLineNumber) ? 0.25 : 0}px)`
+              }"
               :class="{
-                highlight: (!line.translationFlag && line.lineNumber == lyricLineNumber) || (line.translationFlag && line.lineNumber == lyricLineNumberTrans),
+                highlight: isHighlighted(line.lineNumber, line.translationFlag),
                 hidden: line.translationFlag && !settings.enableLyricTranslation,
                 'mt-1': line.translationFlag,
                 'mt-4': !line.translationFlag
               }">
               {{ line.content }}
             </p>
-            <div class="placeholder" />
+            <div class="placeholder h-1/3" />
           </div>
         </div>
       </div>
-      <div v-if="commentActive" class="mt-20 mb-8 mx-auto w-[42rem] z-10">
+      <div v-if="commentActive" class="mt-16 mb-8 self-center w-[42rem] z-10">
         <div>热门评论</div>
         <ul>
           <li v-for="comment in commentList" :key="comment.id" class="flex py-4 border-b border-default">
@@ -149,6 +153,7 @@ import useOverlay from '../composition/overlay';
 import usePlayer from '../composition/player';
 import useSettings from '../composition/settings';
 import { datetimeFormats } from '../i18n/index';
+import coverImg from '../images/mycover.jpg';
 import type { Comment } from '../provider/types';
 import MediaService from '../services/MediaService';
 const { t, d } = useI18n({
@@ -176,6 +181,7 @@ const showPlaylist = (playlistId?: string) => {
 };
 
 const toggleLyricTranslation = () => setSettings({ enableLyricTranslation: !settings.enableLyricTranslation });
+const isHighlighted = (n: number, flag: boolean) => n == (flag ? lyricLineNumberTrans : lyricLineNumber);
 
 const showImage = (e: any, url: any) => {
   e.target.src = url;
@@ -254,4 +260,9 @@ watchEffect(async () => {
 .page .songdetail-wrapper .close svg {
   stroke: var(--now-playing-close-icon-color);
 } */
+
+.blur-mask {
+  mask: linear-gradient(transparent 5%, black 20%, black 80%, transparent 95%);
+  -webkit-mask: linear-gradient(transparent 5%, black 20%, black 80%, transparent 95%);
+}
 </style>
