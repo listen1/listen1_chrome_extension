@@ -1,7 +1,7 @@
 <template>
   <div class="page">
     <div
-      class="songdetail-wrapper absolute flex flex-col top-0 left-0 right-0 bottom-20 duration-500 app-region-nodrag bg-now-playing"
+      class="songdetail-wrapper absolute flex flex-col top-0 left-0 right-0 bottom-20 duration-300 app-region-nodrag bg-now-playing"
       :class="{
         'overflow-y-scroll': commentActive,
         'overflow-hidden justify-center': !commentActive,
@@ -38,8 +38,8 @@
                 </svg>
       </div>-->
 
-      <div class="playsong-detail flex self-center place-content-between w-[60rem] z-10" :class="{ 'mt-48': commentActive }">
-        <div class="detail-head overflow-hidden flex items-center">
+      <div class="playsong-detail flex self-center w-[60rem] z-10 justify-center" :class="{ 'mt-24': commentActive }">
+        <div class="detail-head overflow-hidden flex items-center mr-20">
           <div class="detail-head-cover w-80 2xl:w-96 transition-all ease-in-out">
             <img class="w-full aspect-square object-cover rounded-lg shadow-2xl" :src="currentPlaying?.img_url" @error="showImage($event, coverImg)" />
           </div>
@@ -48,7 +48,7 @@
             <a open-url="currentPlaying.source_url" title="原始链接" class="link">原始链接</a>-->
           </div>
         </div>
-        <div class="detail-songinfo flex w-96 app-region-nodrag overflow-hidden flex-col">
+        <div class="detail-songinfo flex w-96 app-region-nodrag overflow-hidden flex-col ml-8">
           <div class="title flex items-start">
             <h2 class="font-normal text-3xl mr-4 mb-4">{{ currentPlaying?.title }}</h2>
             <span
@@ -89,7 +89,7 @@
             </div>
           </div>
           <div class="lyric blur-mask relative flex-none h-[30rem] overflow-y-scroll">
-            <div class="placeholder h-1/2" />
+            <div class="placeholder h-1/3" />
             <p
               v-for="line in lyricArray"
               :key="line.lineNumber"
@@ -107,11 +107,11 @@
               }">
               {{ line.content }}
             </p>
-            <div class="placeholder" />
+            <div class="placeholder h-1/3" />
           </div>
         </div>
       </div>
-      <div v-if="commentActive" class="mt-20 mb-8 self-center w-[42rem] z-10">
+      <div v-if="commentActive" class="mt-16 mb-8 self-center w-[42rem] z-10">
         <div>热门评论</div>
         <ul>
           <li v-for="comment in commentList" :key="comment.id" class="flex py-4 border-b border-default">
