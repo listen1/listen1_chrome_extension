@@ -93,7 +93,7 @@
   "devDependencies": {
     "electron": "14.2.5",
     "electron-builder": "^22.14.13",
-    "electron-reloader": "^1.2.2"
+    "electron-reloader": "1.2.1"
   },
   "dependencies": {
     "chardet": "^1.4.0",
