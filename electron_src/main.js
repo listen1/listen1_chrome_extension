@@ -239,7 +239,7 @@ ipcMain.on('control', async (event, arg, params) => {
       break;
 
     case 'window_max':
-      windowState.maximized ? mainWindow.unmaximize() : mainWindow.maximize();
+      mainWindow.isMaximized() ? mainWindow.unmaximize() : mainWindow.maximize();
       break;
 
     case 'window_close':
