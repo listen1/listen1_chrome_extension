@@ -58,7 +58,7 @@ const provider: MusicProvider = class localmusic extends MusicResource {
     const sound = {} as any;
     sound.url = track.sound_url;
     sound.platform = 'localmusic';
-
+    sound.bitrate = track.bitrate;
     success(sound);
   }
 

@@ -239,7 +239,7 @@ ipcMain.on('control', async (event, arg, params) => {
       break;
 
     case 'window_max':
-      windowState.maximized ? mainWindow.unmaximize() : mainWindow.maximize();
+      mainWindow.isMaximized() ? mainWindow.unmaximize() : mainWindow.maximize();
       break;
 
     case 'window_close':
@@ -293,7 +293,8 @@ ipcMain.on('chooseLocalFile', async (event, listId) => {
       img_url: imgBase64 ? `data:${md.common.picture?.[0].format};base64,${imgBase64}` : 'images/mycover.jpg',
       lyrics: md.common.lyrics,
       // url: "lmtrack_"+fp,
-      sound_url: `file://${fp}`
+      sound_url: `file://${fp}`,
+      bitrate: `${(md.format.bitrate / 1000).toFixed(0)}kbps`
     };
     tracks.push(track);
   }
