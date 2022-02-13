@@ -1,7 +1,5 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const { contextBridge, ipcRenderer, session, webFrame } = require('electron');
-// TODO: import store will throw exception
-const store = require('./store');
 const ipcOn = (channel) => (fn) => {
   ipcRenderer.on(channel, (event, ...args) => fn(...args));
 };
@@ -11,7 +9,12 @@ const ipcOnce = (channel) => (fn) => {
 const setZoomLevel = (level) => {
   webFrame.setZoomLevel(level);
 };
-setZoomLevel(store.safeGet('windowState').zoomLevel);
+try {
+  const { safeGet } = require('./store');
+  setZoomLevel(safeGet('windowState').zoomLevel);
+} catch (error) {
+  // ignore on error
+}
 const setTheme = (theme) => {
   // store.set('theme', theme);
 };

@@ -6,7 +6,7 @@
     <title>Listen1</title>
     <style>
       div.content {
-        border-radius: 5px;
+        border-radius: 8px;
         min-height: 70px;
         box-sizing: border-box;
         overflow: hidden;
@@ -175,11 +175,11 @@
       </div>
     </div>
     <script>
-      currentLyric = document.getElementById('currentLyric');
+      const currentLyric = document.getElementById('currentLyric');
       window.api.onLyric((arg) => {
         currentLyric.innerHTML = arg;
       });
-      currentLyricTrans = document.getElementById('currentLyricTrans');
+      const currentLyricTrans = document.getElementById('currentLyricTrans');
       window.api.onTranslLyric((arg) => {
         currentLyricTrans.innerHTML = arg;
       });

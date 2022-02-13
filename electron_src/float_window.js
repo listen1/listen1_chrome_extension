@@ -1,8 +1,8 @@
 const { BrowserWindow, screen } = require('electron');
-const store = require('./store');
+const { safeGet } = require('./store');
 const { join } = require('path');
 
-/** @type {electron.BrowserWindow} */
+/** @type {BrowserWindow} */
 let floatingWindow;
 let floatingWindowCssKey = undefined;
 /**
@@ -17,7 +17,7 @@ function createFloatingWindow(cssStyle) {
   }
   if (!floatingWindow) {
     /** @type {Electron.Rectangle} */
-    const winBounds = store.safeGet('floatingWindowBounds');
+    const winBounds = safeGet('floatingWindowBounds');
 
     floatingWindow = new BrowserWindow({
       width: 1000,
@@ -32,6 +32,7 @@ function createFloatingWindow(cssStyle) {
       alwaysOnTop: true,
       webPreferences: {
         sandbox: true,
+        contextIsolation: true,
         preload: join(__dirname, 'preload.js')
       },
       ...winBounds
