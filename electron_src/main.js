@@ -268,7 +268,7 @@ ipcMain.on('chooseLocalFile', async (event, listId) => {
     filters: [
       {
         name: 'Music Files',
-        extensions: ['mp3', 'flac', 'ape']
+        extensions: ['ape', 'fla', 'flac', 'mp3', 'wav']
       }
     ]
   });
@@ -277,8 +277,7 @@ ipcMain.on('chooseLocalFile', async (event, listId) => {
     return;
   }
   const tracks = [];
-  for (let i = 0; i < result.filePaths.length; i++) {
-    const fp = result.filePaths[i];
+  for (const fp of result.filePaths) {
     const md = await readAudioTags(fp);
     const imgBase64 = md.common.picture?.[0]?.data?.toString('base64');
     const track = {
