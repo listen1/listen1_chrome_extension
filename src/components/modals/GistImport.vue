@@ -23,13 +23,13 @@
   </DefaultModal>
 </template>
 <script lang="ts" setup>
-import DefaultModal from './DefaultModal.vue';
+import { ref } from 'vue';
 import { useI18n } from 'vue-i18n';
-import GithubClient from '../../services/GithubService';
-import notyf from '../../services/notyf';
 import iDB from '../../services/DBService';
 import EventService from '../../services/EventService';
-import { ref } from 'vue';
+import GithubClient from '../../services/GithubService';
+import notyf from '../../services/notyf';
+import DefaultModal from './DefaultModal.vue';
 
 const emit = defineEmits<{
   (e: 'close'): void;

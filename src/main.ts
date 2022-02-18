@@ -1,14 +1,12 @@
+import mitt from 'mitt';
+import 'notyf/notyf.min.css';
 import { createApp } from 'vue';
 import VueFeather from 'vue-feather';
-import mitt from 'mitt';
 import App from './App.vue';
-import i18n from './i18n';
-import router from './router';
-
-import 'notyf/notyf.min.css';
 import './assets/css/icon.css';
 import './assets/css/index.css';
-
+import i18n from './i18n';
+import router from './router';
 import { setPrototypeOfLocalStorage } from './utils';
 
 setPrototypeOfLocalStorage();

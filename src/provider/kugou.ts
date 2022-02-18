@@ -315,7 +315,7 @@ const provider: MusicProvider = class kugou extends MusicResource {
     const { data } = await axios.get(target_url);
     // const total = data.plist.total;
     /** @type {{cover_img_url:string;id:string;source_url:string;title:string}[]}*/
-    const result = data.plist.list.info.map((item: any) => ({
+    const result: { cover_img_url: string; id: string; source_url: string; title: string }[] = data.plist.list.info.map((item: any) => ({
       cover_img_url: item.imgurl ? item.imgurl.replace('{size}', '400') : '',
       title: item.specialname,
       id: `kgplaylist_${item.specialid}`,

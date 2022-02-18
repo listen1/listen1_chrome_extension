@@ -144,6 +144,7 @@ import { useRoute, useRouter } from 'vue-router';
 import Modal from '../components/Modal.vue';
 import Playerbar from '../components/Playerbar.vue';
 import Sidebar from '../components/Sidebar.vue';
+import WindowControl from '../components/WindowControl.vue';
 import useAuth from '../composition/auth';
 import usePlayer from '../composition/player';
 import useSearch from '../composition/search';
@@ -151,9 +152,8 @@ import useSettings from '../composition/settings';
 import { setLocale } from '../i18n';
 import EventService from '../services/EventService';
 import { l1Player } from '../services/l1_player';
-import NowPlaying from '../views/NowPlaying.vue';
-import WindowControl from '../components/WindowControl.vue';
 import { isElectron } from '../utils';
+import NowPlaying from '../views/NowPlaying.vue';
 
 const { t } = useI18n();
 const { player } = usePlayer();

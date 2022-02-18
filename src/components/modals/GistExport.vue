@@ -34,10 +34,10 @@
   </DefaultModal>
 </template>
 <script lang="ts" setup>
-import DefaultModal from './DefaultModal.vue';
 import { useI18n } from 'vue-i18n';
-import GithubClient from '../../services/GithubService';
 import iDB from '../../services/DBService';
+import GithubClient from '../../services/GithubService';
+import DefaultModal from './DefaultModal.vue';
 
 const emit = defineEmits<{
   (e: 'close'): void;

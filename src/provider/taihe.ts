@@ -208,8 +208,8 @@ const provider: MusicProvider = class taihe extends MusicResource {
     const tracks = data.trackList.map((song: any) => ({
       id: `thtrack_${song.assetId}`,
       title: song.title,
-      artist: song.artist ? song.artist[0].name : '',
-      artist_id: song.artist ? `thartist_${song.artist[0].artistCode}` : 'thartist_',
+      artist: song.artist?.[0].name,
+      artist_id: `thartist_${song.artist?.[0].artistCode}`,
       album: info.title,
       album_id: `thalbum_${album_id}`,
       source: 'taihe',

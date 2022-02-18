@@ -22,9 +22,9 @@
   </DefaultModal>
 </template>
 <script lang="ts" setup>
-import DefaultModal from './DefaultModal.vue';
 import { useI18n } from 'vue-i18n';
 import useAuth from '../../composition/auth';
+import DefaultModal from './DefaultModal.vue';
 const { source } = defineProps<{
   source: string;
 }>();

@@ -80,8 +80,7 @@ const provider: MusicProvider = class netease extends MusicResource {
     const data = this.weapi({});
 
     const response = await axios.post(url, new URLSearchParams(data));
-    /** @type {{cover_img_url:string;id:string;source_url:string;title:string}[]}*/
-    const result = response.data.list.map((item: any) => ({
+    const result: { cover_img_url: string; id: string; source_url: string; title: string }[] = response.data.list.map((item: any) => ({
       cover_img_url: item.coverImgUrl,
       id: `neplaylist_${item.id}`,
       source_url: `https://music.163.com/#/playlist?id=${item.id}`,
