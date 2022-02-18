@@ -53,7 +53,7 @@ export default defineConfig({
     emptyOutDir: true,
     rollupOptions: {
       external: ['./assets/main.css'],
-      input: ['./manifest.ts'],
+      input: ['./src/manifest.ts'],
       output: {
         dir: BUILD_ELECTRON ? 'electron_src/dist' : 'dist',
         format: 'esm',
