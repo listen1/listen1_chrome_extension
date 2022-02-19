@@ -63,9 +63,6 @@
   </div>
 </template>
 <script setup lang="ts">
-const { hidden } = defineProps<{
-  hidden: boolean;
-}>();
 import { inject, toRaw } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
@@ -73,6 +70,9 @@ import usePlayer from '../composition/player';
 import { l1Player } from '../services/l1_player';
 import DragDropZone from './DragDropZone.vue';
 
+const { hidden } = defineProps<{
+  hidden: boolean;
+}>();
 const { t } = useI18n();
 const { player } = usePlayer();
 const router = useRouter();

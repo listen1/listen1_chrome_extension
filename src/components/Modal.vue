@@ -10,11 +10,11 @@ import AddToPlaylist from './modals/AddToPlaylist.vue';
 import CreatePlaylist from './modals/CreatePlaylist.vue';
 import DefaultModal from './modals/DefaultModal.vue';
 import EditPlaylist from './modals/EditPlaylist.vue';
-import ImportPlaylist from './modals/ImportPlaylist.vue';
-import OpenLogin from './modals/OpenLogin.vue';
-import GithubAuth from './modals/GithubAuth.vue';
 import GistExport from './modals/GistExport.vue';
 import GistImport from './modals/GistImport.vue';
+import GithubAuth from './modals/GithubAuth.vue';
+import ImportPlaylist from './modals/ImportPlaylist.vue';
+import OpenLogin from './modals/OpenLogin.vue';
 import ParseUrl from './modals/ParseUrl.vue';
 
 let show = $ref(false);

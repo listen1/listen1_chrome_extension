@@ -23,8 +23,7 @@ const provider: MusicProvider = class qq extends MusicResource {
       'https://c.y.qq.com/v8/fcg-bin/fcg_myqq_toplist.fcg?g_tk=5381&inCharset=utf-8&outCharset=utf-8&notice=0&format=json&uin=0&needNewCode=1&platform=h5';
 
     const { data } = await axios.get(url);
-    /** @type {{cover_img_url:string;id:string;source_url:string;title:string}[]}*/
-    const result = data.data.topList.map((item: any) => ({
+    const result: { cover_img_url: string; id: string; source_url: string; title: string }[] = data.data.topList.map((item: any) => ({
       cover_img_url: item.picUrl,
       id: `qqtoplist_${item.id}`,
       source_url: `https://y.qq.com/n/yqq/toplist/${item.id}.html`,
