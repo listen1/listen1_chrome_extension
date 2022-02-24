@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { isElectron } from '../utils';
-import iDB from './DBService';
+
+import SettingModel from '../models/SettingModel';
 
 const OAUTH_URL = 'https://github.com/login/oauth';
 const API_URL = 'https://api.github.com';
@@ -13,9 +14,7 @@ const GithubAPI = axios.create({
   headers: { accept: 'application/json' }
 });
 GithubAPI.interceptors.request.use(async (config) => {
-  const dbRes = await iDB.Settings.get({
-    key: 'GITHUB_ACCESS_TOKEN'
-  });
+  const dbRes = await SettingModel.getByKey('GITHUB_ACCESS_TOKEN');
   const accessToken = dbRes?.value;
   if (config.headers) config.headers.Authorization = `token ${accessToken}`;
   return config;
@@ -39,11 +38,9 @@ const GithubClient = {
         headers: { accept: 'application/json' }
       });
       const ak = res.data.access_token;
-      if (ak)
-        iDB.Settings.put({
-          key: 'GITHUB_ACCESS_TOKEN',
-          value: ak
-        });
+      if (ak) {
+        SettingModel.setByKey('GITHUB_ACCESS_TOKEN', ak);
+      }
       return ak;
     },
     _openAuthUrl: () => {
@@ -86,9 +83,7 @@ const GithubClient = {
       }
     },
     updateStatus: async () => {
-      const dbRes = await iDB.Settings.get({
-        key: 'GITHUB_ACCESS_TOKEN'
-      });
+      const dbRes = await SettingModel.getByKey('GITHUB_ACCESS_TOKEN');
       const accessToken = dbRes?.value;
       if (!accessToken) {
         Github.status = 0;
@@ -104,10 +99,7 @@ const GithubClient = {
       return Github.status;
     },
     logout: () => {
-      iDB.Settings.put({
-        key: 'GITHUB_ACCESS_TOKEN',
-        value: null
-      });
+      SettingModel.setByKey('GITHUB_ACCESS_TOKEN', null);
       Github.status = 0;
     }
   },

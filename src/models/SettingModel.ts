@@ -70,4 +70,10 @@ export default class SettingModel {
   static async updateByKey(key: string, updateFn: any) {
     await iDB.Settings.where('key').equals(key).modify(updateFn);
   }
+  static setByKey(key: string, value: any) {
+    iDB.Settings.put({
+      key,
+      value
+    });
+  }
 }

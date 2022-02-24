@@ -1,4 +1,7 @@
+import { initDBService } from './services/DBService';
 import GithubClient from './services/GithubService';
+
+initDBService();
 
 chrome.browserAction.onClicked.addListener(() => {
   const url = chrome.extension.getURL('index.html');
