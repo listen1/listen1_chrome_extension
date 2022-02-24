@@ -14,17 +14,12 @@ import blackStyle from './assets/css/themes/origin.css?inline';
 import blackTransparentStyle from './assets/css/themes/origin_transparent.css?inline';
 import { PlayerEventListener } from './composition/player';
 import useRedHeart from './composition/redheart';
-import useSettings, { migrateSettings } from './composition/settings';
-import iDB, { dbMigrate } from './services/DBService';
+import useSettings from './composition/settings';
+import iDB from './services/DBService';
 import type { Track } from './services/l1_player';
 import { l1Player } from './services/l1_player';
 import { initMediaSession, MediaSessionEventListener } from './services/media_session';
 import Home from './views/Home.vue';
-
-if (!localStorage.getItem('V3_MIGRATED')) {
-  migrateSettings();
-  dbMigrate();
-}
 
 const { settings, loadSettings } = useSettings();
 

@@ -2,6 +2,7 @@ import Dexie from 'dexie';
 import TrackModel from '../models/TrackModel';
 import SettingkModel from '../models/SettingModel';
 import PlaylistModel, { defaultPlaylists } from '../models/PlaylistModel';
+
 interface MODEL {
   new (): unknown;
   INDEX_STRING: string;
@@ -30,60 +31,63 @@ export class L1DB extends Dexie {
 }
 
 const iDB = new L1DB();
-iDB.open();
 
-iDB.tables.forEach((table) => {
-  const keys = [...Object.getOwnPropertyNames(new models[table.name]())];
-  function createHook(primKey: unknown, originalObj: Record<string, unknown>) {
-    const formattedObj = { ...originalObj };
-    Object.keys(formattedObj).forEach((key) => (keys.includes(key) ? null : delete formattedObj[key]));
-    originalObj = formattedObj;
-  }
-  function updateHook(mod: any) {
-    const formattedObj = { ...mod };
-    Object.keys(formattedObj).forEach((key) => (keys.includes(key) ? null : delete formattedObj[key]));
-    mod = formattedObj;
-  }
-  table.hook('creating', createHook);
-  table.hook('updating', updateHook);
-});
+export function initDBService() {
+  iDB.open();
 
-for (const key in defaultPlaylists) {
-  const value = defaultPlaylists[key];
-  iDB.Playlists.get({ id: key }).then((playlist) => {
-    if (!playlist) {
-      iDB.Playlists.put(value);
+  iDB.tables.forEach((table) => {
+    const keys = [...Object.getOwnPropertyNames(new models[table.name]())];
+    function createHook(primKey: unknown, originalObj: Record<string, unknown>) {
+      const formattedObj = { ...originalObj };
+      Object.keys(formattedObj).forEach((key) => (keys.includes(key) ? null : delete formattedObj[key]));
+      originalObj = formattedObj;
+    }
+    function updateHook(mod: any) {
+      const formattedObj = { ...mod };
+      Object.keys(formattedObj).forEach((key) => (keys.includes(key) ? null : delete formattedObj[key]));
+      mod = formattedObj;
+    }
+    table.hook('creating', createHook);
+    table.hook('updating', updateHook);
+  });
+
+  for (const key in defaultPlaylists) {
+    const value = defaultPlaylists[key];
+    iDB.Playlists.get({ id: key }).then((playlist) => {
+      if (!playlist) {
+        iDB.Playlists.put(value);
+      }
+    });
+  }
+
+  iDB.Settings.bulkAdd([
+    {
+      key: 'favorite_playlist_order',
+      value: []
+    },
+    {
+      key: 'my_playlist_order',
+      value: ['myplaylist_redheart']
+    }
+  ]);
+
+  // migrate my playlist without redheart entry
+  iDB.Settings.get({ key: 'my_playlist_order' }).then((order: any) => {
+    if (!order) {
+      iDB.Settings.put({
+        key: 'my_playlist_order',
+        value: ['myplaylist_redheart']
+      });
+    } else {
+      if (order.value.findIndex((id: string) => id == 'myplaylist_redheart') == -1) {
+        iDB.Settings.put({
+          key: 'my_playlist_order',
+          value: ['myplaylist_redheart', ...order.value]
+        });
+      }
     }
   });
 }
-
-iDB.Settings.bulkAdd([
-  {
-    key: 'favorite_playlist_order',
-    value: []
-  },
-  {
-    key: 'my_playlist_order',
-    value: ['myplaylist_redheart']
-  }
-]);
-
-// migrate my playlist without redheart entry
-iDB.Settings.get({ key: 'my_playlist_order' }).then((order: any) => {
-  if (!order) {
-    iDB.Settings.put({
-      key: 'my_playlist_order',
-      value: ['myplaylist_redheart']
-    });
-  } else {
-    if (order.value.findIndex((id: string) => id == 'myplaylist_redheart') == -1) {
-      iDB.Settings.put({
-        key: 'my_playlist_order',
-        value: ['myplaylist_redheart', ...order.value]
-      });
-    }
-  }
-});
 
 function migratePlaylist(tracks: any, newId: string, newTitle: string, newType: 'current' | 'favorite' | 'my' | 'local') {
   iDB.Playlists.put({
