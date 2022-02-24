@@ -60,33 +60,7 @@ export function initDBService() {
     });
   }
 
-  iDB.Settings.bulkAdd([
-    {
-      key: 'favorite_playlist_order',
-      value: []
-    },
-    {
-      key: 'my_playlist_order',
-      value: ['myplaylist_redheart']
-    }
-  ]);
-
-  // migrate my playlist without redheart entry
-  iDB.Settings.get({ key: 'my_playlist_order' }).then((order: any) => {
-    if (!order) {
-      iDB.Settings.put({
-        key: 'my_playlist_order',
-        value: ['myplaylist_redheart']
-      });
-    } else {
-      if (order.value.findIndex((id: string) => id == 'myplaylist_redheart') == -1) {
-        iDB.Settings.put({
-          key: 'my_playlist_order',
-          value: ['myplaylist_redheart', ...order.value]
-        });
-      }
-    }
-  });
+  SettingkModel.prepare();
 }
 
 function migratePlaylist(tracks: any, newId: string, newTitle: string, newType: 'current' | 'favorite' | 'my' | 'local') {
