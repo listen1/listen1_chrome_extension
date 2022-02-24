@@ -3,6 +3,7 @@ import iDB from '../services/DBService';
 import EventService from '../services/EventService';
 import { arrayMove } from '../utils';
 import { MusicResource, MusicProvider } from './types';
+import SettingModel from '../models/SettingModel';
 
 const provider = class MyPlaylist extends MusicResource {
   static Name = 'myplaylist';
@@ -21,7 +22,7 @@ const provider = class MyPlaylist extends MusicResource {
     return key;
   }
   static async getMyplaylistsList(playlist_type: string) {
-    let order = (await iDB.Settings.get({ key: playlist_type + '_playlist_order' })) as any;
+    let order = (await SettingModel.getByKey(playlist_type + '_playlist_order')) as any;
     let playlists = await iDB.Playlists.where('type').equals(playlist_type).toArray();
     if (playlist_type === 'my' && (order === undefined || order.value.length == 0)) {
       order = { value: ['redheart'] };
@@ -69,21 +70,19 @@ const provider = class MyPlaylist extends MusicResource {
   }
 
   static async reorderMyplaylist(playlist_type: string, playlist_id: string, to_playlist_id: string, direction: string) {
-    await iDB.Settings.where('key')
-      .equals(playlist_type + '_playlist_order')
-      .modify((order: any) => {
-        const index = order.value.findIndex((i: string) => i === playlist_id);
-        let insertIndex = order.value.findIndex((i: string) => i === to_playlist_id);
-        if (index === insertIndex) {
-          return order;
-        }
-        if (insertIndex > index) {
-          insertIndex -= 1;
-        }
-        const offset = direction === 'top' ? 0 : 1;
-        arrayMove(order.value, index, insertIndex + offset);
+    await SettingModel.updateByKey(playlist_type + '_playlist_order', (order: any) => {
+      const index = order.value.findIndex((i: string) => i === playlist_id);
+      let insertIndex = order.value.findIndex((i: string) => i === to_playlist_id);
+      if (index === insertIndex) {
         return order;
-      });
+      }
+      if (insertIndex > index) {
+        insertIndex -= 1;
+      }
+      const offset = direction === 'top' ? 0 : 1;
+      arrayMove(order.value, index, insertIndex + offset);
+      return order;
+    });
   }
 
   static async saveMyplaylist(playlist_type: string, playlistObj: any) {
@@ -100,9 +99,7 @@ const provider = class MyPlaylist extends MusicResource {
       playlistInfo.order = playlist.tracks.map((track: any) => track.id);
       playlist.tracks.forEach((track: any) => (track.playlist = playlist_id));
       await iDB.transaction('rw', [iDB.Settings, iDB.Tracks, iDB.Playlists], async () => {
-        await iDB.Settings.where('key')
-          .equals('my_playlist_order')
-          .modify((order: any) => order.value.push(playlist_id));
+        await SettingModel.updateByKey('my_playlist_order', (order: any) => order.value.push(playlist_id));
         await iDB.Playlists.put(playlistInfo);
         await iDB.Tracks.where('playlist').equals(playlist_id).delete();
         await iDB.Tracks.bulkAdd(playlist.tracks);
@@ -110,13 +107,11 @@ const provider = class MyPlaylist extends MusicResource {
     } else if (playlist_type === 'favorite') {
       playlist_id = playlist.info.id;
       playlistInfo.type = 'favorite';
-      await iDB.Settings.where('key')
-        .equals('favorite_playlist_order')
-        .modify((order: any) => {
-          if (!order.value.includes(playlist_id)) {
-            order.value.push(playlist_id);
-          }
-        });
+      await SettingModel.updateByKey('favorite_playlist_order', (order: any) => {
+        if (!order.value.includes(playlist_id)) {
+          order.value.push(playlist_id);
+        }
+      });
       await iDB.Playlists.put(playlistInfo);
 
       // remove all tracks info, cause favorite playlist always load latest
@@ -128,11 +123,9 @@ const provider = class MyPlaylist extends MusicResource {
 
   static async removeMyplaylist(playlist_type: string, playlist_id: string) {
     await iDB.transaction('rw', [iDB.Settings, iDB.Tracks, iDB.Playlists], async () => {
-      await iDB.Settings.where('key')
-        .equals(playlist_type + '_playlist_order')
-        .modify((order: any) => {
-          if (order.value.includes(playlist_id)) order.value.splice(order.value.indexOf(playlist_id), 1);
-        });
+      await SettingModel.updateByKey(playlist_type + '_playlist_order', (order: any) => {
+        if (order.value.includes(playlist_id)) order.value.splice(order.value.indexOf(playlist_id), 1);
+      });
       await iDB.Playlists.where('id').equals(playlist_id).delete();
       await iDB.Tracks.where('playlist').equals(playlist_id).delete();
     });

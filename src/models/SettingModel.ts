@@ -64,4 +64,10 @@ export default class SettingModel {
     }, {});
     return dbRes;
   }
+  static getByKey(key: string) {
+    return iDB.Settings.get({ key });
+  }
+  static async updateByKey(key: string, updateFn: any) {
+    await iDB.Settings.where('key').equals(key).modify(updateFn);
+  }
 }
