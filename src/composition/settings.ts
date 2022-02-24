@@ -1,7 +1,6 @@
 import { reactive, watch } from 'vue';
 import type { Language } from '../i18n';
 import SettingModel from '../models/SettingModel';
-import iDB from '../services/DBService';
 
 import { setPrototypeOfLocalStorage } from '../utils';
 setPrototypeOfLocalStorage();
@@ -69,10 +68,7 @@ function saveSettingsToDB(newValue: Partial<Record<settingsKey, unknown>>) {
 }
 
 async function loadSettings() {
-  const dbRes: Record<string, unknown> = (await iDB.Settings.toArray()).reduce((ret: Record<string, unknown>, cur) => {
-    ret[cur.key] = cur.value;
-    return ret;
-  }, {});
+  const dbRes: Record<string, unknown> = await SettingModel.loadSettings();
   if (Object.values(dbRes).some((value) => value === undefined)) {
     flushSettings();
   } else {
@@ -91,11 +87,7 @@ export function migrateSettings() {
   setSettings(lsSettings);
 }
 async function getSettingsAsync() {
-  const dbRes: Record<string, unknown> = (await iDB.Settings.toArray()).reduce((ret: Record<string, unknown>, cur) => {
-    ret[cur.key] = cur.value;
-    return ret;
-  }, {});
-  return dbRes;
+  return await SettingModel.loadSettings();
 }
 export function getSetting(key: settingsKey) {
   return settings[key];

@@ -57,4 +57,11 @@ export default class SettingModel {
       iDB.Settings.put({ key, value });
     }
   }
+  static async loadSettings() {
+    const dbRes: Record<string, unknown> = (await iDB.Settings.toArray()).reduce((ret: Record<string, unknown>, cur) => {
+      ret[cur.key] = cur.value;
+      return ret;
+    }, {});
+    return dbRes;
+  }
 }
