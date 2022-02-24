@@ -1,5 +1,5 @@
 import iDB from '../services/DBService';
-
+import { settingsKey, settingsType, settingEntries } from '../composition/settings';
 export default class SettingModel {
   key!: string;
   value!: unknown;
@@ -34,7 +34,27 @@ export default class SettingModel {
       }
     });
   }
+
   static async getArrayByKey(key: string) {
     return iDB.Settings.where('key').equals(key).toArray();
+  }
+
+  static async flushSettings(settings: settingsType) {
+    await iDB.Settings.bulkPut(
+      (Object.keys(settings) as settingsKey[]).map((key) => ({
+        key,
+        value: settings[key]
+      }))
+    );
+  }
+  static setSettings(newValue: Partial<Record<settingsKey, unknown>>) {
+    for (const [key, value] of Object.entries(newValue) as settingEntries) {
+      iDB.Settings.put({ key, value });
+    }
+  }
+  static saveSettingsToDB(newValue: Partial<Record<settingsKey, unknown>>) {
+    for (const [key, value] of Object.entries(newValue) as settingEntries) {
+      iDB.Settings.put({ key, value });
+    }
   }
 }

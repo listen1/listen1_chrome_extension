@@ -1,5 +1,6 @@
 import { reactive, watch } from 'vue';
 import type { Language } from '../i18n';
+import SettingModel from '../models/SettingModel';
 import iDB from '../services/DBService';
 
 import { setPrototypeOfLocalStorage } from '../utils';
@@ -46,32 +47,27 @@ const settings = reactive({
   autoChooseSourceList: ['kuwo', 'qq', 'migu']
 });
 
-type settingsType = typeof settings;
-type settingsKey = keyof settingsType;
+export type settingsType = typeof settings;
+export type settingsKey = keyof settingsType;
 type Entries<T> = {
   [K in keyof T]: [K, T[K]];
 }[keyof T][];
-type settingEntries = Entries<settingsType>;
+export type settingEntries = Entries<settingsType>;
 
 async function flushSettings() {
-  await iDB.Settings.bulkPut(
-    (Object.keys(settings) as settingsKey[]).map((key) => ({
-      key,
-      value: settings[key]
-    }))
-  );
+  await SettingModel.flushSettings(settings);
 }
 function setSettings(newValue: Partial<Record<settingsKey, unknown>>) {
   for (const [key, value] of Object.entries(newValue) as settingEntries) {
     settings[key] = value as never;
-    iDB.Settings.put({ key, value });
   }
+  SettingModel.setSettings(newValue);
 }
+
 function saveSettingsToDB(newValue: Partial<Record<settingsKey, unknown>>) {
-  for (const [key, value] of Object.entries(newValue) as settingEntries) {
-    iDB.Settings.put({ key, value });
-  }
+  SettingModel.setSettings(newValue);
 }
+
 async function loadSettings() {
   const dbRes: Record<string, unknown> = (await iDB.Settings.toArray()).reduce((ret: Record<string, unknown>, cur) => {
     ret[cur.key] = cur.value;
