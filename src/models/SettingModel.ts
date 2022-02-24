@@ -34,4 +34,7 @@ export default class SettingModel {
       }
     });
   }
+  static async getArrayByKey(key: string) {
+    return iDB.Settings.where('key').equals(key).toArray();
+  }
 }

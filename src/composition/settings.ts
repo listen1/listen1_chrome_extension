@@ -1,6 +1,7 @@
 import { reactive, watch } from 'vue';
 import type { Language } from '../i18n';
 import iDB from '../services/DBService';
+
 import { setPrototypeOfLocalStorage } from '../utils';
 setPrototypeOfLocalStorage();
 
@@ -20,8 +21,10 @@ const nameMapping = {
   playerSettings: 'player_settings',
   theme: 'theme'
 };
+
 type nameMapping = typeof nameMapping;
 type mappingKey = keyof nameMapping;
+
 const settings = reactive({
   language: 'zh-CN' as Language,
   enableAutoChooseSource: false,
@@ -42,12 +45,14 @@ const settings = reactive({
   lyricFontWeight: 400,
   autoChooseSourceList: ['kuwo', 'qq', 'migu']
 });
+
 type settingsType = typeof settings;
 type settingsKey = keyof settingsType;
 type Entries<T> = {
   [K in keyof T]: [K, T[K]];
 }[keyof T][];
 type settingEntries = Entries<settingsType>;
+
 async function flushSettings() {
   await iDB.Settings.bulkPut(
     (Object.keys(settings) as settingsKey[]).map((key) => ({

@@ -15,6 +15,7 @@ import blackTransparentStyle from './assets/css/themes/origin_transparent.css?in
 import { PlayerEventListener } from './composition/player';
 import useRedHeart from './composition/redheart';
 import useSettings from './composition/settings';
+import SettingModel from './models/SettingModel';
 import iDB from './services/DBService';
 import type { Track } from './services/l1_player';
 import { l1Player } from './services/l1_player';
@@ -53,7 +54,7 @@ const initPlayer = async () => {
     //@ts-ignore not null
     tracks = currentPlaylist.order.map((id) => localCurrentPlaying.find((track) => track.id == id));
   }
-  const dbSettings = await iDB.Settings.where('key').equals('playerSettings').toArray();
+  const dbSettings = await SettingModel.getArrayByKey('playerSettings');
 
   tracks.forEach((i) => {
     i.disabled = false;
