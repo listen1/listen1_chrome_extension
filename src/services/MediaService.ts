@@ -222,54 +222,39 @@ const MediaService = {
       const trackPlatform = getProviderNameByItemId(track.id);
 
       const failover_source_list = settings.autoChooseSourceList.filter((i: string) => i !== trackPlatform);
+      const getUrlAsync = failover_source_list.map(async (source) => {
+        if (track.source === source) {
+          return;
+        }
+        const keyword = `${track.title} ${track.artist}`;
+        const curpage = 1;
+        const url = `/search?keywords=${keyword}&curpage=${curpage}&type=0`;
+        const provider = getProviderByName(source);
+        const result = await provider.search(url);
 
-      const getUrlAsync = failover_source_list.map(
-        (source: string) =>
-          new Promise((res, rej) => {
-            if (track.source === source) {
-              return;
-            }
-            const keyword = `${track.title} ${track.artist}`;
-            const curpage = 1;
-            const url = `/search?keywords=${keyword}&curpage=${curpage}&type=0`;
-            const provider = getProviderByName(source);
-            //@ts-ignore TODO: use await to work with awaitable function
-            provider.search(url).then((data: any) => {
-              for (let i = 0; i < data.result.length; i += 1) {
-                const searchTrack = data.result[i];
-                // compare search track and track to check if they are same
-                // TODO: better similar compare method (duration, md5)
-                if (
-                  !searchTrack.disable &&
-                  searchTrack.title.toLowerCase() === track.title.toLowerCase() &&
-                  searchTrack.artist.toLowerCase() === track.artist.toLowerCase()
-                ) {
-                  return provider.bootstrapTrack(
-                    searchTrack,
-                    (response: Record<string, unknown>) => {
-                      sound.url = response.url;
-                      sound.bitrate = response.bitrate;
-                      sound.platform = response.platform;
-                      rej(sound); // Use Reject to return immediately
-                    },
-                    res
-                  );
-                }
-              }
-              res('');
-            });
-          })
-      );
-      // TODO: Use Promise.any() in ES2021 replace the tricky workaround
-      Promise.all(getUrlAsync)
-        .then(playerFailCallback)
-        .catch((response) => {
-          playerSuccessCallback(response);
-        });
+        for (const searchTrack of result.result) {
+          if (
+            !searchTrack.disable &&
+            searchTrack.title.toLowerCase() === track.title.toLowerCase() &&
+            searchTrack.artist.toLowerCase() === track.artist.toLowerCase()
+          ) {
+            return provider.bootstrapTrack(
+              searchTrack,
+              (response: Record<string, unknown>) => {
+                sound.url = response.url;
+                sound.bitrate = response.bitrate;
+                sound.platform = response.platform;
+                return sound;
+              },
+              Promise.reject
+            );
+          }
+        }
+        return '';
+      });
+      Promise.any(getUrlAsync).then(playerSuccessCallback).catch(playerFailCallback);
     }
-
     const provider = getProviderByName(track.source);
-
     provider.bootstrapTrack(track, successCallback, failureCallback);
   },
 
