@@ -1,6 +1,6 @@
-# Listen 1 (Chrome Extension) V2.21.7
+# Listen 1 (Chrome Extension) V2.22.0
 
-（Last Update Jan 23rd, 2022)
+（Last Update Mar 9th, 2022)
 
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE)
 
@@ -46,6 +46,16 @@ Making your own playlist is also supported.
 2. Click Add to Firefox button
 
 ## Changelog
+
+`2022-02 ~ 2022-03`
+
+Features：
+
+- Add Korean language support（thanks @kkange ）
+
+Fix bugs：
+
+- fix kugou api play song error
 
 `2021-08 ~ 2022-01`
 
