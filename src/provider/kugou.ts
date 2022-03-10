@@ -140,7 +140,7 @@ const provider: MusicProvider = class kugou extends MusicResource {
       cover_img_url: data.info.list.imgurl ? data.info.list.imgurl.replace('{size}', '400') : '',
       title: data.info.list.specialname,
       id: `kgplaylist_${data.info.list.specialid}`,
-      source_url: 'https://www.kugou.com/yy/special/single/{size}.html'.replace('{size}', data.info.list.specialid)
+      source_url: `https://www.kugou.com/yy/special/single/${data.info.list.specialid}.html`
     };
     const tracks = await async_process(data.list.list.info, this.kg_render_playlist_result_item, []);
     return { tracks, info };
@@ -218,10 +218,12 @@ const provider: MusicProvider = class kugou extends MusicResource {
     let sound = {};
     const track_id = track.id.slice('kgtrack_'.length);
     const album_id = track.album_id.slice('kgalbum_'.length);
-    let target_url = `https://wwwapi.kugou.com/yy/index.php?r=play/getdata&callback=jQuery&hash=${track_id}&dfid=dfid&mid=mid&platid=4`;
+    let target_url = `https://wwwapi.kugou.com/yy/index.php?r=play/getdata&callback=jQuery&hash=${track_id}&platid=4`;
     if (album_id !== '') {
       target_url += `&album_id=${album_id}`;
     }
+    const timstamp = +new Date();
+    target_url += `&_=${timstamp}`;
     axios
       .get(target_url)
       .then((response) => {
@@ -247,7 +249,9 @@ const provider: MusicProvider = class kugou extends MusicResource {
   static async lyric(url: string) {
     const track_id = getParameterByName('track_id', url)?.split('_').pop();
     const album_id = getParameterByName('album_id', url)?.split('_').pop();
-    const lyric_url = `https://wwwapi.kugou.com/yy/index.php?r=play/getdata&callback=jQuery&hash=${track_id}&dfid=dfid&mid=mid&platid=4&album_id=${album_id}`;
+    let lyric_url = `https://wwwapi.kugou.com/yy/index.php?r=play/getdata&callback=jQuery&hash=${track_id}&platid=4&album_id=${album_id}`;
+    const timstamp = +new Date();
+    lyric_url += `&_=${timstamp}`;
     const { data } = await axios.get(lyric_url);
     const jsonString = data.slice('jQuery('.length, data.length - 1 - 1);
     const info = JSON.parse(jsonString);
@@ -319,7 +323,7 @@ const provider: MusicProvider = class kugou extends MusicResource {
       cover_img_url: item.imgurl ? item.imgurl.replace('{size}', '400') : '',
       title: item.specialname,
       id: `kgplaylist_${item.specialid}`,
-      source_url: 'https://www.kugou.com/yy/special/single/{size}.html'.replace('{size}', item.specialid)
+      source_url: `https://www.kugou.com/yy/special/single/${item.specialid}.html`
     }));
     return result;
   }
