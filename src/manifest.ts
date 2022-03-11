@@ -18,6 +18,7 @@ const mv2: ManifestV2 = {
     '*://*.bilibili.com/*',
     '*://*.bilivideo.com/*',
     '*://*.migu.cn/*',
+    '*://*.taihe.com/*',
     '*://api.github.com/*',
     '*://github.com/*',
     '*://gist.githubusercontent.com/*',

@@ -1,7 +1,6 @@
 import axios from 'axios';
-import { async_process } from '../utils';
-import { getParameterByName } from '../utils';
-import { MusicResource, MusicProvider } from './types';
+import { async_process, getParameterByName } from '../utils';
+import { MusicProvider, MusicResource } from './types';
 
 // https://www.cnblogs.com/willingtolove/p/11059325.html
 function html2Escape(sHtml: string) {
