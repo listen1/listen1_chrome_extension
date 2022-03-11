@@ -1,0 +1,21 @@
+[
+  {
+    "id": 1,
+    "priority": 1,
+    "action": {
+      "type": "modifyHeaders",
+      "requestHeaders": [
+        {
+          "header": "Referer",
+          "operation": "set",
+          "value": "https://y.qq.com/"
+        },
+        { "header": "Origin", "operation": "set", "value": "https://y.qq.com" }
+      ]
+    },
+    "condition": {
+      "urlFilter": "c.y.qq.com",
+      "resourceTypes": ["xmlhttprequest"]
+    }
+  }
+]
