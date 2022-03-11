@@ -1,35 +1,8 @@
 {
   "background": {
-    "scripts": [
-      "js/vendor/axios.min.js",
-      "js/vendor/forge_listen1_fork.min.js",
-
-      "js/github.js",
-      "js/background.js",
-      "js/vendor/howler.core.min.js",
-      "js/bridge.js",
-
-      "js/vendor/async.min.js",
-      "js/vendor/lru-cache.min.js",
-      "js/lowebutil.js",
-
-      "js/provider/xiami.js",
-      "js/provider/qq.js",
-      "js/provider/netease.js",
-      "js/provider/kugou.js",
-      "js/provider/kuwo.js",
-      "js/provider/bilibili.js",
-      "js/provider/migu.js",
-      "js/provider/taihe.js",
-      "js/provider/localmusic.js",
-      "js/myplaylist.js",
-
-      "js/loweb.js",
-      "js/player_thread.js"
-    ],
-    "persistent": true
+    "service_worker": "js/background.js"
   },
-  "browser_action": {
+  "action": {
     "default_icon": "images/logo.png",
     "default_title": "Listen 1"
   },
@@ -39,12 +12,10 @@
     "16": "images/logo_16.png",
     "48": "images/logo_48.png"
   },
-  "manifest_version": 2,
+  "manifest_version": 3,
   "name": "Listen 1",
-  "permissions": [
-    "notifications",
-    "unlimitedStorage",
-    "cookies",
+  "permissions": ["notifications", "unlimitedStorage", "cookies"],
+  "host_permissions": [
     "*://music.163.com/*",
     "*://*.music.163.com/*",
     "*://*.xiami.com/*",
@@ -56,12 +27,12 @@
     "*://*.migu.cn/*",
     "*://api.github.com/*",
     "*://github.com/*",
-    "*://gist.githubusercontent.com/*",
-    "webRequest",
-    "webRequestBlocking"
+    "*://gist.githubusercontent.com/*"
   ],
   "version": "2.22.0",
-  "web_accessible_resources": ["images/*"],
+  "web_accessible_resources": [
+    { "resources": ["images/*"], "matches": ["<all_urls>"] }
+  ],
   "content_scripts": [
     {
       "matches": ["https://listen1.github.io/listen1/*"],
