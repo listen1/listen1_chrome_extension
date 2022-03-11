@@ -14,7 +14,21 @@
   },
   "manifest_version": 3,
   "name": "Listen 1",
-  "permissions": ["notifications", "unlimitedStorage", "cookies"],
+  "permissions": [
+    "notifications",
+    "unlimitedStorage",
+    "cookies",
+    "declarativeNetRequest",
+    "*://music.163.com/*",
+    "*://*.music.163.com/*",
+    "*://*.xiami.com/*",
+    "*://*.qq.com/*",
+    "*://*.kugou.com/",
+    "*://*.kuwo.cn/",
+    "*://*.bilibili.com/*",
+    "*://*.bilivideo.com/*",
+    "*://*.migu.cn/*"
+  ],
   "host_permissions": [
     "*://music.163.com/*",
     "*://*.music.163.com/*",
@@ -29,6 +43,15 @@
     "*://github.com/*",
     "*://gist.githubusercontent.com/*"
   ],
+  "declarative_net_request": {
+    "rule_resources": [
+      {
+        "id": "ruleset_1",
+        "enabled": true,
+        "path": "rules.json"
+      }
+    ]
+  },
   "version": "2.22.0",
   "web_accessible_resources": [
     { "resources": ["images/*"], "matches": ["<all_urls>"] }
