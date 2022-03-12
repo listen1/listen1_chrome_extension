@@ -59,6 +59,10 @@ function hack_referer_header(details: chrome.webRequest.WebRequestHeadersDetails
     add_origin = false;
   }
 
+  if (url.includes('.taihe.com/')) {
+    referer_value = 'https://music.taihe.com/';
+  }
+
   if (url.includes('.migu.cn')) {
     referer_value = 'https://music.migu.cn/v3/music/player/audio?from=migu';
   }
