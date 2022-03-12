@@ -67,7 +67,7 @@ function hack_referer_header(details) {
     add_origin = false;
   }
 
-  if (url.includes('.taihe.com/')) {
+  if (details.url.includes('.taihe.com/')) {
     referer_value = 'https://music.taihe.com/';
   }
 
