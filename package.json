@@ -4,8 +4,10 @@
   "private": false,
   "scripts": {
     "build": "vite build",
+    "build:mv3": "cross-env mv3=1 vite build",
     "dev": "vite",
     "start": "vite build -w",
+    "start:mv3": "cross-env mv3=1 vite build -w",
     "build:electron": "cross-env BUILD_ELECTRON=1 vite build",
     "start:electron:dev": "cross-env BUILD_ELECTRON=1 vite build -w",
     "prepare": "husky install",
