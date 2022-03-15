@@ -1,6 +1,6 @@
-# Listen 1 (Chrome Extension) V2.22.0
+# Listen 1 (Chrome Extension) V2.22.1
 
-（Last Update Mar 9th, 2022)
+（Last Update Mar 15th, 2022)
 
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE)
 
@@ -51,11 +51,12 @@ Making your own playlist is also supported.
 
 Features：
 
-- Add Korean language support（thanks @kkange ）
+- Add Korean language support（thanks @kkange）
 
 Fix bugs：
 
 - fix kugou api play song error
+- fix qianqian music api error（thanks @mikelxk）
 
 `2021-08 ~ 2022-01`
 

@@ -1,6 +1,6 @@
-# Listen 1 (Chrome Extension) V2.22.0
+# Listen 1 (Chrome Extension) V2.22.1
 
-（最后更新于 2022 年 03 月 09 日）
+（最后更新于 2022 年 03 月 15 日）
 
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE)
 
@@ -81,6 +81,7 @@ Listen1 诞生的初衷从不是和大公司的争夺版权利益，而是为了
 修复：
 
 - 酷狗音乐无法播放的问题
+- 千千音乐列表接口无法访问的问题（感谢 @mikelxk 的提交）
 
 `2021-08 ~ 2022-01`
 
