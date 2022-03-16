@@ -184,5 +184,17 @@ const GithubClient = {
     }
   }
 };
+/**
+ * Get tokens.
+ */
+
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  if (!request.code) {
+    return;
+  }
+
+  GithubClient.github.handleCallback(request.code);
+  sendResponse();
+});
 
 export default GithubClient;

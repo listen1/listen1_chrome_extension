@@ -37,7 +37,6 @@
     "eslint-plugin-vue": "^8.4.1",
     "feather-icons": "^4.28.0",
     "husky": "^7.0.4",
-    "ky": "^0.30.0",
     "mitt": "^3.0.0",
     "node-forge": "^1.2.1",
     "notyf": "^3.10.0",
