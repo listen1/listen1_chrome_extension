@@ -285,11 +285,11 @@
 import { inject } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { version } from '../../package.json';
+import Checkbox from '../components/Checkbox.vue';
 import Href from '../components/Href.vue';
+import SettingBlock from '../components/SettingBlock.vue';
 import SettingButton from '../components/SettingButton.vue';
 import ToggleButtons from '../components/ToggleButtons.vue';
-import Checkbox from '../components/Checkbox.vue';
-import SettingBlock from '../components/SettingBlock.vue';
 import useSettings from '../composition/settings';
 import { setLocale } from '../i18n';
 import EventService from '../services/EventService';

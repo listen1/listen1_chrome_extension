@@ -43,6 +43,11 @@
   </div>
 </template>
 <script setup lang="ts">
+import { inject, toRaw } from 'vue';
+import { useI18n } from 'vue-i18n';
+import useRedHeart from '../composition/redheart';
+import { l1Player } from '../services/l1_player';
+import notyf from '../services/notyf';
 const { song, isMine, isLocal, listId, index } = defineProps<{
   song: any;
   isMine?: boolean | string;
@@ -50,12 +55,6 @@ const { song, isMine, isLocal, listId, index } = defineProps<{
   listId?: string;
   index?: number;
 }>();
-import { inject, toRaw } from 'vue';
-import { useI18n } from 'vue-i18n';
-import useRedHeart from '../composition/redheart';
-import { l1Player } from '../services/l1_player';
-import notyf from '../services/notyf';
-
 const { isRedHeart, setRedHeart, removeTrackFromMyPlaylistByUpdateRedHeart } = useRedHeart();
 
 const showModal = inject('showModal') as CallableFunction;
