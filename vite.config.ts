@@ -29,6 +29,15 @@ export default defineConfig({
     __VUE_PROD_DEVTOOLS__: 'false'
   },
   plugins: [
+    {
+      name: 'inject-css',
+      buildStart() {
+        const $ = chromeExtPlugin._plugins.html.cache.html$[0];
+        if ($('head link').last().attr('href') !== 'assets/main.css') {
+          $('head').last().append($('<link rel="stylesheet" href="assets/main.css">'));
+        }
+      }
+    },
     // @ts-ignore: Type Mismatch Error
     chromeExtPlugin,
     vueI18n({ include: 'src/i18n/*.json', runtimeOnly: true }),

@@ -185,7 +185,7 @@ const GithubClient = {
     },
 
     async importMySettingsFromGist(gistId: string) {
-      const res = (await GithubAPI()).get(`/gists/${gistId}`) as any;
+        const res = (await (await GithubAPI()).get(`/gists/${gistId}`).json()) as any;
       return res.data.files;
     }
   }

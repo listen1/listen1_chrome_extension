@@ -85,7 +85,7 @@ const mv3: ManifestV3 = {
     ]
   },
   //it seem that rollup chrome extension will append `import-` on content script while not changing the original name, so make a copy here
-  web_accessible_resources: [{ resources: ['images/*', 'rules.json', 'import-oauth_callback.js'], matches: ['<all_urls>'] }],
+  web_accessible_resources: [{ resources: ['images/*', 'assets/fonts/*', 'rules.json', 'import-oauth_callback.js', 'index.html'], matches: ['<all_urls>'] }],
   content_scripts: [
     {
       matches: ['https://listen1.github.io/listen1/*'],
