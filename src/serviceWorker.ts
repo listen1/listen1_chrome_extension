@@ -1,6 +1,6 @@
 chrome.action.onClicked.addListener(() => {
   const url = chrome.runtime.getURL('index.html');
-  chrome.tabs.query({ url }, (tabs) => {
+  chrome.tabs.query({ url }).then((tabs) => {
     if (tabs.length === 0) {
       chrome.tabs.create({ url });
     } else {

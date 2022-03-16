@@ -154,11 +154,10 @@ const GithubClient = {
       return res.data;
     },
 
-    listExistBackup() {
-      return GithubAPI.get('/gists').then((res) => {
-        const result = res.data;
-        return result.filter((backupObject: Record<string, any>) => backupObject.description.startsWith('updated by Listen1'));
-      });
+    async listExistBackup() {
+      const res = await GithubAPI.get('/gists');
+      const result = res.data;
+      return result.filter((backupObject: Record<string, any>) => backupObject.description.startsWith('updated by Listen1'));
     },
 
     backupMySettings2Gist(files: any, gistId: string, isPublic: boolean) {
@@ -179,8 +178,9 @@ const GithubClient = {
       });
     },
 
-    importMySettingsFromGist(gistId: string) {
-      return GithubAPI.get(`/gists/${gistId}`).then((res) => res.data.files);
+    async importMySettingsFromGist(gistId: string) {
+      const res = await GithubAPI.get(`/gists/${gistId}`);
+      return res.data.files;
     }
   }
 };
@@ -192,7 +192,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (!request.code) {
     return;
   }
-
   GithubClient.github.handleCallback(request.code);
   sendResponse();
 });
