@@ -1,0 +1,168 @@
+[
+  {
+    "id": 1,
+    "priority": 1,
+    "action": {
+      "type": "modifyHeaders",
+      "requestHeaders": [
+        {
+          "header": "Referer",
+          "operation": "set",
+          "value": "https://y.qq.com/"
+        },
+        {
+          "header": "Origin",
+          "operation": "set",
+          "value": "https://y.qq.com"
+        }
+      ]
+    },
+    "condition": {
+      "domain": ["*://*.qq.com/*"],
+      "urlFilter": "qq.com",
+      "resourceTypes": ["xmlhttprequest", "media"]
+    }
+  },
+  {
+    "id": 2,
+    "priority": 1,
+    "action": {
+      "type": "modifyHeaders",
+      "requestHeaders": [
+        {
+          "header": "Referer",
+          "operation": "set",
+          "value": "https://music.163.com/"
+        },
+        {
+          "header": "Origin",
+          "operation": "set",
+          "value": "https://music.163.com/"
+        }
+      ]
+    },
+    "condition": {
+      "domain": ["*://music.163.com/*", "*://*.music.163.com/*"],
+      "urlFilter": "||music.163.com",
+      "resourceTypes": ["xmlhttprequest", "media"]
+    }
+  },
+  {
+    "id": 3,
+    "priority": 1,
+    "action": {
+      "type": "modifyHeaders",
+      "requestHeaders": [
+        {
+          "header": "Referer",
+          "operation": "set",
+          "value": "https://www.kugou.com/"
+        },
+        {
+          "header": "Origin",
+          "operation": "set",
+          "value": "https://www.kugou.com/"
+        }
+      ]
+    },
+    "condition": {
+      "urlFilter": "kugou",
+      "domain": ["*://*.kugou.com/*"],
+      "resourceTypes": ["xmlhttprequest"]
+    }
+  },
+  {
+    "id": 4,
+    "priority": 1,
+    "action": {
+      "type": "modifyHeaders",
+      "requestHeaders": [
+        {
+          "header": "Referer",
+          "operation": "set",
+          "value": "https://www.kuwo.com/"
+        },
+        {
+          "header": "Origin",
+          "operation": "set",
+          "value": "https://www.kuwo.com/"
+        }
+      ]
+    },
+    "condition": {
+      "urlFilter": "kuwo",
+      "domain": ["*://*.kuwo.cn/*"],
+      "resourceTypes": ["xmlhttprequest", "media"]
+    }
+  },
+  {
+    "id": 5,
+    "priority": 1,
+    "action": {
+      "type": "modifyHeaders",
+      "requestHeaders": [
+        {
+          "header": "Referer",
+          "operation": "set",
+          "value": "https://www.bilibili.com/"
+        },
+        {
+          "header": "Origin",
+          "operation": "remove"
+        }
+      ]
+    },
+    "condition": {
+      "urlFilter": "bili",
+      "domain": ["*://*.bilibili.com/*", "*://*.bilivideo.com/*"],
+      "resourceTypes": ["xmlhttprequest", "media"]
+    }
+  },
+  {
+    "id": 6,
+    "priority": 1,
+    "action": {
+      "type": "modifyHeaders",
+      "requestHeaders": [
+        {
+          "header": "Referer",
+          "operation": "set",
+          "value": "https://music.migu.cn"
+        },
+        {
+          "header": "Origin",
+          "operation": "set",
+          "value": "https://music.migu.cn"
+        }
+      ]
+    },
+    "condition": {
+      "urlFilter": "*://*.migu.cn/*",
+      "resourceTypes": ["xmlhttprequest", "media"]
+    }
+  },
+  {
+    "id": 7,
+    "priority": 1,
+    "action": {
+      "type": "modifyHeaders",
+      "requestHeaders": [
+        {
+          "header": "Referer",
+          "operation": "set",
+          "value": "https://music.taihe.com/"
+        },
+        {
+          "header": "Origin",
+          "operation": "set",
+          "value": "https://music.taihe.com/"
+        }
+      ]
+    },
+    "condition": {
+      "domain": ["*://*.taihe.com/*"],
+      "urlFilter": "||taihe.com",
+      "resourceTypes": ["xmlhttprequest"]
+    }
+  }
+]

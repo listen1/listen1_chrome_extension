@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import MediaService from './MediaService';
 import { arrayMove } from '../utils';
+import MediaService from './MediaService';
 
 const FALI_WAIT_SECOND = 1;
 export interface Track {
