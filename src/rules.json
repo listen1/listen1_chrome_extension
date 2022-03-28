@@ -108,7 +108,8 @@
         },
         {
           "header": "Origin",
-          "operation": "remove"
+          "operation": "set",
+          "value": "https://www.bilibili.com/"
         }
       ]
     },
