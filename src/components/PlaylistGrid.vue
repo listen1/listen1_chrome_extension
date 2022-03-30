@@ -1,14 +1,14 @@
 <template>
   <ul class="playlist-covers m-0 py-0 relative grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-5">
     <li v-for="i in playlists" :key="i.id" class="group min-h-40">
-      <div class="relative shadow-lg">
-        <div class="aspect-square bg-cover" style="background-image: url('/images/mycover.jpg')">
+      <div class="relative shadow-md rounded bg-neutral-700">
+        <div class="aspect-square bg-cover rounded group-hover:opacity-60 ease-linear duration-200" style="background-image: url('/images/mycover.jpg')">
           <img :src="i.cover_img_url" class="m-auto cursor-pointer rounded object-cover w-full" @click="showPlaylist(i.id)" />
         </div>
         <div
           class="bottom opacity-0 group-hover:opacity-100 cursor-pointer absolute w-8 h-8 bottom-3 right-3 ease-linear duration-200"
           @click="directplaylist(i.id)">
-          <vue-feather type="play-circle" size="2rem"></vue-feather>
+          <vue-feather type="play-circle" size="2rem" stroke="white"></vue-feather>
         </div>
       </div>
       <div class="desc cursor-pointer">
