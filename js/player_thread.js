@@ -147,8 +147,8 @@
     }
 
     clearPlaylist() {
+      this.stopAll(); // stop the loadded track before remove list
       this.playlist = [];
-      this.stopAll();
       Howler.unload();
       this.sendPlaylistEvent();
       this.sendLoadEvent();
