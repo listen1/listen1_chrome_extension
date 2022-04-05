@@ -50,14 +50,12 @@ function queryStringify(options: unknown) {
 
 const MediaService = {
   getSourceList() {
-    return providers
-      .filter((p) => !p.hidden)
-      .map((p) => ({
-        id: p.id,
-        name: p.Name,
-        searchable: p.searchable,
-        displayId: p.displayId
-      }));
+    return getAllProviders().map((p) => ({
+      id: p.id,
+      name: p.Name,
+      searchable: p.searchable,
+      displayId: p.displayId
+    }));
   },
   getLoginProviders() {
     const result = providers.filter((i) => !i.hidden && i.support_login);
@@ -191,8 +189,7 @@ const MediaService = {
 
   async parseURL(url: string) {
     const providers = getAllProviders();
-    for (let i = 0; i < providers.length; i++) {
-      const provider = providers[i];
+    for (const provider of providers) {
       const result = await provider.parseUrl(url);
       if (result != null) {
         return result;
@@ -318,5 +315,4 @@ const MediaService = {
   }
 };
 
-// eslint-disable-next-line no-unused-vars
 export default MediaService;
