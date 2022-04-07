@@ -344,6 +344,11 @@ angular.module('listenone').controller('NavigationController', [
       }
     };
 
+    $scope.addAndPlay = (song) => {
+      l1Player.addTrack(song);
+      l1Player.playById(song.id);
+    }
+
     $scope.addMyPlaylist = (option_id, song) => {
       MediaService.addMyPlaylist(option_id, song).success((playlist) => {
         notyf.success(i18next.t('_ADD_TO_PLAYLIST_SUCCESS'));
