@@ -123,8 +123,10 @@ const GithubClient = {
       const songsCount = jsonObject.Playlists.reduce((count: number, playlist: any) => {
         const cover = `<img src="${playlist.cover_img_url}" width="140" height="140"><br/>`;
         const { title } = playlist;
-        let tableHeader = '\n| 音乐标题 | 歌手 | 专辑 |\n';
-        tableHeader += '| --- | --- | --- |\n';
+        const tableHeader = `
+        | 音乐标题 | 歌手 | 专辑 |
+        | --- | --- | --- |
+        `;
         const tracks = jsonObject.Tracks.filter((track: any) => track.playlist === playlist.id);
         const tableBody = tracks.reduce((r: string, track: any) => `${r} | ${track.title} | ${track.artist} | ${track.album} | \n`, '');
         const content = `<details>\n  <summary>${cover}   ${title}</summary><p>\n${tableHeader}${tableBody}</p></details>`;
