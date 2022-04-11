@@ -778,6 +778,7 @@
                                 ng-class-even="'even'"
                                 ng-mouseenter="options=true"
                                 ng-mouseleave="options=false"
+                                ng-dblclick="addAndPlay(song)"
                               >
                                 <div class="title">
                                   <!-- <a ng-if="song.disabled" class="disabled" ng-click="copyrightNotice()">{{ song.title |limitTo:30}}</a> -->
@@ -1647,6 +1648,7 @@
                             ng-class-even="'even'"
                             ng-mouseenter="options=true"
                             ng-mouseleave="options=false"
+                            ng-dblclick="addAndPlay(song)"
                             draggable="true"
                             drag-drop-zone
                             drag-zone-object="song"
