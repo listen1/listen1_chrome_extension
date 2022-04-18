@@ -10,6 +10,7 @@
   class Player {
     constructor() {
       this.playlist = [];
+      this._random_playlist = [];
       this.index = -1;
       this._loop_mode = 0;
       this._media_uri_list = {};
@@ -377,14 +378,44 @@
     skip(direction) {
       Howler.unload();
       // Get the next track based on the direction of the track.
-      let nextIndexFn = null;
-      if (this._loop_mode === 2 || direction === 'random') {
-        // TODO: shuffle algorithm instead of random
-        nextIndexFn = () => Math.floor(Math.random() * this.playlist.length);
-      } else if (direction === 'prev') {
-        nextIndexFn = (idx) => (idx - 1) % this.playlist.length;
-      } else if (direction === 'next') {
-        nextIndexFn = (idx) => (idx + 1) % this.playlist.length;
+      const nextIndexFn = (idx) => {
+        const l = this.playlist.length;
+        let rdx = idx;
+        let random_mode = false;
+
+        if (this._loop_mode === 2 || direction === 'random') {
+          if(this._random_playlist.length/2 !== l) {
+            // construction random playlist
+            const a = Array.from({length:l},(_v,i)=>i);
+            for (let i = 0; i < l; i += 1) {
+              const e = l-i-1;
+              const s = Math.floor(Math.random() * e);
+              const t = a[s];
+              a[s] = a[e];
+              a[e] = t;
+              // lookup table
+              a[t+l] = e;
+            }
+            this._random_playlist = a;
+          }
+          // is random mode
+          random_mode = true;
+          rdx = this._random_playlist[idx + l];
+        }
+        else if (this._random_playlist.length !== 0) {
+          // clear random playlist
+          this._random_playlist = [];
+        }
+
+        if (direction === 'prev') {
+          if (rdx === 0) rdx = l;
+          rdx -= 1;
+        }
+        else {
+          if (rdx === l-1) rdx = -1;
+          rdx += 1;
+        }
+        return random_mode ? this._random_playlist[rdx % l] : rdx;
       }
       this.index = nextIndexFn(this.index);
 
@@ -579,7 +610,7 @@
   const threadPlayer = new Player();
   threadPlayer.setRefreshRate();
   window.threadPlayer = threadPlayer;
-  
+
   if ('mediaSession' in navigator) {
     const { mediaSession } = navigator;
     mediaSession.setActionHandler('play', () => {
