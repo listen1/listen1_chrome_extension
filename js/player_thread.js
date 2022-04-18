@@ -384,25 +384,24 @@
         let random_mode = false;
 
         if (this._loop_mode === 2 || direction === 'random') {
-          if(this._random_playlist.length/2 !== l) {
+          if (this._random_playlist.length / 2 !== l) {
             // construction random playlist
-            const a = Array.from({length:l},(_v,i)=>i);
+            const a = Array.from({ length: l }, (_v, i) => i);
             for (let i = 0; i < l; i += 1) {
-              const e = l-i-1;
+              const e = l - i - 1;
               const s = Math.floor(Math.random() * e);
               const t = a[s];
               a[s] = a[e];
               a[e] = t;
               // lookup table
-              a[t+l] = e;
+              a[t + l] = e;
             }
             this._random_playlist = a;
           }
           // is random mode
           random_mode = true;
           rdx = this._random_playlist[idx + l];
-        }
-        else if (this._random_playlist.length !== 0) {
+        } else if (this._random_playlist.length !== 0) {
           // clear random playlist
           this._random_playlist = [];
         }
@@ -410,13 +409,12 @@
         if (direction === 'prev') {
           if (rdx === 0) rdx = l;
           rdx -= 1;
-        }
-        else {
-          if (rdx === l-1) rdx = -1;
+        } else {
+          if (rdx === l - 1) rdx = -1;
           rdx += 1;
         }
         return random_mode ? this._random_playlist[rdx % l] : rdx;
-      }
+      };
       this.index = nextIndexFn(this.index);
 
       let tryCount = 0;
