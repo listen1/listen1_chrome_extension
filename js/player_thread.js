@@ -410,10 +410,9 @@
           if (rdx === 0) rdx = l;
           rdx -= 1;
         } else {
-          if (rdx === l - 1) rdx = -1;
           rdx += 1;
         }
-        return random_mode ? this._random_playlist[rdx % l] : rdx;
+        return random_mode ? this._random_playlist[rdx % l] : rdx % l;
       };
       this.index = nextIndexFn(this.index);
 
