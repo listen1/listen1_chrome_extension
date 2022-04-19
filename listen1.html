@@ -1993,6 +1993,7 @@
                       ng-class="{ playing: currentPlaying.id == song.id }"
                       ng-mouseenter="playlist_highlight=true"
                       ng-mouseleave="playlist_highlight=false"
+                      ng-dblclick="playById(song.id)"
                       ng-class-odd="'odd'"
                       ng-class-even="'even'"
                       draggable="true"
