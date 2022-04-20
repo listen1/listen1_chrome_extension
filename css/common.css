@@ -728,6 +728,7 @@ https://stackoverflow.com/questions/19889615/can-an-angular-directive-pass-argum
 }
 .page .coverbg .playsong-detail .detail-songinfo .lyric {
   color: var(--lyric-on-cover-color);
+  flex-grow: 1;  
 }
 .page .playsong-detail .detail-songinfo .lyric p {
   margin: var(--lyric-line-margin) 0 0 0;
