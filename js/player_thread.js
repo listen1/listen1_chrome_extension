@@ -380,10 +380,11 @@
       // Get the next track based on the direction of the track.
       const nextIndexFn = (idx) => {
         const l = this.playlist.length;
-        let rdx = idx;
-        let random_mode = false;
+        const random_mode = this._loop_mode === 2 || direction === 'random';
 
-        if (this._loop_mode === 2 || direction === 'random') {
+        let rdx = idx;
+
+        if (random_mode) {
           if (this._random_playlist.length / 2 !== l) {
             // construction random playlist
             const a = Array.from({ length: l }, (_v, i) => i);
@@ -398,8 +399,6 @@
             }
             this._random_playlist = a;
           }
-          // is random mode
-          random_mode = true;
           rdx = this._random_playlist[idx + l];
         } else if (this._random_playlist.length !== 0) {
           // clear random playlist
