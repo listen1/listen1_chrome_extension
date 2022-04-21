@@ -344,6 +344,10 @@ angular.module('listenone').controller('NavigationController', [
       }
     };
 
+    $scope.playById = (id) => {
+      l1Player.playById(id);
+    }
+
     $scope.addAndPlay = (song) => {
       l1Player.addTrack(song);
       l1Player.playById(song.id);
