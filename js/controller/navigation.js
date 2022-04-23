@@ -639,7 +639,7 @@ angular.module('listenone').controller('NavigationController', [
             filters: [
               {
                 name: 'Music Files',
-                extensions: ['mp3', 'flac', 'ape'],
+                extensions: ['ape', 'flac', 'mp3', 'wav'],
               },
             ],
           })
