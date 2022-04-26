@@ -36,6 +36,9 @@ export function getParameterByName(name: string, url: string) {
 export function replaceBR(str: string) {
   return str.replace(/<br>/g, '\n');
 }
+export function replaceNBSP(str: string) {
+  return str.replace(/&nbsp;|&#160;/g, ' ');
+}
 export function isElectron() {
   return Boolean(window.api?.platform);
 }
