@@ -18,8 +18,7 @@ axiosTH.interceptors.request.use(
 
     return { ...config, params };
   },
-  null,
-  // @ts-ignore: Known Usage
+  undefined,
   { synchronous: true }
 );
 
