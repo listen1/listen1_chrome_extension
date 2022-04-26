@@ -137,6 +137,7 @@ const provider: MusicProvider = class kugou extends MusicResource {
 
     const info = {
       cover_img_url: data.info.list.imgurl ? data.info.list.imgurl.replace('{size}', '400') : '',
+      description: data.info.list.intro,
       title: data.info.list.specialname,
       id: `kgplaylist_${data.info.list.specialid}`,
       source_url: `https://www.kugou.com/yy/special/single/${data.info.list.specialid}.html`
@@ -183,9 +184,9 @@ const provider: MusicProvider = class kugou extends MusicResource {
     const artist_id = getParameterByName('list_id', url)?.split('_').pop();
     let target_url = `http://mobilecdnbj.kugou.com/api/v3/singer/info?singerid=${artist_id}`;
     const { data } = await axios.get(target_url);
-
     const info = {
       cover_img_url: data.data.imgurl.replace('{size}', '400'),
+      description: data.data.profile,
       title: data.data.singername,
       id: `kgartist_${artist_id}`,
       source_url: 'https://www.kugou.com/singer/{id}.html'.replace('{id}', artist_id || '')
@@ -282,7 +283,7 @@ const provider: MusicProvider = class kugou extends MusicResource {
       track.title = data.songName;
       track.artist = data.singerId === 0 ? '未知' : data.singerName;
       track.artist_id = `kgartist_${data.singerId}`;
-      track.img_url = data.imgUrl.replace('{size}', '400');
+      track.img_url = data.imgUrl?.replace('{size}', '400');
       callback(null, track);
     });
   }
@@ -296,6 +297,7 @@ const provider: MusicProvider = class kugou extends MusicResource {
     const { data } = response;
     const info = {
       cover_img_url: data.data.imgurl.replace('{size}', '400'),
+      description: data.data.intro,
       title: data.data.albumname,
       id: `kgalbum_${data.data.albumid}`,
       source_url: 'https://www.kugou.com/album/{id}.html'.replace('{id}', data.data.albumid)

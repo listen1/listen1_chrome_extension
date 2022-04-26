@@ -42,6 +42,7 @@
     "notyf": "^3.10.0",
     "postcss": "^8.4.12",
     "prettier": "^2.6.1",
+    "prettier-plugin-tailwindcss": "^0.1.10",
     "rollup-plugin-chrome-extension": "3.6.6",
     "rollup-plugin-copy": "^3.4.0",
     "rollup-plugin-zip": "^1.0.3",

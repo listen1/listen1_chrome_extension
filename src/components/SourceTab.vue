@@ -7,12 +7,12 @@
         @click="changeTab(source.name)">
         {{ t(source.displayId) }}
       </div>
-      <div v-if="index != sources.length - 1" class="splitter inline-block mx-3 -mb-0.5 w-px h-4 bg-neutral-400" />
+      <div v-if="index != sources.length - 1" class="splitter mx-3 -mb-0.5 inline-block h-4 w-px bg-neutral-400" />
     </template>
     <svg
       v-show="loading"
       id="loader-1"
-      class="searchspinner inline-block w-6 h-6 ml-4 -mt-1"
+      class="searchspinner ml-4 -mt-1 inline-block h-6 w-6"
       version="1.1"
       xmlns="http://www.w3.org/2000/svg"
       xmlns:xlink="http://www.w3.org/1999/xlink"

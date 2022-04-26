@@ -1,6 +1,6 @@
 <template>
   <div class="m-2">
-    <div class="settings-title pb-2 mb-3 mx-8">
+    <div class="settings-title mx-8 mb-3 pb-2">
       <span class="text-xl">{{ title }}</span>
     </div>
     <div class="settings-content mx-7 leading-8">

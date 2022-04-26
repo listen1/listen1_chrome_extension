@@ -7,7 +7,7 @@
       <div class="dialog-open-url">
         <input
           v-model="url"
-          class="form-control h-10 w-80 pl-3 rounded-sm border-none bg-search-input text-default"
+          class="form-control h-10 w-80 rounded-sm border-none bg-search-input pl-3 text-default"
           type="text"
           :placeholder="t('_EXAMPLE') + 'https://www.xiami.com/collect/198267231'" />
       </div>

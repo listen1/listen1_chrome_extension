@@ -1,7 +1,7 @@
 import axios from 'axios';
 import forge from 'node-forge';
 import { getParameterByName } from '../utils';
-import { MusicResource, MusicProvider } from './types';
+import { MusicProvider, MusicResource } from './types';
 
 const axiosTH = axios.create({
   baseURL: 'https://music.taihe.com/v1'
@@ -123,14 +123,15 @@ const provider: MusicProvider = class taihe extends MusicResource {
 
   static async th_artist(url: string) {
     const artist_id = getParameterByName('list_id', url)?.split('_').pop();
-    const response = await axiosTH.get('/artist/info', {
+    const { data } = await axiosTH.get('/artist/info', {
       params: {
         artistCode: artist_id
       }
     });
     const info = {
-      cover_img_url: response.data.data.pic,
-      title: response.data.data.name,
+      cover_img_url: data.data.pic,
+      description: data.data.introduce,
+      title: data.data.name,
       id: `thartist_${artist_id}`,
       source_url: `https://music.taihe.com/artist/${artist_id}`
     };

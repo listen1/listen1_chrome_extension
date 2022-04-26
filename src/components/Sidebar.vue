@@ -1,5 +1,5 @@
 <template>
-  <div class="sidebar flex flex-col bg-sidebar flex-none w-56 pl-3">
+  <div class="sidebar flex w-56 flex-none flex-col bg-sidebar pl-3">
     <div class="flex-scroll-wrapper flex-1 overflow-y-scroll">
       <div class="app-region-drag h-12" />
       <SidebarTitle :text="t('_PLATFORM_UNION')"></SidebarTitle>

@@ -1,30 +1,30 @@
 <template>
   <div class="menu-modal fixed top-0 right-0 left-0 bg-white bg-opacity-20" :class="{ 'bottom-20': !hidden }" @click="close()" />
   <div
-    class="menu bg-theme fixed overflow-hidden border-default rounded-t-lg h-96"
+    class="menu fixed h-96 overflow-hidden rounded-t-lg border-default bg-theme"
     :class="{ 'bottom-20 opacity-100': !hidden, '-bottom-80 opacity-0': hidden }">
-    <div class="menu-header text-sm h-10 border-b border-default flex items-center bg-menu">
-      <span class="menu-title flex-1 px-4 border-default border-r">{{ t('_TOTAL_SONG_PREFIX') }} {{ playlist.length }} {{ t('_TOTAL_SONG_POSTFIX') }}</span>
-      <a class="add-all pr-4 flex items-center cursor-pointer" @click="showModal('AddToPlaylist', { tracks: playlist })">
-        <span class="icon mr-2 li-songlist" />
+    <div class="menu-header flex h-10 items-center border-b border-default bg-menu text-sm">
+      <span class="menu-title flex-1 border-r border-default px-4">{{ t('_TOTAL_SONG_PREFIX') }} {{ playlist.length }} {{ t('_TOTAL_SONG_POSTFIX') }}</span>
+      <a class="add-all flex cursor-pointer items-center pr-4" @click="showModal('AddToPlaylist', { tracks: playlist })">
+        <span class="icon li-songlist mr-2" />
         <span>{{ t('_ADD_TO_PLAYLIST') }}</span>
       </a>
-      <a class="remove-all mr-4 flex items-center cursor-pointer" @click="clearPlaylist()">
-        <span class="icon mr-2 li-del" />
+      <a class="remove-all mr-4 flex cursor-pointer items-center" @click="clearPlaylist()">
+        <span class="icon li-del mr-2" />
         <span>{{ t('_CLEAR_ALL') }}</span>
       </a>
 
-      <a class="close mx-4 cursor-pointer flex items-center" @click="close()">
+      <a class="close mx-4 flex cursor-pointer items-center" @click="close()">
         <vue-feather size="1.25rem" type="x"></vue-feather>
       </a>
     </div>
-    <ul class="menu-list overflow-y-scroll text-sm align-middle">
+    <ul class="menu-list overflow-y-scroll align-middle text-sm">
       <DragDropZone
         v-for="(song, index) in playlist"
         :id="'song_' + song.id"
         :key="song.id"
         :draggable="true"
-        :class="{ playing: currentPlaying.id == song.id, even: index % 2 === 0, odd: index % 2 !== 0, 'flex items-center h-10 relative': true }"
+        :class="{ playing: currentPlaying.id == song.id, even: index % 2 === 0, odd: index % 2 !== 0, 'relative flex h-10 items-center': true }"
         dragtype="application/listen1-song"
         :dragobject="song"
         :dragtitle="song.title"
@@ -44,7 +44,7 @@
             {{ song.title }}
           </a>
         </div>
-        <div class="song-singer truncate cursor-pointer flex-1">
+        <div class="song-singer flex-1 cursor-pointer truncate">
           <a
             @click="
               showPlaylist(song.artist_id);
@@ -53,8 +53,8 @@
             {{ song.artist }}
           </a>
         </div>
-        <div class="tools w-12 mr-4">
-          <span v-show="song.highlight" class="icon li-del opacity-50 hover:opacity-100 mr-2" @click="removeTrack(song)" />
+        <div class="tools mr-4 w-12">
+          <span v-show="song.highlight" class="icon li-del mr-2 opacity-50 hover:opacity-100" @click="removeTrack(song)" />
           <span v-show="song.highlight" class="icon li-link opacity-50 hover:opacity-100" @click="openUrl(song.source_url)" />
         </div>
         <!-- <div class="song-time">00:00</div> -->

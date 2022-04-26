@@ -1,7 +1,6 @@
 import axios from 'axios';
-import { cookieRemove, cookieGetPromise } from '../utils';
-import { getParameterByName } from '../utils';
-import { MusicResource, MusicProvider } from './types';
+import { cookieGetPromise, cookieRemove, getParameterByName, replaceBR } from '../utils';
+import { MusicProvider, MusicResource } from './types';
 
 const provider: MusicProvider = class qq extends MusicResource {
   static Name = 'qq';
@@ -197,8 +196,10 @@ const provider: MusicProvider = class qq extends MusicResource {
       '&format=json&inCharset=GB2312&outCharset=utf-8&notice=0' +
       '&platform=yqq&needNewCode=0';
     const { data } = await axios.get(target_url);
+    console.log(data);
     const info = {
       cover_img_url: data.cdlist[0].logo,
+      description: replaceBR(data.cdlist[0].desc).replace(/&#160/g, ' '),
       title: data.cdlist[0].dissname,
       id: `qqplaylist_${list_id}`,
       source_url: `https://y.qq.com/n/ryqq/playlist/${list_id}`
@@ -222,6 +223,7 @@ const provider: MusicProvider = class qq extends MusicResource {
 
     const info = {
       cover_img_url: this.qq_get_image_url(album_id, 'album'),
+      description: replaceBR(data.data.desc).replace(/&#160/g, '\n'),
       title: data.data.name,
       id: `qqalbum_${album_id}`,
       source_url: `https://y.qq.com/#type=album&mid=${album_id}`

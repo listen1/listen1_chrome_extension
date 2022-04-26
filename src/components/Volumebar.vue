@@ -1,6 +1,6 @@
 <template>
   <div class="volume-ctrl flex flex-1 items-center">
-    <vue-feather class="icon cursor-pointer ml-6 mr-2" :type="volumeIcon" size="1.5rem" stroke-width="1" @click="toggleMuteStatus()" />
+    <vue-feather class="icon ml-6 mr-2 cursor-pointer" :type="volumeIcon" size="1.5rem" stroke-width="1" @click="toggleMuteStatus()" />
     <div class="m-pbar volume flex-1">
       <DraggableBar
         id="volumebar"
@@ -17,8 +17,8 @@
 import DraggableBar from '../components/DraggableBar.vue';
 import usePlayer from '../composition/player';
 import useSettings from '../composition/settings';
-
 import { l1Player } from '../services/l1_player';
+
 const { player } = usePlayer();
 
 const { saveSettingsToDB, getSettingsAsync } = useSettings();

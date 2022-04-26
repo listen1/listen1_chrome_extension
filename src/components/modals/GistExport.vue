@@ -5,25 +5,25 @@
     </template>
     <template #body>
       <ul class="text-left">
-        <li class="cursor-pointer h-24 p-2 hover:bg-dialog-hover rounded" @click="download()">
-          <img class="float-left h-20 w-20 mr-4" src="/images/mycover.jpg" />
+        <li class="h-24 cursor-pointer rounded p-2 hover:bg-dialog-hover" @click="download()">
+          <img class="float-left mr-4 h-20 w-20" src="/images/mycover.jpg" />
           <h2>{{ t('_EXPORT_TO_LOCAL_FILE') }}</h2>
         </li>
-        <h3 v-show="githubStatus == 2" class="font-semibold mb-3">{{ t('_EXPORT_TO_GITHUB_GIST') }}</h3>
-        <li v-show="githubStatus == 2" class="cursor-pointer h-24 p-2 hover:bg-dialog-hover rounded" @click="backupGist('', true)">
-          <img class="float-left h-20 w-20 mr-4 rounded" src="/images/mycover.jpg" />
+        <h3 v-show="githubStatus == 2" class="mb-3 font-semibold">{{ t('_EXPORT_TO_GITHUB_GIST') }}</h3>
+        <li v-show="githubStatus == 2" class="h-24 cursor-pointer rounded p-2 hover:bg-dialog-hover" @click="backupGist('', true)">
+          <img class="float-left mr-4 h-20 w-20 rounded" src="/images/mycover.jpg" />
           <h2>{{ t('_CREATE_PUBLIC_BACKUP') }}</h2>
         </li>
-        <li v-show="githubStatus == 2" class="cursor-pointer h-24 p-2 hover:bg-dialog-hover rounded" @click="backupGist('', false)">
-          <img class="float-left h-20 w-20 mr-4 rounded" src="/images/mycover.jpg" />
+        <li v-show="githubStatus == 2" class="h-24 cursor-pointer rounded p-2 hover:bg-dialog-hover" @click="backupGist('', false)">
+          <img class="float-left mr-4 h-20 w-20 rounded" src="/images/mycover.jpg" />
           <h2>{{ t('_CREATE_PRIVATE_BACKUP') }}</h2>
         </li>
         <li
           v-for="(backup, index) in myBackup"
           :key="index"
-          class="cursor-pointer h-24 p-2 hover:bg-dialog-hover rounded"
+          class="h-24 cursor-pointer rounded p-2 hover:bg-dialog-hover"
           @click="backupGist(backup.id, backup.public)">
-          <img class="float-left h-20 w-20 mr-4" src="/images/mycover.jpg" />
+          <img class="float-left mr-4 h-20 w-20" src="/images/mycover.jpg" />
           <h2 class="flex">{{ backup.id + '\n' + new Date(backup.updated_at).toLocaleString() }}</h2>
         </li>
       </ul>

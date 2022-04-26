@@ -71,6 +71,7 @@ const mv3: ManifestV3 = {
     '*://*.bilivideo.com/*',
     '*://*.migu.cn/*',
     '*://*.taihe.com/*',
+    '*://*.91q.com/*',
     '*://api.github.com/*',
     '*://github.com/*',
     '*://gist.githubusercontent.com/*'

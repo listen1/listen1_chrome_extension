@@ -1,8 +1,7 @@
 import axios from 'axios';
 import forge from 'node-forge';
-import { cookieSet, cookieRemove, cookieGetPromise } from '../utils';
-import { getParameterByName } from '../utils';
-import { MusicResource, MusicProvider } from './types';
+import { cookieGetPromise, cookieRemove, cookieSet, getParameterByName } from '../utils';
+import { MusicProvider, MusicResource } from './types';
 
 const provider: MusicProvider = class netease extends MusicResource {
   static Name = 'netease';

@@ -1,9 +1,9 @@
 <template>
-  <div class="toggle overflow-hidden grid grid-flow-col w-fit divide-x divide-y-0 divide-solid rounded-lg">
+  <div class="toggle grid w-fit grid-flow-col divide-x divide-y-0 divide-solid overflow-hidden rounded-lg">
     <SettingButton
       v-for="(button, index) in options"
       :key="index"
-      class="rounded-none mr-auto decoration-2 underline-offset-4 whitespace-pre"
+      class="mr-auto whitespace-pre rounded-none decoration-2 underline-offset-4"
       :text="button.text"
       :selected="selected === index"
       @click="emit('change', button.value)" />

@@ -2,18 +2,19 @@
   <div class="page">
     <div class="playlist-detail">
       <div class="detail-head flex">
-        <div class="detail-head-cover w-48 mx-8 mt-8 mb-1">
-          <img :src="cover_img_url" class="h-48 aspect-square rounded" err-src="https://y.gtimg.cn/mediastyle/global/img/singer_300.png" />
+        <div class="detail-head-cover mx-8 mt-8 mb-1 w-48">
+          <img :src="cover_img_url" class="aspect-square h-48 rounded" err-src="https://y.gtimg.cn/mediastyle/global/img/singer_300.png" />
         </div>
         <div class="detail-head-title flex-1">
-          <h2 class="h-10 my-7 text-3xl font-semibold">{{ playlist_title }}</h2>
+          <h2 class="mt-7 mb-2 h-10 text-3xl font-semibold">{{ playlist_title }}</h2>
+          <h3 class="mb-4 max-h-40 max-w-2xl overflow-hidden whitespace-pre-line text-sm">{{ description }}</h3>
           <div class="playlist-button-list flex flex-wrap">
             <IconButton icon="li-play-s" icon-class="text-important" @click="playMylist()">
               <template #main>
                 {{ t('_PLAY_ALL') }}
               </template>
               <template #right>
-                <div class="add-list border-l border-button flex items-center justify-center w-8 hover:bg-button-hover" @click="addMylist(listId)">
+                <div class="add-list flex w-8 items-center justify-center border-l border-button hover:bg-button-hover" @click="addMylist(listId)">
                   <span class="icon li-add" />
                 </div>
               </template>
@@ -54,12 +55,12 @@
           </svg>
           <input class="playlist-search-input" type="text" ng-model="playlistFilter.key" :placeholder="$t('_SEARCH_PLAYLIST')" />
         </div>-->
-        <li class="head border-t-2 border-b-2 border-transparent text-inactive -mb-2px group flex relative items-center px-6 h-12">
-          <div class="flex-none w-8">
+        <li class="head -mb-2px group relative flex h-12 items-center border-t-2 border-b-2 border-transparent px-6 text-inactive">
+          <div class="w-8 flex-none">
             <span>No.</span>
           </div>
-          <div class="title flex-2 truncate flex">
-            <div class="flex-none w-5 mx-4"></div>
+          <div class="title flex flex-2 truncate">
+            <div class="mx-4 w-5 flex-none"></div>
             <a>{{ t('_SONGS') + '(' + songs.length + ')' }}</a>
           </div>
           <div class="artist flex-1 truncate">
@@ -68,14 +69,14 @@
           <div class="album flex-1 truncate">
             <a>{{ t('_ALBUMS') }}</a>
           </div>
-          <div class="tools flex items-center w-28">{{ t('_OPERATION') }}</div>
+          <div class="tools flex w-28 items-center">{{ t('_OPERATION') }}</div>
         </li>
         <DragDropZone
           v-for="(song, index) in songs"
           :key="song.id"
           :draggable="true"
           :class="{ 'bg-even': index % 2 === 0, 'bg-odd': index % 2 !== 0 }"
-          class="flex relative items-center px-6 h-12 hover:bg-row-hover"
+          class="relative flex h-12 items-center px-6 hover:bg-row-hover"
           :dragobject="song"
           :dragtitle="song.title"
           :sortable="is_mine || is_local"
@@ -116,6 +117,7 @@ let cover_img_url = $ref('images/loading.svg');
 let playlist_title = $ref('');
 let playlist_source_url = $ref('');
 let is_favorite = $ref(false);
+let description = $ref('');
 
 const refreshPlaylist = async () => {
   const data = await MediaService.getPlaylist(listId);
@@ -127,6 +129,7 @@ const refreshPlaylist = async () => {
   cover_img_url = data.info.cover_img_url;
   playlist_title = data.info.title;
   playlist_source_url = data.info.source_url;
+  description = data.info.description;
 };
 
 onMounted(async () => {

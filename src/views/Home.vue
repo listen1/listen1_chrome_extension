@@ -1,6 +1,6 @@
 <template>
   <Modal ref="modalRef"></Modal>
-  <div class="background-layer inset-0 fixed"></div>
+  <div class="background-layer fixed inset-0"></div>
   <div class="wrap flex h-screen flex-col bg-theme">
     <!-- dialog-->
     <!-- <div v-show="is_dialog_hidden !== 1" class="shadow" />
@@ -87,32 +87,32 @@
       </div>
     </div> -->
 
-    <div class="main flex z-10 overflow-hidden flex-1">
+    <div class="main z-10 flex flex-1 overflow-hidden">
       <Sidebar></Sidebar>
 
-      <div class="flex flex-col flex-1 bg-content overflow-hidden">
-        <div class="flex flex-none items-center h-14 app-region-drag border-b border-default pr-2" :class="{ 'pt-1': isElectron() }">
+      <div class="flex flex-1 flex-col overflow-hidden bg-content">
+        <div class="app-region-drag flex h-14 flex-none items-center border-b border-default pr-2" :class="{ 'pt-1': isElectron() }">
           <div class="flex flex-1 items-center">
-            <span class="icon opacity-50 hover:opacity-100 text-xl text-icon li-back ml-4" @click="$router.go(-1)" />
-            <span class="icon opacity-50 hover:opacity-100 text-xl text-icon li-advance ml-2 mr-4" @click="$router.go(1)" />
+            <span class="icon li-back ml-4 text-xl text-icon opacity-50 hover:opacity-100" @click="$router.go(-1)" />
+            <span class="icon li-advance ml-2 mr-4 text-xl text-icon opacity-50 hover:opacity-100" @click="$router.go(1)" />
             <input
               id="search-input"
               v-model="input_keywords"
               type="text"
-              class="form-control search-input h-10 w-80 pl-3 rounded border-none bg-search-input text-default"
+              class="form-control search-input h-10 w-80 rounded border-none bg-search-input pl-3 text-default"
               :placeholder="t('_SEARCH_PLACEHOLDER')"
               @input="searchTextChanged" />
           </div>
           <div :class="{ active: route.path === '/login' }" :style="platButtonStyle">
             <router-link to="/login">
-              <span class="icon opacity-50 hover:opacity-100 mr-4">
+              <span class="icon mr-4 opacity-50 hover:opacity-100">
                 <vue-feather size="1.25rem" type="users"></vue-feather>
               </span>
             </router-link>
           </div>
           <div :class="{ active: route.path === '/settings' }" :style="settingButtonStyle">
             <router-link to="/settings">
-              <span class="icon opacity-50 hover:opacity-100 mr-4">
+              <span class="icon mr-4 opacity-50 hover:opacity-100">
                 <vue-feather size="1.25rem" type="settings"></vue-feather>
               </span>
             </router-link>

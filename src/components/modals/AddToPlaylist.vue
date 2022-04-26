@@ -5,12 +5,12 @@
     </template>
     <template #body>
       <ul class="text-left">
-        <li class="cursor-pointer h-14 p-2 hover:bg-dialog-hover" @click="showModal('CreatePlaylist', { tracks: [...tracks] })">
-          <img class="float-left h-10 w-10 mr-4" src="../../images/mycover.jpg" />
+        <li class="h-14 cursor-pointer p-2 hover:bg-dialog-hover" @click="showModal('CreatePlaylist', { tracks: [...tracks] })">
+          <img class="float-left mr-4 h-10 w-10" src="../../images/mycover.jpg" />
           <h2>{{ t('_CREATE_PLAYLIST') }}</h2>
         </li>
-        <li v-for="(playlist, index) in myplaylist" :key="index" class="cursor-pointer h-14 p-2 hover:bg-dialog-hover" @click="addToPlaylist(playlist.id)">
-          <img class="float-left h-10 w-10 mr-4" :src="playlist.cover_img_url" />
+        <li v-for="(playlist, index) in myplaylist" :key="index" class="h-14 cursor-pointer p-2 hover:bg-dialog-hover" @click="addToPlaylist(playlist.id)">
+          <img class="float-left mr-4 h-10 w-10" :src="playlist.cover_img_url" />
           <h2>{{ playlist.title }}</h2>
         </li>
       </ul>

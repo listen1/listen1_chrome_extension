@@ -1,7 +1,7 @@
 <template>
-  <div :id="id" class="playbar-clickable cursor-pointer h-3 pt-1" @mousedown="onMyMouseDown">
+  <div :id="id" class="playbar-clickable h-3 cursor-pointer pt-1" @mousedown="onMyMouseDown">
     <div class="barbg h-1 bg-draggable-bar">
-      <div class="cur bg-draggable-bar-current relative h-full" :style="{ width: changingProgress ? cprogress * 100 + '%' : progress + '%' }">
+      <div class="cur relative h-full bg-draggable-bar-current" :style="{ width: changingProgress ? cprogress * 100 + '%' : progress + '%' }">
         <span class="btn absolute rounded-full" :class="btnClass ? btnClass : ''" :tooltips="tooltips">
           <i />
         </span>
