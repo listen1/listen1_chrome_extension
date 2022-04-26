@@ -196,7 +196,6 @@ const provider: MusicProvider = class qq extends MusicResource {
       '&format=json&inCharset=GB2312&outCharset=utf-8&notice=0' +
       '&platform=yqq&needNewCode=0';
     const { data } = await axios.get(target_url);
-    console.log(data);
     const info = {
       cover_img_url: data.cdlist[0].logo,
       description: replaceBR(data.cdlist[0].desc).replace(/&#160/g, ' '),

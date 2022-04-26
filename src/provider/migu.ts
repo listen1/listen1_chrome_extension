@@ -269,7 +269,6 @@ const provider: MusicProvider = class migu extends MusicResource {
 
     const info_url = `https://app.c.nf.migu.cn/MIGUM2.0/v1.0/content/resourceinfo.do?needSimple=00&resourceType=2003&resourceId=${album_id}`;
     const { data } = await axios.get(info_url);
-    console.log(data);
     const info = {
       cover_img_url: data.resource[0].imgItems[1].img,
       description: data.resource[0].summary,

@@ -92,7 +92,6 @@ const provider: MusicProvider = class bilibili extends MusicResource {
     const target = `https://api.bilibili.com/audio/music-service-c/web/song/upper?pn=1&ps=0&order=2&uid=${artist_id}`;
     const getInfo = async () => {
       const { data } = await axios.get(target_url);
-      console.log(data);
       return {
         cover_img_url: data.data.face,
         description: data.data.sign,

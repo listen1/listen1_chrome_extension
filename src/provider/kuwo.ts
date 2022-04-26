@@ -442,7 +442,6 @@ const provider: MusicProvider = class kuwo extends MusicResource {
       const target_url = `https://www.kuwo.cn/api/www/artist/artist?artistid=${artist_id}`;
       const response = (await this.getCookie(target_url)) as any;
       const { data } = response.data;
-      console.log(data);
       return {
         cover_img_url: data.pic300,
         description: html_decode(data.info),
