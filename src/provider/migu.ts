@@ -1,8 +1,7 @@
 import axios from 'axios';
 import forge from 'node-forge';
-import { getParameterByName } from '../utils';
-import { MusicResource, MusicProvider } from './types';
-import { cookieRemove } from '../utils';
+import { cookieRemove, getParameterByName } from '../utils';
+import { MusicProvider, MusicResource } from './types';
 
 const provider: MusicProvider = class migu extends MusicResource {
   static Name = 'migu';
@@ -232,8 +231,9 @@ const provider: MusicProvider = class migu extends MusicResource {
     const { data } = await axios.get(target_url);
 
     const info = {
-      id: `mgtoplist_${list_id}`,
       cover_img_url: list_id === 33683712 ? board_list[list_id].img : `https://cdnmusic.migu.cn/tycms_picture${board_list[list_id].img}`,
+      description: data.columnInfo?.columnDes,
+      id: `mgtoplist_${list_id}`,
       title: data.data ? data.data.columnInfo.title : board_list[list_id].name,
       source_url: `https://music.migu.cn/v3/music/top/${board_list[list_id].url}`
     };
@@ -269,10 +269,10 @@ const provider: MusicProvider = class migu extends MusicResource {
 
     const info_url = `https://app.c.nf.migu.cn/MIGUM2.0/v1.0/content/resourceinfo.do?needSimple=00&resourceType=2003&resourceId=${album_id}`;
     const { data } = await axios.get(info_url);
-
     const info = {
-      id: `mgalbum_${album_id}`,
       cover_img_url: data.resource[0].imgItems[1].img,
+      description: data.resource[0].summary,
+      id: `mgalbum_${album_id}`,
       title: data.resource[0].title,
       source_url: `https://music.migu.cn/v3/music/album/${album_id}`
     };
@@ -293,9 +293,9 @@ const provider: MusicProvider = class migu extends MusicResource {
     const page = offset / pageSize + 1;
     const target_url = `https://app.c.nf.migu.cn/MIGUM2.0/v1.0/content/singer_songs.do?pageNo=${page}&pageSize=${pageSize}&resourceType=2&singerId=${artist_id}`;
     const { data } = await axios.get(target_url);
-
     const info = {
       id: `mgartist_${artist_id}`,
+      description: data.singer.summary,
       cover_img_url: data.singer.imgs[1].img,
       title: data.singer.singer,
       source_url: `https://music.migu.cn/v3/music/artist/${artist_id}/song`

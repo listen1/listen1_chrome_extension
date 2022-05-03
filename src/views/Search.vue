@@ -13,7 +13,7 @@
                   @click="changeSearchType(0)">
                   <a>单曲</a>
                 </li>
-                <div class="splitter inline-block mx-3 -mb-0.5 w-px h-4 bg-neutral-400" />
+                <div class="splitter mx-3 -mb-0.5 inline-block h-4 w-px bg-neutral-400" />
                 <li
                   class="source-button inline-block cursor-pointer border-b hover:border-active hover:text-default"
                   :class="{ 'border-active': condition.searchType === 1, 'border-transparent text-inactive': condition.searchType !== 1 }"
@@ -27,8 +27,8 @@
           <ul class="detail-songlist px-8">
             <li
               v-if="condition.searchType === 0"
-              class="head border-t-2 border-b-2 border-transparent bg-inactive -mb-2px group flex relative items-center px-6 h-12">
-              <div class="title flex-2 truncate flex">
+              class="head bg-inactive -mb-2px group relative flex h-12 items-center border-t-2 border-b-2 border-transparent px-6">
+              <div class="title flex flex-2 truncate">
                 <a>{{ t('_SONGS') }}</a>
               </div>
               <div class="artist flex-1">
@@ -37,12 +37,12 @@
               <div class="album flex-1">
                 <a>{{ t('_ALBUMS') }}</a>
               </div>
-              <div class="tool flex items-center w-28">{{ t('_OPERATION') }}</div>
+              <div class="tool flex w-28 items-center">{{ t('_OPERATION') }}</div>
             </li>
             <li
               v-if="condition.searchType === 1"
-              class="head border-t-2 border-b-2 border-transparent bg-inactive -mb-2px group flex relative items-center px-6 h-12">
-              <div class="title flex-2 truncate flex">
+              class="head bg-inactive -mb-2px group relative flex h-12 items-center border-t-2 border-b-2 border-transparent px-6">
+              <div class="title flex flex-2 truncate">
                 <a>{{ t('_PLAYLIST_TITLE') }}</a>
               </div>
               <div class="artist flex-1">
@@ -57,7 +57,7 @@
                 v-for="(song, index) in result.tracks"
                 :key="song.id"
                 :class="{ 'bg-even': index % 2 === 0, 'bg-odd': index % 2 !== 0 }"
-                class="flex relative items-center px-6 h-12 hover:bg-row-hover"
+                class="relative flex h-12 items-center px-6 hover:bg-row-hover"
                 @mouseenter="song.options = true"
                 @mouseleave="song.options = undefined">
                 <TrackRow :index="index" :song="song"></TrackRow>
@@ -68,13 +68,13 @@
                 v-for="(playlist, index) in result.tracks"
                 :key="playlist.id"
                 :class="{ 'bg-even': index % 2 === 0, 'bg-odd': index % 2 !== 0 }"
-                class="playlist-result flex relative items-center px-10 h-20 hover:bg-row-hover">
+                class="playlist-result relative flex h-20 items-center px-10 hover:bg-row-hover">
                 <div class="title flex-2 truncate">
-                  <a class="cursor-pointer flex" @click="$router.push(`/playlist/${playlist.id}`)">
-                    <img class="h-16 w-16 block mr-3" :src="playlist.img_url" err-src="https://y.gtimg.cn/mediastyle/global/img/playlist_300.png" />
+                  <a class="flex cursor-pointer" @click="$router.push(`/playlist/${playlist.id}`)">
+                    <img class="mr-3 block h-16 w-16" :src="playlist.img_url" err-src="https://y.gtimg.cn/mediastyle/global/img/playlist_300.png" />
                     <div>
                       {{ playlist.title }}
-                      <span v-if="isAllMusic" class="w-6 px-1 mr-3 text-gray-500 text-ms text-center border border-solid rounded border-gray-500">
+                      <span v-if="isAllMusic" class="text-ms mr-3 w-6 rounded border border-solid border-gray-500 px-1 text-center text-gray-500">
                         {{ playlist.source }}
                       </span>
                     </div>
@@ -85,7 +85,7 @@
               </li>
             </template>
           </ul>
-          <div v-show="result.totalpage > 1" class="search-pagination text-center p-4">
+          <div v-show="result.totalpage > 1" class="search-pagination p-4 text-center">
             <button class="btn btn-sm btn-pagination bg-button" :disabled="condition.curpage == 1" @click="changeSearchPage(-1)">上一页</button>
             <label class="mx-4">{{ condition.curpage }}/{{ result.totalpage }} 页</label>
             <button class="btn btn-sm btn-pagination bg-button" :disabled="condition.curpage == result.totalpage" @click="changeSearchPage(1)">下一页</button>

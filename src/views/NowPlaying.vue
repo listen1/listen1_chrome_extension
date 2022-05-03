@@ -1,10 +1,10 @@
 <template>
   <div class="page">
     <div
-      class="songdetail-wrapper absolute flex flex-col top-0 left-0 right-0 bottom-20 duration-300 app-region-nodrag bg-now-playing"
+      class="songdetail-wrapper app-region-nodrag absolute top-0 left-0 right-0 bottom-20 flex flex-col bg-now-playing duration-300"
       :class="{
         'overflow-y-scroll': commentActive,
-        'overflow-hidden justify-center': !commentActive,
+        'justify-center overflow-hidden': !commentActive,
         slidedown: overlay.type !== 'track',
         coverbg: settings.enableNowplayingCoverBackground
       }">
@@ -13,16 +13,16 @@
         class="absolute top-0 left-0 right-0 h-24" />
       <div
         v-if="settings.enableNowplayingCoverBackground"
-        class="bg absolute opacity-50 h-full text-center w-full brightness-[0.8] blur-[90px] duration-1000 ease-in-out"
+        class="bg absolute h-full w-full text-center opacity-50 blur-[90px] brightness-[0.8] duration-1000 ease-in-out"
         :style="{ backgroundImage: `url(${currentPlaying?.img_url}` }" />
 
       <div
-        class="translate-switch app-region-nodrag h-6 w-6 border flex items-center justify-center absolute bottom-10 right-10 cursor-pointer text-neutral-400 hover:text-default"
+        class="translate-switch app-region-nodrag absolute bottom-10 right-10 flex h-6 w-6 cursor-pointer items-center justify-center border text-neutral-400 hover:text-default"
         :class="{ 'text-default': settings.enableLyricTranslation }"
         @click="toggleLyricTranslation()">
         译
       </div>
-      <div class="close app-region-nodrag cursor-pointer absolute left-8 right-8 w-8 h-8" :class="isMac ? 'mac top-16' : 'top-8 '" @click="toggleNowPlaying()">
+      <div class="close app-region-nodrag absolute left-8 right-8 h-8 w-8 cursor-pointer" :class="isMac ? 'mac top-16' : 'top-8 '" @click="toggleNowPlaying()">
         <vue-feather type="chevron-down"></vue-feather>
       </div>
       <WindowControl class="absolute right-2 top-4" />
@@ -38,35 +38,35 @@
                 </svg>
       </div>-->
 
-      <div class="playsong-detail flex self-center w-[60rem] z-10 justify-center" :class="{ 'mt-24': commentActive }">
-        <div class="detail-head overflow-hidden flex items-center mr-20">
-          <div class="detail-head-cover w-80 2xl:w-96 transition-all ease-in-out">
-            <img class="w-full aspect-square object-cover rounded-lg shadow-2xl" :src="currentPlaying?.img_url" @error="showImage($event, coverImg)" />
+      <div class="playsong-detail z-10 flex w-[60rem] justify-center self-center" :class="{ 'mt-24': commentActive }">
+        <div class="detail-head mr-20 flex items-center overflow-hidden">
+          <div class="detail-head-cover w-80 transition-all ease-in-out 2xl:w-96">
+            <img class="aspect-square w-full rounded-lg object-cover shadow-2xl" :src="currentPlaying?.img_url" @error="showImage($event, coverImg)" />
           </div>
           <div class="detail-head-title">
             <!--<a title="加入收藏" class="clone" ng-click="showDialog(0, currentPlaying)">收藏</a>
             <a open-url="currentPlaying.source_url" title="原始链接" class="link">原始链接</a>-->
           </div>
         </div>
-        <div class="detail-songinfo flex w-96 app-region-nodrag overflow-hidden flex-col ml-8">
+        <div class="detail-songinfo app-region-nodrag ml-8 flex w-96 flex-col overflow-hidden">
           <div class="title flex items-start">
-            <h2 class="font-normal text-3xl mr-4 mb-4">{{ currentPlaying?.title }}</h2>
+            <h2 class="mr-4 mb-4 text-3xl font-normal">{{ currentPlaying?.title }}</h2>
             <span
               v-if="settings.enableNowplayingBitrate && currentTrackMeta?.bitrate !== undefined"
-              class="badge text-badge text-sm border border-badge px-2 ml-2 mt-2 rounded h-6 flex items-center justify-center whitespace-nowrap">
+              class="badge ml-2 mt-2 flex h-6 items-center justify-center whitespace-nowrap rounded border border-badge px-2 text-sm text-badge">
               {{ currentTrackMeta.bitrate }}
             </span>
             <span
               v-if="settings.enableNowplayingPlatform && currentTrackMeta?.platform !== undefined"
-              class="badge text-badge text-sm border border-badge px-2 ml-2 mt-2 rounded h-6 flex items-center justify-center whitespace-nowrap platform">
+              class="badge platform ml-2 mt-2 flex h-6 items-center justify-center whitespace-nowrap rounded border border-badge px-2 text-sm text-badge">
               {{ t(currentTrackMeta.platform) }}
             </span>
           </div>
-          <div class="info border-b border-default pb-2 flex">
-            <div class="singer flex-1 overflow-hidden whitespace-nowrap text-ellipsis">
+          <div class="info flex border-b border-default pb-2">
+            <div class="singer flex-1 overflow-hidden text-ellipsis whitespace-nowrap">
               <span>{{ t('_ARTIST') }}:</span>
               <a
-                class="cursor-pointer ml-2"
+                class="ml-2 cursor-pointer"
                 :title="currentPlaying?.artist"
                 @click="
                   showPlaylist(currentPlaying?.artist_id);
@@ -75,10 +75,10 @@
                 {{ currentPlaying?.artist }}
               </a>
             </div>
-            <div class="album flex-2 overflow-hidden whitespace-nowrap text-ellipsis">
+            <div class="album flex-2 overflow-hidden text-ellipsis whitespace-nowrap">
               <span>{{ t('_ALBUM') }}:</span>
               <a
-                class="cursor-pointer ml-2"
+                class="ml-2 cursor-pointer"
                 :title="currentPlaying?.album"
                 @click="
                   showPlaylist(currentPlaying?.album_id);
@@ -88,7 +88,7 @@
               </a>
             </div>
           </div>
-          <div class="lyric blur-mask relative flex-none h-[30rem] overflow-y-scroll">
+          <div class="lyric blur-mask relative h-[30rem] flex-none overflow-y-scroll">
             <div class="placeholder h-1/3" />
             <p
               v-for="line in lyricArray"
@@ -111,28 +111,28 @@
           </div>
         </div>
       </div>
-      <div v-if="commentActive" class="mt-16 mb-8 self-center w-[42rem] z-10">
+      <div v-if="commentActive" class="z-10 mt-16 mb-8 w-[42rem] self-center">
         <div>热门评论</div>
         <ul>
-          <li v-for="comment in commentList" :key="comment.id" class="flex py-4 border-b border-default">
-            <div class="flex-none w-16 justify-center">
-              <img :src="comment.avatar" class="w-12 h-12 object-cover rounded-full" />
+          <li v-for="comment in commentList" :key="comment.id" class="flex border-b border-default py-4">
+            <div class="w-16 flex-none justify-center">
+              <img :src="comment.avatar" class="h-12 w-12 rounded-full object-cover" />
             </div>
             <div class="flex-1 overflow-hidden">
               <div>
-                <span class="text-blue-500 mr-1">{{ comment.nickname }}:</span>
+                <span class="mr-1 text-blue-500">{{ comment.nickname }}:</span>
                 <span v-for="(line, index) in comment.content.split('\n')" :key="index">
                   {{ line }}
                   <br v-if="line != ''" />
                 </span>
               </div>
-              <div v-if="comment.reply.length > 0" class="mt-2 p-2 bg-even">
-                <span class="text-blue-500 mr-1">{{ comment.reply[0].nickname }}:</span>
+              <div v-if="comment.reply.length > 0" class="mt-2 bg-even p-2">
+                <span class="mr-1 text-blue-500">{{ comment.reply[0].nickname }}:</span>
                 {{ comment.reply[0].content }}
               </div>
-              <div class="flex text-neutral-500 mt-1">
+              <div class="mt-1 flex text-neutral-500">
                 <div class="flex-1 text-left">{{ d(new Date(comment.time), 'long') }}</div>
-                <div class="flex-1 text-right mr-2 flex items-center justify-end">
+                <div class="mr-2 flex flex-1 items-center justify-end text-right">
                   <vue-feather class="mr-1" type="thumbs-up" size="1rem"></vue-feather>
                   {{ comment.like }}
                 </div>

@@ -2,7 +2,7 @@
   <!-- content page: 设置 -->
   <div class="page" ng-init="lastfm.updateStatus()">
     <div class="site-wrapper-innerd">
-      <div class="cover-container leading-normal flex content-left flex-col flex-wrap gap-4 2xl:h-[calc(100vh-10rem)] pt-6">
+      <div class="cover-container content-left flex flex-col flex-wrap gap-4 pt-6 leading-normal 2xl:h-[calc(100vh-10rem)]">
         <SettingBlock :title="t('_LANGUAGE')">
           <ToggleButtons :options="locales" :selected="locales.findIndex((i) => i.value === settings.language)" @change="setLocale($event)" />
         </SettingBlock>
@@ -19,27 +19,27 @@
         </SettingBlock>
 
         <SettingBlock :title="t('_NOWPLAYING_DISPLAY')">
-          <label class="shortcut flex items-center mb-1">
+          <label class="shortcut mb-1 flex items-center">
             <Checkbox
               :checked="settings.enableNowplayingCoverBackground"
               :text="t('_NOWPLAYING_COVER_BACKGROUND_NOTICE')"
               @change="setSettings({ enableNowplayingCoverBackground: $event })" />
           </label>
-          <label class="shortcut flex items-center mb-1">
+          <label class="shortcut mb-1 flex items-center">
             <Checkbox
               :checked="settings.enableNowplayingBitrate"
               :text="t('_NOWPLAYING_BITRATE_NOTICE')"
               @change="setSettings({ enableNowplayingBitrate: $event })" />
           </label>
 
-          <label class="shortcut flex items-center mb-1">
+          <label class="shortcut mb-1 flex items-center">
             <Checkbox
               :checked="settings.enableNowplayingPlatform"
               :text="t('_NOWPLAYING_PLATFORM_NOTICE')"
               @change="setSettings({ enableNowplayingPlatform: $event })" />
           </label>
 
-          <label class="shortcut flex items-center mb-1">
+          <label class="shortcut mb-1 flex items-center">
             <Checkbox :checked="settings.enableNowplayingComment" :text="t('_NOWPLAYING_COMMENT')" @change="setSettings({ enableNowplayingComment: $event })" />
           </label>
         </SettingBlock>
@@ -51,7 +51,7 @@
         <SettingBlock :title="t('_STYLE')">
           <p class="mb-1">
             {{ `${t('_LYRIC_SIZE')}` }}
-            <input v-model.lazy="settings.lyricFontSize" class="settings-input w-16 pl-[6px] py-0" type="number" min="10" max="40" />
+            <input v-model.lazy="settings.lyricFontSize" class="settings-input w-16 py-0 pl-[6px]" type="number" min="10" max="40" />
             px
           </p>
           <p class="mb-1">

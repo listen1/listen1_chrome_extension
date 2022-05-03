@@ -8,9 +8,9 @@
         <li
           v-for="(playlist, index) in myplaylist"
           :key="index"
-          class="cursor-pointer h-14 p-2 rounded hover:bg-dialog-hover"
+          class="h-14 cursor-pointer rounded p-2 hover:bg-dialog-hover"
           @click="mergePlaylist(playlist.id)">
-          <img class="float-left h-10 w-10 mr-4 rounded" :src="playlist.cover_img_url" />
+          <img class="float-left mr-4 h-10 w-10 rounded" :src="playlist.cover_img_url" />
           <h2>{{ playlist.title }}</h2>
         </li>
       </ul>

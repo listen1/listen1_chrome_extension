@@ -4,9 +4,9 @@
     <div class="login flex flex-col items-center justify-center">
       <div v-for="source in loginSourceList" :key="source">
         <div v-if="is_login(source)">
-          <div class="usercard flex items-center w-96 border border-default mb-6">
-            <img :src="musicAuth[source].avatar" class="w-16 h-16 m-3" />
-            <div class="usercard-title flex-1 h-16 font-semibold">
+          <div class="usercard mb-6 flex w-96 items-center border border-default">
+            <img :src="musicAuth[source].avatar" class="m-3 h-16 w-16" />
+            <div class="usercard-title h-16 flex-1 font-semibold">
               <div class="usercard-nickname">{{ musicAuth[source].nickname }}</div>
               <div class="usercard-info text-subtitle">{{ t(source) }}</div>
             </div>
@@ -14,10 +14,10 @@
           </div>
         </div>
         <div v-if="!is_login(source)">
-          <div class="usercard flex items-center w-96 border border-default mb-6">
-            <img src="../images/placeholder.png" class="w-16 h-16 m-3" />
+          <div class="usercard mb-6 flex w-96 items-center border border-default">
+            <img src="../images/placeholder.png" class="m-3 h-16 w-16" />
 
-            <div class="usercard-title flex-1 h-16 font-semibold">
+            <div class="usercard-title h-16 flex-1 font-semibold">
               <div class="usercard-nickname">{{ t('_NOT_LOGIN_NICKNAME') }}</div>
               <div class="usercard-info text-subtitle">{{ t(source) }}</div>
             </div>

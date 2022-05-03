@@ -49,6 +49,7 @@ const provider: MusicProvider = class bilibili extends MusicResource {
       const { data } = (await axios.get(target_url)).data;
       return {
         cover_img_url: data.cover,
+        description: data.intro,
         title: data.title,
         id: `biplaylist_${list_id}`,
         source_url: `https://www.bilibili.com/audio/am${list_id}`
@@ -93,6 +94,7 @@ const provider: MusicProvider = class bilibili extends MusicResource {
       const { data } = await axios.get(target_url);
       return {
         cover_img_url: data.data.face,
+        description: data.data.sign,
         title: data.data.name,
         id: `biartist_${artist_id}`,
         source_url: `https://space.bilibili.com/${artist_id}/#/audio`

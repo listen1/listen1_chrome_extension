@@ -25,6 +25,7 @@ module.exports = {
     // because new rfc suggests props destructure variable is also reactive
     // more details please refer to link
     // https://github.com/vuejs/rfcs/discussions/369
-    'vue/no-setup-props-destructure': 'off'
+    'vue/no-setup-props-destructure': 'off',
+    'vue/multi-word-component-names': 'off'
   }
 };

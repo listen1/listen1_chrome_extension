@@ -1,15 +1,15 @@
 <template>
-  <div class="footer flex relative z-20 h-20 border-t border-default">
-    <div class="flex flex-none items-center w-80">
-      <span class="icon text-3xl ml-12 li-previous text-prevnext" @click="prevTrack()" />
+  <div class="footer relative z-20 flex h-20 border-t border-default">
+    <div class="flex w-80 flex-none items-center">
+      <span class="icon li-previous ml-12 text-3xl text-prevnext" @click="prevTrack()" />
       <span
-        class="icon text-3xl ml-6 mr-6 li-play play text-play hover:text-play-hover"
+        class="icon li-play play ml-6 mr-6 text-3xl text-play hover:text-play-hover"
         :class="isPlaying ? 'li-pause' : 'li-play'"
         @click="playPauseToggle()" />
-      <span class="icon text-3xl mr-4 li-next text-prevnext" @click="nextTrack()" />
+      <span class="icon li-next mr-4 text-3xl text-prevnext" @click="nextTrack()" />
     </div>
-    <div class="main-info flex flex-1 overflow-hidden bg-footer-main z-30">
-      <div v-if="playlist.length == 0" class="logo-banner text-center flex-1 flex items-center h-20 w-20">
+    <div class="main-info z-30 flex flex-1 overflow-hidden bg-footer-main">
+      <div v-if="playlist.length == 0" class="logo-banner flex h-20 w-20 flex-1 items-center text-center">
         <svg
           class="logo h-12 w-12"
           xmlns="http://www.w3.org/2000/svg"
@@ -25,17 +25,17 @@
           <polygon points="13 4 13 13 16 13 16 4" />
         </svg>
       </div>
-      <div v-if="playlist.length > 0" class="cover flex-none cursor-pointer h-20 w-20 relative group" @click="toggleNowPlaying()">
-        <img class="object-cover h-20 w-20" :src="currentPlaying?.img_url" @error="showImage($event, 'images/mycover.jpg')" />
-        <div class="mask items-center justify-center absolute inset-0 hidden group-hover:bg-black group-hover:bg-opacity-60 group-hover:flex">
+      <div v-if="playlist.length > 0" class="cover group relative h-20 w-20 flex-none cursor-pointer" @click="toggleNowPlaying()">
+        <img class="h-20 w-20 object-cover" :src="currentPlaying?.img_url" @error="showImage($event, 'images/mycover.jpg')" />
+        <div class="mask absolute inset-0 hidden items-center justify-center group-hover:flex group-hover:bg-black group-hover:bg-opacity-60">
           <vue-feather type="chevrons-up" stroke="#cccccc" />
         </div>
       </div>
-      <div v-if="playlist.length > 0" class="detail flex-1 relative overflow-hidden">
+      <div v-if="playlist.length > 0" class="detail relative flex-1 overflow-hidden">
         <div class="ctrl absolute top-1 right-2">
           <vue-feather
             v-if="!isRedHeart(currentPlaying?.id)"
-            class="icon opacity-50 hover:opacity-100 cursor-pointer"
+            class="icon cursor-pointer opacity-50 hover:opacity-100"
             type="heart"
             size="1.125rem"
             stroke-width="1.5"
@@ -49,22 +49,22 @@
             size="1.125rem"
             @click="setRedHeart(toRaw(currentPlaying), false)" />
           <a :title="t('_ADD_TO_PLAYLIST')" @click="showModal('AddToPlaylist', { tracks: [currentPlaying] })">
-            <span class="icon opacity-50 hover:opacity-100 li-songlist ml-3" />
+            <span class="icon li-songlist ml-3 opacity-50 hover:opacity-100" />
           </a>
-          <a class="mx-2 opacity-50 hover:opacity-100 text-lg ml-3" @click="changePlaymode()">
+          <a class="mx-2 ml-3 text-lg opacity-50 hover:opacity-100" @click="changePlaymode()">
             <span v-show="playmode == 0" class="icon li-loop" />
             <span v-show="playmode == 1" class="icon li-single-cycle" />
             <span v-show="playmode == 2" class="icon li-random-loop" />
           </a>
         </div>
 
-        <div class="title text-center truncate h-8 flex items-end justify-center text-lg">
+        <div class="title flex h-8 items-end justify-center truncate text-center text-lg">
           <span v-if="currentPlaying?.source === 'xiami'" style="color: orange; font-size: medium">⚠️</span>
           {{ currentPlaying?.title }}
         </div>
-        <div class="more-info h-6 text-sm flex text-subtitle px-3">
+        <div class="more-info flex h-6 px-3 text-sm text-subtitle">
           <div class="current">{{ formatTime(currentPosition) }}</div>
-          <div class="singer flex-1 tuncate text-center">
+          <div class="singer tuncate flex-1 text-center">
             <a class="cursor-pointer" @click="showPlaylist(currentPlaying?.artist_id)">{{ currentPlaying?.artist }}</a>
             -
             <a class="cursor-pointer" @click="showPlaylist(currentPlaying?.album_id)">{{ currentPlaying?.album }}</a>
@@ -81,12 +81,12 @@
         </div>
       </div>
     </div>
-    <div class="right-control flex flex-none items-center w-80">
-      <div class="playlist-toggle cursor-pointer ml-8">
+    <div class="right-control flex w-80 flex-none items-center">
+      <div class="playlist-toggle ml-8 cursor-pointer">
         <span class="icon li-list" @click="togglePlaylist()" />
       </div>
       <Volumebar></Volumebar>
-      <div v-if="isElectron()" class="lyric-toggle cursor-pointer mx-6">
+      <div v-if="isElectron()" class="lyric-toggle mx-6 cursor-pointer">
         <div class="lyric-icon" :class="{ selected: settings.enableLyricFloatingWindow }" @click="toggleLyricFloatingWindow()">词</div>
       </div>
       <div v-if="!isElectron()" class="mx-6"></div>

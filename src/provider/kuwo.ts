@@ -1,7 +1,6 @@
 import axios from 'axios';
-import { cookieGet } from '../utils';
-import { getParameterByName } from '../utils';
-import { MusicResource, MusicProvider } from './types';
+import { cookieGet, getParameterByName, replaceBR } from '../utils';
+import { MusicProvider, MusicResource } from './types';
 
 const kwConvertSong = (item: any) => ({
   id: `kwtrack_${item.rid}`,
@@ -445,6 +444,7 @@ const provider: MusicProvider = class kuwo extends MusicResource {
       const { data } = response.data;
       return {
         cover_img_url: data.pic300,
+        description: html_decode(data.info),
         title: html_decode(data.name),
         id: `kwartist_${data.id}`,
         source_url: `https://www.kuwo.cn/singer_detail/${data.id}`
@@ -489,9 +489,9 @@ const provider: MusicProvider = class kuwo extends MusicResource {
     let { data } = await axios.get(target_url);
 
     data = JSON.parse(this.fix_json(data));
-
     const info = {
       cover_img_url: data.hts_img.replace('/120/', '/400/'),
+      description: replaceBR(html_decode(data.info)),
       title: html_decode(data.name),
       id: `kwalbum_${data.albumid}`,
       source_url: `https://www.kuwo.cn/album_detail/${data.albumid}`
@@ -600,6 +600,7 @@ const provider: MusicProvider = class kuwo extends MusicResource {
 
     const info = {
       cover_img_url: data.pic.replace('_150.jpg', '_400.jpg'),
+      description: data.info,
       title: data.title,
       id: `kwplaylist_${data.id}`,
       source_url: `https://www.kuwo.cn/playlist_detail/${data.id}`

@@ -160,5 +160,29 @@
       "urlFilter": "||taihe.com",
       "resourceTypes": ["xmlhttprequest"]
     }
+  },
+  {
+    "id": 8,
+    "priority": 1,
+    "action": {
+      "type": "modifyHeaders",
+      "requestHeaders": [
+        {
+          "header": "Referer",
+          "operation": "set",
+          "value": "https://music.taihe.com/"
+        },
+        {
+          "header": "Origin",
+          "operation": "set",
+          "value": "https://music.taihe.com/"
+        }
+      ]
+    },
+    "condition": {
+      "domain": ["*://*.91q.com/*"],
+      "urlFilter": "||91q.com",
+      "resourceTypes": ["xmlhttprequest"]
+    }
   }
 ]

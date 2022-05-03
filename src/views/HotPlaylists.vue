@@ -1,5 +1,5 @@
 <template>
-  <div class="page page-hot-playlist max-w-5xl 2xl:max-w-7xl my-0 mx-auto">
+  <div class="page page-hot-playlist my-0 mx-auto max-w-5xl 2xl:max-w-7xl">
     <SourceTab :sources="sourceList" :tab="tab" :loading="false" @click="changeTab"></SourceTab>
     <div class="playlist-filter mx-4 mb-4 leading-8">
       <div
@@ -13,11 +13,11 @@
       <div v-show="playlistFilters[tab] && playlistFilters[tab].length > 0" class="l1-button filter-item px-4 py-1" @click="toggleMorePlaylists()">更多...</div>
     </div>
     <div v-show="showMore" class="all-playlist-filter px-4">
-      <div v-for="category in allPlaylistFilters[tab] || []" :key="category.category" class="category flex mb-4">
-        <div class="category-title w-16 text-lg flex-none pl-4 font-semibold">{{ category.category }}</div>
-        <div class="category-filters flex flex-wrap ml-4">
-          <div v-for="filter in category.filters" :key="filter.name" class="filter-item flex min-w-24 rounded-sm hover:bg-button">
-            <span class="flex items-center justify-center cursor-pointer px-4 py-1" @click="changeFilter(filter.id)">{{ filter.name }}</span>
+      <div v-for="category in allPlaylistFilters[tab] || []" :key="category.category" class="category mb-4 flex">
+        <div class="category-title w-16 flex-none pl-4 text-lg font-semibold">{{ category.category }}</div>
+        <div class="category-filters ml-4 flex flex-wrap">
+          <div v-for="filter in category.filters" :key="filter.name" class="filter-item min-w-24 flex rounded-sm hover:bg-button">
+            <span class="flex cursor-pointer items-center justify-center px-4 py-1" @click="changeFilter(filter.id)">{{ filter.name }}</span>
           </div>
         </div>
       </div>
