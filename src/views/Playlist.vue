@@ -41,7 +41,20 @@
               {{ t('_IMPORT') }}
             </IconButton>
           </div>
-          <h3 class="mb-2 max-h-36 max-w-2xl overflow-hidden whitespace-pre-line text-sm">{{ description }}</h3>
+          <h3 v-if="!showMore" class="mb-2 max-h-36 max-w-2xl overflow-hidden whitespace-pre-line text-sm">
+            {{ description.slice(0, MAX_BRIEF_LENGTH) }}
+            <span v-if="description.length > MAX_BRIEF_LENGTH">...</span>
+          </h3>
+          <h3 v-if="showMore" class="mb-2 max-w-2xl whitespace-pre-line text-sm">{{ description }}</h3>
+          <div v-if="description.length > MAX_BRIEF_LENGTH" class="max-w-2xl">
+            <a class="flex justify-end cursor-pointer" @click="showMore = !showMore">
+              <div class="flex items-center text-sm">
+                <div v-if="!showMore">展开</div>
+                <div v-if="showMore">收起</div>
+                <vue-feather size="1.25rem" :type="showMore ? 'chevron-up' : 'chevron-down'" stroke="#cccccc" />
+              </div>
+            </a>
+          </div>
         </div>
       </div>
 
@@ -118,6 +131,8 @@ let playlist_title = $ref('');
 let playlist_source_url = $ref('');
 let is_favorite = $ref(false);
 let description = $ref('');
+const MAX_BRIEF_LENGTH = 120;
+let showMore = $ref(false);
 
 const refreshPlaylist = async () => {
   const data = await MediaService.getPlaylist(listId);
