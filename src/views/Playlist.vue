@@ -3,7 +3,7 @@
     <div class="playlist-detail">
       <div class="detail-head flex">
         <div class="detail-head-cover mx-8 mt-8 mb-1 w-52">
-          <img :src="cover_img_url" class="rounded border-[0.5px] border-default" err-src="https://y.gtimg.cn/mediastyle/global/img/singer_300.png" />
+          <img :src="cover_img_url" class="rounded border-[0.5px] border-default w-52" err-src="https://y.gtimg.cn/mediastyle/global/img/singer_300.png" />
         </div>
         <div class="detail-head-title flex-1">
           <h2 class="mt-7 mb-4 h-10 text-3xl font-semibold">{{ playlist_title }}</h2>
