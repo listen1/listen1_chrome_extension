@@ -144,7 +144,7 @@ const refreshPlaylist = async () => {
   cover_img_url = data.info.cover_img_url;
   playlist_title = data.info.title;
   playlist_source_url = data.info.source_url;
-  description = data.info.description;
+  description = data.info.description || '';
 };
 
 onMounted(async () => {
