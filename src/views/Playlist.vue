@@ -2,12 +2,11 @@
   <div class="page">
     <div class="playlist-detail">
       <div class="detail-head flex">
-        <div class="detail-head-cover mx-8 mt-8 mb-1 w-48">
-          <img :src="cover_img_url" class="aspect-square h-48 rounded" err-src="https://y.gtimg.cn/mediastyle/global/img/singer_300.png" />
+        <div class="detail-head-cover mx-8 mt-8 mb-1 w-52">
+          <img :src="cover_img_url" class="rounded border-[0.5px] border-default" err-src="https://y.gtimg.cn/mediastyle/global/img/singer_300.png" />
         </div>
         <div class="detail-head-title flex-1">
-          <h2 class="mt-7 mb-2 h-10 text-3xl font-semibold">{{ playlist_title }}</h2>
-          <h3 class="mb-4 max-h-40 max-w-2xl overflow-hidden whitespace-pre-line text-sm">{{ description }}</h3>
+          <h2 class="mt-7 mb-4 h-10 text-3xl font-semibold">{{ playlist_title }}</h2>
           <div class="playlist-button-list flex flex-wrap">
             <IconButton icon="li-play-s" icon-class="text-important" @click="playMylist()">
               <template #main>
@@ -42,6 +41,7 @@
               {{ t('_IMPORT') }}
             </IconButton>
           </div>
+          <h3 class="mb-2 max-h-36 max-w-2xl overflow-hidden whitespace-pre-line text-sm">{{ description }}</h3>
         </div>
       </div>
 
