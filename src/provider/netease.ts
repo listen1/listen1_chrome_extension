@@ -241,6 +241,7 @@ const provider: MusicProvider = class netease extends MusicResource {
           id: `neplaylist_${list_id}`,
           cover_img_url: res_data.playlist.coverImgUrl,
           title: res_data.playlist.name,
+          description: res_data.playlist.description,
           source_url: `https://music.163.com/#/playlist?id=${list_id}`
         };
         const max_allow_size = 1000;
