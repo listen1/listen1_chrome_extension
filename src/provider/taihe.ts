@@ -107,9 +107,10 @@ const provider: MusicProvider = class taihe extends MusicResource {
     const { data } = response.data;
 
     const info = {
-      cover_img_url: data.pic,
-      title: data.title,
       id: `thplaylist_${list_id}`,
+      cover_img_url: data.pic,
+      description: data.desc,
+      title: data.title,
       source_url: `https://music.taihe.com/songlist/${list_id}`
     };
 
