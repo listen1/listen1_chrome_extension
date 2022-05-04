@@ -253,6 +253,7 @@ const provider: MusicProvider = class migu extends MusicResource {
 
     const info = {
       id: `mgplaylist_${list_id}`,
+      description: response.data.resource[0].summary,
       cover_img_url: response.data.resource[0].imgItem.img,
       title: response.data.resource[0].title,
       source_url: `https://music.migu.cn/v3/music/playlist/${list_id}`
