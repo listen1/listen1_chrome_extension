@@ -1,11 +1,11 @@
 <template>
-  <ul class="playlist-covers relative m-0 grid grid-cols-3 gap-5 py-0 sm:grid-cols-4 md:grid-cols-5">
+  <ul class="playlist-covers relative m-0 grid grid-cols-3 gap-5 py-0 md:grid-cols-4 lg:grid-cols-5 xl:gap-7">
     <li v-for="i in playlists" :key="i.id" class="min-h-40 group">
-      <div class="relative rounded bg-neutral-700 shadow-md">
+      <div class="relative rounded bg-neutral-700 shadow-md xl:rounded-md">
         <div
-          class="aspect-square rounded border-[0.5px] border-default bg-cover duration-200 ease-linear group-hover:opacity-60"
+          class="aspect-square rounded border-[0.5px] border-default bg-cover duration-200 ease-linear group-hover:opacity-60 xl:rounded-md"
           style="background-image: url('/images/mycover.jpg')">
-          <img :src="i.cover_img_url" class="m-auto w-full cursor-pointer rounded object-cover" @click="showPlaylist(i.id)" />
+          <img :src="i.cover_img_url" class="m-auto w-full cursor-pointer rounded object-cover xl:rounded-md" @click="showPlaylist(i.id)" />
         </div>
         <div
           class="bottom absolute bottom-3 right-3 h-8 w-8 cursor-pointer opacity-0 duration-200 ease-linear group-hover:opacity-100"
@@ -14,7 +14,7 @@
         </div>
       </div>
       <div class="desc cursor-pointer">
-        <div class="t-1 min-h-[8px] px-2 text-center text-sm" @click="showPlaylist(i.id)">{{ i.title }}</div>
+        <div class="min-h-[8px] px-2 pt-1 text-left text-sm" @click="showPlaylist(i.id)">{{ i.title }}</div>
       </div>
     </li>
     <!-- <div class="loading_bottom">
