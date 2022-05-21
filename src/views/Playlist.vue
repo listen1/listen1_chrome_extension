@@ -3,7 +3,7 @@
     <div class="playlist-detail">
       <div class="detail-head flex">
         <div class="detail-head-cover mx-8 mt-8 mb-1 w-52">
-          <img :src="cover_img_url" class="rounded border-[0.5px] border-default w-52" err-src="https://y.gtimg.cn/mediastyle/global/img/singer_300.png" />
+          <img :src="cover_img_url" class="w-52 rounded border-[0.5px] border-default" err-src="https://y.gtimg.cn/mediastyle/global/img/singer_300.png" />
         </div>
         <div class="detail-head-title flex-1">
           <h2 class="mt-7 mb-4 h-10 text-3xl font-semibold">{{ playlist_title }}</h2>
@@ -13,7 +13,7 @@
                 {{ t('_PLAY_ALL') }}
               </template>
               <template #right>
-                <div class="add-list flex w-8 items-center justify-center border-l border-button hover:bg-button-hover" @click="addMylist(listId)">
+                <div class="add-list flex w-8 items-center justify-center rounded-r border-l border-button hover:bg-button-hover" @click="addMylist(listId)">
                   <span class="icon li-add" />
                 </div>
               </template>
@@ -47,7 +47,7 @@
           </h3>
           <h3 v-if="showMore" class="mb-2 max-w-2xl whitespace-pre-line text-sm">{{ description }}</h3>
           <div v-if="description.length > MAX_BRIEF_LENGTH" class="max-w-2xl">
-            <a class="flex justify-end cursor-pointer" @click="showMore = !showMore">
+            <a class="flex cursor-pointer justify-end" @click="showMore = !showMore">
               <div class="flex items-center text-sm">
                 <div v-if="!showMore">展开</div>
                 <div v-if="showMore">收起</div>
