@@ -190,7 +190,7 @@ const GithubClient = {
  * Get tokens.
  */
 
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+chrome.runtime?.onMessage.addListener((request, sender, sendResponse) => {
   if (!request.code) {
     return;
   }
