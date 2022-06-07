@@ -49,9 +49,16 @@ Making your own playlist is also supported.
 
 `2022-06`
 
-Fix bugs：
+Features:
 
-- fix kugou get playlist fail
+- Double click to play in playlist and search result page（thanks @piz-ewing）
+- Support wav format local file in desktop version (thanks @mikelxk)
+
+Fix bugs:
+
+- fix shuffle mode play duplicate music bug (thanks @piz-ewing)
+- fix music continue to play when clear now playing playlist (thanks @leca）
+- fix kugou music play fail
 
 `2022-02 ~ 2022-03`
 
