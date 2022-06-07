@@ -10,6 +10,8 @@ chrome.browserAction.onClicked.addListener((tab) => {
     }
   );
 });
+const MOBILE_UA =
+  'Mozilla/5.0 (iPhone; CPU iPhone OS 14_3 like Mac OS X) AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Mobile Safari/534.30';
 
 function hack_referer_header(details) {
   const replace_referer = true;
@@ -52,8 +54,11 @@ function hack_referer_header(details) {
 
   if (details.url.includes('.kugou.com/')) {
     referer_value = 'https://www.kugou.com/';
+    ua_value = MOBILE_UA;
   }
-
+  if (details.url.includes('m.kugou.com/')) {
+    ua_value = MOBILE_UA;
+  }
   if (details.url.includes('.kuwo.cn/')) {
     referer_value = 'https://www.kuwo.cn/';
   }
@@ -83,8 +88,7 @@ function hack_referer_header(details) {
     details.url.includes('app.c.nf.migu.cn') ||
     details.url.includes('d.musicapp.migu.cn')
   ) {
-    ua_value =
-      'Mozilla/5.0 (iPhone; CPU iPhone OS 14_3 like Mac OS X) AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Mobile Safari/534.30';
+    ua_value = MOBILE_UA;
     add_origin = false;
     add_referer = false;
   }

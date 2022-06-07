@@ -151,7 +151,7 @@ class kugou {
     return {
       success: (fn) => {
         const list_id = getParameterByName('list_id', url).split('_').pop();
-        const target_url = `http://m.kugou.com/plist/list/${list_id}?json=true`;
+        const target_url = `https://m.kugou.com/plist/list/${list_id}?json=true`;
 
         axios.get(target_url).then((response) => {
           const { data } = response;
