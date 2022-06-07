@@ -1,6 +1,6 @@
-# Listen 1 (Chrome Extension) V2.22.1
+# Listen 1 (Chrome Extension) V2.23.0
 
-（Last Update Mar 15th, 2022)
+（Last Update June 7th, 2022)
 
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE)
 
@@ -46,6 +46,12 @@ Making your own playlist is also supported.
 2. Click Add to Firefox button
 
 ## Changelog
+
+`2022-06`
+
+Fix bugs：
+
+- fix kugou get playlist fail
 
 `2022-02 ~ 2022-03`
 

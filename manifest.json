@@ -61,7 +61,7 @@
     "webRequest",
     "webRequestBlocking"
   ],
-  "version": "2.22.1",
+  "version": "2.23.0",
   "web_accessible_resources": ["images/*"],
   "content_scripts": [
     {
