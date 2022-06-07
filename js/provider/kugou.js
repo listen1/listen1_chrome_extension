@@ -105,7 +105,7 @@ class kugou {
   static kg_render_playlist_result_item(index, item, params, callback) {
     const { hash } = item;
 
-    let target_url = `${'http://m.kugou.com/app/i/getSongInfo.php?cmd=playInfo&hash='}${hash}`;
+    let target_url = `${'https://m.kugou.com/app/i/getSongInfo.php?cmd=playInfo&hash='}${hash}`;
     const track = {
       id: `kgtrack_${hash}`,
       title: '',
@@ -339,7 +339,7 @@ class kugou {
       lyric_url: item.hash,
     };
     // Fix other data
-    const target_url = `${'http://m.kugou.com/app/i/getSongInfo.php?cmd=playInfo&hash='}${
+    const target_url = `${'https://m.kugou.com/app/i/getSongInfo.php?cmd=playInfo&hash='}${
       item.hash
     }`;
     axios.get(target_url).then((response) => {
