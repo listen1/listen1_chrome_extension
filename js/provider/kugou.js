@@ -396,8 +396,8 @@ class kugou {
     if (offset === undefined) {
       offset = 0;
     }
-    // const page = offset / 30 + 1;
-    const target_url = `${'http://m.kugou.com/plist/index&json=true&page='}${offset}`;
+    const page = offset / 30 + 1;
+    const target_url = `${'https://m.kugou.com/plist/index&json=true&page='}${page}`;
     return {
       success: (fn) => {
         axios.get(target_url).then((response) => {
