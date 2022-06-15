@@ -257,6 +257,9 @@
           <span v-show="proxyMode_name == 'custom'">proxyRules</span>
           <button ng-click="showDialog(12)">{{ $t('_MODIFY') }}</button>
         </div>-->
+        <SettingBlock :title="t('_SHORTCUTS')">
+          <SettingButton :text="t('_VIEW_SHORTCUTS_LIST')" @click="showModal('KeyboardShortcut')" />
+        </SettingBlock>
         <SettingBlock :title="t('_ABOUT')">
           <p>
             Listen 1 {{ t('_HOMEPAGE') }}:
