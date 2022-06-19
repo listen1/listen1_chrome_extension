@@ -97,6 +97,9 @@ angular.module('listenone').controller('PlayController', [
       $scope.enableGlobalShortCut = localStorage.getObject(
         'enable_global_shortcut'
       );
+      $scope.enableLyricStatus = localStorage.getObject(
+        'enable_status_bar_lyric'
+      );
       $scope.enableLyricFloatingWindow = localStorage.getObject(
         'enable_lyric_floating_window'
       );
@@ -185,6 +188,31 @@ angular.module('listenone').controller('PlayController', [
       localStorage.setObject(
         'enable_lyric_floating_window',
         $scope.enableLyricFloatingWindow
+      );
+      const { ipcRenderer } = require('electron');
+      ipcRenderer.send(
+        'control',
+        message,
+        getCSSStringFromSetting($scope.floatWindowSetting)
+      );
+    };
+
+    $scope.openLyricStatus = (toggle) => {
+      if (!isElectron()) {
+        return;
+      }
+      let message = '';
+      if (toggle === true) {
+        $scope.enableLyricStatus = !$scope.enableLyricStatus;
+      }
+      if ($scope.enableLyricStatus === true) {
+        message = 'enable_status_bar_lyric';
+      } else {
+        message = 'disable_lyric_status';
+      }
+      localStorage.setObject(
+        'enable_status_bar_lyric',
+        $scope.enableLyricStatus
       );
       const { ipcRenderer } = require('electron');
       ipcRenderer.send(

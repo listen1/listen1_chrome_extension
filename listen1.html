@@ -1096,6 +1096,24 @@
                             <div class="shortcut" ng-if="!isChrome">
                               <svg
                                 class="feather"
+                                ng-show="!enableLyricStatus"
+                                ng-click="openLyricStatus(true)"
+                              >
+                                <use href="#square"></use>
+                              </svg>
+                              <svg
+                                class="feather"
+                                ng-show="enableLyricStatus"
+                                ng-click="openLyricStatus(true)"
+                              >
+                                <use href="#check-square"></use>
+                              </svg>
+                              <span ng-show="enableLyricStatus"></span
+                              >{{_SHOW_STATUS_LYRIC}}
+                            </div>
+                            <div class="shortcut" ng-if="!isChrome">
+                              <svg
+                                class="feather"
                                 ng-show="!enableLyricFloatingWindow"
                                 ng-click="openLyricFloatingWindow(true)"
                               >
