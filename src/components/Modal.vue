@@ -14,6 +14,7 @@ import GistExport from './modals/GistExport.vue';
 import GistImport from './modals/GistImport.vue';
 import GithubAuth from './modals/GithubAuth.vue';
 import ImportPlaylist from './modals/ImportPlaylist.vue';
+import KeyboardShortcut from './modals/KeyboardShortcut.vue';
 import OpenLogin from './modals/OpenLogin.vue';
 import ParseUrl from './modals/ParseUrl.vue';
 
@@ -31,6 +32,7 @@ const components: Record<string, any> = {
   OpenLogin,
   GithubAuth,
   GistExport,
+  KeyboardShortcut,
   GistImport
 };
 

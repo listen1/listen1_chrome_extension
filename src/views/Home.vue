@@ -151,6 +151,7 @@ import useSearch from '../composition/search';
 import useSettings from '../composition/settings';
 import { setLocale } from '../i18n';
 import EventService from '../services/EventService';
+import { initKeymap } from '../services/keymap';
 import { l1Player } from '../services/l1_player';
 import { isElectron } from '../utils';
 import NowPlaying from '../views/NowPlaying.vue';
@@ -277,6 +278,7 @@ onMounted(() => {
     }
   }
   refreshAuthStatus();
+  initKeymap();
 });
 const handleScroll = () => {
   const element = document.getElementById('browser') as HTMLElement;
