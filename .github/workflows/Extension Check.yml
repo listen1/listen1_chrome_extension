@@ -79,5 +79,7 @@ jobs:
       - name: Install Dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Create directory
+        run: mkdir artifacts
       - name: Run Build
         run: pnpm run build
