@@ -44,7 +44,6 @@ export default defineConfig({
     vue({ reactivityTransform: true }),
     // @ts-ignore: Type Mismatch Error
     simpleReloader(),
-    // @ts-ignore: Type Mismatch Error
     production && zip({ dir: 'artifacts' })
   ],
   build: {
