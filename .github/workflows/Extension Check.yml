@@ -16,6 +16,8 @@ jobs:
         with:
           node-version: 16
           cache: 'pnpm'
+      - name: Install pnpm
+        run: corepack enable
 
       - name: Install Dependencies
         run: pnpm install --frozen-lockfile
@@ -31,9 +33,11 @@ jobs:
         with:
           node-version: 16
           cache: 'pnpm'
+      - name: Install pnpm
+        run: corepack enable
 
       - name: Install Dependencies
-        run: pnpm i
+        run: pnpm install --frozen-lockfile
 
       - name: Run ESLint
         run: pnpm run lint
@@ -46,6 +50,9 @@ jobs:
         with:
           node-version: 16
           cache: 'pnpm'
+
+      - name: Install pnpm
+        run: corepack enable
 
       - name: Install Dependencies
         run: pnpm install --frozen-lockfile
@@ -61,6 +68,9 @@ jobs:
         with:
           node-version: 16
           cache: 'pnpm'
+
+      - name: Install pnpm
+        run: corepack enable
 
       - name: Install Dependencies
         run: pnpm install --frozen-lockfile
