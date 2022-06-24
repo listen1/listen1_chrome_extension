@@ -1,7 +1,7 @@
 import vueI18n from '@intlify/vite-plugin-vue-i18n';
 import vue from '@vitejs/plugin-vue';
 import { chromeExtension, simpleReloader } from 'rollup-plugin-chrome-extension';
-import zip from 'rollup-plugin-zip';
+import zip from 'vite-plugin-zip';
 import { defineConfig, build } from 'vite';
 
 const { NODE_ENV, BUILD_ELECTRON } = process.env;
@@ -44,7 +44,6 @@ export default defineConfig({
     vue({ reactivityTransform: true }),
     // @ts-ignore: Type Mismatch Error
     simpleReloader(),
-    // @ts-ignore: Type Mismatch Error
     production && zip({ dir: 'artifacts' })
   ],
   build: {
