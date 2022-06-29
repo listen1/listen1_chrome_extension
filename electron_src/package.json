@@ -91,7 +91,7 @@
     }
   },
   "devDependencies": {
-    "electron": "^14.2.9",
+    "electron": "^19.0.6",
     "electron-builder": "^23.1.0",
     "electron-reloader": "^1.2.3"
   },

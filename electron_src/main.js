@@ -46,7 +46,6 @@ let mainWindow;
 let willQuitApp = false;
 
 function createWindow() {
-  fixCORS();
   const transparent = false;
   mainWindow = new BrowserWindow({
     width: windowState.width,
@@ -67,6 +66,7 @@ function createWindow() {
     frame: false,
     hasShadow: true
   });
+  fixCORS(mainWindow);
   if (windowState.maximized) {
     mainWindow.maximize();
   }

@@ -49,21 +49,6 @@ const GithubClient = {
     _openAuthUrl: () => {
       Github.status = 1;
       const url = `${OAUTH_URL}/authorize?client_id=${client_id}&scope=gist`;
-      if (isElectron()) {
-        // normal window for link
-        // @ts-ignore: eletron only
-        // eslint-disable-next-line @typescript-eslint/no-var-requires
-        const { BrowserWindow } = require('electron').remote; // TODO: Use
-        let win = new BrowserWindow({
-          width: 1000,
-          height: 670
-        });
-        win.on('closed', () => {
-          win = null;
-        });
-        win.loadURL(url);
-        return;
-      }
       window.open(url, '_blank');
     },
     get openAuthUrl() {
@@ -197,5 +182,7 @@ chrome.runtime?.onMessage.addListener((request, sender, sendResponse) => {
   GithubClient.github.handleCallback(request.code);
   sendResponse();
 });
-
+window.api?.ipcOn('githubCode')((code: string) => {
+  GithubClient.github.handleCallback(code);
+});
 export default GithubClient;
