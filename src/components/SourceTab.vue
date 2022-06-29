@@ -1,8 +1,8 @@
 <template>
-  <div class="m-4 flex max-w-4xl justify-between self-center rounded-xl bg-search-input border-[0.5px] border-default">
+  <div class="m-4 flex max-w-4xl justify-between self-center rounded-xl border-[0.5px] border-default bg-search-input">
     <template v-for="source in sources" :key="source.name">
       <div
-        class="source-button flex h-9 w-40 cursor-pointer flex-row items-center justify-center rounded-xl transition-colors ease-in-out hover:bg-sidebar-hover m-[1px]"
+        class="source-button m-[1px] flex h-9 w-40 cursor-pointer flex-row items-center justify-center rounded-xl transition-colors ease-in-out hover:bg-sidebar-hover"
         :class="{ 'bg-dialog-hover hover:bg-dialog-hover': tab === source.name }"
         @click="changeTab(source.name)">
         {{ t(source.displayId) }}
