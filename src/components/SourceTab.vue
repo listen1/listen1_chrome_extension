@@ -2,8 +2,8 @@
   <div class="m-4 flex max-w-4xl justify-between self-center rounded-xl border-[0.5px] border-default bg-search-input">
     <template v-for="source in sources" :key="source.name">
       <div
-        class="source-button m-[1px] flex h-9 w-40 cursor-pointer flex-row items-center justify-center rounded-xl transition-colors ease-in-out hover:bg-sidebar-hover"
-        :class="{ 'bg-dialog-hover hover:bg-dialog-hover': tab === source.name }"
+        class="source-button m-[1px] flex h-9 w-40 cursor-pointer flex-row items-center justify-center rounded-xl transition-colors duration-200 ease-in-out hover:bg-sidebar-hover hover:text-sidebar-hover"
+        :class="{ 'active bg-sidebar-hover text-sidebar-hover': tab === source.name }"
         @click="changeTab(source.name)">
         {{ t(source.displayId) }}
       </div>
