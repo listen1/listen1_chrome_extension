@@ -91,11 +91,12 @@
     }
   },
   "devDependencies": {
-    "electron": "^19.0.6",
+    "electron": "^19.0.7",
     "electron-builder": "^23.1.0",
     "electron-reloader": "^1.2.3"
   },
   "dependencies": {
+    "@typescript-eslint/parser": "^5.30.0",
     "chardet": "^1.4.0",
     "electron-store": "^8.0.2",
     "music-metadata": "^7.12.3"

@@ -2,7 +2,7 @@
   "name": "listen1_chrome_extension",
   "version": "3.0.0",
   "private": false,
-  "packageManager": "pnpm@7.3.0",
+  "packageManager": "pnpm@7.4.1",
   "scripts": {
     "build": "vite build",
     "build:mv3": "cross-env mv3=1 vite build",
@@ -30,7 +30,7 @@
     "browserslist": "^4.21.0",
     "cross-env": "^7.0.3",
     "dexie": "^3.2.2",
-    "electron": "19.0.6",
+    "electron": "19.0.7",
     "eslint": "^8.18.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-vue": "^9.1.1",
