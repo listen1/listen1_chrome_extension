@@ -15,13 +15,10 @@ try {
 } catch (error) {
   // ignore on error
 }
-const setTheme = (theme) => {
-  // store.set('theme', theme);
-};
 const getCookie = (request) => ipcRenderer.invoke('getCookie', request);
 const setCookie = (cookie) => ipcRenderer.send('setCookie', cookie);
 const removeCookie = (url, name) => ipcRenderer.send('removeCookie', url, name);
-
+const updateTheme = ({ color, symbolColor }) => ipcRenderer.send('updateTheme', { color, symbolColor });
 const sendControl = (args, params) => ipcRenderer.send('control', args, params);
 const sendLyric = (args, params) => ipcRenderer.send('currentLyric', args, params);
 const sendTrackPlayingNow = (args, params) => ipcRenderer.send('trackPlayingNow', args, params);
@@ -42,10 +39,10 @@ const chooseLocalFile = (listId) => ipcRenderer.send('chooseLocalFile', listId);
 contextBridge.exposeInMainWorld('api', {
   chooseLocalFile,
   setZoomLevel,
-  setTheme,
   getCookie,
   setCookie,
   removeCookie,
+  updateTheme,
   session,
   ipcRenderer,
   platform: process.platform,

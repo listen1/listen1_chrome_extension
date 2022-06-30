@@ -10,11 +10,11 @@ declare module '*.vue' {
 declare module 'global' {
   import type { Session, IpcRenderer, Cookie, CookiesGetFilter } from 'electron';
   global {
-    type Theme = 'black' | 'white';
+    type Theme = 'black' | 'white' | 'infinite_grid' | 'gridient';
     interface Window {
       api: {
         setZoomLevel: (level: number) => void;
-        setTheme: (theme: Theme) => void;
+        updateTheme: (theme: any) => void;
         getCookie: (request: CookiesGetFilter) => Promise<Cookie[]>;
         setCookie: (cookie: Cookie) => Promise<void>;
         removeCookie: (url: string, name: string) => void;

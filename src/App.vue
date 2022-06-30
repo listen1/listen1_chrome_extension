@@ -37,10 +37,27 @@ function applyThemeCSS() {
     infinite_grid: infiniteGridStyle,
     gridient: gridientStyle
   };
-
+  const titleBarMapping = {
+    white: {
+      color: '#ffffff',
+      symbolColor: '#72706e'
+    },
+    black: {
+      color: '#333333',
+      symbolColor: '#969da5'
+    },
+    infinite_grid: {
+      color: '#ffffff',
+      symbolColor: '#72706e'
+    },
+    gridient: {
+      color: '#f6f6f6',
+      symbolColor: '#72706e'
+    }
+  };
   const cssStyle = mapping[settings.theme] || '';
 
-  window.api?.setTheme(settings.theme);
+  window.api?.updateTheme(titleBarMapping[settings.theme]);
   (document.getElementById('theme') as HTMLElement).textContent = cssStyle;
 }
 
