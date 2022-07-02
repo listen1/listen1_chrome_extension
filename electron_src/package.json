@@ -96,8 +96,8 @@
     "electron-reloader": "^1.2.3"
   },
   "dependencies": {
-    "@typescript-eslint/parser": "^5.30.0",
     "chardet": "^1.4.0",
+    "conf": "^10.1.2",
     "electron-store": "^8.0.2",
     "music-metadata": "^7.12.3"
   }
