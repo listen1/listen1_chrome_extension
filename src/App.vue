@@ -19,6 +19,7 @@ import iDB, { dbMigrate } from './services/DBService';
 import type { Track } from './services/l1_player';
 import { l1Player } from './services/l1_player';
 import { initMediaSession, MediaSessionEventListener } from './services/media_session';
+import { isWin } from './utils';
 import Home from './views/Home.vue';
 
 if (!localStorage.getItem('V3_MIGRATED')) {
@@ -56,8 +57,9 @@ function applyThemeCSS() {
     }
   };
   const cssStyle = mapping[settings.theme] || '';
-
-  window.api?.updateTheme(titleBarMapping[settings.theme]);
+  if (isWin()) {
+    window.api.updateTheme(titleBarMapping[settings.theme]);
+  }
   (document.getElementById('theme') as HTMLElement).textContent = cssStyle;
 }
 
