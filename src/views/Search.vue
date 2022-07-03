@@ -4,7 +4,7 @@
     <div class="site-wrapper-innerd">
       <div class="cover-container">
         <div class="searchbox">
-          <SourceTab class="px-10" :tab="condition.tab" :sources="sourceList" :loading="result.loading" @click="changeSourceTab">
+          <SourceTab class="ml-12" :tab="condition.tab" :sources="sourceList" :loading="result.loading" @click="changeSourceTab">
             <template #right>
               <div class="search-type float-right flex flex-row">
                 <li
