@@ -117,6 +117,22 @@ class qq {
     return d;
   }
 
+  static qq_convert_song2(song) {
+    const d = {
+      id: `qqtrack_${song.mid}`,
+      title: this.htmlDecode(song.name),
+      artist: this.htmlDecode(song.singer[0].name),
+      artist_id: `qqartist_${song.singer[0].mid}`,
+      album: this.htmlDecode(song.album.name),
+      album_id: `qqalbum_${song.album.mid}`,
+      img_url: this.qq_get_image_url(song.album.mid, 'album'),
+      source: 'qq',
+      source_url: `https://y.qq.com/#type=song&mid=${song.songmid}&tpl=yqq_song_detail`,
+      url: '',
+    };
+    return d;
+  }
+
   static get_toplist_url(id, period, limit) {
     return `https://u.y.qq.com/cgi-bin/musicu.fcg?format=json&inCharset=utf8&outCharset=utf-8&platform=yqq.json&needNewCode=0&data=${encodeURIComponent(
       JSON.stringify({
@@ -280,24 +296,37 @@ class qq {
 
     return {
       success: (fn) => {
-        const target_url =
-          'https://i.y.qq.com/v8/fcg-bin/fcg_v8_singer_track_cp.fcg' +
-          `?platform=h5page&order=listen&begin=0&num=50&singermid=${artist_id}` +
-          '&g_tk=938407465&uin=0&format=json&' +
-          'inCharset=utf-8&outCharset=utf-8&notice=0&platform=' +
-          'h5&needNewCode=1&from=h5&_=1459960621777';
+        const target_url = `https://u.y.qq.com/cgi-bin/musicu.fcg?format=json&loginUin=0&hostUin=0inCharset=utf8&outCharset=utf-8&platform=yqq.json&needNewCode=0&data=${encodeURIComponent(
+          JSON.stringify({
+            comm: {
+              ct: 24,
+              cv: 0,
+            },
+            singer: {
+              method: 'get_singer_detail_info',
+              param: {
+                sort: 5,
+                singermid: artist_id,
+                sin: 0,
+                num: 50,
+              },
+              module: 'music.web_singer_info_svr',
+            },
+          })
+        )}`;
+
         axios.get(target_url).then((response) => {
           const { data } = response;
 
           const info = {
             cover_img_url: this.qq_get_image_url(artist_id, 'artist'),
-            title: data.data.singer_name,
+            title: data.singer.data.singer_info.name,
             id: `qqartist_${artist_id}`,
             source_url: `https://y.qq.com/#type=singer&mid=${artist_id}`,
           };
 
-          const tracks = data.data.list.map((item) =>
-            this.qq_convert_song(item.musicData)
+          const tracks = data.singer.data.songlist.map((item) =>
+            this.qq_convert_song2(item)
           );
           return fn({
             tracks,
