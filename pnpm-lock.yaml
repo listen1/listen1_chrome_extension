@@ -15,7 +15,7 @@ importers:
       browserslist: ^4.21.0
       cross-env: ^7.0.3
       dexie: ^3.2.2
-      electron: 19.0.7
+      electron: 19.0.8
       eslint: ^8.18.0
       eslint-config-prettier: ^8.5.0
       eslint-plugin-vue: ^9.1.1
@@ -28,9 +28,9 @@ importers:
       prettier-plugin-tailwindcss: ^0.1.11
       rollup-plugin-chrome-extension: 3.6.6
       rollup-plugin-copy: ^3.4.0
-      tailwindcss: ^3.1.4
+      tailwindcss: ^3.1.5
       typescript: ^4.7.4
-      vite: ^2.9.13
+      vite: ^2.9.14
       vite-plugin-zip: ^1.0.1
       vue: ^3.2.37
       vue-feather: ^2.0.0
@@ -38,18 +38,18 @@ importers:
       vue-router: ^4.0.16
       vue-tsc: ^0.38.2
     devDependencies:
-      '@intlify/vite-plugin-vue-i18n': 3.4.0_krmxvkyjildqapt6of732e4fvy
+      '@intlify/vite-plugin-vue-i18n': 3.4.0_i5cftpqtlusdawbczcfmwd3bya
       '@types/chrome': 0.0.190
       '@types/node-forge': 1.0.2
       '@typescript-eslint/eslint-plugin': 5.30.3_xuuykav7urhdozug7htlfgar3u
       '@typescript-eslint/parser': 5.30.3_4x5o4skxv6sl53vpwefgt23khm
-      '@vitejs/plugin-vue': 2.3.3_vite@2.9.13+vue@3.2.37
+      '@vitejs/plugin-vue': 2.3.3_vite@2.9.14+vue@3.2.37
       autoprefixer: 10.4.7_postcss@8.4.14
       axios: 0.27.2
       browserslist: 4.21.1
       cross-env: 7.0.3
       dexie: 3.2.2
-      electron: 19.0.7
+      electron: 19.0.8
       eslint: 8.19.0
       eslint-config-prettier: 8.5.0_eslint@8.19.0
       eslint-plugin-vue: 9.1.1_eslint@8.19.0
@@ -62,9 +62,9 @@ importers:
       prettier-plugin-tailwindcss: 0.1.11_prettier@2.7.1
       rollup-plugin-chrome-extension: 3.6.6
       rollup-plugin-copy: 3.4.0
-      tailwindcss: 3.1.4
+      tailwindcss: 3.1.5
       typescript: 4.7.4
-      vite: 2.9.13
+      vite: 2.9.14
       vite-plugin-zip: 1.0.1
       vue: 3.2.37
       vue-feather: 2.0.0_x5rx2ih5b2suonmbxbf7ye4nou
@@ -76,7 +76,7 @@ importers:
     specifiers:
       chardet: ^1.4.0
       conf: ^10.1.2
-      electron: ^19.0.7
+      electron: ^19.0.8
       electron-builder: ^23.1.0
       electron-reloader: ^1.2.3
       electron-store: ^8.0.2
@@ -87,7 +87,7 @@ importers:
       electron-store: 8.0.2
       music-metadata: 7.12.3
     devDependencies:
-      electron: 19.0.7
+      electron: 19.0.8
       electron-builder: 23.1.0
       electron-reloader: 1.2.3
 
@@ -276,7 +276,7 @@ packages:
     engines: {node: '>= 12'}
     dev: true
 
-  /@intlify/vite-plugin-vue-i18n/3.4.0_krmxvkyjildqapt6of732e4fvy:
+  /@intlify/vite-plugin-vue-i18n/3.4.0_i5cftpqtlusdawbczcfmwd3bya:
     resolution: {integrity: sha512-XXcZBgwJ+3FRu11c4ARoY9N00kElPii0/jNZ49qR045Ka7/YGCwb1Ku14BBlMSEHiHDSjLQknLwrJKSQGVZLyA==}
     engines: {node: '>= 12'}
     peerDependencies:
@@ -295,7 +295,7 @@ packages:
       debug: 4.3.4
       fast-glob: 3.2.11
       source-map: 0.6.1
-      vite: 2.9.13
+      vite: 2.9.14
       vue-i18n: 9.2.0-beta.36_vue@3.2.37
     transitivePeerDependencies:
       - supports-color
@@ -626,14 +626,14 @@ packages:
       eslint-visitor-keys: 3.3.0
     dev: true
 
-  /@vitejs/plugin-vue/2.3.3_vite@2.9.13+vue@3.2.37:
+  /@vitejs/plugin-vue/2.3.3_vite@2.9.14+vue@3.2.37:
     resolution: {integrity: sha512-SmQLDyhz+6lGJhPELsBdzXGc+AcaT8stgkbiTFGpXPe8Tl1tJaBw1A6pxDqDuRsVkD8uscrkx3hA7QDOoKYtyw==}
     engines: {node: '>=12.0.0'}
     peerDependencies:
       vite: ^2.5.10
       vue: ^3.2.25
     dependencies:
-      vite: 2.9.13
+      vite: 2.9.14
       vue: 3.2.37
     dev: true
 
@@ -1771,8 +1771,8 @@ packages:
     resolution: {integrity: sha512-FYPir3NSBEGexSZUEeht81oVhHfLFl6mhUKSkjHN/iB/TwEIt/WHQrqVGfTLN5gQxwJCQkIJBe05eOXjI7omgg==}
     dev: true
 
-  /electron/19.0.7:
-    resolution: {integrity: sha512-Wyg+oGkY8cWYmm8tVka6CZmhJxnyUx+Us2ALyWiY4w73+dO9XUNB/c7vQNIm1Uk/DLMn9vFzgvcS9YtOOMqpbg==}
+  /electron/19.0.8:
+    resolution: {integrity: sha512-OWK3P/NbDFfBUv+wbYv1/OV4jehY5DQPT7n1maQJfN9hsnrWTMktXS/bmS05eSUAjNAzHmKPKfiKH2c1Yr7nGw==}
     engines: {node: '>= 8.6'}
     hasBin: true
     requiresBuild: true
@@ -3447,9 +3447,9 @@ packages:
       postcss: 8.4.14
     dev: true
 
-  /postcss-load-config/3.1.4_postcss@8.4.14:
-    resolution: {integrity: sha512-6DiM4E7v4coTE4uzA8U//WhtPwyhiim3eyjEMFCnUpzbrkK9wJHgKDT2mR+HbtSrd/NubVaYTOpSpjUl8NQeRg==}
-    engines: {node: '>= 10'}
+  /postcss-load-config/4.0.1_postcss@8.4.14:
+    resolution: {integrity: sha512-vEJIc8RdiBRu3oRAI0ymerOn+7rPuMvRXslTvZUKZonDHFIczxztIyJ1urxM1x9JXEikvpWWTUUqal5j/8QgvA==}
+    engines: {node: '>= 14'}
     peerDependencies:
       postcss: '>=8.0.9'
       ts-node: '>=9.0.0'
@@ -3461,7 +3461,7 @@ packages:
     dependencies:
       lilconfig: 2.0.5
       postcss: 8.4.14
-      yaml: 1.10.2
+      yaml: 2.1.1
     dev: true
 
   /postcss-nested/5.0.6_postcss@8.4.14:
@@ -3949,8 +3949,8 @@ packages:
     engines: {node: '>= 0.4'}
     dev: true
 
-  /tailwindcss/3.1.4:
-    resolution: {integrity: sha512-NrxbFV4tYsga/hpWbRyUfIaBrNMXDxx5BsHgBS4v5tlyjf+sDsgBg5m9OxjrXIqAS/uR9kicxLKP+bEHI7BSeQ==}
+  /tailwindcss/3.1.5:
+    resolution: {integrity: sha512-bC/2dy3dGPqxMWAqFSRgQxVCfmO/31ZbeEp8s9DMDh4zgPZ5WW1gxRJkbBkXcTUIzaSUdhWrcsrSOe32ccgB4w==}
     engines: {node: '>=12.13.0'}
     hasBin: true
     dependencies:
@@ -3970,7 +3970,7 @@ packages:
       postcss: 8.4.14
       postcss-import: 14.1.0_postcss@8.4.14
       postcss-js: 4.0.0_postcss@8.4.14
-      postcss-load-config: 3.1.4_postcss@8.4.14
+      postcss-load-config: 4.0.1_postcss@8.4.14
       postcss-nested: 5.0.6_postcss@8.4.14
       postcss-selector-parser: 6.0.10
       postcss-value-parser: 4.2.0
@@ -4207,8 +4207,8 @@ packages:
       yazl: 2.5.1
     dev: true
 
-  /vite/2.9.13:
-    resolution: {integrity: sha512-AsOBAaT0AD7Mhe8DuK+/kE4aWYFMx/i0ZNi98hJclxb4e0OhQcZYUrvLjIaQ8e59Ui7txcvKMiJC1yftqpQoDw==}
+  /vite/2.9.14:
+    resolution: {integrity: sha512-P/UCjSpSMcE54r4mPak55hWAZPlyfS369svib/gpmz8/01L822lMPOJ/RYW6tLCe1RPvMvOsJ17erf55bKp4Hw==}
     engines: {node: '>=12.2.0'}
     hasBin: true
     peerDependencies:
@@ -4394,6 +4394,11 @@ packages:
   /yaml/1.10.2:
     resolution: {integrity: sha512-r3vXyErRCYJ7wg28yvBY5VSoAF8ZvlcW9/BwUzEtUsjvX/DKs24dIkuwjtuprwJJHsbyUbLApepYTR1BN4uHrg==}
     engines: {node: '>= 6'}
+    dev: true
+
+  /yaml/2.1.1:
+    resolution: {integrity: sha512-o96x3OPo8GjWeSLF+wOAbrPfhFOGY0W00GNaxCDv+9hkcDJEnev1yh8S7pgHF0ik6zc8sQLuL8hjHjJULZp8bw==}
+    engines: {node: '>= 14'}
     dev: true
 
   /yargs-parser/21.0.1:
