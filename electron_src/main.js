@@ -12,19 +12,9 @@ if (isDev) {
 }
 const { getFloatingWindow, createFloatingWindow, updateFloatingWindow } = require('./float_window');
 
-const theme = store.get('theme');
 /** @type {{ width: number; height: number; maximized: boolean; zoomLevel: number}} */
 const windowState = store.safeGet('windowState');
-let titleStyle;
 let titleBarStyle;
-switch (theme) {
-  case 'black':
-    titleStyle = { color: '#333333', symbolColor: '#e5e5e5' };
-    break;
-  case 'white':
-    titleStyle = { color: '#ffffff', symbolColor: '#3c3c3c' };
-    break;
-}
 //platform specific
 switch (process.platform) {
   case 'darwin':
@@ -46,7 +36,6 @@ let mainWindow;
 let willQuitApp = false;
 
 function createWindow() {
-  fixCORS();
   const transparent = false;
   mainWindow = new BrowserWindow({
     width: windowState.width,
@@ -61,12 +50,13 @@ function createWindow() {
     },
     //icon: iconPath,
     titleBarStyle,
-    titleBarOverlay: false,
+    titleBarOverlay: true,
     transparent: transparent,
     vibrancy: 'light',
     frame: false,
     hasShadow: true
   });
+  fixCORS(mainWindow);
   if (windowState.maximized) {
     mainWindow.maximize();
   }
@@ -300,7 +290,9 @@ ipcMain.on('chooseLocalFile', async (event, listId) => {
 
   mainWindow.webContents.send('chooseLocalFile', { tracks, id: listId });
 });
-
+ipcMain.on('updateTheme', (event, { color, symbolColor }) => {
+  mainWindow.setTitleBarOverlay({ color, symbolColor, height: 50 });
+});
 // Quit when all windows are closed.
 app.on('window-all-closed', function () {
   // On OS X it is common for applications and their menu bar

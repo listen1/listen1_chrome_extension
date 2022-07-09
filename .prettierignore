@@ -1,3 +1,4 @@
 /dist
 /desktop_dist
 /electron_src/dist
+pnpm-lock.yaml

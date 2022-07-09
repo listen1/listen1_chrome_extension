@@ -117,6 +117,7 @@
               </span>
             </router-link>
           </div>
+
           <WindowControl></WindowControl>
         </div>
 
@@ -153,7 +154,7 @@ import { setLocale } from '../i18n';
 import EventService from '../services/EventService';
 import { initKeymap } from '../services/keymap';
 import { l1Player } from '../services/l1_player';
-import { isElectron } from '../utils';
+import { isElectron, isWin } from '../utils';
 import NowPlaying from '../views/NowPlaying.vue';
 
 const { t } = useI18n();
@@ -259,24 +260,6 @@ provide('showModal', (type: any, opt: any) => {
   modalRef.showModal(type, opt);
 });
 onMounted(() => {
-  if ('windowControlsOverlay' in navigator) {
-    // @ts-ignore windowControlsOverlay is not in builtin dom
-    const { x } = navigator.windowControlsOverlay.getBoundingClientRect();
-    //windows
-    if (x === 0) {
-      //hard coded style. Looking for better solution
-      settingButtonStyle = {
-        position: 'fixed',
-        left: 'calc(env(titlebar-area-width) - 26px)',
-        top: 'calc(env(titlebar-area-height)/4)'
-      };
-      platButtonStyle = {
-        position: 'fixed',
-        left: 'calc(env(titlebar-area-width) - 62px)',
-        top: 'calc(env(titlebar-area-height)/4)'
-      };
-    }
-  }
   refreshAuthStatus();
   initKeymap();
 });

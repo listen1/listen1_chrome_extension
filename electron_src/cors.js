@@ -1,7 +1,7 @@
 const { session } = require('electron');
 
 /**
- * @param {electron.OnBeforeSendHeadersListenerDetails} details
+ * @param {Electron.OnBeforeSendHeadersListenerDetails} details
  */
 function hack_referer_header(details) {
   let replace_referer = true;
@@ -88,7 +88,7 @@ function hack_referer_header(details) {
   details.requestHeaders = headers;
 }
 
-function fixCORS() {
+function fixCORS(mainWindow) {
   const filter = {
     urls: [
       '*://*.music.163.com/*',
@@ -110,11 +110,18 @@ function fixCORS() {
     if (details.url.startsWith('https://listen1.github.io/listen1/callback.html?code=')) {
       const { url } = details;
       const code = url.split('=')[1];
-      mainWindow.webContents.executeJavaScript('GithubClient.github.handleCallback("' + code + '");');
+      mainWindow.webContents.send('githubCode', code);
     } else {
       hack_referer_header(details);
     }
     callback({ cancel: false, requestHeaders: details.requestHeaders });
+  });
+  //https://github.com/electron/electron/issues/22345#issuecomment-1057130188
+  session.defaultSession.webRequest.onHeadersReceived(filter, (details, callback) => {
+    if (details.responseHeaders?.['Set-Cookie']?.length && !details.responseHeaders['Set-Cookie'][0].includes('SameSite=none; Secure')) {
+      details.responseHeaders['Set-Cookie'][0] += '; SameSite=none; Secure';
+    }
+    callback({ cancel: false, responseHeaders: details.responseHeaders });
   });
 }
 module.exports = { fixCORS, hack_referer_header };

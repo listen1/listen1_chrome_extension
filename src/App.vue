@@ -19,6 +19,7 @@ import iDB, { dbMigrate } from './services/DBService';
 import type { Track } from './services/l1_player';
 import { l1Player } from './services/l1_player';
 import { initMediaSession, MediaSessionEventListener } from './services/media_session';
+import { isWin } from './utils';
 import Home from './views/Home.vue';
 
 if (!localStorage.getItem('V3_MIGRATED')) {
@@ -37,10 +38,28 @@ function applyThemeCSS() {
     infinite_grid: infiniteGridStyle,
     gridient: gridientStyle
   };
-
+  const titleBarMapping = {
+    white: {
+      color: '#ffffff',
+      symbolColor: '#72706e'
+    },
+    black: {
+      color: '#333333',
+      symbolColor: '#969da5'
+    },
+    infinite_grid: {
+      color: '#ffffff',
+      symbolColor: '#72706e'
+    },
+    gridient: {
+      color: '#f6f6f6',
+      symbolColor: '#72706e'
+    }
+  };
   const cssStyle = mapping[settings.theme] || '';
-
-  window.api?.setTheme(settings.theme);
+  if (isWin()) {
+    window.api.updateTheme(titleBarMapping[settings.theme]);
+  }
   (document.getElementById('theme') as HTMLElement).textContent = cssStyle;
 }
 
