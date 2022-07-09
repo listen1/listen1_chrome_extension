@@ -1,12 +1,13 @@
 <template>
-  <div class="m-4 flex max-w-4xl justify-between self-center rounded-xl border-[0.5px] border-default bg-search-input">
-    <template v-for="source in sources" :key="source.name">
+  <div class="source-list m-4">
+    <template v-for="(source, index) in sources" :key="source.name">
       <div
-        class="source-button m-[1px] flex h-9 w-40 cursor-pointer flex-row items-center justify-center rounded-xl transition-colors ease-in-out hover:bg-sidebar-hover"
-        :class="{ 'bg-dialog-hover hover:bg-dialog-hover': tab === source.name }"
+        class="source-button inline-block cursor-pointer border-b hover:border-active hover:text-default"
+        :class="{ 'border-active': tab === source.name, 'border-transparent text-inactive': tab !== source.name }"
         @click="changeTab(source.name)">
         {{ t(source.displayId) }}
       </div>
+      <div v-if="index != sources.length - 1" class="splitter mx-3 -mb-0.5 inline-block h-4 w-px bg-neutral-400" />
     </template>
     <svg
       v-show="loading"
