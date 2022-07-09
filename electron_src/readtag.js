@@ -1,11 +1,11 @@
-const { existsSync } = require('fs');
-const { readFile } = require('fs/promises');
-const { parseFile } = require('music-metadata');
+const { existsSync, promises } = require('fs');
+const { readFile } = promises;
 const { basename, extname, parse, format } = require('path');
-const { detect } = require('chardet');
 
 module.exports = {
   async readAudioTags(filePath) {
+    const { detect } = require('chardet');
+    const { parseFile } = require('music-metadata');
     const fileName = basename(filePath, extname(filePath));
     try {
       const metaData = await parseFile(filePath);

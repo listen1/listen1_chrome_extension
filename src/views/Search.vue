@@ -4,17 +4,18 @@
     <div class="site-wrapper-innerd">
       <div class="cover-container">
         <div class="searchbox">
-          <SourceTab class="ml-12" :tab="condition.tab" :sources="sourceList" :loading="result.loading" @click="changeSourceTab">
+          <SourceTab class="px-10" :tab="condition.tab" :sources="sourceList" :loading="result.loading" @click="changeSourceTab">
             <template #right>
-              <div class="search-type float-right flex flex-row">
+              <div class="search-type float-right">
                 <li
-                  class="source-button w-10 cursor-pointer list-none justify-between self-center border-b text-start hover:border-active hover:text-default"
+                  class="source-button inline-block cursor-pointer border-b hover:border-active hover:text-default"
                   :class="{ 'border-active': condition.searchType === 0, 'border-transparent text-inactive': condition.searchType !== 0 }"
                   @click="changeSearchType(0)">
                   <a>单曲</a>
                 </li>
+                <div class="splitter mx-3 -mb-0.5 inline-block h-4 w-px bg-neutral-400" />
                 <li
-                  class="source-button w-10 cursor-pointer list-none justify-between self-center border-b hover:border-active hover:text-default"
+                  class="source-button inline-block cursor-pointer border-b hover:border-active hover:text-default"
                   :class="{ 'border-active': condition.searchType === 1, 'border-transparent text-inactive': condition.searchType !== 1 }"
                   @click="changeSearchType(1)">
                   <a>歌单</a>
