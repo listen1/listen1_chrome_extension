@@ -278,7 +278,7 @@ class kugou {
   static bootstrap_track(track, success, failure) {
     const track_id = track.id.slice('kgtrack_'.length);
     const album_id = track.album_id.slice('kgalbum_'.length);
-    let target_url = `https://wwwapi.kugou.com/yy/index.php?r=play/getdata&callback=jQuery&hash=${track_id}&platid=4`;
+    let target_url = `https://wwwapi.kugou.com/yy/index.php?r=play/getdata&callback=jQuery&mid=1&hash=${track_id}&platid=4`;
     if (album_id !== '') {
       target_url += `&album_id=${album_id}`;
     }
