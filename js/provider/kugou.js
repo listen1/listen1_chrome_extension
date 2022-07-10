@@ -305,7 +305,7 @@ class kugou {
   static lyric(url) {
     const track_id = getParameterByName('track_id', url).split('_').pop();
     const album_id = getParameterByName('album_id', url).split('_').pop();
-    let lyric_url = `https://wwwapi.kugou.com/yy/index.php?r=play/getdata&callback=jQuery&hash=${track_id}&platid=4&album_id=${album_id}`;
+    let lyric_url = `https://wwwapi.kugou.com/yy/index.php?r=play/getdata&callback=jQuery&mid=1&hash=${track_id}&platid=4&album_id=${album_id}`;
     const timstamp = +new Date();
     lyric_url += `&_=${timstamp}`;
     return {
