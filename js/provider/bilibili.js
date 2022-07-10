@@ -1,6 +1,11 @@
 /* global getParameterByName */
 // eslint-disable-next-line no-unused-vars
 class bilibili {
+  static htmlDecode(value) {
+    const parser = new DOMParser();
+    return parser.parseFromString(value, 'text/html').body.textContent;
+  }
+
   static bi_convert_song(song_info) {
     const track = {
       id: `bitrack_${song_info.id}`,
@@ -137,10 +142,31 @@ class bilibili {
   }
 
   static bootstrap_track(track, success, failure) {
+    const trackId = track.id;
+    if (trackId.startsWith('bitrack_v_')) {
+      const sound = {};
+      const bvid = track.id.slice('bitrack_v_'.length);
+      const target_url = `https://api.bilibili.com/x/web-interface/view?bvid=${bvid}`;
+
+      return axios.get(target_url).then((response) => {
+        const { cid } = response.data.data.pages[0];
+        const target_url2 = `http://api.bilibili.com/x/player/playurl?fnval=16&bvid=${bvid}&cid=${cid}`;
+        axios.get(target_url2).then((response2) => {
+          if (response2.data.data.dash.audio.length > 0) {
+            const url = response2.data.data.dash.audio[0].baseUrl;
+            sound.url = url;
+            sound.platform = 'bilibili';
+            success(sound);
+          } else {
+            failure(sound);
+          }
+        });
+      });
+    }
     const sound = {};
     const song_id = track.id.slice('bitrack_'.length);
     const target_url = `https://www.bilibili.com/audio/music-service-c/web/url?sid=${song_id}`;
-    axios.get(target_url).then((response) => {
+    return axios.get(target_url).then((response) => {
       const { data } = response;
       if (data.code === 0) {
         [sound.url] = data.data.cdns;
@@ -158,48 +184,38 @@ class bilibili {
       success: (fn) => {
         const keyword = getParameterByName('keywords', url);
         const curpage = getParameterByName('curpage', url);
-        const au = /\d+$/.exec(keyword);
-        if (au != null) {
-          const target_url = `https://www.bilibili.com/audio/music-service-c/web/song/info?sid=${au}`;
-          axios.get(target_url).then((response) => {
-            const { data } = response.data;
-            const tracks = [this.bi_convert_song(data)];
-            return fn({
-              result: tracks,
-              total: 1,
-            });
-          });
-        } else {
-          return fn({
-            result: [],
-            total: 0,
-          });
-        }
-        // inferred, not implemented yet
-        const target_url = `https://api.bilibili.com/x/web-interface/search/type?search_type=audio&keyword=${keyword}&page=${curpage}`;
+
+        const target_url = `https://api.bilibili.com/x/web-interface/search/type?__refresh__=true&_extra=&context=&page=${curpage}&page_size=42&platform=pc&highlight=1&single_column=0&keyword=${encodeURIComponent(
+          keyword
+        )}&category_id=&search_type=video&dynamic_offset=0&preload=true&com2co=true`;
+
         axios.get(target_url).then((response) => {
-          const { data } = response.data;
-          const tracks = data.result.map((item) => this.bi_convert_song(item));
+          const result = response.data.data.result.map((song) => ({
+            id: `bitrack_v_${song.bvid}`,
+            title: this.htmlDecode(song.title),
+            artist: this.htmlDecode(song.author),
+            artist_id: `biartist_v_${song.mid}`,
+            album: '',
+            album_id: `bialbum_v_`,
+            img_url: `https:${song.pic}`,
+            source: 'bilibili',
+            source_url: `https://www.bilibili.com/video/${song.bvid}`,
+          }));
+          const total = response.data.data.numResults;
           return fn({
-            result: tracks,
-            total: data.numResults,
+            result,
+            total,
           });
         });
-        return null;
       },
     };
   }
 
-  static lyric(url) {
-    // const track_id = getParameterByName('track_id', url).split('_').pop();
-    const lyric_url = getParameterByName('lyric_url', url);
+  static lyric() {
     return {
       success: (fn) => {
-        axios.get(lyric_url).then((response) => {
-          const { data } = response;
-          return fn({
-            lyric: data,
-          });
+        fn({
+          lyric: '',
         });
       },
     };

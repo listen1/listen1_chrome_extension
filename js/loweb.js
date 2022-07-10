@@ -41,7 +41,7 @@ const PROVIDERS = [
   {
     name: 'bilibili',
     instance: bilibili,
-    searchable: false,
+    searchable: true,
     support_login: false,
     id: 'bi',
   },

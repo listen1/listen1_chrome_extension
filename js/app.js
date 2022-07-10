@@ -27,7 +27,6 @@ const sourceList = [
   {
     name: 'bilibili',
     displayId: '_BILIBILI_MUSIC',
-    searchable: false,
   },
   {
     name: 'migu',
