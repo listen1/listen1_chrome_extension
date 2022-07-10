@@ -1,6 +1,6 @@
-# Listen 1 (Chrome Extension) V2.23.0
+# Listen 1 (Chrome Extension) V2.24.0
 
-（Last Update June 7th, 2022)
+（Last Update June 10th, 2022)
 
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE)
 
@@ -46,6 +46,19 @@ Making your own playlist is also supported.
 2. Click Add to Firefox button
 
 ## Changelog
+
+`2022-07`
+
+Features:
+
+- add bilibili search page for audio in video search
+
+Fix bugs:
+
+- fix kugou music play error
+- fix kugou hot playlist load more bug
+- fix qq singer page error
+- fix migu top list open error
 
 `2022-06`
 
