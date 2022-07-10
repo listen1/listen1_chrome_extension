@@ -21,6 +21,23 @@ class bilibili {
     return track;
   }
 
+  static bi_convert_song2(song_info) {
+    let imgUrl = song_info.pic;
+    if (imgUrl.startsWith('//')) {
+      imgUrl = `https:${imgUrl}`;
+    }
+    const track = {
+      id: `bitrack_v_${song_info.bvid}`,
+      title: this.htmlDecode(song_info.title),
+      artist: this.htmlDecode(song_info.author),
+      artist_id: `biartist_v_${song_info.mid}`,
+      source: 'bilibili',
+      source_url: `https://www.bilibili.com/${song_info.bvid}`,
+      img_url: imgUrl,
+    };
+    return track;
+  }
+
   static show_playlist(url) {
     let offset = getParameterByName('offset', url);
     if (offset === undefined) {
@@ -98,9 +115,10 @@ class bilibili {
   }
 
   static bi_artist(url) {
+    const artist_id = getParameterByName('list_id', url).split('_').pop();
+
     return {
       success: (fn) => {
-        const artist_id = getParameterByName('list_id', url).split('_').pop();
         let target_url = `https://api.bilibili.com/x/space/acc/info?mid=${artist_id}&jsonp=jsonp`;
         axios.get(target_url).then((response) => {
           const info = {
@@ -109,8 +127,20 @@ class bilibili {
             id: `biartist_${artist_id}`,
             source_url: `https://space.bilibili.com/${artist_id}/#/audio`,
           };
+          if (getParameterByName('list_id', url).split('_').length === 3) {
+            target_url = `https://api.bilibili.com/x/space/arc/search?mid=${artist_id}&pn=1&ps=25&order=click&index=1&jsonp=jsonp`;
+            return axios.get(target_url).then((res) => {
+              const tracks = res.data.data.list.vlist.map((item) =>
+                this.bi_convert_song2(item)
+              );
+              return fn({
+                tracks,
+                info,
+              });
+            });
+          }
           target_url = `https://api.bilibili.com/audio/music-service-c/web/song/upper?pn=1&ps=0&order=2&uid=${artist_id}`;
-          axios.get(target_url).then((res) => {
+          return axios.get(target_url).then((res) => {
             const tracks = res.data.data.data.map((item) =>
               this.bi_convert_song(item)
             );
@@ -190,17 +220,9 @@ class bilibili {
         )}&category_id=&search_type=video&dynamic_offset=0&preload=true&com2co=true`;
 
         axios.get(target_url).then((response) => {
-          const result = response.data.data.result.map((song) => ({
-            id: `bitrack_v_${song.bvid}`,
-            title: this.htmlDecode(song.title),
-            artist: this.htmlDecode(song.author),
-            artist_id: `biartist_v_${song.mid}`,
-            album: '',
-            album_id: `bialbum_v_`,
-            img_url: `https:${song.pic}`,
-            source: 'bilibili',
-            source_url: `https://www.bilibili.com/video/${song.bvid}`,
-          }));
+          const result = response.data.data.result.map((song) =>
+            this.bi_convert_song2(song)
+          );
           const total = response.data.data.numResults;
           return fn({
             result,
