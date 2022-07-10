@@ -70,14 +70,13 @@ class migu {
             })
           );
           migu_board.splice(0, 2);
-          const global_board = response.data.data.contentItemList[7].itemList.map(
-            (item) => ({
+          const global_board =
+            response.data.data.contentItemList[7].itemList.map((item) => ({
               cover_img_url: item.imageUrl,
               title: item.displayLogId.param.rankName,
               id: `mgtoplist_${item.displayLogId.param.rankId}`,
               source_url: '',
-            })
-          );
+            }));
           const chart_board = [
             {
               cover_img_url:
@@ -98,20 +97,6 @@ class migu {
                 'https://cdnmusic.migu.cn/tycms_picture/20/04/99/200408163702795_360x360_1614.png',
               title: '尖叫原创榜',
               id: 'mgtoplist_27553408',
-              source: '',
-            },
-            {
-              cover_img_url:
-                'https://cdnmusic.migu.cn/tycms_picture/20/05/136/200515161733982_360x360_1523.png',
-              title: '音乐榜',
-              id: 'mgtoplist_1',
-              source: '',
-            },
-            {
-              cover_img_url:
-                'https://cdnmusic.migu.cn/tycms_picture/20/05/136/200515161848938_360x360_673.png',
-              title: '影视榜',
-              id: 'mgtoplist_2',
               source: '',
             },
           ];
@@ -236,8 +221,7 @@ class migu {
           33683712: {
             name: '数字专辑畅销榜',
             url: '',
-            img:
-              'https://d.musicapp.migu.cn/prod/file-service/file-down/bcb5ddaf77828caee4eddc172edaa105/2297b53efa678bbc8a5b83064622c4c8/ebfe5bff9fd9981b5ae1c043f743bfb3',
+            img: 'https://d.musicapp.migu.cn/prod/file-service/file-down/bcb5ddaf77828caee4eddc172edaa105/2297b53efa678bbc8a5b83064622c4c8/ebfe5bff9fd9981b5ae1c043f743bfb3',
           },
           23217754: {
             name: 'MV榜',
@@ -270,12 +254,7 @@ class migu {
             img: '/20/08/231/200818095950791_327x327_8293.png',
           },
         };
-        let target_url = '';
-        if (list_id === 1 || list_id === 2) {
-          target_url = `https://music.migu.cn/v3/music/top/${board_list[list_id].url}`;
-        } else {
-          target_url = `https://app.c.nf.migu.cn/MIGUM3.0/v1.0/template/rank-detail/release?columnId=${list_id}&needAll=0&resourceType=2009`;
-        }
+        const target_url = `https://music.migu.cn/v3/music/top/${board_list[list_id].url}`;
 
         axios.get(target_url).then((response) => {
           const { data } = response;
@@ -290,26 +269,28 @@ class migu {
               : board_list[list_id].name,
             source_url: `https://music.migu.cn/v3/music/top/${board_list[list_id].url}`,
           };
-          let tracks = {};
-          if (list_id === 1 || list_id === 2) {
-            // 音乐榜及影视榜
-            const list_elements = new DOMParser()
-              .parseFromString(data, 'text/html')
-              .getElementsByTagName('script');
-            const result = JSON.parse(
-              list_elements[1].innerText.split('=').pop()
-            );
+          let tracks = [];
+          const list_elements = new DOMParser()
+            .parseFromString(data, 'text/html')
+            .getElementsByTagName('script');
+          const result = JSON.parse(
+            list_elements[1].innerText.split('=').slice(1).join('=')
+          );
+          if (result.songs && result.songs.items) {
             tracks = result.songs.items.map((song) => {
+              let songAlbum = '';
+              let songAlbumId = 'mgalbum_';
+              if (song.album && song.album.albumId !== 1) {
+                songAlbum = song.album.albumName;
+                songAlbumId = `mgalbum_${song.album.albumId}`;
+              }
               const track = {
                 id: `mgtrack_${song.copyrightId}`,
                 title: song.name,
                 artist: song.singers[0].name,
                 artist_id: `mgartist_${song.singers[0].id}`,
-                album: song.album.albumId !== 1 ? song.album.albumName : '',
-                album_id:
-                  song.album.albumId !== 1
-                    ? `mgalbum_${song.album.albumId}`
-                    : 'mgalbum_',
+                album: songAlbum,
+                album_id: songAlbumId,
                 source: 'migu',
                 source_url: `https://music.migu.cn/v3/music/song/${song.copyrightId}`,
                 img_url: `https:${song.mediumPic}`,
@@ -328,47 +309,6 @@ class migu {
               }
               return track;
             });
-          } else if (list_id === 23217754) {
-            //  MV榜
-            tracks = data.data.columnInfo.dataList.map((song) => ({
-              id: `mgtrack_${song.copyrightId}`,
-              title: song.songName,
-              artist: song.singer,
-              artist_id: `mgartist_${song.singerId}`,
-              album: '',
-              album_id: 'mgalbum_',
-              source: 'migu',
-              source_url: `https://music.migu.cn/v3/music/song/${song.copyrightId}`,
-              img_url: song.imgs[1].img,
-              // url: `mgtrack_${song.copyrightId}`,
-              lyric_url: null,
-              tlyric_url: '',
-              song_id: song.songId,
-              url: song.copyright === 0 ? '' : undefined,
-            }));
-          } else if (list_id === 23218151 || list_id === 33683712) {
-            //  新专辑榜及数字专辑畅销榜
-            tracks = data.data.columnInfo.dataList.map((item) => ({
-              id: `mgtrack_`,
-              title: '',
-              artist: item.singer,
-              artist_id: `mgartist_${item.singerId}`,
-              album: item.title,
-              album_id: item.albumId ? `mgalbum_${item.albumId}` : 'mgalbum_',
-              source: 'migu',
-              source_url: `https://music.migu.cn/v3/music/album/${
-                item.albumId || ''
-              }`,
-              img_url: item.imgItems[1].img,
-              // url: `mgtrack_${song.copyrightId}`,
-              lyric_url: '',
-              tlyric_url: '',
-              url: '',
-            }));
-          } else {
-            tracks = data.data.columnInfo.dataList.map((item) =>
-              this.mg_convert_song(item)
-            );
           }
           return fn({
             tracks,
@@ -784,7 +724,8 @@ class migu {
     arr_plain.splice(0, plain_head_line);
     arr_translation.splice(0, trans_head_line);
     // 删除翻译与原歌词重复的歌曲名，歌手、作曲、作词等信息
-    const reg_info = /(\u4f5c|\u7f16)(\u8bcd|\u66f2)|\u6b4c(\u624b|\u66f2)\u540d|Written by/;
+    const reg_info =
+      /(\u4f5c|\u7f16)(\u8bcd|\u66f2)|\u6b4c(\u624b|\u66f2)\u540d|Written by/;
     let trans_info_line = 0;
     for (let i = 0; i < 6; i += 1) {
       if (reg_info.test(arr_translation[i])) {
