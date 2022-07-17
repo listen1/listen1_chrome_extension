@@ -55,6 +55,7 @@
     "*://*.bilivideo.com/*",
     "*://*.migu.cn/*",
     "*://*.taihe.com/*",
+    "*://music.91q.com/*",
     "*://api.github.com/*",
     "*://github.com/*",
     "*://gist.githubusercontent.com/*",
