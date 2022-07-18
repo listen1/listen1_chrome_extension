@@ -65,5 +65,3 @@ const changeTab = (newTab: string) => {
   loadPlatformPlaylists();
 };
 </script>
-
-<style></style>

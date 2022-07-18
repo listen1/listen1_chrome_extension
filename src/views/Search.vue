@@ -122,5 +122,3 @@ const changeSearchPage = (offset: number) => {
 const sourceList = computed(() => [{ name: 'allmusic', displayId: '_ALL_MUSIC' }, ...MediaService.getSourceList().filter((source) => source.searchable)]);
 const isAllMusic = computed(() => condition.tab === 'allmusic');
 </script>
-
-<style></style>
