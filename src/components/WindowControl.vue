@@ -10,4 +10,8 @@
 </template>
 <script setup>
 import { isLinux, isWin } from '../utils';
+
+const sendControl = (message) => {
+  window.api?.sendControl(message);
+};
 </script>
