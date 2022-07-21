@@ -1,7 +1,7 @@
 <template>
   <!-- content page: 登录 -->
   <div class="page">
-    <div class="login flex flex-col items-center justify-center">
+    <div class="flex min-h-[calc(100vh-192px)] flex-col items-center justify-center">
       <div v-for="source in loginSourceList" :key="source">
         <div v-if="is_login(source)">
           <div class="usercard mb-6 flex w-96 items-center border border-default">
@@ -47,8 +47,3 @@ const showModal = inject<any>('showModal');
 
 const { musicAuth, is_login, openLogin, loginSourceList, logout } = useAuth();
 </script>
-<style>
-.page .login {
-  min-height: calc(100vh - 192px);
-}
-</style>

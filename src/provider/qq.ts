@@ -673,6 +673,8 @@ const provider: MusicProvider = class qq extends MusicResource {
       uin = `1${uin.slice('o'.length)}`; // replace prefix o with 1
       return this.get_user_by_uin(uin);
     }
+    const { value: uin } = qqCookie;
+    return this.get_user_by_uin(uin);
   }
 
   static getLoginUrl() {

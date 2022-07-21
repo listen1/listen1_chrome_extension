@@ -80,12 +80,12 @@
         {
           "header": "Referer",
           "operation": "set",
-          "value": "https://www.kuwo.com/"
+          "value": "https://www.kuwo.cn/"
         },
         {
           "header": "Origin",
           "operation": "set",
-          "value": "https://www.kuwo.com/"
+          "value": "https://www.kuwo.cn/"
         }
       ]
     },
