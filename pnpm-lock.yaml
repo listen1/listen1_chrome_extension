@@ -80,12 +80,12 @@ importers:
       electron-builder: ^23.1.0
       electron-reloader: ^1.2.3
       electron-store: ^8.0.2
-      music-metadata: ^7.12.4
+      music-metadata: ^7.12.5
     dependencies:
       ajv: 8.11.0
       chardet: 1.4.0
       electron-store: 8.0.2
-      music-metadata: 7.12.4
+      music-metadata: 7.12.5
     devDependencies:
       electron: 19.0.9
       electron-builder: 23.1.0
@@ -410,7 +410,7 @@ packages:
   /@types/fs-extra/9.0.13:
     resolution: {integrity: sha512-nEnwB++1u5lVDM2UI4c1+5R+FYaKfaAzS4OococimjVm3nQw3TuzH5UNsocrcTBbhnerblyHj4A49qXbIiZdpA==}
     dependencies:
-      '@types/node': 18.0.6
+      '@types/node': 18.6.0
     dev: true
 
   /@types/glob/7.2.0:
@@ -418,7 +418,7 @@ packages:
     requiresBuild: true
     dependencies:
       '@types/minimatch': 3.0.5
-      '@types/node': 18.0.6
+      '@types/node': 18.6.0
     dev: true
 
   /@types/har-format/1.2.8:
@@ -432,7 +432,7 @@ packages:
   /@types/keyv/3.1.4:
     resolution: {integrity: sha512-BQ5aZNSCpj7D6K2ksrRCTmKRLEpnPvWDiLPfoGyhZ++8YtiK9d/3DBKPJgry359X/P1PfruyYwvnvwFjuEiEIg==}
     dependencies:
-      '@types/node': 18.0.6
+      '@types/node': 16.11.45
     dev: true
 
   /@types/lodash/4.14.182:
@@ -465,6 +465,10 @@ packages:
     resolution: {integrity: sha512-/xUq6H2aQm261exT6iZTMifUySEt4GR5KX8eYyY+C4MSNPqSh9oNIP7tz2GLKTlFaiBbgZNxffoR3CVRG+cljw==}
     dev: true
 
+  /@types/node/18.6.0:
+    resolution: {integrity: sha512-WZ/6I1GL0DNAo4bb01lGGKTHH8BHJyECepf11kWONg3OJoHq2WYOm16Es1V54Er7NTUXsbDCpKRKdmBc4X2xhA==}
+    dev: true
+
   /@types/parse-json/4.0.0:
     resolution: {integrity: sha512-//oorEZjL6sbPcKUaCdIGlIUeH26mgzimjBB77G6XRgnDl/L5wOnpyBGRe/Mmf5CVW3PwEBE1NjiMZ/ssFh4wA==}
     dev: true
@@ -473,7 +477,7 @@ packages:
     resolution: {integrity: sha512-ULqvZNGMv0zRFvqn8/4LSPtnmN4MfhlPNtJCTpKuIIxGVGZ2rYWzFXrvEBoh9CVyqSE7D6YFRJ1hydLHI6kbWw==}
     requiresBuild: true
     dependencies:
-      '@types/node': 18.0.6
+      '@types/node': 18.6.0
       xmlbuilder: 15.1.1
     dev: true
     optional: true
@@ -481,7 +485,7 @@ packages:
   /@types/responselike/1.0.0:
     resolution: {integrity: sha512-85Y2BjiufFzaMIlvJDvTTB8Fxl2xfLo4HgmHzVBz08w4wDePCTjYw66PdrolO0kzli3yam/YCgRufyo1DdQVTA==}
     dependencies:
-      '@types/node': 18.0.6
+      '@types/node': 16.11.45
     dev: true
 
   /@types/verror/1.10.6:
@@ -2319,8 +2323,8 @@ packages:
       flat-cache: 3.0.4
     dev: true
 
-  /file-type/16.5.3:
-    resolution: {integrity: sha512-uVsl7iFhHSOY4bEONLlTK47iAHtNsFHWP5YE4xJfZ4rnX7S1Q3wce09XgqSC7E/xh8Ncv/be1lNoyprlUH/x6A==}
+  /file-type/16.5.4:
+    resolution: {integrity: sha512-/yFHK0aGjFEgDJjEKP0pWCplsPFPhwyfwevf/pVxiN0tmE4L9LmwWxWukdJSHdoCli4VgQLehjJtwQBnqmsKcw==}
     engines: {node: '>=10'}
     dependencies:
       readable-web-to-node-stream: 3.0.2
@@ -3178,14 +3182,14 @@ packages:
   /ms/2.1.2:
     resolution: {integrity: sha512-sGkPx+VjMtmA6MX27oA4FBFELFCZZ4S4XqeGOXCv68tT+jb3vk/RyaKWP0PTKyWtmLSM0b+adUTEvbs1PEaH2w==}
 
-  /music-metadata/7.12.4:
-    resolution: {integrity: sha512-hn4DsDYQUeq4WDDh7MD/nSj6CaZMywuD/4Ywq6veeh4Q5KZw4A2yLY8gUzsEWf/ctdtV9Lj066ihkU7Nk7EXIA==}
+  /music-metadata/7.12.5:
+    resolution: {integrity: sha512-nVKDwcaKwj5wwIkUNbRZEVgEi3AmensLKI3/MCVW9ehHvA3Ehj1ei59BIBUzVkgNyqFNEb2nQFUR2G4Q8yJ9eg==}
     engines: {node: '>=10'}
     dependencies:
       '@tokenizer/token': 0.3.0
       content-type: 1.0.4
       debug: 4.3.4
-      file-type: 16.5.3
+      file-type: 16.5.4
       media-typer: 1.1.0
       strtok3: 6.3.0
       token-types: 4.2.0

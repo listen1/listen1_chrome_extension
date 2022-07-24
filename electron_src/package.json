@@ -99,6 +99,6 @@
     "ajv": "^8.11.0",
     "chardet": "^1.4.0",
     "electron-store": "^8.0.2",
-    "music-metadata": "^7.12.4"
+    "music-metadata": "^7.12.5"
   }
 }
