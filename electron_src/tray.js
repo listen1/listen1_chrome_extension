@@ -1,9 +1,20 @@
 const { app, Menu, Tray } = require('electron');
 const { join } = require('path');
-
+/** @type { Electron.Tray } */
 let appTray;
 /**
- * @param {electron.BrowserWindow} mainWindow
+ * @param { string } str
+ * @param { number } maxLen
+ */
+function limitLenth(str, maxLen) {
+  if (str.length > maxLen) {
+    return `${str.slice(0, maxLen)}...`;
+  }
+  return str;
+}
+
+/**
+ * @param { Electron.BrowserWindow } mainWindow
  * @param {{ title: string; artist: string; }} [track]
  */
 function initialTray(mainWindow, track) {
@@ -12,8 +23,8 @@ function initialTray(mainWindow, track) {
     artist: '  '
   };
 
-  let nowPlayingTitle = `${track.title}`;
-  let nowPlayingArtist = `歌手: ${track.artist}`;
+  let nowPlayingTitle = limitLenth(`${track.title}`, 27);
+  let nowPlayingArtist = limitLenth(`歌手: ${track.artist}`, 23);
 
   function toggleVisiable() {
     mainWindow.isVisible() ? mainWindow.hide() : mainWindow.show();
