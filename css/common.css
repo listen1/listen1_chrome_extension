@@ -5,10 +5,17 @@ body {
   font-size: var(--text-default-size);
   color: var(--text-default-color);
   font-family: system-ui, 'PingFang SC', STHeiti, sans-serif;
+  background-color: var(--color-body-bg);
+  transition: background 0.2s;
 }
 
 a {
   cursor: pointer;
+  color: inherit;
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
 }
 
 .wrap {
@@ -24,7 +31,11 @@ textarea:focus,
 button:focus {
   outline: none;
 }
-
+input:focus,
+textarea:focus {
+  background-color: var(--theme-color-hover);
+  color: var(--theme-color);
+}
 ul {
   list-style: none;
   margin: 0;
@@ -52,6 +63,7 @@ button:hover {
 }
 img {
   -webkit-user-drag: none;
+  object-fit: cover;
 }
 .l1-button {
   background-color: var(--button-background-color);
@@ -65,6 +77,7 @@ img {
 }
 .l1-button:hover {
   background: var(--button-hover-background-color);
+  color: var(--text-default-color);
 }
 svg {
   width: 24px;
@@ -78,11 +91,6 @@ svg {
   /*    stroke: var(--icon-default-color);*/
 }
 
-/* svg:hover {
-  fill: var(--icon-highlight-color);
-  stroke: var(--icon-highlight-color);
-} */
-
 .icon {
   /* default icon settings */
   font-size: 16px;
@@ -93,28 +101,32 @@ svg {
 .flex-scroll-wrapper {
   flex: 1;
   height: 100px;
-  overflow-y: scroll;
+  /* overflow-y: scroll; */
   scrollbar-width: thin;
   scrollbar-color: var(--scroll-color) var(--content-background-color);
 }
 
 /* scroll bar style */
 ::-webkit-scrollbar {
-  width: 14px;
-  height: 18px;
+  width: 8px;
   background: transparent;
+  transition: background 0.4s;
 }
 
 ::-webkit-scrollbar-thumb {
-  height: 49px;
-  border: 5px solid rgba(0, 0, 0, 0);
-  background-clip: padding-box;
-  border-radius: 7px;
-  -webkit-border-radius: 7px;
-  background-color: var(--scroll-color);
+  transition: background 0.4s;
+  width: 8px;
+  border-radius: 4px;
+  background: hsla(0, 0%, 50.2%, 0.38);
   /*rgba(151, 151, 151, 0.4);*/
 
   /*    -webkit-box-shadow: inset -1px -1px 0px rgba(0, 0, 0, 0.05), inset 1px 1px 0px rgba(0, 0, 0, 0.05);*/
+}
+
+::-webkit-scrollbar-thumb:hover,
+::-webkit-scrollbar-thumb:active {
+  background-color: hsla(0, 0%, 50.2%, 0.58);
+  transition: background 0.4s;
 }
 
 ::-webkit-scrollbar-button {
@@ -142,38 +154,43 @@ svg {
   overflow: hidden;
 }
 
-.footer {
-  background: var(--foot-background-color);
-  height: 60px;
-  border-top: solid 1px var(--line-default-color);
-  display: flex;
-  position: relative;
-  z-index: 99;
-}
-
 /* split main to left/right 2 parts */
 .main .sidebar {
-  flex: 0 0 200px;
+  padding-left: 1vw;
+  /* padding-right: 2vw; */
   display: flex;
   flex-direction: column;
-  background: var(--sidebar-background-color);
 }
 
 .main .content {
-  background: var(--content-background-color);
   flex: 1;
   display: flex;
   flex-direction: column;
+  position: relative;
 }
 
 /* split content to up/down 2 parts */
 .main .content .navigation {
-  height: 46px;
-  flex: 0 0 46px;
-  border-bottom: solid 1px var(--line-default-color);
+  user-select: none;
+  height: 64px;
+  flex: 0 0 64px;
+  /* border-bottom: solid 1px var(--line-default-color); */
   display: flex;
   align-items: center;
   -webkit-app-region: drag;
+  margin-right: 20px;
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 100;
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  backdrop-filter: saturate(180%) blur(20px);
+  background-color: var(--nav-background-color);
+  transition: background 0.2s;
 }
 
 .main .content .browser {
@@ -185,15 +202,80 @@ svg {
 /*****************************************************************/
 
 /* main sidebar start */
+.main .sidebar-content {
+  height: calc(100vh - 210px);
+  overflow: hidden;
+  width: 60px;
+  transition: 0.2s;
+  background: var(--sidebar-background);
+  border-radius: 10px;
+  cursor: pointer;
+}
+.main .sidebar-content.footerdef {
+  height: calc(100vh - 130px);
+}
+.main .sidebar-content.opensidebar {
+  width: 200px;
+}
+.sidebar-content .logo-content {
+  /* width: 200px;
+  height: 80px; */
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin: 10px;
+  margin-bottom: 0;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--sidebar-splitter);
+  transition: 0.2s;
+}
+.sidebar-content .logo-content .logo-svg {
+  padding: 10px;
+  padding-right: 0;
+  transition: 0.2s;
+}
+.sidebar-content .logo-content .logo-title {
+  padding-right: 10px;
+  display: flex;
+}
+.sidebar-content .logo-content .logo-title svg {
+  color: var(--sidebar-splitter);
+  opacity: 0;
+  width: 0;
+  transition: 0.2s;
+}
+.opensidebar > .logo-content {
+  border-bottom: 1px solid transparent;
+}
+.opensidebar > .logo-content .logo-title svg {
+  opacity: 1;
+  width: 90px;
+}
+.sidebar .sidebar-scroll-content {
+  overflow-x: hidden;
+  overflow-y: overlay;
+
+  height: calc(100% - 80px);
+}
+.sidebar .sidebar-scroll-content::-webkit-scrollbar {
+  display: none;
+}
+.sidebar .sidebar-scroll-content::-webkit-scrollbar-thumb {
+  background: var(--theme-color-ope);
+}
+.sidebar .opensidebar > .sidebar-scroll-content:hover::-webkit-scrollbar {
+  display: block;
+  width: 2px;
+}
 .sidebar .menu-control {
-  height: 43px;
-  width: 125px;
+  height: 74px;
   -webkit-app-region: drag;
 }
+
 .sidebar .menu-title {
   height: 28px;
   line-height: 28px;
-  margin: 0 12px 4px 12px;
+  margin: 8px 12px 8px 12px;
   color: var(--link-default-color);
   padding-left: 10px;
   display: flex;
@@ -201,37 +283,58 @@ svg {
   font-size: 12px;
 }
 .sidebar .menu-title .title {
-  flex: 1;
+  user-select: none;
+  white-space: nowrap;
+  opacity: 0;
+  transition: 0.2s;
+  width: 0;
+  flex: 0;
 }
-.sidebar .menu-title svg {
+.sidebar .menu-title .title.opensidebar {
+  opacity: 1;
+  flex: 1;
+  width: auto;
+}
+.sidebar ul li .sidebar-block > div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 10px;
+}
+.sidebar ul li .sidebar-block .sidebar .menu-title svg {
   flex: 0 0 18px;
 }
 
 .sidebar ul li {
   cursor: pointer;
-  padding-left: 10px;
-  border-top: solid 2px transparent;
-  border-bottom: solid 2px transparent;
-  margin-bottom: -2px;
+  padding: 2px 10px;
+  /* margin-bottom: -2px; */
 }
 .sidebar ul li .sidebar-block {
   display: flex;
   align-items: center;
   line-height: 28px;
-  padding-left: 12px;
-  margin: 3px 0;
-  color: var(--text-default-color);
+  padding: 6px 12px;
+  margin: 1px 0;
+  transition: all 0.2s;
 
+  color: var(--sidebar-hover-text-color);
   border-radius: var(--default-border-radius);
+  background-color: var(--button-background-color);
 }
-
+.sidebar ul li .sidebar-block.opensidebar {
+  background-color: transparent;
+}
 .sidebar svg {
   width: 18px;
   height: 18px;
+  z-index: 10;
 }
-
+.sidebar .icon {
+  margin-right: 10px;
+  font-size: 18px;
+}
 .sidebar ul li a {
-  margin-left: 10px;
   width: 125px;
   overflow: hidden;
   white-space: nowrap;
@@ -239,18 +342,25 @@ svg {
 }
 
 .sidebar ul li:hover .sidebar-block {
+  background: var(--theme-color-hover);
+  color: var(--text-default-color);
+  border-radius: 10px;
+  transition: all 0.3s;
+}
+.sidebar ul li:hover .sidebar-block.opensidebar {
   background: var(--sidebar-hover-background-color);
-  color: var(--sidebar-hover-text-color);
 }
 
 .sidebar ul li.active .sidebar-block,
 .sidebar ul li.active:hover .sidebar-block {
-  background: var(--sidebar-highlight-background-color);
-  color: var(--sidebar-highlight-text-color);
+  background: var(--theme-color);
+  color: #fff;
+  border-radius: 10px;
 }
 .sidebar ul li.dragover .sidebar-block {
   background: var(--sidebar-highlight-background-color);
-  color: var(--sidebar-highlight-text-color);
+  color: var(--text-default-color);
+  border-radius: 10px;
 }
 /*
 avoid hover effect trigger dragleave event
@@ -263,8 +373,8 @@ https://stackoverflow.com/questions/19889615/can-an-angular-directive-pass-argum
 
 /* widget navigation start */
 .navigation svg {
-  width: 18px;
-  height: 18px;
+  width: 24px;
+  height: 24px;
   color: var(--icon-default-color);
 }
 .navigation .icon svg {
@@ -275,29 +385,69 @@ https://stackoverflow.com/questions/19889615/can-an-angular-directive-pass-argum
   line-height: 46px;
   vertical-align: middle;
   padding: 0 13px;
-}
-
-.navigation .search {
   flex: 1;
 }
 
+.navigation .search {
+  /* flex: 1; */
+  display: flex;
+  width: 200px;
+  height: 32px;
+  background: var(--search-input-background-color);
+  border-style: none;
+  border-radius: var(--default-border-radius);
+  padding-left: 10px;
+  margin-right: 20px;
+  align-items: center;
+}
 .navigation .settings {
-  flex: 0 0 32px;
+  margin-right: 8px;
+}
+
+.navigation .settings.is-setting {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 8px;
+  margin-right: 1vw;
+  transition: 0.2s;
+}
+.navigation .settings.is-setting:hover {
+  opacity: 1;
+  background-color: var(--songlist-hover-background-color);
+
+  border-radius: 25%;
+}
+.navigation .settings.is-setting:hover svg {
+  color: var(--text-default-color);
 }
 
 .navigation .icon {
   color: var(--text-default-color);
-  opacity: 0.5;
+  background-color: transparent;
+  /* opacity: 0.5; */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  border-radius: 25%;
+  transition: 0.2s;
+}
+.navigation .icon img {
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
 }
 
 .navigation .icon:hover {
   opacity: 1;
+  background-color: var(--songlist-hover-background-color);
 }
 
 .navigation .backfront .icon {
   display: inline-block;
   vertical-align: middle;
-  margin-bottom: 4px;
+  /* margin-bottom: 4px; */
 }
 
 .navigation .backfront .icon:nth-of-type(1) {
@@ -305,20 +455,16 @@ https://stackoverflow.com/questions/19889615/can-an-angular-directive-pass-argum
 }
 
 .navigation .search-input {
-  width: 270px;
-  height: 23px;
-  background: var(--search-input-background-color);
+  width: 174px;
+  background-color: transparent;
   border-style: none;
-  border-radius: var(--default-border-radius);
-  padding-left: 10px;
-  font-size: 12px;
+  font-size: 16px;
+  font-weight: 600;
   color: var(--text-default-color);
 }
 
 .navigation .window-control {
-  flex: 0 0 105px;
-  border-left: solid 1px var(--window-control-border-color);
-  margin-left: 15px;
+  display: flex;
 }
 
 .navigation .window-control svg {
@@ -332,58 +478,121 @@ https://stackoverflow.com/questions/19889615/can-an-angular-directive-pass-argum
 /* navigation end */
 
 /* page hot-playlist start */
-.page-hot-playlist {
-  max-width: 850px;
-  margin: 0 auto;
-}
+/* .page-hot-playlist {
+  max-width: 850px; 
+  margin-top: 84px;
+}  */
 
-.playlist-covers {
-  margin: 0;
-  padding: 0 13px;
+.playlist-covers,
+.detail-songlist.isSearch {
+  padding-right: 2vw;
+  padding-top: 50px;
+  /* padding: 0 13px; */
   display: flex;
   flex-flow: row wrap;
   position: relative;
+
+  margin: 0 14px;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 44px 0px;
+}
+.playlist-covers {
+  transition: padding 0.3s;
 }
 
 .playlist-covers li {
   flex: 0 1 calc(20% - 26px);
   min-height: 156px;
   color: var(--text-default-color);
-  margin: 0 13px;
+  margin: 0 12px;
 }
 
-.playlist-covers .u-cover {
+.playlist-covers .u-cover,
+ul.detail-songlist li .u-cover {
   display: flex;
   position: relative;
+  justify-content: center;
+  align-items: center;
+  user-select: none;
 }
 
-.playlist-covers .u-cover img {
-  height: 136px;
-  min-width: 136px;
-  max-width: 100%;
+.playlist-covers .u-cover img,
+ul.detail-songlist li .u-cover img {
+  transition: all 0.1s ease-in-out 0s;
+  /* height: 136px; */
+  box-sizing: border-box;
+  width: 100%;
+  border-radius: 0.75em;
+  /* min-width: 136px;
+  max-width: 100%; */
   object-fit: cover;
-  margin: auto;
-  border: solid 1px var(--line-default-color);
-  margin-bottom: 2px;
+  /* margin: auto; */
+  border: solid 1px rgba(0, 0, 0, 0.04);
+  /* margin-bottom: 2px; */
   cursor: pointer;
+  z-index: 1;
 }
 
-.playlist-covers .u-cover .bottom {
+.playlist-covers .u-cover .bottom,
+.detail-head-cover .bottom,
+ul.detail-songlist li .u-cover .bottom {
   position: absolute;
-  right: 5px;
-  bottom: 10px;
-  height: 30px;
-  width: 30px;
+  z-index: 2;
   cursor: pointer;
   opacity: 0;
-  transition: opacity 0.2s linear;
-}
+  transition: all 0.2s ease 0s;
 
-.playlist-covers .u-cover:hover .bottom {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgb(255, 255, 255);
+  backdrop-filter: blur(8px);
+  background: hsla(0, 0%, 100%, 0.14);
+  border: 1px solid hsla(0, 0%, 100%, 0.08);
+  height: 22%;
+  width: 22%;
+  border-radius: 50%;
+}
+.playlist-covers .u-cover .covershadow,
+.detail-head-cover .covershadow,
+ul.detail-songlist li .u-cover .covershadow {
+  transition: all 0.4s;
+  /* display: none; */
+  opacity: 0;
+  position: absolute;
+  top: 12px;
+  height: 100%;
+  width: 100%;
+  filter: blur(16px) opacity(0.6);
+  transform: scale(0.92, 0.96);
+  z-index: 0;
+  background-size: cover;
+  border-radius: 0.75em;
+}
+.playlist-covers .u-cover:hover img,
+ul.detail-songlist li .u-cover:hover img {
+  margin-top: -10px;
+  margin-bottom: 10px;
+  padding-bottom: 0;
+}
+.playlist-covers .u-cover:hover .covershadow,
+ul.detail-songlist li .u-cover:hover .covershadow {
+  display: block;
   opacity: 1;
 }
+.playlist-covers .u-cover:hover .bottom,
+.detail-head-cover:hover .bottom,
+ul.detail-songlist li .u-cover:hover .bottom {
+  opacity: 1;
+}
+.playlist-covers .u-cover:hover .bottom:hover,
+.detail-head-cover:hover .bottom:hover,
+ul.detail-songlist li .u-cover .bottom:hover {
+  background: hsla(0, 0%, 100%, 0.28);
+}
 
-.playlist-covers .u-cover .bottom svg {
+.playlist-covers .u-cover .bottom svg,
+ul.detail-songlist li .u-cover .bottom svg {
   height: 30px;
   width: 30px;
   fill: rgba(200, 200, 200, 0.5);
@@ -391,19 +600,41 @@ https://stackoverflow.com/questions/19889615/can-an-angular-directive-pass-argum
   stroke: #ffffff;
 }
 
-.playlist-covers .u-cover .bottom svg:hover {
+.playlist-covers .u-cover .bottom svg:hover,
+ul.detail-songlist li .u-cover .bottom svg:hover {
   fill: rgba(100, 100, 100, 0.5);
 }
 
-.playlist-covers .desc {
-  cursor: pointer;
+.playlist-covers .desc,
+ul.detail-songlist li .desc {
+  cursor: default;
+  padding-top: 8px;
+  height: 65px;
 }
 
-.playlist-covers .desc .title {
+.playlist-covers .desc .title,
+ul.detail-songlist li .desc div.title {
+  word-break: break-all;
+  /* cursor: pointer; */
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 20px;
+  word-break: break-all;
   display: flex;
-  min-height: 32px;
   margin: 0 0 5px;
+  z-index: 1;
+  text-overflow: ellipsis;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  display: -webkit-box;
+  text-decoration: none;
+  overflow: hidden;
 }
+
+/* .playlist-covers .desc .title:hover,
+ul.detail-songlist li .desc div.title:hover{
+  text-decoration: underline;
+} */
 /* page hot-playlist end */
 
 /* page playlist-detail start */
@@ -413,19 +644,61 @@ https://stackoverflow.com/questions/19889615/can-an-angular-directive-pass-argum
 
 .page .playlist-detail .detail-head {
   display: flex;
+  margin-top: 11px;
+  margin-bottom: 72px;
 }
 
 .page .playlist-detail .detail-head img {
-  height: 150px;
+  position: relative;
+  z-index: 1;
+  height: 288px;
+  width: 288px;
+  border-radius: 0.75em;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  aspect-ratio: 1/1;
+  border: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+.page .playlist-detail .detail-head .covershadow {
+  transition: all 0.4s;
+  /* display: none; */
+  opacity: 0;
+  position: absolute;
+  top: 12px;
+  height: 100%;
+  width: 100%;
+  filter: blur(16px) opacity(0.6);
+  transform: scale(0.92, 0.96);
+  z-index: 0;
+  background-size: cover;
+  border-radius: 0.75em;
 }
 
 .page .playlist-detail .detail-head .detail-head-cover {
   flex: 0 0 150px;
-  padding: 26px 26px 8px 26px;
+  position: relative;
+  margin-left: 26px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1;
 }
 
 .page .playlist-detail .detail-head .detail-head-title {
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  /* justify-content: center; */
+  margin-left: 56px;
+  margin-right: 2vw;
+}
+.page .playlist-detail .detail-head .detail-head-title h2 {
+  font-size: 36px;
+  font-weight: 700;
 }
 
 .playlist-button-list {
@@ -434,12 +707,19 @@ https://stackoverflow.com/questions/19889615/can-an-angular-directive-pass-argum
 }
 
 .playlist-button-list .playlist-button {
+  margin-top: 10px;
   height: 26px;
-  border: solid 1px var(--button-border-color);
   cursor: pointer;
-  border-radius: 2px;
   display: flex;
-  margin: 0 20px 20px 0;
+  margin-right: 16px;
+  border-radius: 8px;
+  padding: 8px 16px;
+  width: auto;
+  background-color: var(--button-background-color);
+}
+.playlist-button-list .playlist-button.favorited {
+  background-color: var(--theme-color-hover);
+  color: var(--theme-color);
 }
 
 .playlist-button-list .playlist-button.playadd-button {
@@ -448,9 +728,12 @@ https://stackoverflow.com/questions/19889615/can-an-angular-directive-pass-argum
 
 .playlist-button-list .playlist-button .play-list {
   flex: 1;
-  padding: 0 18px;
   display: flex;
   align-items: center;
+  font-size: 17px;
+  line-height: 17px;
+  font-weight: 500;
+  user-select: none;
 }
 .playlist-button-list .playlist-button .play-list svg {
   margin-right: 4px;
@@ -471,17 +754,21 @@ https://stackoverflow.com/questions/19889615/can-an-angular-directive-pass-argum
   flex: 0 0 14px;
   margin-right: 4px;
   color: var(--important-color);
+  transition: 0.2s;
 }
 
 .playlist-button-list .playlist-button.playadd-button .add-list {
   flex: 0 0 26px;
   height: 26px;
   width: 26px;
-  border-left: solid 1px var(--button-border-color);
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: 0.2s;
+  font-size: 17px;
+  line-height: 17px;
+  font-weight: 500;
 }
 
 .playlist-button-list .playlist-button.edit-button .play-list.favorited {
@@ -491,9 +778,11 @@ https://stackoverflow.com/questions/19889615/can-an-angular-directive-pass-argum
   color: var(--text-default-color);
 }
 
-.playlist-button-list .playlist-button .play-list:hover,
-.playlist-button-list .playlist-button.playadd-button .add-list:hover {
-  background: var(--button-hover-background-color);
+.playlist-button-list .playlist-button:hover,
+.playlist-button-list .playlist-button.playadd-button .add-list:hover,
+.playlist-button-list .playlist-button.playadd-button .play-list:hover {
+  transform: scale(1.1);
+  transition: 0.2s;
 }
 .playlist-button-list .playlist-button.playadd-button .add-list svg {
   width: 14px;
@@ -520,26 +809,27 @@ https://stackoverflow.com/questions/19889615/can-an-angular-directive-pass-argum
   fill: rgb(102, 102, 102);
 }
 
-.page .playlist-detail .detail-head .detail-head-title h2 {
+/* .page .playlist-detail .detail-head .detail-head-title h2 {
   font-size: var(--h2-title-font-size);
-}
+} */
 /* page playlist detail end */
 
 /* page song detail start */
-.page .songdetail-wrapper {
+.songdetail-wrapper {
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
-  bottom: 60px;
-  background: var(--now-playing-page-background-color);
+  bottom: 100px;
   overflow: hidden;
-  border: solid 1px var(--windows-border-color);
+  /* border: solid 1px var(--windows-border-color); */
   -webkit-app-region: no-drag;
-  transition: all 0.3s;
+  transition: all 0.5s;
+  z-index: 100;
+  opacity: 1;
 }
 
-.page .songdetail-wrapper .draggable-zone {
+.songdetail-wrapper .draggable-zone {
   position: absolute;
   left: 0;
   top: 0;
@@ -548,36 +838,17 @@ https://stackoverflow.com/questions/19889615/can-an-angular-directive-pass-argum
   height: 80px;
 }
 
-.page .songdetail-wrapper.slidedown .draggable-zone {
+.songdetail-wrapper.slidedown .draggable-zone {
   display: none;
   -webkit-app-region: no-drag;
 }
 
-.page .songdetail-wrapper .translate-switch {
-  border: solid 1px;
-  width: 20px;
-  height: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: absolute;
-  bottom: 30px;
-  right: 30px;
-  color: #888888;
-  cursor: pointer;
-  -webkit-app-region: no-drag;
-}
-.page .songdetail-wrapper .translate-switch:hover {
-  color: var(--text-default-color);
-}
-.page .songdetail-wrapper .translate-switch.selected {
-  color: var(--text-default-color);
-}
-.page .songdetail-wrapper.slidedown {
-  top: calc(100% - 60px);
+.songdetail-wrapper.slidedown {
+  top: calc(100% - 100px);
+  /* opacity: 0; */
 }
 
-.page .songdetail-wrapper .close {
+.songdetail-wrapper .close {
   position: absolute;
   top: 24px;
   left: 24px;
@@ -586,11 +857,12 @@ https://stackoverflow.com/questions/19889615/can-an-angular-directive-pass-argum
   cursor: pointer;
   -webkit-app-region: no-drag;
 }
-.page .songdetail-wrapper .close.mac {
+.songdetail-wrapper .close.mac {
   top: 44px;
+  z-index: 100;
 }
 
-.page .songdetail-wrapper .window-control {
+.songdetail-wrapper .window-control {
   position: absolute;
   top: 24px;
   right: 24px;
@@ -600,78 +872,107 @@ https://stackoverflow.com/questions/19889615/can-an-angular-directive-pass-argum
   z-index: 99;
 }
 
-.page .songdetail-wrapper .window-control svg {
+.songdetail-wrapper .window-control svg {
   margin-left: 8px;
   stroke: var(--now-playing-close-icon-color);
 }
 
-.page .songdetail-wrapper .close svg {
+.songdetail-wrapper .close svg {
   stroke: var(--now-playing-close-icon-color);
 }
-
-.page .bg {
-  opacity: 0.5;
-  height: 100%;
-  text-align: center;
-  line-height: 100%;
-  float: left;
+.bgwrapper {
+  overflow: hidden;
+  border-radius: 10px;
   width: 100%;
+}
+.bg {
+  opacity: 0.6;
+  width: 100%;
+  height: 100%;
+  filter: blur(200px) contrast(75%) brightness(150%);
+  float: left;
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
-  filter: blur(10px) brightness(0.6);
   transition: background ease-in-out 1.5s;
 }
-
-.page .playsong-detail {
+.playsong-detail {
   position: absolute;
-  left: 10px;
-  right: 10px;
-  max-width: 770px;
-  margin: 0 auto;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  /* z-index: 200; */
   display: flex;
-  height: 100%;
+  clip: rect(auto, auto, auto, auto);
 }
 
-.page .playsong-detail .detail-head {
-  flex: 0 0 350px;
-  overflow: hidden;
+.playsong-detail .detail-head {
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
+  margin-right: 32px;
+  margin-top: 24px;
+  align-items: center;
+  transition: all 0.5s;
+  z-index: 1;
 }
 
-.page .playsong-detail .detail-head .detail-head-cover {
+/* .page .playsong-detail .detail-head .detail-head-cover {
   width: 250px;
   height: 250px;
   margin-top: 110px;
+} */
+.playsong-detail .detail-head-cover {
+  position: relative;
 }
 
-.page .playsong-detail .detail-head img {
-  width: 250px;
-  height: 250px;
+.playsong-detail .detail-head img {
+  border-radius: 10px;
+  width: 54vh;
+  height: 54vh;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -o-object-fit: cover;
   object-fit: cover;
 }
 
-.page .playsong-detail .detail-songinfo {
+.playsong-detail .detail-songinfo {
   flex: 1;
-  margin-top: 80px;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  -webkit-app-region: no-drag;
+  font-weight: 600;
+  color: var(--color-text);
+  margin-right: 24px;
+  z-index: 0;
 }
-.page .playsong-detail .detail-songinfo .title {
+.playsong-detail .detail-head-title {
+  max-width: 54vh;
+  margin-top: 24px;
+}
+
+.playsong-detail .title {
   display: flex;
   align-items: center;
 }
-.page .playsong-detail .detail-songinfo .title h2 {
+.playsong-detail .title h2 {
   font-size: var(--h2-title-font-size);
-  font-weight: 400;
+  margin-top: 8px;
+  margin-bottom: 0;
+  /* font-size: 1.4rem; */
+  font-weight: 600;
+  opacity: 0.88;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+  overflow: hidden;
 }
-.page .playsong-detail .detail-songinfo .title .badge {
+.playsong-detail .title .badge {
   font-size: var(--badge-font-size);
-  color: var(--badge-font-color);
-  border: solid 1px var(--badge-border-color);
-  border-radius: 3px;
-  margin-left: 5px;
+  color: var(--theme-color);
+  border: solid 1px var(--theme-color);
+  border-radius: 5px;
+  margin-left: 10px;
   padding-left: 4px;
   padding-right: 4px;
   margin-top: 4px;
@@ -682,78 +983,114 @@ https://stackoverflow.com/questions/19889615/can-an-angular-directive-pass-argum
   justify-content: center;
   white-space: nowrap;
 }
-.page .playsong-detail .detail-songinfo .title .badge.platform {
+.playsong-detail .title .badge.platform {
   padding-top: 1px;
 }
-.page .playsong-detail .detail-songinfo .title .badge:first-of-type {
+.playsong-detail .title .badge:first-of-type {
   margin-left: 15px;
 }
-.page .playsong-detail .detail-songinfo .info {
-  border-bottom: solid 1px var(--line-default-color);
-  padding-bottom: 6px;
-  flex: 0 0 20px;
+.playsong-detail .info {
+  margin-top: 4px;
+  font-size: 16px;
+  opacity: 0.58;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+  overflow: hidden;
+}
+
+.playsong-detail .info .singer {
+  display: inline;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.playsong-detail .info .album {
+  display: inline;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.coverbg .playsong-detail .info span {
+  color: var(--lyric-on-cover-color);
+}
+.playsong-detail .detail-songinfo .lyric {
+  font-size: 16px;
+  height: 100%;
   display: flex;
-}
-.page .playsong-detail .detail-songinfo .info a {
-  cursor: pointer;
-}
-.page .playsong-detail .detail-songinfo .info .singer {
-  flex: 1;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
+  flex-direction: column;
+  padding-left: 78px;
+  max-width: 460px;
+  overflow-y: auto;
+  transition: 0.5s;
 
-.page .playsong-detail .detail-songinfo .info .album {
-  flex: 2;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
-
-.page .playsong-detail .detail-songinfo .info span {
   color: var(--lyric-default-color);
 }
-.page .coverbg .playsong-detail .detail-songinfo .info span {
-  color: var(--lyric-on-cover-color);
-}
-.page .playsong-detail .detail-songinfo .lyric {
-  position: relative;
-  flex: 0 0 380px;
-  overflow-y: scroll;
-  color: var(--lyric-default-color);
-  scrollbar-width: thin;
-  scrollbar-color: var(--scroll-color) transparent;
-  font-size: var(--lyric-font-size);
-}
-.page .coverbg .playsong-detail .detail-songinfo .lyric {
-  color: var(--lyric-on-cover-color);
-}
-.page .playsong-detail .detail-songinfo .lyric p {
-  margin: var(--lyric-line-margin) 0 0 0;
-}
-.page .playsong-detail .detail-songinfo .lyric p.translate {
-  margin: 5px 0 0 0;
-}
-.page .playsong-detail .detail-songinfo .lyric p.hide {
+.playsong-detail .detail-songinfo .lyric::-webkit-scrollbar {
   display: none;
 }
-.page .playsong-detail .detail-songinfo .lyric p.highlight {
-  color: var(--lyric-important-color);
+
+.coverbg .playsong-detail .detail-songinfo .lyric {
+  color: var(--lyric-on-cover-color);
 }
-.page .coverbg .playsong-detail .detail-songinfo .lyric p.highlight {
+.playsong-detail .detail-songinfo .lyric .placeholder {
+  margin-top: 50vh;
+}
+.playsong-detail .detail-songinfo .lyric p {
+  padding: 18px;
+  transition: background 0.2s;
+  border-radius: 12px;
+  margin: 0;
+  opacity: 0.28;
+  cursor: default;
+  background: transparent;
+}
+.playsong-detail .detail-songinfo .lyric p:hover {
+  background: hsla(0, 0%, 100%, 0.08);
+}
+.playsong-detail .detail-songinfo .lyric p.translate {
+  margin: 5px 0 0 0;
+}
+.playsong-detail .detail-songinfo .lyric p.hide {
+  display: none;
+}
+.playsong-detail .detail-songinfo .lyric p.highlight {
+  color: var(--text-default-color);
+  opacity: 1;
+}
+.coverbg .playsong-detail .detail-songinfo .lyric p.highlight {
   color: var(--lyric-important-on-cover-color);
+  opacity: 1;
 }
 
 ul.detail-songlist {
-  padding: 0 25px;
   position: relative;
+}
+.detail-songlist.playlist-songlist {
+  margin: 0 2vw;
+  padding-top: 13px;
+  transition: 0.3s;
+}
+ul.detail-songlist.isSearchOne {
+  padding: 0 25px;
 }
 
 ul.detail-songlist .playlist-search {
   position: absolute;
   right: 0;
-  top: -30px;
+  top: -50px;
+
+  display: flex;
+  width: 200px;
+  height: 32px;
+  background: var(--songlist-odd-background-color);
+  border-style: none;
+  border-radius: var(--default-border-radius);
+  padding-left: 10px;
+  margin-right: 40px;
+  align-items: center;
 }
 ul.detail-songlist .playlist-search .playlist-search-icon {
   width: 14px;
@@ -767,47 +1104,77 @@ ul.detail-songlist .playlist-search .playlist-clear-icon {
   left: 158px;
 }
 ul.detail-songlist .playlist-search .playlist-search-input {
-  margin-right: 28px;
-  margin-bottom: 10px;
-  border: none;
-  height: 24px;
-  border-radius: 12px;
-  padding: 0 30px;
-  background: var(--content-background-color);
+  width: 174px;
+  background-color: transparent;
+  border-style: none;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-default-color);
+}
+ul.detail-songlist .playlist-search:hover,
+ul.detail-songlist .playlist-search:active {
+  background-color: var(--search-input-background-color);
+}
+/* ul.detail-songlist .playlist-search .playlist-search-input::placeholder {
   color: #bbbbbb;
-  width: 120px;
-}
-ul.detail-songlist .playlist-search .playlist-search-input:hover {
-  background-color: var(--songlist-odd-background-color);
-}
-ul.detail-songlist .playlist-search .playlist-search-input::placeholder {
-  color: #bbbbbb;
-}
+} */
 
-ul.detail-songlist li {
+ul.detail-songlist li.isSearchType {
   /* https://stackoverflow.com/questions/4157005/css-positioning-z-index-negative-margins */
   position: relative;
+
+  transition: all 0.3s;
   display: flex;
-  border-top: solid 2px var(--songlist-border-color);
-  border-bottom: solid 2px var(--songlist-border-color);
-  height: 37px;
   align-items: center;
-  padding: 0 20px;
-  font-size: 14px;
-  margin-bottom: -2px;
+  padding: 8px;
+  border-radius: 12px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+ul.detail-songlist li.isSearchGeDan {
+  flex: 0 1 calc(20% - 26px);
+  min-height: 156px;
+  color: var(--text-default-color);
+  margin: 0 12px;
+  cursor: default;
 }
 
-ul.detail-songlist li.playlist-result {
+ul.detail-songlist li.playlist-result.isSearchType {
   height: 80px;
   padding: 0 10px;
 }
-ul.detail-songlist li.odd {
+/* ul.detail-songlist li.odd {
   background-color: var(--songlist-odd-background-color);
+} */
+
+ul.detail-songlist li > img {
+  object-fit: cover;
+  border-radius: 8px;
+  height: 46px;
+  width: 46px;
+  margin-right: 20px;
+  border: 1px solid rgba(0, 0, 0, 0.04);
+  cursor: pointer;
 }
 
-ul.detail-songlist li:hover,
-ul.detail-songlist li.odd:hover {
+ul.detail-songlist li.isSearchType:hover {
   background-color: var(--songlist-hover-background-color);
+}
+
+ul.detail-songlist li.isSearchType.playing,
+ul.detail-songlist li.isSearchType.playing:hover {
+  background-color: var(--theme-color-hover);
+  color: var(--theme-color);
+}
+ul.detail-songlist li .title-and-artist {
+  flex: 1;
+  display: flex;
+}
+ul.detail-songlist li .container {
+  display: flex;
+  flex-direction: column;
 }
 
 ul.detail-songlist li a {
@@ -816,7 +1183,8 @@ ul.detail-songlist li a {
 ul.detail-songlist li a.disabled {
   color: var(--disable-song-title-color);
 }
-ul.detail-songlist li a span.source {
+ul.detail-songlist li a span.source,
+ul.detail-songlist span {
   border: solid 1px #ccc;
   border-radius: 4px;
   margin-right: 10px;
@@ -826,12 +1194,14 @@ ul.detail-songlist li a span.source {
   font-size: 12px;
   width: 24px;
   text-align: center;
+  white-space: nowrap;
+  height: min-content;
 }
 ul.detail-songlist li a span.source.playlist {
   margin-left: 10px;
   margin-right: 0;
 }
-ul.detail-songlist li.head {
+/* ul.detail-songlist li.head {
   height: 28px;
   color: var(--text-disable-color);
   border-top: none;
@@ -839,26 +1209,32 @@ ul.detail-songlist li.head {
 }
 ul.detail-songlist li.head:hover {
   background-color: transparent;
-}
+} */
 
 ul.detail-songlist li .title {
-  flex: 2;
+  font-size: 18px;
+  font-weight: 600;
+  /* cursor: default; */
+  /* padding-right: 16px; */
+
+  /* flex: 2; */
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
-  line-height: 17px;
-  max-height: 38px;
-  -webkit-line-clamp: 2;
+  /* line-height: 17px; */
+  /* max-height: 38px; */
+  -webkit-line-clamp: 1;
   -webkit-box-orient: vertical;
+  word-break: break-all;
 }
 ul.detail-songlist li.playlist-result .title {
   max-height: 80px;
 }
 
-ul.detail-songlist li.playlist-result .title a {
+/* ul.detail-songlist li.playlist-result .title a {
   display: flex;
   align-items: center;
-}
+} */
 
 ul.detail-songlist li.playlist-result .title img {
   height: 60px;
@@ -868,14 +1244,19 @@ ul.detail-songlist li.playlist-result .title img {
 }
 
 ul.detail-songlist li .artist {
-  flex: 1;
+  /* flex: 1; */
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
-  line-height: 17px;
-  max-height: 38px;
-  -webkit-line-clamp: 2;
+  /* line-height: 17px;
+  max-height: 38px; */
+  -webkit-line-clamp: 1;
   -webkit-box-orient: vertical;
+
+  font-size: 13px;
+  margin-top: 2px;
+  font-size: 13px;
+  opacity: 0.68;
 }
 
 ul.detail-songlist li .album {
@@ -883,10 +1264,14 @@ ul.detail-songlist li .album {
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
-  line-height: 17px;
-  max-height: 38px;
-  -webkit-line-clamp: 2;
+  /* line-height: 17px;
+  max-height: 38px; */
+  -webkit-line-clamp: 1;
   -webkit-box-orient: vertical;
+
+  display: flex;
+  font-size: 16px;
+  opacity: 0.88;
 }
 
 ul.detail-songlist li .tools {
@@ -894,6 +1279,10 @@ ul.detail-songlist li .tools {
   display: flex;
   align-items: center;
 }
+ul.detail-songlist li .tools a:hover {
+  color: var(--text-default-color) !important;
+}
+
 ul.detail-songlist li .tools .icon {
   height: 16px;
   width: 16px;
@@ -952,6 +1341,10 @@ ul.detail-songlist li .tools .icon {
   flex: 1;
   font-size: 16px;
 }
+.page .login .login-form .login-form_field input:focus {
+  background-color: var(--theme-color-hover);
+  color: var(--theme-color);
+}
 .page .login .login-submit_button {
   display: flex;
   align-items: center;
@@ -976,63 +1369,118 @@ ul.detail-songlist li .tools .icon {
   color: var(--text-subtitle-color);
 }
 .page .login .usercard {
+  padding: 20px;
   display: flex;
   align-items: center;
   width: 400px;
-  border: solid 1px var(--button-border-color);
+  background-color: var(--button-background-color);
   margin-bottom: 20px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+.page .login .usercard .logoin-icon {
+  width: 60px;
+  height: 60px;
+  margin: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.page .login .usercard .logoin-icon svg {
+  width: 35px;
+  height: 35px;
+}
+.page .login .usercard:hover,
+.page .login .usercard:active {
+  background-color: var(--theme-color-hover);
+  color: var(--theme-color);
+  width: 500px;
+}
+.page .login .usercard:hover .usercard-info,
+.page .login .usercard:active .usercard-info {
+  color: var(--theme-color);
 }
 .page .login .usercard img {
+  border-radius: 10px;
   width: 60px;
   height: 60px;
   margin: 10px;
 }
 .page .login .usercard .usercard-title {
+  margin-left: 10px;
   flex: 1;
   height: 50px;
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 700;
 }
 .page .login .usercard .usercard-title .usercard-info {
-  color: var(--link-inactive-color);
+  color: var(--text-subtitle-color);
   font-size: 12px;
 }
 .page .login .usercard button {
   margin: 10px;
+  margin: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 8px 16px;
+  transition: 0.2s;
+}
+
+.page .login .usercard button:hover {
+  background-color: var(--theme-color-hover);
+  color: var(--theme-color);
 }
 /* page login end */
 
 /* page setting start */
+/* .page .cover-container{
+  margin-top: 40px;
+  margin-left: 40px;
+} */
 .page .settings-title {
-  border-bottom: solid 1px var(--line-default-color);
-  padding-bottom: 10px;
   max-width: 800px;
-  margin: 0 25px;
-  font-size: 17px;
-  margin-bottom: 10px;
+  margin: 48px 75px 10px 115px;
+  font-weight: bold;
+  padding-bottom: 12px;
+  font-size: 26px;
+  user-select: none;
+  /* color: var(--color-text); */
+  border-bottom: 1px solid rgba(128, 128, 128, 0.18);
 }
-.page .settings-title:first-of-type {
-  margin-top: 20px;
-}
+
 .page .settings-content {
-  margin: 0 25px 25px 25px;
+  margin: 25px 75px 25px 115px;
+  font-size: 16px;
+  font-weight: 500;
+  opacity: 0.78;
 }
 .page .settings-content label.upload-button,
-.page .settings-content .language-button {
-  padding: 5px;
+.page .settings-content .language-button,
+.page .settings-content .theme-button,
+.page .settings-content button {
   background: var(--button-background-color);
   margin-right: 4px;
   color: var(--text-default-color);
   cursor: pointer;
+  opacity: 1;
+  font-weight: 600;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 8px;
+  appearance: none;
+  transition: all 0.2s;
 }
 
 .page .settings-content label.upload-button:hover,
-.page .settings-content .language-button:hover {
+.page .settings-content .language-button:hover,
+.page .settings-content button:hover {
+  transform: scale(1.1);
   background: var(--button-hover-background-color);
 }
 .page .settings-content .shortcut {
   display: flex;
-  margin-top: 10px;
+  margin-bottom: 25px;
 }
 .page .settings-content .shortcut svg {
   width: 18px;
@@ -1041,7 +1489,28 @@ ul.detail-songlist li .tools .icon {
 }
 .page .searchbox .search-pagination {
   text-align: center;
-  padding: 15px;
+  padding: 32px;
+}
+.page .searchbox .search-pagination .btn-pagination {
+  padding: 8px 16px;
+  width: auto;
+  height: 40px;
+  min-width: 40px;
+  font-size: 18px;
+  line-height: 18px;
+  font-weight: 600;
+  transition: 0.2s all;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  opacity: 0.78;
+}
+.page .searchbox .search-pagination .ng-binding {
+  font-size: 18px;
+  line-height: 18px;
+  font-weight: 600;
+  padding: 0 20px;
 }
 .page .settings-content .shortcut_table .shortcut_table-header,
 .page .settings-content .shortcut_table .shortcut_table-line {
@@ -1106,8 +1575,13 @@ ul.detail-songlist li .tools .icon {
   height: 24px;
   width: 200px;
 }
-.page .settings-content .search-description {
-  margin: 10px 0 5px 0;
+.page .settings-content .custom-proxy input:focus {
+  background-color: var(--theme-color-hover);
+  color: var(--theme-color);
+}
+.page .settings-content .search-description,
+.page .settings-content p {
+  margin: 0 0 25px 0;
 }
 .page .settings-content .search-source-list {
   display: flex;
@@ -1142,32 +1616,92 @@ svg.searchspinner {
 /* footer start */
 
 .footer {
-  background: var(--foot-background-color);
-  height: 60px;
-  border-top: solid 1px var(--foot-border-color);
+  height: 100px;
   display: flex;
-  position: relative;
+  align-items: flex-end;
+  z-index: 130;
+
+  margin: 1vh 1vw;
+  border-radius: 10px;
+  position: fixed;
+  bottom: 0;
+  width: 98vw;
+  transition: 0.5s;
+  color: var(--text-default-color);
 }
 
+.footer.footerdef {
+  opacity: 0;
+  bottom: -140px;
+  transition: 0.5s;
+}
+.footer .footer-main {
+  position: relative;
+  z-index: 140;
+  height: 100px;
+  border-radius: 10px;
+  display: flex;
+  flex: 1;
+  transition: 0.5s;
+  backdrop-filter: saturate(180%) blur(20px);
+  background-color: var(--nav-background-color);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0px 0px 16px rgb(0 0 0 / 10%);
+  border-top: solid 1px var(--line-default-color);
+}
+.footer .footer-main.slidedown {
+  height: calc(98vh - 2px);
+}
+.footer .footerwrap {
+  width: 100%;
+  display: flex;
+  height: 100px;
+  position: absolute;
+  bottom: 0;
+}
 .footer .left-control {
-  flex: 0 0 300px;
+  flex: 0 0 36%;
   display: flex;
   align-items: center;
+  overflow: hidden;
+  transition: 0.5s;
+  opacity: 1;
 }
-
+.footer .left-control.slidedown {
+  flex: 0 0 0;
+  opacity: 0;
+  transform: scaleX(0);
+}
 .footer .left-control .icon {
+  display: flex;
   font-size: 22px;
-  color: var(--player-left-icon-color);
-  margin: 0 13px;
+  border-radius: 10px;
+  padding: 7px;
+  margin: 37px;
+  transition: all 0.3s;
+  background: transparent;
+}
+.footer .left-control .icon:hover {
+  background-color: var(--songlist-hover-background-color);
+}
+.footer .left-control .icon.playlistactive {
+  background-color: var(--theme-color-hover);
+  color: var(--theme-color);
+}
+.footer .left-control .splitter {
+  height: 20px;
+  width: 1px;
+  display: inline-block;
+  background: #a9a9a9;
 }
 
 .footer .left-control .icon.play {
   margin-right: 10px;
 }
 
-.footer .left-control .icon:first-of-type {
+/* .footer .left-control .icon:first-of-type {
   margin-left: 42px;
-}
+} */
 
 .footer .left-control .icon.play {
   color: var(--player-icon-color);
@@ -1178,10 +1712,14 @@ svg.searchspinner {
 
 .footer .main-info {
   flex: 1;
-  background: var(--footer-main-background-color);
+  /* background: var(--footer-main-background-color); */
   display: flex;
-  overflow: hidden;
+  /* overflow: hidden; */
   z-index: 1;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  z-index: 110;
 }
 
 .footer .main-info .logo-banner {
@@ -1198,25 +1736,243 @@ svg.searchspinner {
   stroke: #666666;
   margin: 0 auto;
 }
-
-.footer .main-info .cover {
-  height: 60px;
-  width: 60px;
+.footer .circlemark {
+  display: flex;
+  justify-content: center;
+  width: 100px;
+  height: 50px;
+  position: absolute;
+  top: 45px;
+  z-index: -1;
+  overflow: hidden;
+  transform-origin: top center;
+}
+.rotatemark {
+  animation: rotatemark 1s 1 forwards ease-in-out;
+}
+.circlmark {
+  animation: circlmark 1s 1 forwards ease-in-out;
+}
+.rotatecircl {
+  animation: rotatecircl 16s 0.5s infinite forwards linear;
+}
+.lipause {
+  animation-play-state: paused;
+}
+.liplay {
+  animation-play-state: running;
+}
+/* .circlopacity{
+  animation:circlopacity 1s forwards;
+} */
+@keyframes rotatemark {
+  0% {
+    transform-origin: top center;
+    transform: rotate(0deg);
+  }
+  50% {
+    transform-origin: top center;
+    transform: rotate(180deg);
+  }
+  100% {
+    transform-origin: top center;
+    transform: rotate(360deg);
+  }
+}
+@keyframes circlmark {
+  0% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(180deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+/* @keyframes circlopacity{
+  0%{
+    opacity: 1;
+  }
+  50%{
+    opacity: 0;
+  }
+  100%{
+    opacity: 1;
+  }
+} */
+@keyframes rotatecircl {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+.footer .cover {
+  height: 90px;
+  width: 90px;
   object-fit: cover;
-  flex: 0 0 60px;
-  cursor: pointer;
   position: relative;
-  color: #ffffff;
+  color: transparent;
+  top: -30px;
+  display: flex;
+  justify-content: center;
 }
-.footer .main-info .cover img {
-  height: 60px;
-  width: 60px;
+.footer .cover ul,
+.footer .cover .cover-list {
+  width: 220px;
+  height: 90px;
+  position: absolute;
+}
+.footer .cover .cover-list span {
+  bottom: 0;
+  cursor: pointer;
+  transition: 0.3s;
+  color: var(--white--black);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+}
+.footer .cover .cover-list span:hover {
+  opacity: 1;
+  background-color: var(--white--black-background);
+}
+.footer .cover li {
+  transition: all 0.3s;
+  left: 0;
+  bottom: 0;
+  height: 45px;
+  width: 30px;
+}
+.footer .cover li.def {
+  opacity: 0;
+  z-index: -1;
+  height: 45px;
+  width: 32px;
+  /* display: none; */
+  float: left;
+  position: absolute;
+  overflow: hidden;
+  transition: all 0.3s;
+  border-radius: 16px;
+  left: 0;
+  bottom: 0;
+}
+.footer .cover li.hid {
+  opacity: 0;
+  z-index: -1;
+  height: 45px;
+  width: 32px;
+  display: none;
+  float: left;
+  position: absolute;
+  overflow: hidden;
+  transition: all 0.3s;
+  border-radius: 16px;
+  left: 0;
+  bottom: 0;
+}
+.footer .cover ul.a,
+.footer .cover-list .a {
+  height: 45px;
+  width: 32px;
+  left: 0;
+  position: absolute;
+  overflow: hidden;
+  border-radius: 16px;
+  opacity: 1;
+  z-index: 100;
+  display: block;
+  /* background-color: var(--footer-player-bar-cur-button-color); */
+}
+.footer .cover ul .b,
+.footer .cover-list .b {
+  height: 90px;
+  width: 90px;
+  left: 65px;
+  position: absolute;
+  overflow: hidden;
+  border-radius: 50%;
+  opacity: 1;
+  z-index: 101;
+  display: block;
+  /* background-color: var(--footer-player-bar-cur-button-color); */
+}
+.footer .cover ul .c,
+.footer .cover-list .c {
+  height: 45px;
+  width: 32px;
+  left: 190px;
+  position: absolute;
+  overflow: hidden;
+  border-radius: 16px;
+  opacity: 1;
+  z-index: 99;
+  display: block;
+  /* background-color: var(--footer-player-bar-cur-button-color); */
+}
+.footer .cover img {
+  height: 100%;
+  width: 100%;
   object-fit: cover;
+  /* border-radius: 50%; */
+  /* position: absolute; */
+  /* border: 1px solid transparent; */
+  box-sizing: border-box;
 }
-.footer .main-info .cover .mask {
+.footer .cover .circle {
+  width: 100px;
+  height: 100px;
+  position: relative;
+  top: -50px;
+  z-index: -1;
+  overflow: hidden;
+  transition: all 0.1s linear;
+}
+.footer .circlemark .topmark {
+  width: 100px;
+  height: 50px;
+  /* position: absolute; */
+  z-index: -1;
+  overflow: hidden;
+}
+.footer .cover .top {
+  width: 96px;
+  height: 96px;
+  z-index: -1;
+  border-radius: 50%;
+  border: 2px solid;
+  border-color: var(--text-default-color);
+}
+.footer .cover .bottom {
+  width: 100px;
+  height: 50px;
+  /* position: absolute; */
+  overflow: hidden;
+}
+.footer .cover .bottom .bottomcircle {
+  width: 96px;
+  height: 96px;
+  transform: translateY(-50px);
+  z-index: -1;
+  border-radius: 50%;
+  border: 2px solid;
+  border-color: var(--footer-player-bar-background-color);
+}
+/* .footer .cover .circle .inner{
+  width: 96px;
+  background: #fff;
+  height: 48px;
+  z-index: -1;
+  border-bottom-left-radius: 48px;
+  border-bottom-right-radius: 48px;
+} */
+/* .footer .cover .mask {
   display: none;
 }
-.footer .main-info .cover:hover .mask {
+.footer .cover:hover .mask {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1226,145 +1982,234 @@ svg.searchspinner {
   right: 0;
   left: 0;
   bottom: 0;
+} */
+.footer .footertime {
+  padding-bottom: 15px;
+  font-size: 12px;
+  flex: 0;
+  cursor: default;
+  font-weight: 500;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  transition: 0.3s;
+}
+.footer .footertime:hover {
+  padding: 0;
+}
+.footer .footertime:hover .timeswitch {
+  display: none;
+}
+.footer .footertime:hover .bottomprogressbar {
+  display: flex;
 }
 
-.footer .main-info .detail {
-  flex: 1;
+.footer .left-control .detail {
+  /* flex: 1; */
+  max-width: 356px;
+  margin-left: 37px;
   position: relative;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
-.footer .main-info .detail .ctrl {
+.footer .left-control .detail .ctrl {
   position: absolute;
   right: 0px;
   top: 4px;
   padding-right: 6px;
   /* background: #eeeeee; */
 }
-.footer .main-info .detail .ctrl:first-of-type .icon {
+.footer .left-control .detail .ctrl:first-of-type .icon {
   margin-right: 5px;
 }
-.footer .main-info .detail .ctrl .icon {
+.footer .left-control .detail .ctrl .icon {
   color: var(--text-default-color);
   opacity: 0.5;
 }
-.footer .main-info .detail .ctrl .icon:hover {
+.footer .left-control .detail .ctrl .icon:hover {
   opacity: 1;
 }
 
-.footer .main-info .detail .title {
-  text-align: center;
+.footer .left-control .detail .title {
+  /* text-align: center; */
   font-size: 14px;
   color: var(--text-default-color);
   min-width: 0px;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
-  margin: 3px 60px 0 60px;
+  /* margin: 3px 60px 0 60px; */
+  margin: 5px 0;
+  font-size: 18px;
+  font-weight: 600;
 }
 
-.footer .main-info .detail .more-info {
-  padding: 0 10px;
+.footer .left-control .detail .more-info {
+  /* padding: 0 10px; */
+  margin: 5px 0;
   display: flex;
   color: var(--text-subtitle-color);
 }
 
-.footer .main-info .detail .more-info .singer {
+.footer .left-control .detail .more-info .singer {
   flex: 1;
-  text-align: center;
+  /* text-align: center; */
   font-size: 12px;
   min-width: 0px;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
 }
-.footer .main-info .detail .more-info .singer a {
+.footer .left-control .detail .more-info .singer a {
   cursor: pointer;
 }
 
-.footer .main-info .detail .more-info .current {
+.footer .left-control .detail .more-info .current {
   width: 50px;
   font-size: 12px;
 }
 
-.footer .main-info .detail .more-info .total {
+.footer .left-control .detail .more-info .total {
   width: 50px;
   text-align: right;
   font-size: 12px;
 }
-
-.footer .main-info .detail .playbar {
-  width: 100%;
+.footer .main-info .bottomprogressbar svg {
+  cursor: default;
 }
-.footer .main-info .detail .playbar .playbar-clickable {
-  padding: 8px 10px;
+.footer .main-info .bottomprogressbar {
+  justify-content: center;
+  align-items: center;
+  flex-wrap: nowrap;
+  width: 300px;
+  display: none;
 }
-.footer .main-info .detail .playbar .barbg {
+.footer .main-info .playbar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 150px;
+}
+.footer .main-info .playbar .playbar-clickable {
+  padding: 10px 0px;
+  margin-right: 10px;
+  flex: 1;
+  cursor: col-resize;
+}
+.footer .main-info .barbg {
   height: 3px;
   background: var(--footer-player-bar-background-color);
 }
 
-.footer .main-info .detail .playbar .barbg .cur {
+.footer .main-info .barbg .cur {
   height: 100%;
   background: var(--footer-player-bar-cur-background-color);
   position: relative;
 }
-
-.footer .main-info .detail .playbar .barbg .cur .btn {
+.footer .main-info .playbar .playbar-clickable:hover .cur,
+.footer .main-info .m-pbar:hover .barbg .cur {
+  background: var(--theme-color);
+}
+.footer .main-info .barbg .cur .btn {
   background: var(--footer-player-bar-cur-button-color);
   height: 8px;
   width: 2px;
   position: absolute;
   right: -2px;
   top: -5px;
+  transition: 0.3s;
 }
 
-.footer .main-info .detail .playbar .playbar-clickable:hover .barbg .cur .btn {
+.footer .main-info .playbar .playbar-clickable:hover .barbg .cur .btn,
+.footer .main-info .m-pbar:hover .barbg .cur .btn {
   width: 10px;
   height: 10px;
   border-radius: 5px;
   top: -3px;
 }
 
+.volume-ctrl {
+  width: 150px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.bottomprogressbar .icon {
+  flex: 0 0 24px;
+  color: var(--text-default-color);
+  cursor: default;
+  padding: 7px;
+  display: flex;
+}
+.volume-ctrl .m-pbar {
+  flex: 1;
+  padding: 10px 0;
+  cursor: col-resize;
+}
+
 .footer .menu-modal {
+  border-radius: 10px;
+  transition: 0.3s;
   left: 0;
   right: 0;
   top: 0;
   position: fixed;
-  background: rgba(255, 255, 255, 0.2);
+  opacity: 0;
+  background: var(--shadow-mask);
 }
 .footer .menu-modal.slideup {
-  bottom: 60px;
+  bottom: 0px;
+  opacity: 1;
+  transition: 0.3s;
 }
 
 .footer .menu {
-  background: var(--foot-background-color);
-  border: solid 1px var(--foot-border-color);
-  border-radius: 3px;
-  position: fixed;
-  height: 370px;
-  bottom: -311px;
-  left: 300px;
-  right: 300px;
+  border-radius: 10px;
+  position: absolute;
+  z-index: 120;
+  bottom: 120px;
+  height: 0;
+  opacity: 0;
+  box-sizing: border-box;
+  border: 1px solid var(--white--black);
+
+  left: 0;
   -webkit-app-region: no-drag;
   transition: all 0.3s;
   overflow: hidden;
+  width: 530px;
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  backdrop-filter: saturate(180%) blur(20px);
+  background-color: var(--nav-background-color);
+  box-shadow: 0px 0px 16px rgb(0 0 0 / 10%);
+  padding-bottom: 20px;
 }
 .footer .menu.slideup {
-  bottom: 60px;
+  bottom: 125px;
+  height: 500px;
+  opacity: 1;
+  box-sizing: border-box;
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .footer .menu .menu-header {
   height: 30px;
-  border-bottom: solid 1px var(--footer-header-background-color);
   display: flex;
   align-items: center;
   color: #9e9e9e;
-  font-size: 12px;
+  padding: 30px;
+  user-select: none;
 }
 
 .footer .menu .menu-header .menu-title {
   flex: 1;
-  padding: 20px;
+  padding: 0 20px;
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--text-default-color);
 }
 
 .footer .menu .menu-header .add-all {
@@ -1373,6 +2218,7 @@ svg.searchspinner {
   display: flex;
   align-items: center;
   padding-right: 10px;
+  font-size: 14px;
 }
 
 .footer .menu .menu-header .remove-all {
@@ -1380,13 +2226,28 @@ svg.searchspinner {
   flex: 0 0 auto;
   display: flex;
   align-items: center;
+  font-size: 14px;
+}
+.footer .menu .menu-header .remove-all:hover .ng-binding,
+.footer .menu .menu-header .add-all:hover .ng-binding {
+  text-decoration: underline;
+  color: var(--theme-color);
+}
+.footer .menu .menu-header .remove-all:hover,
+.footer .menu .menu-header .add-all:hover {
+  text-decoration: none;
+  color: var(--theme-color);
 }
 
 .footer .menu .menu-header .close {
-  margin-left: 10px;
+  margin-left: 15px;
   flex: 0 0 25px;
   align-items: center;
   cursor: pointer;
+  color: var(--icon-default-color);
+}
+.footer .menu .menu-header .close:hover {
+  color: var(--theme-color);
 }
 .footer .menu .menu-header .add-all span,
 .footer .menu .menu-header .remove-all span {
@@ -1396,45 +2257,47 @@ svg.searchspinner {
 .footer .menu .menu-header .add-all .icon,
 .footer .menu .menu-header .remove-all .icon {
   margin-right: 7px;
+  width: 18px;
+  height: 18px;
 }
 
 .footer .menu .menu-header .close svg {
   margin-right: 3px;
-  height: 16px;
-  width: 16px;
-  cursor: pointer;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .footer .menu ul.menu-list {
   overflow-y: scroll;
-  height: 340px;
-  font-size: 12px;
+  height: 370px;
+  padding: 0 30px;
+  font-size: 14px;
 }
 
 .footer .menu ul.menu-list li {
+  border-radius: 10px;
   display: flex;
   align-items: center;
   height: 30px;
-  padding-right: 20px;
   position: relative;
   margin-bottom: -2px;
-  border-top: solid 2px var(--songlist-border-color);
-  border-bottom: solid 2px var(--songlist-border-color);
-}
-
-.footer .menu ul.menu-list li.even {
-  background: var(--footer-menu-even-background-color);
+  padding: 10px 20px 10px 0;
+  transition: 0.3s;
 }
 
 .footer .menu ul.menu-list li:hover {
-  background: var(--footer-menu-hover-background-color);
+  background: var(--songlist-hover-background-color);
 }
 
 .footer .menu ul.menu-list li.playing {
   color: var(--important-color);
+  background: var(--songlist-hover-background-color);
 }
 .footer .menu ul.menu-list li .song-status-icon {
-  flex: 0 0 20px;
+  flex: 0 0 30px;
   width: 20px;
   height: 30px;
   text-align: center;
@@ -1453,6 +2316,9 @@ svg.searchspinner {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+  font-size: 15px;
+  font-weight: 400;
+  padding-right: 10px;
 }
 .footer .menu ul.menu-list li .song-title.disabled {
   color: #777777;
@@ -1467,6 +2333,8 @@ svg.searchspinner {
   white-space: nowrap;
   text-overflow: ellipsis;
   cursor: pointer;
+  padding: 0 10px;
+  font-weight: 300;
 }
 
 /* div.visited{
@@ -1478,7 +2346,7 @@ svg.searchspinner {
   width: 42px;
 }
 .footer .menu ul.menu-list li .tools .icon {
-  color: #666666;
+  color: #fff;
   cursor: pointer;
   opacity: 0.5;
 }
@@ -1495,15 +2363,75 @@ svg.searchspinner {
 }
 
 .footer .right-control {
-  flex: 0 0 300px;
-  background: var(--foot-background-color);
+  flex: 0 0 36%;
   display: flex;
   align-items: center;
+  justify-content: flex-end;
 }
 
 .footer .right-control .playlist-toggle {
-  margin-left: 29px;
   cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 37px;
+  padding: 7px;
+}
+.footer .right-control .ctrl {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.footer .right-control .ctrl a {
+  margin-right: 32px;
+  padding: 7px;
+  display: flex;
+  transition: 0.3s;
+  border-radius: 10px;
+}
+.footer .right-control .ctrl a:hover {
+  text-decoration: none;
+  background-color: var(--songlist-hover-background-color);
+}
+.footer .right-control .translate-switch {
+  border-radius: 10px;
+  display: flex;
+  cursor: pointer;
+  -webkit-app-region: no-drag;
+
+  height: 0px;
+  box-sizing: border-box;
+  width: 0px;
+  transition: 0.3s;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+}
+.footer .right-control .translate-switch.slidedown {
+  padding: 7px;
+  margin-right: 32px;
+  height: 35px;
+  box-sizing: border-box;
+  width: 32px;
+}
+.footer .right-control .translate-switch:hover {
+  background-color: var(--songlist-hover-background-color);
+}
+.footer .right-control .translate-switch.selected {
+  color: var(--theme-color);
+}
+.footer .right-control .mask {
+  margin-right: 32px;
+  padding: 7px;
+  display: flex;
+  transition: 0.3s;
+  border-radius: 50%;
+}
+.footer .right-control .mask.slidedown {
+  transform: rotate(180deg);
+}
+.footer .right-control .mask:hover {
+  background-color: var(--songlist-hover-background-color);
 }
 
 .footer .right-control .playlist-toggle .icon {
@@ -1515,11 +2443,17 @@ svg.searchspinner {
 }
 
 .footer .right-control .lyric-toggle {
-  margin-right: 30px;
+  margin-right: 32px;
+  padding: 7px;
+  display: flex;
   cursor: pointer;
+  transition: 0.3s;
+  border-radius: 10px;
 }
-
-.footer .right-control .lyric-toggle .lyric-icon,
+.footer .right-control .lyric-toggle:hover {
+  background-color: var(--songlist-hover-background-color);
+}
+/* .footer .right-control .lyric-toggle .lyric-icon,
 .footer .right-control .lyric-toggle .lyric-icon.selected:hover {
   border: solid 1px #7f7f7f;
   height: 16px;
@@ -1534,55 +2468,14 @@ svg.searchspinner {
   border: solid 1px #7f7f7f;
   background-color: #7f7f7f;
   color: #fff;
-}
-
-.footer .right-control .volume-ctrl {
-  flex: 1;
-  display: flex;
-}
-
-.footer .right-control .volume-ctrl .icon {
-  flex: 0 0 24px;
-  color: var(--volume-icon-color);
-  cursor: pointer;
-  margin-left: 21px;
-}
-.footer .right-control .volume-ctrl .m-pbar {
-  flex: 1;
-}
-
-.footer .right-control .volume-ctrl .barbg {
-  height: 3px;
-
-  background: var(--volume-bar-background-color);
-  margin-top: 7px;
-  width: 140px;
-}
-
-.footer .right-control .volume-ctrl .barbg .cur {
-  height: 100%;
-  background: var(--volume-bar-current-background-color);
-
-  position: relative;
-}
-
-.footer .right-control .volume-ctrl .barbg .cur .btn {
-  background: #ffffff;
-  height: 13px;
-  width: 13px;
-  border: solid 1px #e4e4e4;
-  border-radius: 13px;
-  position: absolute;
-  right: -13px;
-  top: -6px;
-}
+} */
 
 /* footer end */
 
 /* dialog start */
 .shadow {
   position: fixed;
-  background: rgba(30, 30, 30, 0.9);
+  background: var(--shadow-mask);
   _position: absolute;
   z-index: 9999;
   top: 0;
@@ -1609,10 +2502,10 @@ svg.searchspinner {
 
 .dialog-header {
   height: 30px;
-  font-size: 15px;
+  font-size: 24px;
   font-weight: bold;
-  text-align: left;
-  padding: 12px;
+  text-align: center;
+  padding: 20px;
 }
 
 .dialog-header .dialog-close {
@@ -1635,15 +2528,40 @@ svg.searchspinner {
   margin-top: 20px;
 }
 
-.dialog-body .buttons .confirm-button {
+.dialog-body .buttons button,
+.dialog-body .dialog-footer button {
   margin-right: 20px;
+
+  font-size: 16px;
+  font-weight: 500;
+  transition: 0.2s;
+}
+.dialog-body .buttons .btn-primary {
+  background-color: var(--theme-color-hover);
+  color: var(--theme-color);
+}
+.dialog-body .buttons button:hover,
+.dialog-body .dialog-footer button:hover {
+  transform: scale(1.2);
 }
 .dialog .detail-songlist li:hover {
   background-color: #e3e3e5;
   cursor: pointer;
 }
 .dialog-body input {
-  width: 100%;
+  width: calc(100% - 20px);
+  height: 30px;
+  border-radius: 10px;
+  background: #eee;
+  color: #666;
+  border: transparent;
+  padding: 5px 10px;
+  margin-bottom: 10px;
+  font-weight: 500;
+}
+.dialog-body input:focus {
+  background-color: var(--theme-color-hover);
+  color: var(--theme-color);
 }
 
 .dialog-playlist,
@@ -1654,11 +2572,18 @@ svg.searchspinner {
 }
 
 .dialog-playlist li,
-.dialog-backuplist li,
-.dialog-merge-playlist li {
+.dialog-backuplist li {
   cursor: pointer;
   height: 48px;
   padding: 6px;
+  border-radius: 10px;
+}
+.dialog-merge-playlist li {
+  cursor: pointer;
+  height: 48px;
+  padding: 10px;
+  border-radius: 10px;
+  transition: 0.2s;
 }
 .dialog-backuplist li {
   height: 96px;
@@ -1677,6 +2602,7 @@ svg.searchspinner {
   float: left;
   height: 48px;
   width: 48px;
+  object-fit: cover;
 }
 
 .dialog-playlist li h2,
@@ -1699,6 +2625,9 @@ svg.searchspinner {
 
 .dialog-editplaylist label,
 .dialog-open-url label {
+  font-size: 18px;
+  font-weight: 500;
+  padding: 10px 0;
   display: block;
   height: 30px;
   line-height: 30px;
@@ -1715,22 +2644,62 @@ svg.searchspinner {
 /* dialog end */
 
 /* widget source-list start */
+.searchbox {
+  margin-bottom: 150px;
+  transition: 0.3s;
+}
+.searchbox.footerdef {
+  margin-bottom: 0;
+}
 .source-list {
-  margin: 20px 26px 10px 26px;
+  margin: 10px 26px 24px 26px;
+  user-select: none;
 }
 
 .source-list .source-button {
   display: inline-block;
-  color: var(--link-inactive-color);
   cursor: pointer;
-  padding-bottom: 4px;
-  font-size: 14px;
+  transition: 0.1s;
+  /* font-weight: 600; */
+}
+.source-list .source-button:hover,
+.source-list .source-button.active {
+  transition: 0.2s;
+  padding: 0;
+}
+.source-list .source-button a:hover {
+  text-decoration: none;
 }
 
-.source-list .source-button.active,
-.source-list .source-button:hover {
-  color: var(--link-active-color);
-  border-bottom: solid 1px var(--link-active-color);
+.source-list .source-button.active .buttontext,
+.source-list .source-button:hover .buttontext,
+.source-list .source-button .buttontext:hover,
+.source-list .source-button .buttontext.active {
+  color: var(--text-default-color);
+  -webkit-app-region: no-drag;
+  font-size: 24px;
+  font-weight: 700;
+  text-decoration: none;
+  border-radius: 10px;
+  padding: 6px 10px;
+  transition: all 0.2s, background 0.3s;
+  -webkit-user-drag: none;
+  margin-right: 12px;
+  margin-left: 12px;
+}
+.source-list .source-button.active .buttontext,
+.source-list .source-button .buttontext.active {
+  border-bottom: solid 2px var(--text-default-color);
+}
+.source-list .source-button:hover .buttontext,
+.source-list .source-button .buttontext:hover {
+  background-color: var(--button-background-color);
+}
+.source-list .source-button .buttontext {
+  font-size: 14px;
+  padding: 4px 10px;
+  color: var(--text-subtitle-color);
+  transition: 0.1s;
 }
 
 .source-list .splitter {
@@ -1739,7 +2708,6 @@ svg.searchspinner {
   margin-top: 1px;
   height: 12px;
   width: 1px;
-  margin: 0 10px;
 }
 .source-list .search-type {
   float: right;
@@ -1749,54 +2717,100 @@ svg.searchspinner {
 /* widget playlist-filter start */
 
 .playlist-filter {
+  display: flex;
+  flex-wrap: wrap;
   line-height: 38px;
-  margin: 0 26px 10px 26px;
+  margin: 0 26px 0px 26px;
 }
 
 .playlist-filter .filter-item {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   line-height: 20px;
-  padding: 5px 15px;
-  margin-right: 10px;
+  padding: 8px 16px;
+  margin: 10px 16px 6px 0;
+  color: var(--black--white);
+  /* display: flex;
+  justify-content: center;
+  align-items: center; */
+  font-weight: 600;
+  font-size: 18px;
+  border-radius: 10px;
+  transition: all 0.2s;
 }
 
-.playlist-filter .filter-item.active {
-  font-weight: 600;
-  background: var(--button-hover-background-color);
+.playlist-filter .filter-item.active,
+.playlist-filter .filter-item:hover {
+  background: var(--theme-color-hover);
+  color: var(--theme-color);
+  transition: all 0.2s;
 }
 
 /* widget playlist-filter end */
 
 /* widget all-playlist-filter start */
+.all-playlist-filter {
+  margin: 10px 26px 0px 26px;
+  border-radius: 10px;
+  padding: 8px;
+  background-color: var(--button-background-color);
+}
+
 .all-playlist-filter .category {
-  margin-bottom: 10px;
+  margin-bottom: 32px;
   display: flex;
 }
 
 .all-playlist-filter .category .category-title {
-  margin-left: 30px;
-  margin-top: 12px;
-  min-width: 50px;
-  font-size: 18px;
+  font-size: 24px;
+  font-weight: 700;
+  opacity: 0.68;
+  margin-left: 24px;
+  min-width: 54px;
+  height: 26px;
+  margin-top: 8px;
+  /* color: var(--icon-default-color); */
 }
 .all-playlist-filter .category .category-filters {
-  margin-left: 10px;
+  margin-left: 24px;
   display: flex;
   flex-wrap: wrap;
+  /* color: var(--icon-default-color); */
 }
 .all-playlist-filter .category .category-filters .filter-item {
-  min-width: 80px;
-  margin-top: 10px;
+  min-width: 98px;
+  margin-top: 4px;
   display: flex;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  align-items: center;
+  font-weight: 500;
+  font-size: 16px;
+  transition: 0.2s;
 }
 .all-playlist-filter .category .category-filters .filter-item span {
   display: flex;
   justify-content: center;
   align-items: center;
   cursor: pointer;
-  padding: 5px 10px;
+  padding: 6px 10px;
+  height: 26px;
+  border-radius: 12px;
+  opacity: 0.88;
+  transition: 0.2s;
 }
 .all-playlist-filter .category .category-filters .filter-item span:hover {
-  background-color: var(--button-background-color);
+  opacity: 1;
+  background-color: var(--theme-color-hover);
   border-radius: var(--default-border-radius);
+  transition: 0.2s;
+  color: var(--theme-color);
 }
+.all-playlist-filter .category .category-filters .filter-item span.active {
+  color: var(--theme-color);
+}
+
 /* widget all-playlist-filter end */

@@ -54,7 +54,6 @@
 
   // eslint-disable-next-line no-unused-vars
   class lastfm {
-
     static getSession(callback) {
       // load session info from localStorage
       let mySession = localStorage.getObject('lastfmsession');
@@ -77,7 +76,7 @@
 
       axios
         .get(apiUrl, {
-          params
+          params,
         })
         .then((response) => {
           const { data } = response;
@@ -108,14 +107,16 @@
         params.api_sig = generateSign(params);
         params.format = 'json';
 
-        axios.post(apiUrl, '', {
-          params,
-        }).then((response) => {
-          const { data } = response;
-          if (callback != null) {
-            callback(data);
-          }
-        });
+        axios
+          .post(apiUrl, '', {
+            params,
+          })
+          .then((response) => {
+            const { data } = response;
+            if (callback != null) {
+              callback(data);
+            }
+          });
       });
     }
 
@@ -138,23 +139,25 @@
     }
 
     static getAuth(callback) {
-      axios.get(apiUrl, {
-        params: {
-          method: 'auth.gettoken',
-          api_key: options.apiKey,
-          format: 'json',
-        },
-      }).then((response) => {
-        const { data } = response;
-        const { token } = data;
-        localStorage.setObject('lastfmtoken', token);
-        const grant_url = `https://www.last.fm/api/auth/?api_key=${options.apiKey}&token=${token}`;
-        window.open(grant_url, '_blank');
-        status = 1;
-        if (callback != null) {
-          callback();
-        }
-      });
+      axios
+        .get(apiUrl, {
+          params: {
+            method: 'auth.gettoken',
+            api_key: options.apiKey,
+            format: 'json',
+          },
+        })
+        .then((response) => {
+          const { data } = response;
+          const { token } = data;
+          localStorage.setObject('lastfmtoken', token);
+          const grant_url = `https://www.last.fm/api/auth/?api_key=${options.apiKey}&token=${token}`;
+          window.open(grant_url, '_blank');
+          status = 1;
+          if (callback != null) {
+            callback();
+          }
+        });
     }
 
     static cancelAuth() {
@@ -176,14 +179,16 @@
         params.api_sig = generateSign(params);
         params.format = 'json';
 
-        axios.post(apiUrl, '', {
-          params
-        }).then((response) => {
-          const { data } = response;
-          if (callback != null) {
-            callback(data);
-          }
-        });
+        axios
+          .post(apiUrl, '', {
+            params,
+          })
+          .then((response) => {
+            const { data } = response;
+            if (callback != null) {
+              callback(data);
+            }
+          });
       });
     }
 
@@ -205,14 +210,16 @@
         params.api_sig = generateSign(params);
         params.format = 'json';
 
-        axios.post(apiUrl, '', {
-          params,
-        }).then((response) => {
-          const { data } = response;
-          if (callback != null) {
-            callback(data);
-          }
-        });
+        axios
+          .post(apiUrl, '', {
+            params,
+          })
+          .then((response) => {
+            const { data } = response;
+            if (callback != null) {
+              callback(data);
+            }
+          });
       });
     }
 
@@ -240,4 +247,3 @@
 
   window.lastfm = lastfm;
 }
-

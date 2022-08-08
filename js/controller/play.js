@@ -472,10 +472,10 @@ angular.module('listenone').controller('PlayController', [
               lastObject.lineNumber !== $scope.lyricLineNumber
             ) {
               const lineElement = document.querySelector(
-                `.page .playsong-detail .detail-songinfo .lyric p[data-line="${lastObject.lineNumber}"]`
+                `.playsong-detail .detail-songinfo .lyric p[data-line="${lastObject.lineNumber}"]`
               );
               const windowHeight = document.querySelector(
-                '.page .playsong-detail .detail-songinfo .lyric'
+                '.playsong-detail .detail-songinfo .lyric'
               ).offsetHeight;
 
               const adjustOffset = 30;

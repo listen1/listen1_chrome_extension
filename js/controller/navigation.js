@@ -4,7 +4,6 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-param-reassign */
 /* global angular notyf i18next MediaService l1Player hotkeys isElectron require GithubClient lastfm */
-
 // control main view of page, it can be called any place
 angular.module('listenone').controller('NavigationController', [
   '$scope',
@@ -30,10 +29,21 @@ angular.module('listenone').controller('NavigationController', [
 
     $scope.lastfm = lastfm;
 
+    $scope.isOpenSidebar = true
+
     $scope.$on('isdoubanlogin:update', (event, data) => {
       $scope.isDoubanLogin = data;
     });
 
+    // isOpenSidebar
+    
+    if (localStorage.getObject('openSidebar') !== null) {
+      $scope.isOpenSidebar = localStorage.getObject('openSidebar');
+    }
+    $scope.openSidebar = () => {
+      $scope.isOpenSidebar = !$scope.isOpenSidebar;
+      localStorage.setObject('openSidebar',$scope.isOpenSidebar);
+    }
     // tag
     $scope.showTag = (tag_id, tag_params) => {
       $scope.current_tag = tag_id;
@@ -118,6 +128,9 @@ angular.module('listenone').controller('NavigationController', [
         $scope.popWindow();
         return;
       }
+      if (!$scope.menuHidden) {
+        $scope.togglePlaylist() 
+      }
       // save current scrolltop
       $scope.is_window_hidden = 0;
       $scope.resetWindow();
@@ -127,8 +140,20 @@ angular.module('listenone').controller('NavigationController', [
         offset: document.getElementsByClassName('browser')[0].scrollTop,
       });
       $scope.window_poped_url_stack = [];
-
+     
       $scope.window_type = 'track';
+    };
+
+    $scope.download_music = (artist_name,song_name,song_url) => {
+      const mp3url = song_url
+      const strs=mp3url.split('.'); // 字符分割 
+      const houzhui = strs[strs.length-1].substring(0, 3);
+      const filename = `${song_name } - ${artist_name}`;
+      const x=new XMLHttpRequest();
+      x.open("GET", mp3url, true);
+      x.responseType = 'blob';
+      x.onload=function(e){download(x.response, `${filename}.${houzhui}`);};
+      x.send();
     };
 
     $scope.forwardWindow = () => {

@@ -132,7 +132,10 @@ class netease {
               .getElementsByClassName('m-cvrlst')[0].children
           );
           const result = list_elements.map((item) => ({
-            cover_img_url: item.getElementsByTagName('img')[0].src,
+            cover_img_url: item
+              .getElementsByTagName('img')[0]
+              .src.replace('140y140', '512y512'),
+
             title: item
               .getElementsByTagName('div')[0]
               .getElementsByTagName('a')[0].title,

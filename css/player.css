@@ -4,7 +4,7 @@ a {
 
 .shadow {
   position: fixed;
-  background: rgba(30, 30, 30, 0.9);
+  background: rgba(30, 30, 30, 0.5);
   _position: absolute;
   z-index: 9999;
   top: 0;

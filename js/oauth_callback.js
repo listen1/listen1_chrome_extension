@@ -5,7 +5,7 @@
 chrome.runtime.sendMessage(
   {
     type: 'code',
-    code: (new URLSearchParams(window.location.search)).get('code'),
+    code: new URLSearchParams(window.location.search).get('code'),
   },
   // eslint-disable-next-line no-unused-vars
   (response) => {

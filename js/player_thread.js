@@ -197,13 +197,14 @@
      */
     play(idx) {
       this.load(idx);
-
       const data = this.playlist[this.index];
+
       if (!data.howl || !this._media_uri_list[data.id]) {
         this.retrieveMediaUrl(this.index, true);
       } else {
         this.finishLoad(this.index, true);
       }
+      // this.changeImg(idx)
     }
 
     retrieveMediaUrl(index, playNow) {
@@ -254,12 +255,12 @@
       if (!this.playlist[index]) {
         index = 0;
       }
+
       // stop when load new track to avoid multiple songs play in same time
       if (index !== this.index) {
         Howler.unload();
       }
       this.index = index;
-
       this.sendLoadEvent();
     }
 
@@ -282,13 +283,13 @@
               mediaSession.metadata = new MediaMetadata({
                 title: self.currentAudio.title,
                 artist: self.currentAudio.artist,
-                album: `Listen1  •  ${(
+                album: `Listen 1  •  ${(
                   self.currentAudio.album || '<???>'
                 ).padEnd(100)}`,
                 artwork: [
                   {
                     src: self.currentAudio.img_url,
-                    sizes: '300x300',
+                    sizes: '500x500',
                   },
                 ],
               });
@@ -359,6 +360,7 @@
         });
         this.currentHowl.play();
       }
+      this.changeImg(index);
     }
 
     /**
@@ -369,6 +371,54 @@
 
       // Puase the sound.
       this.currentHowl.pause();
+    }
+    // circlopacity(){
+    //   let circlopacity = document.getElementById("circlmark")
+    //   circlopacity.classList.add('circlopacity')
+    //   circlopacity.addEventListener("animationend",function(){
+    //     circlopacity.classList.remove('circlopacity')
+    //   })
+    // }
+
+    changeImg(rdx) {
+      const l = this.playlist.length;
+      let li = document.querySelectorAll('.footer .cover li');
+      if (l > 5) {
+        for (let i = 0; i < l; i++) {
+          li[i].className = 'hid';
+        }
+      }
+      function x(rdx) {
+        if (rdx < 0) {
+          return l + rdx;
+        } else if (rdx > l - 1) {
+          return rdx - l;
+        } else {
+          return rdx;
+        }
+      }
+      if (l == 1) {
+        li[rdx].className = 'b';
+      } else if (l == 2) {
+        li[x(rdx)].className = 'b';
+        li[x(rdx + 1)].className = 'c';
+      } else if (l == 3) {
+        li[x(rdx - 1)].className = 'a';
+        li[x(rdx)].className = 'b';
+        li[x(rdx + 1)].className = 'c';
+      } else if (l == 4) {
+        li[x(rdx - 1)].className = 'a';
+        li[x(rdx)].className = 'b';
+        li[x(rdx + 1)].className = 'c';
+        li[x(rdx + 2)].className = 'def';
+      } else {
+        li[x(rdx - 2)].className = 'def';
+        li[x(rdx - 1)].className = 'a';
+        li[x(rdx)].className = 'b';
+        li[x(rdx + 1)].className = 'c';
+        li[x(rdx + 2)].className = 'def';
+      }
+      li[x(rdx)].classList.add('rotatecircl');
     }
 
     /**
@@ -381,6 +431,10 @@
       const nextIndexFn = (idx) => {
         const l = this.playlist.length;
         const random_mode = this._loop_mode === 2 || direction === 'random';
+
+        let rotatemark = document.getElementById('rotatemark');
+        let circlmark = document.getElementById('circlmark');
+        // var li = document.querySelectorAll(".footer .cover li")
 
         let rdx = idx;
 
@@ -405,12 +459,38 @@
           this._random_playlist = [];
         }
 
-        if (direction === 'prev') {
+        circlmark.classList.add('circlmark');
+        rotatemark.classList.add('rotatemark');
+        circlmark.addEventListener('animationend', function () {
+          circlmark.classList.remove('circlmark');
+        });
+        rotatemark.addEventListener('animationend', function () {
+          rotatemark.classList.remove('rotatemark');
+        });
+        if (random_mode) {
+          rdx -= 1;
+          this.changeImg(this._random_playlist[rdx % l]);
+        } else if (direction === 'prev') {
           if (rdx === 0) rdx = l;
           rdx -= 1;
+          this.changeImg(rdx);
+          // li[x(rdx-2)].className="def"
+          // li[x(rdx-1)].className="a"
+          // li[x(rdx)].className="b"
+          // li[x(rdx+1)].className="c"
+          // li[x(rdx+2)].className="def"
+          // li[x(rdx)].classList.add('rotatecircl')
         } else {
           rdx += 1;
+          this.changeImg(rdx);
+          // li[x(rdx-2)].className="def"
+          // li[x(rdx-1)].className="a"
+          // li[x(rdx)].className="b"
+          // li[x(rdx+1)].className="c"
+          // li[x(rdx+2)].className="def"
+          // li[x(rdx)].classList.add('rotatecircl')
         }
+
         return random_mode ? this._random_playlist[rdx % l] : rdx % l;
       };
       this.index = nextIndexFn(this.index);
