@@ -398,7 +398,7 @@
         
       }
       if (l === 1) {
-        li[rdx].className = 'b';
+        li[0].className = 'b';
       } else if (l === 2) {
         li[x(rdx)].className = 'b';
         li[x(rdx + 1)].className = 'c';
@@ -474,23 +474,10 @@
           if (rdx === 0) rdx = l;
           rdx -= 1;
           this.changeImg(rdx);
-          // li[x(rdx-2)].className="def"
-          // li[x(rdx-1)].className="a"
-          // li[x(rdx)].className="b"
-          // li[x(rdx+1)].className="c"
-          // li[x(rdx+2)].className="def"
-          // li[x(rdx)].classList.add('rotatecircl')
         } else {
           rdx += 1;
           this.changeImg(rdx);
-          // li[x(rdx-2)].className="def"
-          // li[x(rdx-1)].className="a"
-          // li[x(rdx)].className="b"
-          // li[x(rdx+1)].className="c"
-          // li[x(rdx+2)].className="def"
-          // li[x(rdx)].classList.add('rotatecircl')
         }
-
         return random_mode ? this._random_playlist[rdx % l] : rdx % l;
       };
       this.index = nextIndexFn(this.index);

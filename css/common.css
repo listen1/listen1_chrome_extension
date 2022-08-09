@@ -852,14 +852,21 @@ ul.detail-songlist li .desc div.title:hover{
   position: absolute;
   top: 24px;
   left: 24px;
-  height: 24px;
-  width: 24px;
+  height: 19px;
+  width: 19px;
   cursor: pointer;
+  padding: 5px;
+  border-radius: 50%;
   -webkit-app-region: no-drag;
+  transition: .2s;
+  z-index: 100;
+}
+.songdetail-wrapper .close:hover{
+  background-color: var(--songlist-hover-background-color);
 }
 .songdetail-wrapper .close.mac {
   top: 44px;
-  z-index: 100;
+  
 }
 
 .songdetail-wrapper .window-control {
@@ -2094,8 +2101,7 @@ svg.searchspinner {
   width: 150px;
 }
 .footer .main-info .playbar .playbar-clickable {
-  padding: 10px 0px;
-  margin-right: 10px;
+  margin: 10px 10px 10px 0;
   flex: 1;
   cursor: col-resize;
 }
@@ -2146,7 +2152,7 @@ svg.searchspinner {
 }
 .volume-ctrl .m-pbar {
   flex: 1;
-  padding: 10px 0;
+  margin: 10px 0;
   cursor: col-resize;
 }
 
