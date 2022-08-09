@@ -382,31 +382,31 @@
 
     changeImg(rdx) {
       const l = this.playlist.length;
-      let li = document.querySelectorAll('.footer .cover li');
+      const li = document.querySelectorAll('.footer .cover li');
       if (l > 5) {
-        for (let i = 0; i < l; i++) {
+        for (let i = 0; i < l; i += 1) {
           li[i].className = 'hid';
         }
       }
-      function x(rdx) {
-        if (rdx < 0) {
-          return l + rdx;
-        } else if (rdx > l - 1) {
-          return rdx - l;
-        } else {
-          return rdx;
-        }
+      function x(musicId) {
+        if (musicId < 0) {
+          return l + musicId;
+        } else if (musicId > l - 1) {
+          return musicId - l;
+        } 
+          return musicId;
+        
       }
-      if (l == 1) {
+      if (l === 1) {
         li[rdx].className = 'b';
-      } else if (l == 2) {
+      } else if (l === 2) {
         li[x(rdx)].className = 'b';
         li[x(rdx + 1)].className = 'c';
-      } else if (l == 3) {
+      } else if (l === 3) {
         li[x(rdx - 1)].className = 'a';
         li[x(rdx)].className = 'b';
         li[x(rdx + 1)].className = 'c';
-      } else if (l == 4) {
+      } else if (l === 4) {
         li[x(rdx - 1)].className = 'a';
         li[x(rdx)].className = 'b';
         li[x(rdx + 1)].className = 'c';
@@ -432,8 +432,8 @@
         const l = this.playlist.length;
         const random_mode = this._loop_mode === 2 || direction === 'random';
 
-        let rotatemark = document.getElementById('rotatemark');
-        let circlmark = document.getElementById('circlmark');
+        const rotatemark = document.getElementById('rotatemark');
+        const circlmark = document.getElementById('circlmark');
         // var li = document.querySelectorAll(".footer .cover li")
 
         let rdx = idx;
@@ -461,10 +461,10 @@
 
         circlmark.classList.add('circlmark');
         rotatemark.classList.add('rotatemark');
-        circlmark.addEventListener('animationend', function () {
+        circlmark.addEventListener('animationend', ()=> {
           circlmark.classList.remove('circlmark');
         });
-        rotatemark.addEventListener('animationend', function () {
+        rotatemark.addEventListener('animationend', ()=>{
           rotatemark.classList.remove('rotatemark');
         });
         if (random_mode) {

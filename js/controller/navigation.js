@@ -144,17 +144,6 @@ angular.module('listenone').controller('NavigationController', [
       $scope.window_type = 'track';
     };
 
-    $scope.download_music = (artist_name,song_name,song_url) => {
-      const mp3url = song_url
-      const strs=mp3url.split('.'); // 字符分割 
-      const houzhui = strs[strs.length-1].substring(0, 3);
-      const filename = `${song_name } - ${artist_name}`;
-      const x=new XMLHttpRequest();
-      x.open("GET", mp3url, true);
-      x.responseType = 'blob';
-      x.onload=function(e){download(x.response, `${filename}.${houzhui}`);};
-      x.send();
-    };
 
     $scope.forwardWindow = () => {
       if ($scope.window_poped_url_stack.length === 0) {
