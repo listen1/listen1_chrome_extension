@@ -157,7 +157,6 @@ svg {
 /* split main to left/right 2 parts */
 .main .sidebar {
   padding-left: 1vw;
-  /* padding-right: 2vw; */
   display: flex;
   flex-direction: column;
 }
@@ -174,7 +173,6 @@ svg {
   user-select: none;
   height: 64px;
   flex: 0 0 64px;
-  /* border-bottom: solid 1px var(--line-default-color); */
   display: flex;
   align-items: center;
   -webkit-app-region: drag;
@@ -218,8 +216,6 @@ svg {
   width: 200px;
 }
 .sidebar-content .logo-content {
-  /* width: 200px;
-  height: 80px; */
   display: flex;
   align-items: center;
   justify-content: flex-start;
@@ -308,7 +304,6 @@ svg {
 .sidebar ul li {
   cursor: pointer;
   padding: 2px 10px;
-  /* margin-bottom: -2px; */
 }
 .sidebar ul li .sidebar-block {
   display: flex;
@@ -389,7 +384,6 @@ https://stackoverflow.com/questions/19889615/can-an-angular-directive-pass-argum
 }
 
 .navigation .search {
-  /* flex: 1; */
   display: flex;
   width: 200px;
   height: 32px;
@@ -447,7 +441,6 @@ https://stackoverflow.com/questions/19889615/can-an-angular-directive-pass-argum
 .navigation .backfront .icon {
   display: inline-block;
   vertical-align: middle;
-  /* margin-bottom: 4px; */
 }
 
 .navigation .backfront .icon:nth-of-type(1) {
@@ -478,16 +471,12 @@ https://stackoverflow.com/questions/19889615/can-an-angular-directive-pass-argum
 /* navigation end */
 
 /* page hot-playlist start */
-/* .page-hot-playlist {
-  max-width: 850px; 
-  margin-top: 84px;
-}  */
+
 
 .playlist-covers,
 .detail-songlist.isSearch {
   padding-right: 2vw;
   padding-top: 50px;
-  /* padding: 0 13px; */
   display: flex;
   flex-flow: row wrap;
   position: relative;
@@ -519,16 +508,13 @@ ul.detail-songlist li .u-cover {
 .playlist-covers .u-cover img,
 ul.detail-songlist li .u-cover img {
   transition: all 0.1s ease-in-out 0s;
-  /* height: 136px; */
   box-sizing: border-box;
   width: 100%;
   border-radius: 0.75em;
   /* min-width: 136px;
   max-width: 100%; */
   object-fit: cover;
-  /* margin: auto; */
   border: solid 1px rgba(0, 0, 0, 0.04);
-  /* margin-bottom: 2px; */
   cursor: pointer;
   z-index: 1;
 }
@@ -557,7 +543,6 @@ ul.detail-songlist li .u-cover .bottom {
 .detail-head-cover .covershadow,
 ul.detail-songlist li .u-cover .covershadow {
   transition: all 0.4s;
-  /* display: none; */
   opacity: 0;
   position: absolute;
   top: 12px;
@@ -615,7 +600,6 @@ ul.detail-songlist li .desc {
 .playlist-covers .desc .title,
 ul.detail-songlist li .desc div.title {
   word-break: break-all;
-  /* cursor: pointer; */
   font-size: 16px;
   font-weight: 600;
   line-height: 20px;
@@ -664,7 +648,6 @@ ul.detail-songlist li .desc div.title:hover{
 
 .page .playlist-detail .detail-head .covershadow {
   transition: all 0.4s;
-  /* display: none; */
   opacity: 0;
   position: absolute;
   top: 12px;
@@ -692,7 +675,6 @@ ul.detail-songlist li .desc div.title:hover{
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  /* justify-content: center; */
   margin-left: 56px;
   margin-right: 2vw;
 }
@@ -809,9 +791,6 @@ ul.detail-songlist li .desc div.title:hover{
   fill: rgb(102, 102, 102);
 }
 
-/* .page .playlist-detail .detail-head .detail-head-title h2 {
-  font-size: var(--h2-title-font-size);
-} */
 /* page playlist detail end */
 
 /* page song detail start */
@@ -822,7 +801,6 @@ ul.detail-songlist li .desc div.title:hover{
   right: 0;
   bottom: 100px;
   overflow: hidden;
-  /* border: solid 1px var(--windows-border-color); */
   -webkit-app-region: no-drag;
   transition: all 0.5s;
   z-index: 100;
@@ -909,7 +887,6 @@ ul.detail-songlist li .desc div.title:hover{
   right: 0;
   left: 0;
   bottom: 0;
-  /* z-index: 200; */
   display: flex;
   clip: rect(auto, auto, auto, auto);
 }
@@ -925,11 +902,6 @@ ul.detail-songlist li .desc div.title:hover{
   z-index: 1;
 }
 
-/* .page .playsong-detail .detail-head .detail-head-cover {
-  width: 250px;
-  height: 250px;
-  margin-top: 110px;
-} */
 .playsong-detail .detail-head-cover {
   position: relative;
 }
@@ -966,7 +938,6 @@ ul.detail-songlist li .desc div.title:hover{
   font-size: var(--h2-title-font-size);
   margin-top: 8px;
   margin-bottom: 0;
-  /* font-size: 1.4rem; */
   font-weight: 600;
   opacity: 0.88;
   display: -webkit-box;
@@ -1122,9 +1093,7 @@ ul.detail-songlist .playlist-search:hover,
 ul.detail-songlist .playlist-search:active {
   background-color: var(--search-input-background-color);
 }
-/* ul.detail-songlist .playlist-search .playlist-search-input::placeholder {
-  color: #bbbbbb;
-} */
+
 
 ul.detail-songlist li.isSearchType {
   /* https://stackoverflow.com/questions/4157005/css-positioning-z-index-negative-margins */
@@ -1152,9 +1121,7 @@ ul.detail-songlist li.playlist-result.isSearchType {
   height: 80px;
   padding: 0 10px;
 }
-/* ul.detail-songlist li.odd {
-  background-color: var(--songlist-odd-background-color);
-} */
+
 
 ul.detail-songlist li > img {
   object-fit: cover;
@@ -1208,28 +1175,15 @@ ul.detail-songlist li a span.source.playlist {
   margin-left: 10px;
   margin-right: 0;
 }
-/* ul.detail-songlist li.head {
-  height: 28px;
-  color: var(--text-disable-color);
-  border-top: none;
-  padding-bottom: 2px;
-}
-ul.detail-songlist li.head:hover {
-  background-color: transparent;
-} */
 
 ul.detail-songlist li .title {
   font-size: 18px;
   font-weight: 600;
-  /* cursor: default; */
-  /* padding-right: 16px; */
 
-  /* flex: 2; */
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
-  /* line-height: 17px; */
-  /* max-height: 38px; */
+
   -webkit-line-clamp: 1;
   -webkit-box-orient: vertical;
   word-break: break-all;
@@ -1238,10 +1192,7 @@ ul.detail-songlist li.playlist-result .title {
   max-height: 80px;
 }
 
-/* ul.detail-songlist li.playlist-result .title a {
-  display: flex;
-  align-items: center;
-} */
+
 
 ul.detail-songlist li.playlist-result .title img {
   height: 60px;
@@ -1251,7 +1202,6 @@ ul.detail-songlist li.playlist-result .title img {
 }
 
 ul.detail-songlist li .artist {
-  /* flex: 1; */
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
@@ -1441,10 +1391,7 @@ ul.detail-songlist li .tools .icon {
 /* page login end */
 
 /* page setting start */
-/* .page .cover-container{
-  margin-top: 40px;
-  margin-left: 40px;
-} */
+
 .page .settings-title {
   max-width: 800px;
   margin: 48px 75px 10px 115px;
@@ -1452,7 +1399,6 @@ ul.detail-songlist li .tools .icon {
   padding-bottom: 12px;
   font-size: 26px;
   user-select: none;
-  /* color: var(--color-text); */
   border-bottom: 1px solid rgba(128, 128, 128, 0.18);
 }
 
@@ -1706,9 +1652,6 @@ svg.searchspinner {
   margin-right: 10px;
 }
 
-/* .footer .left-control .icon:first-of-type {
-  margin-left: 42px;
-} */
 
 .footer .left-control .icon.play {
   color: var(--player-icon-color);
@@ -1719,9 +1662,7 @@ svg.searchspinner {
 
 .footer .main-info {
   flex: 1;
-  /* background: var(--footer-main-background-color); */
   display: flex;
-  /* overflow: hidden; */
   z-index: 1;
   justify-content: center;
   align-items: center;
@@ -1858,7 +1799,6 @@ svg.searchspinner {
   z-index: -1;
   height: 45px;
   width: 32px;
-  /* display: none; */
   float: left;
   position: absolute;
   overflow: hidden;
@@ -1892,7 +1832,6 @@ svg.searchspinner {
   opacity: 1;
   z-index: 100;
   display: block;
-  /* background-color: var(--footer-player-bar-cur-button-color); */
 }
 .footer .cover ul .b,
 .footer .cover-list .b {
@@ -1905,7 +1844,6 @@ svg.searchspinner {
   opacity: 1;
   z-index: 101;
   display: block;
-  /* background-color: var(--footer-player-bar-cur-button-color); */
 }
 .footer .cover ul .c,
 .footer .cover-list .c {
@@ -1918,7 +1856,6 @@ svg.searchspinner {
   opacity: 1;
   z-index: 99;
   display: block;
-  /* background-color: var(--footer-player-bar-cur-button-color); */
 }
 .footer .cover img {
   height: 100%;
@@ -1968,28 +1905,7 @@ svg.searchspinner {
   border: 2px solid;
   border-color: var(--footer-player-bar-background-color);
 }
-/* .footer .cover .circle .inner{
-  width: 96px;
-  background: #fff;
-  height: 48px;
-  z-index: -1;
-  border-bottom-left-radius: 48px;
-  border-bottom-right-radius: 48px;
-} */
-/* .footer .cover .mask {
-  display: none;
-}
-.footer .cover:hover .mask {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(0, 0, 0, 0.6);
-  position: absolute;
-  top: 0;
-  right: 0;
-  left: 0;
-  bottom: 0;
-} */
+
 .footer .footertime {
   padding-bottom: 15px;
   font-size: 12px;
@@ -2013,7 +1929,6 @@ svg.searchspinner {
 }
 
 .footer .left-control .detail {
-  /* flex: 1; */
   max-width: 356px;
   margin-left: 37px;
   position: relative;
@@ -2027,7 +1942,6 @@ svg.searchspinner {
   right: 0px;
   top: 4px;
   padding-right: 6px;
-  /* background: #eeeeee; */
 }
 .footer .left-control .detail .ctrl:first-of-type .icon {
   margin-right: 5px;
@@ -2041,21 +1955,19 @@ svg.searchspinner {
 }
 
 .footer .left-control .detail .title {
-  /* text-align: center; */
   font-size: 14px;
   color: var(--text-default-color);
   min-width: 0px;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
-  /* margin: 3px 60px 0 60px; */
   margin: 5px 0;
   font-size: 18px;
   font-weight: 600;
 }
 
 .footer .left-control .detail .more-info {
-  /* padding: 0 10px; */
+
   margin: 5px 0;
   display: flex;
   color: var(--text-subtitle-color);
@@ -2063,7 +1975,6 @@ svg.searchspinner {
 
 .footer .left-control .detail .more-info .singer {
   flex: 1;
-  /* text-align: center; */
   font-size: 12px;
   min-width: 0px;
   overflow: hidden;
@@ -2343,9 +2254,6 @@ svg.searchspinner {
   font-weight: 300;
 }
 
-/* div.visited{
-  color: green;
-} */
 
 .footer .menu ul.menu-list li .tools {
   flex: 0 0 42px;
@@ -2459,22 +2367,7 @@ svg.searchspinner {
 .footer .right-control .lyric-toggle:hover {
   background-color: var(--songlist-hover-background-color);
 }
-/* .footer .right-control .lyric-toggle .lyric-icon,
-.footer .right-control .lyric-toggle .lyric-icon.selected:hover {
-  border: solid 1px #7f7f7f;
-  height: 16px;
-  line-height: 16px;
-  font-size: 14px;
-  color: #7f7f7f;
-  background-color: var(--lyric-icon-background-color);
-  user-select: none;
-}
 
-.footer .right-control .lyric-toggle .lyric-icon.selected {
-  border: solid 1px #7f7f7f;
-  background-color: #7f7f7f;
-  color: #fff;
-} */
 
 /* footer end */
 
@@ -2666,7 +2559,6 @@ svg.searchspinner {
   display: inline-block;
   cursor: pointer;
   transition: 0.1s;
-  /* font-weight: 600; */
 }
 .source-list .source-button:hover,
 .source-list .source-button.active {
@@ -2737,9 +2629,6 @@ svg.searchspinner {
   padding: 8px 16px;
   margin: 10px 16px 6px 0;
   color: var(--black--white);
-  /* display: flex;
-  justify-content: center;
-  align-items: center; */
   font-weight: 600;
   font-size: 18px;
   border-radius: 10px;
