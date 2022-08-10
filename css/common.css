@@ -224,6 +224,7 @@ svg {
   padding-bottom: 10px;
   border-bottom: 1px solid var(--sidebar-splitter);
   transition: 0.2s;
+  cursor: pointer;
 }
 .sidebar-content .logo-content .logo-svg {
   padding: 10px;
