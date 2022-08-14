@@ -103,7 +103,7 @@
     "conf": "10.2.0",
     "debounce-fn": "4.0.0",
     "dot-prop": "6.0.1",
-    "electron-store": "^8.0.2",
+    "electron-store": "^8.1.0",
     "env-paths": "2.2.1",
     "music-metadata": "^8.0.1",
     "semver": "7.3.5"
