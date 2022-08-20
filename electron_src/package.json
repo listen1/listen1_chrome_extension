@@ -91,14 +91,21 @@
     }
   },
   "devDependencies": {
-    "electron": "^19.0.9",
-    "electron-builder": "^23.1.0",
+    "electron": "19.0.12",
+    "electron-builder": "^23.3.3",
     "electron-reloader": "^1.2.3"
   },
   "dependencies": {
-    "ajv": "^8.11.0",
+    "ajv": "8.6.3",
+    "ajv-formats": "2.1.1",
+    "atomically": "1.7.0",
     "chardet": "^1.4.0",
-    "electron-store": "^8.0.2",
-    "music-metadata": "^7.12.5"
+    "conf": "10.2.0",
+    "debounce-fn": "4.0.0",
+    "dot-prop": "6.0.1",
+    "electron-store": "^8.1.0",
+    "env-paths": "2.2.1",
+    "music-metadata": "^8.0.1",
+    "semver": "7.3.5"
   }
 }
