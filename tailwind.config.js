@@ -22,7 +22,8 @@ module.exports = {
         disabled: 'var(--disabled-color)',
         inactive: 'var(--link-inactive-color)',
         important: 'var(--important-color)',
-        badge: 'var(--badge-font-color)'
+        badge: 'var(--badge-font-color)',
+        'search-placeholder': 'var(--search-placeholder-background-color)',
       },
       backgroundColor: {
         theme: 'var(--theme-background-color)',

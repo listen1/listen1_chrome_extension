@@ -24,14 +24,18 @@
           :class="{ active: route.path === `/my_platform/netease` }"
           class="group cursor-pointer pb-[2px]"
           @click="$router.push(`/my_platform/netease`)">
-          <SidebarEntry :text="t('_MY_NETEASE')" icon="vue-feather-globe"></SidebarEntry>
+          <SidebarEntry :text="t('_MY_NETEASE')" icon="vue-feather-globe">
+            <img src="../images/netease-logo.png" class="h-5 w-5" />
+          </SidebarEntry>
         </li>
         <li
           v-if="is_login('qq')"
           :class="{ active: route.path === `/my_platform/qq` }"
           class="group cursor-pointer pb-[2px]"
           @click="$router.push(`/my_platform/qq`)">
-          <SidebarEntry :text="t('_MY_QQ')" icon="vue-feather-globe"></SidebarEntry>
+          <SidebarEntry :text="t('_MY_QQ')" icon="vue-feather-globe">
+            <img src="../images/qq.svg" class="h-5 w-5" />
+          </SidebarEntry>
         </li>
       </ul>
       <SidebarTitle class="mt-4" :text="t('_CREATED_PLAYLIST')">
@@ -92,6 +96,7 @@ import MediaService from '../services/MediaService';
 import notyf from '../services/notyf';
 import { isElectron } from '../utils';
 import Entry from './Entry.vue';
+import qqIcon from '../images/qq.svg';
 
 const isChrome = !isElectron();
 const route = useRoute();
