@@ -23,7 +23,7 @@ module.exports = {
         inactive: 'var(--link-inactive-color)',
         important: 'var(--important-color)',
         badge: 'var(--badge-font-color)',
-        'search-placeholder': 'var(--search-placeholder-background-color)'
+        'search-placeholder': 'var(--search-input-placeholder-color)'
       },
       backgroundColor: {
         theme: 'var(--theme-background-color)',
