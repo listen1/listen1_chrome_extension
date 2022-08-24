@@ -96,7 +96,6 @@ import MediaService from '../services/MediaService';
 import notyf from '../services/notyf';
 import { isElectron } from '../utils';
 import Entry from './Entry.vue';
-import qqIcon from '../images/qq.svg';
 
 const isChrome = !isElectron();
 const route = useRoute();
