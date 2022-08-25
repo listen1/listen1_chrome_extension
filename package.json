@@ -30,7 +30,7 @@
     "browserslist": "^4.21.0",
     "cross-env": "^7.0.3",
     "dexie": "^3.2.2",
-    "electron": "20.0.3",
+    "electron": "20.1.0",
     "eslint": "^8.22.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-vue": "^9.4.0",
