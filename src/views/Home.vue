@@ -116,7 +116,7 @@
                 id="search-input"
                 v-model="input_keywords"
                 type="text"
-                class="form-control search-input w-64 bg-transparent font-medium text-search-placeholder text-lg"
+                class="form-control search-input w-64 bg-transparent text-lg font-medium text-search-placeholder"
                 :placeholder="t('_SEARCH_PLACEHOLDER')"
                 @input="searchTextChanged" />
             </div>
