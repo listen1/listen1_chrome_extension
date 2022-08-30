@@ -1,5 +1,7 @@
 /* global getParameterByName */
 // eslint-disable-next-line no-unused-vars
+/* global cookieSet cookieGet */
+// eslint-disable-next-line no-unused-vars
 class bilibili {
   static htmlDecode(value) {
     const parser = new DOMParser();
@@ -219,16 +221,51 @@ class bilibili {
           keyword
         )}&category_id=&search_type=video&dynamic_offset=0&preload=true&com2co=true`;
 
-        axios.get(target_url).then((response) => {
-          const result = response.data.data.result.map((song) =>
-            this.bi_convert_song2(song)
-          );
-          const total = response.data.data.numResults;
-          return fn({
-            result,
-            total,
-          });
-        });
+        const domain = `https://api.bilibili.com`;
+        const cookieName = 'buvid3';
+        const expire =
+          (new Date().getTime() + 1e3 * 60 * 60 * 24 * 365 * 100) / 1000;
+        cookieGet(
+          {
+            url: domain,
+            name: cookieName,
+          },
+          (cookie) => {
+            if (cookie == null) {
+              cookieSet(
+                {
+                  url: domain,
+                  name: cookieName,
+                  value: '0',
+                  expirationDate: expire,
+                },
+                () => {
+                  axios.get(target_url).then((response) => {
+                    const result = response.data.data.result.map((song) =>
+                      this.bi_convert_song2(song)
+                    );
+                    const total = response.data.data.numResults;
+                    return fn({
+                      result,
+                      total,
+                    });
+                  });
+                }
+              );
+            } else {
+              axios.get(target_url).then((response) => {
+                const result = response.data.data.result.map((song) =>
+                  this.bi_convert_song2(song)
+                );
+                const total = response.data.data.numResults;
+                return fn({
+                  result,
+                  total,
+                });
+              });
+            }
+          }
+        );
       },
     };
   }

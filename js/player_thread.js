@@ -335,7 +335,12 @@
             });
             self.currentAudio.disabled = true;
             self.sendPlayingEvent('err');
-            self.currentHowl.unload();
+            for (let i = 0; i < self.playlist.length; i += 1) {
+              if (self.playlist[i].howl === self.currentHowl) {
+                self.playlist[i].howl = null
+              }
+            };
+            self.currentHowl = null;
             delete self._media_uri_list[data.id];
           },
           onplayerror(id, err) {

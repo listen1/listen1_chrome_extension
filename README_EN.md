@@ -1,6 +1,6 @@
-# Listen 1 (Chrome Extension) V2.24.0
+# Listen 1 (Chrome Extension) V2.25.0
 
-（Last Update June 10th, 2022)
+（Last Update August 30th, 2022)
 
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE)
 
@@ -46,6 +46,14 @@ Making your own playlist is also supported.
 2. Click Add to Firefox button
 
 ## Changelog
+
+`2022-08`
+
+Fix bugs:
+
+- fix music can't play after idle for a while #902 （thanks @reserveword）
+- fix qq music search not working (thanks to lx-music-desktop for solution)
+- fix bilibili search response error
 
 `2022-07`
 

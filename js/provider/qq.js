@@ -127,7 +127,7 @@ class qq {
       album_id: `qqalbum_${song.album.mid}`,
       img_url: this.qq_get_image_url(song.album.mid, 'album'),
       source: 'qq',
-      source_url: `https://y.qq.com/#type=song&mid=${song.songmid}&tpl=yqq_song_detail`,
+      source_url: `https://y.qq.com/#type=song&mid=${song.mid}&tpl=yqq_song_detail`,
       url: '',
     };
     return d;
@@ -342,38 +342,49 @@ class qq {
     const keyword = getParameterByName('keywords', url);
     const curpage = getParameterByName('curpage', url);
     const searchType = getParameterByName('type', url);
-    let target_url = '';
-    switch (searchType) {
-      case '0':
-        target_url =
-          'https://c.y.qq.com/soso/fcgi-bin/client_search_cp?' +
-          'g_tk=938407465&uin=0&format=json&inCharset=utf-8' +
-          '&outCharset=utf-8&notice=0&platform=h5&needNewCode=1' +
-          `&w=${keyword}&zhidaqu=1&catZhida=1` +
-          `&t=0&flag=1&ie=utf-8&sem=1&aggr=0&perpage=20&n=20&p=${curpage}&remoteplace=txt.mqq.all&_=1459991037831`;
-        break;
-      case '1':
-        target_url =
-          'https://c.y.qq.com/soso/fcgi-bin/client_music_search_songlist?' +
-          'remoteplace=txt.yqq.playlist&&outCharset=utf-8&format=json' +
-          `&page_no=${curpage - 1}&num_per_page=20&query=${keyword}`;
-        break;
-      default:
-        break;
-    }
+
+    // API solution from lx-music-desktop
+    // https://github.com/lyswhut/lx-music-desktop/blob/master/src/renderer/utils/music/tx/musicSearch.js
+    const target_url = 'https://u.y.qq.com/cgi-bin/musicu.fcg';
+
+    const searchTypeMapping = {
+      0: 0,
+      1: 3,
+    };
+
     return {
       success: (fn) => {
-        axios.get(target_url).then((response) => {
+        const limit = 50;
+        const page = curpage;
+        const query = {
+          comm: {
+            ct: '19',
+            cv: '1859',
+            uin: '0',
+          },
+          req: {
+            method: 'DoSearchForQQMusicDesktop',
+            module: 'music.search.SearchCgiService',
+            param: {
+              grp: 1,
+              num_per_page: limit,
+              page_num: parseInt(page, 10),
+              query: keyword,
+              search_type: searchTypeMapping[searchType],
+            },
+          },
+        };
+        axios.post(target_url, query).then((response) => {
           const { data } = response;
           let result = [];
           let total = 0;
           if (searchType === '0') {
-            result = data.data.song.list.map((item) =>
-              this.qq_convert_song(item)
+            result = data.req.data.body.song.list.map((item) =>
+              this.qq_convert_song2(item)
             );
-            total = data.data.song.totalnum;
+            total = data.req.data.meta.sum;
           } else if (searchType === '1') {
-            result = data.data.list.map((info) => ({
+            result = data.req.data.body.songlist.list.map((info) => ({
               id: `qqplaylist_${info.dissid}`,
               title: this.htmlDecode(info.dissname),
               source: 'qq',
@@ -383,7 +394,7 @@ class qq {
               author: this.UnicodeToAscii(info.creator.name),
               count: info.song_count,
             }));
-            total = data.data.sum;
+            total = data.req.data.meta.sum;
           }
           return fn({
             result,
