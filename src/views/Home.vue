@@ -95,13 +95,31 @@
           <div class="flex flex-1 items-center">
             <span class="icon li-back ml-4 text-xl text-icon opacity-50 hover:opacity-100" @click="$router.go(-1)" />
             <span class="icon li-advance ml-2 mr-4 text-xl text-icon opacity-50 hover:opacity-100" @click="$router.go(1)" />
-            <input
-              id="search-input"
-              v-model="input_keywords"
-              type="text"
-              class="form-control search-input h-10 w-80 rounded border-none bg-search-input pl-3 text-default"
-              :placeholder="t('_SEARCH_PLACEHOLDER')"
-              @input="searchTextChanged" />
+            <div class="flex h-9 w-80 rounded-lg border-none bg-search-input pl-3 text-default">
+              <label class="mr-2 self-center">
+                <svg
+                  fill="currentColor"
+                  class="h-4 w-4 cursor-default opacity-[0.28]"
+                  aria-hidden="true"
+                  focusable="false"
+                  data-prefix="fas"
+                  data-icon="search"
+                  role="img"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 512 512">
+                  <path
+                    fill="currentColor"
+                    d="M505 442.7L405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9 0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7 0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0 128 57.2 128 128 0 70.7-57.2 128-128 128z"></path>
+                </svg>
+              </label>
+              <input
+                id="search-input"
+                v-model="input_keywords"
+                type="text"
+                class="form-control search-input w-64 bg-transparent text-lg font-medium text-search-placeholder"
+                :placeholder="t('_SEARCH_PLACEHOLDER')"
+                @input="searchTextChanged" />
+            </div>
           </div>
           <div :class="{ active: route.path === '/login' }" :style="platButtonStyle">
             <router-link to="/login">
