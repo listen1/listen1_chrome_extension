@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { cookieGetPromise, cookieRemove, getParameterByName, replaceBR, replaceNBSP } from '../utils';
+import { cookieGetPromise, cookieRemove, getParameterByName, htmlDecode, replaceBR, replaceNBSP } from '../utils';
 import { MusicProvider, MusicResource } from './types';
 
 function fixString(str: string) {
@@ -12,10 +12,6 @@ const provider: MusicProvider = class qq extends MusicResource {
   static support_login = true;
   static hidden = false;
   static displayId = '_QQ_MUSIC';
-  static htmlDecode(value: string) {
-    const parser = new DOMParser();
-    return parser.parseFromString(value, 'text/html').body.textContent;
-  }
 
   static async qq_show_toplist(offset: number) {
     if (offset !== undefined && offset > 0) {
@@ -53,7 +49,7 @@ const provider: MusicProvider = class qq extends MusicResource {
     /** @type {{cover_img_url:string;id:string;source_url:string;title:string}[]}*/
     const playlists = data.data.list.map((item: any) => ({
       cover_img_url: item.imgurl,
-      title: this.htmlDecode(item.dissname),
+      title: htmlDecode(item.dissname),
       id: `qqplaylist_${item.dissid}`,
       source_url: `https://y.qq.com/n/ryqq/playlist/${item.dissid}`
     }));
@@ -93,16 +89,32 @@ const provider: MusicProvider = class qq extends MusicResource {
     const d = {
       id: `qqtrack_${song.songmid}`,
       id2: `qqtrack_${song.songid}`,
-      title: this.htmlDecode(song.songname),
-      artist: this.htmlDecode(song.singer[0].name),
+      title: htmlDecode(song.songname),
+      artist: htmlDecode(song.singer[0].name),
       artist_id: `qqartist_${song.singer[0].mid}`,
-      album: this.htmlDecode(song.albumname),
+      album: htmlDecode(song.albumname),
       album_id: `qqalbum_${song.albummid}`,
       img_url: this.qq_get_image_url(song.albummid, 'album'),
       source: 'qq',
       source_url: `https://y.qq.com/#type=song&mid=${song.songmid}&tpl=yqq_song_detail`,
       // url: `qqtrack_${song.songmid}`,
       url: !qq.qq_is_playable(song) ? '' : undefined
+    };
+    return d;
+  }
+
+  static qq_convert_song2(song: any) {
+    const d = {
+      id: `qqtrack_${song.mid}`,
+      title: htmlDecode(song.name),
+      artist: htmlDecode(song.singer[0].name),
+      artist_id: `qqartist_${song.singer[0].mid}`,
+      album: htmlDecode(song.album.name),
+      album_id: `qqalbum_${song.album.mid}`,
+      img_url: this.qq_get_image_url(song.album.mid, 'album'),
+      source: 'qq',
+      source_url: `https://y.qq.com/#type=song&mid=${song.mid}&tpl=yqq_song_detail`,
+      url: ''
     };
     return d;
   }
@@ -166,10 +178,10 @@ const provider: MusicProvider = class qq extends MusicResource {
       const d = {
         id: `qqtrack_${song.mid}`,
         id2: `qqtrack_${song.id}`,
-        title: this.htmlDecode(song.name),
-        artist: this.htmlDecode(song.singer[0].name),
+        title: htmlDecode(song.name),
+        artist: htmlDecode(song.singer[0].name),
         artist_id: `qqartist_${song.singer[0].mid}`,
-        album: this.htmlDecode(song.album.name),
+        album: htmlDecode(song.album.name),
         album_id: `qqalbum_${song.album.mid}`,
         img_url: this.qq_get_image_url(song.album.mid, 'album'),
         source: 'qq',
@@ -267,37 +279,48 @@ const provider: MusicProvider = class qq extends MusicResource {
     // eslint-disable-line no-unused-vars
     const keyword = getParameterByName('keywords', url);
     const curpage = Number(getParameterByName('curpage', url));
-    const searchType = getParameterByName('type', url);
-    let target_url = '';
-    switch (searchType) {
-      case '0':
-        target_url =
-          'https://c.y.qq.com/soso/fcgi-bin/client_search_cp?' +
-          'g_tk=938407465&uin=0&format=json&inCharset=utf-8' +
-          '&outCharset=utf-8&notice=0&platform=h5&needNewCode=1' +
-          `&w=${keyword}&zhidaqu=1&catZhida=1` +
-          `&t=0&flag=1&ie=utf-8&sem=1&aggr=0&perpage=20&n=20&p=${curpage}&remoteplace=txt.mqq.all&_=1459991037831`;
-        break;
-      case '1':
-        target_url =
-          'https://c.y.qq.com/soso/fcgi-bin/client_music_search_songlist?' +
-          'remoteplace=txt.yqq.playlist&&outCharset=utf-8&format=json' +
-          `&page_no=${curpage - 1}&num_per_page=20&query=${keyword}`;
-        break;
-      default:
-        break;
-    }
-    const response = await axios.get(target_url);
+    const searchType = getParameterByName('type', url) as '0' | '1';
+
+    // API solution from lx-music-desktop
+    // https://github.com/lyswhut/lx-music-desktop/blob/master/src/renderer/utils/music/tx/musicSearch.js
+    const target_url = 'https://u.y.qq.com/cgi-bin/musicu.fcg';
+
+    const searchTypeMapping = {
+      0: 0,
+      1: 3
+    };
+    const limit = 50;
+    const page = curpage;
+    const query = {
+      comm: {
+        ct: '19',
+        cv: '1859',
+        uin: '0'
+      },
+      req: {
+        method: 'DoSearchForQQMusicDesktop',
+        module: 'music.search.SearchCgiService',
+        param: {
+          grp: 1,
+          num_per_page: limit,
+          page_num: page,
+          query: keyword,
+          search_type: searchTypeMapping[searchType]
+        }
+      }
+    };
+    const response = await axios.post(target_url, query);
     const { data } = response;
+    console.log('qqdata', data);
     let result = [];
     let total = 0;
     if (searchType === '0') {
-      result = data.data.song.list.map((item: any) => this.qq_convert_song(item));
-      total = data.data.song.totalnum;
+      result = data.data.song.list.map((item: any) => this.qq_convert_song2(item));
+      total = data.req.data.meta.sum;
     } else if (searchType === '1') {
-      result = data.data.list.map((info: any) => ({
+      result = data.req.data.body.songlist.list.map((info: any) => ({
         id: `qqplaylist_${info.dissid}`,
-        title: this.htmlDecode(info.dissname),
+        title: htmlDecode(info.dissname),
         source: 'qq',
         source_url: `https://y.qq.com/n/ryqq/playlist/${info.dissid}`,
         img_url: info.imgurl,
@@ -305,7 +328,7 @@ const provider: MusicProvider = class qq extends MusicResource {
         author: this.UnicodeToAscii(info.creator.name),
         count: info.song_count
       }));
-      total = data.data.sum;
+      total = data.req.data.meta.sum;
     }
     return {
       result,
@@ -497,7 +520,7 @@ const provider: MusicProvider = class qq extends MusicResource {
     data.data.categories.forEach((cate: any) => {
       const result = { category: cate.categoryGroupName, filters: [] };
       if (cate.usable === 1) {
-        result.filters = cate.items.map((item: any) => ({ id: item.categoryId, name: this.htmlDecode(item.categoryName) }));
+        result.filters = cate.items.map((item: any) => ({ id: item.categoryId, name: htmlDecode(item.categoryName) }));
         all.push(result);
       }
     });

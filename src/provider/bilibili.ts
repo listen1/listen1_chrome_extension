@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { getParameterByName } from '../utils';
+import { cookieGetPromise, cookieSetPromise, getParameterByName, htmlDecode } from '../utils';
 import { MusicProvider, MusicResource } from './types';
 
 const provider: MusicProvider = class bilibili extends MusicResource {
@@ -20,6 +20,23 @@ const provider: MusicProvider = class bilibili extends MusicResource {
       img_url: song_info.cover,
       // url: song_info.id,
       lyric_url: song_info.lyric
+    };
+    return track;
+  }
+
+  static bi_convert_song2(song_info: any) {
+    let imgUrl = song_info.pic;
+    if (imgUrl.startsWith('//')) {
+      imgUrl = `https:${imgUrl}`;
+    }
+    const track = {
+      id: `bitrack_v_${song_info.bvid}`,
+      title: htmlDecode(song_info.title),
+      artist: htmlDecode(song_info.author),
+      artist_id: `biartist_v_${song_info.mid}`,
+      source: 'bilibili',
+      source_url: `https://www.bilibili.com/${song_info.bvid}`,
+      img_url: imgUrl
     };
     return track;
   }
@@ -145,34 +162,32 @@ const provider: MusicProvider = class bilibili extends MusicResource {
   }
 
   static async search(url: string) {
-    const keyword = getParameterByName('keywords', url) || '';
-    const au = /\d+$/.exec(keyword);
-    if (au != null) {
-      const target_url = `https://www.bilibili.com/audio/music-service-c/web/song/info?sid=${au}`;
-      const response = await axios.get(target_url);
-      const { data } = response.data;
-      const tracks = [this.bi_convert_song(data)];
-      return {
-        result: tracks,
-        total: 1
-      };
-    } else {
-      return {
-        result: [],
-        total: 0
-      };
+    const keyword = getParameterByName('keywords', url) as string;
+    const curpage = getParameterByName('curpage', url);
+    const target_url = `https://api.bilibili.com/x/web-interface/search/type?__refresh__=true&_extra=&context=&page=${curpage}&page_size=42&platform=pc&highlight=1&single_column=0&keyword=${encodeURIComponent(
+      keyword
+    )}&category_id=&search_type=video&dynamic_offset=0&preload=true&com2co=true`;
+    const domain = `https://api.bilibili.com`;
+    const cookieName = 'buvid3';
+    const expire = (new Date().getTime() + 1e3 * 60 * 60 * 24 * 365 * 100) / 1000;
+
+    const cookie = await cookieGetPromise({
+      url: domain,
+      name: cookieName
+    });
+    if (cookie == null) {
+      await cookieSetPromise({
+        url: domain,
+        name: cookieName,
+        value: '0',
+        expirationDate: expire,
+        sameSite: "no_restriction"
+      });
     }
-    // eslint-disable-next-line no-unreachable
-    // const target_url = `https://api.bilibili.com/x/web-interface/search/type?search_type=audio&keyword=${keyword}&page=${curpage}`;
-    // axios.get(target_url).then((response) => {
-    //   const { data } = response.data;
-    //   const tracks = data.result.map((item) => this.bi_convert_song(item));
-    //   return fn({
-    //     result: tracks,
-    //     total: data.numResults
-    //   });
-    // });
-    // return null;
+    const { data } = await axios.get(target_url);
+    const result = data.data.result.map(this.bi_convert_song2);
+    const total = data.data.numResult;
+    return { result, total };
   }
 
   static async lyric(url: string) {
