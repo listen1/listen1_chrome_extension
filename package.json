@@ -1,6 +1,6 @@
 {
   "name": "listen1_chrome_extension",
-  "version": "2.24.0",
+  "version": "2.25.0",
   "description": "one for all free music in china",
   "main": "index.js",
   "scripts": {
