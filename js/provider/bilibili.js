@@ -252,6 +252,17 @@ class bilibili {
                   });
                 }
               );
+            } else {
+              axios.get(target_url).then((response) => {
+                const result = response.data.data.result.map((song) =>
+                  this.bi_convert_song2(song)
+                );
+                const total = response.data.data.numResults;
+                return fn({
+                  result,
+                  total,
+                });
+              });
             }
           }
         );
