@@ -311,7 +311,6 @@ const provider: MusicProvider = class qq extends MusicResource {
     };
     const response = await axios.post(target_url, query);
     const { data } = response;
-    console.log('qqdata', data);
     let result = [];
     let total = 0;
     if (searchType === '0') {
