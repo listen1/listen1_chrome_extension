@@ -396,7 +396,8 @@
       function x(musicId) {
         if (musicId < 0) {
           return l + musicId;
-        } else if (musicId > l - 1) {
+        }
+        if (musicId > l - 1) {
           return musicId - l;
         } 
           return musicId;
@@ -416,7 +417,7 @@
         li[x(rdx)].className = 'b';
         li[x(rdx + 1)].className = 'c';
         li[x(rdx + 2)].className = 'def';
-      } else if (l > 4){
+      } else {
         li[x(rdx - 2)].className = 'def';
         li[x(rdx - 1)].className = 'a';
         li[x(rdx)].className = 'b';
