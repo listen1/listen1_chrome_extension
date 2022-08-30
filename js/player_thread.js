@@ -416,7 +416,7 @@
         li[x(rdx)].className = 'b';
         li[x(rdx + 1)].className = 'c';
         li[x(rdx + 2)].className = 'def';
-      } else {
+      } else if (l > 4){
         li[x(rdx - 2)].className = 'def';
         li[x(rdx - 1)].className = 'a';
         li[x(rdx)].className = 'b';
