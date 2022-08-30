@@ -181,7 +181,7 @@ const provider: MusicProvider = class bilibili extends MusicResource {
         name: cookieName,
         value: '0',
         expirationDate: expire,
-        sameSite: "no_restriction"
+        sameSite: 'no_restriction'
       });
     }
     const { data } = await axios.get(target_url);
