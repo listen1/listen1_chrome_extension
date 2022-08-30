@@ -53,6 +53,7 @@ Fix bugs:
 
 - fix music can't play after idle for a while #902 （thanks @reserveword）
 - fix qq music search not working (thanks to lx-music-desktop for solution)
+- fix bilibili search response error
 
 `2022-07`
 
