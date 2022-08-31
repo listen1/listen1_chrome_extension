@@ -329,7 +329,6 @@ const provider: MusicProvider = class qq extends MusicResource {
       }));
       total = data.req.data.meta.sum;
     }
-    console.log(result)
     return {
       result,
       total,
