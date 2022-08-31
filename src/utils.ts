@@ -33,6 +33,10 @@ export function getParameterByName(name: string, url: string) {
   const { searchParams } = new URL(url, location.origin);
   return searchParams.get(name);
 }
+export function htmlDecode(value: string) {
+  const parser = new DOMParser();
+  return parser.parseFromString(value, 'text/html').body.textContent;
+}
 export function replaceBR(str: string) {
   return str.replace(/<br>/g, '\n');
 }
