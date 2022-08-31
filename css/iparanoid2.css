@@ -1,0 +1,80 @@
+/* global settings (theme related) */
+:root {
+  --icon-default-color: #000;
+
+  --text-default-color: #000;
+  --text-subtitle-color: #7a7a7b;
+  /* --text-disable-color: #999999; */
+
+  --lyric-default-color: #666666;
+  --lyric-on-cover-color: #333333;
+  --lyric-important-on-cover-color: #ffffff;
+
+  --link-default-color: #999999;
+  --link-active-color: #323232;
+
+  --line-default-color: #e5e5e5;
+
+  --sidebar-highlight-background-color: #f2f2f3;
+  --sidebar-hover-background-color: #f2f2f3;
+  --sidebar-hover-text-color: #262626;
+
+  --content-background-color: #ffffff;
+
+  --footer-player-bar-cur-background-color: #666666;
+  --search-input-background-color: #f2f2f3;
+
+  --footer-player-bar-cur-button-color: #111111;
+  --footer-player-bar-background-color: #e0e0e0;
+
+  --window-control-border-color: #dddddd;
+
+  --important-color: #335eea;
+
+  --button-background-color: #f5f5f7;
+  --button-border-color: #bebebe;
+  --button-hover-background-color: #dddddd;
+
+  --now-playing-close-icon-color: #666666;
+
+  --disable-song-title-color: #b7b7b7;
+  --windows-border-color: #dddddd;
+
+  --default-border-radius: 10px;
+  --text-default-size: 13px;
+  --h2-title-font-size: 24px;
+  --badge-font-size: 12px;
+  --songlist-odd-background-color: #f5f5f5;
+  --songlist-hover-background-color: #eeeeee;
+
+  --player-icon-color: #666666;
+  --player-icon-hover-color: #666666;
+  --player-right-icon-color: #333333;
+  --player-right-icon-hover-color: #000000;
+
+  --dialog-highlight-color: #e3e3e5;
+  --dialog-background-color: #fafafa;
+  --dialog-text-color: #565656;
+
+  --volume-icon-color: #333333;
+
+  --scroll-color: #c2c2c2;
+
+  --lyric-icon-background-color: #ffffff;
+
+  --footer-background-color: hsla(0, 0%, 100%, 0.86);
+  --nav-background-color: hsla(0, 0%, 100%, 0.86);
+  --color-body-bg: #fff;
+  --white--black: #fff;
+  --black--white: #222;
+  --white--black-background: #222;
+
+  --theme-color: #335eea;
+  --theme-color-ope: rgba(51, 94, 234, 0.4);
+  --theme-color-hover: #eaeffd;
+
+  --sidebar-background: #ebebec;
+  --sidebar-splitter: #1d1d1f;
+
+  --shadow-mask: rgba(30, 30, 30, 0.5);
+}

@@ -337,9 +337,9 @@
             self.sendPlayingEvent('err');
             for (let i = 0; i < self.playlist.length; i += 1) {
               if (self.playlist[i].howl === self.currentHowl) {
-                self.playlist[i].howl = null
+                self.playlist[i].howl = null;
               }
-            };
+            }
             self.currentHowl = null;
             delete self._media_uri_list[data.id];
           },
@@ -399,9 +399,8 @@
         }
         if (musicId > l - 1) {
           return musicId - l;
-        } 
-          return musicId;
-        
+        }
+        return musicId;
       }
       if (l === 1) {
         li[0].className = 'b';
@@ -464,26 +463,37 @@
           // clear random playlist
           this._random_playlist = [];
         }
+        // TODO: UI related code should not in player thread file
+        const useMordernTheme = circlmark !== null && rotatemark !== null;
+        if (useMordernTheme) {
+          circlmark.classList.add('circlmark');
+          rotatemark.classList.add('rotatemark');
+          circlmark.addEventListener('animationend', () => {
+            circlmark.classList.remove('circlmark');
+          });
+          rotatemark.addEventListener('animationend', () => {
+            rotatemark.classList.remove('rotatemark');
+          });
+        }
 
-        circlmark.classList.add('circlmark');
-        rotatemark.classList.add('rotatemark');
-        circlmark.addEventListener('animationend', ()=> {
-          circlmark.classList.remove('circlmark');
-        });
-        rotatemark.addEventListener('animationend', ()=>{
-          rotatemark.classList.remove('rotatemark');
-        });
         if (random_mode) {
           rdx -= 1;
-          this.changeImg(this._random_playlist[rdx % l]);
+          if (useMordernTheme) {
+            this.changeImg(this._random_playlist[rdx % l]);
+          }
         } else if (direction === 'prev') {
           if (rdx === 0) rdx = l;
           rdx -= 1;
-          this.changeImg(rdx);
+          if (useMordernTheme) {
+            this.changeImg(rdx);
+          }
         } else {
           rdx += 1;
-          this.changeImg(rdx);
+          if (useMordernTheme) {
+            this.changeImg(rdx);
+          }
         }
+
         return random_mode ? this._random_playlist[rdx % l] : rdx % l;
       };
       this.index = nextIndexFn(this.index);
