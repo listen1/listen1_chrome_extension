@@ -474,10 +474,19 @@ angular.module('listenone').controller('PlayController', [
               const lineElement = document.querySelector(
                 `.playsong-detail .detail-songinfo .lyric p[data-line="${lastObject.lineNumber}"]`
               );
-              const windowHeight = document.querySelector(
+
+              const rotatemark = document.getElementById('rotatemark');
+              const circlmark = document.getElementById('circlmark');
+              const useMordernTheme = circlmark !== null && rotatemark !== null;
+              let windowHeight = document.querySelector(
                 '.playsong-detail .detail-songinfo .lyric'
               ).offsetHeight;
-
+              if (useMordernTheme){
+                windowHeight = document.querySelector(
+                  'body'
+                ).offsetHeight - 100;
+              }
+              
               const adjustOffset = 30;
               const offset =
                 lineElement.offsetTop - windowHeight / 2 + adjustOffset;

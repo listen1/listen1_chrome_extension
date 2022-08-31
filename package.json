@@ -33,11 +33,5 @@
   "lint-staged": {
     "!(**/vendor/*.js)*.js": "eslint --cache --fix",
     "!(**/vendor/*.js)*.{js,css,md}": "prettier --write"
-  },
-  "dependencies": {
-    "color": "^4.2.3",
-    "jquery": "^3.6.0",
-    "jquery-lazyload": "^1.9.7",
-    "node-vibrant": "^3.2.1-alpha.1"
   }
 }
