@@ -72,6 +72,18 @@ const main = () => {
             background: 'deepskyblue',
             icon: false,
           },
+          {
+            type: 'success',
+            className: 'notyf__toast--success',
+            backgroundColor: '#335eea',
+            icon: { className: 'notyf__icon--success', tagName: 'i' },
+          },
+          {
+            type: 'error',
+            className: 'notyf__toast--error',
+            backgroundColor: '#b90b2c',
+            icon: { className: 'notyf__icon--error', tagName: 'i' },
+          },
         ],
       });
       window.notyf.warning = (msg, replace) => {
