@@ -365,7 +365,8 @@
         });
         this.currentHowl.play();
       }
-      this.changeImg(index);
+      const uiAnimation = new UiAnimation();
+      uiAnimation.changeImg(index,this.playlist.length);
     }
 
     /**
@@ -376,54 +377,6 @@
 
       // Puase the sound.
       this.currentHowl.pause();
-    }
-    // circlopacity(){
-    //   let circlopacity = document.getElementById("circlmark")
-    //   circlopacity.classList.add('circlopacity')
-    //   circlopacity.addEventListener("animationend",function(){
-    //     circlopacity.classList.remove('circlopacity')
-    //   })
-    // }
-
-    changeImg(rdx) {
-      const l = this.playlist.length;
-      const li = document.querySelectorAll('.footer .cover li');
-      if (l > 5) {
-        for (let i = 0; i < l; i += 1) {
-          li[i].className = 'hid';
-        }
-      }
-      function x(musicId) {
-        if (musicId < 0) {
-          return l + musicId;
-        }
-        if (musicId > l - 1) {
-          return musicId - l;
-        }
-        return musicId;
-      }
-      if (l === 1) {
-        li[0].className = 'b';
-      } else if (l === 2) {
-        li[x(rdx)].className = 'b';
-        li[x(rdx + 1)].className = 'c';
-      } else if (l === 3) {
-        li[x(rdx - 1)].className = 'a';
-        li[x(rdx)].className = 'b';
-        li[x(rdx + 1)].className = 'c';
-      } else if (l === 4) {
-        li[x(rdx - 1)].className = 'a';
-        li[x(rdx)].className = 'b';
-        li[x(rdx + 1)].className = 'c';
-        li[x(rdx + 2)].className = 'def';
-      } else {
-        li[x(rdx - 2)].className = 'def';
-        li[x(rdx - 1)].className = 'a';
-        li[x(rdx)].className = 'b';
-        li[x(rdx + 1)].className = 'c';
-        li[x(rdx + 2)].className = 'def';
-      }
-      li[x(rdx)].classList.add('rotatecircl');
     }
 
     /**
@@ -436,10 +389,6 @@
       const nextIndexFn = (idx) => {
         const l = this.playlist.length;
         const random_mode = this._loop_mode === 2 || direction === 'random';
-
-        const rotatemark = document.getElementById('rotatemark');
-        const circlmark = document.getElementById('circlmark');
-        // var li = document.querySelectorAll(".footer .cover li")
 
         let rdx = idx;
 
@@ -464,34 +413,19 @@
           this._random_playlist = [];
         }
         // TODO: UI related code should not in player thread file
-        const useMordernTheme = circlmark !== null && rotatemark !== null;
-        if (useMordernTheme) {
-          circlmark.classList.add('circlmark');
-          rotatemark.classList.add('rotatemark');
-          circlmark.addEventListener('animationend', () => {
-            circlmark.classList.remove('circlmark');
-          });
-          rotatemark.addEventListener('animationend', () => {
-            rotatemark.classList.remove('rotatemark');
-          });
-        }
+        const uiAnimation = new UiAnimation();
+        uiAnimation.skipAnimation()
 
         if (random_mode) {
           rdx -= 1;
-          if (useMordernTheme) {
-            this.changeImg(this._random_playlist[rdx % l]);
-          }
+          uiAnimation.changeImg(this._random_playlist[rdx % l],l);
         } else if (direction === 'prev') {
           if (rdx === 0) rdx = l;
           rdx -= 1;
-          if (useMordernTheme) {
-            this.changeImg(rdx);
-          }
+          uiAnimation.changeImg(rdx,l);
         } else {
           rdx += 1;
-          if (useMordernTheme) {
-            this.changeImg(rdx);
-          }
+          uiAnimation.changeImg(rdx,l);
         }
 
         return random_mode ? this._random_playlist[rdx % l] : rdx % l;
