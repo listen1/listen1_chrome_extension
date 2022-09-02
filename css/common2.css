@@ -1991,6 +1991,9 @@ svg.searchspinner {
 .footer .main-info .bottomprogressbar svg {
   cursor: default;
 }
+.footer .main-info .volume-ctrl .icon svg{
+  cursor: pointer;
+}
 .footer .main-info .bottomprogressbar {
   justify-content: center;
   align-items: center;
@@ -2007,7 +2010,7 @@ svg.searchspinner {
 .footer .main-info .playbar .playbar-clickable {
   margin: 10px 10px 10px 0;
   flex: 1;
-  cursor: col-resize;
+  cursor: pointer;
 }
 .footer .main-info .barbg {
   height: 3px;
@@ -2057,7 +2060,7 @@ svg.searchspinner {
 .volume-ctrl .m-pbar {
   flex: 1;
   margin: 10px 0;
-  cursor: col-resize;
+  cursor: pointer;
 }
 
 .footer .menu-modal {
