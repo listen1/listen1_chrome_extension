@@ -197,14 +197,13 @@
      */
     play(idx) {
       this.load(idx);
-      const data = this.playlist[this.index];
 
+      const data = this.playlist[this.index];
       if (!data.howl || !this._media_uri_list[data.id]) {
         this.retrieveMediaUrl(this.index, true);
       } else {
         this.finishLoad(this.index, true);
       }
-      // this.changeImg(idx)
     }
 
     retrieveMediaUrl(index, playNow) {
@@ -255,12 +254,12 @@
       if (!this.playlist[index]) {
         index = 0;
       }
-
       // stop when load new track to avoid multiple songs play in same time
       if (index !== this.index) {
         Howler.unload();
       }
       this.index = index;
+
       this.sendLoadEvent();
     }
 
@@ -365,8 +364,19 @@
         });
         this.currentHowl.play();
       }
-      const uiAnimation = new UiAnimation();
-      uiAnimation.changeImg(index,this.playlist.length);
+      const msg = {
+        type: 'BG_PLAYER:FINISH_LOAD',
+        data: {
+          ...this.playlist[index],
+          howl: undefined,
+          index,
+          playlist: {
+            index,
+            length: this.playlist.length,
+          },
+        },
+      };
+      playerSendMessage(this.mode, msg);
     }
 
     /**
@@ -412,23 +422,29 @@
           // clear random playlist
           this._random_playlist = [];
         }
-        // TODO: UI related code should not in player thread file
-        const uiAnimation = new UiAnimation();
-        uiAnimation.skipAnimation()
 
-        if (random_mode) {
-          rdx -= 1;
-          uiAnimation.changeImg(this._random_playlist[rdx % l],l);
-        } else if (direction === 'prev') {
+        if (direction === 'prev') {
           if (rdx === 0) rdx = l;
           rdx -= 1;
-          uiAnimation.changeImg(rdx,l);
         } else {
           rdx += 1;
-          uiAnimation.changeImg(rdx,l);
         }
+        const result = random_mode ? this._random_playlist[rdx % l] : rdx % l;
+        const msg = {
+          type: 'BG_PLAYER:SKIP',
+          data: {
+            ...this.playlist[result],
+            howl: undefined,
+            index: result,
+            playlist: {
+              index: result,
+              length: this.playlist.length,
+            },
+          },
+        };
+        playerSendMessage(this.mode, msg);
 
-        return random_mode ? this._random_playlist[rdx % l] : rdx % l;
+        return result;
       };
       this.index = nextIndexFn(this.index);
 

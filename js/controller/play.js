@@ -2,7 +2,7 @@
 /* eslint-disable no-shadow */
 /* eslint-disable import/no-unresolved */
 /* eslint-disable global-require */
-/* global angular notyf i18next MediaService l1Player hotkeys GithubClient isElectron require getLocalStorageValue getPlayer getPlayerAsync addPlayerListener smoothScrollTo lastfm */
+/* global angular notyf i18next MediaService l1Player hotkeys GithubClient isElectron require getLocalStorageValue getPlayer getPlayerAsync addPlayerListener smoothScrollTo lastfm UiAnimation */
 
 function getCSSStringFromSetting(setting) {
   let { backgroundAlpha } = setting;
@@ -481,12 +481,11 @@ angular.module('listenone').controller('PlayController', [
               let windowHeight = document.querySelector(
                 '.playsong-detail .detail-songinfo .lyric'
               ).offsetHeight;
-              if (useMordernTheme){
-                windowHeight = document.querySelector(
-                  'body'
-                ).offsetHeight - 100;
+              if (useMordernTheme) {
+                windowHeight =
+                  document.querySelector('body').offsetHeight - 100;
               }
-              
+
               const adjustOffset = 30;
               const offset =
                 lineElement.offsetTop - windowHeight / 2 + adjustOffset;
@@ -686,6 +685,19 @@ angular.module('listenone').controller('PlayController', [
           }
           case 'RETRIEVE_URL_FAIL_ALL': {
             $scope.failAllNotice();
+            break;
+          }
+          case 'FINISH_LOAD': {
+            const { index, length } = msg.data.playlist;
+            const uiAnimation = new UiAnimation();
+            uiAnimation.changeImg(index, length);
+            break;
+          }
+          case 'SKIP': {
+            const { index, length } = msg.data.playlist;
+            const uiAnimation = new UiAnimation();
+            uiAnimation.skipAnimation();
+            uiAnimation.changeImg(index, length);
             break;
           }
           default:
