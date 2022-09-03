@@ -1,13 +1,16 @@
+/* eslint-disable no-unused-vars: "error" */
 class UiAnimation {
 
-  get useMordernTheme() {
+  useMordernTheme = () => {
     const rotatemark = document.getElementById('rotatemark');
-      const circlmark = document.getElementById('circlmark');
+    const circlmark = document.getElementById('circlmark');
     return circlmark !== null && rotatemark !== null;
   }
 
   skipAnimation(){
         if (this.useMordernTheme) {
+          const rotatemark = document.getElementById('rotatemark');
+          const circlmark = document.getElementById('circlmark');
           circlmark.classList.add('circlmark');
           rotatemark.classList.add('rotatemark');
           circlmark.addEventListener('animationend', () => {
@@ -25,19 +28,22 @@ class UiAnimation {
      * @param  {Number} l Length of playlist.
      */
   changeImg(rdx,l) {
+
+    function x(musicId) {
+      if (musicId < 0) {
+        return l + musicId;
+      }
+      if (musicId > l - 1) {
+        return musicId - l;
+      }
+      return musicId;
+    }
+
       if(this.useMordernTheme){
       // const l = this.playlist.length;
       const li = document.querySelectorAll('.footer .cover li');
 
-      function x(musicId) {
-        if (musicId < 0) {
-          return l + musicId;
-        }
-        if (musicId > l - 1) {
-          return musicId - l;
-        }
-        return musicId;
-      }
+      
       if (l === 1) {
         li[0].className = 'b';
       } else if (l === 2) {
