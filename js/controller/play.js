@@ -2,7 +2,7 @@
 /* eslint-disable no-shadow */
 /* eslint-disable import/no-unresolved */
 /* eslint-disable global-require */
-/* global angular notyf i18next MediaService l1Player hotkeys GithubClient isElectron require getLocalStorageValue getPlayer getPlayerAsync addPlayerListener smoothScrollTo lastfm UiAnimation */
+/* global angular notyf i18next MediaService l1Player hotkeys GithubClient isElectron require getLocalStorageValue getPlayer getPlayerAsync addPlayerListener smoothScrollTo lastfm */
 
 function getCSSStringFromSetting(setting) {
   let { backgroundAlpha } = setting;
@@ -22,6 +22,75 @@ function getCSSStringFromSetting(setting) {
       font-size: ${setting.fontSize - 4}px;
     }
     `;
+}
+
+function useModernTheme() {
+  const rotatemark = document.getElementById('rotatemark');
+  const circlmark = document.getElementById('circlmark');
+  return circlmark !== null && rotatemark !== null;
+}
+
+/**
+ * Skip to the next or previous track animation.
+ * @param  {Number} rdx Index of the song in the playlist.
+ * @param  {Number} l Length of playlist.
+ */
+function changeImg(rdx, l) {
+  function x(musicId) {
+    if (musicId < 0) {
+      return l + musicId;
+    }
+    if (musicId > l - 1) {
+      return musicId - l;
+    }
+    return musicId;
+  }
+
+  if (useModernTheme()) {
+    // const l = this.playlist.length;
+    const li = document.querySelectorAll('.footer .cover li');
+
+    if (l === 1) {
+      li[0].className = 'b';
+    } else if (l === 2) {
+      li[x(rdx)].className = 'b';
+      li[x(rdx + 1)].className = 'c';
+    } else if (l === 3) {
+      li[x(rdx - 1)].className = 'a';
+      li[x(rdx)].className = 'b';
+      li[x(rdx + 1)].className = 'c';
+    } else if (l === 4) {
+      li[x(rdx - 1)].className = 'a';
+      li[x(rdx)].className = 'b';
+      li[x(rdx + 1)].className = 'c';
+      li[x(rdx + 2)].className = 'def';
+    } else {
+      for (let i = 0; i < l; i += 1) {
+        li[i].className = 'hid';
+      }
+      li[x(rdx - 2)].className = 'def';
+      li[x(rdx - 1)].className = 'a';
+      li[x(rdx)].className = 'b';
+      li[x(rdx + 1)].className = 'c';
+      li[x(rdx + 2)].className = 'def';
+    }
+    li[x(rdx)].classList.add('rotatecircl');
+  }
+}
+
+function skipAnimation() {
+  if (useModernTheme()) {
+    const rotatemark = document.getElementById('rotatemark');
+    const circlmark = document.getElementById('circlmark');
+    circlmark.classList.add('circlmark');
+    rotatemark.classList.add('rotatemark');
+    circlmark.addEventListener('animationend', () => {
+      circlmark.classList.remove('circlmark');
+    });
+    rotatemark.addEventListener('animationend', () => {
+      rotatemark.classList.remove('rotatemark');
+    });
+  }
 }
 
 angular.module('listenone').controller('PlayController', [
@@ -475,13 +544,10 @@ angular.module('listenone').controller('PlayController', [
                 `.playsong-detail .detail-songinfo .lyric p[data-line="${lastObject.lineNumber}"]`
               );
 
-              const rotatemark = document.getElementById('rotatemark');
-              const circlmark = document.getElementById('circlmark');
-              const useMordernTheme = circlmark !== null && rotatemark !== null;
               let windowHeight = document.querySelector(
                 '.playsong-detail .detail-songinfo .lyric'
               ).offsetHeight;
-              if (useMordernTheme) {
+              if (useModernTheme()) {
                 windowHeight =
                   document.querySelector('body').offsetHeight - 100;
               }
@@ -689,15 +755,13 @@ angular.module('listenone').controller('PlayController', [
           }
           case 'FINISH_LOAD': {
             const { index, length } = msg.data.playlist;
-            const uiAnimation = new UiAnimation();
-            uiAnimation.changeImg(index, length);
+            changeImg(index, length);
             break;
           }
           case 'SKIP': {
             const { index, length } = msg.data.playlist;
-            const uiAnimation = new UiAnimation();
-            uiAnimation.skipAnimation();
-            uiAnimation.changeImg(index, length);
+            skipAnimation();
+            changeImg(index, length);
             break;
           }
           default:
