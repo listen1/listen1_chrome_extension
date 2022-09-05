@@ -26,7 +26,7 @@ function getCSSStringFromSetting(setting) {
 
 function useModernTheme() {
   const defaultTheme = localStorage.getObject('theme');
-  return defaultTheme ==='white2'||defaultTheme ==='black2';
+  return defaultTheme === 'white2' || defaultTheme === 'black2';
 }
 
 function getSafeIndex(index, length) {
@@ -43,7 +43,7 @@ function skipAnimation() {
   if (useModernTheme()) {
     const rotatemark = document.getElementById('rotatemark');
     const circlmark = document.getElementById('circlmark');
-    if(rotatemark !== null &&circlmark !== null){
+    if (rotatemark !== null && circlmark !== null) {
       circlmark.classList.add('circlmark');
       rotatemark.classList.add('rotatemark');
       circlmark.addEventListener('animationend', () => {
@@ -351,7 +351,6 @@ angular.module('listenone').controller('PlayController', [
       });
     });
 
-
     /**
      * Skip to the next or previous track animation.
      * @param  {Number} rdx Index of the song in the playlist.
@@ -359,18 +358,21 @@ angular.module('listenone').controller('PlayController', [
      */
     function changeImg(rdx, l) {
       if (useModernTheme()) {
-        let prePlayIndex = getSafeIndex(rdx-1,l)
-        let nextPlayIndex = getSafeIndex(rdx+1,l)
+        const prePlayIndex = getSafeIndex(rdx - 1, l);
+        const nextPlayIndex = getSafeIndex(rdx + 1, l);
         if (l === 1) {
-          $scope.prePlayIndex = null
-          $scope.nextPlayIndex = null
-        } else if (l === 2||l === 3) {
-          $scope.prePlayIndex = prePlayIndex
-          $scope.nextPlayIndex = nextPlayIndex
+          $scope.prePlayIndex = null;
+          $scope.nextPlayIndex = null;
+        } else if (l === 2 || l === 3) {
+          $scope.prePlayIndex = prePlayIndex;
+          $scope.nextPlayIndex = nextPlayIndex;
         } else {
-          $scope.prePlayIndex = prePlayIndex
-          $scope.nextPlayIndex = nextPlayIndex
-          $scope.defPlayIndex = [getSafeIndex(rdx-2,l),getSafeIndex(rdx+2,l)]
+          $scope.prePlayIndex = prePlayIndex;
+          $scope.nextPlayIndex = nextPlayIndex;
+          $scope.defPlayIndex = [
+            getSafeIndex(rdx - 2, l),
+            getSafeIndex(rdx + 2, l),
+          ];
         }
       }
     }
@@ -604,10 +606,10 @@ angular.module('listenone').controller('PlayController', [
 
           case 'LOAD': {
             $scope.currentPlaying = msg.data.currentPlaying;
-            const {length , index} = msg.data.playlist
-            changeImg(index,length)
+            const { length, index } = msg.data.playlist;
+            changeImg(index, length);
             skipAnimation();
-            if (msg.data.id === undefined) {
+            if (msg.data.currentPlaying.id === undefined) {
               break;
             }
             $scope.currentPlaying.platformText = i18next.t(
@@ -634,7 +636,6 @@ angular.module('listenone').controller('PlayController', [
             if (lastfm.isAuthorized()) {
               lastfm.sendNowPlaying(track.title, track.artist, () => {});
             }
-
             MediaService.getLyric(
               msg.data.currentPlaying.id,
               msg.data.currentPlaying.album_id,
