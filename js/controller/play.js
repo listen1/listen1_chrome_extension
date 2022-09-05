@@ -25,9 +25,8 @@ function getCSSStringFromSetting(setting) {
 }
 
 function useModernTheme() {
-  const rotatemark = document.getElementById('rotatemark');
-  const circlmark = document.getElementById('circlmark');
-  return circlmark !== null && rotatemark !== null;
+  const defaultTheme = localStorage.getObject('theme');
+  return defaultTheme ==='white2'||defaultTheme ==='black2';
 }
 
 function getSafeIndex(index, length) {
@@ -40,56 +39,20 @@ function getSafeIndex(index, length) {
   return index;
 }
 
-/**
- * Skip to the next or previous track animation.
- * @param  {Number} rdx Index of the song in the playlist.
- * @param  {Number} l Length of playlist.
- */
-function changeImg(rdx, l) {
-  if (useModernTheme()) {
-    // const l = this.playlist.length;
-    const li = document.querySelectorAll('.footer .cover li');
-
-    if (l === 1) {
-      li[0].className = 'b';
-    } else if (l === 2) {
-      li[getSafeIndex(rdx, l)].className = 'b';
-      li[getSafeIndex(rdx + 1, l)].className = 'c';
-    } else if (l === 3) {
-      li[getSafeIndex(rdx - 1, l)].className = 'a';
-      li[getSafeIndex(rdx, l)].className = 'b';
-      li[getSafeIndex(rdx + 1, l)].className = 'c';
-    } else if (l === 4) {
-      li[getSafeIndex(rdx - 1, l)].className = 'a';
-      li[getSafeIndex(rdx, l)].className = 'b';
-      li[getSafeIndex(rdx + 1, l)].className = 'c';
-      li[getSafeIndex(rdx + 2, l)].className = 'def';
-    } else {
-      for (let i = 0; i < l; i += 1) {
-        li[i].className = 'hid';
-      }
-      li[getSafeIndex(rdx - 2, l)].className = 'def';
-      li[getSafeIndex(rdx - 1, l)].className = 'a';
-      li[getSafeIndex(rdx, l)].className = 'b';
-      li[getSafeIndex(rdx + 1, l)].className = 'c';
-      li[getSafeIndex(rdx + 2, l)].className = 'def';
-    }
-    li[getSafeIndex(rdx, l)].classList.add('rotatecircl');
-  }
-}
-
 function skipAnimation() {
   if (useModernTheme()) {
     const rotatemark = document.getElementById('rotatemark');
     const circlmark = document.getElementById('circlmark');
-    circlmark.classList.add('circlmark');
-    rotatemark.classList.add('rotatemark');
-    circlmark.addEventListener('animationend', () => {
-      circlmark.classList.remove('circlmark');
-    });
-    rotatemark.addEventListener('animationend', () => {
-      rotatemark.classList.remove('rotatemark');
-    });
+    if(rotatemark !== null &&circlmark !== null){
+      circlmark.classList.add('circlmark');
+      rotatemark.classList.add('rotatemark');
+      circlmark.addEventListener('animationend', () => {
+        circlmark.classList.remove('circlmark');
+      });
+      rotatemark.addEventListener('animationend', () => {
+        rotatemark.classList.remove('rotatemark');
+      });
+    }
   }
 }
 
@@ -388,6 +351,30 @@ angular.module('listenone').controller('PlayController', [
       });
     });
 
+
+    /**
+     * Skip to the next or previous track animation.
+     * @param  {Number} rdx Index of the song in the playlist.
+     * @param  {Number} l Length of playlist.
+     */
+    function changeImg(rdx, l) {
+      if (useModernTheme()) {
+        let prePlayIndex = getSafeIndex(rdx-1,l)
+        let nextPlayIndex = getSafeIndex(rdx+1,l)
+        if (l === 1) {
+          $scope.prePlayIndex = null
+          $scope.nextPlayIndex = null
+        } else if (l === 2||l === 3) {
+          $scope.prePlayIndex = prePlayIndex
+          $scope.nextPlayIndex = nextPlayIndex
+        } else {
+          $scope.prePlayIndex = prePlayIndex
+          $scope.nextPlayIndex = nextPlayIndex
+          $scope.defPlayIndex = [getSafeIndex(rdx-2,l),getSafeIndex(rdx+2,l)]
+        }
+      }
+    }
+
     function parseLyric(lyric, tlyric) {
       const lines = lyric.split('\n');
       let result = [];
@@ -616,7 +603,10 @@ angular.module('listenone').controller('PlayController', [
           }
 
           case 'LOAD': {
-            $scope.currentPlaying = msg.data;
+            $scope.currentPlaying = msg.data.currentPlaying;
+            const {length , index} = msg.data.playlist
+            changeImg(index,length)
+            skipAnimation();
             if (msg.data.id === undefined) {
               break;
             }
@@ -624,18 +614,18 @@ angular.module('listenone').controller('PlayController', [
               $scope.currentPlaying.platform
             );
             $scope.myProgress = 0;
-            if ($scope.lastTrackId === msg.data.id) {
+            if ($scope.lastTrackId === msg.data.currentPlaying.id) {
               break;
             }
             const current = localStorage.getObject('player-settings') || {};
-            current.nowplaying_track_id = msg.data.id;
+            current.nowplaying_track_id = msg.data.currentPlaying.id;
             localStorage.setObject('player-settings', current);
             // update lyric
             $scope.lyricArray = [];
             $scope.lyricLineNumber = -1;
             $scope.lyricLineNumberTrans = -1;
             smoothScrollTo(document.querySelector('.lyric'), 0, 300);
-            const track = msg.data;
+            const track = msg.data.currentPlaying;
             $rootScope.page_title = {
               title: track.title,
               artist: track.artist,
@@ -646,8 +636,8 @@ angular.module('listenone').controller('PlayController', [
             }
 
             MediaService.getLyric(
-              msg.data.id,
-              msg.data.album_id,
+              msg.data.currentPlaying.id,
+              msg.data.currentPlaying.album_id,
               track.lyric_url,
               track.tlyric_url
             ).success((res) => {
@@ -657,7 +647,7 @@ angular.module('listenone').controller('PlayController', [
               }
               $scope.lyricArray = parseLyric(lyric, tlyric);
             });
-            $scope.lastTrackId = msg.data.id;
+            $scope.lastTrackId = msg.data.currentPlaying.id;
             if (isElectron()) {
               const { ipcRenderer } = require('electron');
               ipcRenderer.send('currentLyric', track.title);
@@ -751,17 +741,6 @@ angular.module('listenone').controller('PlayController', [
           }
           case 'RETRIEVE_URL_FAIL_ALL': {
             $scope.failAllNotice();
-            break;
-          }
-          case 'FINISH_LOAD': {
-            const { index, length } = msg.data.playlist;
-            changeImg(index, length);
-            break;
-          }
-          case 'SKIP': {
-            const { index, length } = msg.data.playlist;
-            skipAnimation();
-            changeImg(index, length);
             break;
           }
           default:

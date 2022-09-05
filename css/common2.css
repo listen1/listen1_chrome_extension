@@ -1788,19 +1788,6 @@ svg.searchspinner {
   height: 45px;
   width: 30px;
 }
-.footer .cover li.def {
-  opacity: 0;
-  z-index: -1;
-  height: 45px;
-  width: 32px;
-  float: left;
-  position: absolute;
-  overflow: hidden;
-  transition: all 0.3s;
-  border-radius: 16px;
-  left: 0;
-  bottom: 0;
-}
 .footer .cover li.hid {
   opacity: 0;
   z-index: -1;
@@ -1815,7 +1802,10 @@ svg.searchspinner {
   left: 0;
   bottom: 0;
 }
-.footer .cover ul.a,
+.footer .cover li.def {
+  display: block;
+}
+.footer .cover  ul .a,
 .footer .cover-list .a {
   height: 45px;
   width: 32px;

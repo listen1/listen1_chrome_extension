@@ -364,19 +364,6 @@
         });
         this.currentHowl.play();
       }
-      const msg = {
-        type: 'BG_PLAYER:FINISH_LOAD',
-        data: {
-          ...this.playlist[index],
-          howl: undefined,
-          index,
-          playlist: {
-            index,
-            length: this.playlist.length,
-          },
-        },
-      };
-      playerSendMessage(this.mode, msg);
     }
 
     /**
@@ -430,19 +417,6 @@
           rdx += 1;
         }
         const result = random_mode ? this._random_playlist[rdx % l] : rdx % l;
-        const msg = {
-          type: 'BG_PLAYER:SKIP',
-          data: {
-            ...this.playlist[result],
-            howl: undefined,
-            index: result,
-            playlist: {
-              index: result,
-              length: this.playlist.length,
-            },
-          },
-        };
-        playerSendMessage(this.mode, msg);
 
         return result;
       };
@@ -613,8 +587,14 @@
       playerSendMessage(this.mode, {
         type: 'BG_PLAYER:LOAD',
         data: {
-          ...this.currentAudio,
-          howl: undefined,
+          currentPlaying:{
+            ...this.currentAudio,
+            howl: undefined,
+          },
+          playlist:{
+            index:this.index,
+            length:this.playlist.length
+          }
         },
       });
     }

@@ -26,38 +26,6 @@
         module = undefined;
       }
     </script>
-    <script>
-       window.onload=function(){
-      let li = document.querySelectorAll(".footer .cover li")
-      // if(li.length>5){
-      //   for(let i=0;i<li.length-1;i++){
-      //     li[i].className="hid"
-      //   }
-      // }
-      if(li.length==1){
-        li[0].className="b"
-      }else if(li.length==2){
-        li[0].className="b"
-        li[1].className="c"
-      }else if(li.length==3){
-        li[li.length-1].className="a"
-        li[0].className="b"
-        li[1].className="c"
-      }else if(li.length==4){
-        li[li.length-1].className="a"
-        li[0].className="b"
-        li[1].className="c"
-        li[2].className="def"
-      }else{
-        li[li.length-2].className="def"
-      li[li.length-1].className="a"
-      li[0].className="b"
-      li[1].className="c"
-      li[2].className="def"
-      }
-     
-    }
-    </script>
     
     <script type="text/javascript" src="js/vendor/angular.min.js"></script>
     <script src="js/vendor/i18next.min.js"></script>
@@ -4042,7 +4010,14 @@
                     <ul id="cover-list" class="cover-list">
                       <li
                         ng-init="loadpalyj()"
-                        ng-class="{lipause:!isPlaying,liplay:isPlaying,rotatecircl:song.id===currentPlaying.id}"
+                        ng-class="{
+                          lipause:!isPlaying,
+                          liplay:isPlaying,
+                          rotatecircl:song.id===currentPlaying.id,
+                          b:song.id === currentPlaying.id,
+                          c:$index === nextPlayIndex,
+                          a:$index === prePlayIndex,
+                          def:$index === defPlayIndex[0]||$index === defPlayIndex[1]}"
                         class="hid"
                         id="song{{ song.id }}"
                         ng-repeat="song in playlist track by $index"
