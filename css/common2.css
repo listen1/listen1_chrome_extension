@@ -316,7 +316,7 @@ svg {
 
   color: var(--sidebar-hover-text-color);
   border-radius: var(--default-border-radius);
-  background-color: var(--button-background-color);
+  background-color: var(--sidebar-button-background);
 }
 .sidebar ul li .sidebar-block.opensidebar {
   background-color: transparent;
@@ -344,7 +344,7 @@ svg {
   transition: all 0.3s;
 }
 .sidebar ul li:hover .sidebar-block.opensidebar {
-  background: var(--sidebar-hover-background-color);
+  background: var(--sidebar-button-background);
 }
 
 .sidebar ul li.active .sidebar-block,
@@ -371,7 +371,6 @@ https://stackoverflow.com/questions/19889615/can-an-angular-directive-pass-argum
 .navigation svg {
   width: 24px;
   height: 24px;
-  color: var(--icon-default-color);
 }
 .navigation .icon svg {
   color: var(--text-default-color);
@@ -476,7 +475,7 @@ https://stackoverflow.com/questions/19889615/can-an-angular-directive-pass-argum
 .playlist-covers,
 .detail-songlist.isSearch {
   padding-right: 2vw;
-  padding-top: 50px;
+  padding-top: 40px;
   display: flex;
   flex-flow: row wrap;
   position: relative;
@@ -2617,7 +2616,7 @@ svg.searchspinner {
   margin: 10px 16px 6px 0;
   color: var(--black--white);
   font-weight: 600;
-  font-size: 18px;
+  font-size: 16px;
   border-radius: 10px;
   transition: all 0.2s;
 }

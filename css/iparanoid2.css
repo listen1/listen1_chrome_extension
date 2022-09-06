@@ -29,7 +29,7 @@
 
   --window-control-border-color: #dddddd;
 
-  --important-color: #335eea;
+  --important-color: #017afe;
 
   --button-background-color: #f5f5f7;
   --button-border-color: #bebebe;
@@ -69,11 +69,12 @@
   --black--white: #222;
   --white--black-background: #222;
 
-  --theme-color: #335eea;
-  --theme-color-ope: rgba(51, 94, 234, 0.4);
-  --theme-color-hover: #eaeffd;
+  --theme-color: #017afe;
+  --theme-color-ope: rgba(1, 122, 254, 0.4);
+  --theme-color-hover: #f0f7ff;
 
-  --sidebar-background: #ebebec;
+  --sidebar-background: #f2f2f7;
+  --sidebar-button-background: #fff;
   --sidebar-splitter: #1d1d1f;
 
   --shadow-mask: rgba(30, 30, 30, 0.5);
