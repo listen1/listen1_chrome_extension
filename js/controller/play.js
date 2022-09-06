@@ -24,6 +24,42 @@ function getCSSStringFromSetting(setting) {
     `;
 }
 
+function useModernTheme() {
+  const defaultTheme = localStorage.getObject('theme');
+  return defaultTheme === 'white2' || defaultTheme === 'black2';
+}
+
+function getSafeIndex(index, length) {
+  if (index < 0) {
+    return length + index;
+  }
+  if (index > length - 1) {
+    return index - length;
+  }
+  return index;
+}
+
+function skipAnimation() {
+  if (useModernTheme()) {
+    const rotatemark = document.getElementById('rotatemark');
+    const circlmark = document.getElementById('circlmark');
+    if (rotatemark !== null && circlmark !== null) {
+      circlmark.classList.add('circlmark');
+      rotatemark.classList.add('rotatemark');
+      circlmark.addEventListener('animationend', () => {
+        circlmark.classList.remove('circlmark');
+      });
+      rotatemark.addEventListener('animationend', () => {
+        rotatemark.classList.remove('rotatemark');
+      });
+    }
+  }
+}
+
+function formatSecond(posSec) {
+  return `${Math.floor(posSec / 60)}:${`0${posSec % 60}`.slice(-2)}`;
+}
+
 angular.module('listenone').controller('PlayController', [
   '$scope',
   '$timeout',
@@ -48,6 +84,7 @@ angular.module('listenone').controller('PlayController', [
     $scope.isMac = false;
 
     $scope.currentDuration = '0:00';
+    $scope.currentDurationSeconds = 0;
     $scope.currentPosition = '0:00';
 
     if (!$scope.isChrome) {
@@ -312,12 +349,53 @@ angular.module('listenone').controller('PlayController', [
     $scope.failAllNotice = () => {
       notyf.warning(i18next.t('_FAIL_ALL_NOTICE'), true);
     };
-    $rootScope.$on('track:myprogress', (event, data) => {
+
+    $rootScope.$on('dragbar:myprogress', (event, data) => {
       $scope.$evalAsync(() => {
         // should use apply to force refresh ui
         $scope.myProgress = data;
+
+        const posSec = Math.floor(
+          ($scope.currentDurationSeconds * $scope.myProgress) / 100
+        );
+        const posStr = formatSecond(posSec);
+
+        $scope.currentPosition = posStr;
       });
     });
+
+    $rootScope.$on('dragbar:changing_progress', (event, data) => {
+      $scope.$evalAsync(() => {
+        // should use apply to force refresh ui
+        $scope.changingProgress = data;
+      });
+    });
+
+    /**
+     * Skip to the next or previous track animation.
+     * @param  {Number} rdx Index of the song in the playlist.
+     * @param  {Number} l Length of playlist.
+     */
+    function changeImg(rdx, l) {
+      if (useModernTheme()) {
+        const prePlayIndex = getSafeIndex(rdx - 1, l);
+        const nextPlayIndex = getSafeIndex(rdx + 1, l);
+        if (l === 1) {
+          $scope.prePlayIndex = null;
+          $scope.nextPlayIndex = null;
+        } else if (l === 2 || l === 3) {
+          $scope.prePlayIndex = prePlayIndex;
+          $scope.nextPlayIndex = nextPlayIndex;
+        } else {
+          $scope.prePlayIndex = prePlayIndex;
+          $scope.nextPlayIndex = nextPlayIndex;
+          $scope.defPlayIndex = [
+            getSafeIndex(rdx - 2, l),
+            getSafeIndex(rdx + 2, l),
+          ];
+        }
+      }
+    }
 
     function parseLyric(lyric, tlyric) {
       const lines = lyric.split('\n');
@@ -472,11 +550,16 @@ angular.module('listenone').controller('PlayController', [
               lastObject.lineNumber !== $scope.lyricLineNumber
             ) {
               const lineElement = document.querySelector(
-                `.page .playsong-detail .detail-songinfo .lyric p[data-line="${lastObject.lineNumber}"]`
+                `.playsong-detail .detail-songinfo .lyric p[data-line="${lastObject.lineNumber}"]`
               );
-              const windowHeight = document.querySelector(
-                '.page .playsong-detail .detail-songinfo .lyric'
+
+              let windowHeight = document.querySelector(
+                '.playsong-detail .detail-songinfo .lyric'
               ).offsetHeight;
+              if (useModernTheme()) {
+                windowHeight =
+                  document.querySelector('body').offsetHeight - 100;
+              }
 
               const adjustOffset = 30;
               const offset =
@@ -521,6 +604,7 @@ angular.module('listenone').controller('PlayController', [
                 return;
               }
               $scope.currentDuration = durationStr;
+              $scope.currentDurationSeconds = msg.data.duration;
             })();
 
             // 'track:progress'
@@ -532,9 +616,7 @@ angular.module('listenone').controller('PlayController', [
                   $scope.myProgress = (msg.data.pos / msg.data.duration) * 100;
                 }
                 const posSec = Math.floor(msg.data.pos);
-                const posStr = `${Math.floor(posSec / 60)}:${`0${
-                  posSec % 60
-                }`.substr(-2)}`;
+                const posStr = formatSecond(posSec);
                 $scope.currentPosition = posStr;
               });
             }
@@ -542,26 +624,29 @@ angular.module('listenone').controller('PlayController', [
           }
 
           case 'LOAD': {
-            $scope.currentPlaying = msg.data;
-            if (msg.data.id === undefined) {
+            $scope.currentPlaying = msg.data.currentPlaying;
+            const { length, index } = msg.data.playlist;
+            changeImg(index, length);
+            skipAnimation();
+            if (msg.data.currentPlaying.id === undefined) {
               break;
             }
             $scope.currentPlaying.platformText = i18next.t(
               $scope.currentPlaying.platform
             );
             $scope.myProgress = 0;
-            if ($scope.lastTrackId === msg.data.id) {
+            if ($scope.lastTrackId === msg.data.currentPlaying.id) {
               break;
             }
             const current = localStorage.getObject('player-settings') || {};
-            current.nowplaying_track_id = msg.data.id;
+            current.nowplaying_track_id = msg.data.currentPlaying.id;
             localStorage.setObject('player-settings', current);
             // update lyric
             $scope.lyricArray = [];
             $scope.lyricLineNumber = -1;
             $scope.lyricLineNumberTrans = -1;
             smoothScrollTo(document.querySelector('.lyric'), 0, 300);
-            const track = msg.data;
+            const track = msg.data.currentPlaying;
             $rootScope.page_title = {
               title: track.title,
               artist: track.artist,
@@ -570,10 +655,9 @@ angular.module('listenone').controller('PlayController', [
             if (lastfm.isAuthorized()) {
               lastfm.sendNowPlaying(track.title, track.artist, () => {});
             }
-
             MediaService.getLyric(
-              msg.data.id,
-              msg.data.album_id,
+              msg.data.currentPlaying.id,
+              msg.data.currentPlaying.album_id,
               track.lyric_url,
               track.tlyric_url
             ).success((res) => {
@@ -583,7 +667,7 @@ angular.module('listenone').controller('PlayController', [
               }
               $scope.lyricArray = parseLyric(lyric, tlyric);
             });
-            $scope.lastTrackId = msg.data.id;
+            $scope.lastTrackId = msg.data.currentPlaying.id;
             if (isElectron()) {
               const { ipcRenderer } = require('electron');
               ipcRenderer.send('currentLyric', track.title);

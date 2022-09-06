@@ -282,13 +282,13 @@
               mediaSession.metadata = new MediaMetadata({
                 title: self.currentAudio.title,
                 artist: self.currentAudio.artist,
-                album: `Listen1  •  ${(
+                album: `Listen 1  •  ${(
                   self.currentAudio.album || '<???>'
                 ).padEnd(100)}`,
                 artwork: [
                   {
                     src: self.currentAudio.img_url,
-                    sizes: '300x300',
+                    sizes: '500x500',
                   },
                 ],
               });
@@ -336,9 +336,9 @@
             self.sendPlayingEvent('err');
             for (let i = 0; i < self.playlist.length; i += 1) {
               if (self.playlist[i].howl === self.currentHowl) {
-                self.playlist[i].howl = null
+                self.playlist[i].howl = null;
               }
-            };
+            }
             self.currentHowl = null;
             delete self._media_uri_list[data.id];
           },
@@ -416,7 +416,9 @@
         } else {
           rdx += 1;
         }
-        return random_mode ? this._random_playlist[rdx % l] : rdx % l;
+        const result = random_mode ? this._random_playlist[rdx % l] : rdx % l;
+
+        return result;
       };
       this.index = nextIndexFn(this.index);
 
@@ -585,8 +587,14 @@
       playerSendMessage(this.mode, {
         type: 'BG_PLAYER:LOAD',
         data: {
-          ...this.currentAudio,
-          howl: undefined,
+          currentPlaying:{
+            ...this.currentAudio,
+            howl: undefined,
+          },
+          playlist:{
+            index:this.index,
+            length:this.playlist.length
+          }
         },
       });
     }

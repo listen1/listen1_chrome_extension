@@ -55,7 +55,7 @@ function addBackgroundPlayerListener(listener) {
         return null;
       }
       return listener(msg, sender, res);
-    },
+    }
   );
 }
 

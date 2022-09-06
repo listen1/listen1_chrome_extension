@@ -15,7 +15,7 @@ angular.module('listenone').controller('ProfileController', [
       defaultLang = localStorage.getObject('language');
     }
     $scope.lastestVersion = '';
-
+    $scope.theme = '';
     $scope.proxyModes = [
       { name: 'system', displayId: '_PROXY_SYSTEM' },
       { name: 'direct', displayId: '_PROXY_DIRECT' },
@@ -128,15 +128,25 @@ angular.module('listenone').controller('ProfileController', [
       defaultTheme = localStorage.getObject('theme');
     }
     $scope.setTheme = (theme) => {
+      $scope.theme = theme;
+
       const themeFiles = {
-        white: 'css/iparanoid.css',
-        black: 'css/origin.css',
+        white: ['css/iparanoid.css', 'css/common.css'],
+        black: ['css/origin.css', 'css/common.css'],
+        white2: ['css/iparanoid2.css', 'css/common2.css'],
+        black2: ['css/origin2.css', 'css/common2.css'],
       };
       // You can change the language during runtime
       if (themeFiles[theme] !== undefined) {
-        document.getElementById('theme').href = themeFiles[theme];
+        const keys = ['theme-css', 'common-css'];
+        for (let i = 0; i < themeFiles[theme].length; i += 1) {
+          document.getElementById(keys[i]).href = themeFiles[theme][i];
+        }
         localStorage.setObject('theme', theme);
       }
+      axios.get('images/feather-sprite.svg').then((res) => {
+        document.getElementById('feather-container').innerHTML = res.data;
+      });
     };
     $scope.setTheme(defaultTheme);
   },

@@ -72,6 +72,18 @@ const main = () => {
             background: 'deepskyblue',
             icon: false,
           },
+          {
+            type: 'success',
+            className: 'notyf__toast--success',
+            backgroundColor: '#335eea',
+            icon: { className: 'notyf__icon--success', tagName: 'i' },
+          },
+          {
+            type: 'error',
+            className: 'notyf__toast--error',
+            backgroundColor: '#b90b2c',
+            icon: { className: 'notyf__icon--error', tagName: 'i' },
+          },
         ],
       });
       window.notyf.warning = (msg, replace) => {
@@ -92,9 +104,6 @@ const main = () => {
           message: msg,
         });
       };
-      axios.get('images/feather-sprite.svg').then((res) => {
-        document.getElementById('feather-container').innerHTML = res.data;
-      });
     },
   ]);
 
@@ -411,19 +420,19 @@ const main = () => {
 
       function onMyMousedown() {
         if (mode === 'play') {
-          scope.changingProgress = true;
+          $rootScope.$broadcast('dragbar:changing_progress', true);
         }
       }
 
       function onMyMouseup() {
         if (mode === 'play') {
-          scope.changingProgress = false;
+          $rootScope.$broadcast('dragbar:changing_progress', false);
         }
       }
 
       function onMyUpdateProgress(progress) {
         if (mode === 'play') {
-          $rootScope.$broadcast('track:myprogress', progress * 100);
+          $rootScope.$broadcast('dragbar:myprogress', progress * 100);
         }
         if (mode === 'volume') {
           l1Player.setVolume(progress * 100);
