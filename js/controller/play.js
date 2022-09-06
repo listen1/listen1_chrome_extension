@@ -56,6 +56,10 @@ function skipAnimation() {
   }
 }
 
+function formatSecond(posSec) {
+  return `${Math.floor(posSec / 60)}:${`0${posSec % 60}`.slice(-2)}`;
+}
+
 angular.module('listenone').controller('PlayController', [
   '$scope',
   '$timeout',
@@ -80,6 +84,7 @@ angular.module('listenone').controller('PlayController', [
     $scope.isMac = false;
 
     $scope.currentDuration = '0:00';
+    $scope.currentDurationSeconds = 0;
     $scope.currentPosition = '0:00';
 
     if (!$scope.isChrome) {
@@ -344,10 +349,25 @@ angular.module('listenone').controller('PlayController', [
     $scope.failAllNotice = () => {
       notyf.warning(i18next.t('_FAIL_ALL_NOTICE'), true);
     };
-    $rootScope.$on('track:myprogress', (event, data) => {
+
+    $rootScope.$on('dragbar:myprogress', (event, data) => {
       $scope.$evalAsync(() => {
         // should use apply to force refresh ui
         $scope.myProgress = data;
+
+        const posSec = Math.floor(
+          ($scope.currentDurationSeconds * $scope.myProgress) / 100
+        );
+        const posStr = formatSecond(posSec);
+
+        $scope.currentPosition = posStr;
+      });
+    });
+
+    $rootScope.$on('dragbar:changing_progress', (event, data) => {
+      $scope.$evalAsync(() => {
+        // should use apply to force refresh ui
+        $scope.changingProgress = data;
       });
     });
 
@@ -584,6 +604,7 @@ angular.module('listenone').controller('PlayController', [
                 return;
               }
               $scope.currentDuration = durationStr;
+              $scope.currentDurationSeconds = msg.data.duration;
             })();
 
             // 'track:progress'
@@ -595,9 +616,7 @@ angular.module('listenone').controller('PlayController', [
                   $scope.myProgress = (msg.data.pos / msg.data.duration) * 100;
                 }
                 const posSec = Math.floor(msg.data.pos);
-                const posStr = `${Math.floor(posSec / 60)}:${`0${
-                  posSec % 60
-                }`.substr(-2)}`;
+                const posStr = formatSecond(posSec);
                 $scope.currentPosition = posStr;
               });
             }

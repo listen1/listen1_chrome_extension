@@ -420,19 +420,19 @@ const main = () => {
 
       function onMyMousedown() {
         if (mode === 'play') {
-          scope.changingProgress = true;
+          $rootScope.$broadcast('dragbar:changing_progress', true);
         }
       }
 
       function onMyMouseup() {
         if (mode === 'play') {
-          scope.changingProgress = false;
+          $rootScope.$broadcast('dragbar:changing_progress', false);
         }
       }
 
       function onMyUpdateProgress(progress) {
         if (mode === 'play') {
-          $rootScope.$broadcast('track:myprogress', progress * 100);
+          $rootScope.$broadcast('dragbar:myprogress', progress * 100);
         }
         if (mode === 'volume') {
           l1Player.setVolume(progress * 100);
