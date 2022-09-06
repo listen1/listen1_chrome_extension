@@ -1777,7 +1777,8 @@ svg.searchspinner {
   align-items: center;
   opacity: 0;
 }
-.footer .cover .cover-list span:hover {
+.footer .cover .cover-list span:hover,
+.footer .cover .cover-list span.show {
   opacity: 1;
   background-color: var(--white--black-background);
 }
@@ -1805,7 +1806,7 @@ svg.searchspinner {
 .footer .cover li.def {
   display: block;
 }
-.footer .cover  ul .a,
+.footer .cover ul .a,
 .footer .cover-list .a {
   height: 45px;
   width: 32px;
@@ -1981,7 +1982,7 @@ svg.searchspinner {
 .footer .main-info .bottomprogressbar svg {
   cursor: default;
 }
-.footer .main-info .volume-ctrl .icon svg{
+.footer .main-info .volume-ctrl .icon svg {
   cursor: pointer;
 }
 .footer .main-info .bottomprogressbar {
