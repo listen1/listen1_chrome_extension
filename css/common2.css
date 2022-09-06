@@ -1999,7 +1999,8 @@ svg.searchspinner {
   width: 150px;
 }
 .footer .main-info .playbar .playbar-clickable {
-  margin: 10px 10px 10px 0;
+  margin: 5px 10px 5px 0;
+  padding: 5px 0;
   flex: 1;
   cursor: pointer;
 }
@@ -2050,7 +2051,8 @@ svg.searchspinner {
 }
 .volume-ctrl .m-pbar {
   flex: 1;
-  margin: 10px 0;
+  margin: 5px 0;
+  padding: 5px 0;
   cursor: pointer;
 }
 
