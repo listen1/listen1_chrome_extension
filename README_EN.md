@@ -1,6 +1,6 @@
-# Listen 1 (Chrome Extension) V2.25.0
+# Listen 1 (Chrome Extension) V2.26.0
 
-（Last Update August 30th, 2022)
+（Last Update September 6th, 2022)
 
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE)
 
@@ -46,6 +46,12 @@ Making your own playlist is also supported.
 2. Click Add to Firefox button
 
 ## Changelog
+
+`2022-09`
+
+Features:
+
+- Add new themes: modern white, modern black（thanks @814959822）
 
 `2022-08`
 
