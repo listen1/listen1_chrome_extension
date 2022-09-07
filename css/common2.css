@@ -475,14 +475,14 @@ https://stackoverflow.com/questions/19889615/can-an-angular-directive-pass-argum
 .playlist-covers,
 .detail-songlist.isSearch {
   padding-right: 2vw;
-  padding-top: 40px;
+  padding-top: 30px;
   display: flex;
   flex-flow: row wrap;
   position: relative;
 
   margin: 0 14px;
   grid-template-columns: repeat(5, 1fr);
-  gap: 44px 0px;
+  gap: 40px 0px;
 }
 .playlist-covers {
   transition: padding 0.3s;
