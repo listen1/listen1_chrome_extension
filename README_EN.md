@@ -1,6 +1,6 @@
-# Listen 1 (Chrome Extension) V2.26.0
+# Listen 1 (Chrome Extension) V2.26.1
 
-（Last Update September 6th, 2022)
+（Last Update September 10th, 2022)
 
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE)
 
@@ -52,6 +52,7 @@ Making your own playlist is also supported.
 Features:
 
 - Add new themes: modern white, modern black（thanks @814959822）
+- Optimize new theme performance
 
 `2022-08`
 
