@@ -39,23 +39,6 @@ function getSafeIndex(index, length) {
   return index;
 }
 
-function skipAnimation() {
-  if (useModernTheme()) {
-    const rotatemark = document.getElementById('rotatemark');
-    const circlmark = document.getElementById('circlmark');
-    if (rotatemark !== null && circlmark !== null) {
-      circlmark.classList.add('circlmark');
-      rotatemark.classList.add('rotatemark');
-      circlmark.addEventListener('animationend', () => {
-        circlmark.classList.remove('circlmark');
-      });
-      rotatemark.addEventListener('animationend', () => {
-        rotatemark.classList.remove('rotatemark');
-      });
-    }
-  }
-}
-
 function formatSecond(posSec) {
   return `${Math.floor(posSec / 60)}:${`0${posSec % 60}`.slice(-2)}`;
 }
@@ -86,6 +69,23 @@ angular.module('listenone').controller('PlayController', [
     $scope.currentDuration = '0:00';
     $scope.currentDurationSeconds = 0;
     $scope.currentPosition = '0:00';
+
+    $scope.currentIndex = 0;
+    $scope.staged_playlist = [];
+    $scope.getSongIdByIndex = (index) =>
+      $scope.playlist[getSafeIndex(index, $scope.playlist.length)].id;
+
+    $scope.refreshStage = () => {
+      const STAGED_LENGTH = 5;
+      let i = $scope.currentIndex - 2;
+      $scope.staged_playlist = [];
+      while ($scope.staged_playlist.length < STAGED_LENGTH) {
+        $scope.staged_playlist.push(
+          $scope.playlist[getSafeIndex(i, $scope.playlist.length)]
+        );
+        i += 1;
+      }
+    };
 
     if (!$scope.isChrome) {
       // eslint-disable-next-line no-undef
@@ -371,32 +371,6 @@ angular.module('listenone').controller('PlayController', [
       });
     });
 
-    /**
-     * Skip to the next or previous track animation.
-     * @param  {Number} rdx Index of the song in the playlist.
-     * @param  {Number} l Length of playlist.
-     */
-    function changeImg(rdx, l) {
-      if (useModernTheme()) {
-        const prePlayIndex = getSafeIndex(rdx - 1, l);
-        const nextPlayIndex = getSafeIndex(rdx + 1, l);
-        if (l === 1) {
-          $scope.prePlayIndex = null;
-          $scope.nextPlayIndex = null;
-        } else if (l === 2 || l === 3) {
-          $scope.prePlayIndex = prePlayIndex;
-          $scope.nextPlayIndex = nextPlayIndex;
-        } else {
-          $scope.prePlayIndex = prePlayIndex;
-          $scope.nextPlayIndex = nextPlayIndex;
-          $scope.defPlayIndex = [
-            getSafeIndex(rdx - 2, l),
-            getSafeIndex(rdx + 2, l),
-          ];
-        }
-      }
-    }
-
     function parseLyric(lyric, tlyric) {
       const lines = lyric.split('\n');
       let result = [];
@@ -626,8 +600,27 @@ angular.module('listenone').controller('PlayController', [
           case 'LOAD': {
             $scope.currentPlaying = msg.data.currentPlaying;
             const { length, index } = msg.data.playlist;
-            changeImg(index, length);
-            skipAnimation();
+
+            if (useModernTheme()) {
+              $scope.currentIndex = index;
+              $scope.refreshStage(index, length);
+            }
+
+            if (useModernTheme()) {
+              const rotatemark = document.getElementById('rotatemark');
+              const circlmark = document.getElementById('circlmark');
+              if (rotatemark !== null && circlmark !== null) {
+                circlmark.classList.add('circlmark');
+                rotatemark.classList.add('rotatemark');
+                circlmark.addEventListener('animationend', () => {
+                  circlmark.classList.remove('circlmark');
+                });
+                rotatemark.addEventListener('animationend', () => {
+                  rotatemark.classList.remove('rotatemark');
+                });
+              }
+            }
+
             if (msg.data.currentPlaying.id === undefined) {
               break;
             }
@@ -688,6 +681,7 @@ angular.module('listenone').controller('PlayController', [
             // 'player:playlist'
             $scope.$evalAsync(() => {
               $scope.playlist = msg.data;
+              $scope.refreshStage();
               localStorage.setObject('current-playing', msg.data);
             });
 
