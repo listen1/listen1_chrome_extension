@@ -29,21 +29,21 @@ angular.module('listenone').controller('NavigationController', [
 
     $scope.lastfm = lastfm;
 
-    $scope.isOpenSidebar = true
+    $scope.isOpenSidebar = true;
 
     $scope.$on('isdoubanlogin:update', (event, data) => {
       $scope.isDoubanLogin = data;
     });
 
     // isOpenSidebar
-    
+
     if (localStorage.getObject('openSidebar') !== null) {
       $scope.isOpenSidebar = localStorage.getObject('openSidebar');
     }
     $scope.openSidebar = () => {
       $scope.isOpenSidebar = !$scope.isOpenSidebar;
-      localStorage.setObject('openSidebar',$scope.isOpenSidebar);
-    }
+      localStorage.setObject('openSidebar', $scope.isOpenSidebar);
+    };
     // tag
     $scope.showTag = (tag_id, tag_params) => {
       $scope.current_tag = tag_id;
@@ -129,7 +129,7 @@ angular.module('listenone').controller('NavigationController', [
         return;
       }
       if (!$scope.menuHidden) {
-        $scope.togglePlaylist() 
+        $scope.togglePlaylist();
       }
       // save current scrolltop
       $scope.is_window_hidden = 0;
@@ -140,10 +140,9 @@ angular.module('listenone').controller('NavigationController', [
         offset: document.getElementsByClassName('browser')[0].scrollTop,
       });
       $scope.window_poped_url_stack = [];
-     
+
       $scope.window_type = 'track';
     };
-
 
     $scope.forwardWindow = () => {
       if ($scope.window_poped_url_stack.length === 0) {
@@ -328,9 +327,9 @@ angular.module('listenone').controller('NavigationController', [
         return true;
       }
       return (
-        song.title.indexOf($scope.playlistFilter.key) > -1 ||
-        song.artist.indexOf($scope.playlistFilter.key) > -1 ||
-        song.album.indexOf($scope.playlistFilter.key) > -1
+        song.title.includes($scope.playlistFilter.key) ||
+        song.artist.includes($scope.playlistFilter.key) ||
+        (song.album && song.album.includes($scope.playlistFilter.key))
       );
     };
     $scope.onPlaylistSongDrop = (list_id, song, data, dataType, direction) => {
@@ -360,12 +359,12 @@ angular.module('listenone').controller('NavigationController', [
 
     $scope.playById = (id) => {
       l1Player.playById(id);
-    }
+    };
 
     $scope.addAndPlay = (song) => {
       l1Player.addTrack(song);
       l1Player.playById(song.id);
-    }
+    };
 
     $scope.addMyPlaylist = (option_id, song) => {
       MediaService.addMyPlaylist(option_id, song).success((playlist) => {
