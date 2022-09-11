@@ -314,7 +314,7 @@ const provider: MusicProvider = class qq extends MusicResource {
     let result = [];
     let total = 0;
     if (searchType === '0') {
-      result = data.req.data.song.list.map((item: any) => this.qq_convert_song2(item));
+      result = data.req.data.body.song.list.map((item: any) => this.qq_convert_song2(item));
       total = data.req.data.meta.sum;
     } else if (searchType === '1') {
       result = data.req.data.body.songlist.list.map((info: any) => ({

@@ -111,7 +111,8 @@ const provider: MusicProvider = class netease extends MusicResource {
 
     const list_elements = Array.from(new DOMParser().parseFromString(data, 'text/html').getElementsByClassName('m-cvrlst')[0].children);
     const result = list_elements.map((item) => ({
-      cover_img_url: item.getElementsByTagName('img')[0].src,
+      //force high-res image here
+      cover_img_url: item.getElementsByTagName('img')[0].src.replace('140y140', '512y512'),
       title: item.getElementsByTagName('div')[0].getElementsByTagName('a')[0].title,
       id: `neplaylist_${getParameterByName('id', item.getElementsByTagName('div')[0].getElementsByTagName('a')[0].href)}`,
       source_url: `https://music.163.com/#/playlist?id=${getParameterByName('id', item.getElementsByTagName('div')[0].getElementsByTagName('a')[0].href)}`

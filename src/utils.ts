@@ -10,7 +10,7 @@ export function setPrototypeOfLocalStorage(): void {
   Object.setPrototypeOf(localStorage, proto);
 }
 
-export function arrayMove(arr: any, old_index: number, new_index: number) {
+export function arrayMove(arr: any[], old_index: number, new_index: number) {
   // https://stackoverflow.com/questions/5306680/move-an-array-element-from-one-array-position-to-another
   if (new_index >= arr.length) {
     let k = new_index - arr.length + 1;
@@ -103,7 +103,7 @@ export function cookieSet(cookie: Cookie, callback: CallableFunction) {
 export function cookieSetPromise(cookie: Cookie) {
   return new Promise((res) => {
     if (!isElectron()) {
-      return chrome.cookies.set(cookie, (cookie: any) => {
+      return chrome.cookies.set(cookie, (cookie: chrome.cookies.Cookie | null) => {
         res(cookie);
       });
     }

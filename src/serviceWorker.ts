@@ -1,3 +1,7 @@
+import { handleFetch } from './cache';
+
+self.addEventListener('fetch', handleFetch);
+
 chrome.action.onClicked.addListener(() => {
   const url = chrome.runtime.getURL('index.html');
   chrome.tabs.query({ url }).then((tabs) => {
