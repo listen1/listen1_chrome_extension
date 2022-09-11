@@ -4,15 +4,16 @@ const cacheName = 'cache_dev';
  * https://developer.chrome.com/docs/workbox/caching-strategies-overview/#stale-while-revalidate
  */
 export function handleFetch(event: FetchEvent) {
-  const { destination, url } = event.request;
+  const { respondWith, request } = event;
+  const { destination, url } = request;
   if ((destination === 'image' || destination === 'audio') && !url.startsWith('chrome-extension')) {
-    event.respondWith(
+    respondWith(
       caches.open(cacheName).then(async (cache) => {
-        const cachedResponse = await cache.match(event.request);
-        const fetchedResponse = fetch(event.request).then((networkResponse) => {
+        const cachedResponse = await cache.match(request);
+        const fetchedResponse = fetch(request).then((networkResponse) => {
           //can not perform put on partial response
           if (networkResponse.ok && networkResponse.status !== 206) {
-            cache.put(event.request, networkResponse.clone());
+            cache.put(request, networkResponse.clone());
           }
           return networkResponse;
         });
