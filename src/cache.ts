@@ -1,5 +1,8 @@
 const cacheName = 'cache_dev';
-
+/**
+ * Use stale-while-revalidate strategy to cache image and audio
+ * https://developer.chrome.com/docs/workbox/caching-strategies-overview/#stale-while-revalidate
+ */
 export function handleFetch(event: FetchEvent) {
   const { destination, url } = event.request;
   if ((destination === 'image' || destination === 'audio') && !url.startsWith('chrome-extension')) {
