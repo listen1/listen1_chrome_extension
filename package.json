@@ -22,9 +22,11 @@
     "@intlify/vite-plugin-vue-i18n": "^6.0.1",
     "@types/chrome": "^0.0.196",
     "@types/node-forge": "^1.0.4",
+    "@types/serviceworker": "^0.0.51",
     "@typescript-eslint/eslint-plugin": "^5.36.1",
     "@typescript-eslint/parser": "^5.36.1",
     "@vitejs/plugin-vue": "^3.1.0",
+    "autoprefixer": "^10.4.8",
     "axios": "^0.27.2",
     "cross-env": "^7.0.3",
     "dexie": "^3.2.2",
@@ -67,9 +69,5 @@
   "bugs": {
     "url": "https://github.com/listen1/listen1_chrome_extension/issues"
   },
-  "homepage": "https://github.com/listen1/listen1_chrome_extension#readme",
-  "dependencies": {
-    "@types/serviceworker": "^0.0.51",
-    "autoprefixer": "^10.4.8"
-  }
+  "homepage": "https://github.com/listen1/listen1_chrome_extension#readme"
 }
