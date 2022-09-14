@@ -207,7 +207,7 @@ svg {
   transition: 0.2s;
   background: var(--sidebar-background);
   border-radius: 10px;
-  cursor: pointer;
+  cursor: default;
 }
 .main .sidebar-content.footerdef {
   height: calc(100vh - 130px);
@@ -2538,6 +2538,9 @@ svg.searchspinner {
 .source-list {
   margin: 10px 26px 24px 26px;
   user-select: none;
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
 }
 
 .source-list .source-button {
@@ -2567,8 +2570,8 @@ svg.searchspinner {
   padding: 6px 10px;
   transition: all 0.2s, background 0.3s;
   -webkit-user-drag: none;
-  margin-right: 12px;
-  margin-left: 12px;
+  margin: 0px 12px;
+  white-space: nowrap;
 }
 .source-list .source-button.active .buttontext,
 .source-list .source-button .buttontext.active {
@@ -2579,8 +2582,13 @@ svg.searchspinner {
   background-color: var(--button-background-color);
 }
 .source-list .source-button .buttontext {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
   font-size: 14px;
-  padding: 4px 10px;
+  margin: 4px 10px;
   color: var(--text-subtitle-color);
   transition: 0.1s;
 }
@@ -2594,6 +2602,11 @@ svg.searchspinner {
 }
 .source-list .search-type {
   float: right;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  justify-content: flex-end;
 }
 /* widget source-list end */
 
