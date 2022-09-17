@@ -31,10 +31,14 @@ function useModernTheme() {
 
 function getSafeIndex(index, length) {
   if (index < 0) {
-    return length + index;
+    const r = index % length;
+    if (r < 0) {
+      return length + (index % length);
+    }
+    return r;
   }
   if (index > length - 1) {
-    return index - length;
+    return index % length;
   }
   return index;
 }
@@ -72,17 +76,22 @@ angular.module('listenone').controller('PlayController', [
 
     $scope.currentIndex = 0;
     $scope.staged_playlist = [];
-    $scope.getSongIdByIndex = (index) =>
-      $scope.playlist[getSafeIndex(index, $scope.playlist.length)].id;
+    $scope.getSongIdByIndex = (index) => {
+      const songId =
+        $scope.playlist[getSafeIndex(index, $scope.playlist.length)].id;
+      return `${songId}_${index}`;
+    };
 
     $scope.refreshStage = () => {
+      if ($scope.playlist === undefined) {
+        return;
+      }
       const STAGED_LENGTH = 5;
       let i = $scope.currentIndex - 2;
       $scope.staged_playlist = [];
       while ($scope.staged_playlist.length < STAGED_LENGTH) {
-        $scope.staged_playlist.push(
-          $scope.playlist[getSafeIndex(i, $scope.playlist.length)]
-        );
+        const song = $scope.playlist[getSafeIndex(i, $scope.playlist.length)];
+        $scope.staged_playlist.push({ ...song, stageId: `${song.id}_${i}` });
         i += 1;
       }
     };

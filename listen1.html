@@ -4011,12 +4011,12 @@
                       <li ng-class="{
                         lipause:!isPlaying,
                         liplay:isPlaying,
-                        rotatecircl:song.id === currentPlaying.id,
-                        a:song.id === getSongIdByIndex(currentIndex-1),
-                        b:song.id === currentPlaying.id,
-                        c:song.id === getSongIdByIndex(currentIndex+1),
-                        def:song.id === getSongIdByIndex(currentIndex+2)||song.id === getSongIdByIndex(currentIndex-2)}" class="hid"
-                            id="song{{ song.id }}" ng-repeat="song in staged_playlist track by song.id" draggable="true">
+                        rotatecircl:song.stageId === getSongIdByIndex(currentIndex),
+                        a:song.stageId === getSongIdByIndex(currentIndex-1),
+                        b:song.stageId === getSongIdByIndex(currentIndex),
+                        c:song.stageId === getSongIdByIndex(currentIndex+1),
+                        def:song.stageId === getSongIdByIndex(currentIndex+2)||song.stageId === getSongIdByIndex(currentIndex-2)}" class="hid"
+                            id="song{{ song.id }}" ng-repeat="song in staged_playlist track by song.stageId" draggable="true">
                     <img
                     err-src="https://y.gtimg.cn/mediastyle/global/img/album_300.png"
                     ng-src="{{song.img_url.replace('/120/','/300/')}}?param=300y300" alt="">
