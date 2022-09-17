@@ -54,6 +54,12 @@ Features:
 - Add new themes: modern white, modern black（thanks @814959822）
 - Optimize new theme performance
 
+Fix bugs:
+
+- fix bilibili search problem (thanks @mikelxk)
+- fix hover shaking problem when choose platform（thanks @814959822）
+- fix player bar empty when playlist contains less than five songs in modern theme
+
 `2022-08`
 
 Fix bugs:
