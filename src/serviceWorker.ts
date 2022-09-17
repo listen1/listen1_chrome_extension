@@ -1,6 +1,4 @@
-import { handleFetch } from './cache';
-
-self.addEventListener('fetch', handleFetch);
+import './cache';
 
 chrome.action.onClicked.addListener(() => {
   const url = chrome.runtime.getURL('index.html');

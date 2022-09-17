@@ -24,3 +24,5 @@ export function handleFetch(event: FetchEvent) {
     return;
   }
 }
+
+self.addEventListener('fetch', handleFetch);
