@@ -1,6 +1,6 @@
-# Listen 1 (Chrome Extension) V2.26.1
+# Listen 1 (Chrome Extension) V2.26.2
 
-（Last Update September 10th, 2022)
+（Last Update September 17th, 2022)
 
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE)
 
