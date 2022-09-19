@@ -652,7 +652,7 @@ angular.module('listenone').controller('NavigationController', [
             filters: [
               {
                 name: 'Music Files',
-                extensions: ['ape', 'flac', 'mp3', 'wav'],
+                extensions: ['flac', 'mp3', 'mp4', 'ogg', 'wav', 'webm'],
               },
             ],
           })
