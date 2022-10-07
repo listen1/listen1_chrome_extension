@@ -29,6 +29,9 @@ export class MusicResource {
   static parseUrl(url: string): PromiseLike<any> {
     throw new NotImplementedError('');
   }
+  static init(track: any): PromiseLike<any> {
+    throw new NotImplementedError('');
+  }
   static bootstrapTrack(track: any, success: any, failure: any): PromiseLike<any> {
     throw new NotImplementedError('');
   }
@@ -101,6 +104,7 @@ export interface MusicProvider {
   getPlaylistFilters(): PromiseLike<any>;
   getPlaylist(url: string): PromiseLike<any>;
   parseUrl(url: string): PromiseLike<any>;
+  init(track: any): PromiseLike<any>;
   bootstrapTrack(track: any, success: any, failure: any): PromiseLike<any>;
   search(url: string): PromiseLike<SearchResult>;
   lyric(url: string): PromiseLike<LyricResult>;

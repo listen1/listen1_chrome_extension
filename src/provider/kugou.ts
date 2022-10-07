@@ -213,7 +213,28 @@ const provider: MusicProvider = class kugou extends MusicResource {
     }
     return result;
   }
-
+  static async init(track: any) {
+    const track_id = track.id.slice('kgtrack_'.length);
+    const album_id = track.album_id.slice('kgalbum_'.length);
+    let target_url = `https://wwwapi.kugou.com/yy/index.php?r=play/getdata&callback=jQuery&hash=${track_id}&platid=4`;
+    if (album_id !== '') {
+      target_url += `&album_id=${album_id}`;
+    }
+    const timstamp = +new Date();
+    target_url += `&_=${timstamp}`;
+    const { data } = await axios.get(target_url);
+    const jsonString = data.slice('jQuery('.length, data.length - 1 - 1);
+    const info = JSON.parse(jsonString);
+    const { play_url } = info.data;
+    if (play_url === '') {
+      throw new Error('Play url is empty');
+    }
+    return {
+      url: play_url,
+      bitrate: `${info.data.bitrate}kbps`,
+      platform: 'kugou'
+    };
+  }
   static bootstrapTrack(track: any, success: CallableFunction, failure: CallableFunction) {
     let sound = {};
     const track_id = track.id.slice('kgtrack_'.length);

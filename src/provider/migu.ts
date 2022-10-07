@@ -308,7 +308,55 @@ const provider: MusicProvider = class migu extends MusicResource {
       info
     };
   }
-
+  static async init(track: any) {
+    const sound = {} as any;
+    const songId = track.song_id;
+    let toneFlag = 'PQ';
+    switch (track.quality) {
+      case '110000':
+        toneFlag = 'HQ';
+        break;
+      case '111100':
+        toneFlag = 'SQ';
+        break;
+      case '111111':
+        toneFlag = 'ZQ';
+        break;
+      default:
+        toneFlag = 'PQ';
+    }
+    const target_url = `https://app.c.nf.migu.cn/MIGUM2.0/strategy/listen-url/v2.2?netType=01&resourceType=E&songId=${songId}&toneFlag=${toneFlag}`;
+    const { data } = await axios.get(target_url, {
+      headers: {
+        channel: '0146951',
+        uid: '1234'
+      }
+    });
+    let playUrl: string = data.data?.url || null;
+    if (playUrl) {
+      if (playUrl.startsWith('//')) {
+        playUrl = `https:${playUrl}`;
+      }
+      sound.url = playUrl.replace(/\+/g, '%2B'); // eslint-disable-line no-param-reassign
+      sound.platform = 'migu';
+      switch (toneFlag) {
+        case 'HQ':
+          sound.bitrate = '320kbps';
+          break;
+        case 'SQ':
+          sound.bitrate = '999kbps';
+          break;
+        case 'ZQ':
+          sound.bitrate = '999kbps';
+          break;
+        default:
+          sound.bitrate = '128kbps';
+      }
+      return sound
+    } else {
+      throw('migu:no play url')
+    }
+  }
   static bootstrapTrack(track: any, success: CallableFunction, failure: CallableFunction) {
     const sound = {} as any;
     const songId = track.song_id;

@@ -336,7 +336,16 @@ const provider: MusicProvider = class kuwo extends MusicResource {
       type: searchType
     };
   }
-
+  static async init(track: any) {
+    const song_id = track.id.slice('kwtrack_'.length);
+    const target_url = `https://antiserver.kuwo.cn/anti.s?type=convert_url&format=mp3&response=url&rid=${song_id}`;
+    const { data } = await axios.get(target_url);
+    if (data.length > 0) {
+      return { url: data, platform: 'kuwo' };
+    } else {
+      throw new Error('Kuwo empty list');
+    }
+  }
   // eslint-disable-next-line no-unused-vars
   static bootstrapTrack(track: any, success: CallableFunction, failure: CallableFunction) {
     const sound = {} as any;

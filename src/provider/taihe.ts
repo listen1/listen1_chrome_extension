@@ -148,7 +148,23 @@ const provider: MusicProvider = class taihe extends MusicResource {
       info
     };
   }
-
+  static async init(track: any) {
+    const sound = {} as any;
+    const song_id = track.id.slice('thtrack_'.length);
+    const { data } = await axiosTH.get('/song/tracklink', {
+      params: {
+        TSID: song_id
+      }
+    });
+    if (data.data?.path) {
+      sound.url = data.data.path;
+      sound.platform = 'taihe';
+      sound.bitrate = `${data.data.rate}kbps`;
+      return sound;
+    } else {
+      throw 'taihe:init:no data path';
+    }
+  }
   static bootstrapTrack(track: any, success: CallableFunction, failure: CallableFunction) {
     const sound = {} as any;
     const song_id = track.id.slice('thtrack_'.length);

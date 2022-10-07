@@ -202,7 +202,39 @@ const MediaService = {
     const branchPlaylist = await myplaylist.getPlaylistById(branchPlaylistId);
     await myplaylist.addTracksToMyplaylist(masterPlaylistId, branchPlaylist.tracks);
   },
-
+  async init(track: any) {
+    const { settings } = useSettings();
+    const trackPlatform = getProviderNameByItemId(track.id);
+    const failover_source_list = settings.autoChooseSourceList.filter((i) => i !== trackPlatform);
+    const getUrlAsync = failover_source_list.map(
+      (source: string) =>
+        new Promise((res, rej) => {
+          if (track.source === source) {
+            return;
+          }
+          const keyword = `${track.title} ${track.artist}`;
+          const curpage = 1;
+          const url = `/search?keywords=${keyword}&curpage=${curpage}&type=0`;
+          const provider = getProviderByName(source);
+          //@ts-ignore TODO: use await to work with awaitable function
+          provider.search(url).then((data: any) => {
+            for (const searchTrack of data.result) {
+              // compare search track and track to check if they are same
+              // TODO: better similar compare method (duration, md5)
+              if (
+                !searchTrack.disable &&
+                searchTrack.title.toLowerCase() === track.title.toLowerCase() &&
+                searchTrack.artist.toLowerCase() === track.artist.toLowerCase()
+              ) {
+                res(provider.init(searchTrack));
+              }
+            }
+            rej('');
+          });
+        })
+    );
+    return Promise.any(getUrlAsync);
+  },
   async bootstrapTrackAsync(track: any) {
     return new Promise((res, rej) => this.bootstrapTrack(track, res, rej));
   },

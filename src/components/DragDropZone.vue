@@ -27,15 +27,15 @@ const emits = defineEmits(['drop']);
 let root: any = $ref(null);
 
 // https://stackoverflow.com/questions/34200023/drag-drop-set-custom-html-as-drag-image
-const dragstart = (ev: any) => {
+const dragstart = (ev: DragEvent) => {
   if (dragobject === undefined) {
     return;
   }
   if (dragtype === undefined) {
     return;
   }
-  ev.dataTransfer.setData(dragtype, JSON.stringify(dragobject));
-  const elem: any = document.createElement('div');
+  ev.dataTransfer?.setData(dragtype, JSON.stringify(dragobject));
+  const elem = document.createElement('div');
   elem.id = 'drag-ghost';
   elem.innerHTML = dragtitle;
   elem.style.position = 'absolute';
@@ -43,10 +43,10 @@ const dragstart = (ev: any) => {
   elem.style.padding = '3px';
   elem.style.background = '#eeeeee';
   elem.style.color = '#333';
-  elem.style['border-radius'] = '3px';
+  elem.style.borderRadius = '3px';
 
   document.body.appendChild(elem);
-  ev.dataTransfer.setDragImage(elem, 0, 40);
+  ev.dataTransfer?.setDragImage(elem, 0, 40);
 };
 const dragend = () => {
   const ghost = document.getElementById('drag-ghost');
@@ -57,8 +57,11 @@ const dragend = () => {
     ghost.parentNode.removeChild(ghost);
   }
 };
-const dragenter = (event: any) => {
+const dragenter = (event: DragEvent) => {
   let dragType = '';
+  if (!event.dataTransfer?.types) {
+    return;
+  }
   if (event.dataTransfer.types.length > 0) {
     [dragType] = event.dataTransfer.types;
   }
