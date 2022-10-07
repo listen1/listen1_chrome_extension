@@ -162,7 +162,7 @@ const provider: MusicProvider = class taihe extends MusicResource {
       sound.bitrate = `${data.data.rate}kbps`;
       return sound;
     } else {
-      throw `taihe:init():no data path ${data}`;
+      throw `taihe:init():no data path ${JSON.stringify(data)}`;
     }
   }
   static bootstrapTrack(track: any, success: CallableFunction, failure: CallableFunction) {

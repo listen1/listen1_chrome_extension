@@ -413,7 +413,7 @@ const provider: MusicProvider = class qq extends MusicResource {
 
     if (purl === '') {
       // vip
-      throw `qq:init(): purl invalid maybe vip is needed?${data}`;
+      throw `qq:init(): purl invalid maybe vip is needed? ${JSON.stringify(data)}`;
     }
     const url = data.req_0.data.sip[0] + purl;
     sound.url = url;
