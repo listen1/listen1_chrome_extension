@@ -352,9 +352,9 @@ const provider: MusicProvider = class migu extends MusicResource {
         default:
           sound.bitrate = '128kbps';
       }
-      return sound
+      return sound;
     } else {
-      throw('migu:no play url')
+      throw 'migu:init(): no play url';
     }
   }
   static bootstrapTrack(track: any, success: CallableFunction, failure: CallableFunction) {

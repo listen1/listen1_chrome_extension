@@ -289,7 +289,7 @@ const provider: MusicProvider = class netease extends MusicResource {
       sound.platform = 'netease';
       return sound;
     } else {
-      throw 'netease:init url is null';
+      throw 'netease:init(): url is null';
     }
   }
   static bootstrapTrack(track: any, success: CallableFunction, failure: CallableFunction) {

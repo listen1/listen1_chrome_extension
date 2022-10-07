@@ -147,7 +147,7 @@ const provider: MusicProvider = class bilibili extends MusicResource {
     if (data.code === 0) {
       return { url: data.data.cdns[0], platform: 'bilibili' };
     } else {
-      throw new Error(`invalid data code`);
+      throw `bilibili:init(): invalid data ${data}`;
     }
   }
   static bootstrapTrack(track: any, success: CallableFunction, failure: CallableFunction) {

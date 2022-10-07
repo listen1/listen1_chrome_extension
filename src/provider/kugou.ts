@@ -227,7 +227,7 @@ const provider: MusicProvider = class kugou extends MusicResource {
     const info = JSON.parse(jsonString);
     const { play_url } = info.data;
     if (play_url === '') {
-      throw new Error('Play url is empty');
+      throw 'kugou:init(): empty play url'
     }
     return {
       url: play_url,

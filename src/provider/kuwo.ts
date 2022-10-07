@@ -343,7 +343,7 @@ const provider: MusicProvider = class kuwo extends MusicResource {
     if (data.length > 0) {
       return { url: data, platform: 'kuwo' };
     } else {
-      throw new Error('Kuwo empty list');
+      throw `kuwo:init() invalid data ${data}`;
     }
   }
   // eslint-disable-next-line no-unused-vars
