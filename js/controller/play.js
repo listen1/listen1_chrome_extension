@@ -712,9 +712,9 @@ angular.module('listenone').controller('PlayController', [
               }
               if ($rootScope.page_title.status !== '') {
                 if ($rootScope.page_title.status === 'playing') {
-                  title += '▶ ';
-                } else if ($rootScope.page_title.status === 'paused') {
                   title += '❚❚ ';
+                } else if ($rootScope.page_title.status === 'paused') {
+                  title += '▶ ';
                 }
               }
               title += $rootScope.page_title.title;
