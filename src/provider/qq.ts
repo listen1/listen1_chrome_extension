@@ -343,7 +343,87 @@ const provider: MusicProvider = class qq extends MusicResource {
     );
     return result;
   }
+  static async init(track: any) {
+    const sound = {} as any;
+    const songId = track.id.slice('qqtrack_'.length);
+    const target_url = 'https://u.y.qq.com/cgi-bin/musicu.fcg';
+    // thanks to https://github.com/Rain120/qq-music-api/blob/2b9cb811934888a532545fbd0bf4e4ab2aea5dbe/routers/context/getMusicPlay.js
+    const guid = '10000';
+    const songmidList = [songId];
+    const uin = '0';
 
+    const fileType = '128';
+    const fileConfig = {
+      m4a: {
+        s: 'C400',
+        e: '.m4a',
+        bitrate: 'M4A'
+      },
+      128: {
+        s: 'M500',
+        e: '.mp3',
+        bitrate: '128kbps'
+      },
+      320: {
+        s: 'M800',
+        e: '.mp3',
+        bitrate: '320kbps'
+      },
+      ape: {
+        s: 'A000',
+        e: '.ape',
+        bitrate: 'APE'
+      },
+      flac: {
+        s: 'F000',
+        e: '.flac',
+        bitrate: 'FLAC'
+      }
+    };
+    const fileInfo = fileConfig[fileType];
+    const file = songmidList.length === 1 && `${fileInfo.s}${songId}${songId}${fileInfo.e}`;
+    const reqData = {
+      req_0: {
+        module: 'vkey.GetVkeyServer',
+        method: 'CgiGetVkey',
+        param: {
+          filename: file ? [file] : [],
+          guid,
+          songmid: songmidList,
+          songtype: [0],
+          uin,
+          loginflag: 1,
+          platform: '20'
+        }
+      },
+      loginUin: uin,
+      comm: {
+        uin,
+        format: 'json',
+        ct: 24,
+        cv: 0
+      }
+    };
+    const params = {
+      format: 'json',
+      data: JSON.stringify(reqData)
+    };
+    const { data } = await axios.get(target_url, { params });
+    const { purl } = data.req_0.data.midurlinfo[0];
+
+    if (purl === '') {
+      // vip
+      throw `qq:init(): purl invalid maybe vip is needed? ${JSON.stringify(data)}`;
+    }
+    const url = data.req_0.data.sip[0] + purl;
+    sound.url = url;
+    const prefix = purl.slice(0, 4);
+    const found = Object.values(fileConfig).filter((i) => i.s === prefix);
+    sound.bitrate = found.length > 0 ? found[0].bitrate : '';
+    sound.platform = 'qq';
+
+    return sound;
+  }
   static bootstrapTrack(track: any, success: CallableFunction, failure: CallableFunction) {
     const sound = {} as any;
     const songId = track.id.slice('qqtrack_'.length);

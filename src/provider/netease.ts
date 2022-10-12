@@ -1,6 +1,6 @@
 import axios from 'axios';
 import forge from 'node-forge';
-import { cookieGetPromise, cookieRemove, cookieSet, getParameterByName } from '../utils';
+import { cookieGetPromise, cookieRemove, cookieSet, cookieSetPromise, getParameterByName } from '../utils';
 import { MusicProvider, MusicResource } from './types';
 
 const provider: MusicProvider = class netease extends MusicResource {
@@ -259,6 +259,38 @@ const provider: MusicProvider = class netease extends MusicResource {
         //   }));
       });
     });
+  }
+  static async init(track: any) {
+    const sound = {} as any;
+    const target_url = `https://interface3.music.163.com/eapi/song/enhance/player/url`;
+    let song_id = track.id;
+    const eapiUrl = '/api/song/enhance/player/url';
+
+    song_id = song_id.slice('netrack_'.length);
+
+    const d = {
+      ids: `[${song_id}]`,
+      br: 999000
+    };
+    const data = this.eapi(eapiUrl, d);
+    const expire = (new Date().getTime() + 1e3 * 60 * 60 * 24 * 365 * 100) / 1000;
+    await cookieSetPromise({
+      url: 'https://interface3.music.163.com',
+      name: 'os',
+      value: 'pc',
+      expirationDate: expire,
+      sameSite: 'no_restriction'
+    });
+    const { data: res_data } = await axios.post(target_url, new URLSearchParams(data));
+    const { url, br } = res_data.data[0];
+    if (url != null) {
+      sound.url = url;
+      sound.bitrate = `${(br / 1000).toFixed(0)}kbps`;
+      sound.platform = 'netease';
+      return sound;
+    } else {
+      throw 'netease:init(): url is null';
+    }
   }
   static bootstrapTrack(track: any, success: CallableFunction, failure: CallableFunction) {
     const sound = {} as any;

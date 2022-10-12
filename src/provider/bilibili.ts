@@ -140,7 +140,16 @@ const provider: MusicProvider = class bilibili extends MusicResource {
     }
     return result;
   }
-
+  static async init(track: any) {
+    const song_id = track.id.slice('bitrack_'.length);
+    const target_url = `https://www.bilibili.com/audio/music-service-c/web/url?sid=${song_id}`;
+    const { data } = await axios.get(target_url);
+    if (data.code === 0) {
+      return { url: data.data.cdns[0], platform: 'bilibili' };
+    } else {
+      throw `bilibili:init(): invalid data ${JSON.stringify(data)}`;
+    }
+  }
   static bootstrapTrack(track: any, success: CallableFunction, failure: CallableFunction) {
     const sound = {} as any;
     const song_id = track.id.slice('bitrack_'.length);

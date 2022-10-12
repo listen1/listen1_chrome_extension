@@ -53,7 +53,9 @@ const provider: MusicProvider = class localmusic extends MusicResource {
 
     return playlist;
   }
-
+  static init(track: any) {
+    return { url: track.sound_url, platform: 'localmusic', bitrate: track.bitrate };
+  }
   static bootstrapTrack(track: any, success: CallableFunction) {
     const sound = {} as any;
     sound.url = track.sound_url;
