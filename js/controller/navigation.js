@@ -331,7 +331,7 @@ angular.module('listenone').controller('NavigationController', [
         const lowerK = key.toLowerCase();
         let matches = 0;
         if (lowerS.includes(lowerK)) return true;
-        for (let i = 0; i < lowerK.length; i++) {
+        for (let i = 0; i < lowerK.length; i += 1) {
           if (lowerS.includes(lowerK[i])) matches += 1;
           else matches -= 1;
         }
