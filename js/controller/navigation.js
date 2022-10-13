@@ -326,10 +326,20 @@ angular.module('listenone').controller('NavigationController', [
       if ($scope.playlistFilter.key === '') {
         return true;
       }
+      function fuzzy(str, key, ratio = 0.5) {
+        let s = str.toLowerCase();
+        let k = key.toLowerCase();
+        let matches = 0;
+        if (s.includes(k)) return true;
+        for (let c of k) {
+          s.includes(c) ? ++matches : --matches;
+        }
+        return matches / str.length > ratio || key == '';
+      }
       return (
-        song.title.includes($scope.playlistFilter.key) ||
-        song.artist.includes($scope.playlistFilter.key) ||
-        (song.album && song.album.includes($scope.playlistFilter.key))
+        fuzzy(song.title, $scope.playlistFilter.key) ||
+        fuzzy(song.artist, $scope.playlistFilter.key) ||
+        (song.album && fuzzy(song.album, $scope.playlistFilter.key))
       );
     };
     $scope.onPlaylistSongDrop = (list_id, song, data, dataType, direction) => {
