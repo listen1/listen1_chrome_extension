@@ -327,14 +327,15 @@ angular.module('listenone').controller('NavigationController', [
         return true;
       }
       function fuzzy(str, key, ratio = 0.5) {
-        let s = str.toLowerCase();
-        let k = key.toLowerCase();
+        const lowerS = str.toLowerCase();
+        const lowerK = key.toLowerCase();
         let matches = 0;
-        if (s.includes(k)) return true;
-        for (let c of k) {
-          s.includes(c) ? ++matches : --matches;
+        if (lowerS.includes(lowerK)) return true;
+        for (let i = 0; i < lowerK.length; i++) {
+          if (lowerS.includes(lowerK[i])) matches += 1;
+          else matches -= 1;
         }
-        return matches / str.length > ratio || key == '';
+        return matches / str.length > ratio || key === '';
       }
       return (
         fuzzy(song.title, $scope.playlistFilter.key) ||
