@@ -707,15 +707,11 @@ angular.module('listenone').controller('PlayController', [
               title = '';
               if (msg.data.isPlaying) {
                 $rootScope.page_title.status = 'playing';
+                title += '▶ ';
               } else {
                 $rootScope.page_title.status = 'paused';
+                title += '❚❚ ';
               }
-              if ($rootScope.page_title.status !== '') {
-                if ($rootScope.page_title.status === 'playing') {
-                  title += '▶ ';
-                } else if ($rootScope.page_title.status === 'paused') {
-                  title += '❚❚ ';
-                }
               }
               title += $rootScope.page_title.title;
               if ($rootScope.page_title.artist !== '') {
