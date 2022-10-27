@@ -491,13 +491,13 @@ https://stackoverflow.com/questions/19889615/can-an-angular-directive-pass-argum
   color: var(--text-default-color);
   margin: 0 12px;
 }
-@media screen and (max-width:1124px){
+@media screen and (max-width:1000px){
   .playlist-covers li {
     flex: 0 1 calc(25% - 26px);
   }
 }
 
-@media screen and (min-width:1124px) and (max-width:1480px){
+@media screen and (min-width:1000px) and (max-width:1480px){
   .playlist-covers li {
     flex: 0 1 calc(20% - 26px);
   }
