@@ -1,7 +1,7 @@
 import useSettings from '../composition/settings';
-import providers from '../provider';
-import myplaylist from '../provider/myplaylist';
-import { MusicProvider } from '../provider/types';
+import providers from '@provider';
+import myplaylist from '@provider/myplaylist';
+import { MusicProvider } from '@provider/types';
 
 function getProviderByName(sourceName: string) {
   const provider = providers.find((i) => i.Name === sourceName);

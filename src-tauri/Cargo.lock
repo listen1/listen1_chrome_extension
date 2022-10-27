@@ -1548,6 +1548,7 @@ name = "media_providers"
 version = "0.1.0"
 dependencies = [
  "kuchiki",
+ "rand 0.8.5",
  "reqwest",
  "serde",
  "url",

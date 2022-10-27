@@ -97,27 +97,16 @@ const provider: MusicProvider = class netease extends MusicResource {
       return this.ne_show_toplist(offset);
     }
 
-    let filter = '';
+    const params = { order };
     if (filterId !== '') {
-      filter = `&cat=${filterId}`;
+      params.category_id = filterId;
     }
-    let target_url = '';
     if (offset != null) {
-      target_url = `https://music.163.com/discover/playlist/?order=${order}${filter}&limit=35&offset=${offset}`;
-    } else {
-      target_url = `https://music.163.com/discover/playlist/?order=${order}${filter}`;
+      params.offset = offset;
     }
-    const { data } = await axios.get(target_url);
 
-    const list_elements = Array.from(new DOMParser().parseFromString(data, 'text/html').getElementsByClassName('m-cvrlst')[0].children);
-    const result = list_elements.map((item) => ({
-      //force high-res image here
-      cover_img_url: item.getElementsByTagName('img')[0].src.replace('140y140', '512y512'),
-      title: item.getElementsByTagName('div')[0].getElementsByTagName('a')[0].title,
-      id: `neplaylist_${getParameterByName('id', item.getElementsByTagName('div')[0].getElementsByTagName('a')[0].href)}`,
-      source_url: `https://music.163.com/#/playlist?id=${getParameterByName('id', item.getElementsByTagName('div')[0].getElementsByTagName('a')[0].href)}`
-    }));
-    return result;
+    const { data } = await axios.get("http://localhost:3030/playlist/netease", { params });
+    return data;
   }
 
   static ne_ensure_cookie(callback: CallableFunction) {

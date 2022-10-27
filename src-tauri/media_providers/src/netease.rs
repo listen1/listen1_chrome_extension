@@ -1,19 +1,41 @@
-use kuchiki::{NodeRef, parse_html};
-use kuchiki::traits::TendrilSink;
-use serde::{Serialize};
 use super::playlist::Playlist;
 use super::utils::create_url;
+use kuchiki::traits::TendrilSink;
+use kuchiki::{parse_html, NodeRef};
+use serde::Serialize;
+use url::Url;
 
 pub struct NeteaseService;
 
+const PLAYLIST_URL: &'static str = "https://music.163.com/discover/playlist";
+
+fn build_playlist_url(data: PlaylistParams) -> String {
+  let mut params: Vec<(String, String)> = vec![];
+  params.push(("order".to_string(), data.order));
+  params.push(("offset".to_string(), data.offset.to_string()));
+  match data.category_id {
+    Some(x) => {
+      params.push(("cat".to_string(), x));
+    },
+    _ => {}
+  }
+  let url = Url::parse_with_params(PLAYLIST_URL, &params).unwrap();
+
+  url.to_string()
+}
+
+pub struct PlaylistParams {
+  pub order: String,
+  pub offset: u32,
+  pub category_id: Option<String>,
+}
+
 impl NeteaseService {
-  pub async fn get_playlist() -> Vec<Playlist> {
+  pub async fn get_playlist(params: PlaylistParams) -> Vec<Playlist> {
+    let client = reqwest::Client::builder().build().unwrap();
 
-    let client = reqwest::Client::builder()
-      .build()
-      .unwrap();
-
-    let resp = client.get("https://music.163.com/discover/playlist/?order=hot&limit=35&offset=0")
+    let url = build_playlist_url(params);
+    let resp = client.get(url)
       // .header("Referer", "http://music.163.com/")
       // .header("Origin", "http://music.163.com/")
       .send()
@@ -37,7 +59,9 @@ impl NeteaseService {
   fn create_playlist(node_ref: &NodeRef) -> Playlist {
     let cover_node = node_ref.select_first("img").unwrap();
     // let cover_node = cover_node.as_node();
-    let cover_url = cover_node.attributes.borrow()
+    let cover_url = cover_node
+      .attributes
+      .borrow()
       .get("src")
       .unwrap()
       .replace("140y140", "512y512");
@@ -48,8 +72,10 @@ impl NeteaseService {
     let title = anchor_attrs.get("title").unwrap().to_string();
     let href = anchor_attrs.get("href").unwrap();
     let url = create_url(href).unwrap();
-    let pair = url.query_pairs()
-      .find(|(name, value)| name == "id").unwrap();
+    let pair = url
+      .query_pairs()
+      .find(|(name, value)| name == "id")
+      .unwrap();
 
     let mut id = "neplaylist_".to_string();
     let playlist_id = &pair.1.into_owned();

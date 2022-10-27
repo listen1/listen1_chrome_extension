@@ -8,5 +8,6 @@ edition = "2021"
 [dependencies]
 url = "2.3.1"
 kuchiki = "0.8.1"
-reqwest = "0.11.12"
+reqwest = { version = "0.11.12", features = [ "json" ] }
 serde = { version = "1.0", features = ["derive"] }
+rand = "0.8.5"
