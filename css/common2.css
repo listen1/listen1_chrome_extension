@@ -334,7 +334,6 @@ svg {
   font-size: 18px;
 }
 .sidebar ul li a {
-  width: 125px;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
