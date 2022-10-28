@@ -5,10 +5,13 @@ body {
   font-size: var(--text-default-size);
   color: var(--text-default-color);
   font-family: system-ui, 'PingFang SC', STHeiti, sans-serif;
+ 
+}
+body .body{
   background-color: var(--color-body-bg);
   transition: background 0.2s;
+  border-radius: 8px;
 }
-
 a {
   cursor: pointer;
   color: inherit;
