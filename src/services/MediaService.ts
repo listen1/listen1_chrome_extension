@@ -98,6 +98,7 @@ const MediaService = {
   showPlaylistArray(source: string, offset: number, filter_id: string) {
     const provider = getProviderByName(source);
     const url = `/show_playlist?${queryStringify({ offset, filter_id })}`;
+    console.log("url", url, provider);
     return provider.showPlaylist(url);
   },
 

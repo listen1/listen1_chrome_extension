@@ -107,7 +107,10 @@ const provider: MusicProvider = class netease extends MusicResource {
     } else {
       target_url = `https://music.163.com/discover/playlist/?order=${order}${filter}`;
     }
-    const { data } = await axios.get(target_url);
+    // const { data } = await axios.get(target_url);
+
+    const { data } = await axios.get("http://localhost:3030/playlist/netease?order=hot&limit=35&offset=0");
+    return data;
 
     const list_elements = Array.from(new DOMParser().parseFromString(data, 'text/html').getElementsByClassName('m-cvrlst')[0].children);
     const result = list_elements.map((item) => ({
