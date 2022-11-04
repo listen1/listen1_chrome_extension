@@ -40,7 +40,7 @@ const provider: MusicProvider = class qq extends MusicResource {
       filterId = '10000000';
     }
 
-    const { data } = await axios.get(`http://localhost:3030/playlist/qq?category_id=${filterId}&limit=35&offset=${offset}`);
+    const { data } = await axios.get(`http://localhost:3030/qq/playlists?category_id=${filterId}&limit=35&offset=${offset}`);
 
     return data;
   }
@@ -190,27 +190,19 @@ const provider: MusicProvider = class qq extends MusicResource {
   }
 
   static async qq_get_playlist(url: string) {
-    // eslint-disable-line no-unused-vars
     const list_id = getParameterByName('list_id', url)?.split('_').pop();
-    const target_url =
-      'https://i.y.qq.com/qzone-music/fcg-bin/fcg_ucc_getcdinfo_' +
-      'byids_cp.fcg?type=1&json=1&utf8=1&onlysong=0' +
-      `&nosign=1&disstid=${list_id}&g_tk=5381&loginUin=0&hostUin=0` +
-      '&format=json&inCharset=GB2312&outCharset=utf-8&notice=0' +
-      '&platform=yqq&needNewCode=0';
-    const { data } = await axios.get(target_url);
-    const info = {
-      cover_img_url: data.cdlist[0].logo,
-      description: fixString(data.cdlist[0].desc),
-      title: data.cdlist[0].dissname,
-      id: `qqplaylist_${list_id}`,
-      source_url: `https://y.qq.com/n/ryqq/playlist/${list_id}`
-    };
-    const tracks = data.cdlist[0].songlist.map((item: any) => this.qq_convert_song(item));
-    return {
-      tracks,
-      info
-    };
+    try {
+      const { data } = await axios.get(`http://localhost:3030/qq/playlist/${list_id}`);
+      return {
+        status: '1',
+        ...data,
+      }
+    } catch (e) {
+      return {
+        status: '0',
+        reason: '',
+      }
+    }
   }
 
   static async qq_album(url: string) {
@@ -562,6 +554,7 @@ const provider: MusicProvider = class qq extends MusicResource {
 
   static getPlaylist(url: string) {
     const list_id = getParameterByName('list_id', url)?.split('_')[0];
+    console.log('getPlaylist', list_id);
     switch (list_id) {
       case 'qqplaylist':
         return this.qq_get_playlist(url);

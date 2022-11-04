@@ -38,7 +38,8 @@ pub fn start(app_handle: &App) {
         let cors = CorsLayer::new().allow_origin(Any);
         let app = Router::new()
             .route("/", get(|| async { "Hello, World!" }))
-            .route("/playlist/:provider_name", get(get_playlist))
+            .route("/:provider_name/playlists", get(get_playlists))
+            .route("/:provider_name/playlist/:playlist_id", get(get_playlist))
             .layer(
                 ServiceBuilder::new()
                     .layer(TraceLayer::new_for_http())
@@ -55,7 +56,7 @@ pub fn start(app_handle: &App) {
     });
 }
 
-async fn get_playlist(
+async fn get_playlists(
     Path(provider_name): Path<String>,
     Query(params): Query<HashMap<String, String>>,
 ) -> Json<Value> {
@@ -65,4 +66,16 @@ async fn get_playlist(
         _ => vec![],
     };
     Json(json!(playlists))
+}
+
+async fn get_playlist(
+    Path((provider_name, playlist_id)): Path<(String, String)>,
+    Query(params): Query<HashMap<String, String>>,
+) -> Json<Value> {
+    let playlist = match provider_name.as_str() {
+        // "netease" => Netease::get_playlists(params).await,
+        "qq" => qq::QQ::get_playlist_detail(&playlist_id).await,
+        _ => qq::QQ::get_playlist_detail(&playlist_id).await,
+    };
+    Json(json!(playlist))
 }

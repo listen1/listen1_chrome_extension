@@ -10,7 +10,7 @@
         <div
           class="bottom absolute bottom-3 right-3 h-8 w-8 cursor-pointer opacity-0 duration-200 ease-linear group-hover:opacity-100"
           @click="directplaylist(i.id)">
-          <vue-feather type="play-circle" size="2rem" stroke="white"></vue-feather>
+          <vue-feather type="play-circle" stroke="white"></vue-feather>
         </div>
       </div>
       <div class="desc cursor-pointer">

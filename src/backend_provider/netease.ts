@@ -105,7 +105,7 @@ const provider: MusicProvider = class netease extends MusicResource {
       params.offset = offset;
     }
 
-    const { data } = await axios.get("http://localhost:3030/playlist/netease", { params });
+    const { data } = await axios.get("http://localhost:3030/netease/playlists", { params });
     return data;
   }
 
