@@ -5,10 +5,13 @@ body {
   font-size: var(--text-default-size);
   color: var(--text-default-color);
   font-family: system-ui, 'PingFang SC', STHeiti, sans-serif;
+ 
+}
+body .body{
   background-color: var(--color-body-bg);
   transition: background 0.2s;
+  border-radius: 8px;
 }
-
 a {
   cursor: pointer;
   color: inherit;
@@ -331,7 +334,6 @@ svg {
   font-size: 18px;
 }
 .sidebar ul li a {
-  width: 125px;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -487,14 +489,27 @@ https://stackoverflow.com/questions/19889615/can-an-angular-directive-pass-argum
 .playlist-covers {
   transition: padding 0.3s;
 }
-
 .playlist-covers li {
-  flex: 0 1 calc(20% - 26px);
-  min-height: 156px;
   color: var(--text-default-color);
   margin: 0 12px;
 }
+@media screen and (max-width:1000px){
+  .playlist-covers li {
+    flex: 0 1 calc(25% - 26px);
+  }
+}
 
+@media screen and (min-width:1000px) and (max-width:1480px){
+  .playlist-covers li {
+    flex: 0 1 calc(20% - 26px);
+  }
+}
+
+@media screen and (min-width:1480px){
+  .playlist-covers li {
+    flex: 0 1 calc(16.66% - 26px);
+  }
+}
 .playlist-covers .u-cover,
 ul.detail-songlist li .u-cover {
   display: flex;
@@ -634,15 +649,14 @@ ul.detail-songlist li .desc div.title:hover{
 .page .playlist-detail .detail-head img {
   position: relative;
   z-index: 1;
-  height: 288px;
-  width: 288px;
+  height: 100%;
+  width: 100%;
   border-radius: 0.75em;
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
   aspect-ratio: 1/1;
-  border: 1px solid rgba(0, 0, 0, 0.04);
 }
 
 .page .playlist-detail .detail-head .covershadow {
@@ -660,13 +674,14 @@ ul.detail-songlist li .desc div.title:hover{
 }
 
 .page .playlist-detail .detail-head .detail-head-cover {
-  flex: 0 0 150px;
   position: relative;
-  margin-left: 26px;
+  margin-left: 2vw;
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 1;
+  height: 25vh;
+  width: 25vh;
 }
 
 .page .playlist-detail .detail-head .detail-head-title {
@@ -680,6 +695,7 @@ ul.detail-songlist li .desc div.title:hover{
 .page .playlist-detail .detail-head .detail-head-title h2 {
   font-size: 36px;
   font-weight: 700;
+  margin-top: 10px;
 }
 
 .playlist-button-list {
@@ -1016,7 +1032,7 @@ ul.detail-songlist li .desc div.title:hover{
 }
 .playsong-detail .detail-songinfo .lyric p {
   padding: 18px;
-  transition: background 0.2s;
+  transition: all 0.2s;
   border-radius: 12px;
   margin: 0;
   opacity: 0.28;
@@ -1025,6 +1041,8 @@ ul.detail-songlist li .desc div.title:hover{
 }
 .playsong-detail .detail-songinfo .lyric p:hover {
   background: hsla(0, 0%, 100%, 0.08);
+  opacity: 0.6;
+  color: var(--text-default-color);
 }
 .playsong-detail .detail-songinfo .lyric p.translate {
   margin: 5px 0 0 0;
@@ -1035,6 +1053,7 @@ ul.detail-songlist li .desc div.title:hover{
 .playsong-detail .detail-songinfo .lyric p.highlight {
   color: var(--text-default-color);
   opacity: 1;
+  font-size: 26px;
 }
 .coverbg .playsong-detail .detail-songinfo .lyric p.highlight {
   color: var(--lyric-important-on-cover-color);
@@ -1388,7 +1407,8 @@ ul.detail-songlist li .tools .icon {
 
 .page .settings-title {
   max-width: 800px;
-  margin: 48px 75px 10px 115px;
+  margin: 0 auto;
+  padding: 0 20px;
   font-weight: bold;
   padding-bottom: 12px;
   font-size: 26px;
@@ -1397,7 +1417,9 @@ ul.detail-songlist li .tools .icon {
 }
 
 .page .settings-content {
-  margin: 25px 75px 25px 115px;
+  max-width: 800px;
+  margin: 25px auto;
+  padding: 0 20px;
   font-size: 16px;
   font-weight: 500;
   opacity: 0.78;
@@ -1901,6 +1923,8 @@ svg.searchspinner {
   align-items: center;
   flex-direction: column;
   transition: 0.3s;
+  width: 100%;
+  max-width: 30vw;
 }
 .footer .footertime:hover {
   padding: 0;
@@ -1988,14 +2012,14 @@ svg.searchspinner {
   justify-content: center;
   align-items: center;
   flex-wrap: nowrap;
-  width: 300px;
+  width: 100%;
   display: none;
 }
 .footer .main-info .playbar {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 150px;
+  width: 50%;
 }
 .footer .main-info .playbar .playbar-clickable {
   margin: 5px 10px 5px 0;
@@ -2036,7 +2060,7 @@ svg.searchspinner {
 }
 
 .volume-ctrl {
-  width: 150px;
+  width: 50%;
   display: flex;
   justify-content: center;
   align-items: center;
