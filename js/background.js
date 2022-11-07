@@ -72,6 +72,13 @@ function hack_referer_header(details) {
     add_origin = false;
   }
 
+  if (details.url.includes('.bilivideo.cn')) {
+    referer_value = 'https://www.bilibili.com/';
+    origin_value = 'https://www.bilibili.com/';
+    add_referer = true;
+    add_origin = true;
+  }
+
   if (
     details.url.includes('.taihe.com/') ||
     details.url.includes('music.91q.com')
@@ -166,6 +173,7 @@ const urls = [
   '*://*.kuwo.cn/*',
   '*://*.bilibili.com/*',
   '*://*.bilivideo.com/*',
+  '*://*.bilivideo.cn/*',
   '*://*.migu.cn/*',
   '*://*.githubusercontent.com/*',
 ];
