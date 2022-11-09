@@ -152,7 +152,7 @@ class bilibili {
       artist: this.htmlDecode(author.name),
       artist_id: `biartist_v_${author.mid}`,
       source: 'bilibili',
-      source_url: `https://www.bilibili.com/${bvid}`,
+      source_url: `https://www.bilibili.com/${bvid}/?p=${song_info.page}`,
       img_url: imgUrl,
     };
     return track;
