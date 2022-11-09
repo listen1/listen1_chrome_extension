@@ -120,7 +120,7 @@ class bilibili {
     const track_id = getParameterByName('list_id', url).split('_').pop();
     return {
       success: (fn) => {
-        let target_url = `https://api.bilibili.com/x/web-interface/view?bvid=${track_id}`;
+        const target_url = `https://api.bilibili.com/x/web-interface/view?bvid=${track_id}`;
         axios.get(target_url).then((response) => {
           const info = {
             cover_img_url: response.data.data.pic,
@@ -128,9 +128,10 @@ class bilibili {
             id: `bitrack_v_${track_id}`,
             source_url: `https://www.bilibili.com/${track_id}`,
           };
-          let author = response.data.data.owner;
+          const author = response.data.data.owner;
+          const default_img = response.data.data.pic;
           const tracks = response.data.data.pages.map((item) =>
-            this.bi_convert_song3(item,track_id,author)
+            this.bi_convert_song3(item,track_id,author,default_img)
           );
           return fn({
             tracks,
@@ -141,9 +142,11 @@ class bilibili {
     };
   }
 
-  static bi_convert_song3(song_info, bvid,author) {
+  static bi_convert_song3(song_info,bvid,author,default_img) {
     let imgUrl = song_info.first_frame;
-    if (imgUrl !== undefined  && imgUrl.startsWith('//')) {
+    if (imgUrl === undefined){
+      imgUrl = default_img;
+    } else if (imgUrl.startsWith('//')) {
       imgUrl = `https:${imgUrl}`;
     }
     const track = {
@@ -229,7 +232,7 @@ class bilibili {
       return axios.get(target_url).then((response) => {
         let { cid } = response.data.data.pages[0];
         if(trackIdCheck.length > 1){
-          cid = trackIdCheck[1];
+          [,cid] = trackIdCheck;
         }
         const target_url2 = `http://api.bilibili.com/x/player/playurl?fnval=16&bvid=${bvid}&cid=${cid}`;
         axios.get(target_url2).then((response2) => {
