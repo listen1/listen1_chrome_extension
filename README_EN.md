@@ -1,4 +1,4 @@
-# Listen 1 (Chrome Extension) V2.26.2
+# Listen 1 (Chrome Extension) V2.27.0
 
 （Last Update September 17th, 2022)
 
@@ -46,6 +46,19 @@ Making your own playlist is also supported.
 2. Click Add to Firefox button
 
 ## Changelog
+
+`2022-11`
+
+Features：
+
+- Search playlist for bilibili video (thanks @Wei-bin-Wu)
+- Optimaze modern theme style (thanks @814959822)
+
+Fix bugs:
+
+- Fix bilibili tracks play error
+- Fix local music play problem related to file types (thanks @mikelxk)
+- Fix image related problem when playing bilibili music (thanks @mikelxk)
 
 `2022-09`
 
