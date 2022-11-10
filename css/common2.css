@@ -1038,6 +1038,7 @@ ul.detail-songlist li .desc div.title:hover{
   opacity: 0.28;
   cursor: default;
   background: transparent;
+  color: var(--text-default-color);
 }
 .playsong-detail .detail-songinfo .lyric p:hover {
   background: hsla(0, 0%, 100%, 0.08);
