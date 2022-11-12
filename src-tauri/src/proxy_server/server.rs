@@ -1,14 +1,14 @@
-use crate::media_providers::netease::Netease;
 use axum::http::StatusCode;
 use axum::{
   error_handling::HandleErrorLayer,
   extract::{Path, Query},
   routing::get,
-  BoxError, Json, Router,
+  BoxError, Extension, Json, Router,
 };
-use media_providers::{media::Provider, netease, qq};
+use media_providers::{media::Provider, netease::Netease, qq::QQ};
 use serde_json::{json, Value};
 use std::collections::HashMap;
+use std::sync::Arc;
 use std::time::Duration;
 use tauri::{App, AppHandle, Manager};
 use tower::ServiceBuilder;
@@ -31,9 +31,23 @@ async fn handle_timeout_error(err: BoxError) -> (StatusCode, String) {
   }
 }
 
+#[derive(Debug)]
+struct State {
+  clients: HashMap<String, reqwest::Client>,
+}
+
 pub fn start(app_handle: &App) {
   tauri::async_runtime::spawn(async move {
     tracing_subscriber::fmt::init();
+
+    let netease_client = reqwest::Client::builder().build().unwrap();
+    let qq_client = reqwest::Client::builder().build().unwrap();
+
+    let mut clients = HashMap::new();
+    clients.insert(String::from("netease"), netease_client);
+    clients.insert(String::from("qq"), qq_client);
+
+    let shared_state = Arc::new(State { clients });
 
     let cors = CorsLayer::new().allow_origin(Any);
     let app = Router::new()
@@ -45,6 +59,7 @@ pub fn start(app_handle: &App) {
           .layer(TraceLayer::new_for_http())
           .layer(cors)
           .layer(HandleErrorLayer::new(handle_timeout_error))
+          .layer(Extension(shared_state))
           .timeout(Duration::from_secs(30)),
       );
 
@@ -59,10 +74,18 @@ pub fn start(app_handle: &App) {
 async fn get_playlists(
   Path(provider_name): Path<String>,
   Query(params): Query<HashMap<String, String>>,
+  Extension(state): Extension<Arc<State>>,
 ) -> Json<Value> {
+  let client = state.clients.get(provider_name.as_str()).unwrap();
   let playlists = match provider_name.as_str() {
-    "netease" => Netease::get_playlists(params).await,
-    "qq" => qq::QQ::get_playlists(params).await,
+    "netease" => {
+      let netease = Netease { client: client };
+      netease.get_playlists(params).await
+    }
+    "qq" => {
+      let qq = QQ { client: client };
+      qq.get_playlists(params).await
+    }
     _ => vec![],
   };
   Json(json!(playlists))
@@ -74,8 +97,8 @@ async fn get_playlist(
 ) -> Json<Value> {
   let playlist = match provider_name.as_str() {
     // "netease" => Netease::get_playlists(params).await,
-    "qq" => qq::QQ::get_playlist_detail(&playlist_id).await,
-    _ => qq::QQ::get_playlist_detail(&playlist_id).await,
+    "qq" => QQ::get_playlist_detail(&playlist_id).await,
+    _ => QQ::get_playlist_detail(&playlist_id).await,
   };
   Json(json!(playlist))
 }

@@ -2,11 +2,14 @@ use super::media::Playlist;
 use crate::media::{PlaylistDetail, Provider, Track};
 use async_trait::async_trait;
 use rand;
+use reqwest::Client;
 use serde::Deserialize;
 use std::collections::HashMap;
 use std::fmt::format;
 
-pub struct QQ;
+pub struct QQ<'a> {
+  pub client: &'a Client,
+}
 
 #[derive(Deserialize)]
 struct Item {
@@ -87,12 +90,11 @@ fn build_playlist_detail_url(list_id: &str) -> String {
 }
 
 #[async_trait]
-impl Provider for QQ {
-  async fn get_playlists(params: HashMap<String, String>) -> Vec<Playlist> {
-    let client = reqwest::Client::builder().build().unwrap();
-
+impl Provider for QQ<'_> {
+  async fn get_playlists(&self, params: HashMap<String, String>) -> Vec<Playlist> {
     let url = build_playlist_url(params);
-    let resp = client
+    let resp = self
+      .client
       .get(url)
       .header("Referer", "https://y.qq.com")
       .header("Origin", "https://y.qq.com/")
@@ -123,7 +125,7 @@ impl Provider for QQ {
   }
 }
 
-impl QQ {
+impl QQ<'_> {
   fn convert_to_listen1_song(songData: &SongData) -> Track {
     let source_url = format!(
       "https://y.qq.com/#type=song&mid={}&tpl=yqq_song_detail",

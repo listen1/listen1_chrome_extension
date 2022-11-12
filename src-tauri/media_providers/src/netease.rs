@@ -3,11 +3,14 @@ use super::utils::create_url;
 use async_trait::async_trait;
 use kuchiki::traits::TendrilSink;
 use kuchiki::{parse_html, NodeRef};
+use reqwest::Client;
 use serde::Serialize;
 use std::collections::HashMap;
 use url::Url;
 
-pub struct Netease;
+pub struct Netease<'a> {
+  pub client: &'a Client,
+}
 
 const PLAYLIST_URL: &'static str = "https://music.163.com/discover/playlist";
 
@@ -28,12 +31,11 @@ fn build_playlist_url(param: HashMap<String, String>) -> String {
 }
 
 #[async_trait]
-impl Provider for Netease {
-  async fn get_playlists(params: HashMap<String, String>) -> Vec<Playlist> {
-    let client = reqwest::Client::builder().build().unwrap();
-
+impl Provider for Netease<'_> {
+  async fn get_playlists(&self, params: HashMap<String, String>) -> Vec<Playlist> {
     let url = build_playlist_url(params);
-    let resp = client
+    let resp = self
+      .client
       .get(url)
       // .header("Referer", "http://music.163.com/")
       // .header("Origin", "http://music.163.com/")
@@ -60,7 +62,7 @@ impl Provider for Netease {
   // }
 }
 
-impl Netease {
+impl Netease<'_> {
   fn create_playlist(node_ref: &NodeRef) -> Playlist {
     let cover_node = node_ref.select_first("img").unwrap();
     // let cover_node = cover_node.as_node();

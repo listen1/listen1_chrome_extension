@@ -51,6 +51,7 @@ dependencies = [
  "axum",
  "hyper",
  "media_providers",
+ "reqwest",
  "serde",
  "serde_json",
  "tauri",

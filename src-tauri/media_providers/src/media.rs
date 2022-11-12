@@ -46,6 +46,6 @@ pub struct Song {
 
 #[async_trait]
 pub trait Provider {
-  async fn get_playlists(params: HashMap<String, String>) -> Vec<Playlist>;
+  async fn get_playlists(&self, params: HashMap<String, String>) -> Vec<Playlist>;
   // async fn get_playlist_detail(playlist_id: &str) {}
 }
