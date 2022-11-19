@@ -5,7 +5,6 @@ use rand;
 use reqwest::Client;
 use serde::Deserialize;
 use std::collections::HashMap;
-use std::fmt::format;
 
 pub struct QQ<'a> {
   pub client: &'a Client,
@@ -126,24 +125,24 @@ impl Provider for QQ<'_> {
 }
 
 impl QQ<'_> {
-  fn convert_to_listen1_song(songData: &SongData) -> Track {
+  fn convert_to_listen1_song(song_data: &SongData) -> Track {
     let source_url = format!(
       "https://y.qq.com/#type=song&mid={}&tpl=yqq_song_detail",
-      songData.songmid
+      song_data.songmid
     );
-    let first_singer = &songData.singer[0];
+    let first_singer = &song_data.singer[0];
     Track {
-      id: format!("qqtrack_{}", songData.songmid),
+      id: format!("qqtrack_{}", song_data.songmid),
       // id2: format!("qqtrack_{}", songData.songid),
       // title: htmlDecode(songData.songname),
-      title: songData.songname.to_string(),
+      title: song_data.songname.to_string(),
       // artist: htmlDecode(songData.singer[0].name),
       artist: first_singer.name.to_string(),
       artist_id: format!("qqartist_{}", first_singer.mid),
       // album: htmlDecode(songData.albumname),
       // album: songData.albumname.to_string(),
       // album_id: `qqalbum_{songData.albummid}`,
-      album_id: format!("qqalbum_{}", songData.albummid),
+      album_id: format!("qqalbum_{}", song_data.albummid),
       // img_url: this.qq_get_image_url(songData.albummid, 'album'),
       img_url: "".to_string(),
       source: "qq".to_string(),

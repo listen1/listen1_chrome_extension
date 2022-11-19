@@ -5,8 +5,10 @@ use axum::{
   routing::get,
   BoxError, Extension, Json, Router,
 };
-use media_providers::{media::Provider, netease::Netease, qq::QQ};
+use media_providers::{kuwo::Kuwo, media::Provider, netease::Netease, qq::QQ};
+use reqwest::{cookie, Client, ClientBuilder};
 use serde_json::{json, Value};
+use std::borrow::Borrow;
 use std::collections::HashMap;
 use std::sync::Arc;
 use std::time::Duration;
@@ -33,19 +35,25 @@ async fn handle_timeout_error(err: BoxError) -> (StatusCode, String) {
 
 #[derive(Debug)]
 struct State {
-  clients: HashMap<String, reqwest::Client>,
+  clients: HashMap<String, Client>,
 }
 
 pub fn start(app_handle: &App) {
   tauri::async_runtime::spawn(async move {
     tracing_subscriber::fmt::init();
 
-    let netease_client = reqwest::Client::builder().build().unwrap();
-    let qq_client = reqwest::Client::builder().build().unwrap();
+    let netease_client = Client::builder().build().unwrap();
+    let qq_client = Client::builder().build().unwrap();
+    let kuwo_client = Client::builder()
+      .connection_verbose(true)
+      .cookie_store(true)
+      .build()
+      .unwrap();
 
     let mut clients = HashMap::new();
     clients.insert(String::from("netease"), netease_client);
     clients.insert(String::from("qq"), qq_client);
+    clients.insert(String::from("kuwo"), kuwo_client);
 
     let shared_state = Arc::new(State { clients });
 
@@ -54,6 +62,8 @@ pub fn start(app_handle: &App) {
       .route("/", get(|| async { "Hello, World!" }))
       .route("/:provider_name/playlists", get(get_playlists))
       .route("/:provider_name/playlist/:playlist_id", get(get_playlist))
+      .route("/:provider_name/search", get(search))
+      .route("/:provider_name/song/:song_id", get(get_song))
       .layer(
         ServiceBuilder::new()
           .layer(TraceLayer::new_for_http())
@@ -101,4 +111,31 @@ async fn get_playlist(
     _ => QQ::get_playlist_detail(&playlist_id).await,
   };
   Json(json!(playlist))
+}
+
+async fn search(
+  Path(provider_name): Path<String>,
+  Query(params): Query<HashMap<String, String>>,
+  Extension(state): Extension<Arc<State>>,
+) -> Json<Value> {
+  // let playlist = match provider_name.as_str() {
+  //   // "netease" => Netease::get_playlists(params).await,
+  //   "qq" => qq::QQ::get_playlist_detail(&playlist_id).await,
+  //   _ => qq::QQ::get_playlist_detail(&playlist_id).await,
+  // };
+  let client = state.clients.get(provider_name.as_str()).unwrap();
+  let x = client.borrow();
+  let kuwo = Kuwo { client };
+  let response = kuwo.search(params).await;
+  Json(json!(response))
+}
+
+async fn get_song(
+  Path((provider_name, song_id)): Path<(String, String)>,
+  Extension(state): Extension<Arc<State>>,
+) -> Json<Value> {
+  let client = state.clients.get(provider_name.as_str()).unwrap();
+  let kuwo = Kuwo { client };
+  let response = kuwo.get_track(&song_id).await;
+  Json(json!(response))
 }

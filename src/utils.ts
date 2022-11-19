@@ -61,11 +61,13 @@ interface Cookie extends chrome.cookies.Details, Electron.Cookie {}
 
 export function cookieGet(cookieRequest: CookieRequest, callback: CallableFunction) {
   if (!isElectron()) {
+    console.log(cookieRequest);
     return chrome.cookies.get(cookieRequest, (cookie) => {
       callback(cookie);
     });
   }
   window.api.getCookie(cookieRequest).then((cookieArray) => {
+    console.log('getCookie', cookieArray);
     let cookie = null;
     if (cookieArray.length > 0) {
       [cookie] = cookieArray;

@@ -1,10 +1,9 @@
-use super::media::{Playlist, PlaylistDetail, Provider};
+use super::media::{Playlist, Provider};
 use super::utils::create_url;
 use async_trait::async_trait;
 use kuchiki::traits::TendrilSink;
 use kuchiki::{parse_html, NodeRef};
 use reqwest::Client;
-use serde::Serialize;
 use std::collections::HashMap;
 use url::Url;
 

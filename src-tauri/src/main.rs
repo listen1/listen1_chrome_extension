@@ -3,7 +3,6 @@
   windows_subsystem = "windows"
 )]
 
-use media_providers;
 mod proxy_server;
 
 use crate::proxy_server::server;

@@ -304,7 +304,10 @@ const provider: MusicProvider = class kuwo extends MusicResource {
         break;
     }
     const target_url = `https://www.kuwo.cn/api/www/search/${api}?key=${keyword}&pn=${curpage}&rn=20`;
-    const response = await this.getCookie(target_url);
+    // const response = await this.getCookie(target_url);
+    // console.log('response', response);
+    let response = await axios.get(`http://localhost:3030/kuwo/search`, { params: { api, keyword, curpage }});
+    console.log('resp', response);
     let result = <any>[];
     let total = 0;
     if (response === undefined) {
@@ -339,7 +342,8 @@ const provider: MusicProvider = class kuwo extends MusicResource {
   static async init(track: any) {
     const song_id = track.id.slice('kwtrack_'.length);
     const target_url = `https://antiserver.kuwo.cn/anti.s?type=convert_url&format=mp3&response=url&rid=${song_id}`;
-    const { data } = await axios.get(target_url);
+    // const { data } = await axios.get(target_url);
+    const { data } = await axios.get(`http://localhost:3030/kuwo/song/${song_id}`);
     if (data.length > 0) {
       return { url: data, platform: 'kuwo' };
     } else {
