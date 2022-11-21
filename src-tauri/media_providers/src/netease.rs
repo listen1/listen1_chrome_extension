@@ -3,15 +3,23 @@ use super::utils::create_url;
 use async_trait::async_trait;
 use kuchiki::traits::TendrilSink;
 use kuchiki::{parse_html, NodeRef};
-use reqwest::Client;
+use rand;
+use rand::Rng;
+use reqwest::{cookie, Client};
 use std::collections::HashMap;
+use std::fmt::{Display, Formatter};
+use std::string::String;
+use std::sync::Arc;
+use std::time::{SystemTime, UNIX_EPOCH};
 use url::Url;
 
 pub struct Netease<'a> {
   pub client: &'a Client,
 }
 
+const HOST: &'static str = "https://music.163.com";
 const PLAYLIST_URL: &'static str = "https://music.163.com/discover/playlist";
+const SECRET_CHARS: &'static str = "012345679abcdef";
 
 fn build_playlist_url(param: HashMap<String, String>) -> String {
   let mut items: Vec<(String, String)> = vec![];
@@ -61,7 +69,70 @@ impl Provider for Netease<'_> {
   // }
 }
 
+fn get_time() -> u64 {
+  let start = SystemTime::now();
+  let since_the_epoch = start
+    .duration_since(UNIX_EPOCH)
+    .expect("Time went backwards");
+
+  let in_ms = since_the_epoch.as_secs() * 1000 + since_the_epoch.subsec_nanos() as u64 / 1_000_000;
+
+  in_ms
+}
+
 impl Netease<'_> {
+  fn create_secret_key(size: u8) -> String {
+    let mut rng = rand::thread_rng();
+    let mut result: Vec<char> = vec![];
+    let mut chars = SECRET_CHARS.chars();
+    let range = 0..chars.count();
+
+    for i in 0..size {
+      let index = rng.gen_range(range.clone());
+      result.push(SECRET_CHARS.chars().nth(index).unwrap())
+    }
+
+    result.iter().collect()
+  }
+
+  pub fn create_cookie_jar() -> cookie::Jar {
+    let uid = Netease::create_secret_key(32);
+    let time = get_time();
+    let nid = format!("{uid},{timestamp}", uid = uid, timestamp = time);
+
+    let expire_at = (time + 1000 * 60 * 60 * 24 * 365 * 100) / 1000;
+    println!("nid is {:?}", nid);
+
+    let url = HOST.parse::<Url>().unwrap();
+    let uid_cookie = format!(
+      "_ntes_nuid={}; expires={}; Domain={}",
+      uid,
+      expire_at,
+      url.domain().unwrap()
+    );
+    let nid_cookie = format!(
+      "_ntes_nnid={}; expires={}; Domain={}",
+      uid,
+      expire_at,
+      url.domain().unwrap()
+    );
+
+    let jar = cookie::Jar::default();
+    jar.add_cookie_str(&uid_cookie, &url);
+    jar.add_cookie_str(&nid_cookie, &url);
+
+    jar
+  }
+
+  pub fn create_client() -> Client {
+    let jar = Netease::create_cookie_jar();
+
+    Client::builder()
+      .cookie_provider(Arc::new(jar))
+      .build()
+      .unwrap()
+  }
+
   fn create_playlist(node_ref: &NodeRef) -> Playlist {
     let cover_node = node_ref.select_first("img").unwrap();
     // let cover_node = cover_node.as_node();

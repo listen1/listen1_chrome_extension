@@ -42,7 +42,7 @@ pub fn start(app_handle: &App) {
   tauri::async_runtime::spawn(async move {
     tracing_subscriber::fmt::init();
 
-    let netease_client = Client::builder().build().unwrap();
+    let netease_client = Netease::create_client();
     let qq_client = Client::builder().build().unwrap();
     let kuwo_client = Client::builder()
       .connection_verbose(true)

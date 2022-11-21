@@ -10,5 +10,5 @@ url = "2.3.1"
 kuchiki = "0.8.1"
 reqwest = { version = "0.11.12", features = [ "json", "cookies" ] }
 serde = { version = "1.0", features = ["derive"] }
-rand = "0.8.5"
+rand = { version = "0.8.5", features = [ "std", "std_rng"] }
 async-trait = "0.1.58"
