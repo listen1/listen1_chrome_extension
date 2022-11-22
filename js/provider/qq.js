@@ -424,7 +424,7 @@ class qq {
     const songmidList = [songId];
     const uin = '0';
 
-    const fileType = '128';
+    const fileType = '320';
     const fileConfig = {
       m4a: {
         s: 'C400',
