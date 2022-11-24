@@ -83,7 +83,6 @@ class kugou {
                   author: item.nickname,
                   count: item.songcount,
                 }));
-                //没有返回页数，设置最大页数为50，每页20条
                 const total = 1000;
                 return fn({
                   result,
