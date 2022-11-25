@@ -64,13 +64,34 @@ const provider: MusicProvider = class kugou extends MusicResource {
     const curpage = getParameterByName('curpage', url);
     const searchType = getParameterByName('type', url);
     if (searchType === '1') {
-      return {
-        result: [],
-        total: 0,
-        type: searchType
-      };
+      const target_url = `http://mobilecdnbj.kugou.com/api/v3/search/special?keyword=${keyword}&pagesize=20&filter=0&page=${curpage}`;
+      try {
+        const { data } = await axios.get(target_url);
+        const { total, info } = data.data;
+        const result = info.map((item: any) => ({
+          id: `kgplaylist_${item.specialid}`,
+          title: item.specialname,
+          source: 'kugou',
+          source_url: 'https://www.kugou.com/yy/special/single/{size}.html'.replace('{size}', item.specialid),
+          img_url: item.imgurl ? item.imgurl.replace('{size}', '400') : '',
+          url: `kgplaylist_${item.specialid}`,
+          author: item.nickname,
+          count: item.songcount
+        }));
+        return {
+          result,
+          total,
+          type: searchType
+        };
+      } catch (error) {
+        return {
+          result: [],
+          total: 0,
+          type: searchType
+        };
+      }
     }
-    const target_url = `${'https://songsearch.kugou.com/song_search_v2?keyword='}${keyword}&page=${curpage}`;
+    const target_url = `https://songsearch.kugou.com/song_search_v2?keyword=${keyword}&page=${curpage}`;
     try {
       const response = await axios.get(target_url);
       const { data } = response;
@@ -92,7 +113,7 @@ const provider: MusicProvider = class kugou extends MusicResource {
   static kg_render_playlist_result_item(index: any, item: any, params: any, callback: CallableFunction) {
     const { hash } = item;
 
-    let target_url = `${'http://m.kugou.com/app/i/getSongInfo.php?cmd=playInfo&hash='}${hash}`;
+    let target_url = `http://m.kugou.com/app/i/getSongInfo.php?cmd=playInfo&hash=${hash}`;
     const track = {
       id: `kgtrack_${hash}`,
       title: '',
