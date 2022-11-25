@@ -83,7 +83,7 @@ class kugou {
                   author: item.nickname,
                   count: item.songcount,
                 }));
-                const total = 1000;
+                const { total } = response.data.data;
                 return fn({
                   result,
                   total,
