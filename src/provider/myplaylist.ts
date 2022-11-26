@@ -59,9 +59,6 @@ const provider = class MyPlaylist extends MusicResource {
     }
     return playlist;
   }
-  static guid() {
-    return crypto.randomUUID();
-  }
 
   static async reorderMyplaylist(playlist_type: string, playlist_id: string, to_playlist_id: string, direction: string) {
     await iDB.Settings.where('key')
@@ -89,7 +86,7 @@ const provider = class MyPlaylist extends MusicResource {
     // update listid
     let playlist_id = '';
     if (playlist_type === 'my') {
-      playlist_id = `myplaylist_${this.guid()}`;
+      playlist_id = `myplaylist_${crypto.randomUUID()}`;
       playlistInfo.id = playlist_id;
       playlistInfo.type = 'my';
       playlistInfo.order = playlist.tracks.map((track: any) => track.id);
