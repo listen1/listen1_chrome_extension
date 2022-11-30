@@ -469,7 +469,7 @@ const provider: MusicProvider = class migu extends MusicResource {
     const keyword = getParameterByName('keywords', url) || '';
     const curpage = getParameterByName('curpage', url);
     const searchType = getParameterByName('type', url);
-    const sid = (this.uuid() + this.uuid()).replace(/-/g, '');
+    const sid = (crypto.randomUUID() + crypto.randomUUID()).replace(/-/g, '');
     // let type ='';
     let searchSwitch = '';
     let target_url = 'https://jadeite.migu.cn/music_search/v2/search/searchAll?';
@@ -500,7 +500,7 @@ const provider: MusicProvider = class migu extends MusicResource {
     // const target_url = `https://pd.musicapp.migu.cn/MIGUM3.0/v1.0/content/search_all.do?&isCopyright=0&isCorrect=0&text=${keyword}&pageNo=${curpage}&searchSwitch=${searchSwitch}`;
     // const target_url = `https://m.music.migu.cn/migu/remoting/scr_search_tag?rows=20&type=${type}&keyword=${keyword}'&pgc=${curpage}`;
 
-    const deviceId = forge.md.md5.create().update(this.uuid().replace(/-/g, '')).digest().toHex().toLocaleUpperCase(); // 设备的UUID
+    const deviceId = forge.md.md5.create().update(crypto.randomUUID().replace(/-/g, '')).digest().toHex().toLocaleUpperCase(); // 设备的UUID
     const timestamp = Date.now().toString();
     const signature_md5 = '6cdc72a439cef99a3418d2a78aa28c73'; // app签名证书的md5
     const text = `${keyword + signature_md5}yyapp2d16148780a1dcc7408e06336b98cfd50${deviceId}${timestamp}`;
@@ -564,14 +564,6 @@ const provider: MusicProvider = class migu extends MusicResource {
       total,
       type: searchType
     };
-  }
-
-  // https://abhishekdutta.org/blog/standalone_uuid_generator_in_javascript.html
-  static uuid() {
-    const temp_url = URL.createObjectURL(new Blob());
-    const strTemp = temp_url.toString();
-    URL.revokeObjectURL(temp_url);
-    return strTemp.substr(strTemp.lastIndexOf('/') + 1); // remove prefix (e.g. blob:null/, blob:www.test.com/, ...)
   }
 
   static async lyric(url: string) {

@@ -44,7 +44,7 @@ export default defineConfig({
     vue({ reactivityTransform: true }),
     // @ts-ignore: Type Mismatch Error
     simpleReloader(),
-    production && zip({ dir: 'artifacts' })
+    production && !BUILD_ELECTRON && zip({ dir: 'artifacts' })
   ],
   build: {
     //we are still in develop here, since sourcemap won't work in extension, it's better not minify the files
