@@ -184,7 +184,8 @@ const provider: MusicProvider = class netease extends MusicResource {
       ids: `[${track_ids.join(',')}]`
     };
     const data = this.weapi(d);
-    const response = await axios.post(target_url, new URLSearchParams(data));
+    // const response = await axios.post(target_url, new URLSearchParams(data));
+    const response = await axios.post('http://localhost:3030/netease/song', new URLSearchParams(data));
     const tracks = response.data.songs.map((track_json: any) => ({
       id: `netrack_${track_json.id}`,
       title: track_json.name,
@@ -224,8 +225,8 @@ const provider: MusicProvider = class netease extends MusicResource {
         csrf_token: ''
       };
       const data = this.weapi(d);
-      this.ne_ensure_cookie(async () => {
-        const response = await axios.post(target_url, new URLSearchParams(data));
+
+      axios.post(`http://localhost:3030/netease/playlist/${list_id}`, new URLSearchParams(data)).then(async (response) => {
         const { data: res_data } = response;
         const info = {
           id: `neplaylist_${list_id}`,

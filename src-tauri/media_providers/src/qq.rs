@@ -153,12 +153,11 @@ impl QQ<'_> {
     }
   }
 
-  pub async fn get_playlist_detail(playlist_id: &str) -> PlaylistDetail {
+  pub async fn get_playlist_detail(&self, playlist_id: &str) -> PlaylistDetail {
     let url = build_playlist_detail_url(playlist_id);
-    println!("get_playlist_detail, {}", url);
-    let client = reqwest::Client::builder().build().unwrap();
 
-    let resp = client
+    let resp = self
+      .client
       .get(url)
       .header("Referer", "http://y.qq.com")
       .header("Origin", "http://y.qq.com/")

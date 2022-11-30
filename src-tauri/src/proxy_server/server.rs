@@ -1,11 +1,17 @@
 use axum::http::StatusCode;
 use axum::{
   error_handling::HandleErrorLayer,
+  extract,
   extract::{Path, Query},
-  routing::get,
-  BoxError, Extension, Json, Router,
+  routing::{get, post},
+  BoxError, Extension, Form, Json, Router,
 };
-use media_providers::{kuwo::Kuwo, media::Provider, netease::Netease, qq::QQ};
+use media_providers::{
+  kuwo::Kuwo,
+  media::Provider,
+  netease::{Netease, NeteaseFormData},
+  qq::QQ,
+};
 use reqwest::{cookie, Client, ClientBuilder};
 use serde_json::{json, Value};
 use std::borrow::Borrow;
@@ -61,9 +67,13 @@ pub fn start(app_handle: &App) {
     let app = Router::new()
       .route("/", get(|| async { "Hello, World!" }))
       .route("/:provider_name/playlists", get(get_playlists))
-      .route("/:provider_name/playlist/:playlist_id", get(get_playlist))
+      .route(
+        "/:provider_name/playlist/:playlist_id",
+        get(get_playlist).post(get_playlist_with_params),
+      )
       .route("/:provider_name/search", get(search))
       .route("/:provider_name/song/:song_id", get(get_song))
+      .route("/:provider_name/song", post(get_song_with_params))
       .layer(
         ServiceBuilder::new()
           .layer(TraceLayer::new_for_http())
@@ -103,12 +113,37 @@ async fn get_playlists(
 
 async fn get_playlist(
   Path((provider_name, playlist_id)): Path<(String, String)>,
-  Query(params): Query<HashMap<String, String>>,
+  Extension(state): Extension<Arc<State>>,
 ) -> Json<Value> {
+  let client = state.clients.get(provider_name.as_str()).unwrap();
   let playlist = match provider_name.as_str() {
-    // "netease" => Netease::get_playlists(params).await,
-    "qq" => QQ::get_playlist_detail(&playlist_id).await,
-    _ => QQ::get_playlist_detail(&playlist_id).await,
+    "qq" => {
+      let qq = QQ { client };
+      qq.get_playlist_detail(&playlist_id).await
+    }
+    _ => {
+      let qq = QQ { client };
+      qq.get_playlist_detail(&playlist_id).await
+    }
+  };
+  Json(json!(playlist))
+}
+
+async fn get_playlist_with_params(
+  Path((provider_name, playlist_id)): Path<(String, String)>,
+  Form(payload): Form<NeteaseFormData>,
+  Extension(state): Extension<Arc<State>>,
+) -> Json<Value> {
+  let client = state.clients.get(provider_name.as_str()).unwrap();
+  let playlist = match provider_name.as_str() {
+    "netease" => {
+      let netease = Netease { client };
+      netease.get_playlist_detail(payload).await
+    }
+    _ => {
+      let netease = Netease { client };
+      netease.get_playlist_detail(payload).await
+    }
   };
   Json(json!(playlist))
 }
@@ -124,7 +159,6 @@ async fn search(
   //   _ => qq::QQ::get_playlist_detail(&playlist_id).await,
   // };
   let client = state.clients.get(provider_name.as_str()).unwrap();
-  let x = client.borrow();
   let kuwo = Kuwo { client };
   let response = kuwo.search(params).await;
   Json(json!(response))
@@ -137,5 +171,16 @@ async fn get_song(
   let client = state.clients.get(provider_name.as_str()).unwrap();
   let kuwo = Kuwo { client };
   let response = kuwo.get_track(&song_id).await;
+  Json(json!(response))
+}
+
+async fn get_song_with_params(
+  Path(provider_name): Path<String>,
+  Form(payload): Form<NeteaseFormData>,
+  Extension(state): Extension<Arc<State>>,
+) -> Json<Value> {
+  let client = state.clients.get(provider_name.as_str()).unwrap();
+  let netease = Netease { client };
+  let response = netease.get_song(payload).await;
   Json(json!(response))
 }

@@ -1,11 +1,13 @@
 use super::media::{Playlist, Provider};
 use super::utils::create_url;
+use crate::media::PlaylistDetail;
 use async_trait::async_trait;
 use kuchiki::traits::TendrilSink;
 use kuchiki::{parse_html, NodeRef};
 use rand;
 use rand::Rng;
 use reqwest::{cookie, Client};
+use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::fmt::{Display, Formatter};
 use std::string::String;
@@ -13,13 +15,66 @@ use std::sync::Arc;
 use std::time::{SystemTime, UNIX_EPOCH};
 use url::Url;
 
+const HOST: &'static str = "https://music.163.com";
+const PLAYLIST_URL: &'static str = "https://music.163.com/discover/playlist";
+const PLAYLIST_DETAIL_URL: &'static str = "https://music.163.com/weapi/v3/playlist/detail";
+const SONG_DETAIL_URL: &'static str = "https://music.163.com/weapi/v3/song/detail";
+const SECRET_CHARS: &'static str = "012345679abcdef";
+
 pub struct Netease<'a> {
   pub client: &'a Client,
 }
 
-const HOST: &'static str = "https://music.163.com";
-const PLAYLIST_URL: &'static str = "https://music.163.com/discover/playlist";
-const SECRET_CHARS: &'static str = "012345679abcdef";
+#[derive(Deserialize, Serialize, Debug)]
+pub struct NeteaseFormData {
+  pub params: String,
+  pub encSecKey: String,
+}
+
+#[derive(Deserialize, Serialize, Debug)]
+struct TrackData {
+  id: u64,
+}
+
+#[derive(Deserialize, Serialize, Debug)]
+struct PlaylistData {
+  id: u64,
+  coverImgUrl: String,
+  name: String,
+  description: String,
+  trackIds: Vec<TrackData>,
+}
+
+#[derive(Deserialize, Serialize, Debug)]
+pub struct PlaylistResponse {
+  playlist: PlaylistData,
+}
+
+#[derive(Deserialize, Serialize, Debug)]
+pub struct Artist {
+  id: u64,
+  name: String,
+}
+
+#[derive(Deserialize, Serialize, Debug)]
+pub struct Album {
+  id: u64,
+  name: String,
+  picUrl: String,
+}
+
+#[derive(Deserialize, Serialize, Debug)]
+pub struct Song {
+  id: u64,
+  name: String,
+  ar: Vec<Artist>,
+  al: Album,
+}
+
+#[derive(Deserialize, Serialize, Debug)]
+pub struct SongResponse {
+  songs: Vec<Song>,
+}
 
 fn build_playlist_url(param: HashMap<String, String>) -> String {
   let mut items: Vec<(String, String)> = vec![];
@@ -63,10 +118,6 @@ impl Provider for Netease<'_> {
 
     return playlists;
   }
-
-  // async fn get_playlist_detail<T>(params: T) -> PlaylistDetail {
-  //   todo!()
-  // }
 }
 
 fn get_time() -> u64 {
@@ -131,6 +182,52 @@ impl Netease<'_> {
       .cookie_provider(Arc::new(jar))
       .build()
       .unwrap()
+  }
+
+  pub async fn get_playlist_detail(&self, payload: NeteaseFormData) -> PlaylistResponse {
+    // let text = self
+    //   .client
+    //   .post(PLAYLIST_DETAIL_URL)
+    //   .header("Referer", HOST)
+    //   .form(&payload)
+    //   .send()
+    //   .await
+    //   .unwrap()
+    //   .text()
+    //   .await
+    //   .unwrap();
+    //
+    // println!("text response is {:#?}", text);
+
+    let response = self
+      .client
+      .post(PLAYLIST_DETAIL_URL)
+      .header("Referer", HOST)
+      .form(&payload)
+      .send()
+      .await
+      .unwrap()
+      .json::<PlaylistResponse>()
+      .await
+      .unwrap();
+
+    return response;
+  }
+
+  pub async fn get_song(&self, payload: NeteaseFormData) -> SongResponse {
+    let response = self
+      .client
+      .post(SONG_DETAIL_URL)
+      .header("Referer", HOST)
+      .form(&payload)
+      .send()
+      .await
+      .unwrap()
+      .json::<SongResponse>()
+      .await
+      .unwrap();
+
+    response
   }
 
   fn create_playlist(node_ref: &NodeRef) -> Playlist {
