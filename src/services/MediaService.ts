@@ -1,7 +1,7 @@
 import useSettings from '../composition/settings';
-import providers from '../provider';
-import myplaylist from '../provider/myplaylist';
-import { MusicProvider } from '../provider/types';
+import providers from '@provider';
+import myplaylist from '@provider/myplaylist';
+import { MusicProvider } from '@provider/types';
 
 function getProviderByName(sourceName: string) {
   const provider = providers.find((i) => i.Name === sourceName);
@@ -98,6 +98,7 @@ const MediaService = {
   showPlaylistArray(source: string, offset: number, filter_id: string) {
     const provider = getProviderByName(source);
     const url = `/show_playlist?${queryStringify({ offset, filter_id })}`;
+    console.log("url", url, provider);
     return provider.showPlaylist(url);
   },
 
@@ -218,6 +219,7 @@ const MediaService = {
           const provider = getProviderByName(source);
           //@ts-ignore TODO: use await to work with awaitable function
           provider.search(url).then((data: any) => {
+            // console.log('data', data);
             for (const searchTrack of data.result) {
               // compare search track and track to check if they are same
               // TODO: better similar compare method (duration, md5)

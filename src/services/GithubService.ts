@@ -175,13 +175,13 @@ const GithubClient = {
  * Get tokens.
  */
 
-chrome.runtime?.onMessage.addListener((request, sender, sendResponse) => {
-  if (!request.code) {
-    return;
-  }
-  GithubClient.github.handleCallback(request.code);
-  sendResponse();
-});
+// chrome.runtime?.onMessage.addListener((request, sender, sendResponse) => {
+//   if (!request.code) {
+//     return;
+//   }
+//   GithubClient.github.handleCallback(request.code);
+//   sendResponse();
+// });
 window.api?.ipcOn('githubCode')((code: string) => {
   GithubClient.github.handleCallback(code);
 });

@@ -221,7 +221,7 @@ watch(
 );
 </script>
 <style>
-/* 
+/*
 
 ul.detail-songlist .playlist-search {
   position: absolute;

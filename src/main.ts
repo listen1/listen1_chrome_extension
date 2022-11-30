@@ -18,4 +18,8 @@ app
   .component(VueFeather.name || '', VueFeather)
   .mount('#app');
 
+app.config.warnHandler = () => {
+  //
+}
+
 app.config.globalProperties.$mitt = mitt();

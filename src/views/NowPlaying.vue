@@ -154,7 +154,7 @@ import usePlayer from '../composition/player';
 import useSettings from '../composition/settings';
 import { datetimeFormats } from '../i18n/index';
 import coverImg from '../images/mycover.jpg';
-import type { Comment } from '../provider/types';
+import type { Comment } from '@provider/types';
 import MediaService from '../services/MediaService';
 const { t, d } = useI18n({
   //@ts-ignore mismatch arg num

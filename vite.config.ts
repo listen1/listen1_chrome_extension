@@ -1,12 +1,15 @@
+import { resolve } from 'path';
 import vueI18n from '@intlify/vite-plugin-vue-i18n';
 import vue from '@vitejs/plugin-vue';
 import { chromeExtension, simpleReloader } from 'rollup-plugin-chrome-extension';
 import zip from 'vite-plugin-zip';
 import { defineConfig, build } from 'vite';
 
-const { NODE_ENV, BUILD_ELECTRON } = process.env;
+const { NODE_ENV, BUILD_ELECTRON, BUILD_TAURI } = process.env;
 const production = NODE_ENV === 'production';
 if (process.argv.includes('-w') || process.argv.includes('--watch')) process.env.ROLLUP_WATCH = 'true';
+
+const provider_src = resolve(__dirname, `src/${BUILD_TAURI ? 'backend_provider' : 'provider'}`);
 
 const chromeExtPlugin = chromeExtension();
 
@@ -15,7 +18,8 @@ export default defineConfig({
   resolve: {
     alias: {
       'vue-i18n': 'vue-i18n/dist/vue-i18n.runtime.esm-bundler.js',
-      'node-forge': 'node-forge/dist/forge.min.js'
+      'node-forge': 'node-forge/dist/forge.min.js',
+      '@provider': provider_src,
     }
   },
   base: '',
