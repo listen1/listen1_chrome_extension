@@ -19,6 +19,8 @@ const HOST: &'static str = "https://music.163.com";
 const PLAYLIST_URL: &'static str = "https://music.163.com/discover/playlist";
 const PLAYLIST_DETAIL_URL: &'static str = "https://music.163.com/weapi/v3/playlist/detail";
 const SONG_DETAIL_URL: &'static str = "https://music.163.com/weapi/v3/song/detail";
+const SONG_LYRICS_URL: &'static str = "https://music.163.com/weapi/song/lyric?csrf_token=";
+
 const SECRET_CHARS: &'static str = "012345679abcdef";
 
 pub struct Netease<'a> {
@@ -74,6 +76,18 @@ pub struct Song {
 #[derive(Deserialize, Serialize, Debug)]
 pub struct SongResponse {
   songs: Vec<Song>,
+}
+
+#[derive(Deserialize, Serialize, Debug)]
+pub struct Lyrics {
+  version: u32,
+  lyric: String,
+}
+
+#[derive(Deserialize, Serialize, Debug)]
+pub struct LyricResponse {
+  lrc: Lyrics,
+  tlyric: Option<Lyrics>,
 }
 
 fn build_playlist_url(param: HashMap<String, String>) -> String {
@@ -185,20 +199,6 @@ impl Netease<'_> {
   }
 
   pub async fn get_playlist_detail(&self, payload: NeteaseFormData) -> PlaylistResponse {
-    // let text = self
-    //   .client
-    //   .post(PLAYLIST_DETAIL_URL)
-    //   .header("Referer", HOST)
-    //   .form(&payload)
-    //   .send()
-    //   .await
-    //   .unwrap()
-    //   .text()
-    //   .await
-    //   .unwrap();
-    //
-    // println!("text response is {:#?}", text);
-
     let response = self
       .client
       .post(PLAYLIST_DETAIL_URL)
@@ -230,9 +230,24 @@ impl Netease<'_> {
     response
   }
 
+  pub async fn get_song_lyrics(&self, payload: NeteaseFormData) -> LyricResponse {
+    let response = self
+      .client
+      .post(SONG_LYRICS_URL)
+      .header("Referer", HOST)
+      .form(&payload)
+      .send()
+      .await
+      .unwrap()
+      .json::<LyricResponse>()
+      .await
+      .unwrap();
+
+    response
+  }
+
   fn create_playlist(node_ref: &NodeRef) -> Playlist {
     let cover_node = node_ref.select_first("img").unwrap();
-    // let cover_node = cover_node.as_node();
     let cover_url = cover_node
       .attributes
       .borrow()

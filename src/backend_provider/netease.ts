@@ -215,7 +215,6 @@ const provider: MusicProvider = class netease extends MusicResource {
     // https://github.com/Binaryify/NeteaseCloudMusicApi
     return new Promise((res) => {
       const list_id = getParameterByName('list_id', url)?.split('_').pop();
-      const target_url = 'https://music.163.com/weapi/v3/playlist/detail';
       const d = {
         id: list_id,
         offset: 0,
@@ -459,7 +458,7 @@ const provider: MusicProvider = class netease extends MusicResource {
   static async lyric(url: string) {
     const track_id = getParameterByName('track_id', url)?.split('_').pop();
     // use chrome extension to modify referer.
-    const target_url = 'https://music.163.com/weapi/song/lyric?csrf_token=';
+    const target_url = 'http://localhost:3030/netease/song/lyrics'
     const csrf = '';
     const d = {
       id: track_id,

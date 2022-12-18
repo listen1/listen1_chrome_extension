@@ -1,7 +1,6 @@
 use axum::http::StatusCode;
 use axum::{
   error_handling::HandleErrorLayer,
-  extract,
   extract::{Path, Query},
   routing::{get, post},
   BoxError, Extension, Form, Json, Router,
@@ -12,13 +11,12 @@ use media_providers::{
   netease::{Netease, NeteaseFormData},
   qq::QQ,
 };
-use reqwest::{cookie, Client, ClientBuilder};
+use reqwest::Client;
 use serde_json::{json, Value};
-use std::borrow::Borrow;
 use std::collections::HashMap;
 use std::sync::Arc;
 use std::time::Duration;
-use tauri::{App, AppHandle, Manager};
+use tauri::App;
 use tower::ServiceBuilder;
 use tower_http::{
   cors::{Any, CorsLayer},
@@ -74,6 +72,10 @@ pub fn start(app_handle: &App) {
       .route("/:provider_name/search", get(search))
       .route("/:provider_name/song/:song_id", get(get_song))
       .route("/:provider_name/song", post(get_song_with_params))
+      .route(
+        "/:provider_name/song/lyrics",
+        post(get_song_lyrics_with_params),
+      )
       .layer(
         ServiceBuilder::new()
           .layer(TraceLayer::new_for_http())
@@ -182,5 +184,16 @@ async fn get_song_with_params(
   let client = state.clients.get(provider_name.as_str()).unwrap();
   let netease = Netease { client };
   let response = netease.get_song(payload).await;
+  Json(json!(response))
+}
+
+async fn get_song_lyrics_with_params(
+  Path(provider_name): Path<String>,
+  Form(payload): Form<NeteaseFormData>,
+  Extension(state): Extension<Arc<State>>,
+) -> Json<Value> {
+  let client = state.clients.get(provider_name.as_str()).unwrap();
+  let netease = Netease { client };
+  let response = netease.get_song_lyrics(payload).await;
   Json(json!(response))
 }
