@@ -38,7 +38,7 @@ V2.9.0 新特性：自动切换播放源(Beta)
 
 - [Chrome Web Store 安装](https://chrome.google.com/webstore/detail/listen-1/indecfegkejajpaipjipfkkbedgaodbp)
 - [FireFox 安装](https://addons.mozilla.org/zh-CN/firefox/addon/listen1/)
-- [Microsoft Edge 安装](https://microsoftedge.microsoft.com/addons/detail/hneiglcmpeedblkmbndhfbeahcpjojjg)
+- [Microsoft Edge 安装](https://microsoftedge.microsoft.com/addons/detail/listen-1/bcneiehcbgahghfmgigmblcgkhihehad)
 
 感谢 [@TNT-c](https://github.com/TNT-c) 维护 Firefox 的发布渠道
 
