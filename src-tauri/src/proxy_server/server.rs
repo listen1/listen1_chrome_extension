@@ -6,6 +6,7 @@ use axum::{
   BoxError, Extension, Form, Json, Router,
 };
 use media_providers::{
+  kugou::Kugou,
   kuwo::Kuwo,
   media::Provider,
   netease::{Netease, NeteaseFormData},
@@ -48,6 +49,7 @@ pub fn start(app_handle: &App) {
 
     let netease_client = Netease::create_client();
     let qq_client = Client::builder().build().unwrap();
+    let kugou_client = Client::builder().build().unwrap();
     let kuwo_client = Client::builder()
       .connection_verbose(true)
       .cookie_store(true)
@@ -58,6 +60,7 @@ pub fn start(app_handle: &App) {
     clients.insert(String::from("netease"), netease_client);
     clients.insert(String::from("qq"), qq_client);
     clients.insert(String::from("kuwo"), kuwo_client);
+    clients.insert(String::from("kugou"), kugou_client);
 
     let shared_state = Arc::new(State { clients });
 
@@ -107,6 +110,10 @@ async fn get_playlists(
     "qq" => {
       let qq = QQ { client: client };
       qq.get_playlists(params).await
+    }
+    "kugou" => {
+      let kugou = Kugou { client: client };
+      kugou.get_playlists(params).await
     }
     _ => vec![],
   };

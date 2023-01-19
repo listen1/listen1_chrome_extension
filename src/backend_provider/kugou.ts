@@ -336,18 +336,9 @@ const provider: MusicProvider = class kugou extends MusicResource {
       offset = 0;
     }
     // const page = offset / 30 + 1;
-    const target_url = `${'http://m.kugou.com/plist/index&json=true&page='}${offset}`;
-
-    const { data } = await axios.get(target_url);
-    // const total = data.plist.total;
-    /** @type {{cover_img_url:string;id:string;source_url:string;title:string}[]}*/
-    const result: { cover_img_url: string; id: string; source_url: string; title: string }[] = data.plist.list.info.map((item: any) => ({
-      cover_img_url: item.imgurl ? item.imgurl.replace('{size}', '400') : '',
-      title: item.specialname,
-      id: `kgplaylist_${item.specialid}`,
-      source_url: `https://www.kugou.com/yy/special/single/${item.specialid}.html`
-    }));
-    return result;
+    const params = { page: offset };
+    const { data } = await axios.get("http://localhost:3030/kugou/playlists", { params });
+    return data;
   }
 
   static async parseUrl(url: string) {
