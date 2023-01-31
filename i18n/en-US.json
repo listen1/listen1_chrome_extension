@@ -54,7 +54,7 @@
  "_CREATE_PUBLIC_BACKUP": "Create Public Backup",
  "_CREATE_PRIVATE_BACKUP": "Create Private Backup",
  "_BACKUP_PLAYLIST": "Backup Playlists",
- "_BACKUP_WARNING": "Reinstall or clear cache will lost all your playlists, backup is STORNG RECOMMENDED.",
+ "_BACKUP_WARNING": "Reinstall or clear cache will lost all your playlists, backup is STRONG RECOMMENDED.",
  "_EXPORT_TO_LOCAL_FILE": "Export to Local File",
  "_EXPORT_TO_GITHUB_GIST": "Export to Github Gist",
  "_RECOVER_PLAYLIST": "Recover Playlists",
