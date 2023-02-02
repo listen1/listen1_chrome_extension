@@ -20,8 +20,8 @@
   "description": "one for all free music in china",
   "devDependencies": {
     "@intlify/vite-plugin-vue-i18n": "^6.0.3",
-    "@tauri-apps/api": "^1.1.0",
-    "@tauri-apps/cli": "^1.1.1",
+    "@tauri-apps/api": "^1.2.0",
+    "@tauri-apps/cli": "^1.2.3",
     "@types/chrome": "^0.0.197",
     "@types/node-forge": "^1.3.0",
     "@types/serviceworker": "^0.0.53",

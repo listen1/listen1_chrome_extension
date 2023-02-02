@@ -1,7 +1,7 @@
 use axum::http::StatusCode;
 use axum::{
   error_handling::HandleErrorLayer,
-  extract::{Path, Query},
+  extract::{Path, Query, State},
   routing::{get, post},
   BoxError, Extension, Form, Json, Router,
 };
@@ -39,11 +39,11 @@ async fn handle_timeout_error(err: BoxError) -> (StatusCode, String) {
 }
 
 #[derive(Debug)]
-struct State {
+struct AppState {
   clients: HashMap<String, Client>,
 }
 
-pub fn start(app_handle: &App) {
+pub fn start(_app_handle: &App) {
   tauri::async_runtime::spawn(async move {
     tracing_subscriber::fmt::init();
 
@@ -62,7 +62,7 @@ pub fn start(app_handle: &App) {
     clients.insert(String::from("kuwo"), kuwo_client);
     clients.insert(String::from("kugou"), kugou_client);
 
-    let shared_state = Arc::new(State { clients });
+    let app_state = Arc::new(AppState { clients });
 
     let cors = CorsLayer::new().allow_origin(Any);
     let app = Router::new()
@@ -84,9 +84,9 @@ pub fn start(app_handle: &App) {
           .layer(TraceLayer::new_for_http())
           .layer(cors)
           .layer(HandleErrorLayer::new(handle_timeout_error))
-          .layer(Extension(shared_state))
           .timeout(Duration::from_secs(30)),
-      );
+      )
+      .with_state(app_state);
 
     // run it with hyper on localhost:3000
     axum::Server::bind(&"0.0.0.0:3030".parse().unwrap())
@@ -97,9 +97,9 @@ pub fn start(app_handle: &App) {
 }
 
 async fn get_playlists(
+  State(state): State<Arc<AppState>>,
   Path(provider_name): Path<String>,
   Query(params): Query<HashMap<String, String>>,
-  Extension(state): Extension<Arc<State>>,
 ) -> Json<Value> {
   let client = state.clients.get(provider_name.as_str()).unwrap();
   let playlists = match provider_name.as_str() {
@@ -121,8 +121,8 @@ async fn get_playlists(
 }
 
 async fn get_playlist(
+  State(state): State<Arc<AppState>>,
   Path((provider_name, playlist_id)): Path<(String, String)>,
-  Extension(state): Extension<Arc<State>>,
 ) -> Json<Value> {
   let client = state.clients.get(provider_name.as_str()).unwrap();
   let playlist = match provider_name.as_str() {
@@ -143,9 +143,9 @@ async fn get_playlist(
 }
 
 async fn get_playlist_with_params(
-  Path((provider_name, playlist_id)): Path<(String, String)>,
+  State(state): State<Arc<AppState>>,
+  Path((provider_name, _playlist_id)): Path<(String, String)>,
   Form(payload): Form<NeteaseFormData>,
-  Extension(state): Extension<Arc<State>>,
 ) -> Json<Value> {
   let client = state.clients.get(provider_name.as_str()).unwrap();
   let playlist = match provider_name.as_str() {
@@ -162,9 +162,9 @@ async fn get_playlist_with_params(
 }
 
 async fn search(
+  State(state): State<Arc<AppState>>,
   Path(provider_name): Path<String>,
   Query(params): Query<HashMap<String, String>>,
-  Extension(state): Extension<Arc<State>>,
 ) -> Json<Value> {
   // let playlist = match provider_name.as_str() {
   //   // "netease" => Netease::get_playlists(params).await,
@@ -178,8 +178,8 @@ async fn search(
 }
 
 async fn get_song(
+  State(state): State<Arc<AppState>>,
   Path((provider_name, song_id)): Path<(String, String)>,
-  Extension(state): Extension<Arc<State>>,
 ) -> Json<Value> {
   let client = state.clients.get(provider_name.as_str()).unwrap();
   let kuwo = Kuwo { client };
@@ -188,9 +188,9 @@ async fn get_song(
 }
 
 async fn get_song_with_params(
+  State(state): State<Arc<AppState>>,
   Path(provider_name): Path<String>,
   Form(payload): Form<NeteaseFormData>,
-  Extension(state): Extension<Arc<State>>,
 ) -> Json<Value> {
   let client = state.clients.get(provider_name.as_str()).unwrap();
   let netease = Netease { client };
@@ -199,9 +199,9 @@ async fn get_song_with_params(
 }
 
 async fn get_song_lyrics_with_params(
+  State(state): State<Arc<AppState>>,
   Path(provider_name): Path<String>,
   Form(payload): Form<NeteaseFormData>,
-  Extension(state): Extension<Arc<State>>,
 ) -> Json<Value> {
   let client = state.clients.get(provider_name.as_str()).unwrap();
   let netease = Netease { client };
