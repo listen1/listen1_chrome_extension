@@ -74,12 +74,10 @@ impl KugouSongInPlaylist {
       .await;
 
     match result {
-      Ok(album_response) => {
-        println!("get_album {:?}", album_response.data);
-        album_response.data
-      }
+      Ok(album_response) => album_response.data,
       Err(e) => {
         println!("get_album failed for url {}", url);
+        println!("Error is {}", e);
         AlbumData {
           albumname: String::from(""),
         }

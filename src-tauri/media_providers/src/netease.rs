@@ -1,6 +1,5 @@
 use super::media::{Playlist, Provider};
 use super::utils::create_url;
-use crate::media::PlaylistDetail;
 use async_trait::async_trait;
 use kuchiki::traits::TendrilSink;
 use kuchiki::{parse_html, NodeRef};
@@ -9,7 +8,6 @@ use rand::Rng;
 use reqwest::{cookie, Client};
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
-use std::fmt::{Display, Formatter};
 use std::string::String;
 use std::sync::Arc;
 use std::time::{SystemTime, UNIX_EPOCH};
@@ -149,7 +147,7 @@ impl Netease<'_> {
   fn create_secret_key(size: u8) -> String {
     let mut rng = rand::thread_rng();
     let mut result: Vec<char> = vec![];
-    let mut chars = SECRET_CHARS.chars();
+    let chars = SECRET_CHARS.chars();
     let range = 0..chars.count();
 
     for i in 0..size {

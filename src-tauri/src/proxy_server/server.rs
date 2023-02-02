@@ -3,7 +3,7 @@ use axum::{
   error_handling::HandleErrorLayer,
   extract::{Path, Query, State},
   routing::{get, post},
-  BoxError, Extension, Form, Json, Router,
+  BoxError, Form, Json, Router,
 };
 use media_providers::{
   kugou::Kugou,

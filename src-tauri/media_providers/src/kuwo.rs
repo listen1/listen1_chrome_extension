@@ -1,4 +1,4 @@
-use reqwest::{header, Client};
+use reqwest::Client;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use url::Url;
@@ -39,7 +39,6 @@ pub struct UrlResponse {
 
 impl Kuwo<'_> {
   pub async fn get_cookie(&self) -> String {
-    let client = Client::builder().build().unwrap();
     let resp: HashMap<String, String> = self
       .client
       .head("https://www.kuwo.cn")
