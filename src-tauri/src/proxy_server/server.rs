@@ -49,7 +49,7 @@ pub fn start(app_handle: &App) {
 
     let netease_client = Netease::create_client();
     let qq_client = Client::builder().build().unwrap();
-    let kugou_client = Client::builder().build().unwrap();
+    let kugou_client = Client::builder().user_agent("Mozilla/5.0 (iPhone; CPU iPhone OS 14_3 like Mac OS X) AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Mobile Safari/534.30").build().unwrap();
     let kuwo_client = Client::builder()
       .connection_verbose(true)
       .cookie_store(true)
@@ -129,6 +129,10 @@ async fn get_playlist(
     "qq" => {
       let qq = QQ { client };
       qq.get_playlist_detail(&playlist_id).await
+    }
+    "kugou" => {
+      let kugou = Kugou { client };
+      kugou.get_playlist_detail(&playlist_id).await
     }
     _ => {
       let qq = QQ { client };

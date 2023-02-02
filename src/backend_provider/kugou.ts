@@ -132,18 +132,9 @@ const provider: MusicProvider = class kugou extends MusicResource {
 
   static async kg_get_playlist(url: string) {
     const list_id = getParameterByName('list_id', url)?.split('_').pop();
-    const target_url = `http://m.kugou.com/plist/list/${list_id}?json=true`;
-    const { data } = await axios.get(target_url);
+    const { data } = await axios.get(`http://localhost:3030/kugou/playlist/${list_id}`);
 
-    const info = {
-      cover_img_url: data.info.list.imgurl ? data.info.list.imgurl.replace('{size}', '400') : '',
-      description: data.info.list.intro,
-      title: data.info.list.specialname,
-      id: `kgplaylist_${data.info.list.specialid}`,
-      source_url: `https://www.kugou.com/yy/special/single/${data.info.list.specialid}.html`
-    };
-    const tracks = await async_process(data.list.list.info, this.kg_render_playlist_result_item, []);
-    return { tracks, info };
+    return data;
   }
 
   static kg_render_artist_result_item(index: any, item: any, params: any, callback: CallableFunction) {

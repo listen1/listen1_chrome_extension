@@ -140,7 +140,7 @@ impl QQ<'_> {
       artist: first_singer.name.to_string(),
       artist_id: format!("qqartist_{}", first_singer.mid),
       // album: htmlDecode(songData.albumname),
-      // album: songData.albumname.to_string(),
+      album: song_data.albumname.to_string(),
       // album_id: `qqalbum_{songData.albummid}`,
       album_id: format!("qqalbum_{}", song_data.albummid),
       // img_url: this.qq_get_image_url(songData.albummid, 'album'),

@@ -17,6 +17,7 @@ pub struct Track {
   pub artist: String,
   pub artist_id: String,
   pub album_id: String,
+  pub album: String,
   pub source: String,
   pub source_url: String,
   pub img_url: String,
