@@ -1,4 +1,4 @@
-use crate::media::{Playlist, PlaylistDetail, Provider, Track};
+use crate::media::{L1PlaylistDetail, L1PlaylistInfo, L1Track, Provider};
 use async_trait::async_trait;
 use futures;
 use reqwest::Client;
@@ -10,10 +10,10 @@ const HOST: &'static str = "https://www.kuwo.cn";
 fn build_playlist_url(params: HashMap<String, String>) -> String {
   let page: u32 = params.get("page").unwrap().parse().unwrap();
 
-  return format!(
+  format!(
     "http://m.kugou.com/plist/index&json=true&page={page}",
     page = page,
-  );
+  )
 }
 
 #[derive(Debug)]
@@ -30,31 +30,17 @@ pub struct KugouPlaylistDetail {
 
 #[derive(Debug, Deserialize)]
 pub struct KugouSongInPlaylist {
-  hash: String,
-  album_id: String,
+  pub hash: String,
+  pub album_id: String,
 }
 
 impl KugouSongInPlaylist {
-  fn to_track(&self) -> Track {
-    let track = Track {
-      id: format!("kgtrack_{}", self.hash),
-      title: String::from(""),
-      artist: String::from(""),
-      artist_id: String::from(""),
-      album: String::from(""),
-      album_id: format!("kgalbum_{}", self.album_id),
-      source: "".to_string(),
-      source_url: format!(
-        "https://www.kugou.com/song/#hash={hash}&album_id={album_id}",
-        hash = self.hash,
-        album_id = self.album_id
-      ),
-      img_url: String::from(""),
-      url: None,
-      // lyric_url: x.hash
-    };
-
-    track
+  pub fn build_track_source_url(&self) -> String {
+    format!(
+      "https://www.kugou.com/song/#hash={hash}&album_id={album_id}",
+      hash = self.hash,
+      album_id = self.album_id
+    )
   }
 
   async fn get_album(&self, client: &Client) -> AlbumData {
@@ -178,7 +164,7 @@ struct AlbumResponse {
 
 #[async_trait]
 impl Provider for Kugou<'_> {
-  async fn get_playlists(&self, params: HashMap<String, String>) -> Vec<Playlist> {
+  async fn get_playlists(&self, params: HashMap<String, String>) -> Vec<L1PlaylistInfo> {
     let url = build_playlist_url(params);
     let resp = self
       .client
@@ -190,10 +176,10 @@ impl Provider for Kugou<'_> {
       .await
       .unwrap();
 
-    let mut playlists: Vec<Playlist> = Vec::new();
+    let mut playlists: Vec<L1PlaylistInfo> = Vec::new();
 
     for item in resp.plist.list.info {
-      let playlist = Playlist {
+      let playlist = L1PlaylistInfo {
         id: "kgplaylist_".to_string() + &item.specialid.to_string(),
         cover_img_url: {
           item.imgurl.replace("{size}", "400")
@@ -217,8 +203,8 @@ impl Provider for Kugou<'_> {
 }
 
 impl Kugou<'_> {
-  fn to_playlist(&self, playlist: &KugouPlaylistDetail) -> Playlist {
-    Playlist {
+  fn to_playlist(&self, playlist: &KugouPlaylistDetail) -> L1PlaylistInfo {
+    L1PlaylistInfo {
       cover_img_url: playlist.imgurl.replace("{size}", "400"),
       title: playlist.specialname.to_string(),
       id: playlist.specialid.to_string(),
@@ -229,14 +215,14 @@ impl Kugou<'_> {
     }
   }
 
-  async fn get_tracks(&self, items: &KugouPlaylistListInfo) -> Vec<Track> {
+  async fn get_tracks(&self, items: &KugouPlaylistListInfo) -> Vec<L1Track> {
     let tasks: Vec<_> = items
       .info
       .iter()
-      .map(move |item| async {
-        let mut track = item.to_track();
-        let album_data = item.get_album(self.client).await;
-        let song_info = item.get_song_info(self.client).await;
+      .map(move |playlist_song| async {
+        let mut track: L1Track = playlist_song.into();
+        let album_data = playlist_song.get_album(self.client).await;
+        let song_info = playlist_song.get_song_info(self.client).await;
 
         track.album = album_data.albumname;
         track.title = song_info.song_name;
@@ -258,7 +244,7 @@ impl Kugou<'_> {
     futures::future::join_all(tasks).await
   }
 
-  pub async fn get_playlist_detail(&self, playlist_id: &str) -> PlaylistDetail {
+  pub async fn get_playlist_detail(&self, playlist_id: &str) -> L1PlaylistDetail {
     let url = format!(
       "http://m.kugou.com/plist/list/{playlist_id}?json=true",
       playlist_id = playlist_id
@@ -281,7 +267,7 @@ impl Kugou<'_> {
     let playlist = self.to_playlist(&resp.info.list);
 
     let tracks = self.get_tracks(&resp.list.list).await;
-    let detail = PlaylistDetail {
+    let detail = L1PlaylistDetail {
       info: playlist,
       tracks: tracks,
     };

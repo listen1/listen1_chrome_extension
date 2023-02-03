@@ -1,4 +1,4 @@
-use super::media::{Playlist, Provider};
+use super::media::{L1PlaylistInfo, Provider};
 use super::utils::create_url;
 use async_trait::async_trait;
 use kuchiki::traits::TendrilSink;
@@ -106,7 +106,7 @@ fn build_playlist_url(param: HashMap<String, String>) -> String {
 
 #[async_trait]
 impl Provider for Netease<'_> {
-  async fn get_playlists(&self, params: HashMap<String, String>) -> Vec<Playlist> {
+  async fn get_playlists(&self, params: HashMap<String, String>) -> Vec<L1PlaylistInfo> {
     let url = build_playlist_url(params);
     let resp = self
       .client
@@ -122,7 +122,7 @@ impl Provider for Netease<'_> {
 
     let document = parse_html().one(resp);
     let list_element = document.select_first(".m-cvrlst").unwrap();
-    let mut playlists: Vec<Playlist> = Vec::new();
+    let mut playlists: Vec<L1PlaylistInfo> = Vec::new();
     for data in list_element.as_node().select("li").unwrap() {
       let playlist = Netease::create_playlist(&data.as_node());
       playlists.push(playlist);
@@ -244,7 +244,7 @@ impl Netease<'_> {
     response
   }
 
-  fn create_playlist(node_ref: &NodeRef) -> Playlist {
+  fn create_playlist(node_ref: &NodeRef) -> L1PlaylistInfo {
     let cover_node = node_ref.select_first("img").unwrap();
     let cover_url = cover_node
       .attributes
@@ -269,7 +269,7 @@ impl Netease<'_> {
     id.push_str(playlist_id);
     let mut source_url = "https://music.163.com/#/playlist?id=".to_string();
     source_url.push_str(playlist_id);
-    let playlist = Playlist {
+    let playlist = L1PlaylistInfo {
       id,
       cover_img_url: cover_url,
       source_url,

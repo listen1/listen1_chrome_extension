@@ -1,5 +1,5 @@
-use super::media::Playlist;
-use crate::media::{PlaylistDetail, Provider, Track};
+use super::media::L1PlaylistInfo;
+use crate::media::{L1PlaylistDetail, L1Track, Provider};
 use async_trait::async_trait;
 use rand;
 use reqwest::Client;
@@ -90,7 +90,7 @@ fn build_playlist_detail_url(list_id: &str) -> String {
 
 #[async_trait]
 impl Provider for QQ<'_> {
-  async fn get_playlists(&self, params: HashMap<String, String>) -> Vec<Playlist> {
+  async fn get_playlists(&self, params: HashMap<String, String>) -> Vec<L1PlaylistInfo> {
     let url = build_playlist_url(params);
     let resp = self
       .client
@@ -104,10 +104,10 @@ impl Provider for QQ<'_> {
       .await
       .unwrap();
 
-    let mut playlists: Vec<Playlist> = Vec::new();
+    let mut playlists: Vec<L1PlaylistInfo> = Vec::new();
 
     for item in resp.data.list {
-      let playlist = Playlist {
+      let playlist = L1PlaylistInfo {
         id: "qqplaylist_".to_string() + &item.dissid,
         cover_img_url: item.imgurl,
         source_url: format!(
@@ -125,13 +125,13 @@ impl Provider for QQ<'_> {
 }
 
 impl QQ<'_> {
-  fn convert_to_listen1_song(song_data: &SongData) -> Track {
+  fn convert_to_listen1_song(song_data: &SongData) -> L1Track {
     let source_url = format!(
       "https://y.qq.com/#type=song&mid={}&tpl=yqq_song_detail",
       song_data.songmid
     );
     let first_singer = &song_data.singer[0];
-    Track {
+    L1Track {
       id: format!("qqtrack_{}", song_data.songmid),
       // id2: format!("qqtrack_{}", songData.songid),
       // title: htmlDecode(songData.songname),
@@ -153,7 +153,7 @@ impl QQ<'_> {
     }
   }
 
-  pub async fn get_playlist_detail(&self, playlist_id: &str) -> PlaylistDetail {
+  pub async fn get_playlist_detail(&self, playlist_id: &str) -> L1PlaylistDetail {
     let url = build_playlist_detail_url(playlist_id);
 
     let resp = self
@@ -169,7 +169,7 @@ impl QQ<'_> {
       .unwrap();
 
     let first = &resp.cdlist[0];
-    let playlist = Playlist {
+    let playlist = L1PlaylistInfo {
       cover_img_url: first.logo.to_string(),
       title: first.dissname.to_string(),
       id: format!("qqplaylist_{}", playlist_id),
@@ -179,8 +179,8 @@ impl QQ<'_> {
       .songlist
       .iter()
       .map(|x| QQ::convert_to_listen1_song(&x))
-      .collect::<Vec<Track>>();
-    let detail = PlaylistDetail {
+      .collect::<Vec<L1Track>>();
+    let detail = L1PlaylistDetail {
       info: playlist,
       tracks: tracks,
     };
