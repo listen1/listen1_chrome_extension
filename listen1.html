@@ -1825,17 +1825,23 @@
                       </div>
                     </div>
                   </div>
+                  
                   <div class="footer">
                     <div class="left-control">
+                      <!-- previous button -->
                       <span class="icon li-previous" prev-track=""></span>
+                      <!-- pause button -->
                       <span
                         class="icon li-play play"
                         ng-class="isPlaying? 'li-pause': 'li-play'"
                         play-pause-toggle=""
                       ></span>
+                      <!-- next button -->
                       <span class="icon li-next" next-track=""></span>
                     </div>
+
                     <div class="main-info">
+                      <!-- default listen one logo when playlist is empty -->
                       <div class="logo-banner" ng-if="playlist.length == 0">
                         <svg
                           class="logo"
@@ -1855,6 +1861,8 @@
                           <polygon points="13 4 13 13 16 13 16 4"></polygon>
                         </svg>
                       </div>
+                      <!-- detail of the playing music -->
+                      <!-- music cover -->
                       <div
                         class="cover"
                         class="cover"
@@ -1865,12 +1873,19 @@
                           ng-src="{{ currentPlaying.img_url }}"
                           err-src="https://y.gtimg.cn/mediastyle/global/img/album_300.png"
                         />
+                        <!-- tipping user when switching to current music or playlist -->
                         <div class="mask">
-                          <svg class="feather">
+                          <svg class="feather" ng-if="getCurrentUrl() != '/now_playing'">
                             <use href="#chevrons-up"></use>
                           </svg>
+                          <svg class="feather" ng-if="getCurrentUrl() === '/now_playing'">
+                            <use href="#chevrons-down"></use>
+                          </svg>
                         </div>
+                        
+
                       </div>
+                      <!--control button group -->
                       <div class="detail" ng-if="playlist.length > 0">
                         <div class="ctrl">
                           <a
