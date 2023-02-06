@@ -64,7 +64,11 @@ function setPrototypeOfLocalStorage() {
   const proto = Object.getPrototypeOf(localStorage);
   proto.getObject = function getObject(key) {
     const value = this.getItem(key);
-    return value && JSON.parse(value);
+    try {
+      return value && JSON.parse(value);
+    } catch (error) {
+      return {}
+    }
   };
   proto.setObject = function setObject(key, value) {
     this.setItem(key, JSON.stringify(value));
