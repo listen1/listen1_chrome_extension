@@ -1,8 +1,8 @@
 {
   "$schema": "../node_modules/@tauri-apps/cli/schema.json",
   "build": {
-    "beforeBuildCommand": "BUILD_TAURI=1 pnpm run build",
-    "beforeDevCommand": "BUILD_TAURI=1 pnpm run dev",
+    "beforeBuildCommand": "pnpm run build",
+    "beforeDevCommand": "pnpm run dev",
     "devPath": "http://localhost:5173",
     "distDir": "./dist"
   },
@@ -34,7 +34,7 @@
         "icons/icon.icns",
         "icons/icon.ico"
       ],
-      "identifier": "com.tauri.dev",
+      "identifier": "com.priestch.listen1",
       "longDescription": "",
       "macOS": {
         "entitlements": null,

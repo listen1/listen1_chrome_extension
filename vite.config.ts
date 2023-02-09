@@ -5,11 +5,11 @@ import { chromeExtension, simpleReloader } from 'rollup-plugin-chrome-extension'
 import zip from 'vite-plugin-zip';
 import { defineConfig, build } from 'vite';
 
-const { NODE_ENV, BUILD_ELECTRON, BUILD_TAURI } = process.env;
+const { NODE_ENV, BUILD_ELECTRON, TAURI_PLATFORM } = process.env;
 const production = NODE_ENV === 'production';
 if (process.argv.includes('-w') || process.argv.includes('--watch')) process.env.ROLLUP_WATCH = 'true';
 
-const provider_src = resolve(__dirname, `src/${BUILD_TAURI ? 'backend_provider' : 'provider'}`);
+const provider_src = resolve(__dirname, `src/${TAURI_PLATFORM ? 'backend_provider' : 'provider'}`);
 
 const chromeExtPlugin = chromeExtension();
 
