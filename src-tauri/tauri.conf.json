@@ -4,7 +4,7 @@
     "beforeBuildCommand": "pnpm run build",
     "beforeDevCommand": "pnpm run dev",
     "devPath": "http://localhost:5173",
-    "distDir": "./dist"
+    "distDir": "../dist"
   },
   "package": {
     "productName": "listen1_chrome_extension",
