@@ -37,7 +37,7 @@ impl From<&KugouSongInPlaylist> for L1Track {
       source: "".to_string(),
       source_url: item.build_track_source_url(),
       img_url: String::from(""),
-      url: None,
+      url: Some(String::from("")),
       // lyric_url: item.hash
     }
   }
