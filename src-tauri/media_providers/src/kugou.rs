@@ -1,7 +1,7 @@
 use crate::media::{L1PlaylistDetail, L1PlaylistInfo, L1Track, Provider};
 use async_trait::async_trait;
 use futures;
-use reqwest::Client;
+use reqwest::{header, Client};
 use serde::Deserialize;
 use std::collections::HashMap;
 
@@ -51,8 +51,6 @@ impl KugouSongInPlaylist {
 
     let result = client
       .get(&url)
-      .header("Referer", "https://www.kugou.com/")
-      .header("Origin", "https://www.kugou.com/")
       .send()
       .await
       .unwrap()
@@ -79,8 +77,6 @@ impl KugouSongInPlaylist {
 
     let result = client
       .get(&url)
-      .header("Referer", "https://www.kugou.com/")
-      .header("Origin", "https://www.kugou.com/")
       .send()
       .await
       .unwrap()
@@ -203,6 +199,19 @@ impl Provider for Kugou<'_> {
 }
 
 impl Kugou<'_> {
+  pub fn create_client() -> Client {
+    let mut headers = header::HeaderMap::new();
+    headers.insert(
+      "Referer",
+      header::HeaderValue::from_static("https://www.kugou.com/"),
+    );
+    headers.insert(
+      "Origin",
+      header::HeaderValue::from_static("https://www.kugou.com/"),
+    );
+
+    Client::builder().default_headers(headers).user_agent("Mozilla/5.0 (iPhone; CPU iPhone OS 14_3 like Mac OS X) AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Mobile Safari/534.30").build().unwrap()
+  }
   fn to_playlist(&self, playlist: &KugouPlaylistDetail) -> L1PlaylistInfo {
     L1PlaylistInfo {
       cover_img_url: playlist.imgurl.replace("{size}", "400"),
@@ -245,18 +254,11 @@ impl Kugou<'_> {
   }
 
   pub async fn get_playlist_detail(&self, playlist_id: &str) -> L1PlaylistDetail {
-    let url = format!(
-      "http://m.kugou.com/plist/list/{playlist_id}?json=true",
-      playlist_id = playlist_id
-    );
+    let url = format!("http://m.kugou.com/plist/list/{playlist_id}?json=true");
 
-    let builder = self
+    let resp = self
       .client
       .get(url)
-      .header("Referer", "https://www.kugou.com/")
-      .header("Origin", "https://www.kugou.com/");
-
-    let resp = builder
       .send()
       .await
       .unwrap()
