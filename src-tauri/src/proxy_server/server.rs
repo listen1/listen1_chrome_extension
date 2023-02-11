@@ -50,11 +50,7 @@ pub fn start(_app_handle: &App) {
     let netease_client = Netease::create_client();
     let qq_client = Client::builder().build().unwrap();
     let kugou_client = Kugou::create_client();
-    let kuwo_client = Client::builder()
-      .connection_verbose(true)
-      .cookie_store(true)
-      .build()
-      .unwrap();
+    let kuwo_client = Kuwo::create_client();
 
     let mut clients = HashMap::new();
     clients.insert(String::from("netease"), netease_client);

@@ -1,4 +1,4 @@
-use reqwest::Client;
+use reqwest::{header, Client};
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use url::Url;
@@ -38,6 +38,18 @@ pub struct UrlResponse {
 }
 
 impl Kuwo<'_> {
+  pub fn create_client() -> Client {
+    let mut headers = header::HeaderMap::new();
+    headers.insert("Referer", header::HeaderValue::from_static(HOST));
+
+    Client::builder()
+      .default_headers(headers)
+      // .connection_verbose(true)
+      .cookie_store(true)
+      .build()
+      .unwrap()
+  }
+
   pub async fn get_cookie(&self) -> String {
     let resp: HashMap<String, String> = self
       .client
@@ -80,7 +92,6 @@ impl Kuwo<'_> {
     let response = self
       .client
       .get(url)
-      .header("Referer", HOST)
       .header("CSRF", token)
       .send()
       .await
@@ -99,7 +110,6 @@ impl Kuwo<'_> {
     let song_url = self
       .client
       .get(url)
-      .header("Referer", HOST)
       .header("CSRF", token)
       .send()
       .await

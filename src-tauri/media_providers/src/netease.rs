@@ -5,7 +5,7 @@ use kuchiki::traits::TendrilSink;
 use kuchiki::{parse_html, NodeRef};
 use rand;
 use rand::Rng;
-use reqwest::{cookie, Client};
+use reqwest::{cookie, header, Client};
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::string::String;
@@ -188,9 +188,12 @@ impl Netease<'_> {
   }
 
   pub fn create_client() -> Client {
-    let jar = Netease::create_cookie_jar();
+    let mut headers = header::HeaderMap::new();
+    headers.insert("Referer", header::HeaderValue::from_static(HOST));
 
+    let jar = Netease::create_cookie_jar();
     Client::builder()
+      .default_headers(headers)
       .cookie_provider(Arc::new(jar))
       .build()
       .unwrap()
@@ -200,7 +203,6 @@ impl Netease<'_> {
     let response = self
       .client
       .post(PLAYLIST_DETAIL_URL)
-      .header("Referer", HOST)
       .form(&payload)
       .send()
       .await
@@ -216,7 +218,6 @@ impl Netease<'_> {
     let response = self
       .client
       .post(SONG_DETAIL_URL)
-      .header("Referer", HOST)
       .form(&payload)
       .send()
       .await
@@ -232,7 +233,6 @@ impl Netease<'_> {
     let response = self
       .client
       .post(SONG_LYRICS_URL)
-      .header("Referer", HOST)
       .form(&payload)
       .send()
       .await
