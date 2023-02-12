@@ -203,11 +203,14 @@ pub struct SearchResult {
 
 #[derive(Debug, Deserialize)]
 struct Song {
-  img: String,
+  hash: Option<String>,
+  img: Option<String>,
 }
 
 #[derive(Debug, Deserialize)]
 struct SongResponse {
+  status: u32,
+  err_code: u32,
   data: Song,
 }
 
@@ -330,8 +333,7 @@ impl Kugou<'_> {
     return detail;
   }
 
-  async fn get_song(&self, file_hash: &str) {
-    // let url = `${'https://www.kugou.com/yy/index.php?r=play/getdata&hash='}${track.lyric_url}`;
+  async fn get_song(&self, file_hash: &str) -> Song {
     let url = format!(
       "https://www.kugou.com/yy/index.php?r=play/getdata&hash={}",
       file_hash
@@ -339,18 +341,28 @@ impl Kugou<'_> {
     let response = self
       .client
       .get(&url)
+      .header(header::COOKIE, "kg_mid=3333")
       .send()
       .await
       .unwrap()
-      // .json::<SongResponse>()
-      .text()
+      .json::<SongResponse>()
       .await
       .unwrap();
 
-    println!("url {:?}", url);
-    println!("text {:?}", response);
+    // let response1 = self
+    //   .client
+    //   .get(&url)
+    //   .header(header::COOKIE, "kg_mid=3333")
+    //   .send()
+    //   .await
+    //   .unwrap()
+    //   .text()
+    //   .await
+    //   .unwrap();
 
-    // response.data
+    println!("get song {:?}", response);
+
+    response.data
   }
 
   pub async fn search(&self, params: HashMap<String, String>) -> SearchResult {
@@ -401,7 +413,8 @@ impl Kugou<'_> {
         track.artist = singer_name;
         track.artist_id = format!("kgartist_{}", singer_id[0]);
 
-        self.get_song(&item.file_hash).await;
+        let song = self.get_song(&item.file_hash).await;
+        track.img_url = song.img.unwrap_or_else(|| "".into());
 
         track
       })
@@ -409,7 +422,7 @@ impl Kugou<'_> {
 
     let tracks = futures::future::join_all(tasks).await;
 
-    println!("kutou search result is {:?}", tracks);
+    println!("kutou searched tracks length is {:?}", tracks.len());
 
     SearchResult {
       total: response.data.total,

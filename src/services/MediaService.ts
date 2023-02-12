@@ -217,8 +217,6 @@ const MediaService = {
           const curpage = 1;
           const url = `/search?keywords=${keyword}&curpage=${curpage}&type=0`;
           const provider = getProviderByName(source);
-          const kugouProvider = getProviderByName("kugou");
-          kugouProvider.search(url);
           //@ts-ignore TODO: use await to work with awaitable function
           provider.search(url).then((data: any) => {
             // console.log('data', data);
