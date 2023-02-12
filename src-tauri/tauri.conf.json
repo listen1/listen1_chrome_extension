@@ -21,6 +21,9 @@
     },
     "bundle": {
       "active": true,
+      "appimage": {
+        "bundleMediaFramework": true
+      },
       "category": "DeveloperTool",
       "copyright": "",
       "deb": {
