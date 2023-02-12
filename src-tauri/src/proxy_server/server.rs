@@ -162,15 +162,29 @@ async fn search(
   Path(provider_name): Path<String>,
   Query(params): Query<HashMap<String, String>>,
 ) -> Json<Value> {
-  // let playlist = match provider_name.as_str() {
-  //   // "netease" => Netease::get_playlists(params).await,
-  //   "qq" => qq::QQ::get_playlist_detail(&playlist_id).await,
-  //   _ => qq::QQ::get_playlist_detail(&playlist_id).await,
-  // };
   let client = state.clients.get(provider_name.as_str()).unwrap();
-  let kuwo = Kuwo { client };
-  let response = kuwo.search(params).await;
-  Json(json!(response))
+  let json_result = match provider_name.as_str() {
+    // "netease" => Netease::get_playlists(params).await,
+    "kuwo" => {
+      let kuwo = Kuwo { client };
+      let result = kuwo.search(params).await;
+
+      json!(result)
+    }
+    "kugou" => {
+      let kugou = Kugou { client };
+      let result = kugou.search(params.clone()).await;
+
+      json!(result)
+    }
+    _ => {
+      let kuwo = Kuwo { client };
+      let result = kuwo.search(params).await;
+
+      json!(result)
+    }
+  };
+  Json(json_result)
 }
 
 async fn get_song(

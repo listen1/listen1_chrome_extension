@@ -2,8 +2,9 @@ use crate::media::{L1PlaylistDetail, L1PlaylistInfo, L1Track, Provider};
 use async_trait::async_trait;
 use futures;
 use reqwest::{header, Client};
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
+use url::Url;
 
 const HOST: &'static str = "https://www.kuwo.cn";
 
@@ -158,6 +159,58 @@ struct AlbumResponse {
   data: AlbumData,
 }
 
+#[derive(Debug, Deserialize)]
+struct Singer {
+  id: u64,
+  name: String,
+  ip_id: u64,
+}
+
+#[derive(Debug, Deserialize)]
+struct SearchResultItems {
+  #[serde(rename(deserialize = "FileHash"))]
+  file_hash: String,
+  #[serde(rename(deserialize = "SongName"))]
+  song_name: String,
+  #[serde(rename(deserialize = "AlbumName"))]
+  album_name: String,
+  #[serde(rename(deserialize = "AlbumID"))]
+  album_id: String,
+  #[serde(rename(deserialize = "Singers"))]
+  singers: Vec<Singer>,
+  #[serde(rename(deserialize = "SingerId"))]
+  singer_id: Vec<u64>,
+  #[serde(rename(deserialize = "SingerName"))]
+  singer_name: String,
+}
+
+#[derive(Debug, Deserialize)]
+struct SearchResponseData {
+  total: u64,
+  lists: Vec<SearchResultItems>,
+}
+
+#[derive(Debug, Deserialize)]
+struct SearchResponse {
+  data: SearchResponseData,
+}
+
+#[derive(Debug, Serialize)]
+pub struct SearchResult {
+  total: u64,
+  lists: Vec<L1Track>,
+}
+
+#[derive(Debug, Deserialize)]
+struct Song {
+  img: String,
+}
+
+#[derive(Debug, Deserialize)]
+struct SongResponse {
+  data: Song,
+}
+
 #[async_trait]
 impl Provider for Kugou<'_> {
   async fn get_playlists(&self, params: HashMap<String, String>) -> Vec<L1PlaylistInfo> {
@@ -275,5 +328,92 @@ impl Kugou<'_> {
     };
 
     return detail;
+  }
+
+  async fn get_song(&self, file_hash: &str) {
+    // let url = `${'https://www.kugou.com/yy/index.php?r=play/getdata&hash='}${track.lyric_url}`;
+    let url = format!(
+      "https://www.kugou.com/yy/index.php?r=play/getdata&hash={}",
+      file_hash
+    );
+    let response = self
+      .client
+      .get(&url)
+      .send()
+      .await
+      .unwrap()
+      // .json::<SongResponse>()
+      .text()
+      .await
+      .unwrap();
+
+    println!("url {:?}", url);
+    println!("text {:?}", response);
+
+    // response.data
+  }
+
+  pub async fn search(&self, params: HashMap<String, String>) -> SearchResult {
+    let search_url = Url::parse_with_params(
+      "https://songsearch.kugou.com/song_search_v2",
+      Vec::from_iter(params.iter()),
+    )
+    .unwrap();
+
+    let response = self
+      .client
+      .get(search_url)
+      .send()
+      .await
+      .unwrap()
+      .json::<SearchResponse>()
+      .await
+      .unwrap();
+
+    let tasks: Vec<_> = response
+      .data
+      .lists
+      .into_iter()
+      .map(|item| async move {
+        let mut track = L1Track {
+          id: format!("kgtrack_{}", item.file_hash),
+          title: item.song_name,
+          artist: "".to_string(),
+          artist_id: "".to_string(),
+          album_id: format!("kgalbum_{}", item.album_id),
+          album: item.album_name,
+          source: "kugou".to_string(),
+          source_url: format!(
+            "https://www.kugou.com/song/#hash={}&album_id={}",
+            item.file_hash, item.album_id
+          ),
+          img_url: "".to_string(),
+          // url: format!("kgtrack_{}", item.file_hash),
+          url: None,
+          // lyric_url: item.file_hash,
+        };
+        let singer_id = item.singer_id;
+        let singer_name = item.singer_name;
+        // if (item.SingerId instanceof Array) {
+        //   [singer_id] = singer_id;
+        //   [singer_name] = singer_name.split('、');
+        // }
+        track.artist = singer_name;
+        track.artist_id = format!("kgartist_{}", singer_id[0]);
+
+        self.get_song(&item.file_hash).await;
+
+        track
+      })
+      .collect();
+
+    let tracks = futures::future::join_all(tasks).await;
+
+    println!("kutou search result is {:?}", tracks);
+
+    SearchResult {
+      total: response.data.total,
+      lists: tracks,
+    }
   }
 }

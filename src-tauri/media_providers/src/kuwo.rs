@@ -44,7 +44,7 @@ impl Kuwo<'_> {
 
     Client::builder()
       .default_headers(headers)
-      // .connection_verbose(true)
+      .connection_verbose(true)
       .cookie_store(true)
       .build()
       .unwrap()

@@ -70,13 +70,15 @@ const provider: MusicProvider = class kugou extends MusicResource {
         type: searchType
       };
     }
-    const target_url = `${'https://songsearch.kugou.com/song_search_v2?keyword='}${keyword}&page=${curpage}`;
+    const target_url = 'http://localhost:3030/kugou/search';
     try {
-      const response = await axios.get(target_url);
+      const response = await axios.get(target_url, { params: { keyword, page: curpage }});
+      console.log('response', response);
+
       const { data } = response;
-      const tracks = await async_process(data.data.lists, kugou.kg_render_search_result_item, []);
+      // const tracks = await async_process(data.data.lists, kugou.kg_render_search_result_item, []);
       return {
-        result: tracks,
+        result: data.lists,
         total: data.data.total,
         type: searchType
       };

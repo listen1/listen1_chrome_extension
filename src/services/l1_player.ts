@@ -197,6 +197,7 @@ class l1PlayerProto {
       }
       return;
     }
+    console.log('play', track);
     if (track.url === undefined || track.url === '') {
       const result: unknown = await MediaService.init(track).catch(async () => {
         this._emit('custom:track_not_playable', { track });

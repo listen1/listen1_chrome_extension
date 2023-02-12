@@ -1,6 +1,6 @@
 use crate::kugou::KugouSongInPlaylist;
 use async_trait::async_trait;
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
 #[derive(Debug, Serialize)]
@@ -11,7 +11,7 @@ pub struct L1PlaylistInfo {
   pub title: String,
 }
 
-#[derive(Debug, Serialize)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct L1Track {
   pub id: String,
   pub title: String,
