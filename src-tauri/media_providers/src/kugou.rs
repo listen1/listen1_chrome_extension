@@ -422,7 +422,7 @@ impl Kugou<'_> {
 
     let tracks = futures::future::join_all(tasks).await;
 
-    println!("kutou searched tracks length is {:?}", tracks.len());
+    println!("kugou searched tracks length is {:?}", tracks.len());
 
     SearchResult {
       total: response.data.total,

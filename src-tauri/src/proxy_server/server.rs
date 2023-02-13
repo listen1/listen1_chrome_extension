@@ -9,6 +9,7 @@ use media_providers::{
   kugou::Kugou,
   kuwo::Kuwo,
   media::Provider,
+  migu,
   netease::{Netease, NeteaseFormData},
   qq::QQ,
 };
@@ -51,12 +52,14 @@ pub fn start(_app_handle: &App) {
     let qq_client = Client::builder().build().unwrap();
     let kugou_client = Kugou::create_client();
     let kuwo_client = Kuwo::create_client();
+    let migu_client = migu::Migu::create_client();
 
     let mut clients = HashMap::new();
     clients.insert(String::from("netease"), netease_client);
     clients.insert(String::from("qq"), qq_client);
     clients.insert(String::from("kuwo"), kuwo_client);
     clients.insert(String::from("kugou"), kugou_client);
+    clients.insert(String::from("migu"), migu_client);
 
     let app_state = Arc::new(AppState { clients });
 
@@ -174,6 +177,14 @@ async fn search(
     "kugou" => {
       let kugou = Kugou { client };
       let result = kugou.search(params.clone()).await;
+
+      json!(result)
+    }
+    "migu" => {
+      let client = state.clients.get("migu").unwrap();
+      let migu = migu::Migu { client: client };
+      let search_params = migu::SearchParams::from_query(&params);
+      let result = migu.search(search_params).await;
 
       json!(result)
     }

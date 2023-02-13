@@ -13,3 +13,7 @@ serde = { version = "1.0", features = ["derive"] }
 rand = { version = "0.8.5", features = [ "std", "std_rng"] }
 async-trait = "0.1.58"
 futures = "0.3.25"
+uuid = { version = "1.3.0", features = ["v4", "fast-rng", "macro-diagnostics"] }
+serde_qs = "0.11.0"
+chrono = "0.4.23"
+md-5 = "0.10.5"

@@ -531,18 +531,25 @@ const provider: MusicProvider = class migu extends MusicResource {
       uiVersion: 'A_music_3.3.0',
       version: '7.0.4'
     };
-    const response = await axios.get(target_url, {
-      headers
-    });
-    const { data } = response;
+    // const response = await axios.get(target_url, {
+    //   headers
+    // });
+    // const { data } = response;
     let result = [];
     let total = 0;
     if (searchType === '0') {
-      if (data.songResultData.result) {
-        result = data.songResultData.result.map((item: any) => this.mg_convert_song(item));
-        total = data.songResultData.totalCount;
-      }
+      const target_url = "http://localhost:3030/migu/search"
+      const response = await axios.get(target_url, {
+        params: { keyword, page: curpage }
+      });
+      const { data } = response;
+      result = data.result;
+      total = data.total;
     } else if (searchType === '1') {
+      const response = await axios.get(target_url, {
+        headers
+      });
+      const { data } = response;
       if (data.songListResultData.result) {
         result = data.songListResultData.result.map((item: any) => ({
           // result = data.songLists.map(item => ({
