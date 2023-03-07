@@ -1871,9 +1871,13 @@
                           ng-src="{{ currentPlaying.img_url }}"
                           err-src="https://y.gtimg.cn/mediastyle/global/img/album_300.png"
                         />
+                        <!-- Switching icon when hover -->
                         <div class="mask">
-                          <svg class="feather">
+                          <svg class="feather" ng-if="getCurrentUrl() != '/now_playing'">
                             <use href="#chevrons-up"></use>
+                          </svg>
+                          <svg class="feather" ng-if="getCurrentUrl() === '/now_playing'">
+                            <use href="#chevrons-down"></use>
                           </svg>
                         </div>
                       </div>
