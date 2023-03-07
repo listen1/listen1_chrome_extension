@@ -497,8 +497,8 @@ const main = () => {
 i18next.use(i18nextHttpBackend).init({
   lng: 'zh-CN',
   fallbackLng: 'zh-CN',
-  supportedLngs: ['zh-CN', 'zh-TC', 'en-US', 'fr-FR', 'ko-KR'],
-  preload: ['zh-CN', 'zh-TC', 'en-US', 'fr-FR', 'ko-KR'],
+  supportedLngs: ['zh-CN', 'zh-TC', 'en-US', 'fr-FR', 'ko-KR', 'pt-BR'],
+  preload: ['zh-CN', 'zh-TC', 'en-US', 'fr-FR', 'ko-KR', 'pt-BR'],
   debug: false,
   backend: {
     loadPath: 'i18n/{{lng}}.json',
