@@ -1,6 +1,6 @@
-# Listen 1 (Chrome Extension) V2.27.0
+# Listen 1 (Chrome Extension) V2.28.0
 
-（最后更新于 2022 年 11 月 10 日）
+（最后更新于 2023 年 3 月 29 日）
 
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE)
 
@@ -71,6 +71,20 @@ Listen1 诞生的初衷从不是和大公司的争夺版权利益，而是为了
 在这个关系项目生死存亡的时刻，我寻求项目因为 DMCA 被 github 关闭的援助。如果有对这个比较了解如何解决的人，或者你想对这个事情发表看法和建议，可以在[issue](https://github.com/listen1/listen1_chrome_extension/issues/113)留言，或者发送邮件到 githublisten1@gmail.com。我们会尽最大努力，来守护 Listen1，即使可能它即将成为历史。
 
 ## 更新日志
+
+`2022-12 ~ 2023-03`
+
+功能改进：
+
+- 增加了葡萄牙语(巴西)的翻译 (感谢 @nailtonvital 的提交)
+- 增加了 qq 音乐 320kbps 音质的支持 (感谢 @fecet 的提交)
+
+修复：
+
+- 修复了酷我音乐播放接口失效的问题 (感谢 @NickeyLin 的提交)
+- 修复导出歌单失败的问题 (感谢 @@IcedWatermelonJuice 的提交)
+- 修复了现在播放页面打开后图标状态的问题 (感谢 @@mnyon 的提交)
+- 修复了 lastfm 不记录最近播放的问题 (感谢 @@Anmizi 的提交)
 
 `2022-11`
 
