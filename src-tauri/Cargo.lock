@@ -1622,7 +1622,7 @@ dependencies = [
 [[package]]
 name = "listen1"
 version = "0.1.0"
-source = "git+https://github.com/Priestch/listen1#dc9d5a700607874758edca3628399f19e51302da"
+source = "git+https://github.com/Priestch/listen1?branch=dev#e88d50e97cdf9aad766ee15696b1c27938b080cf"
 dependencies = [
  "async-trait",
  "chrono",
