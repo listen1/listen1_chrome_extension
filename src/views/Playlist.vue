@@ -2,11 +2,11 @@
   <div class="page">
     <div class="playlist-detail">
       <div class="detail-head flex">
-        <div class="detail-head-cover mx-8 mt-8 mb-1 w-52">
+        <div class="detail-head-cover mx-8 mb-1 mt-8 w-52">
           <img :src="cover_img_url" class="w-52 rounded border-[0.5px] border-default" err-src="https://y.gtimg.cn/mediastyle/global/img/singer_300.png" />
         </div>
         <div class="detail-head-title flex-1">
-          <h2 class="mt-7 mb-4 h-10 text-3xl font-semibold">{{ playlist_title }}</h2>
+          <h2 class="mb-4 mt-7 h-10 text-3xl font-semibold">{{ playlist_title }}</h2>
           <div class="playlist-button-list flex flex-wrap">
             <IconButton icon="li-play-s" icon-class="text-important" @click="playMylist()">
               <template #main>
@@ -68,7 +68,7 @@
           </svg>
           <input class="playlist-search-input" type="text" ng-model="playlistFilter.key" :placeholder="$t('_SEARCH_PLAYLIST')" />
         </div>-->
-        <li class="head -mb-2px group relative flex h-12 items-center border-t-2 border-b-2 border-transparent px-6 text-inactive">
+        <li class="head -mb-2px group relative flex h-12 items-center border-b-2 border-t-2 border-transparent px-6 text-inactive">
           <div class="w-8 flex-none">
             <span>No.</span>
           </div>
@@ -148,7 +148,7 @@ const refreshPlaylist = async () => {
 };
 
 onMounted(async () => {
-  listId = route.params.listId;
+  listId = route.params.listId !== undefined ? route.params.listId : '';
   is_favorite = await MediaService.isMyPlaylist(listId);
   await refreshPlaylist();
 });
@@ -214,7 +214,12 @@ const addLocalMusic = (listId) => {
 watch(
   () => route.path,
   async () => {
-    listId = route.params.listId;
+    listId = route.params.listId !== undefined ? route.params.listId : '';
+    // when user clicked hotPlaylist then there's no need to refresh
+    if (listId === '') {
+      return;
+    }
+    // when user clicked myPlaylist
     is_favorite = await MediaService.isMyPlaylist(listId);
     await refreshPlaylist();
   }
