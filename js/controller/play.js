@@ -91,6 +91,9 @@ angular.module('listenone').controller('PlayController', [
       $scope.staged_playlist = [];
       while ($scope.staged_playlist.length < STAGED_LENGTH) {
         const song = $scope.playlist[getSafeIndex(i, $scope.playlist.length)];
+        if (!song) {
+          break;
+        }
         $scope.staged_playlist.push({ ...song, stageId: `${song.id}_${i}` });
         i += 1;
       }
