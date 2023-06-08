@@ -4,8 +4,8 @@ const { basename, extname, parse, format } = require('path');
 
 module.exports = {
   async readAudioTags(filePath) {
-    const { detect } = require('chardet');
-    const { parseFile } = require('music-metadata');
+    const { detect } = await import('chardet');
+    const { parseFile } = await import('music-metadata');
     const fileName = basename(filePath, extname(filePath));
     try {
       const metaData = await parseFile(filePath);

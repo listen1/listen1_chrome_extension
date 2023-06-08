@@ -28,6 +28,7 @@ declare module 'global' {
         onLyricWindow: any;
         ipcOn: any;
         ipcOnce: any;
+        readTag: (fp: string) => Promise<any>;
       };
     }
   }
