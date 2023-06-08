@@ -22,10 +22,10 @@ const provider: MusicProvider = class localmusic extends MusicResource {
         .toArray()
         .then((tracks) => (playlistInfo.order ? playlistInfo.order.map((id) => tracks.find((track) => track.id === id)) : tracks))
         .then((tracks) => {
-          tracks.map(async(track) => {
+          tracks.map(async (track) => {
             const md = await window.api.readTag(track.source_url);
             const imgBase64 = md.common.picture?.[0]?.data?.toString('base64');
-            track.img_url = imgBase64 ? `data:${md.common.picture?.[0].format};base64,${imgBase64}` : 'images/mycover.jpg',
+            track.img_url = imgBase64 ? `data:${md.common.picture?.[0].format};base64,${imgBase64}` : 'images/mycover.jpg';
             return track;
           });
           return tracks;
