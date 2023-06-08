@@ -15,6 +15,9 @@ module.exports = {
         ext: '.lrc',
         base: undefined
       });
+      const imgBase64 = metaData.common?.picture?.[0]?.data?.toString('base64');
+      const img_url = imgBase64 ? `data:${metaData.common.picture?.[0].format};base64,${imgBase64}` : 'images/mycover.jpg';
+      metaData.common.img_url = img_url;
       //if metadata doesn't include lyric, then try to read from local lyric file
       if (!metaData.common.lyrics && existsSync(lyric_url)) {
         metaData.common.lyrics = [];

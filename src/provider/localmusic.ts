@@ -26,10 +26,9 @@ const provider: MusicProvider = class localmusic extends MusicResource {
             if (!track) {
               return;
             }
-            // @ts-ignore 
+            // @ts-ignore add ts dec later
             const md = await window.api.readTag(track.source_url);
-            const imgBase64 = md.common.picture?.[0]?.data?.toString('base64');
-            track.img_url = imgBase64 ? `data:${md.common.picture?.[0].format};base64,${imgBase64}` : 'images/mycover.jpg';
+            track.img_url = md.common.img_url;
             return track;
           });
           return tracks;

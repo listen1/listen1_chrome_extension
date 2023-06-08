@@ -269,7 +269,6 @@ ipcMain.on('chooseLocalFile', async (event, listId) => {
   const tracks = [];
   for (const fp of result.filePaths) {
     const md = await readAudioTags(fp);
-    const imgBase64 = md.common.picture?.[0]?.data?.toString('base64');
     const track = {
       id: `lmtrack_${fp}`,
       title: md.common.title,
