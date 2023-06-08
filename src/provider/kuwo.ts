@@ -338,10 +338,10 @@ const provider: MusicProvider = class kuwo extends MusicResource {
   }
   static async init(track: any) {
     const song_id = track.id.slice('kwtrack_'.length);
-    const target_url = `http://www.kuwo.cn/api/v1/www/music/playUrl?mid=${song_id}&type=convert_url3&br=128kmp3`;
+    const target_url = `https://antiserver.kuwo.cn/anti.s?type=convert_url&format=mp3&response=url&rid=${song_id}`;
     const { data } = await axios.get(target_url);
-    if (data?.data?.url) {
-      return { url: data.data.url, platform: 'kuwo' };
+    if (data.length > 0) {
+      return { url: data, platform: 'kuwo' };
     } else {
       throw `kuwo:init() invalid data ${data}`;
     }

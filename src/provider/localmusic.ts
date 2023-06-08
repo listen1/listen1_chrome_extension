@@ -20,7 +20,16 @@ const provider: MusicProvider = class localmusic extends MusicResource {
       playlist.tracks = await iDB.Tracks.where('playlist')
         .equals(list_id)
         .toArray()
-        .then((tracks) => (playlistInfo.order ? playlistInfo.order.map((id) => tracks.find((track) => track.id === id)) : tracks));
+        .then((tracks) => (playlistInfo.order ? playlistInfo.order.map((id) => tracks.find((track) => track.id === id)) : tracks))
+        .then((tracks) => {
+          tracks.map(async(track) => {
+            const md = await window.api.readTag(track.source_url);
+            const imgBase64 = md.common.picture?.[0]?.data?.toString('base64');
+            track.img_url = imgBase64 ? `data:${md.common.picture?.[0].format};base64,${imgBase64}` : 'images/mycover.jpg',
+            return track;
+          });
+          return tracks;
+        });
     } else {
       playlist = null;
     }
@@ -56,13 +65,6 @@ const provider: MusicProvider = class localmusic extends MusicResource {
   static init(track: any) {
     return { url: track.sound_url, platform: 'localmusic', bitrate: track.bitrate };
   }
-  static bootstrapTrack(track: any, success: CallableFunction) {
-    const sound = {} as any;
-    sound.url = track.sound_url;
-    sound.platform = 'localmusic';
-    sound.bitrate = track.bitrate;
-    success(sound);
-  }
 
   static async search(url: string) {
     const searchType = getParameterByName('type', url);
@@ -79,13 +81,10 @@ const provider: MusicProvider = class localmusic extends MusicResource {
     const playlist = await this.getPlaylistById(list_id);
 
     const track = playlist.tracks.find((item: any) => item.id === track_id);
-    let lyric = '';
-    if (track.lyrics !== undefined) {
-      [lyric] = track.lyrics;
-    }
+    const md = await window.api.readTag(track.source_url);
     return {
-      lyric,
-      tlyric: ''
+      lyric: md.common.lyrics?.[0] || '',
+      tlyric: md.common.lyrics?.[1] || ''
     };
   }
 

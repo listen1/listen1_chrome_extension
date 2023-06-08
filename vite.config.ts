@@ -1,8 +1,8 @@
-import vueI18n from '@intlify/vite-plugin-vue-i18n';
+import vueI18n from '@intlify/unplugin-vue-i18n/vite';
 import vue from '@vitejs/plugin-vue';
 import { chromeExtension, simpleReloader } from 'rollup-plugin-chrome-extension';
+import { defineConfig } from 'vite';
 import zip from 'vite-plugin-zip';
-import { defineConfig, build } from 'vite';
 
 const { NODE_ENV, BUILD_ELECTRON } = process.env;
 const production = NODE_ENV === 'production';
