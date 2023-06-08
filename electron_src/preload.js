@@ -23,7 +23,7 @@ const sendControl = (args, params) => ipcRenderer.send('control', args, params);
 const sendLyric = (args, params) => ipcRenderer.send('currentLyric', args, params);
 const sendTrackPlayingNow = (args, params) => ipcRenderer.send('trackPlayingNow', args, params);
 const sendFloatWindowMoving = (args, params) => ipcRenderer.send('floatWindowMoving', args, params);
-const readTag = (fp)=> ipcRenderer.invoke("readTag", fp)
+const readTag = (fp) => ipcRenderer.invoke('readTag', fp);
 const onLyric = (fn) => {
   ipcRenderer.on('currentLyric', (event, ...args) => fn(...args));
 };

@@ -12,7 +12,7 @@
     <svg
       v-show="loading"
       id="loader-1"
-      class="searchspinner ml-4 -mt-1 inline-block h-6 w-6"
+      class="searchspinner -mt-1 ml-4 inline-block h-6 w-6"
       version="1.1"
       xmlns="http://www.w3.org/2000/svg"
       xmlns:xlink="http://www.w3.org/1999/xlink"

@@ -1,6 +1,6 @@
 <template>
   <!-- my platform window-->
-  <div class="page page-hot-playlist my-0 mx-auto md:max-w-4xl lg:max-w-5xl xl:max-w-[1150px]">
+  <div class="page page-hot-playlist mx-auto my-0 md:max-w-4xl lg:max-w-5xl xl:max-w-[1150px]">
     <SourceTab :sources="platformSourceList" :tab="tab" :loading="false" @click="changeTab"></SourceTab>
     <div id="hotplaylist" class="site-wrapper-innerd">
       <div id="playlist-content" class="cover-container">

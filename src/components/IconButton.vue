@@ -1,5 +1,5 @@
 <template>
-  <div class="playlist-button clone-button mr-6 mb-6 flex h-8 cursor-pointer rounded border border-button" @click="onclick">
+  <div class="playlist-button clone-button mb-6 mr-6 flex h-8 cursor-pointer rounded border border-button" @click="onclick">
     <div class="play-list flex flex-1 items-center rounded px-6 hover:bg-button-hover">
       <span v-if="!icon.startsWith('vue-feather-')" :class="'icon mr-4 ' + icon + ' ' + (iconClass ? iconClass : '')" />
       <vue-feather

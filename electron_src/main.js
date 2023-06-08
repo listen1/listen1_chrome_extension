@@ -178,7 +178,7 @@ ipcMain.on('setCookie', async (e, cookie) => {
 ipcMain.handle('getCookie', async (e, request) => {
   return session.defaultSession.cookies.get(request);
 });
-ipcMain.handle('readTag', async (e, fp) => readAudioTags(fp))
+ipcMain.handle('readTag', async (e, fp) => readAudioTags(fp));
 ipcMain.on('removeCookie', async (e, url, name) => {
   await session.defaultSession.cookies.remove(url, name);
 });
@@ -288,7 +288,6 @@ ipcMain.on('chooseLocalFile', async (event, listId) => {
 
   mainWindow.webContents.send('chooseLocalFile', { tracks, id: listId });
 });
-
 
 ipcMain.on('updateTheme', (event, { color, symbolColor }) => {
   mainWindow.setTitleBarOverlay({ color, symbolColor, height: 50 });

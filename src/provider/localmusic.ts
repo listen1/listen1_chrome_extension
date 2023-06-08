@@ -23,6 +23,10 @@ const provider: MusicProvider = class localmusic extends MusicResource {
         .then((tracks) => (playlistInfo.order ? playlistInfo.order.map((id) => tracks.find((track) => track.id === id)) : tracks))
         .then((tracks) => {
           tracks.map(async (track) => {
+            if (!track) {
+              return;
+            }
+            // @ts-ignore 
             const md = await window.api.readTag(track.source_url);
             const imgBase64 = md.common.picture?.[0]?.data?.toString('base64');
             track.img_url = imgBase64 ? `data:${md.common.picture?.[0].format};base64,${imgBase64}` : 'images/mycover.jpg';

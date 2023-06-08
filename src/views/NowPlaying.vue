@@ -1,7 +1,7 @@
 <template>
   <div class="page">
     <div
-      class="songdetail-wrapper app-region-nodrag absolute top-0 left-0 right-0 bottom-20 flex flex-col bg-now-playing duration-300"
+      class="songdetail-wrapper app-region-nodrag absolute bottom-20 left-0 right-0 top-0 flex flex-col bg-now-playing duration-300"
       :class="{
         'overflow-y-scroll': commentActive,
         'justify-center overflow-hidden': !commentActive,
@@ -10,7 +10,7 @@
       }">
       <div
         :class="{ 'app-region-drag': overlay.type === 'track', 'app-region-nodrag hidden': overlay.type !== 'track' }"
-        class="absolute top-0 left-0 right-0 h-24" />
+        class="absolute left-0 right-0 top-0 h-24" />
       <div
         v-if="settings.enableNowplayingCoverBackground"
         class="bg absolute h-full w-full text-center opacity-50 blur-[90px] brightness-[0.8] duration-1000 ease-in-out"
@@ -50,7 +50,7 @@
         </div>
         <div class="detail-songinfo app-region-nodrag ml-8 flex w-96 flex-col overflow-hidden">
           <div class="title flex items-start">
-            <h2 class="mr-4 mb-4 text-3xl font-normal">{{ currentPlaying?.title }}</h2>
+            <h2 class="mb-4 mr-4 text-3xl font-normal">{{ currentPlaying?.title }}</h2>
             <span
               v-if="settings.enableNowplayingBitrate && currentTrackMeta?.bitrate !== undefined"
               class="badge ml-2 mt-2 flex h-6 items-center justify-center whitespace-nowrap rounded border border-badge px-2 text-sm text-badge">
@@ -111,7 +111,7 @@
           </div>
         </div>
       </div>
-      <div v-if="commentActive" class="z-10 mt-16 mb-8 w-[42rem] self-center">
+      <div v-if="commentActive" class="z-10 mb-8 mt-16 w-[42rem] self-center">
         <div>热门评论</div>
         <ul>
           <li v-for="comment in commentList" :key="comment.id" class="flex border-b border-default py-4">

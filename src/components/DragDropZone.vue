@@ -1,7 +1,7 @@
 <template>
   <li
     ref="root"
-    class="group -mb-[2px] border-t-2 border-b-2 border-transparent"
+    class="group -mb-[2px] border-b-2 border-t-2 border-transparent"
     :draggable="draggable"
     @dragstart="dragstart"
     @dragend="dragend"
