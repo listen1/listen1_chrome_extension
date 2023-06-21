@@ -148,7 +148,7 @@ const refreshPlaylist = async () => {
 };
 
 onMounted(async () => {
-  listId = route.params.listId;
+  listId = route.params.listId !== undefined ? route.params.listId : '';
   is_favorite = await MediaService.isMyPlaylist(listId);
   await refreshPlaylist();
 });
@@ -214,7 +214,12 @@ const addLocalMusic = (listId) => {
 watch(
   () => route.path,
   async () => {
-    listId = route.params.listId;
+    listId = route.params.listId !== undefined ? route.params.listId : '';
+    // when user clicked hotPlaylist then there's no need to refresh
+    if (listId === '') {
+      return;
+    }
+    // when user clicked myPlaylist
     is_favorite = await MediaService.isMyPlaylist(listId);
     await refreshPlaylist();
   }
