@@ -1,5 +1,5 @@
 <template>
-  <div class="menu-modal fixed top-0 right-0 left-0 bg-white bg-opacity-20" :class="{ 'bottom-20': !hidden }" @click="close()" />
+  <div class="menu-modal fixed left-0 right-0 top-0 bg-white bg-opacity-20" :class="{ 'bottom-20': !hidden }" @click="close()" />
   <div
     class="menu fixed h-96 overflow-hidden rounded-t-lg border-default bg-theme"
     :class="{ 'bottom-20 opacity-100': !hidden, '-bottom-80 opacity-0': hidden }">

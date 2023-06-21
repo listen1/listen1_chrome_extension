@@ -27,7 +27,7 @@
           <ul class="detail-songlist px-8">
             <li
               v-if="condition.searchType === 0"
-              class="head bg-inactive -mb-2px group relative flex h-12 items-center border-t-2 border-b-2 border-transparent px-6">
+              class="head bg-inactive -mb-2px group relative flex h-12 items-center border-b-2 border-t-2 border-transparent px-6">
               <div class="title flex flex-2 truncate">
                 <a>{{ t('_SONGS') }}</a>
               </div>
@@ -41,7 +41,7 @@
             </li>
             <li
               v-if="condition.searchType === 1"
-              class="head bg-inactive -mb-2px group relative flex h-12 items-center border-t-2 border-b-2 border-transparent px-6">
+              class="head bg-inactive -mb-2px group relative flex h-12 items-center border-b-2 border-t-2 border-transparent px-6">
               <div class="title flex flex-2 truncate">
                 <a>{{ t('_PLAYLIST_TITLE') }}</a>
               </div>

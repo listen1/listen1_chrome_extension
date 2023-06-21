@@ -32,7 +32,7 @@
         </div>
       </div>
       <div v-if="playlist.length > 0" class="detail relative flex-1 overflow-hidden">
-        <div class="ctrl absolute top-1 right-2">
+        <div class="ctrl absolute right-2 top-1">
           <vue-feather
             v-if="!isRedHeart(currentPlaying?.id)"
             class="icon cursor-pointer opacity-50 hover:opacity-100"
