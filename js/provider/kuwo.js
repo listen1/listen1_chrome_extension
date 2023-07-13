@@ -2,6 +2,14 @@
 /* eslint-disable no-unused-vars */
 /* global async getParameterByName isElectron */
 class kuwo {
+  static forgeMD5(message) {
+    return forge.md5
+      .create()
+      .update(forge.util.encodeUtf8(message))
+      .digest()
+      .toHex();
+  }
+
   // Convert html code
   static html_decode(str) {
     let text = str;
@@ -165,7 +173,7 @@ class kuwo {
       isRetryValue = isRetry;
     }
     const domain = 'https://www.kuwo.cn';
-    const name = 'kw_token';
+    const name = 'Hm_token';
 
     cookieGet(
       {
@@ -191,7 +199,7 @@ class kuwo {
       axios
         .get(url, {
           headers: {
-            csrf: token,
+            Cross: this.forgeMD5(token),
           },
         })
         .then((response) => {
@@ -201,7 +209,7 @@ class kuwo {
               axios
                 .get(url, {
                   headers: {
-                    csrf: token2,
+                    Cross: this.forgeMD5(token2),
                   },
                 })
                 .then((res) => {
