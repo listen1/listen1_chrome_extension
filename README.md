@@ -1,6 +1,6 @@
-# Listen 1 (Chrome Extension) V2.28.0
+# Listen 1 (Chrome Extension) V2.29.0
 
-（最后更新于 2023 年 3 月 29 日）
+（最后更新于 2023 年 7 月 13 日）
 
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE)
 
@@ -71,6 +71,13 @@ Listen1 诞生的初衷从不是和大公司的争夺版权利益，而是为了
 在这个关系项目生死存亡的时刻，我寻求项目因为 DMCA 被 github 关闭的援助。如果有对这个比较了解如何解决的人，或者你想对这个事情发表看法和建议，可以在[issue](https://github.com/listen1/listen1_chrome_extension/issues/113)留言，或者发送邮件到 githublisten1@gmail.com。我们会尽最大努力，来守护 Listen1，即使可能它即将成为历史。
 
 ## 更新日志
+
+`2023-07`
+
+修复：
+
+- 酷我音乐搜索功能错误 （感谢@yhsj0919 提供解决方案）
+- 控制台报错 （感谢 @caoxiemeihao 的提交）
 
 `2022-12 ~ 2023-03`
 
