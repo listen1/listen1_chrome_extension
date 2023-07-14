@@ -3,11 +3,15 @@
 /* global async getParameterByName isElectron */
 class kuwo {
   static forgeMD5(message) {
-    return forge.md5
+    const md = forge.md.sha1.create();
+    md.update(message);
+    const sig1 = md.digest().toHex();
+    const sig2 = forge.md5
       .create()
-      .update(forge.util.encodeUtf8(message))
+      .update(forge.util.encodeUtf8(sig1))
       .digest()
       .toHex();
+    return sig2;
   }
 
   // Convert html code
