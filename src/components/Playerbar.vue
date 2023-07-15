@@ -263,7 +263,7 @@ if (isElectron()) {
   top: -5px;
 }
 
-.footer .main-info .detail .playbar .playbar-clickable:hover .barbg .cur .btn {
+.footer .main-info .detail .playbar .playbar-clickable .barbg .cur .btn {
   width: 10px;
   height: 10px;
   border-radius: 5px;
