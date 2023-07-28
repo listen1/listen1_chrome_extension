@@ -1,4 +1,4 @@
-# Listen 1 (Chrome Extension) V2.30.0
+# Listen 1 (Chrome Extension) V2.31.0
 
 （Last Update July 14th, 2023)
 
