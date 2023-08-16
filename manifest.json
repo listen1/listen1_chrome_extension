@@ -2,6 +2,7 @@
   "background": {
     "scripts": [
       "js/vendor/axios.min.js",
+      "js/vendor/md5.min.js",
       "js/vendor/forge_listen1_fork.min.js",
 
       "js/github.js",
