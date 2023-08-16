@@ -195,7 +195,9 @@ angular.module('listenone').controller('NavigationController', [
         $scope.is_local = data.info.id.slice(0, 2) === 'lm';
 
         MediaService.queryPlaylist(data.info.id, 'favorite').success((res) => {
+          // success 函数可能在异步回调中执行，需要手动触发脏检查
           $scope.is_favorite = res.result;
+          $scope.$digest();
         });
 
         $scope.window_type = 'list';
