@@ -196,8 +196,9 @@ angular.module('listenone').controller('NavigationController', [
 
         MediaService.queryPlaylist(data.info.id, 'favorite').success((res) => {
           // success 函数可能在异步回调中执行，需要手动触发脏检查
-          $scope.is_favorite = res.result;
-          $scope.$digest();
+          $timeout(() => {
+            $scope.is_favorite = res.result;
+          }, 0);
         });
 
         $scope.window_type = 'list';
