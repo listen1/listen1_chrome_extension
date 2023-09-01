@@ -14,18 +14,14 @@ import blackStyle from './assets/css/themes/origin.css?inline';
 import blackTransparentStyle from './assets/css/themes/origin_transparent.css?inline';
 import { PlayerEventListener } from './composition/player';
 import useRedHeart from './composition/redheart';
-import useSettings, { migrateSettings } from './composition/settings';
-import iDB, { dbMigrate } from './services/DBService';
+import useSettings from './composition/settings';
+import SettingModel from './models/SettingModel';
+import iDB from './services/DBService';
 import type { Track } from './services/l1_player';
 import { l1Player } from './services/l1_player';
 import { initMediaSession, MediaSessionEventListener } from './services/media_session';
 import { isWin } from './utils';
 import Home from './views/Home.vue';
-
-if (!localStorage.getItem('V3_MIGRATED')) {
-  migrateSettings();
-  dbMigrate();
-}
 
 const { settings, loadSettings } = useSettings();
 
@@ -77,7 +73,7 @@ const initPlayer = async () => {
     //@ts-ignore not null
     tracks = currentPlaylist.order.map((id) => localCurrentPlaying.find((track) => track.id == id));
   }
-  const dbSettings = await iDB.Settings.where('key').equals('playerSettings').toArray();
+  const dbSettings = await SettingModel.getArrayByKey('playerSettings');
 
   tracks.forEach((i) => {
     i.disabled = false;

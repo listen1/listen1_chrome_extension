@@ -90,12 +90,11 @@ import SidebarEntry from '../components/SidebarEntry.vue';
 import SidebarTitle from '../components/SidebarTitle.vue';
 import useAuth from '../composition/auth';
 import useRedHeart from '../composition/redheart';
-import type { Playlist } from '../services/DBService';
+import type Playlist from '../models/PlaylistModel';
 import $event from '../services/EventService';
 import MediaService from '../services/MediaService';
 import notyf from '../services/notyf';
 import { isElectron } from '../utils';
-import Entry from './Entry.vue';
 
 const isChrome = !isElectron();
 const route = useRoute();

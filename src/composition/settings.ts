@@ -1,6 +1,7 @@
 import { reactive, watch } from 'vue';
 import type { Language } from '../i18n';
-import iDB from '../services/DBService';
+import SettingModel from '../models/SettingModel';
+
 import { setPrototypeOfLocalStorage } from '../utils';
 setPrototypeOfLocalStorage();
 
@@ -20,8 +21,10 @@ const nameMapping = {
   playerSettings: 'player_settings',
   theme: 'theme'
 };
+
 type nameMapping = typeof nameMapping;
 type mappingKey = keyof nameMapping;
+
 const settings = reactive({
   language: 'zh-CN' as Language,
   enableAutoChooseSource: false,
@@ -42,36 +45,30 @@ const settings = reactive({
   lyricFontWeight: 400,
   autoChooseSourceList: ['kuwo', 'qq', 'migu']
 });
-type settingsType = typeof settings;
-type settingsKey = keyof settingsType;
+
+export type settingsType = typeof settings;
+export type settingsKey = keyof settingsType;
 type Entries<T> = {
   [K in keyof T]: [K, T[K]];
 }[keyof T][];
-type settingEntries = Entries<settingsType>;
+export type settingEntries = Entries<settingsType>;
+
 async function flushSettings() {
-  await iDB.Settings.bulkPut(
-    (Object.keys(settings) as settingsKey[]).map((key) => ({
-      key,
-      value: settings[key]
-    }))
-  );
+  await SettingModel.flushSettings(settings);
 }
 function setSettings(newValue: Partial<Record<settingsKey, unknown>>) {
   for (const [key, value] of Object.entries(newValue) as settingEntries) {
     settings[key] = value as never;
-    iDB.Settings.put({ key, value });
   }
+  SettingModel.setSettings(newValue);
 }
+
 function saveSettingsToDB(newValue: Partial<Record<settingsKey, unknown>>) {
-  for (const [key, value] of Object.entries(newValue) as settingEntries) {
-    iDB.Settings.put({ key, value });
-  }
+  SettingModel.setSettings(newValue);
 }
+
 async function loadSettings() {
-  const dbRes: Record<string, unknown> = (await iDB.Settings.toArray()).reduce((ret: Record<string, unknown>, cur) => {
-    ret[cur.key] = cur.value;
-    return ret;
-  }, {});
+  const dbRes: Record<string, unknown> = await SettingModel.loadSettings();
   if (Object.values(dbRes).some((value) => value === undefined)) {
     flushSettings();
   } else {
@@ -90,11 +87,7 @@ export function migrateSettings() {
   setSettings(lsSettings);
 }
 async function getSettingsAsync() {
-  const dbRes: Record<string, unknown> = (await iDB.Settings.toArray()).reduce((ret: Record<string, unknown>, cur) => {
-    ret[cur.key] = cur.value;
-    return ret;
-  }, {});
-  return dbRes;
+  return await SettingModel.loadSettings();
 }
 export function getSetting(key: settingsKey) {
   return settings[key];
