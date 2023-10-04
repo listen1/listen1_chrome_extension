@@ -551,8 +551,7 @@ class netease {
           let lrc = '';
           let tlrc = '';
           if (res_data.lrc != null) {
-            lrc = res_data.lrc.lyric.replace(/(\[\d{2}:\d{2}\.\d{2}\]){2,}\n/g, '')
-                  .replace(/(\[\d{2}:\d{2}\.\d{2}\])(\[\d{2}:\d{2}\.\d{2}\])+/g, '$1');
+            lrc = res_data.lrc.lyric;
           }
           if (res_data.tlyric != null && res_data.tlyric.lyric != null) {
             // eslint-disable-next-line no-control-regex
