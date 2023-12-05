@@ -159,6 +159,24 @@ angular.module('listenone').controller('PlayController', [
         'enable_auto_choose_source',
         true
       );
+      $scope.enableMusicCache = getLocalStorageValue(
+        'enable_music_cache',
+        false
+      );
+
+      if (isElectron()){
+        const { remote } = require('electron');
+        const { join } = require("path");
+        const fs = require('fs');
+        $scope.musicCacheDir = getLocalStorageValue(
+          'music_cache_dir',
+          join(remote.app.getPath('home'), ".listen1", "music_cache")
+        );
+        if ($scope.enableMusicCache && !fs.existsSync($scope.musicCacheDir)){
+          fs.mkdirSync($scope.musicCacheDir,{ recursive: true });
+        }
+      }
+     
       $scope.autoChooseSourceList = getLocalStorageValue(
         'auto_choose_source_list',
         ['kuwo', 'qq', 'migu']
@@ -852,6 +870,35 @@ angular.module('listenone').controller('PlayController', [
         $scope.enableAutoChooseSource
       );
     };
+
+    $scope.setMusicCache = (toggle) => {
+      if (toggle === true) {
+        $scope.enableMusicCache = !$scope.enableMusicCache;
+      }
+      localStorage.setObject(
+        'enable_music_cache',
+        $scope.enableMusicCache
+      );
+      const fs = require('fs');
+      if (!fs.existsSync($scope.musicCacheDir)){
+        fs.mkdirSync($scope.musicCacheDir,{ recursive: true });
+      }
+    };
+
+    $scope.setMusicCacheDir = () => {
+      const { remote } = require('electron');
+      const dir = remote.dialog.showOpenDialogSync({
+          properties: ['openDirectory'],
+          defaultPath: $scope.musicCacheDir
+      });
+      console.log(dir[0]);
+      if (dir === null) {
+        notyf.warning('请选择音乐缓存目录');
+        return;
+      }
+      $scope.musicCacheDir = dir[0];
+      localStorage.setObject('music_cache_dir', $scope.musicCacheDir);
+    }
 
     $scope.enableSource = (source) => {
       if ($scope.autoChooseSourceList.indexOf(source) > -1) {

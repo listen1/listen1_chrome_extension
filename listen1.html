@@ -1444,6 +1444,43 @@
                                   {{_MODIFY}}
                                 </button>
                               </div>
+                              <div class="settings-title" ng-if="!isChrome">
+                                <span>{{_MUSIC_CACHE_DIR}}</span>
+                              </div>
+                              <div class="settings-content" ng-if="!isChrome">
+                                <div
+                                  class="shortcut"
+                                  class="btn btn-primary confirm-button"
+                                >
+                                  <svg
+                                    class="feather"
+                                    ng-show="!enableMusicCache"
+                                    ng-click="setMusicCache(true)"
+                                  >
+                                    <use href="#square"></use>
+                                  </svg>
+                                  <svg
+                                    class="feather"
+                                    ng-show="enableMusicCache"
+                                    ng-click="setMusicCache(true)"
+                                  >
+                                    <use href="#check-square"></use>
+                                  </svg>
+                                  {{_ENABLE_MUSIC_CACHE}}
+                                </div>
+                                <div
+                                  ng-show="enableMusicCache"
+                                >
+                                  <span></span>
+                                  <p>{{_MUSIC_CACHE_DIR}}: {{musicCacheDir}}</p>
+                                  <label class="upload-button" 
+                                  for="music-cache-dir-selector"
+                                  ng-click="setMusicCacheDir()">
+                                    {{_MODIFY}}
+                                  </label>
+                                </div>
+                                
+                              </div>
                               <div class="settings-title">
                                 <span>{{_ABOUT}}</span>
                               </div>

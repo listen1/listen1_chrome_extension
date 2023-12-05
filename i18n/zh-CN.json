@@ -170,5 +170,7 @@
  "_PROTOCOL": "代理协议",
  "_HOST": "主机地址",
  "_PORT": "端口",
- "ZOOM_IN_OUT": "放大/缩小"
+ "ZOOM_IN_OUT": "放大/缩小",
+ "_MUSIC_CACHE_DIR": "音乐缓存目录",
+ "_ENABLE_MUSIC_CACHE": "是否启用音乐缓存"
 }
