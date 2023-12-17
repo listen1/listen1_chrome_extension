@@ -424,7 +424,8 @@ class qq {
     const songmidList = [songId];
     const uin = '0';
 
-    const fileType = '320';
+    // server won't response with 320kbps request, downgrade to 128kbps
+    const fileType = '128';
     const fileConfig = {
       m4a: {
         s: 'C400',
@@ -458,7 +459,7 @@ class qq {
       `${fileInfo.s}${songId}${songId}${fileInfo.e}`;
 
     const reqData = {
-      req_0: {
+      req_1: {
         module: 'vkey.GetVkeyServer',
         method: 'CgiGetVkey',
         param: {
@@ -479,20 +480,16 @@ class qq {
         cv: 0,
       },
     };
-    const params = {
-      format: 'json',
-      data: JSON.stringify(reqData),
-    };
-    axios.get(target_url, { params }).then((response) => {
+    axios.post(target_url, reqData).then((response) => {
       const { data } = response;
-      const { purl } = data.req_0.data.midurlinfo[0];
+      const { purl } = data.req_1.data.midurlinfo[0];
 
       if (purl === '') {
         // vip
         failure(sound);
         return;
       }
-      const url = data.req_0.data.sip[0] + purl;
+      const url = data.req_1.data.sip[0] + purl;
       sound.url = url;
       const prefix = purl.slice(0, 4);
       const found = Object.values(fileConfig).filter((i) => i.s === prefix);
