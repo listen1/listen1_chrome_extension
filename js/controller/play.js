@@ -165,12 +165,13 @@ angular.module('listenone').controller('PlayController', [
       );
 
       if (isElectron()){
-        const { remote } = require('electron');
-        const { join } = require("path");
+        // const { remote } = require('electron');
+        // const { join } = require("path");
         const fs = require('fs');
         $scope.musicCacheDir = getLocalStorageValue(
           'music_cache_dir',
-          join(remote.app.getPath('home'), ".listen1", "music_cache")
+          // join(remote.app.getPath('home'), ".listen1", "music_cache")
+          require("path").join(require("os").homedir(), ".listen1", "music_cache")
         );
         if ($scope.enableMusicCache && !fs.existsSync($scope.musicCacheDir)){
           fs.mkdirSync($scope.musicCacheDir,{ recursive: true });
