@@ -80,7 +80,11 @@ class bilibili {
           );
         });
       const query_string = query.join('&');
-      const wbi_sign = window.md5(query_string + mixin_key); // 计算 w_rid
+      const wbi_sign = window.forge.md5
+        .create()
+        .update(window.forge.util.encodeUtf8(query_string + mixin_key))
+        .digest()
+        .toHex();
       return `${query_string}&w_rid=${wbi_sign}`;
     });
   }
