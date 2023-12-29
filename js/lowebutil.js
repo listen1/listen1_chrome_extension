@@ -4,7 +4,7 @@
 
 function getParameterByName(name, url) {
   if (!url) url = window.location.href;
-  name = name.replace(/[\[\]]/g, '\\$&'); // eslint-disable-line no-useless-escape
+  name = name.replace(/[\[\]]/g, '\\$&');
   const regex = new RegExp(`[?&]${name}(=([^&#]*)|&|#|$)`);
 
   const results = regex.exec(url);
@@ -23,7 +23,7 @@ function cookieGet(cookieRequest, callback) {
       callback(cookie);
     });
   }
-  const remote = require('electron').remote; // eslint-disable-line
+  const remote = require('@electron/remote'); // eslint-disable-line
   remote.session.defaultSession.cookies
     .get(cookieRequest)
     .then((cookieArray) => {
@@ -41,7 +41,7 @@ function cookieSet(cookie, callback) {
       callback(arg1, arg2);
     });
   }
-  const remote = require('electron').remote; // eslint-disable-line
+  const remote = require('@electron/remote'); // eslint-disable-line
   remote.session.defaultSession.cookies.set(cookie).then((arg1, arg2) => {
     callback(null, arg1, arg2);
   });
@@ -52,7 +52,7 @@ function cookieRemove(cookie, callback) {
       callback(arg1, arg2);
     });
   }
-  const remote = require('electron').remote; // eslint-disable-line
+  const remote = require('@electron/remote'); // eslint-disable-line
   remote.session.defaultSession.cookies
     .remove(cookie.url, cookie.name)
     .then((arg1, arg2) => {
