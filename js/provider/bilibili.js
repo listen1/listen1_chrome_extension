@@ -1,3 +1,4 @@
+let wbi_key = null;
 /* global getParameterByName */
 // eslint-disable-next-line no-unused-vars
 /* global cookieSet cookieGet */
@@ -6,6 +7,106 @@ class bilibili {
   static htmlDecode(value) {
     const parser = new DOMParser();
     return parser.parseFromString(value, 'text/html').body.textContent;
+  }
+
+  static fetch_wbi_key() {
+    return axios({
+      url: 'https://api.bilibili.com/x/web-interface/nav',
+      method: 'get',
+      responseType: 'json',
+    }).then((resp) => {
+      const json_content = resp.data;
+      const { img_url } = json_content.data.wbi_img;
+      const { sub_url } = json_content.data.wbi_img;
+      return {
+        img_key: img_url.slice(
+          img_url.lastIndexOf('/') + 1,
+          img_url.lastIndexOf('.')
+        ),
+        sub_key: sub_url.slice(
+          sub_url.lastIndexOf('/') + 1,
+          sub_url.lastIndexOf('.')
+        ),
+      };
+    });
+  }
+
+  static clear_wbi_key() {
+    wbi_key = null;
+  }
+
+  static get_wbi_key() {
+    if (wbi_key) {
+      return Promise.resolve(wbi_key);
+    }
+    return bilibili.fetch_wbi_key().then((key) => {
+      wbi_key = key;
+      return key;
+    });
+  }
+
+  static enc_wbi(params) {
+    return bilibili.get_wbi_key().then(({ img_key, sub_key }) => {
+      const mixinKeyEncTab = [
+        46, 47, 18, 2, 53, 8, 23, 32, 15, 50, 10, 31, 58, 3, 45, 35, 27, 43, 5,
+        49, 33, 9, 42, 19, 29, 28, 14, 39, 12, 38, 41, 13, 37, 48, 7, 16, 24,
+        55, 40, 61, 26, 17, 0, 1, 60, 51, 30, 4, 22, 25, 54, 21, 56, 59, 6, 63,
+        57, 62, 11, 36, 20, 34, 44, 52,
+      ];
+
+      // 对 imgKey 和 subKey 进行字符顺序打乱编码
+      function get_mixin_key(original) {
+        let temp = '';
+        mixinKeyEncTab.forEach((n) => {
+          temp += original[n];
+        });
+        return temp.slice(0, 32);
+      }
+
+      const mixin_key = get_mixin_key(img_key + sub_key);
+      const curr_time = Math.round(Date.now() / 1000);
+      const chr_filter = /[!'()*]/g;
+      const query = [];
+      Object.assign(params, { wts: curr_time }); // 添加 wts 字段
+      // 按照 key 重排参数
+      Object.keys(params)
+        .sort()
+        .forEach((key) => {
+          query.push(
+            `${encodeURIComponent(key)}=${encodeURIComponent(
+              // 过滤 value 中的 "!'()*" 字符
+              params[key].toString().replace(chr_filter, '')
+            )}`
+          );
+        });
+      const query_string = query.join('&');
+      const wbi_sign = window.forge.md5
+        .create()
+        .update(window.forge.util.encodeUtf8(query_string + mixin_key))
+        .digest()
+        .toHex();
+      return `${query_string}&w_rid=${wbi_sign}`;
+    });
+  }
+
+  static wrap_wbi_request(url, params) {
+    return bilibili
+      .enc_wbi(params)
+      .then((query_string) => {
+        const target_url = `${url}?${query_string}`;
+        return axios.get(target_url);
+      })
+      .catch(() => {
+        // 失败时进行一次清空 wbi_key 后的重试，避免因为 wbi_key 过期导致的错误
+        bilibili.clear_wbi_key();
+        return bilibili
+          .enc_wbi(params)
+          .then((query_string) => {
+            const target_url = `${url}?${query_string}`;
+            return axios.get(target_url);
+          })
+          .catch(() => undefined);
+      });
   }
 
   static bi_convert_song(song_info) {
@@ -131,7 +232,7 @@ class bilibili {
           const author = response.data.data.owner;
           const default_img = response.data.data.pic;
           const tracks = response.data.data.pages.map((item) =>
-            this.bi_convert_song3(item,track_id,author,default_img)
+            this.bi_convert_song3(item, track_id, author, default_img)
           );
           return fn({
             tracks,
@@ -142,9 +243,9 @@ class bilibili {
     };
   }
 
-  static bi_convert_song3(song_info,bvid,author,default_img) {
+  static bi_convert_song3(song_info, bvid, author, default_img) {
     let imgUrl = song_info.first_frame;
-    if (imgUrl === undefined){
+    if (imgUrl === undefined) {
       imgUrl = default_img;
     } else if (imgUrl.startsWith('//')) {
       imgUrl = `https:${imgUrl}`;
@@ -166,37 +267,51 @@ class bilibili {
 
     return {
       success: (fn) => {
-        let target_url = `https://api.bilibili.com/x/space/acc/info?mid=${artist_id}&jsonp=jsonp`;
-        axios.get(target_url).then((response) => {
-          const info = {
-            cover_img_url: response.data.data.face,
-            title: response.data.data.name,
-            id: `biartist_${artist_id}`,
-            source_url: `https://space.bilibili.com/${artist_id}/#/audio`,
-          };
-          if (getParameterByName('list_id', url).split('_').length === 3) {
-            target_url = `https://api.bilibili.com/x/space/arc/search?mid=${artist_id}&pn=1&ps=25&order=click&index=1&jsonp=jsonp`;
+        let target_url;
+        bilibili
+          .wrap_wbi_request('https://api.bilibili.com/x/space/wbi/acc/info', {
+            mid: artist_id,
+          })
+          .then((response) => {
+            const info = {
+              cover_img_url: response.data.data.face,
+              title: response.data.data.name,
+              id: `biartist_${artist_id}`,
+              source_url: `https://space.bilibili.com/${artist_id}/#/audio`,
+            };
+            if (getParameterByName('list_id', url).split('_').length === 3) {
+              return bilibili
+                .wrap_wbi_request(
+                  'https://api.bilibili.com/x/space/wbi/arc/search',
+                  {
+                    mid: artist_id,
+                    pn: 1,
+                    ps: 25,
+                    order: 'click',
+                    index: 1,
+                  }
+                )
+                .then((res) => {
+                  const tracks = res.data.data.list.vlist.map((item) =>
+                    this.bi_convert_song2(item)
+                  );
+                  return fn({
+                    tracks,
+                    info,
+                  });
+                });
+            }
+            target_url = `https://api.bilibili.com/audio/music-service-c/web/song/upper?pn=1&ps=0&order=2&uid=${artist_id}`;
             return axios.get(target_url).then((res) => {
-              const tracks = res.data.data.list.vlist.map((item) =>
-                this.bi_convert_song2(item)
+              const tracks = res.data.data.data.map((item) =>
+                this.bi_convert_song(item)
               );
               return fn({
                 tracks,
                 info,
               });
             });
-          }
-          target_url = `https://api.bilibili.com/audio/music-service-c/web/song/upper?pn=1&ps=0&order=2&uid=${artist_id}`;
-          return axios.get(target_url).then((res) => {
-            const tracks = res.data.data.data.map((item) =>
-              this.bi_convert_song(item)
-            );
-            return fn({
-              tracks,
-              info,
-            });
           });
-        });
       },
     };
   }
@@ -225,14 +340,14 @@ class bilibili {
       let bvid = track.id.slice('bitrack_v_'.length);
 
       const trackIdCheck = trackId.split('-');
-      if(trackIdCheck.length > 1){
+      if (trackIdCheck.length > 1) {
         bvid = trackIdCheck[0].slice('bitrack_v_'.length);
       }
       const target_url = `https://api.bilibili.com/x/web-interface/view?bvid=${bvid}`;
       return axios.get(target_url).then((response) => {
         let { cid } = response.data.data.pages[0];
-        if(trackIdCheck.length > 1){
-          [,cid] = trackIdCheck;
+        if (trackIdCheck.length > 1) {
+          [, cid] = trackIdCheck;
         }
         const target_url2 = `http://api.bilibili.com/x/player/playurl?fnval=16&bvid=${bvid}&cid=${cid}`;
         axios.get(target_url2).then((response2) => {
