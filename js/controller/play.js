@@ -430,7 +430,7 @@ angular.module('listenone').controller('PlayController', [
             };
             timeResult.push({
               content: line
-                .replace(/\[(\d{2,})\:(\d{2})(?:\.(\d{1,3}))?\]/g, '')
+                .replace(/\[(\d{2,}):(\d{2})(?:\.(\d{1,3}))?\]/g, '')
                 .replace(
                   /&(?:amp|lt|gt|quot|#39|apos);/g,
                   (match) => htmlUnescapes[match]
