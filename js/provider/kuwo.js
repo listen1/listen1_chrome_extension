@@ -129,6 +129,21 @@ class kuwo {
       lyric_url: item.rid,
     };
   }
+  static kw_convert_song3(item) {
+    return {
+      id: `kwtrack_${item.DC_TARGETID}`,
+      title: this.html_decode(item.NAME),
+      artist: this.html_decode(item.ARTIST),
+      artist_id: `kwartist_${item.ARTISTID}`,
+      album: this.html_decode(item.ALBUM),
+      album_id: `kwalbum_${item.ALBUMID}`,
+      source: 'kuwo',
+      source_url: `https://www.kuwo.cn/play_detail/${item.DC_TARGETID}`,
+      img_url: `https://img2.kuwo.cn/star/albumcover/${item.web_albumpic_short}`,
+      // url: `kwtrack_${musicrid}`,
+      lyric_url: item.DC_TARGETID,
+    };
+  }
 
   /*
   function async_process_list(data_list, handler, handler_extra_param_list, callback) {
@@ -222,7 +237,7 @@ class kuwo {
       isRetryValue = isRetry;
     }
     const domain = 'https://www.kuwo.cn';
-    const name = 'Hm_Iuvt_cdb524f42f0ce19b169b8072123a4727';
+    const name = 'Hm_Iuvt_cdb524f42f23cer9b268564v7y735ewrq2324';
 
     cookieGet(
       {
@@ -244,7 +259,7 @@ class kuwo {
   }
 
   static kw_cookie_get(url, callback) {
-    const name = 'Hm_Iuvt_cdb524f42f0ce19b169b8072123a4727';
+    const name = 'Hm_Iuvt_cdb524f42f23cer9b268564v7y735ewrq2324';
     this.kw_get_token((token) => {
       axios
         .get(url, {
@@ -305,19 +320,23 @@ class kuwo {
     // eslint-disable-line no-unused-vars
     const keyword = getParameterByName('keywords', url);
     const curpage = getParameterByName('curpage', url);
+    const pn = parseInt(curpage) - 1;
     const searchType = getParameterByName('type', url);
     let api = '';
+    let target_url = '';
     switch (searchType) {
       case '0':
         api = 'searchMusicBykeyWord';
+        target_url = `https://www.kuwo.cn/search/${api}?vipver=1&client=kt&ft=music&cluster=0&strategy=2012&encoding=utf8&rformat=json&mobi=1&issubtitle=1&show_copyright_off=1&pn=${pn}&rn=20&all=${keyword}`;
         break;
       case '1':
         api = 'searchPlayListBykeyWord';
+        target_url = `https://www.kuwo.cn/api/www/search/${api}?key=${keyword}&pn=${curpage}&rn=30`;
         break;
       default:
         break;
     }
-    const target_url = `https://www.kuwo.cn/api/www/search/${api}?key=${keyword}&pn=${curpage}&rn=20`;
+
     return {
       success: (fn) => {
         this.kw_cookie_get(target_url, (response) => {
@@ -330,11 +349,11 @@ class kuwo {
               type: searchType,
             });
           }
-          if (searchType === '0' && response.data.data !== undefined) {
-            result = response.data.data.list.map((item) =>
-              this.kw_convert_song2(item)
+          if (searchType === '0' && response.data.abslist !== undefined) {
+            result = response.data.abslist.map((item) =>
+              this.kw_convert_song3(item)
             );
-            total = response.data.data.total;
+            total = response.data.abslist.length;
           } else if (searchType === '1' && response.data.data !== undefined) {
             result = response.data.data.list.map((item) => ({
               id: `kwplaylist_${item.id}`,
@@ -362,15 +381,8 @@ class kuwo {
   static bootstrap_track(track, success, failure) {
     const sound = {};
     const song_id = track.id.slice('kwtrack_'.length);
-    // const target_url =
-    //   'https://antiserver.kuwo.cn/anti.s?' +
-    //   `type=convert_url&format=mp3&response=url&rid=${song_id}`;
-    /* const target_url = 'https://www.kuwo.cn/url?'
-      + `format=mp3&rid=${song_id}&response=url&type=convert_url3&br=128kmp3&from=web`;
-    https://m.kuwo.cn/newh5app/api/mobile/v1/music/src/${song_id} */
 
-    const target_url = `http://www.kuwo.cn/api/v1/www/music/playUrl?mid=${song_id}&type=music`;
-
+    const target_url = `https://www.kuwo.cn/api/v1/www/music/playUrl?mid=${song_id}&type=music&httpsStatus=1&reqId=&plat=web_www&from=`;
     this.kw_cookie_get(target_url, (response) => {
       const { data } = response;
 
