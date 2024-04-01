@@ -353,7 +353,7 @@ class kuwo {
             result = response.data.abslist.map((item) =>
               this.kw_convert_song3(item)
             );
-            total = response.data.abslist.length;
+            total = parseInt(response.data.HIT);
           } else if (searchType === '1' && response.data.data !== undefined) {
             result = response.data.data.list.map((item) => ({
               id: `kwplaylist_${item.id}`,
