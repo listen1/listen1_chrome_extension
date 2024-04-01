@@ -1,6 +1,6 @@
-# Listen 1 (Chrome Extension) V2.31.0
+# Listen 1 (Chrome Extension) V2.32.0
 
-（Last Update July 14th, 2023)
+（Last Update April 1st, 2024)
 
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE)
 
@@ -46,6 +46,15 @@ Making your own playlist is also supported.
 2. Click Add to Firefox button
 
 ## Changelog
+
+`2023-08 ~ 2024-04`
+
+Fix bugs：
+
+- Migrate bilibili artist info api （thanks @wuhao-igno）
+- fix qq music
+- fix kugou music
+- fix kuwo music
 
 `2023-07`
 
