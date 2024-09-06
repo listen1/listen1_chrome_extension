@@ -367,7 +367,6 @@ class netease {
       (cookie) => {
         axios.post(target_url, new URLSearchParams(data)).then((response) => {
           const { data: res_data } = response;
-          console.log(response)
           const { url, br } = res_data.data[0];
           if (url != null) {
             sound.url = url;

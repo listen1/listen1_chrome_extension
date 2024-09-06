@@ -216,7 +216,7 @@ const main = () => {
       link(scope, element, attrs) {
         element.bind('click', (event) => {
           if (isElectron()) {
-            const { shell } = require('electron');
+            const { shell } = require('electron'); // eslint-disable-line
             shell.openExternal(scope.url);
           } else {
             $window.open(scope.url, '_blank');
@@ -236,7 +236,7 @@ const main = () => {
       link(scope, element, attrs) {
         element.bind('click', (event) => {
           if (isElectron()) {
-            const { ipcRenderer } = require('electron');
+            const { ipcRenderer } = require('electron'); // eslint-disable-line
             ipcRenderer.send('control', scope.action);
           }
         });

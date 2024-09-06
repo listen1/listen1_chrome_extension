@@ -176,7 +176,6 @@ const MediaService = {
       lyric_url,
       tlyric_url,
     })}`;
-    console.log(url)
     return provider.lyric(url);
   },
 
@@ -337,7 +336,7 @@ const MediaService = {
   },
 
   bootstrapTrack(track, playerSuccessCallback, playerFailCallback) {
-    const customCallback =  (bootinfo) => {
+    const customCallback = (bootinfo) => {
       playerSuccessCallback(bootinfo);
     };
     // const successCallback = playerSuccessCallback;

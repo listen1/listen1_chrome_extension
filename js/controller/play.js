@@ -163,21 +163,29 @@ angular.module('listenone').controller('PlayController', [
         'enable_music_cache',
         false
       );
+      $scope.enableMusicCacheOnlyMode = getLocalStorageValue(
+        'enable_music_cache_only_mode',
+        false
+      );
 
-      if (isElectron()){
+      if (isElectron()) {
         // const { remote } = require('electron');
         // const { join } = require("path");
         const fs = require('fs');
         $scope.musicCacheDir = getLocalStorageValue(
           'music_cache_dir',
           // join(remote.app.getPath('home'), ".listen1", "music_cache")
-          require("path").join(require("os").homedir(), ".listen1", "music_cache")
+          require('path').join(
+            require('os').homedir(),
+            '.listen1',
+            'music_cache'
+          )
         );
-        if ($scope.enableMusicCache && !fs.existsSync($scope.musicCacheDir)){
-          fs.mkdirSync($scope.musicCacheDir,{ recursive: true });
+        if ($scope.enableMusicCache && !fs.existsSync($scope.musicCacheDir)) {
+          fs.mkdirSync($scope.musicCacheDir, { recursive: true });
         }
       }
-     
+
       $scope.autoChooseSourceList = getLocalStorageValue(
         'auto_choose_source_list',
         ['kuwo', 'qq', 'migu']
@@ -233,7 +241,7 @@ angular.module('listenone').controller('PlayController', [
         $scope.enableGlobalShortCut
       );
 
-      const { ipcRenderer } = require('electron');
+      const { ipcRenderer } = require('electron'); // eslint-disable-line
       ipcRenderer.send('control', message);
     };
 
@@ -254,7 +262,7 @@ angular.module('listenone').controller('PlayController', [
         'enable_lyric_floating_window',
         $scope.enableLyricFloatingWindow
       );
-      const { ipcRenderer } = require('electron');
+      const { ipcRenderer } = require('electron'); // eslint-disable-line
       ipcRenderer.send(
         'control',
         message,
@@ -263,7 +271,7 @@ angular.module('listenone').controller('PlayController', [
     };
 
     if (isElectron()) {
-      const { webFrame, ipcRenderer } = require('electron');
+      const { webFrame, ipcRenderer } = require('electron'); // eslint-disable-line
       // webFrame.setVisualZoomLevelLimits(1, 3);
       ipcRenderer.on('setZoomLevel', (event, level) => {
         webFrame.setZoomLevel(level);
@@ -320,7 +328,7 @@ angular.module('listenone').controller('PlayController', [
           'float_window_setting',
           $scope.floatWindowSetting
         );
-        const { ipcRenderer } = require('electron');
+        const { ipcRenderer } = require('electron'); // eslint-disable-line
         const message = 'update_lyric_floating_window_css';
         ipcRenderer.send(
           'control',
@@ -578,7 +586,7 @@ angular.module('listenone').controller('PlayController', [
                 $scope.lyricLineNumberTrans = lastObjectTrans.lineNumber;
               }
               if (isElectron()) {
-                const { ipcRenderer } = require('electron');
+                const { ipcRenderer } = require('electron'); // eslint-disable-line
                 const currentLyric =
                   $scope.lyricArray[lastObject.lineNumber].content;
                 let currentLyricTrans = '';
@@ -693,7 +701,7 @@ angular.module('listenone').controller('PlayController', [
             });
             $scope.lastTrackId = msg.data.currentPlaying.id;
             if (isElectron()) {
-              const { ipcRenderer } = require('electron');
+              const { ipcRenderer } = require('electron'); // eslint-disable-line
               ipcRenderer.send('currentLyric', track.title);
               ipcRenderer.send('trackPlayingNow', track);
             }
@@ -747,7 +755,7 @@ angular.module('listenone').controller('PlayController', [
 
             $rootScope.document_title = title;
             if (isElectron()) {
-              const { ipcRenderer } = require('electron');
+              const { ipcRenderer } = require('electron'); // eslint-disable-line
               if (msg.data.isPlaying) {
                 ipcRenderer.send('isPlaying', true);
               } else {
@@ -851,7 +859,8 @@ angular.module('listenone').controller('PlayController', [
     };
 
     if (isElectron()) {
-      require('electron').ipcRenderer.on('globalShortcut', (event, message) => {
+      const { ipcRenderer } = require('electron'); // eslint-disable-line
+      ipcRenderer.on('globalShortcut', (event, message) => {
         if (message === 'right') {
           l1Player.next();
         } else if (message === 'left') {
@@ -872,34 +881,41 @@ angular.module('listenone').controller('PlayController', [
       );
     };
 
+    $scope.setMusicCacheOnlyMode = (toggle) => {
+      if (toggle === true) {
+        $scope.enableMusicCacheOnlyMode = !$scope.enableMusicCacheOnlyMode;
+      }
+      localStorage.setObject(
+        'enable_music_cache_only_mode',
+        $scope.enableMusicCacheOnlyMode
+      );
+    };
+
     $scope.setMusicCache = (toggle) => {
       if (toggle === true) {
         $scope.enableMusicCache = !$scope.enableMusicCache;
       }
-      localStorage.setObject(
-        'enable_music_cache',
-        $scope.enableMusicCache
-      );
+      localStorage.setObject('enable_music_cache', $scope.enableMusicCache);
       const fs = require('fs');
-      if (!fs.existsSync($scope.musicCacheDir)){
-        fs.mkdirSync($scope.musicCacheDir,{ recursive: true });
+      if (!fs.existsSync($scope.musicCacheDir)) {
+        fs.mkdirSync($scope.musicCacheDir, { recursive: true });
       }
     };
 
     $scope.setMusicCacheDir = () => {
-      const { remote } = require('electron');
+      const { remote } = require('electron'); // eslint-disable-line
       const dir = remote.dialog.showOpenDialogSync({
-          properties: ['openDirectory'],
-          defaultPath: $scope.musicCacheDir
+        properties: ['openDirectory'],
+        defaultPath: $scope.musicCacheDir,
       });
-      console.log(dir[0]);
+
       if (dir === null) {
         notyf.warning('请选择音乐缓存目录');
         return;
       }
-      $scope.musicCacheDir = dir[0];
+      $scope.musicCacheDir = dir[0]; // eslint-disable-line
       localStorage.setObject('music_cache_dir', $scope.musicCacheDir);
-    }
+    };
 
     $scope.enableSource = (source) => {
       if ($scope.autoChooseSourceList.indexOf(source) > -1) {

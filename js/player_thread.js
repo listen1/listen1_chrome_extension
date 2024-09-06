@@ -1,6 +1,7 @@
 /* eslint-disable no-underscore-dangle */
 /* global MediaMetadata playerSendMessage MediaService */
 /* global Howl Howler */
+/* global isElectron require */
 {
   /**
    * Player class containing the state of our playlist and where we are in it.
@@ -39,9 +40,9 @@
     get currentHowl() {
       return this.currentAudio && this.currentAudio.howl;
     }
-    
-    set currentHowl(howl){
-      if (this.currentAudio && this.currentAudio.howl){
+
+    set currentHowl(howl) {
+      if (this.currentAudio && this.currentAudio.howl) {
         this.currentAudio.howl = howl;
       }
     }
@@ -229,7 +230,6 @@
           msg.type = 'BG_PLAYER:RETRIEVE_URL_SUCCESS';
 
           msg.data = { ...msg.data, ...bootinfo };
-          console.log(msg)
           this.playlist[index].bitrate = bootinfo.bitrate;
           this.playlist[index].platform = bootinfo.platform;
 
@@ -237,9 +237,25 @@
           this.setAudioDisabled(false, msg.data.index);
           this.finishLoad(msg.data.index, playNow);
 
-          if (isElectron() && localStorage.getObject("enable_music_cache", false)){
-            const { ipcRenderer } = require('electron');
-            ipcRenderer.send('downloadMusic', {data: {title:msg.data.title,artist: msg.data.artist,album: msg.data.album,img_url: msg.data.img_url,url: msg.data.url }, musicCacheDir: localStorage.getObject("music_cache_dir")});
+          if (
+            isElectron() &&
+            localStorage.getObject('enable_music_cache', false)
+          ) {
+            const { ipcRenderer } = require('electron'); // eslint-disable-line
+            ipcRenderer.send('downloadMusic', {
+              data: {
+                title: msg.data.title,
+                artist: msg.data.artist,
+                album: msg.data.album,
+                img_url: msg.data.img_url,
+                url: msg.data.url,
+              },
+              musicCacheDir: localStorage.getObject('music_cache_dir'),
+              cacheOnlyMode: localStorage.getObject(
+                'enable_music_cache_only_mode',
+                false
+              ),
+            });
           }
 
           playerSendMessage(this.mode, msg);
@@ -277,7 +293,6 @@
 
     finishLoad(index, playNow) {
       const data = this.playlist[index];
-      console.log(data)
       // If we already loaded this track, use the current one.
       // Otherwise, setup and load a new Howl.
       const self = this;

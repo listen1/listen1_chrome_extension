@@ -1478,6 +1478,28 @@
                                   ng-click="setMusicCacheDir()">
                                     {{_MODIFY}}
                                   </label>
+                                  <span></span>
+                                  <div
+                                  class="shortcut"
+                                  ng-if="!isChrome"
+                                  class="btn btn-primary confirm-button"
+                                >
+                                  <svg
+                                    class="feather"
+                                    ng-show="!enableMusicCacheOnlyMode"
+                                    ng-click="setMusicCacheOnlyMode(true)"
+                                  >
+                                    <use href="#square"></use>
+                                  </svg>
+                                  <svg
+                                    class="feather"
+                                    ng-show="enableMusicCacheOnlyMode"
+                                    ng-click="setMusicCacheOnlyMode(true)"
+                                  >
+                                    <use href="#check-square"></use>
+                                  </svg>
+                                  {{_ENABLE_MUSIC_CACHE_ONLY_MODE}}
+                                </div>
                                 </div>
                                 
                               </div>
