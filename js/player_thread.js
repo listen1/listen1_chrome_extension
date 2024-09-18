@@ -1,7 +1,6 @@
 /* eslint-disable no-underscore-dangle */
 /* global MediaMetadata playerSendMessage MediaService */
 /* global Howl Howler */
-/* global isElectron require */
 {
   /**
    * Player class containing the state of our playlist and where we are in it.
@@ -238,7 +237,8 @@
           this.finishLoad(msg.data.index, playNow);
 
           if (
-            isElectron() &&
+            // eslint-disable-next-line no-undef
+            process.platform === 'darwin' &&
             localStorage.getObject('enable_music_cache', false)
           ) {
             const { ipcRenderer } = require('electron'); // eslint-disable-line

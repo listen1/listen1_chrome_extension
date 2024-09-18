@@ -1444,10 +1444,10 @@
                                   {{_MODIFY}}
                                 </button>
                               </div>
-                              <div class="settings-title" ng-if="!isChrome">
+                              <div class="settings-title" ng-if="isMac">
                                 <span>{{_MUSIC_CACHE_DIR}}</span>
                               </div>
-                              <div class="settings-content" ng-if="!isChrome">
+                              <div class="settings-content" ng-if="isMac">
                                 <div
                                   class="shortcut"
                                   class="btn btn-primary confirm-button"
@@ -1481,7 +1481,7 @@
                                   <span></span>
                                   <div
                                   class="shortcut"
-                                  ng-if="!isChrome"
+                                  ng-if="isMac"
                                   class="btn btn-primary confirm-button"
                                 >
                                   <svg
