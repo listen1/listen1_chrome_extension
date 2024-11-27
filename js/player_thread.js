@@ -272,6 +272,7 @@
       if (!data.howl) {
         data.howl = new Howl({
           src: [self._media_uri_list[data.url || data.id]],
+          format: 'mp3', // bypass Howl checking url extension, issue #1200
           volume: 1,
           mute: self.muted,
           html5: true, // Force to HTML5 so that the audio can stream in (best for large files).
@@ -335,12 +336,8 @@
             });
             self.currentAudio.disabled = true;
             self.sendPlayingEvent('err');
-            for (let i = 0; i < self.playlist.length; i += 1) {
-              if (self.playlist[i].howl === self.currentHowl) {
-                self.playlist[i].howl = null;
-              }
-            }
-            self.currentHowl = null;
+            self.currentHowl.unload();
+            data.howl = null;
             delete self._media_uri_list[data.id];
           },
           onplayerror(id, err) {
