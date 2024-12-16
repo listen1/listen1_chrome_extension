@@ -646,7 +646,7 @@ angular.module('listenone').controller('NavigationController', [
 
     $scope.addLocalMusic = (list_id) => {
       if (isElectron()) {
-        const { remote } = require('electron');
+        const { remote } = require('electron'); // eslint-disable-line
         const remoteFunctions = remote.require('./functions.js');
         remote.dialog
           .showOpenDialog({

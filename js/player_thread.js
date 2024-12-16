@@ -40,6 +40,12 @@
       return this.currentAudio && this.currentAudio.howl;
     }
 
+    set currentHowl(howl) {
+      if (this.currentAudio && this.currentAudio.howl) {
+        this.currentAudio.howl = howl;
+      }
+    }
+
     get playing() {
       return this.currentHowl ? this.currentHowl.playing() : false;
     }
@@ -223,13 +229,35 @@
           msg.type = 'BG_PLAYER:RETRIEVE_URL_SUCCESS';
 
           msg.data = { ...msg.data, ...bootinfo };
-
           this.playlist[index].bitrate = bootinfo.bitrate;
           this.playlist[index].platform = bootinfo.platform;
 
           this.setMediaURI(msg.data.url, msg.data.id);
           this.setAudioDisabled(false, msg.data.index);
           this.finishLoad(msg.data.index, playNow);
+
+          if (
+            // eslint-disable-next-line no-undef
+            process.platform === 'darwin' &&
+            localStorage.getObject('enable_music_cache', false)
+          ) {
+            const { ipcRenderer } = require('electron'); // eslint-disable-line
+            ipcRenderer.send('downloadMusic', {
+              data: {
+                title: msg.data.title,
+                artist: msg.data.artist,
+                album: msg.data.album,
+                img_url: msg.data.img_url,
+                url: msg.data.url,
+              },
+              musicCacheDir: localStorage.getObject('music_cache_dir'),
+              cacheOnlyMode: localStorage.getObject(
+                'enable_music_cache_only_mode',
+                false
+              ),
+            });
+          }
+
           playerSendMessage(this.mode, msg);
         },
         () => {
@@ -265,7 +293,6 @@
 
     finishLoad(index, playNow) {
       const data = this.playlist[index];
-
       // If we already loaded this track, use the current one.
       // Otherwise, setup and load a new Howl.
       const self = this;

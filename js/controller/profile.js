@@ -45,7 +45,7 @@ angular.module('listenone').controller('ProfileController', [
       $scope.proxyRules = `${$scope.proxyProtocol}://${host}:${port}`;
       if (isElectron()) {
         const message = 'update_proxy_config';
-        const { ipcRenderer } = require('electron');
+        const { ipcRenderer } = require('electron'); // eslint-disable-line
         if (mode === 'system' || mode === 'direct') {
           ipcRenderer.send('control', message, { mode });
         } else {
@@ -60,7 +60,7 @@ angular.module('listenone').controller('ProfileController', [
       if (isElectron()) {
         // get proxy config from main process
         const message = 'get_proxy_config';
-        const { ipcRenderer } = require('electron');
+        const { ipcRenderer } = require('electron'); // eslint-disable-line
         ipcRenderer.send('control', message);
       }
     };
@@ -75,7 +75,7 @@ angular.module('listenone').controller('ProfileController', [
     };
 
     if (isElectron()) {
-      const { ipcRenderer } = require('electron');
+      const { ipcRenderer } = require('electron'); // eslint-disable-line
 
       ipcRenderer.on('proxyConfig', (event, config) => {
         // parse config

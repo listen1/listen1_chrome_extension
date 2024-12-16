@@ -170,5 +170,8 @@
  "_PROTOCOL": "Protocol",
  "_HOST": "Host",
  "_PORT": "Port",
- "ZOOM_IN_OUT": "Zoom In/Out"
+ "ZOOM_IN_OUT": "Zoom In/Out",
+ "_MUSIC_CACHE_DIR": "Music Cache Directory",
+ "_ENABLE_MUSIC_CACHE": "Enable Music Cache",
+ "_ENABLE_MUSIC_CACHE_ONLY_MODE": "Enable Music Cache Only Mode (Turning volume off recommended)"
 }

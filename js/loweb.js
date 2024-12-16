@@ -336,7 +336,10 @@ const MediaService = {
   },
 
   bootstrapTrack(track, playerSuccessCallback, playerFailCallback) {
-    const successCallback = playerSuccessCallback;
+    const customCallback = (bootinfo) => {
+      playerSuccessCallback(bootinfo);
+    };
+    // const successCallback = playerSuccessCallback;
     const sound = {};
     function failureCallback() {
       if (localStorage.getObject('enable_auto_choose_source') === false) {
@@ -399,7 +402,7 @@ const MediaService = {
 
     const provider = getProviderByName(track.source);
 
-    provider.bootstrap_track(track, successCallback, failureCallback);
+    provider.bootstrap_track(track, customCallback, failureCallback);
   },
 
   login(source, options) {

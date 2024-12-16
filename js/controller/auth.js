@@ -40,7 +40,7 @@ angular.module('listenone').controller('AuthController', [
     $scope.openLogin = (source) => {
       const url = $scope.getLoginUrl(source);
       if (isElectron()) {
-        const { ipcRenderer } = require('electron');
+        const { ipcRenderer } = require('electron'); // eslint-disable-line
         return ipcRenderer.send('openUrl', url);
       }
       return window.open(url, '_blank');
