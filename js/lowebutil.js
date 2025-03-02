@@ -4,7 +4,7 @@
 
 function getParameterByName(name, url) {
   if (!url) url = window.location.href;
-  name = name.replace(/[\[\]]/g, '\\$&');
+  name = name.replace(/[[\]]/g, '\\$&');
   const regex = new RegExp(`[?&]${name}(=([^&#]*)|&|#|$)`);
 
   const results = regex.exec(url);
@@ -67,7 +67,7 @@ function setPrototypeOfLocalStorage() {
     try {
       return value && JSON.parse(value);
     } catch (error) {
-      return {}
+      return {};
     }
   };
   proto.setObject = function setObject(key, value) {
