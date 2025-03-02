@@ -100,16 +100,15 @@ function smoothScrollTo(element, to, duration) {
   /* https://gist.github.com/andjosh/6764939 */
   const start = element.scrollTop;
   const change = to - start;
-  let currentTime = 0;
-  const increment = 20;
+  const startTime = performance.now();
 
-  const animateScroll = () => {
-    currentTime += increment;
-    const val = easeInOutQuad(currentTime, start, change, duration);
+  const animateScroll = (currentTime) => {
+    const timeElapsed = currentTime - startTime;
+    const val = easeInOutQuad(timeElapsed, start, change, duration);
     element.scrollTop = val;
-    if (currentTime < duration) {
-      setTimeout(animateScroll, increment);
+    if (timeElapsed < duration) {
+      requestAnimationFrame(animateScroll);
     }
   };
-  animateScroll();
+  requestAnimationFrame(animateScroll);
 }
