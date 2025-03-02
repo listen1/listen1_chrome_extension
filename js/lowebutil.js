@@ -97,7 +97,6 @@ function easeInOutQuad(t, b, c, d) {
 }
 
 function smoothScrollTo(element, to, duration) {
-  /* https://gist.github.com/andjosh/6764939 */
   const start = element.scrollTop;
   const change = to - start;
   const startTime = performance.now();
@@ -108,6 +107,8 @@ function smoothScrollTo(element, to, duration) {
     element.scrollTop = val;
     if (timeElapsed < duration) {
       requestAnimationFrame(animateScroll);
+    } else {
+      element.scrollTop = to; // Ensure it ends exactly at 'to'
     }
   };
   requestAnimationFrame(animateScroll);
