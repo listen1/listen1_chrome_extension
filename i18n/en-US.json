@@ -9,6 +9,7 @@
  "_BILIBILI_MUSIC": "Bilibili",
  "_MIGU_MUSIC": "Migu",
  "_TAIHE_MUSIC": "Qianqian",
+ "_AIR_SONIC": "airsonic",
  "_PLATFORM_UNION": "Platforms",
  "_PLAYLISTS": "PLAYLISTS",
  "_MY_MUSIC": "My Music",
@@ -170,5 +171,7 @@
  "_PROTOCOL": "Protocol",
  "_HOST": "Host",
  "_PORT": "Port",
+ "_SERVER": "Server Url",
+ "_USERNAME": "User Name",
  "ZOOM_IN_OUT": "Zoom In/Out"
 }

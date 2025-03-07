@@ -75,6 +75,13 @@ const PROVIDERS = [
     support_login: false,
     id: 'my',
   },
+  {
+    name: 'airsonic',
+    instance: airsonic,
+    searchable: true,
+    support_login: true,
+    id: 'sn'
+  }
 ];
 
 function getProviderByName(sourceName) {
