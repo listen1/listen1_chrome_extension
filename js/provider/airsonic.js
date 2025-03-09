@@ -1,10 +1,13 @@
+/* eslint-disable no-param-reassign */
+/* eslint-disable no-unused-vars */
+/* global getParameterByName i18next forge threadPlayer */
 
 class airsonic {
     static sn_server() {
-        if (!this._server_info) {
-            this._server_info = localStorage.getObject('sn_server_info');
+        if (!this.server_info) {
+            this.server_info = localStorage.getObject('sn_server_info');
         }
-        return this._server_info;
+        return this.server_info;
     }
 
     static sn_svrurl() {
@@ -85,7 +88,9 @@ class airsonic {
             return {
                 success: fn => {
                     axios.get(target_url).then(res => res.data['subsonic-response']?.searchResult3).then(data => {
-                        let result = data?.song?.map(s => {return Object.assign(s, {id: 'sntrack_' + s.id, snid: s.id, source: 'airsonic', img_url: '',});}) ?? [];
+                        const result = data?.song?.map(s => {
+                            return Object.assign(s, {id: 'sntrack_' + s.id, snid: s.id, source: 'airsonic', img_url: '',});
+                        }) ?? [];
                         return fn({result, total: result.length, type: searchType});
                     });
                 }
@@ -225,7 +230,7 @@ class airsonic {
                 axios.get(url, {timeout: 5000}).then(res => res.data['subsonic-response']).then(data => {
                     let result = { is_login: false };
                     let status = 'fail';
-                    if (data.status == 'ok') {
+                    if (data.status === 'ok') {
                         status = 'success';
                         result = {
                             is_login: true,
@@ -257,7 +262,7 @@ class airsonic {
         }
 
         const ucard_title = snucard.querySelector('div.usercard-title');
-        var cart_t1 = ucard_title.firstElementChild;
+        let cart_t1 = ucard_title.firstElementChild;
         cart_t1.style.width = '58px';
         while (cart_t1.nextElementSibling) {
             cart_t1 = cart_t1.nextElementSibling;
@@ -276,17 +281,17 @@ class airsonic {
         snucard.appendChild(logbtn);
         logbtn.onclick = () => {
             const form = document.querySelector('#airsonic_login_form');
-            this._server_info = {
-                server: form.elements['server'].value,
-                user: form.elements['username'].value,
-                password: form.elements['password'].value
+            this.server_info = {
+                server: form.elements.server.value,
+                user: form.elements.username.value,
+                password: form.elements.password.value
             }
-            if (!this._server_info.server.endsWith('/')) {
-                this._server_info.server += '/';
+            if (!this.server_info.server.endsWith('/')) {
+                this.server_info.server += '/';
             }
             this.get_user().success(r => {
-                if (r.status == 'success') {
-                    localStorage.setObject('sn_server_info', this._server_info);
+                if (r.status === 'success') {
+                    localStorage.setObject('sn_server_info', this.server_info);
                     snucard.parentElement.classList.add('ng-hide');
                     snucard.parentElement.previousElementSibling.classList.remove('ng-hide');
                 }

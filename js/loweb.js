@@ -1,5 +1,5 @@
 /* global async LRUCache setPrototypeOfLocalStorage getLocalStorageValue */
-/* global netease xiami qq kugou kuwo bilibili migu taihe localmusic myplaylist */
+/* global netease xiami qq kugou kuwo bilibili migu taihe localmusic myplaylist airsonic */
 
 const PROVIDERS = [
   {
