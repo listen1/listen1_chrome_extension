@@ -1659,6 +1659,9 @@
                                 />
                               </div>
                               <li class="head">
+                                <div class="sequence">
+                                  
+                                </div>
                                 <div class="title">
                                   <a>{{_SONGS + '(' + songs.length + ')'}}</a>
                                 </div>
@@ -1681,6 +1684,9 @@
                                 drag-zone-type="'application/listen1-song'"
                                 drop-zone-ondrop="onPlaylistSongDrop(list_id, song, arg1, arg2, arg3)"
                               >
+                                <div class="sequence">
+                                  <a>{{$index}}</a>
+                                </div>
                                 <div class="title">
                                   <!-- <a class="disabled" ng-if="song.disabled" ng-click="copyrightNotice()">{{ song.title }}</a> -->
                                   <a add-and-play="song">{{ song.title }}</a>
