@@ -1,5 +1,5 @@
 /* global async LRUCache setPrototypeOfLocalStorage getLocalStorageValue */
-/* global netease xiami qq kugou kuwo bilibili migu taihe localmusic myplaylist */
+/* global netease xiami qq kugou kuwo bilibili migu taihe localmusic myplaylist airsonic */
 
 const PROVIDERS = [
   {
@@ -75,6 +75,13 @@ const PROVIDERS = [
     support_login: false,
     id: 'my',
   },
+  {
+    name: 'airsonic',
+    instance: airsonic,
+    searchable: true,
+    support_login: true,
+    id: 'sn'
+  }
 ];
 
 function getProviderByName(sourceName) {
