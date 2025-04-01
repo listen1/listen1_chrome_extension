@@ -51,7 +51,7 @@ function github() {
         const url = `${OAUTH_URL}/authorize?client_id=${client_id}&scope=gist`;
         if (isElectron()) {
           // normal window for link
-          const { BrowserWindow } = require('electron').remote; // eslint-disable-line import/no-unresolved
+          const { BrowserWindow } = require('@electron/remote'); // eslint-disable-line import/no-unresolved
           let win = new BrowserWindow({
             width: 1000,
             height: 670,

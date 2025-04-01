@@ -4,7 +4,7 @@
 
 function getParameterByName(name, url) {
   if (!url) url = window.location.href;
-  name = name.replace(/[\[\]]/g, '\\$&');
+  name = name.replace(/[[\]]/g, '\\$&');
   const regex = new RegExp(`[?&]${name}(=([^&#]*)|&|#|$)`);
 
   const results = regex.exec(url);
@@ -67,7 +67,7 @@ function setPrototypeOfLocalStorage() {
     try {
       return value && JSON.parse(value);
     } catch (error) {
-      return {}
+      return {};
     }
   };
   proto.setObject = function setObject(key, value) {
@@ -97,19 +97,19 @@ function easeInOutQuad(t, b, c, d) {
 }
 
 function smoothScrollTo(element, to, duration) {
-  /* https://gist.github.com/andjosh/6764939 */
   const start = element.scrollTop;
   const change = to - start;
-  let currentTime = 0;
-  const increment = 20;
+  const startTime = performance.now();
 
-  const animateScroll = () => {
-    currentTime += increment;
-    const val = easeInOutQuad(currentTime, start, change, duration);
+  const animateScroll = (currentTime) => {
+    const timeElapsed = currentTime - startTime;
+    const val = easeInOutQuad(timeElapsed, start, change, duration);
     element.scrollTop = val;
-    if (currentTime < duration) {
-      setTimeout(animateScroll, increment);
+    if (timeElapsed < duration) {
+      requestAnimationFrame(animateScroll);
+    } else {
+      element.scrollTop = to; // Ensure it ends exactly at 'to'
     }
   };
-  animateScroll();
+  requestAnimationFrame(animateScroll);
 }
