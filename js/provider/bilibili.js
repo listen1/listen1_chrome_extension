@@ -392,35 +392,19 @@ class bilibili {
         const cookieName = 'buvid3';
         const expire =
           (new Date().getTime() + 1e3 * 60 * 60 * 24 * 365 * 100) / 1000;
-        cookieGet(
+
+        cookieSet(
           {
             url: domain,
             name: cookieName,
+            value: '0',
+            expirationDate: expire,
+            sameSite: 'no_restriction',
           },
-          (cookie) => {
-            if (cookie == null) {
-              cookieSet(
-                {
-                  url: domain,
-                  name: cookieName,
-                  value: '0',
-                  expirationDate: expire,
-                },
-                () => {
-                  axios.get(target_url).then((response) => {
-                    const result = response.data.data.result.map((song) =>
-                      this.bi_convert_song2(song)
-                    );
-                    const total = response.data.data.numResults;
-                    return fn({
-                      result,
-                      total,
-                    });
-                  });
-                }
-              );
-            } else {
-              axios.get(target_url).then((response) => {
+          () => {
+            axios
+              .get(target_url, { withCredentials: true })
+              .then((response) => {
                 const result = response.data.data.result.map((song) =>
                   this.bi_convert_song2(song)
                 );
@@ -430,7 +414,6 @@ class bilibili {
                   total,
                 });
               });
-            }
           }
         );
       },
