@@ -160,20 +160,57 @@ class netease {
 
   static ne_ensure_cookie(callback) {
     const domain = 'https://music.163.com';
-    const cookieName = 'NMTID';
+    const nuidName = '_ntes_nuid';
+    const nnidName = '_ntes_nnid3';
+    const nuidValue = this._create_secret_key(32);
+    const nnidValue = `${nuidValue},${new Date().getTime()}`;
+    const nmtidName = 'NMTID';
+    const nmtidValue = '0';
+
+    // netease default cookie expire time: 100 years
     const expire =
       (new Date().getTime() + 1e3 * 60 * 60 * 24 * 365 * 100) / 1000;
-
-    cookieSet(
-      {
-        url: domain,
-        name: cookieName,
-        value: '0',
-        expirationDate: expire,
-        sameSite: 'no_restriction',
+    async.concat(
+      [
+        { url: domain, name: nuidName },
+        { url: domain, name: nnidName },
+        { url: domain, name: nmtidName },
+      ],
+      (item, cb) => {
+        cookieGet(item, (result) => cb(null, result));
       },
-      () => {
-        callback(null);
+      (_, results) => {
+        if (results.filter((i) => i === null).length > 0) {
+          async.concat(
+            [
+              {
+                url: domain,
+                name: nuidName,
+                value: nuidValue,
+                expirationDate: expire,
+                sameSite: 'no_restriction',
+              },
+              {
+                url: domain,
+                name: nnidName,
+                value: nnidValue,
+                expirationDate: expire,
+                sameSite: 'no_restriction',
+              },
+              {
+                url: domain,
+                name: nmtidName,
+                value: nmtidValue,
+                expirationDate: expire,
+                sameSite: 'no_restriction',
+              },
+            ],
+            cookieSet,
+            () => {
+              callback(null);
+            }
+          );
+        }
       }
     );
   }
