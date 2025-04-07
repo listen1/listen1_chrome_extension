@@ -36,6 +36,10 @@ const sourceList = [
     name: 'taihe',
     displayId: '_TAIHE_MUSIC',
   },
+  {
+    name: 'airsonic',
+    displayId: '_AIR_SONIC',
+  }
 ];
 
 const main = () => {
