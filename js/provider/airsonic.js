@@ -27,7 +27,7 @@ class airsonic {
         if (!u) {
             throw new Error('server info not set!');
         }
-        const s = 'listen1' + Math.round(Math.random() * 1000);
+        const s = `listen1${Math.round(Math.random() * 1000)}`;
         const t = forge.md5.create().update(forge.util.encodeUtf8(this.sn_credential() + s)).digest().toHex();
         const params = { u, t, s, v: '1.15.0', c: 'listen1'};
         if (jsonfmt) {
@@ -47,7 +47,7 @@ class airsonic {
                 return playlists.map(item => ({
                     cover_img_url: `${this.sn_svrurl()}rest/getCoverArt?${new URLSearchParams(this.sn_params({id: item.coverArt, size: 300}))}`,
                     title: item.name,
-                    id: 'snplaylist_' + item.id,
+                    id: `snplaylist_${item.id}`,
                     img_url: `${this.sn_svrurl()}rest/getCoverArt?${new URLSearchParams(this.sn_params({id: item.coverArt, size: 300}))}`,
                     snid: item.id,
                     author: item.owner,
@@ -66,9 +66,7 @@ class airsonic {
         if (searchType === '1') {
             return {
                 success: fn => {
-                    this.sn_allreachable_playlists().then(result => {
-                        return fn ({result, total: result.length, type: searchType});
-                    });
+                    this.sn_allreachable_playlists().then(result => fn ({result, total: result.length, type: searchType}));
                 }
             }
         }
@@ -88,18 +86,14 @@ class airsonic {
             return {
                 success: fn => {
                     axios.get(target_url).then(res => res.data['subsonic-response']?.searchResult3).then(data => {
-                        const result = data?.song?.map(s => {
-                            return Object.assign(s, {id: 'sntrack_' + s.id, snid: s.id, source: 'airsonic', img_url: '',});
-                        }) ?? [];
+                        const result = data?.song?.map(s => Object.assign(s, {id: `sntrack_${s.id}`, snid: s.id, source: 'airsonic', img_url: '',})) ?? [];
                         return fn({result, total: result.length, type: searchType});
                     });
                 }
             };
         } catch (e) {
             return {
-                success: fn => {
-                    return fn({result: [], total: 0, searchType});
-                }
+                success: fn => fn({result: [], total: 0, searchType})
             }
         }
     }
@@ -119,15 +113,11 @@ class airsonic {
         const track = threadPlayer.playlist.find(x=>x.id === track_id);
 
         try {
-            console.log('airsonic lyric');
             const params = this.sn_params({title: track.title, artist: track.artist});
             const target_url = `${this.sn_svrurl()}rest/getLyrics?${new URLSearchParams(params)}`;
             return {
                 success: fn => {
-                    axios.get(target_url).then(res => res.data["subsonic-response"]).then(data => {
-                        console.log(data);
-                        return fn({ lyric: data?.lyrics??'',})
-                    });
+                    axios.get(target_url).then(res => res.data["subsonic-response"]).then(data => fn({ lyric: data?.lyrics??'',}));
                 }
             };
         } catch (e) {
@@ -138,9 +128,7 @@ class airsonic {
     static show_playlist(url) {
         return {
             success: fn => {
-                this.sn_allreachable_playlists().then(result => {
-                    return fn({ result, });
-                }).catch(err => {
+                this.sn_allreachable_playlists().then(result => fn({ result, })).catch(err => {
                     console.log(err);
                     return fn({ result: [] });
                 });
@@ -163,28 +151,25 @@ class airsonic {
             const list_id = getParameterByName('list_id', url).split('_').pop();
             const params = this.sn_params({id: list_id});
             const target_url = `${this.sn_svrurl()}rest/getPlaylist?${new URLSearchParams(params)}`
-            console.log(url);
             return {
                 success: fn => {
                     axios.get(target_url).then(res => res.data['subsonic-response']).then(data => {
                         const {playlist: {id: snid, coverArt, name: title, entry}} = data;
                         const cvrparams = this.sn_params({id: coverArt, size: 300});
                         const info = {
-                            id: 'snplaylist_' + snid,
+                            id: `snplaylist_${snid}`,
                             cover_img_url: `${this.sn_svrurl()}rest/getCoverArt?${new URLSearchParams(cvrparams)}`,
                             title,
                             snid,
                         }
-                        const tracks = entry.map(s => {return Object.assign(s, {id: 'sntrack_' + s.id, snid: s.id, source: 'airsonic', img_url: '',});});
+                        const tracks = entry.map(s => Object.assign(s, {id: `sntrack_${s.id}`, snid: s.id, source: 'airsonic', img_url: '',}));
                         return fn({tracks, info});
                     });
                 }
             };
         } catch (e) {
             return {
-                success: fn => {
-                    return fn({tracks: [], info: {}});
-                }
+                success: fn => fn({tracks: [], info: {}})
             }
         }
     }
@@ -218,9 +203,8 @@ class airsonic {
             }, 1000);
 
             return {
-                success: fn => {
-                return fn({ status: 'fail', data: {}});
-            }};
+                success: fn => fn({ status: 'fail', data: {}})
+            };
         }
 
         const params = this.sn_params();
