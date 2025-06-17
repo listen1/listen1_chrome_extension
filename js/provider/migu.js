@@ -22,6 +22,30 @@ class migu {
       quality: song.toneControl,
       url: song.copyright === 0 ? '' : undefined,
       song_id: song.songId,
+      content_id: song.contentId,
+    };
+  }
+
+  static mg_convert_song2(song) {
+    return {
+      id: `mgtrack_${song.copyrightId}`,
+      title: song.songName,
+      artist: song.singerList ? song.singerList[0].name : song.singer,
+      artist_id: `mgartist_${
+        song.singerList ? song.singerList[0].id : song.singerId
+      }`,
+      album: song.albumId !== 1 ? song.album : '',
+      album_id: song.albumId !== 1 ? `mgalbum_${song.albumId}` : 'mgalbum_',
+      source: 'migu',
+      source_url: `https://music.migu.cn/v3/music/song/${song.copyrightId}`,
+      img_url: song.img1,
+      // url: `mgtrack_${song.copyrightId}`,
+      lyric_url: song.ext ? song.ext.lrcUrl : '',
+      tlyric_url: song.ext ? song.ext.trcUrl : '',
+      quality: song.toneControl,
+      url: song.copyright === 0 ? '' : undefined,
+      song_id: song.songId,
+      content_id: song.contentId,
     };
   }
 
@@ -43,7 +67,7 @@ class migu {
       const data =
         playlist_type === 'mgplaylist'
           ? response.data.list
-          : response.data.songList;
+          : response.data.data.songList;
       const tracks = data.map((item) => this.mg_convert_song(item));
       return callback(null, tracks);
     });
@@ -412,7 +436,8 @@ class migu {
 
   static bootstrap_track(track, success, failure) {
     const sound = {};
-    const songId = track.song_id;
+    const contentId = track.content_id;
+    const copyrightId = track.id.slice('mgtrack_'.length);
     /*
     const copyrightId = track.id.slice('mgtrack_'.length);
     const type = 1;
@@ -479,7 +504,8 @@ class migu {
       default:
         toneFlag = 'PQ';
     }
-    const target_url = `https://app.c.nf.migu.cn/MIGUM2.0/strategy/listen-url/v2.2?netType=01&resourceType=E&songId=${songId}&toneFlag=${toneFlag}`;
+    // const target_url = `https://app.c.nf.migu.cn/MIGUM2.0/strategy/listen-url/v2.2?netType=01&resourceType=E&songId=${songId}&toneFlag=${toneFlag}`;
+    const target_url = `https://app.c.nf.migu.cn/MIGUM3.0/strategy/pc/listen/v1.0?scene=&netType=01&resourceType=2&copyrightId=${copyrightId}&contentId=${contentId}&toneFlag=${toneFlag}`;
     axios
       .get(target_url, {
         headers: {
@@ -521,96 +547,98 @@ class migu {
     const keyword = getParameterByName('keywords', url);
     const curpage = getParameterByName('curpage', url);
     const searchType = getParameterByName('type', url);
-    const sid = (this.uuid() + this.uuid()).replace(/-/g, '');
-    // let type ='';
-    let searchSwitch = '';
-    let target_url =
-      'https://jadeite.migu.cn/music_search/v2/search/searchAll?';
-    switch (searchType) {
-      case '0':
-        searchSwitch = '{"song":1}'; // {"song":1,"album":0,"singer":0,"tagSong":1,"mvSong":0,"bestShow":1,"songlist":0,"lyricSong":0}
-        // type = 2;
-        target_url =
-          `${target_url}sid=${sid}&isCorrect=1&isCopyright=1` +
-          `&searchSwitch=${encodeURIComponent(searchSwitch)}&pageSize=20` +
-          `&text=${encodeURIComponent(keyword)}&pageNo=${curpage}` +
-          '&feature=1000000000&sort=1';
-        break;
-      case '1':
-        searchSwitch = '{"songlist":1}';
-        // type = 6;
-        target_url =
-          `${target_url}sid=${sid}&isCorrect=1&isCopyright=1` +
-          `&searchSwitch=${encodeURIComponent(searchSwitch)}` +
-          '&userFilter=%7B%22songlisttag%22%3A%5B%5D%7D&pageSize=20' +
-          `&text=${encodeURIComponent(keyword)}&pageNo=${curpage}` +
-          // + `&sort=1&userSort=%7B%22songlist%22%3A%22default%22%7D`;
-          '&feature=0000000010&sort=1';
-        break;
-      default:
-        break;
-    }
+    // const sid = (this.uuid() + this.uuid()).replace(/-/g, '');
+    // // let type ='';
+    // let searchSwitch = '';
+    // let target_url =
+    //   'https://jadeite.migu.cn/music_search/v2/search/searchAll?';
+    // switch (searchType) {
+    //   case '0':
+    //     searchSwitch = '{"song":1}'; // {"song":1,"album":0,"singer":0,"tagSong":1,"mvSong":0,"bestShow":1,"songlist":0,"lyricSong":0}
+    //     // type = 2;
+    //     target_url =
+    //       `${target_url}sid=${sid}&isCorrect=1&isCopyright=1` +
+    //       `&searchSwitch=${encodeURIComponent(searchSwitch)}&pageSize=20` +
+    //       `&text=${encodeURIComponent(keyword)}&pageNo=${curpage}` +
+    //       '&feature=1000000000&sort=1';
+    //     break;
+    //   case '1':
+    //     searchSwitch = '{"songlist":1}';
+    //     // type = 6;
+    //     target_url =
+    //       `${target_url}sid=${sid}&isCorrect=1&isCopyright=1` +
+    //       `&searchSwitch=${encodeURIComponent(searchSwitch)}` +
+    //       '&userFilter=%7B%22songlisttag%22%3A%5B%5D%7D&pageSize=20' +
+    //       `&text=${encodeURIComponent(keyword)}&pageNo=${curpage}` +
+    //       // + `&sort=1&userSort=%7B%22songlist%22%3A%22default%22%7D`;
+    //       '&feature=0000000010&sort=1';
+    //     break;
+    //   default:
+    //     break;
+    // }
     // const target_url = `https://pd.musicapp.migu.cn/MIGUM3.0/v1.0/content/search_all.do?&isCopyright=0&isCorrect=0&text=${keyword}&pageNo=${curpage}&searchSwitch=${searchSwitch}`;
     // const target_url = `https://m.music.migu.cn/migu/remoting/scr_search_tag?rows=20&type=${type}&keyword=${keyword}'&pgc=${curpage}`;
-
-    const deviceId = forge.md5
-      .create()
-      .update(this.uuid().replace(/-/g, ''))
-      .digest()
-      .toHex()
-      .toLocaleUpperCase(); // 设备的UUID
-    const timestamp = new Date().getTime();
-    const signature_md5 = '6cdc72a439cef99a3418d2a78aa28c73'; // app签名证书的md5
-    const text = `${
-      keyword + signature_md5
-    }yyapp2d16148780a1dcc7408e06336b98cfd50${deviceId}${timestamp}`;
-    const sign = forge.md5
-      .create(text)
-      .update(forge.util.encodeUtf8(text))
-      .digest()
-      .toHex();
-    const headers = {
-      // android_id: 'db2cd8c4cdc1345f',
-      appId: 'yyapp2',
-      // brand: 'google',
-      // channel: '0147151',
-      deviceId,
-      // HWID: '',
-      // IMEI: '',
-      // IMSI: '',
-      // ip: '192.168.1.101',
-      // mac: '02:00:00:00:00:00',
-      // 'mgm-Network-standard': '01',
-      // 'mgm-Network-type': '04',
-      // mode: 'android',
-      // msisdn: '',
-      // OAID: '',
-      // os: 'android 7.0',
-      // osVersion: 'android 7.0',
-      // platform: 'G011C',
-      sign,
-      timestamp,
-      // ua: 'Android_migu',
-      // uid: '',
-      uiVersion: 'A_music_3.3.0',
-      version: '7.0.4',
-    };
+    let target_url = `https://app.u.nf.migu.cn/pc/resource/song/item/search/v1.0?text=${keyword}&pageNo=${curpage}&pageSize=20`;
+    if (searchType === '1') {
+      target_url = `https://app.u.nf.migu.cn/pc/v1.0/content/search_all.do?text=${keyword}&pageNo=${curpage}&pageSize=20&searchSwitch={%22songlist%22:+1}`;
+    }
+    // const deviceId = forge.md5
+    //   .create()
+    //   .update(this.uuid().replace(/-/g, ''))
+    //   .digest()
+    //   .toHex()
+    //   .toLocaleUpperCase(); // 设备的UUID
+    // const timestamp = new Date().getTime();
+    // const signature_md5 = '6cdc72a439cef99a3418d2a78aa28c73'; // app签名证书的md5
+    // const text = `${
+    //   keyword + signature_md5
+    // }yyapp2d16148780a1dcc7408e06336b98cfd50${deviceId}${timestamp}`;
+    // const sign = forge.md5
+    //   .create(text)
+    //   .update(forge.util.encodeUtf8(text))
+    //   .digest()
+    //   .toHex();
+    // const headers = {
+    //   // android_id: 'db2cd8c4cdc1345f',
+    //   appId: 'yyapp2',
+    //   // brand: 'google',
+    //   // channel: '0147151',
+    //   deviceId,
+    //   // HWID: '',
+    //   // IMEI: '',
+    //   // IMSI: '',
+    //   // ip: '192.168.1.101',
+    //   // mac: '02:00:00:00:00:00',
+    //   // 'mgm-Network-standard': '01',
+    //   // 'mgm-Network-type': '04',
+    //   // mode: 'android',
+    //   // msisdn: '',
+    //   // OAID: '',
+    //   // os: 'android 7.0',
+    //   // osVersion: 'android 7.0',
+    //   // platform: 'G011C',
+    //   sign,
+    //   timestamp,
+    //   // ua: 'Android_migu',
+    //   // uid: '',
+    //   uiVersion: 'A_music_3.3.0',
+    //   version: '7.0.4',
+    // };
     return {
       success: (fn) => {
         axios
           .get(target_url, {
-            headers,
+            // headers,
           })
           .then((response) => {
             const { data } = response;
             let result = [];
             let total = 0;
             if (searchType === '0') {
-              if (data.songResultData.result) {
-                result = data.songResultData.result.map((item) =>
-                  this.mg_convert_song(item)
-                );
-                total = data.songResultData.totalCount;
+              if (data) {
+                result = data.map((item) => this.mg_convert_song2(item));
+                // no total available
+                total = 1000;
               }
             } else if (searchType === '1') {
               if (data.songListResultData.result) {
@@ -621,7 +649,7 @@ class migu {
                   source: 'migu',
                   source_url: `https://music.migu.cn/v3/music/playlist/${item.id}`,
                   // img_url: item.img,
-                  img_url: item.musicListPicUrl,
+                  img_url: item.imgItems[0].img,
                   url: `mgplaylist_${item.id}`,
                   author: item.userName,
                   count: item.musicNum,
