@@ -77,6 +77,11 @@ Listen1 诞生的初衷从不是和大公司的争夺版权利益，而是为了
 修复：
 
 - 修复咪咕无法播放的问题
+- 修复播放部分歌曲时播放控制失灵的问题(#1200) (#1201) （感谢 @reserveword 的提交）
+- 修复 electron remote 模块以支持更多的 electron 版本 （感谢 @xihale 的提交）
+- 修复新主题性能问题 (#1216) （感谢 @mikelxk 的提交）
+- 修复 electron 的 cookie 未发送问题
+- 修复文档拼写错误 (感谢 Nicholas Wilson)
 
 功能改进：
 

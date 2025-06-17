@@ -52,8 +52,12 @@ Making your own playlist is also supported.
 Fix bugs：
 
 - fix migu playing error
-
-Features：
+- fix playing control problem (#1200) (#1201) （thanks @reserveword ）
+- fix electron remote to support more electron version （thanks @xihale ）
+- fix performance issue for new theme (#1216) （thanks @mikelxk ）
+- fix electron cookie send problem
+- fix spell error (thanks Nicholas Wilson)
+  Features：
 
 - migrate chrome extension manifest version to V3
 
