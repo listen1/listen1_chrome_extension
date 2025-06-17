@@ -198,6 +198,7 @@ chrome.action.onClicked.addListener((tab) => {
 //   );
 // }
 
+
 /**
  * Get tokens.
  */
