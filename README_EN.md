@@ -1,6 +1,6 @@
-# Listen 1 (Chrome Extension) V2.32.0
+# Listen 1 (Chrome Extension) V2.33.0
 
-（Last Update April 1st, 2024)
+（Last Update June 17th, 2025)
 
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE)
 
@@ -46,6 +46,16 @@ Making your own playlist is also supported.
 2. Click Add to Firefox button
 
 ## Changelog
+
+`2025-06`
+
+Fix bugs：
+
+- fix migu playing error
+
+Features：
+
+- migrate chrome extension manifest version to V3
 
 `2023-08 ~ 2024-04`
 
