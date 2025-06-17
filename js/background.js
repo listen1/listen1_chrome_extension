@@ -86,28 +86,28 @@ function hack_referer_header(details) {
     referer_value = 'https://music.taihe.com/';
   }
 
-  if (details.url.includes('.migu.cn')) {
-    referer_value = 'https://music.migu.cn/v3/music/player/audio?from=migu';
-  }
+  // if (details.url.includes('.migu.cn')) {
+  //   referer_value = 'https://music.migu.cn/v3/music/player/audio?from=migu';
+  // }
 
-  if (details.url.includes('m.music.migu.cn')) {
-    referer_value = 'https://m.music.migu.cn/';
-  }
+  // if (details.url.includes('m.music.migu.cn')) {
+  //   referer_value = 'https://m.music.migu.cn/';
+  // }
 
-  if (
-    details.url.includes('app.c.nf.migu.cn') ||
-    details.url.includes('d.musicapp.migu.cn')
-  ) {
-    ua_value = MOBILE_UA;
-    add_origin = false;
-    add_referer = false;
-  }
+  // if (
+  //   details.url.includes('app.c.nf.migu.cn') ||
+  //   details.url.includes('d.musicapp.migu.cn')
+  // ) {
+  //   ua_value = MOBILE_UA;
+  //   add_origin = false;
+  //   add_referer = false;
+  // }
 
-  if (details.url.includes('jadeite.migu.cn')) {
-    ua_value = 'okhttp/3.12.12';
-    add_origin = false;
-    add_referer = false;
-  }
+  // if (details.url.includes('jadeite.migu.cn')) {
+  //   ua_value = 'okhttp/3.12.12';
+  //   add_origin = false;
+  //   add_referer = false;
+  // }
 
   if (origin_value === '') {
     origin_value = referer_value;
