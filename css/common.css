@@ -841,6 +841,12 @@ ul.detail-songlist li.head:hover {
   background-color: transparent;
 }
 
+ul.detail-songlist li .sequence {
+  flex: 0 1 20px;
+  display: flex;
+  align-items: center;
+}
+
 ul.detail-songlist li .title {
   flex: 2;
   overflow: hidden;
